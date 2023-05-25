@@ -1,7 +1,9 @@
 import config from '@kaetram/common/config';
+import { Friends as FriendsPacket } from '@kaetram/common/network/impl';
+import { Opcodes } from '@kaetram/common/network';
 
-import type { Friend, FriendInfo } from '@kaetram/common/types/friends';
 import type Player from './player';
+import type { Friend } from '@kaetram/common/types/friends';
 
 type SyncCallback = (username: string, status: boolean, serverId: number) => void;
 
@@ -69,10 +71,11 @@ export default class Friends {
                 serverId: online ? config.serverId : -1
             };
 
-            if (!online) this.player.world.linkFriends(this.player, false);
-
             // Add the friend to the list and pass on the online status to the client.
             this.addCallback?.(username, this.list[username].online, this.list[username].serverId);
+
+            // If the friend we just added is not online we ask to sync across all servers.
+            if (!online) this.sync([username]);
         });
     }
 
@@ -91,6 +94,27 @@ export default class Friends {
         delete this.list[username];
 
         this.removeCallback?.(username);
+    }
+
+    /**
+     * Relays a message to the hub to check across all servers whether a list
+     * of players are online or not. We use this to synchronize the friends list
+     * after we check the current server for online players.
+     * @param inactiveFriends Optional parameter that defaults to the
+     * current list of inactive friends if not specified.
+     */
+
+    public sync(inactiveFriends: string[] = this.getInactiveFriends()): void {
+        // Skip if there are no inactive friends.
+        if (inactiveFriends.length === 0) return;
+
+        // Relay the message to the hub.
+        this.player.world.client.send(
+            new FriendsPacket(Opcodes.Friends.Sync, {
+                username: this.player.username,
+                inactiveFriends
+            })
+        );
     }
 
     /**

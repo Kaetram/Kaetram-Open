@@ -9,23 +9,30 @@ import Inventory from './containers/impl/inventory';
 import Equipments from './equipments';
 import Statistics from './statistics';
 import Trade from './trade';
+import Incoming from './incoming';
 
-import Pet from '../pet/pet';
 import Mana from '../points/mana';
 import Character from '../character';
+import Item from '../../objects/item';
 import Formulas from '../../../../info/formulas';
-import Incoming from '../../../../controllers/incoming';
 
+import Utils from '@kaetram/common/util/utils';
+import log from '@kaetram/common/util/log';
+import config from '@kaetram/common/config';
+import { PacketType } from '@kaetram/common/network/modules';
+import { Opcodes, Modules } from '@kaetram/common/network';
+import { Team } from '@kaetram/common/api/minigame';
 import {
     Camera,
     Chat,
-    Effect,
+    Guild,
     Heal,
     Movement,
     Music,
     Network,
     Notification,
     Overlay,
+    Player as PlayerPacket,
     Pointer,
     PVP,
     Rank,
@@ -34,33 +41,27 @@ import {
     Sync,
     Teleport,
     Welcome
-} from '@kaetram/server/src/network/packets';
-import Utils from '@kaetram/common/util/utils';
-import log from '@kaetram/common/util/log';
-import { PacketType } from '@kaetram/common/network/modules';
-import { Opcodes, Modules } from '@kaetram/common/network';
-import config from '@kaetram/common/config';
-import { Team } from '@kaetram/common/api/minigame';
+} from '@kaetram/common/network/impl';
 
+import type Pet from '../pet/pet';
 import type NPC from '../../npc/npc';
 import type Skill from './skill/skill';
 import type Map from '../../../map/map';
 import type World from '../../../world';
-import type Item from '../../objects/item';
 import type Area from '../../../map/areas/area';
 import type Regions from '../../../map/regions';
 import type Connection from '../../../../network/connection';
 import type Resource from '../../../globals/impl/resource';
 import type Minigame from '../../../minigames/minigame';
+import type Entities from '../../../../controllers/entities';
+import type Packet from '@kaetram/common/network/packet';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type { PointerData } from '@kaetram/common/types/pointer';
-import type Entities from '@kaetram/server/src/controllers/entities';
-import type Packet from '@kaetram/server/src/network/packet';
 import type { PlayerInfo } from '@kaetram/common/database/mongodb/creator';
-import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 type KillCallback = (character: Character) => void;
 type NPCTalkCallback = (npc: NPC) => void;
@@ -80,28 +81,29 @@ export interface ObjectData {
 }
 
 export default class Player extends Character {
-    public map: Map = this.world.map;
-    private regions: Regions = this.world.map.regions;
-    private entities: Entities = this.world.entities;
+    public map: Map;
+    private regions: Regions;
+    private entities: Entities;
 
-    public incoming: Incoming = new Incoming(this);
+    public incoming: Incoming;
 
     public bank: Bank = new Bank(Modules.Constants.BANK_SIZE);
     public inventory: Inventory = new Inventory(Modules.Constants.INVENTORY_SIZE);
 
-    public abilities: Abilities = new Abilities(this);
-    public quests: Quests = new Quests(this);
-    public achievements: Achievements = new Achievements(this);
-    public skills: Skills = new Skills(this);
-    public equipment: Equipments = new Equipments(this);
-    public mana: Mana = new Mana(Formulas.getMaxMana(this.level));
-    public statistics: Statistics = new Statistics();
-    public friends: Friends = new Friends(this);
-    public trade: Trade = new Trade(this);
+    public abilities: Abilities;
+    public quests: Quests;
+    public achievements: Achievements;
+    public skills: Skills;
+    public equipment: Equipments;
+    public mana: Mana;
+    public statistics: Statistics;
+    public friends: Friends;
+    public trade: Trade;
 
-    public handler: Handler = new Handler(this);
+    public handler: Handler;
 
     public ready = false; // indicates if login processed finished
+    public authenticated = false;
     public isGuest = false;
     public canTalk = true;
     public noclip = false;
@@ -111,17 +113,12 @@ export default class Player extends Character {
     public invalidMovement = 0;
     public overrideMovementSpeed = -1;
 
-    // Special status
-    public running = false;
-    public hotSauce = false;
-    public dualistsMark = false;
-    public thickSkin = false;
-    public snowPotion = false;
-
     // Player info
+    public username = '';
     public password = '';
     public email = '';
     public userAgent = '';
+    public guild = '';
 
     public rank: Modules.Ranks = Modules.Ranks.None;
 
@@ -129,7 +126,7 @@ export default class Player extends Character {
     public lastStyles: { [type: string]: Modules.AttackStyle } = {};
 
     // Pet information
-    public pet!: Pet;
+    public pet: Pet | undefined;
 
     // Warps
     public lastWarp = 0;
@@ -146,6 +143,7 @@ export default class Player extends Character {
 
     private lastNotify = 0;
     private lastEdible = 0;
+    public lastCraft = 0;
 
     private currentSong: string | undefined;
 
@@ -160,9 +158,13 @@ export default class Player extends Character {
     public npcTalk = '';
     public talkIndex = 0;
 
+    // Anti-cheat container
+    public canAccessContainer = false;
+    public activeCraftingInterface = -1; // The skill ID
+
     // Minigame status of the player.
-    public minigame = -1; // Opcodes.Minigame
-    public team: Team = -1;
+    public minigame?: Opcodes.Minigame;
+    public team?: Team;
 
     // Currently open store of the player.
     public storeOpen = '';
@@ -170,7 +172,7 @@ export default class Player extends Character {
     private cameraArea: Area | undefined;
     public overlayArea: Area | undefined;
 
-    private snowPotionTimeout: NodeJS.Timeout | null = null;
+    public readyTimeout!: NodeJS.Timeout | null;
 
     public killCallback?: KillCallback;
     public npcTalkCallback?: NPCTalkCallback;
@@ -182,6 +184,24 @@ export default class Player extends Character {
 
     public constructor(world: World, public database: MongoDB, public connection: Connection) {
         super(connection.instance, world, '', -1, -1);
+
+        this.connection.onClose(this.handleClose.bind(this));
+
+        this.map = this.world.map;
+        this.regions = this.world.map.regions;
+        this.entities = this.world.entities;
+
+        this.incoming = new Incoming(this);
+        this.abilities = new Abilities(this);
+        this.quests = new Quests(this);
+        this.achievements = new Achievements(this);
+        this.skills = new Skills(this);
+        this.equipment = new Equipments(this);
+        this.mana = new Mana(Formulas.getMaxMana(this.level));
+        this.statistics = new Statistics(this);
+        this.friends = new Friends(this);
+        this.trade = new Trade(this);
+        this.handler = new Handler(this);
     }
 
     /**
@@ -198,11 +218,12 @@ export default class Player extends Character {
      * @param data PlayerInfo object containing all data.
      */
 
-    public load(data: PlayerInfo): void {
+    public async load(data: PlayerInfo): Promise<void> {
         // Store coords for when we're done loading.
         this.x = data.x;
         this.y = data.y;
         this.name = data.username;
+        this.guild = data.guild;
         this.rank = data.rank || Modules.Ranks.None;
         this.ban = data.ban;
         this.mute = data.mute;
@@ -219,18 +240,29 @@ export default class Player extends Character {
 
         this.friends.load(data.friends);
 
-        // Being the loading process.
         this.loadSkills();
         this.loadEquipment();
         this.loadInventory();
         this.loadBank();
-        this.loadQuests();
-        this.loadAchievements();
         this.loadStatistics();
         this.loadAbilities();
+
+        // Synchronize login with the hub's server list.
+        this.world.client.send(
+            new PlayerPacket(Opcodes.Player.Login, { username: this.username, guild: this.guild })
+        );
+
+        // Quests and achievements have to be loaded prior to introducing the player.
+        await this.loadQuests();
+        await this.loadAchievements();
+
         this.intro();
 
-        // equipment -> inventory/bank -> quests -> achievements -> skills -> statistics -> abilities -> intro
+        // Connect the player to their guild if they are in one.
+        if (this.guild) this.world.guilds.connect(this, this.guild);
+
+        // Spawn the pet if the player has one.
+        if (data.pet) this.setPet(data.pet);
     }
 
     /**
@@ -261,19 +293,16 @@ export default class Player extends Character {
      * Loads the quest data from the database.
      */
 
-    public loadQuests(): void {
-        this.database.loader?.loadQuests(this, this.quests.load.bind(this.quests));
+    public async loadQuests(): Promise<void> {
+        this.quests.load(await this.database.loader?.loadQuests(this));
     }
 
     /**
      * Loads the achievement data from the database.
      */
 
-    public loadAchievements(): void {
-        this.database.loader?.loadAchievements(
-            this,
-            this.achievements.load.bind(this.achievements)
-        );
+    public async loadAchievements(): Promise<void> {
+        this.achievements.load(await this.database.loader?.loadAchievements(this));
     }
 
     /**
@@ -301,6 +330,64 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles closing a connection. We have to take into consideration
+     * that a connection may have closed prior to all the controllers
+     * being initialized, so we have to check for that.
+     */
+
+    public handleClose(): void {
+        // Stops the character-based intervals
+        this.stop();
+
+        // Stops intervals in handler if it has been initialized
+        this.handler?.clear();
+
+        // If authenticated send information to the hub and Discord.
+        if (this.authenticated) {
+            this.world.discord.sendMessage(this.username, 'has logged out!');
+
+            this.world.client.send(
+                new PlayerPacket(Opcodes.Player.Logout, {
+                    username: this.username,
+                    guild: this.guild
+                })
+            );
+        }
+
+        // Send data to the minigames if present...
+        if (this.inMinigame()) this.getMinigame()?.disconnect(this);
+
+        // Stop all trading.
+        this.trade?.close();
+
+        // Stop combat.
+        this.combat?.stop();
+
+        // Stop skilling
+        this.skills?.stop();
+
+        // Clear the player from areas
+        this.clearAreas();
+        this.minigameArea?.exitCallback?.(this);
+
+        // Signal to other attacking entities that we have left.
+        this.world.cleanCombat(this);
+
+        // Synchronize friends list and guilds with the logout status
+        this.world.syncFriendsList(this.username, true);
+        this.world.syncGuildMembers(this.guild, this.username, true);
+
+        // Save the player if authenticated and ready.
+        if (this.authenticated && this.ready) this.save();
+
+        // Remove the player from the region.
+        this.entities.removePlayer(this);
+
+        // Despawn the pet from the world.
+        if (this.hasPet()) this.world.entities.removePet(this.pet!);
+    }
+
+    /**
      * Handle the actual player login. Check if the user is banned,
      * update hitPoints and mana, and send the player information
      * to the client.
@@ -315,9 +402,9 @@ export default class Player extends Character {
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
 
         // Timeout the player if the ready packet is not received within 10 seconds.
-        setTimeout(() => {
-            if (!this.ready) this.connection.reject('error', true);
-        }, 10_000);
+        this.readyTimeout = setTimeout(() => {
+            if (!this.ready || this.connection.closed) this.connection.reject('error');
+        }, 5000);
 
         this.setPosition(this.x, this.y);
 
@@ -362,10 +449,14 @@ export default class Player extends Character {
 
         this.notify(`Welcome back to ${config.name}!`);
 
-        let population = this.world.getPopulation();
+        let population = this.world.getPopulation(),
+            { activeEvent } = this.world.events;
 
         if (population > 1)
             this.notify(`There are currently ${population} players online.`, '', '', true);
+
+        if (activeEvent)
+            this.notify(`The ${activeEvent} event is currently active!`, 'crimsonred', '', true);
     }
 
     /**
@@ -379,12 +470,17 @@ export default class Player extends Character {
     public override heal(amount = 1, type: Modules.HealTypes = 'passive'): void {
         switch (type) {
             case 'passive': {
-                if (!this.mana.isFull()) this.mana.increment(amount);
+                // Increment mana by 1% of the max mana.
+                if (!this.mana.isFull())
+                    this.mana.increment(Math.floor(this.mana.getMaxMana() * 0.01));
 
-                // Scale the heal rate by the maximum hitpoints.
-                amount += Math.floor(this.hitPoints.getMaxHitPoints() * 0.005);
+                // Base healing amount by 0.5% of the max hitpoints.
+                let healAmount = this.hitPoints.getMaxHitPoints() * 0.005;
 
-                super.heal(amount);
+                // Use the eating level to increase the healing amount.
+                healAmount += this.skills.get(Modules.Skills.Eating).level / 10;
+
+                super.heal(Math.ceil(healAmount));
 
                 break;
             }
@@ -406,6 +502,23 @@ export default class Player extends Character {
         }
 
         this.sync();
+    }
+
+    /**
+     * Loitering occurs when the player is in a region for over 90 seconds. This will
+     * trigger the loitering skill which will give the player a small amount of experience
+     * every 20 seconds. The experience received is proportional to the player's loitering skill.
+     * In the future this experience will correlate to the amount of actions performed in the
+     * 20 second timeframe.
+     */
+
+    public loiter(): void {
+        // Skip if we have not reached the loitering threshold for the region.
+        if (!this.quests.isTutorialFinished() || !this.isLoiteringThreshold()) return;
+
+        let loitering = this.skills.get(Modules.Skills.Loitering);
+
+        loitering.addExperience(loitering.level * 5);
     }
 
     /**
@@ -448,13 +561,17 @@ export default class Player extends Character {
      * @param withAnimation Whether or not to display a special effect when teleporting.
      */
 
-    public teleport(x: number, y: number, withAnimation = false, before = false): void {
+    public override teleport(x: number, y: number, withAnimation = false, before = false): void {
         if (this.dead) return;
 
         if (before) this.sendTeleportPacket(x, y, withAnimation);
 
         this.setPosition(x, y, false);
         this.world.cleanCombat(this);
+
+        // Stop combat and skill activity when teleporting
+        this.combat.stop();
+        this.skills.stop();
 
         if (before) return;
 
@@ -516,9 +633,10 @@ export default class Player extends Character {
                 this.sendToSpawn();
                 return true;
             }
+            // Increment the cheat score.
+            this.incrementCheatScore(`Noclip detected at ${x}, ${y}.`);
 
             // Send player to the last valid position.
-            this.notify(`Noclip detected at ${x}, ${y}. Please submit a bug report.`);
             this.teleport(this.oldX, this.oldY);
         }
 
@@ -561,6 +679,9 @@ export default class Player extends Character {
      */
 
     public handleTargetAttack(instance: string): void {
+        // Prevent targetting yourself.
+        if (instance === this.instance) return;
+
         let target = this.entities.get(instance);
 
         // Ignore if the target is not a character that can actually be attacked.
@@ -600,10 +721,17 @@ export default class Player extends Character {
 
                 if (!item) return;
 
+                if (item.interactable && item.plugin?.onUse(this)) return;
+
                 // Checks if the player can eat and uses the item's plugin to handle the action.
                 if (item.edible && this.canEat() && item.plugin?.onUse(this)) {
                     this.inventory.remove(fromIndex, 1);
                     this.lastEdible = Date.now();
+
+                    if (item.isSmallBowl())
+                        this.inventory.add(new Item('bowlsmall', -1, -1, false, 1));
+                    else if (item.isMediumBowl())
+                        this.inventory.add(new Item('bowlmedium', -1, -1, false, 1));
                 }
 
                 if (item.isEquippable() && item.canEquip(this)) {
@@ -615,6 +743,8 @@ export default class Player extends Character {
             }
 
             case Modules.ContainerType.Bank: {
+                if (!this.canAccessContainer) return this.notify(`You cannot do that right now.`);
+
                 let from =
                         fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
                     to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
@@ -685,16 +815,60 @@ export default class Player extends Character {
 
         // If no sign was found, we attempt to find a tree.
         let coords = instance.split('-'),
-            index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+            diffX = Math.abs(this.x - parseInt(coords[0])),
+            diffY = Math.abs(this.y - parseInt(coords[1]));
+
+        // Ensure that the player is close enough to the object.
+        if (diffX > 2 || diffY > 2) return;
+
+        let index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
             tree = this.world.globals.getTrees().findResource(index);
 
         if (tree) return this.skills.getLumberjacking().cut(this, tree);
 
         // If we don't find a tree then we try finding a rock.
-
         let rock = this.world.globals.getRocks().findResource(index);
 
         if (rock) return this.skills.getMining().mine(this, rock);
+
+        // If we don't find a rock then we try finding a fishing spot.
+        let fishingSpot = this.world.globals.getFishingSpots().findResource(index);
+
+        if (fishingSpot) return this.skills.getFishing().catch(this, fishingSpot);
+
+        // If we don't find a fishing spot, look for foragable plants.
+        let forage = this.world.globals.getForaging().findResource(index);
+
+        if (forage) return this.skills.getForaging().harvest(this, forage);
+
+        /**
+         * Here we use the cursor (I know, it's a bit of a hack) to handle
+         * interactions with objects in the world. Most of these
+         * are used by crafting stations.
+         */
+
+        let cursor = this.map.getCursorFromIndex(index);
+
+        if (!cursor) return;
+
+        // Handle interactable objects based on the cursor.
+        switch (cursor) {
+            case 'smithing': {
+                return this.world.crafting.open(this, Modules.Skills.Smithing);
+            }
+
+            case 'smelting': {
+                return this.world.crafting.open(this, Modules.Skills.Smelting);
+            }
+
+            case 'cooking': {
+                return this.world.crafting.open(this, Modules.Skills.Cooking);
+            }
+
+            case 'crafting': {
+                return this.world.crafting.open(this, Modules.Skills.Crafting);
+            }
+        }
     }
 
     /**
@@ -733,14 +907,15 @@ export default class Player extends Character {
         // Ignore invalid damage values.
         if (damage < 1) return;
 
-        let experience = damage * Modules.Constants.EXPERIENCE_PER_HIT,
+        let experience = damage * this.world.getExperiencePerHit(),
             weapon = this.equipment.getWeapon();
 
         /**
          * If the player doesn't have enough mana then we halve the experience gain.
+         * We make the experience half of what it would normally be.
          */
 
-        if (this.hasManaForAttack()) experience = Math.floor(experience / 2);
+        if (!this.hasManaForAttack()) experience = Math.floor(experience / 2);
 
         /**
          * Since there are four combat skills, we evenly distribute the experience between them.
@@ -857,15 +1032,26 @@ export default class Player extends Character {
      */
 
     public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
-        if (this.map.isDoor(x, y) || (target && following)) return;
-        if (this.inCombat()) return;
+        // Immediately clear the target to prevent combat from sticking to previous target.
+        if (target !== this.target?.instance) this.target = undefined;
+
+        // Stop the movement if the player is stunned.
+        if (this.isStunned()) return this.stopMovement();
+
+        // If the player clicked anywhere outside the bank then the bank is no longer opened.
+        this.canAccessContainer = false;
+        this.activeCraftingInterface = -1;
+
+        if (this.map.isDoor(x, y) || (target && following) || this.inCombat()) return;
 
         let diffX = Math.abs(this.x - x),
             diffY = Math.abs(this.y - y);
 
         if (diffX > 1 || diffY > 1) {
             this.notify(`No-clip detected at ${this.x}(${x}), ${this.y}(${y}).`);
+
             this.invalidMovement++;
+            this.cheatScore++;
 
             log.bug(`${this.username} has no-clipped from ${this.x}(${x}), ${this.y}(${y}).`);
         }
@@ -905,7 +1091,14 @@ export default class Player extends Character {
      */
 
     public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
-        if (this.stunned || this.isInvalidMovement()) return;
+        if (this.isInvalidMovement()) return;
+
+        // Increment cheat score if the player is moving while stunned.
+        if (this.isStunned()) {
+            this.incrementCheatScore(`[${this.username}] Movement while stunned.`);
+
+            this.stopMovement();
+        }
 
         if (this.verifyMovement(x, y, timestamp))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
@@ -947,7 +1140,9 @@ export default class Player extends Character {
         if (!this.isInvalidMovement()) this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
-        if (this.map.isDoor(x, y) && (!target || entity?.isPlayer())) {
+        if (this.map.isDoor(x, y)) {
+            if (entity?.isMob()) return;
+
             let door = this.map.getDoor(x, y);
 
             this.doorCallback?.(door);
@@ -991,13 +1186,18 @@ export default class Player extends Character {
         // Don't needlessly update if the overlay is the same
         if (this.overlayArea === overlay) return;
 
-        if (!overlay) this.overlayArea?.removePlayer(this);
+        // Store the active overlay.
+        let tempOverlay = this.overlayArea;
 
         // Store for comparison.
         this.overlayArea = overlay;
 
         // No overlay object or invalid object, remove the overlay.
-        if (!overlay) return this.send(new Overlay(Opcodes.Overlay.Remove));
+        if (!overlay) {
+            tempOverlay?.removePlayer(this);
+
+            return this.send(new Overlay(Opcodes.Overlay.Remove));
+        }
 
         // New overlay is being loaded, remove lights.
         this.lightsLoaded = [];
@@ -1009,7 +1209,7 @@ export default class Player extends Character {
             })
         );
 
-        if (overlay.type === 'damage') overlay.addPlayer(this);
+        if (overlay.isStatusArea()) overlay.addPlayer(this);
     }
 
     /**
@@ -1087,20 +1287,23 @@ export default class Player extends Character {
                 this.overrideMovementSpeed === -1 // Whether to use the movement speed override.
                     ? Modules.Defaults.MOVEMENT_SPEED
                     : this.overrideMovementSpeed, // Start with default.
-            armour = this.equipment.getArmour(),
             boots = this.equipment.getBoots();
-
-        // Update the movement speed with that of the armour currently wielded.
-        if (armour.hasMovementModifier()) speed = Math.floor(speed * armour.movementModifier);
 
         // Check the boots for movement modifiers
         if (boots.hasMovementModifier()) speed = Math.floor(speed * boots.movementModifier);
 
         // Apply a 10% speed boost if the player running effect is present.
-        if (this.running) speed = Math.floor(speed * 0.9);
+        if (this.status.has(Modules.Effects.Running)) speed = Math.floor(speed * 0.9);
 
         // Apply a 20% speed boost if the player is using the hot sauce.
-        if (this.hotSauce) speed = Math.floor(speed * 0.8);
+        if (this.status.has(Modules.Effects.HotSauce)) speed = Math.floor(speed * 0.8);
+
+        // Apply freezing movement speed effect, make the player move 25% slower.
+        if (
+            this.status.has(Modules.Effects.Freezing) &&
+            !this.status.has(Modules.Effects.SnowPotion)
+        )
+            speed = Math.floor(speed * 1.25);
 
         // Update the movement speed if there is a change from default.
         if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
@@ -1112,12 +1315,17 @@ export default class Player extends Character {
      * Setters
      */
 
+    /**
+     * Updates the movement speed of the player.
+     * @param movementSpeed The new movement speed of the player.
+     */
+
     public setMovementSpeed(movementSpeed: number): void {
         this.movementSpeed = movementSpeed;
 
         // Sync to other players in the region.
         this.sendToRegions(
-            new Effect(Opcodes.Effect.Speed, {
+            new Movement(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed
             })
@@ -1135,26 +1343,18 @@ export default class Player extends Character {
     public setRunning(running: boolean, hotSauce = false): void {
         log.debug(`${this.username} is running: ${running}`);
 
-        // Update the hot sauce status.
-        this.hotSauce = hotSauce;
-        this.running = running;
+        if (running) this.status.add(Modules.Effects.Running);
+        else this.status.remove(Modules.Effects.Running);
+
+        if (hotSauce) this.status.add(Modules.Effects.HotSauce);
+        else this.status.remove(Modules.Effects.HotSauce);
 
         this.sendToRegions(
-            new Effect(Opcodes.Effect.Speed, {
+            new Movement(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed: this.getMovementSpeed()
             })
         );
-    }
-
-    /**
-     * Applies a visual effect onto a player. This can also be used to remove
-     * an effect by passing in the `Opcodes.Effect.None` opcode.
-     * @param opcode The opcode of the effect we want to apply.
-     */
-
-    public setEffect(opcode: Opcodes.Effect): void {
-        this.sendToRegions(new Effect(opcode, { instance: this.instance }));
     }
 
     /**
@@ -1164,45 +1364,59 @@ export default class Player extends Character {
      */
 
     public setDualistsMark(dualistsMark: boolean): void {
-        this.dualistsMark = dualistsMark;
+        if (dualistsMark) this.status.add(Modules.Effects.DualistsMark);
+        else this.status.remove(Modules.Effects.DualistsMark);
 
         this.combat.updateLoop();
     }
 
     /**
-     * Sets the cold resistance snow potion status and creates a (or updates an existing) timeout.
-     * The effect is removed after a set amount of time specified in the game `Constants`.
+     * Adds a temporary status effect for the snow potion. This prevents the player
+     * from taking cold-based damage and also protects them against freezing effects.
      */
 
-    public setSnowPotionEffect(): void {
-        // If we already have an active effect then we restart the timer.
-        if (this.snowPotion) {
-            clearTimeout(this.snowPotionTimeout!);
-            this.snowPotionTimeout = null;
-        }
+    public setSnowPotion(): void {
+        // Remove freezing effect if it has been caused by a timeout (attack).
+        if (this.status.hasTimeout(Modules.Effects.Freezing))
+            this.status.remove(Modules.Effects.Freezing);
 
-        this.snowPotion = true;
-
-        // Remove the freezing special effect if the potion is active.
-        this.setEffect(Opcodes.Effect.None);
+        this.status.addWithTimeout(
+            Modules.Effects.SnowPotion,
+            Modules.Constants.SNOW_POTION_DURATION,
+            () => {
+                this.notify('Your immunity to freezing effects has worn off.');
+            }
+        );
 
         this.notify(
             `You are now immune to freezing effects for ${
                 Modules.Constants.SNOW_POTION_DURATION / 1000
             } seconds.`
         );
+    }
 
-        // Set a timeout to remove the effect.
-        this.snowPotionTimeout = setTimeout(() => {
-            // If the player is still in a freezing area, reapply the effect
-            if (this.overlayArea && this.overlayArea.type === 'damage')
-                this.setEffect(Opcodes.Effect.Freeze);
+    /**
+     * Adds a temporary status effect for the fire potion. This prevents the player
+     * from repeatedly taking fire damage as result of the burn effect.
+     */
 
-            this.snowPotion = false;
-            this.snowPotionTimeout = null;
+    public setFirePotion(): void {
+        // Remove burning effect if present
+        if (this.status.has(Modules.Effects.Burning)) this.status.remove(Modules.Effects.Burning);
 
-            this.notify('Your immunity to freezing effects has worn off.');
-        }, Modules.Constants.SNOW_POTION_DURATION);
+        this.status.addWithTimeout(
+            Modules.Effects.FirePotion,
+            Modules.Constants.FIRE_POTION_DURATION,
+            () => {
+                this.notify('Your immunity to fire effects has worn off.');
+            }
+        );
+
+        this.notify(
+            `You are now immune to fire effects for ${
+                Modules.Constants.FIRE_POTION_DURATION / 1000
+            } seconds.`
+        );
     }
 
     /**
@@ -1288,10 +1502,36 @@ export default class Player extends Character {
      */
 
     public setPet(key: string): void {
-        if (this.pet) return this.notify(`You already have a pet!`);
+        if (this.hasPet()) return this.notify(`You already have a pet!`);
 
         // Create a new pet instance based on the key.
-        this.pet = new Pet(this, key, this.x, this.y);
+        this.pet = this.entities.spawnPet(this, key);
+
+        // Begin the pet following the player.
+        this.pet.follow(this);
+    }
+
+    /**
+     * Removes the player's pet and adds it to their inventory if they have space.
+     */
+
+    public removePet(): void {
+        if (!this.hasPet()) return;
+
+        // Ensure the player has enough space in their inventory.
+        if (!this.inventory.hasSpace()) {
+            this.notify(`You do not have enough inventory space to store your pet.`);
+            return;
+        }
+
+        // Create a pet item and add it to the player's inventory.
+        this.inventory.add(new Item(`${this.pet!.key}pet`, -1, -1, false, 1));
+
+        // Remove the pet from the world
+        this.entities.remove(this.pet!);
+
+        // Remove the pet from the player.
+        this.pet = undefined;
     }
 
     /**
@@ -1336,6 +1576,22 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player has a weapon with the bloodsucking enchantment.
+     */
+
+    public override hasBloodsucking(): boolean {
+        return this.equipment.getWeapon().isBloodsucking();
+    }
+
+    /**
+     * @returns Whether or not the player currently has a pet.
+     */
+
+    public hasPet(): boolean {
+        return !!this.pet;
+    }
+
+    /**
      * Getters
      */
 
@@ -1349,7 +1605,7 @@ export default class Player extends Character {
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
-        if (this.inMinigame()) return this.getMinigame()?.getRespawnPoint(this.team);
+        if (this.inMinigame()) return this.getMinigame()!.getRespawnPoint(this.team);
 
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
@@ -1371,7 +1627,7 @@ export default class Player extends Character {
      * @returns Finds and returns a minigame based on the player's minigame.
      */
 
-    public getMinigame(): Minigame {
+    public getMinigame(): Minigame | undefined {
         return this.world.minigames.get(this.minigame);
     }
 
@@ -1392,6 +1648,11 @@ export default class Player extends Character {
     public loadResource(resource: Resource): void {
         this.resourcesLoaded[resource.instance] = resource.state;
     }
+
+    /**
+     * @param region Region id of the region we are checking.
+     * @returns Whether or not the region has been added to the list of loaded regions.
+     */
 
     public hasLoadedRegion(region: number): boolean {
         return this.regionsLoaded.includes(region);
@@ -1429,8 +1690,9 @@ export default class Player extends Character {
      */
 
     public clearAreas(): void {
-        if (this.overlayArea && this.overlayArea.type === 'damage')
-            this.overlayArea.removePlayer(this);
+        if (!this.inFreezingArea()) return;
+
+        this.overlayArea!.removePlayer(this);
     }
 
     /**
@@ -1458,7 +1720,7 @@ export default class Player extends Character {
      */
 
     public inMinigame(): boolean {
-        return this.minigame !== -1;
+        return this.minigame !== undefined;
     }
 
     /**
@@ -1494,6 +1756,16 @@ export default class Player extends Character {
     }
 
     /**
+     * A hollow admin is an administrator that can perform all of the commands of
+     * an admin but cannot influence the economy of the game.
+     * @returns Whether or not the player has the hollow admin rank.
+     */
+
+    public isHollowAdmin(): boolean {
+        return this.rank === Modules.Ranks.HollowAdmin;
+    }
+
+    /**
      * Accounts younger than 1 minute are considered new accounts.
      * @returns Whether the account's creation date is within the last minute.
      */
@@ -1519,6 +1791,17 @@ export default class Player extends Character {
     }
 
     /**
+     * The threshold for loitering occurs when a player is in
+     * the same region for at least 90 seconds. This is used to level
+     * up the loitering skill when the player sits in one area doing
+     * things like crafting, smithing, etc.
+     */
+
+    public isLoiteringThreshold(): boolean {
+        return Date.now() - this.lastRegionChange >= Modules.Constants.LOITERING_THRESHOLD;
+    }
+
+    /**
      * Players obtain their poisoning abilities from their weapon. Certain
      * weapons may be imbued with a poison effect. This checks if that status
      * is active.
@@ -1526,6 +1809,9 @@ export default class Player extends Character {
      */
 
     public override isPoisonous(): boolean {
+        // If the player is an archer, we use the arrows to determine the poisonous status.
+        if (this.isArcher()) return this.equipment.getArrows().poisonous;
+
         return this.equipment.getWeapon().poisonous;
     }
 
@@ -1538,11 +1824,29 @@ export default class Player extends Character {
     }
 
     /**
+     * Checks whether or not the player is in a freezing area. This is used
+     * to determine stacking of freezing effect (e.g. from ice arrows).
+     * @returns Whether or not the player is in a freezing area.
+     */
+
+    public inFreezingArea(): boolean {
+        return !!this.overlayArea?.isStatusArea();
+    }
+
+    /**
      * @returns Whether or not the time delta is greater than the cooldown since last edible.
      */
 
     private canEat(): boolean {
         return Date.now() - this.lastEdible > Modules.Constants.EDIBLE_COOLDOWN;
+    }
+
+    /**
+     * @returns Whether or not the time delta is greater than the cooldown since last craft.
+     */
+
+    public canCraft(): boolean {
+        return Date.now() - this.lastCraft > Modules.Constants.CRAFT_COOLDOWN;
     }
 
     /**
@@ -1595,7 +1899,9 @@ export default class Player extends Character {
 
     public sendPrivateMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
-            this.world.api.sendPrivateMessage(this, playerName, message);
+            this.world.client.send(
+                new Chat({ source: this.username, message, target: playerName })
+            );
             return;
         }
 
@@ -1658,16 +1964,16 @@ export default class Player extends Character {
 
         if (this.rank !== Modules.Ranks.None) {
             name = `[${Modules.RankTitles[this.rank]}] ${name}`;
-            colour = global ? '' : Modules.RankColours[this.rank];
+            colour = global ? 'rgba(191, 161, 63, 1.0)' : Modules.RankColours[this.rank];
         }
 
         let source = `${global ? '[Global]' : ''} ${name}`;
 
-        // Relay the message to the discord channel.
-        if (config.discordEnabled) this.world.discord.sendMessage(source, message, undefined, true);
+        // Relay the message to the discord channel if it is enabled.
+        this.world.discord.sendMessage(source, message, undefined, true);
 
-        // API relays the message to the discord server from multiple worlds.
-        if (config.hubEnabled) this.world.api.sendChat(source, message);
+        // Relay the hub so that it can handle the discord relay.
+        this.world.client.send(new Chat({ source, message }));
 
         if (global) return this.world.globalMessage(name, message, colour);
 
@@ -1733,6 +2039,15 @@ export default class Player extends Character {
     }
 
     /**
+     * Sends a message to the player's guild controller's interface.
+     * @param message The message we are sending to the player.
+     */
+
+    public guildNotify(message: string): void {
+        this.send(new Guild(Opcodes.Guild.Error, { message }));
+    }
+
+    /**
      * Sends a pointer data packet to the player. Removes all
      * existing pointers first to prevent multiple pointers.
      * @param opcode The pointer opcode we are sending.
@@ -1749,21 +2064,6 @@ export default class Player extends Character {
         info.instance = this.instance;
 
         this.send(new Pointer(opcode, info));
-    }
-
-    /**
-     * Forcefully stopping the player will simply halt
-     * them in between tiles. Should only be used if they are
-     * being transported elsewhere.
-     */
-
-    public stopMovement(forced = false): void {
-        this.send(
-            new Movement(Opcodes.Movement.Stop, {
-                instance: this.instance,
-                forced
-            })
-        );
     }
 
     /**
@@ -1795,7 +2095,7 @@ export default class Player extends Character {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
-        data.key = this.equipment.getArmour().key || 'clotharmor';
+        data.key = this.equipment.getSkin().key || 'base';
         data.name = Utils.formatName(this.username);
         data.rank = this.rank;
         data.level = this.skills.getCombatLevel();
@@ -1847,6 +2147,19 @@ export default class Player extends Character {
 
     public override getBonuses(): Bonuses {
         return this.equipment.totalBonuses;
+    }
+
+    /**
+     * Subclass implementation that uses the appropriate type of weapon
+     * to determine the player's accuracy bonus.
+     * @returns The player's accuracy bonus based on their weapon type.
+     */
+
+    public override getAccuracyBonus(): number {
+        if (this.isArcher()) return this.getBonuses().archery;
+        if (this.isMagic()) return this.getBonuses().magic;
+
+        return this.getBonuses().accuracy;
     }
 
     /**
@@ -1949,9 +2262,69 @@ export default class Player extends Character {
         let reduction = 1;
 
         // Thick skin increases damage reduction by 20%.
-        if (this.thickSkin) reduction -= 0.2;
+        if (this.status.has(Modules.Effects.ThickSkin)) reduction -= 0.2;
+
+        // Attack style defensive boosts defence by 10%.
+        if (this.getAttackStyle() === Modules.AttackStyle.Defensive) reduction -= 0.1;
+
+        // Shared attack style defensive boosts defence by 4%.
+        if (this.getAttackStyle() === Modules.AttackStyle.Shared) reduction -= 0.04;
 
         return reduction;
+    }
+
+    /**
+     * Gets the player's currently selected attack style for the weapon
+     * they are wielding. We use this to determine combat bonuses and whatnot.
+     * @returns The attack style the weapon currently has selected.
+     */
+
+    public override getAttackStyle(): Modules.AttackStyle {
+        return this.equipment.getWeapon().attackStyle;
+    }
+
+    /**
+     * Subclass implementation for player's damage type. The damage hit type is selected
+     * based on the arrows or the weapon the player has equipped.
+     * @returns The damage type of the player's current weapon.
+     */
+
+    public override getDamageType(): Modules.Hits {
+        // Attempt to apply the arrow effects if the player is using ranged weapons.
+        if (this.isArcher()) {
+            let arrows = this.equipment.getArrows();
+
+            /**
+             * Depending on the type of weapon the player is using, we will either use
+             * the burning/freezing effect of the arrows or the weapon itself.
+             */
+
+            if (arrows.freezing && Formulas.getEffectChance()) return Modules.Hits.Freezing;
+            if (arrows.burning && Formulas.getEffectChance()) return Modules.Hits.Burning;
+
+            // We use the player's bow to determine the damage type if the arrows do not have any effects.
+            let weapon = this.equipment.getWeapon();
+
+            if (weapon.isStun() && Formulas.getEffectChance()) return Modules.Hits.Stun;
+
+            // Apply the area-of-effect damage if the weapon is explosive.
+            if (weapon.isExplosive() && Formulas.getEffectChance()) {
+                this.aoe = 1;
+                return Modules.Hits.Explosive;
+            }
+        } else {
+            let weapon = this.equipment.getWeapon();
+
+            /**
+             * Weapon effects may vary. Here we do a roll against the weapon's enchantments
+             * and their level to determine which damage type we will use.
+             */
+
+            if (weapon.isCritical() && Formulas.getEffectChance()) return Modules.Hits.Critical;
+        }
+
+        // Default case for damage.
+        return Modules.Hits.Normal;
     }
 
     /**
@@ -1969,6 +2342,18 @@ export default class Player extends Character {
     }
 
     /**
+     * This function assumes that we already checked that the player has the bloodsucking
+     * enchantment.
+     * @returns The bloodsucking enchantment level the player currently has on his weapon.
+     */
+
+    public override getBloodsuckingLevel(): number {
+        return (
+            this.equipment.getWeapon().enchantments[Modules.Enchantment.Bloodsucking]?.level || 1
+        );
+    }
+
+    /**
      * An override function for the player's attack rate since it
      * is dependent on their weapon at the moment. We may be doing
      * calculations from special equipments/effects in the future.
@@ -1978,7 +2363,8 @@ export default class Player extends Character {
 
     public override getAttackRate(): number {
         // Dualists mark status effect boosts attack speed by 200 milliseconds.
-        if (this.dualistsMark) return this.equipment.getWeapon().attackRate - 200;
+        if (this.status.has(Modules.Effects.DualistsMark))
+            return this.equipment.getWeapon().attackRate - 200;
 
         return this.equipment.getWeapon().attackRate;
     }

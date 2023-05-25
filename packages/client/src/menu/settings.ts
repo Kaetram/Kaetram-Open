@@ -25,6 +25,7 @@ export default class Settings extends Menu {
     private disableCachingCheckbox: HTMLInputElement = document.querySelector(
         '#disable-region-caching-checkbox > input'
     )!;
+    private webGlCheckbox: HTMLInputElement = document.querySelector('#webgl-checkbox > input')!;
 
     public constructor(private game: Game) {
         super('#settings-page', undefined, '#settings-button');
@@ -39,6 +40,7 @@ export default class Settings extends Menu {
         this.showNamesCheckbox.addEventListener('change', this.handleName.bind(this));
         this.showLevelsCheckbox.addEventListener('change', this.handleLevel.bind(this));
         this.disableCachingCheckbox.addEventListener('change', this.handleCaching.bind(this));
+        this.webGlCheckbox.addEventListener('change', this.handleWebGl.bind(this));
 
         this.load();
     }
@@ -63,6 +65,7 @@ export default class Settings extends Menu {
         this.showNamesCheckbox.checked = settings.showNames;
         this.showLevelsCheckbox.checked = settings.showLevels;
         this.disableCachingCheckbox.checked = settings.disableCaching;
+        this.webGlCheckbox.checked = settings.webgl;
 
         // Update brightness value.
         this.handleBrightness();
@@ -165,5 +168,15 @@ export default class Settings extends Menu {
 
     private handleCaching(): void {
         this.game.storage.setDisableCaching(this.disableCachingCheckbox.checked);
+    }
+
+    /**
+     * Handles swapping between the WebGL and Canvas2D rendering engines.
+     */
+
+    private handleWebGl(): void {
+        this.game.storage.setWebGl(this.webGlCheckbox.checked);
+
+        window.location.reload();
     }
 }

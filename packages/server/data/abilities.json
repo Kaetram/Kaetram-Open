@@ -4,22 +4,22 @@
     "levels": {
       "1": {
         "cooldown": 60000,
-        "duration": 10000,
+        "duration": 15000,
         "mana": 15
       },
       "2": {
         "cooldown": 60000,
-        "duration": 15000,
+        "duration": 20000,
         "mana": 17
       },
       "3": {
         "cooldown": 60000,
-        "duration": 20000,
+        "duration": 25000,
         "mana": 19
       },
       "4": {
         "cooldown": 60000,
-        "duration": 25000,
+        "duration": 30000,
         "mana": 21
       }
     }
@@ -30,22 +30,22 @@
     "levels": {
       "1": {
         "cooldown": 60000,
-        "duration": 10000,
+        "duration": 15000,
         "mana": 15
       },
       "2": {
         "cooldown": 60000,
-        "duration": 12000,
+        "duration": 17000,
         "mana": 15
       },
       "3": {
         "cooldown": 60000,
-        "duration": 14000,
+        "duration": 19000,
         "mana": 15
       },
       "4": {
         "cooldown": 60000,
-        "duration": 15000,
+        "duration": 22000,
         "mana": 15
       }
     }

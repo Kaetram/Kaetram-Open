@@ -58,7 +58,7 @@ export default class Splat {
         // Text gets marked as MISS if this is a damage type and the value is 0.
         if (this.isDamage() && value < 1) this.text = 'MISS';
 
-        if (this.isPoison() || this.isCold()) this.prefix = '--';
+        if (this.isPoison() || this.isFreezing()) this.prefix = '--';
         if (this.isPoints()) this.prefix = '++';
 
         if (this.isExperience()) {
@@ -115,8 +115,8 @@ export default class Splat {
      * @returns Whether or not the splat type is cold.
      */
 
-    private isCold(): boolean {
-        return this.type === Modules.Hits.Cold;
+    private isFreezing(): boolean {
+        return this.type === Modules.Hits.Freezing;
     }
 
     /**
@@ -147,9 +147,10 @@ export default class Splat {
 
     private isDamage(): boolean {
         return (
-            this.type === Modules.Hits.Damage ||
+            this.type === Modules.Hits.Normal ||
             this.type === Modules.Hits.Stun ||
-            this.type === Modules.Hits.Critical
+            this.type === Modules.Hits.Critical ||
+            this.type === Modules.Hits.Explosive
         );
     }
 

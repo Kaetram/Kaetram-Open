@@ -6,6 +6,7 @@ import { Modules } from '@kaetram/common/network';
 
 import type {
     ProcessedAnimation,
+    ProcessedTileset,
     RegionData,
     RegionTile,
     RegionTileData
@@ -16,10 +17,12 @@ export interface CursorTiles {
     [tileId: number]: string;
 }
 
+// An extension of image with tileset information attached.
 interface TilesetInfo extends HTMLImageElement {
+    index: number;
     path: string;
-    firstGID: number;
-    lastGID: number;
+    firstGid: number;
+    lastGid: number;
     loaded: boolean;
 }
 
@@ -36,8 +39,8 @@ export default class Map {
     private objects: number[] = [];
     private lights: number[] = [];
 
-    private rawTilesets: { [key: string]: number } = mapData.tilesets; // Key is tileset id, value is the firstGID
-    private tilesets: { [key: string]: TilesetInfo } = {};
+    public tilesets: TilesetInfo[] = [];
+    private rawTilesets: ProcessedTileset[] = mapData.tilesets; // Key is tileset id, value is the firstGID
     private cursorTiles: CursorTiles = {};
     private animatedTiles: { [tileId: number]: ProcessedAnimation[] } = mapData.animations;
 
@@ -107,6 +110,9 @@ export default class Map {
 
         // Save data after we finish parsing it.
         this.saveMapData();
+
+        // Bind the tile layer textures after we finish parsing the map.
+        if (this.game.useWebGl) this.game.renderer.bindTileLayers();
     }
 
     /**
@@ -141,6 +147,9 @@ export default class Map {
 
             // If the tile doesn't have an object but the index is in our objects array, we remove it.
             if (!tile.o && objectIndex > -1) this.objects.splice(objectIndex, 1);
+
+            // Add the tile information to the WebGL renderer if it's active.
+            if (this.game.useWebGl) this.game.renderer.setTile(index, tile.data);
         }
 
         // Store the region we just saved into our local storage.
@@ -157,54 +166,57 @@ export default class Map {
      */
 
     private loadTilesets(): void {
-        for (let key in this.rawTilesets)
-            this.loadTileset(this.rawTilesets[key], parseInt(key), (tileset: TilesetInfo) => {
-                this.tilesets[key] = tileset;
+        for (let index in this.rawTilesets)
+            this.loadTileset(this.rawTilesets[index], parseInt(index), (tileset: TilesetInfo) => {
+                // Prevent adding the tileset if it already exists.
+                for (let set of this.tilesets) if (set.src === tileset.src) return;
 
-                // If we've loaded all the tilesets, map is now allowed to be marked as ready.
-                if (Object.keys(this.tilesets).length === Object.keys(this.rawTilesets).length)
+                this.tilesets.push(tileset);
+
+                if (this.tilesets.length === this.rawTilesets.length) {
+                    // Sort tilesets by first gid.
+                    this.tilesets = this.tilesets.sort((a, b) => a.firstGid - b.firstGid);
+
                     this.tilesetsLoaded = true;
+                }
             });
     }
 
     /**
-     * Function responsible for loading the tilesheet into the game.
-     * Due to the nature of HTML5, when we load an image, it must be
-     * done so asynchronously.
-     * @param firstGID FirstGID is the value of the rawTileset dictionary.
-     * @param tilesetId The tileset number ID as a string.
+     * Handles loading the image for a tileset. Once the image has been loaded
+     * we invoke the callbakc function with the information about the new tileset.
+     * @param tileset Raw tileset data parsed from the map.
      * @param callback Parsed client tileset of type TilesetInfo.
      */
 
     private loadTileset(
-        firstGID: number,
-        tilesetId: number,
+        tileset: ProcessedTileset,
+        index: number,
         callback: (tileset: TilesetInfo) => void
     ): void {
-        let tileset = new Image() as TilesetInfo,
-            path = `/img/tilesets/tilesheet-${tilesetId + 1}.png`; // tileset path in the client.
+        let tilesetInfo = new Image() as TilesetInfo,
+            path = `/img/tilesets/${tileset.relativePath}`; // tileset path in the client.
 
-        tileset.crossOrigin = 'Anonymous';
-        tileset.path = path;
-        tileset.src = path;
-        tileset.firstGID = firstGID;
+        tilesetInfo.crossOrigin = 'Anonymous';
+        tilesetInfo.path = path;
+        tilesetInfo.src = path;
+        tilesetInfo.index = index;
+        tilesetInfo.firstGid = tileset.firstGid;
+        tilesetInfo.lastGid = tileset.lastGid;
 
         // Listener for when the image has finished loading. Equivalent of `image.onload`
-        tileset.addEventListener('load', () => {
+        tilesetInfo.addEventListener('load', () => {
             // Prevent uneven tilemaps from loading.
-            if (tileset.width % this.tileSize > 0)
+            if (tilesetInfo.width % this.tileSize > 0)
                 throw new Error(`The tile size is malformed in the tile set: ${tileset.path}`);
 
-            // Equivalent of firstGID + (tileset.width / this.tileSize) * (tileset.height / this.tileSize)
-            tileset.lastGID = firstGID + (tileset.width * tileset.height) / this.tileSize ** 2;
-
             // Mark tileset as loaded.
-            tileset.loaded = true;
+            tilesetInfo.loaded = true;
 
-            callback(tileset);
+            callback(tilesetInfo);
         });
 
-        tileset.addEventListener('error', () => {
+        tilesetInfo.addEventListener('error', () => {
             throw new Error(`Could not find tile set: ${tileset.path}`);
         });
 
@@ -217,12 +229,12 @@ export default class Map {
          */
 
         setTimeout(() => {
-            if (!tileset.loaded) {
-                // Recursively call this function until the tileset is loaded.
-                this.loadTileset(firstGID, tilesetId, callback);
+            if (tilesetInfo.loaded) return;
 
-                log.debug(`Retrying to load tileset: ${tileset.path}`);
-            }
+            // Recursively call this function until the tileset is loaded.
+            this.loadTileset(tileset, index, callback);
+
+            log.debug(`Retrying to load tileset: ${tileset.path}`);
         }, 500);
     }
 
@@ -295,7 +307,7 @@ export default class Map {
 
     public isColliding(x: number, y: number): boolean {
         if (this.isOutOfBounds(x, y)) return true;
-        if (this.data[this.coordToIndex(x, y)] < 1) return true;
+        if ((this.data[this.coordToIndex(x, y)] as number) < 1) return true;
 
         return this.grid[y][x] === 1;
     }
@@ -398,8 +410,8 @@ export default class Map {
      */
 
     public getTilesetFromId(tileId: number): TilesetInfo | undefined {
-        for (let index in this.tilesets)
-            if (tileId < this.tilesets[index].lastGID) return this.tilesets[index];
+        for (let tileset of this.tilesets)
+            if (tileId >= tileset.firstGid && tileId <= tileset.lastGid) return tileset;
 
         return undefined;
     }

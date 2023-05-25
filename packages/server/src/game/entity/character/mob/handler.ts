@@ -1,5 +1,7 @@
+import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Bubble } from '@kaetram/server/src/network/packets';
+import { Modules } from '@kaetram/common/network';
+import { Bubble } from '@kaetram/common/network/impl';
 
 import type Map from '../../../map/map';
 import type World from '../../../world';
@@ -64,7 +66,7 @@ export default class Handler {
         // This may get called simulatneously with the death callback, so we check here.
         if (this.mob.isDead()) return;
 
-        if (!this.mob.hasAttacker(attacker)) this.mob.addAttacker(attacker);
+        this.mob.addAttacker(attacker);
 
         if (!this.mob.combat.started) this.mob.combat.attack(this.mob.findNearestTarget());
     }
@@ -97,6 +99,9 @@ export default class Handler {
 
         // Stop the combat.
         this.mob.combat.stop();
+
+        // Clear status effects.
+        this.mob.status.clear();
 
         // Remove entity from chest area.
         this.mob.area?.removeEntity(this.mob, attacker);
@@ -219,6 +224,39 @@ export default class Handler {
      */
 
     protected handleCombatLoop(): void {
-        //
+        if (this.mob.instance === this.mob.target?.instance) {
+            log.general(`Mob ${this.mob.key} is attacking itself.`);
+
+            return this.mob.combat.stop();
+        }
+
+        // Parses through the attackers and removes them if they are too far away.
+        this.mob.forEachAttacker((attacker: Character) => {
+            /**
+             * If an attacker goes too far away from the mob then we remove him as
+             * an attacker. If he has not attacked the mob for a certain amount of
+             * time and he is not within the mob's attack range, then we remove him
+             * as an attacker.
+             */
+
+            if (
+                this.mob.getDistance(attacker) > this.mob.roamDistance * 2 ||
+                (!this.mob.isNearTarget() &&
+                    attacker.getLastAttack() > Modules.Constants.ATTACKER_TIMEOUT)
+            )
+                this.mob.removeAttacker(attacker);
+        });
+
+        // Ignore if we have only one attacker.
+        if (this.mob.getAttackerCount() < 2 || !this.mob.canChangeTarget()) return;
+
+        // Alternate targets if another one is nearby.
+        let newTarget = this.mob.getRandomAttacker();
+
+        // New target is too far away, so we ignore it.
+        if (this.mob.getDistance(newTarget) >= this.mob.attackRange) return;
+
+        // We have a new target, so we attack it.
+        this.mob.combat.attack(newTarget);
     }
 }

@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 
 .page {
-    cursor: url('/img/3/hand.png'), auto;
+    cursor: url('/img/hand.png'), auto;
     user-select: none;
 }
 
@@ -15,6 +15,33 @@
 #skills-list {
     position: absolute;
     overflow: auto;
+}
+
+#armour-slot-info {
+    text-align: right;
+}
+
+#arrows-count {
+    position: absolute;
+    font-family: AdvoCut, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+#profile-info {
+    position: absolute;
+    display: none;
+}
+
+#attack-style-list {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+}
+
+#guilds-button, #leaderboards-button {
+    position: absolute;
 }
 
 .profession-item {
@@ -37,10 +64,6 @@
 
     background-color: rgb(51 153 255 / 40%);
     border: 2px solid #373737;
-}
-
-#armour-slot-info {
-    text-align: right;
 }
 
 .profile-info {
@@ -85,20 +108,8 @@
 }
 
 .skill-experience {
-    background: linear-gradient(to left, #4F4, #080);
-    transition: .5s width ease;
-}
-
-#arrows-count {
-    position: absolute;
-    font-family: AdvoCut, sans-serif;
-    color: white;
-    text-align: center;
-}
-
-#profile-info {
-    position: absolute;
-    display: none;
+    background: linear-gradient(to left, #4f4, #080);
+    transition: 0.5s width ease;
 }
 
 .profile-info-title,
@@ -112,44 +123,43 @@
     position: absolute;
 }
 
-#attack-style-list {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    justify-content: center;
-}
-
 @each $size, $i in media.$sizes {
     @media ($size) {
         #state-page,
         .state-page {
             display: block;
-            background: url('/img/#{$i}/characterdialogsheet.png') 0 0;
+            background: url('/img/interface/characterdialogsheet.png') 0 0;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #abilities-page {
             display: none;
-            background: url('/img/#{$i}/characterdialogsheet.png') -124px * $i 0;
+            background: url('/img/interface/characterdialogsheet.png') -124px * $i 0;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #settings-page {
             display: none;
-            background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i 0;
+            background: url('/img/interface/characterdialogsheet.png') -248px * $i 0;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #quest-page {
             display: none;
-            background: url('/img/#{$i}/characterdialogsheet.png') -372px * $i 0;
+            background: url('/img/interface/characterdialogsheet.png') -372px * $i 0;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #guild-page {
             display: none;
-            background: url('/img/#{$i}/characterdialogsheet.png') -496px * $i 0;
+            background: url('/img/interface/characterdialogsheet.png') -496px * $i 0;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #skills-page {
             display: none;
-            background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i -217px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -248px * $i -217px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #profile-dialog,
@@ -193,21 +203,87 @@
             width: 21px * $i;
             height: 17px * $i;
 
-            background: url('/img/#{$i}/characterdialogsheet.png') 0 -257px * $i;
+            background: url('/img/interface/characterdialogsheet.png') 0 -257px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #equipment-button:hover {
-            background: url('/img/#{$i}/characterdialogsheet.png') -42px * $i -257px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -42px * $i -257px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #equipment-button:active,
         #equipment-button.active {
-            background: url('/img/#{$i}/characterdialogsheet.png') -21px * $i -257px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -21px * $i -257px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
+        }
+
+        #arrows-count {
+            top: 19px * $i;
+            left: 2px * $i;
+        }
+
+        #profile-level {
+            top: 8px * $i;
+        }
+
+        #profile-experience {
+            top: 29px * $i;
+        }
+
+        #guilds-button,
+        #leaderboards-button {
+            bottom: 8px * $i;
+        }
+
+        #guilds-button {
+            left: 6px * $i;
+        }
+
+        #leaderboards-button {
+            right: 6px * $i;
+        }
+
+        #guilds-button,
+        #leaderboards-button {
+            width: 14px * $i;
+            height: 15px * $i;
+
+            background: url('/img/interface/main.png') no-repeat;
+            background-position-y: -314px * $i;
+            background-size: calc(width('main.png') * $i);
+        }
+
+                #guilds-button {
+            background-position: -280px * $i -329px * $i;
+
+            &:hover {
+                background-position-x: -294px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -308px * $i;
+            }
+        }
+
+        #leaderboards-button {
+            background-position: -238px * $i -329px * $i;
+
+            &:hover {
+                background-position-x: -252px * $i;
+            }
+
+            &.active,
+            &:active {
+                background-position-x: -266px * $i;
+            }
         }
 
         .slot-background {
             z-index: -1;
-            background: url('/img/#{$i}/characterdialogsheet.png') -464px * $i -256px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -464px * $i -256px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .weapon-slot {
@@ -244,23 +320,10 @@
             top: 174px * $i;
             left: 80px * $i;
         }
-        
+
         .arrows-slot {
             top: 86px * $i;
             left: 79px * $i;
-        }
-
-        #arrows-count {
-            top: 19px * $i;
-            left: 2px * $i;
-        }
-
-        #profile-level {
-            top: 8px * $i;
-        }
-
-        #profile-experience {
-            top: 29px * $i;
         }
 
         .navigator {
@@ -277,7 +340,8 @@
             width: 21px * $i;
             height: 17px * $i;
 
-            background-image: url('/img/#{$i}/characterdialogsheet.png');
+            background-image: url('/img/interface/characterdialogsheet.png');
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .previous {
@@ -286,7 +350,7 @@
             background-position: 0 -240px * $i;
 
             &.disabled {
-                cursor: url('/img/3/hand.png'), auto;
+                cursor: url('/img/hand.png'), auto;
                 background-position: 0 -223px * $i;
             }
         }
@@ -297,7 +361,7 @@
             background-position: -21px * $i -223px * $i;
 
             &.disabled {
-                cursor: url('/img/3/hand.png'), auto;
+                cursor: url('/img/hand.png'), auto;
                 background-position: -21px * $i -240px * $i;
             }
         }
@@ -313,12 +377,14 @@
             width: 102px * $i;
             height: 31px * $i;
             padding-top: 3px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') -32px * $i -353px * $i;
+
+            background: url('/img/interface/characterdialogsheet.png') -32px * $i -353px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
 
             &:hover {
                 background-position: -144px * $i -353px * $i;
             }
-            
+
             &:active {
                 background-position: -144px * $i -400px * $i;
             }
@@ -345,39 +411,83 @@
         }
 
         .skill-image-accuracy {
-            background: url('/img/#{$i}/skills/accuracy.png');
+            background: url('/img/interface/skills/accuracy.png');
+            background-size: calc(width('skills/accuracy.png') * $i);
         }
 
         .skill-image-archery {
-            background: url('/img/#{$i}/skills/archery.png');
+            background: url('/img/interface/skills/archery.png');
+            background-size: calc(width('skills/archery.png') * $i);
         }
 
         .skill-image-health {
-            background: url('/img/#{$i}/skills/health.png');
+            background: url('/img/interface/skills/health.png');
+            background-size: calc(width('skills/health.png') * $i);
         }
 
         .skill-image-lumberjacking {
-            background: url('/img/#{$i}/skills/lumberjacking.png');
+            background: url('/img/interface/skills/lumberjacking.png');
+            background-size: calc(width('skills/lumberjacking.png') * $i);
         }
 
         .skill-image-magic {
-            background: url('/img/#{$i}/skills/magic.png');
+            background: url('/img/interface/skills/magic.png');
+            background-size: calc(width('skills/magic.png') * $i);
         }
 
         .skill-image-mining {
-            background: url('/img/#{$i}/skills/mining.png');
+            background: url('/img/interface/skills/mining.png');
+            background-size: calc(width('skills/mining.png') * $i);
         }
 
         .skill-image-strength {
-            background: url('/img/#{$i}/skills/strength.png');
+            background: url('/img/interface/skills/strength.png');
+            background-size: calc(width('skills/strength.png') * $i);
         }
 
         .skill-image-defense {
-            background: url('/img/#{$i}/skills/defense.png');
+            background: url('/img/interface/skills/defense.png');
+            background-size: calc(width('skills/defense.png') * $i);
         }
 
         .skill-image-fishing {
-            background: url('/img/#{$i}/skills/fishing.png');
+            background: url('/img/interface/skills/fishing.png');
+            background-size: calc(width('skills/fishing.png') * $i);
+        }
+
+        .skill-image-smithing {
+            background: url('/img/interface/skills/smithing.png');
+            background-size: calc(width('skills/smithing.png') * $i);
+        }
+
+        .skill-image-cooking {
+            background: url('/img/interface/skills/cooking.png');
+            background-size: calc(width('skills/cooking.png') * $i);
+        }
+
+        .skill-image-fletching {
+            background: url('/img/interface/skills/fletching.png');
+            background-size: calc(width('skills/fletching.png') * $i);
+        }
+
+        .skill-image-crafting {
+            background: url('/img/interface/skills/crafting.png');
+            background-size: calc(width('skills/crafting.png') * $i);
+        }
+
+        .skill-image-foraging {
+            background: url('/img/interface/skills/foraging.png');
+            background-size: calc(width('skills/foraging.png') * $i);
+        }
+
+        .skill-image-eating {
+            background: url('/img/interface/skills/eating.png');
+            background-size: calc(width('skills/eating.png') * $i);
+        }
+
+        .skill-image-loitering {
+            background: url('/img/interface/skills/loitering.png');
+            background-size: calc(width('skills/loitering.png') * $i);
         }
 
         #achievement-count,
@@ -400,43 +510,51 @@
         }
 
         .ability-icon-intimidate {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: 0 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .ability-icon-run {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -16px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .ability-icon-awareness {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -32px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .ability-icon-dualistsmark {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -48px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .ability-icon-hotshot {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -64px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .ability-icon-thickskin {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -80px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .ability-icon-precognition {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -96px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .ability-icon-secretcalling {
-            background-image: url('/img/#{$i}/abilityicons.png');
+            background-image: url('/img/interface/abilityicons.png');
             background-position: -112px * $i 1px;
+            background-size: calc(width('abilityicons.png') * $i);
         }
 
         .ability-icon-run,
@@ -450,7 +568,8 @@
                 background-position-y: -15px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position-y: -30px * $i;
             }
         }
@@ -462,8 +581,9 @@
             height: 6px * $i;
             margin-top: 10px * $i;
 
-            background-image: url('/img/#{$i}/characterdialogsheet.png');
+            background-image: url('/img/interface/characterdialogsheet.png');
             background-position: -97px * $i -242px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .ability-level1 {
@@ -573,14 +693,15 @@
             width: 92px * $i;
             height: 130px * $i;
 
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -528px * $i -304px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -528px * $i -304px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .profile-info-skill-image {
             width: 16px * $i;
             height: 16px * $i;
             margin-top: 10px * $i;
-            margin-left: 10px * $i;
+            margin-left: 9px * $i;
         }
 
         .profile-info-title {
@@ -607,13 +728,15 @@
         .attack-style-box {
             width: 23px * $i;
             height: 31px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -409px * $i -256px * $i; 
+            background: url('/img/interface/characterdialogsheet.png') -409px * $i -256px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
 
             &:hover {
                 background-position-x: -384px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position-x: -434px * $i;
             }
         }
@@ -626,55 +749,66 @@
         }
 
         .attack-style-stab {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -384px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -384px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-slash {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -403px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -403px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-defensive {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -422px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -422px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-crush {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -441px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -441px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-shared {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -460px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -460px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-hack {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -479px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -479px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-chop {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -498px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -498px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-accurate {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -517px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -517px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-fast {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -536px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -536px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-focused {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -555px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -555px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         .attack-style-longrange {
-            background: url('/img/#{$i}/characterdialogsheet.png') no-repeat -574px * $i -224px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -574px * $i -224px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
     }
 }
 
 @media (--lg) {
     #profile-dialog {
-        right: 34px;
-        bottom: 45px;
+        right: 118px;
+        bottom: 68px;
     }
 
     .profile-item-info {
@@ -688,8 +822,8 @@
 
 @media (--md) {
     #profile-dialog {
-        right: 70px;
-        bottom: 45px;
+        right: 78px;
+        bottom: 48px;
     }
 
     .profile-item-info {
@@ -704,7 +838,7 @@
 
 @media (--sm) {
     #profile-dialog {
-        right: 122px;
+        right: 128px;
         bottom: 99px;
         transform: scale(1.5);
     }

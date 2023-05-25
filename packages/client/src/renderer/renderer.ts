@@ -1,36 +1,21 @@
-import Tile from './tile';
-
+import Utils from '../utils/util';
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
 
-import { DarkMask, Lamp, Lighting, Vec2 } from 'illuminated';
 import { Modules } from '@kaetram/common/network';
+import { DarkMask, Vec2, Lamp, Lighting } from 'illuminated';
 
-import type { SerializedLight } from '@kaetram/common/types/light';
-import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
-import type Player from '../entity/character/player/player';
-import type Entity from '../entity/entity';
-import type Item from '../entity/objects/item';
-import type Sprite from '../entity/sprite';
+import type Equipment from '../entity/character/player/equipment';
 import type Game from '../game';
 import type Map from '../map/map';
 import type Camera from './camera';
 import type Splat from './infos/splat';
-
-interface RendererTile {
-    relativeTileId: number;
-    setWidth: number;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-interface RendererCell {
-    dx: number;
-    dy: number;
-    width: number;
-    height: number;
-}
+import type Entity from '../entity/entity';
+import type Sprite from '../entity/sprite';
+import type Item from '../entity/objects/item';
+import type Player from '../entity/character/player/player';
+import type { SerializedLight } from '@kaetram/common/types/light';
+import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
 
 interface RendererLight {
     origX: number;
@@ -41,140 +26,136 @@ interface RendererLight {
 }
 
 type RendererLamp = RendererLight & Lamp;
-// type RendererLighting = RendererLight & Lighting;
-interface RendererLighting extends RendererLight, Lighting {
+
+export type ContextType = '2d' | 'webgl';
+export interface RendererLighting extends RendererLight, Lighting {
     light: RendererLamp;
 }
 
-enum TileFlip {
-    Horizontal,
-    Vertical,
-    Diagonal
-}
-
-type ContextCallback = (context: CanvasRenderingContext2D) => void;
+export type ContextCallback = (context: CanvasRenderingContext2D) => void;
 
 export default class Renderer {
     public background = document.querySelector<HTMLCanvasElement>('#background')!;
-    private foreground = document.querySelector<HTMLCanvasElement>('#foreground')!;
-    private overlay = document.querySelector<HTMLCanvasElement>('#overlay')!;
-    private textCanvas = document.querySelector<HTMLCanvasElement>('#text-canvas')!;
-    private entitiesCanvas = document.querySelector<HTMLCanvasElement>('#entities')!;
-    private cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
+    protected foreground = document.querySelector<HTMLCanvasElement>('#foreground')!;
+    protected overlay = document.querySelector<HTMLCanvasElement>('#overlay')!;
+    protected textCanvas = document.querySelector<HTMLCanvasElement>('#text-canvas')!;
+    protected entities = document.querySelector<HTMLCanvasElement>('#entities')!;
+    protected cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
 
-    private zoomIn: HTMLElement = document.querySelector('#zoom-in')!;
-    private zoomOut: HTMLElement = document.querySelector('#zoom-out')!;
-
-    private entitiesContext: CanvasRenderingContext2D; // Entities
-
-    public backContext: CanvasRenderingContext2D; // Backgrond
-
-    private foreContext: CanvasRenderingContext2D; // Foreground
-    private overlayContext: CanvasRenderingContext2D; // Lighting
-    private textContext: CanvasRenderingContext2D; // Texts
-    private cursorContext: CanvasRenderingContext2D; // Cursor
-
-    private canvases: HTMLCanvasElement[] = [
+    // Store all canvases for easy iteration
+    protected canvases: HTMLCanvasElement[] = [
         this.background,
-        this.entitiesCanvas,
         this.foreground,
         this.overlay,
         this.textCanvas,
+        this.entities,
         this.cursor
     ];
 
-    private allContexts: CanvasRenderingContext2D[]; // All contexts available
-    private contexts: CanvasRenderingContext2D[]; // Contexts for drawing mouse, entities, text
-    private drawingContexts: CanvasRenderingContext2D[]; // For drawing the map.
+    // Create the contexts based on the canvases.
+    protected entitiesContext: CanvasRenderingContext2D = this.entities.getContext('2d')!;
+    protected overlayContext: CanvasRenderingContext2D = this.overlay.getContext('2d')!;
+    protected textContext: CanvasRenderingContext2D = this.textCanvas.getContext('2d')!;
+    protected cursorContext: CanvasRenderingContext2D = this.cursor.getContext('2d')!;
 
-    private lightings: RendererLighting[] = [];
+    protected allContexts = [
+        this.entitiesContext,
+        this.overlayContext,
+        this.textContext,
+        this.cursorContext
+    ];
 
-    private map: Map;
-    private camera: Camera;
+    // We split contexts into two arrays, one for tilemap rendering and one for the rest.
+    protected contexts = [this.entitiesContext, this.textContext, this.overlayContext];
 
-    public tileSize = 16; // Default fallback for tileSize
-    private actualTileSize = 48; // Default zoom of 3x * tileSize
-    private fontSize = 10;
-    private screenWidth = 0;
-    private screenHeight = 0;
-    public canvasHeight = 0;
+    // Zooming buttons
+    private zoomIn: HTMLElement = document.querySelector('#zoom-in')!;
+    private zoomOut: HTMLElement = document.querySelector('#zoom-out')!;
+
+    protected map: Map;
+    protected camera: Camera;
+
+    // Variables used for calculating multiple things
+    public tileSize = Utils.tileSize;
+    public actualTileSize = Utils.tileSize;
+
+    // Screen dimensions
+    public screenWidth = 0;
+    public screenHeight = 0;
+
+    // Canvas dimensions
     public canvasWidth = 0;
-    private time = Date.now();
-    private fps = 0;
-    private frameCount = 0;
-    private renderedFrame = [0, 0];
+    public canvasHeight = 0;
 
-    private animatedTiles: { [index: number]: Tile } = {};
-
-    private stopRendering = false;
+    // Animated tiles
     public animateTiles = true;
-    public debugging = false;
-    public drawNames = true;
-    public drawLevels = true;
+    private renderedFrame: number[] = [];
 
-    public mobile = isMobile();
-    private tablet = isTablet();
-
-    public forceRendering = false;
-
-    private tiles: { [id: string]: RendererTile } = {};
-    private cells: { [id: number]: RendererCell } = {};
-
-    private darkMask: DarkMask = new DarkMask({
+    // Lighting
+    protected lightings: RendererLighting[] = [];
+    protected darkMask: DarkMask = new DarkMask({
         lights: [],
         color: 'rgba(0, 0, 0, 0.84)'
     });
 
-    private shadowSprite!: Sprite;
-    private sparksSprite!: Sprite;
-    private silverMedal!: Sprite;
-    private goldMedal!: Sprite;
-    private crownArtist!: Sprite;
-    private crownTier1!: Sprite;
-    private crownTier2!: Sprite;
-    private crownTier3!: Sprite;
-    private crownTier4!: Sprite;
-    private crownTier5!: Sprite;
-    private crownTier6!: Sprite;
-    private crownTier7!: Sprite;
+    // Toggles for rendering
+    public debugging = false;
+    public stopRendering = false;
+    public forceRendering = false;
+    public drawNames = true;
+    public drawLevels = true;
 
-    public constructor(private game: Game) {
+    // Default values
+    public fontSize = 10;
+
+    // Detect functions
+    public mobile = isMobile();
+    public tablet = isTablet();
+
+    // FPS variables
+    protected time = Date.now();
+    protected fps = 0;
+    protected frameCount = 0;
+
+    // Static sprites
+    protected shadowSprite!: Sprite;
+    protected sparksSprite!: Sprite;
+    protected silverMedal!: Sprite;
+    protected goldMedal!: Sprite;
+    protected crownArtist!: Sprite;
+    protected crownTier1!: Sprite;
+    protected crownTier2!: Sprite;
+    protected crownTier3!: Sprite;
+    protected crownTier4!: Sprite;
+    protected crownTier5!: Sprite;
+    protected crownTier6!: Sprite;
+    protected crownTier7!: Sprite;
+
+    public constructor(protected game: Game, public type = 'canvas') {
         this.map = game.map;
         this.camera = game.camera;
 
         this.tileSize = game.map.tileSize;
         this.actualTileSize = this.tileSize * this.camera.zoomFactor;
 
-        // Grab the Canvas2D context from the HTML canvas.
-        this.entitiesContext = this.entitiesCanvas.getContext('2d')!; // Entities;
-        this.backContext = this.background.getContext('2d')!; // Background
-        this.foreContext = this.foreground.getContext('2d')!; // Foreground
-        this.overlayContext = this.overlay.getContext('2d')!; // Lighting
-        this.textContext = this.textCanvas.getContext('2d')!; // Texts
-        this.cursorContext = this.cursor.getContext('2d')!; // Cursor
+        // Load the sizes of the canvases
+        this.loadSizes();
 
-        // Store all the contexts in an array so we can parse when needed.
-        this.allContexts = [
-            this.entitiesContext,
-            this.backContext,
-            this.foreContext,
-            this.overlayContext,
-            this.textContext,
-            this.cursorContext
-        ];
+        // Load the static sprites
+        this.loadStaticSprites();
 
-        // We split contexts into two arrays, one for tilemap rendering and one for the rest.
-        this.contexts = [this.entitiesContext, this.textContext, this.overlayContext];
-        this.drawingContexts = [this.backContext, this.foreContext];
-
-        // Dark mask is used for the lighting system.
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-
+        // Event listeners for zooming in and out
         this.zoomIn.addEventListener('click', () => this.game.zoom(0.2));
         this.zoomOut.addEventListener('click', () => this.game.zoom(-0.2));
+    }
 
-        this.loadSizes();
-        this.loadStaticSprites();
+    /**
+     * Superclass implementation for the WebGL renderer. We start loading
+     * textures after the map has completed loading the tilesets.
+     */
+
+    public load(): void {
+        //
     }
 
     /**
@@ -221,43 +202,43 @@ export default class Renderer {
 
         if (!this.sparksSprite.loaded) this.sparksSprite.load();
 
-        this.silverMedal = this.game.sprites.get('silvermedal')!;
+        this.silverMedal = this.game.sprites.get('crowns/silvermedal')!;
 
         if (!this.silverMedal.loaded) this.silverMedal.load();
 
-        this.goldMedal = this.game.sprites.get('goldmedal')!;
+        this.goldMedal = this.game.sprites.get('crowns/goldmedal')!;
 
         if (!this.goldMedal.loaded) this.goldMedal.load();
 
-        this.crownArtist = this.game.sprites.get('crown-artist')!;
+        this.crownArtist = this.game.sprites.get('crowns/artist')!;
 
         if (!this.crownArtist.loaded) this.crownArtist.load();
 
-        this.crownTier1 = this.game.sprites.get('crown-tier1')!;
+        this.crownTier1 = this.game.sprites.get('crowns/tier1')!;
 
         if (!this.crownTier1.loaded) this.crownTier1.load();
 
-        this.crownTier2 = this.game.sprites.get('crown-tier2')!;
+        this.crownTier2 = this.game.sprites.get('crowns/tier2')!;
 
         if (!this.crownTier2.loaded) this.crownTier2.load();
 
-        this.crownTier3 = this.game.sprites.get('crown-tier3')!;
+        this.crownTier3 = this.game.sprites.get('crowns/tier3')!;
 
         if (!this.crownTier3.loaded) this.crownTier3.load();
 
-        this.crownTier4 = this.game.sprites.get('crown-tier4')!;
+        this.crownTier4 = this.game.sprites.get('crowns/tier4')!;
 
         if (!this.crownTier4.loaded) this.crownTier4.load();
 
-        this.crownTier5 = this.game.sprites.get('crown-tier5')!;
+        this.crownTier5 = this.game.sprites.get('crowns/tier5')!;
 
         if (!this.crownTier5.loaded) this.crownTier5.load();
 
-        this.crownTier6 = this.game.sprites.get('crown-tier6')!;
+        this.crownTier6 = this.game.sprites.get('crowns/tier6')!;
 
         if (!this.crownTier6.loaded) this.crownTier6.load();
 
-        this.crownTier7 = this.game.sprites.get('crown-tier7')!;
+        this.crownTier7 = this.game.sprites.get('crowns/tier7')!;
 
         if (!this.crownTier7.loaded) this.crownTier7.load();
     }
@@ -270,9 +251,6 @@ export default class Renderer {
      */
 
     public resize(): void {
-        // Clear cells to be redrawn.
-        this.cells = {};
-
         // Always check if we are on mobile on resizing.
         this.mobile = isMobile();
 
@@ -285,66 +263,26 @@ export default class Renderer {
         // Recalculate canvas sizes.
         this.loadSizes();
 
-        // Re-calculate visible animated tiles.
-        this.updateAnimatedTiles();
-
-        // Cursor may get stuck on when resizing from desktop to mobile proportions.
-        this.clearScreen(this.cursorContext);
-
         // Dimensions may mess with centration, so we force it.
         this.camera.centreOn(this.game.player);
 
         // Prevents blank screen flickers when resizing.
         this.forceRendering = true;
+
+        // Cursor may get stuck on when resizing from desktop to mobile proportions.
+        this.clearScreen(this.cursorContext);
     }
 
     /**
-     * Stops the rendering loop by setting the stopRendering flag to true.
-     * Clears all the contexts and fills them with a black background.
-     */
-
-    public stop(): void {
-        this.stopRendering = true;
-
-        this.forEachContext((context) => {
-            context.fillStyle = 'rgba(18, 16, 13, 1)';
-            context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-        });
-    }
-
-    /**
-     * Image smoothing is automatically applied to a 2D
-     * rendering canvas. We must manually disable it for
-     * each time we draw onto the context.
-     */
-
-    private removeSmoothing(): void {
-        this.forAllContexts((context) => {
-            context.imageSmoothingQuality = 'low';
-            context.imageSmoothingEnabled = false;
-        });
-    }
-
-    /**
-     * The rendering loop that clears all the contexts, and begins
-     * a new rendering one. Clear, save, draw, and restore are used
-     * when working with Canvas2D.
+     * Rendering function is implemented by each subclass implementation of the
+     * renderer class. This is called by the game loop to render the game.
      */
 
     public render(): void {
-        if (this.stopRendering) return;
-
-        // Clears and saves all the contexts
         this.clear();
         this.save();
 
         this.removeSmoothing();
-
-        /**
-         * Rendering related draws
-         */
-
-        this.draw();
 
         this.drawDebugging();
 
@@ -365,68 +303,7 @@ export default class Renderer {
         this.restore();
     }
 
-    /**
-     * Background and foreground drawing function. Here we iterate
-     * through all the tile visibles (every tile in the camera's view)
-     * and draw them onto the foreground and background canvases depending
-     * on the tileId's property (we compare to see if the tile id is that
-     * of a high tile in the map).
-     */
-
-    private draw(): void {
-        if (this.hasRenderedFrame()) return;
-
-        this.clearDrawing();
-        this.saveDrawing();
-
-        // Sets the view according to the camera.
-        this.updateDrawingView();
-
-        this.forEachVisibleTile((tile: RegionTile, index: number) => {
-            let flips: number[] = this.getFlipped(tile as RotatedTile);
-
-            // Extract the tileId from the animated region tile.
-            if (flips.length > 0) tile = (tile as RotatedTile).tileId;
-
-            // Determine the layer of the tile depending on if it is a high tile or not.
-            let isHighTile = this.map.isHighTile(tile as number),
-                context = isHighTile ? this.foreContext : this.backContext;
-
-            // Only do the lighting logic if there is an overlay.
-            if (this.game.overlays.hasOverlay()) {
-                let isLightTile = this.map.isLightTile(tile as number);
-
-                context = isLightTile ? this.overlayContext : context;
-            }
-
-            /**
-             * Draws the animated tiles first so they display behind potential
-             * high tiles. We check if the current index contains an animated tile
-             * and if we are currently animating tiles before proceeding.
-             */
-            if (index in this.animatedTiles && this.animateTiles) {
-                // Advance the timing of the animated tiles with the current epoch.
-                this.animatedTiles[index].animate(this.game.time);
-
-                // Prevent double draws when drawing flipped animated tiles.
-                if (flips.length === 0 && this.animatedTiles[index].isFlipped) return;
-
-                this.drawTile(
-                    context,
-                    this.animatedTiles[index].id,
-                    this.animatedTiles[index].index,
-                    flips
-                );
-            }
-
-            // Skip animated tiles unless we disable animations, then just draw the tile once.
-            if (!this.map.isAnimatedTile(tile as number) || !this.animateTiles)
-                this.drawTile(context, (tile as number) - 1, index, flips);
-        });
-
-        this.saveFrame();
-        this.restoreDrawing();
-    }
+    // -------------- Drawing Functions --------------
 
     /**
      * Draws the debugging menu when the global variable
@@ -508,22 +385,22 @@ export default class Renderer {
 
         // let posX = this.game.input.selectedX,
         //     posY = this.game.input.selectedY,
-        let tD = this.game.input.getTargetData(); // target data
+        let targetData = this.game.input.getTargetData(); // target data
 
-        if (tD) {
+        if (targetData) {
             this.entitiesContext.save();
             this.setCameraView(this.entitiesContext);
 
             this.entitiesContext.drawImage(
-                tD.sprite.image,
-                tD.x,
-                tD.y,
-                tD.width,
-                tD.height,
-                tD.dx,
-                tD.dy,
-                tD.dw,
-                tD.dh
+                targetData.sprite.image,
+                targetData.x,
+                targetData.y,
+                targetData.width,
+                targetData.height,
+                targetData.dx,
+                targetData.dy,
+                targetData.dw,
+                targetData.dh
             );
 
             this.entitiesContext.restore();
@@ -543,8 +420,7 @@ export default class Renderer {
 
         this.forEachVisibleEntity((entity: Entity) => {
             // Skip entities that aren't properly loaded or are invisible.
-            if (!entity.spriteLoaded || !entity.sprite || !entity.animation || !entity.isVisible())
-                return;
+            if (!entity.sprite?.loaded || !entity.animation || !entity.isVisible()) return;
 
             this.drawEntity(entity);
         });
@@ -562,7 +438,6 @@ export default class Renderer {
 
         this.game.info.forEachInfo((info: Splat) => {
             this.textContext.save();
-            this.setCameraView(this.textContext);
             this.textContext.globalAlpha = info.opacity;
             this.drawText(
                 `${info.getText()}`,
@@ -571,7 +446,8 @@ export default class Renderer {
                 true,
                 info.fill,
                 info.stroke,
-                26
+                26,
+                true
             );
             this.textContext.restore();
         });
@@ -620,7 +496,7 @@ export default class Renderer {
 
     private drawFPS(): void {
         this.calculateFPS();
-        this.drawText(`FPS: ${this.fps}`, 10, 61, false, 'white');
+        this.drawText(`[${this.type}] FPS: ${this.fps}`, 10, 61, false, 'white');
     }
 
     /**
@@ -770,8 +646,6 @@ export default class Renderer {
             );
         }
 
-        // // this.drawEntityBack(entity);
-
         this.entitiesContext.drawImage(
             entity.sprite.image,
             frame!.x,
@@ -805,84 +679,111 @@ export default class Renderer {
 
         if (!(entity instanceof Character)) return;
 
-        if (entity.isPlayer()) this.drawWeapon(entity as Player);
-        if (entity.hasEffect()) this.drawEffect(entity);
+        // Iterate through the drawable equipments and draw them.
+        if (entity.isPlayer())
+            (entity as Player).forEachEquipment(
+                (equipment: Equipment) => this.drawEquipment(entity as Player, equipment),
+                true
+            );
+
+        if (entity.hasActiveEffect()) this.drawEffects(entity);
     }
 
     /**
-     * Draws the weapon sprite on top of the player entity. We skip
-     * this function if there is no weapon, the player is dead, or
-     * they are teleporting.
-     * @param player The player we are drawing the weapon for.
+     * Responsible for drawing an equipment element on top of the player. This is
+     * done using the paperdoll method, each equipment is another sprite sheet
+     * that is drawn on top of the player's sprite.
+     * @param player The player we are drawing the equipment for.
+     * @param equipment The equipment information we are drawing.
      */
 
-    private drawWeapon(player: Player): void {
-        if (!player.hasWeapon() || player.dead || player.teleporting) return;
+    private drawEquipment(player: Player, equipment: Equipment): void {
+        if (player.dead || player.teleporting) return;
 
-        let weapon = this.game.sprites.get(player.getWeaponSpriteName());
-
-        if (!weapon) return;
-
-        if (!weapon.loaded) weapon.load();
-
-        let animation = player.animation!,
-            weaponAnimationData = weapon.animationData[animation.name];
-
-        if (!weaponAnimationData) return;
-
-        let { frame, row } = animation,
-            index =
-                frame.index < weaponAnimationData.length
-                    ? frame.index
-                    : frame.index % weaponAnimationData.length,
-            weaponX = weapon.width * index,
-            weaponY = weapon.height * row,
-            weaponWidth = weapon.width,
-            weaponHeight = weapon.height;
-
-        this.entitiesContext.drawImage(
-            weapon.image,
-            weaponX,
-            weaponY,
-            weaponWidth,
-            weaponHeight,
-            weapon.offsetX,
-            weapon.offsetY,
-            weaponWidth,
-            weaponHeight
-        );
-    }
-
-    /**
-     * Draws a special effect on top of the character.
-     * @param character The character we are drawing the effect of.
-     */
-
-    private drawEffect(character: Character): void {
-        let sprite = this.game.sprites.get(character.getActiveEffect());
+        // Equipment sprite based on the key of the slot.
+        let sprite = this.game.sprites.get(equipment.key);
 
         if (!sprite) return;
 
         if (!sprite.loaded) sprite.load();
 
-        let animation = character.getEffectAnimation()!,
-            { index } = animation.frame,
-            x = sprite.width * index,
-            y = sprite.height * animation.row;
+        this.drawSprite(player, sprite);
+    }
+
+    /**
+     * Extracts the animation frame and draws the provided sprite for the character.
+     * @param character The character used to determine the animation frames.
+     * @param sprite The sprite that we are drawing for the character.
+     */
+
+    private drawSprite(character: Character, sprite: Sprite): void {
+        let animation = character.animation!,
+            animationData = sprite.animations[animation.name],
+            { frame, row } = animation,
+            index =
+                frame.index < animationData.length
+                    ? frame.index
+                    : frame.index % animationData.length,
+            spriteX = sprite.width * index,
+            spriteY = sprite.height * row,
+            spriteWidth = sprite.width,
+            spriteHeight = sprite.height;
 
         this.entitiesContext.drawImage(
             sprite.image,
-            x,
-            y,
-            sprite.width,
-            sprite.height,
+            spriteX,
+            spriteY,
+            spriteWidth,
+            spriteHeight,
             sprite.offsetX,
             sprite.offsetY,
-            sprite.width,
-            sprite.height
+            spriteWidth,
+            spriteHeight
         );
+    }
 
-        animation.update(this.game.time);
+    /**
+     * Goes through all the status effects and draws them on top of the character.
+     * @param character The character we are drawing the effect of.
+     */
+
+    private drawEffects(character: Character): void {
+        for (let key of character.statusEffects) {
+            // Do not draw the freezing effect if the character has a snow potion effect.
+            if (key === Modules.Effects.Freezing && character.hasEffect(Modules.Effects.SnowPotion))
+                continue;
+
+            // Do not draw the burning effect if the character has a fire potion effect.
+            if (key === Modules.Effects.Burning && character.hasEffect(Modules.Effects.FirePotion))
+                continue;
+
+            let effect = character.getEffect(key);
+
+            if (!effect) continue;
+
+            let sprite = this.game.sprites.get(effect.key);
+
+            if (!sprite.loaded) sprite.load();
+
+            let { animation } = effect,
+                { index } = animation.frame,
+                x = sprite.width * index,
+                y = sprite.height * animation.row;
+
+            this.entitiesContext.drawImage(
+                sprite.image,
+                x,
+                y,
+                sprite.width,
+                sprite.height,
+                sprite.offsetX,
+                sprite.offsetY,
+                sprite.width,
+                sprite.height
+            );
+
+            animation.update(this.game.time);
+        }
     }
 
     /**
@@ -964,65 +865,51 @@ export default class Renderer {
     }
 
     /**
-     * Draws an itme name for a player or item entity.
+     * Responsible for drawing text above an entity. This includes the name, level,
+     * and additionally, item amounts and counters.
      * @param entity The entity we're drawing the name for.
      */
 
-    private drawName(entity: Player & Item): void {
-        if (
-            entity.hidden ||
-            entity.healthBarVisible ||
-            !entity.level ||
-            !entity.drawNames() ||
-            (!this.drawNames && !this.drawLevels)
-        )
-            return;
+    private drawName(entity: Character & Item): void {
+        if (entity.isPet()) return;
 
-        let colour = entity.wanted ? 'red' : 'white';
+        let x = entity.x + 8, // Default offsets
+            y = entity.y - 10,
+            colour = 'white',
+            stroke = 'rgba(0, 0, 0, 1)',
+            fontSize = 11;
 
-        // If entity has any rank aside from default then we use their colour.
-        if (entity.rank !== Modules.Ranks.None) colour = Modules.RankColours[entity.rank];
+        // Handle the counter if an entity has one.
+        if (entity.hasCounter())
+            return this.drawText(`${entity.counter}`, x, y, true, colour, stroke, fontSize, true);
 
-        // Draw the yellow name above the entity if it's the same entity as our current player.
+        // Handle the item amount if the entity is an item.
+        if (entity.isItem() && entity.count > 1)
+            return this.drawText(`${entity.count}`, x, y, true, colour, stroke, fontSize, true);
+
+        if (entity.hidden || entity.healthBarVisible || !(entity instanceof Character)) return;
+
+        let drawNames = this.drawNames && entity.drawNames(),
+            nameY = this.drawLevels ? y - 7 : y - 4,
+            levelY = this.drawLevels ? y : y - 7,
+            levelText = `Level ${entity.level}`;
+
+        // If there's a rank aside from default then we use that rank's colour.
+        if (entity.isPlayer() && entity.rank !== Modules.Ranks.None)
+            colour = Modules.RankColours[entity.rank];
+
+        // If the entity is the same as our character, we draw a gold name.1
         if (entity.instance === this.game.player.instance) colour = 'rgba(252,218,92, 1)';
 
+        // If an entity has a custom name colour we use that.
         if (entity.nameColour) colour = entity.nameColour;
 
-        this.textContext.save();
-        this.setCameraView(this.textContext);
-        this.textContext.font = '11px AdvoCut';
+        // Draw the name if we're drawing names.
+        if (drawNames) this.drawText(entity.name, x, nameY, true, colour, stroke, fontSize, true);
 
-        if (entity.hasCounter) {
-            // TODO - Move this countdown elsewhere.
-            if (this.game.time - entity.countdownTime > 1000) {
-                entity.countdownTime = this.game.time;
-                entity.counter--;
-            }
-
-            if (entity.counter <= 0) entity.hasCounter = false;
-
-            this.drawText(entity.counter.toString(), entity.x + 8, entity.y - 10, true, colour);
-        } else {
-            let x = entity.x + 8,
-                y = entity.y - Math.floor(entity.sprite.height / 5);
-
-            if (this.drawNames && entity instanceof Character) {
-                let nameY = this.drawLevels && !entity.isNPC() ? y - 7 : y - 4;
-
-                this.drawText(entity.name, x, nameY, true, colour, 'rbga(0, 0, 0, 1)');
-
-                // Draw the medal if the entity has one.
-                if (entity.hasMedal()) this.drawMedal(entity.getMedalKey(), x, nameY);
-            }
-
-            if (this.drawLevels && (entity.isMob() || entity.isPlayer()))
-                this.drawText(`Level ${entity.level}`, x, y, true, colour, 'rbga(0, 0, 0, 1)');
-
-            if (entity.isItem() && entity.count > 1)
-                this.drawText(entity.count.toString(), x, y, true, colour);
-        }
-
-        this.textContext.restore();
+        // Draw the level if we're drawing levels.
+        if (this.drawLevels)
+            this.drawText(levelText, x, levelY, true, colour, stroke, fontSize, true);
     }
 
     private drawMinigameGUI(): void {
@@ -1072,7 +959,7 @@ export default class Renderer {
         }
     }
 
-    private drawLighting(lighting: RendererLighting): void {
+    protected drawLighting(lighting: RendererLighting): void {
         if (lighting.relative) {
             let lightX =
                     (lighting.light.origX - this.camera.x / this.tileSize) * this.actualTileSize,
@@ -1090,237 +977,25 @@ export default class Renderer {
         lighting.render(this.overlayContext);
     }
 
-    /**
-     * Primitive drawing functions
-     */
+    // -------------- Drawing Methods --------------
 
     /**
-     * Draws a tile with a specified tileId, at a specified index. The flips
-     * represent an array of transformations that the tile can undergo. If the
-     * array is empty, then there are no transformations.
-     * @param context The canvas that we are drawing the tile on.
-     * @param tileId The tile id is used to extract the tile from the tileset.
-     * @param cellId The cell id is the index of the tile in the map.
-     * @param flips An array containing transformations the tile will undergo.
+     * Draws a highlight about a cell.
+     * @param x The x grid coordinate of the cell.
+     * @param y The y grid coordinate of the cell.
+     * @param colour The colour in rgba format.
      */
 
-    private drawTile(
-        context: CanvasRenderingContext2D,
-        tileId: number,
-        index: number,
-        flips: number[] = []
-    ): void {
-        if (tileId < 0) return;
-
-        let tileset = this.map.getTilesetFromId(tileId);
-
-        if (!tileset) return;
-
-        /**
-         * To prevent redrawing and reculating the same tile, we
-         * cache the tileId in our list of tiles. These are heavy
-         * calculations that we attempt to prevent from occurring
-         * every frame. The same applies for the cells below.
-         */
-
-        if (!(tileId in this.tiles)) {
-            let setWidth = tileset.width / this.tileSize,
-                relativeTileId = tileId - tileset.firstGID;
-
-            this.tiles[tileId] = {
-                relativeTileId,
-                setWidth,
-                x: this.getX(relativeTileId + 1, setWidth) * this.tileSize,
-                y: Math.floor(relativeTileId / setWidth) * this.tileSize,
-                width: this.tileSize,
-                height: this.tileSize
-            };
-        }
-
-        /**
-         * Cell cache stores data about every index coordinate the player
-         * has explored. This may create overhead in terms of memory usage,
-         * but it is a necessary optimization.
-         */
-
-        if (!(index in this.cells) || flips.length > 0)
-            this.cells[index] = {
-                dx: this.getX(index + 1, this.map.width) * this.actualTileSize,
-                dy: Math.floor(index / this.map.width) * this.actualTileSize,
-                width: this.actualTileSize,
-                height: this.actualTileSize
-            };
-
-        this.drawImage(context, tileset, this.tiles[tileId], this.cells[index], flips);
+    private drawCellHighlight(x: number, y: number, colour: string): void {
+        this.drawCellRect(x * this.actualTileSize, y * this.actualTileSize, colour);
     }
 
     /**
-     * Responsible for drawing an image at a specified tile index.
-     * @param context The Canvas2D context we are drawing the image on.
-     * @param image The image source to draw from (tileset).
-     * @param tile The renderer tile containing information such as x, y, width, height, etc.
-     * @param cell The renderer cell containing information such as dx, dy, width, height, flips.
+     * Drawns a cell rectangle at a specified position (relative to the zooming.).
+     * @param x The x coordinate of the cell.
+     * @param y The y coordinate of the cell.
+     * @param colour The colour in rgba format.
      */
-
-    private drawImage(
-        context: CanvasRenderingContext2D,
-        image: CanvasImageSource,
-        tile: RendererTile,
-        cell: RendererCell,
-        flips: number[] = []
-    ): void {
-        let dx = 0,
-            dy = 0,
-            isFlipped = flips.length > 0;
-
-        /**
-         * A tile rotation or flip is a combination of horizontal
-         * and vertical flips, with a transpose that rotates the tile
-         * 90 degrees. A transpose in our case is a rotation, followed by
-         * a horizontal flip. When a tile undergoes any transformation,
-         * we use these combinations to change its drawing.
-         */
-
-        if (isFlipped) {
-            ({ dx, dy } = cell);
-
-            // Save the context when we begin tile translations.
-            context.save();
-
-            // Store our delta x if we need to transpose.
-            let tempX = dx;
-
-            // Iterate through every type of flip in our array.
-            for (let index = 0; index < flips.length; index++)
-                switch (flips[index]) {
-                    case TileFlip.Horizontal: {
-                        // Flip the context2d horizontally
-                        dx = -dx - cell.width;
-                        context.scale(-1, 1);
-
-                        break;
-                    }
-
-                    case TileFlip.Vertical: {
-                        // Flip the context2d vertically
-                        dy = -dy - cell.height;
-                        context.scale(1, -1);
-
-                        break;
-                    }
-
-                    case TileFlip.Diagonal: {
-                        // A diagonal flip is actually a transpose of 90deg clockwise.
-                        context.rotate(Math.PI / 2);
-                        context.translate(0, -cell.height);
-
-                        (dx = dy), (dy = -tempX);
-
-                        /**
-                         * Explanation: After we perform a diagonal permutation (that is, we rotate the tile
-                         * 90 degrees to the right, the horizontal and vertical flags become inverted). That is,
-                         * performing a horizontal flip after rotating performs a vertical flip when observed
-                         * in the rendering context. The following ensures that a horizontal flip is performed only
-                         * when the next available flip is horizontal (essentially performing two horizontals in a row.)
-                         */
-
-                        if (flips[index + 1] === TileFlip.Horizontal)
-                            flips.push(TileFlip.Horizontal);
-                        else flips.push(TileFlip.Vertical);
-
-                        break;
-                    }
-                }
-        }
-
-        context.drawImage(
-            image,
-            tile.x, // Source X
-            tile.y, // Source Y
-            tile.width, // Source Width
-            tile.height, // Source Height
-            dx || cell.dx, // Destination X
-            dy || cell.dy, // Destination Y
-            cell.width, // Destination Width
-            cell.height // Destination Height
-        );
-
-        if (isFlipped) context.restore();
-    }
-
-    private drawText(
-        text: string,
-        x: number,
-        y: number,
-        centered: boolean,
-        colour: string,
-        strokeColour?: string,
-        fontSize: number = this.fontSize
-    ): void {
-        let strokeSize = 3,
-            context = this.textContext;
-
-        context.save();
-
-        if (centered) context.textAlign = 'center';
-
-        // Decrease font size relative to zoom out.
-        fontSize += this.camera.zoomFactor * 2;
-
-        context.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
-        context.lineWidth = strokeSize;
-        context.font = `${fontSize}px AdvoCut`;
-        context.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
-        context.fillStyle = colour || 'white';
-        context.fillText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
-
-        context.restore();
-    }
-
-    /**
-     * Iterates through all the currently visible tiles and appends tiles
-     * that are animated to our list of animated tiles. This function ensures
-     * that animated tiles are initialzied only once and stored for the
-     * duration of the client's session.
-     */
-
-    public updateAnimatedTiles(): void {
-        if (!this.animateTiles) return;
-
-        this.forEachVisibleTile((tile: RegionTile, index: number) => {
-            let isFlipped = this.isFlipped(tile as RotatedTile);
-
-            if (isFlipped) tile = (tile as RotatedTile).tileId;
-
-            /**
-             * We don't want to reinitialize animated tiles that already exist
-             * and are within the visible camera proportions. This way we can parse
-             * it every time the tile moves slightly.
-             */
-
-            if (!this.map.isAnimatedTile(tile as number)) return;
-
-            /**
-             * Push the pre-existing tiles.
-             */
-
-            if (!(index in this.animatedTiles))
-                this.animatedTiles[index] = new Tile(
-                    tile as number,
-                    index,
-                    this.map.getTileAnimation(tile as number),
-                    isFlipped
-                );
-        }, 2);
-    }
-
-    /**
-     * Temporary solution for synchronizing animated tiles.
-     */
-
-    public resetAnimatedTiles(): void {
-        for (let tile of Object.values(this.animatedTiles)) tile.animationIndex = 0;
-    }
 
     private drawCellRect(x: number, y: number, colour: string): void {
         this.entitiesContext.save();
@@ -1336,9 +1011,48 @@ export default class Renderer {
         this.entitiesContext.restore();
     }
 
-    private drawCellHighlight(x: number, y: number, colour: string): void {
-        this.drawCellRect(x * this.actualTileSize, y * this.actualTileSize, colour);
+    /**
+     * Draws text at a specified position (relative to the zooming.).
+     * @param text The string text to draw.
+     * @param x The x coordinate of the text.
+     * @param y The y coordinate of the text.
+     * @param centered Whether or not we want the text to be centered.
+     * @param colour The colour of the text in rgba format.
+     * @param strokeColour The colour of the stroke in rgba format.
+     * @param fontSize (Optional) The font size of the text.
+     */
+
+    private drawText(
+        text: string,
+        x: number,
+        y: number,
+        centered: boolean,
+        colour: string,
+        strokeColour?: string,
+        fontSize: number = this.fontSize,
+        setViews = false
+    ): void {
+        let strokeSize = 3;
+
+        this.textContext.save();
+
+        if (centered) this.textContext.textAlign = 'center';
+        if (setViews) this.setCameraView(this.textContext);
+
+        // Decrease font size relative to zoom out.
+        fontSize += this.camera.zoomFactor * 2;
+
+        this.textContext.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
+        this.textContext.lineWidth = strokeSize;
+        this.textContext.font = `${fontSize}px AdvoCut`;
+        this.textContext.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
+        this.textContext.fillStyle = colour || 'white';
+        this.textContext.fillText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
+
+        this.textContext.restore();
     }
+
+    // -------------- Light Management --------------
 
     /**
      * Calculates the dark mask effect for the overlay.
@@ -1413,36 +1127,12 @@ export default class Renderer {
     }
 
     /**
-     * Primordial Rendering functions
-     */
-
-    private clear(): void {
-        this.forEachContext((context) =>
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-        );
-    }
-
-    private clearDrawing(): void {
-        this.forEachDrawingContext((context) =>
-            context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-        );
-    }
-
-    private restore(): void {
-        this.forEachContext((context) => context.restore());
-    }
-
-    private restoreDrawing(): void {
-        this.forEachDrawingContext((context) => context.restore());
-    }
-
-    /**
      * Checks whether or not the current frame has already been rendererd in order
      * to prevent drawing when there is no movement during low power mode.
      * @returns Whether or not the current frame has been rendered.
      */
 
-    private hasRenderedFrame(): boolean {
+    protected hasRenderedFrame(): boolean {
         if (this.forceRendering || !this.isLowPowerMode()) return false;
 
         if (this.stopRendering) return true;
@@ -1450,12 +1140,44 @@ export default class Renderer {
         return this.renderedFrame[0] === this.camera.x && this.renderedFrame[1] === this.camera.y;
     }
 
-    private save(): void {
-        this.forEachContext((context) => context.save());
+    // -------------- Context Management --------------
+
+    /**
+     * Image smoothing is automatically applied to a 2D
+     * rendering canvas. We must manually disable it for
+     * each time we draw onto the context.
+     */
+
+    private removeSmoothing(): void {
+        this.forAllContexts((context) => {
+            context.imageSmoothingQuality = 'low';
+            context.imageSmoothingEnabled = false;
+        });
     }
 
-    private saveDrawing(): void {
-        this.forEachDrawingContext((context) => context.save());
+    /**
+     * Iterates through each context and clears the entire frame.
+     */
+
+    private clear(): void {
+        this.forEachContext(this.clearScreen);
+    }
+
+    /**
+     * Clears the screen given a specified context.
+     * @param context The context that we want to clear the contents of.
+     */
+
+    protected clearScreen(context: CanvasRenderingContext2D): void {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    }
+
+    /**
+     * Iterates through each context and saves the current state.
+     */
+
+    private save(): void {
+        this.forEachContext((context: CanvasRenderingContext2D) => context.save());
     }
 
     /**
@@ -1463,7 +1185,7 @@ export default class Renderer {
      * during low power mode.
      */
 
-    private saveFrame(): void {
+    protected saveFrame(): void {
         if (!this.isLowPowerMode()) return;
 
         this.renderedFrame[0] = this.camera.x;
@@ -1473,34 +1195,17 @@ export default class Renderer {
     }
 
     /**
-     * Rendering Functions
+     * Restores all contexts to their previous values (to when we last saved).
      */
 
-    private updateDrawingView(): void {
-        this.forEachDrawingContext((context) => this.setCameraView(context));
+    private restore(): void {
+        this.forEachContext((context: CanvasRenderingContext2D) => context.restore());
     }
 
-    private setCameraView(context: CanvasRenderingContext2D): void {
-        if (!this.camera || this.stopRendering) return;
-
-        context.translate(
-            -this.camera.x * this.camera.zoomFactor,
-            -this.camera.y * this.camera.zoomFactor
-        );
-    }
-
-    private clearScreen(context: CanvasRenderingContext2D): void {
-        context.clearRect(
-            0,
-            0,
-            this.entitiesContext.canvas.width,
-            this.entitiesContext.canvas.height
-        );
-    }
+    // -------------- Setters --------------
 
     /**
-     * Changes the brightness at a canvas style level for each
-     * canvas available.
+     * Changes the brightness at a canvas style level for each canvas available.
      * @param level The level of the brightness.
      */
 
@@ -1513,16 +1218,102 @@ export default class Renderer {
     }
 
     /**
-     * Miscellaneous functions
+     * Synchronizes the camera view onto the a specified context. This translates
+     * the context relative to where the camera is currently positioned.
+     * @param context The context that we are setting the camera view for.
      */
 
-    private getX(index: number, width: number): number {
+    protected setCameraView(context: CanvasRenderingContext2D): void {
+        // Stop if we are not rendering or if there is no camera.
+        if (!this.camera || this.stopRendering) return;
+
+        context.translate(
+            -this.camera.x * this.camera.zoomFactor,
+            -this.camera.y * this.camera.zoomFactor
+        );
+    }
+
+    // -------------- Getters and Checkers --------------
+
+    protected getX(index: number, width: number): number {
         if (index === 0) return 0;
 
         return index % width === 0 ? width - 1 : (index % width) - 1;
     }
 
-    private getMedal(key: string): Sprite | undefined {
+    /**
+     * Checks whether a light source is in the radius of the camera.
+     * @param lighting The light source we are checking for.
+     * @returns Whether or not the light source is in the camera radius.
+     */
+
+    private inRadius(lighting: RendererLighting): boolean {
+        let position = {
+            x: lighting.light.origX,
+            y: lighting.light.origY,
+            diff: lighting.light.diff
+        };
+
+        return (
+            position.x > this.camera.gridX - position.diff &&
+            position.x < this.camera.gridX + this.camera.gridWidth + position.diff &&
+            position.y > this.camera.gridY - position.diff &&
+            position.y < this.camera.gridY + this.camera.gridHeight + position.diff
+        );
+    }
+
+    /**
+     * A flipped tile is any tile that contains a flip
+     * flag or transpose flag.
+     * @param tileInfo Tile data received from the server.
+     * @returns Whether or not the tile contains and flip flags.
+     */
+
+    protected isFlipped(tileInfo: RotatedTile): boolean {
+        if (!tileInfo) return false;
+
+        return tileInfo.v || tileInfo.h || tileInfo.d;
+    }
+
+    /**
+     * Low power mode is activated when both the camera centration and
+     * animated tiles are turned off. This is for devices that cannot
+     * sustain the constant re-drawing of the frame every second.
+     */
+
+    protected isLowPowerMode(): boolean {
+        return !this.camera.isCentered() && !this.animateTiles;
+    }
+
+    /**
+     * Checks if the currently request coordinates are that of a cell
+     * that was already selected (has the animation onto it). We want
+     * to prevent drawing a target cell onto a cell that's being selected.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @returns Whether the x and y coordinates are the same as the input
+     * selected x and y coordinates.
+     */
+
+    private isSelectedCell(x: number, y: number): boolean {
+        return this.game.input.selectedX === x && this.game.input.selectedY === y;
+    }
+
+    /**
+     * @returns Whether the current rendering engine is WebGL.
+     */
+
+    public isWebGl(): boolean {
+        return this.type === 'webgl';
+    }
+
+    /**
+     * Given a key we return the sprite associated with the medal.
+     * @param key The key of the medal.
+     * @returns A sprite element or undefined if the key is invalid.
+     */
+
+    protected getMedal(key: string): Sprite | undefined {
         switch (key) {
             case 'goldmedal': {
                 return this.goldMedal;
@@ -1567,82 +1358,14 @@ export default class Renderer {
     }
 
     /**
-     * A flipped tile is any tile that contains a flip
-     * flag or transpose flag.
-     * @param tileInfo Tile data received from the server.
-     * @returns Whether or not the tile contains and flip flags.
+     * Creates a partial lamp object given the specified data.
+     * @param x The x grid position of the light.
+     * @param y The y grid position of the light.
+     * @param distance How far the light can reach.
+     * @param diffuse How much the light can diffuse.
+     * @param color The color of the light.
+     * @returns A partial lamp object.
      */
-
-    private isFlipped(tileInfo: RotatedTile): boolean {
-        return tileInfo.v || tileInfo.h || tileInfo.d;
-    }
-
-    /**
-     * Checks if the currently request coordinates are that of a cell
-     * that was already selected (has the animation onto it). We want
-     * to prevent drawing a target cell onto a cell that's being selected.
-     * @param x The x grid coordinate we are checking.
-     * @param y The y grid coordinate we are checking.
-     * @returns Whether the x and y coordinates are the same as the input
-     * selected x and y coordinates.
-     */
-
-    private isSelectedCell(x: number, y: number): boolean {
-        return this.game.input.selectedX === x && this.game.input.selectedY === y;
-    }
-
-    /**
-     * Low power mode is activated when both the camera centration and
-     * animated tiles are turned off. This is for devices that cannot
-     * sustain the constant re-drawing of the frame every second.
-     */
-
-    private isLowPowerMode(): boolean {
-        return !this.camera.isCentered() && !this.animateTiles;
-    }
-
-    private inRadius(lighting: RendererLighting): boolean {
-        let position = {
-            x: lighting.light.origX,
-            y: lighting.light.origY,
-            diff: lighting.light.diff
-        };
-
-        return (
-            position.x > this.camera.gridX - position.diff &&
-            position.x < this.camera.gridX + this.camera.gridWidth + position.diff &&
-            position.y > this.camera.gridY - position.diff &&
-            position.y < this.camera.gridY + this.camera.gridHeight + position.diff
-        );
-    }
-
-    public getMiddle(): Position {
-        return {
-            x: this.canvasWidth / 2,
-            y: this.canvasHeight / 2
-        };
-    }
-
-    /**
-     * Checks if a tile is a flipped tile and extracts
-     * all the flags based on the tile data. Returns an
-     * array containing all the flip flags.
-     * @param tile The region tile we are checking.
-     * @returns An array containing all flip flags in order.
-     */
-
-    public getFlipped(tile: RotatedTile): number[] {
-        let flips: number[] = [];
-
-        // Return empty if tile doesn't contain flip flags.
-        if (!this.isFlipped(tile)) return flips;
-
-        if (tile.v) flips.push(TileFlip.Vertical);
-        if (tile.d) flips.push(TileFlip.Diagonal);
-        if (tile.h) flips.push(TileFlip.Horizontal);
-
-        return flips;
-    }
 
     private getLightData(
         x: number,
@@ -1663,63 +1386,46 @@ export default class Renderer {
         };
     }
 
-    /**
-     * Setters
-     */
+    // -------------- Update functions --------------
 
     /**
-     * Iterates through all the available contexts and returns them.
-     * @param callback THe context current being iterated.
+     * Superclass implementation for updating animated tiles. These are
+     * implemented by the Canvas2D rendering engine to update the
+     * animated tiles currently within the player's field of vision.
      */
 
-    private forAllContexts(callback: ContextCallback): void {
-        for (let context of Object.values(this.allContexts)) callback(context);
+    public updateAnimatedTiles(): void {
+        //
     }
 
     /**
-     * Iterates through all of the contexts used for drawing mouse, entities, and text.
-     * @param callback The context being iterated.
+     * Superclass implementation for resetting the animated tiles.
      */
 
-    private forEachContext(callback: ContextCallback): void {
-        for (let context of Object.values(this.contexts)) callback(context);
+    public resetAnimatedTiles(): void {
+        //
     }
 
     /**
-     * Iterates through all the drawing contexts (backContext and foreContext);
-     * @param callback The context being iterated.
+     * Superclass implementation for updating the tile at a specified
+     * index. This is implemented by the WebGL renderer to update the
+     * tile in the buffer.
+     * @param index The index at which to update the tile.
+     * @param data The data with which to update the tile.
      */
 
-    private forEachDrawingContext(callback: ContextCallback): void {
-        for (let context of Object.values(this.drawingContexts)) callback(context);
+    public setTile(_index: number, _data: RegionTile): void {
+        // unimplemented
     }
 
     /**
-     * Iterates through all of the canvases available. Generally used for
-     * updating dimensions.
-     * @param callback Canvas currently being iterated.
+     * Superclass implementation used by the WebGL renderer when we
+     * want to update the texture information. This is used for
+     * updating the tile layer texture for each layer.
      */
 
-    private forEachCanvas(callback: (canvas: HTMLCanvasElement) => void): void {
-        for (let canvas of Object.values(this.canvases)) callback(canvas);
-    }
-
-    /**
-     * Iterates through each light currently loaded.
-     * @param callback The light currently being iterated.
-     */
-
-    private forEachLighting(callback: (lighting: RendererLighting) => void): void {
-        for (let lighting of Object.values(this.lightings)) callback(lighting);
-    }
-
-    /**
-     * Iterates through each of the animated tiles.
-     * @param callback Returns the tile object for that animated tile.
-     */
-
-    private forEachAnimatedTile(callback: (tile: Tile) => void): void {
-        for (let tile of Object.values(this.animatedTiles)) callback(tile);
+    public bindTileLayers(): void {
+        //
     }
 
     /**
@@ -1729,7 +1435,7 @@ export default class Renderer {
      * @param offset How much to look outside the boundaries of the map.
      */
 
-    private forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
+    protected forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
         this.camera.forEachVisiblePosition((x, y) => {
             if (!this.map.isOutOfBounds(x, y)) callback(this.map.coordToIndex(x, y));
         }, offset);
@@ -1744,7 +1450,7 @@ export default class Renderer {
      * @param offset How much to look outside the visible camera proportions.
      */
 
-    private forEachVisibleTile(
+    protected forEachVisibleTile(
         callback: (data: RegionTile, index: number) => void,
         offset?: number
     ): void {
@@ -1764,12 +1470,53 @@ export default class Renderer {
      * @param callback The entity object currently being iterated.
      */
 
-    private forEachVisibleEntity(callback: (entity: Entity) => void): void {
+    protected forEachVisibleEntity(callback: (entity: Entity) => void): void {
         let { grids } = this.game.entities;
 
         this.camera.forEachVisiblePosition((x, y) => {
             if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
                 for (let entity of Object.values(grids.renderingGrid[y][x])) callback(entity);
         });
+    }
+
+    /**
+     * Iterates through each light currently loaded.
+     * @param callback The light currently being iterated.
+     */
+
+    private forEachLighting(callback: (lighting: RendererLighting) => void): void {
+        for (let lighting in this.lightings) callback(this.lightings[lighting]);
+    }
+
+    /**
+     * Iterates through all of the canvases available. Generally used for
+     * updating dimensions.
+     * @param callback Canvas currently being iterated.
+     */
+
+    protected forEachCanvas(callback: (canvas: HTMLCanvasElement) => void): void {
+        for (let canvas in this.canvases) callback(this.canvases[canvas]);
+    }
+
+    /**
+     * Iterates through all of the drawing contexts available.
+     * We cast `CanvasRenderingContext2D` because this is the subclass implementation
+     * that will use those variants of the contexts.
+     * @param callback The context being iterated.
+     */
+
+    private forAllContexts(callback: ContextCallback): void {
+        for (let context in this.allContexts)
+            callback(this.allContexts[context] as CanvasRenderingContext2D);
+    }
+
+    /**
+     * Iterates through all of the contexts used for drawing mouse, entities, and text.
+     * @param callback The context being iterated.
+     */
+
+    private forEachContext(callback: ContextCallback): void {
+        for (let context in this.contexts)
+            callback(this.contexts[context] as CanvasRenderingContext2D);
     }
 }

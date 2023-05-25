@@ -1,9 +1,7 @@
 import Timer from '../../utils/timer';
 
-import $ from 'jquery';
-
 export default class Blob {
-    public element: JQuery;
+    public element: HTMLElement;
     public duration = 5000;
 
     private timer: Timer;
@@ -33,7 +31,12 @@ export default class Blob {
         // Reset timer
         this.timer.time = time;
 
-        $(this.element).find('p').html(text);
+        let textElement = this.element.querySelector('p')!;
+
+        if (!textElement) return;
+
+        // Update text
+        textElement.innerHTML = text;
     }
 
     /**
@@ -47,24 +50,37 @@ export default class Blob {
     }
 
     /**
-     * Removes the JQuery element from the DOM.
+     * Removes the element from the DOM.
      */
 
     public destroy(): void {
-        $(this.element).remove();
+        this.element.remove();
     }
 
     /**
-     * Creates a JQuery HTML element of the bubble with the specified
-     * id and message contents.
-     * @param instance Bubble's identifier, generally the entity's instance.
-     * @param message Message that we are displaying in the bubble.
-     * @returns A JQuery element that is appended to the container.
+     * Creates a HTMLElement given the specified instance and message.
+     * @param instance The instance of the blob, generally the entity's instance.
+     * @param message The message we want to display in the blob.
      */
 
-    public createBlob(instance: string, message: string): JQuery {
-        return $(
-            `<div id="${instance}" class="bubble"><p>${message}</p><div class="bubble-tip"></div></div>`
-        );
+    private createBlob(instance: string, message: string): HTMLElement {
+        let blob = document.createElement('div'),
+            tip = document.createElement('div'),
+            text = document.createElement('p');
+
+        // Add the identifiers and classes to the blob.
+        blob.id = instance;
+        blob.classList.add('bubble');
+
+        // Add the identifiers and classes to the tip.
+        tip.classList.add('bubble-tip');
+
+        // Add the message to the text element.
+        text.innerHTML = message;
+
+        // Combine elements and return the result.
+        blob.append(text, tip);
+
+        return blob;
     }
 }

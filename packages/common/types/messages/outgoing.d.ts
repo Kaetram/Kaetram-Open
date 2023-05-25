@@ -1,15 +1,17 @@
-import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
-import type { Modules, Opcodes } from '../../network';
-import type { AbilityData, SerializedAbility } from '../ability';
-import type { EntityData, EntityDisplayInfo } from '../entity';
-import type { EquipmentData, SerializedEquipment } from '../equipment';
+import type { Decoration, ListInfo, UpdateInfo } from '../guild';
 import type { Friend } from '../friends';
 import type { HitData } from '../info';
 import type { SerializedLight } from '../light';
 import type { PlayerData } from '../player';
 import type { QuestData } from '../quest';
-import type { SerializedSkills, SkillData } from '../skills';
+import type { Modules, Opcodes } from '../../network';
 import type { SerializedStoreItem } from '../stores';
+import type { EntityData, EntityDisplayInfo } from '../entity';
+import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
+import type { SerializedSkills, SkillData } from '../skills';
+import type { AbilityData, SerializedAbility } from '../ability';
+import type { EquipmentData, SerializedEquipment } from '../equipment';
+import type { CraftingRequirement } from '../crafting';
 
 /**
  * Packet interfaces of data being sent from the server to the client.
@@ -18,8 +20,9 @@ import type { SerializedStoreItem } from '../stores';
 ////////////////////////////////////////////////////////////////////////////////
 
 export interface HandshakePacket {
-    instance: string; // Player's instance.
-    serverId: number;
+    // Client-server related handshake data.
+    instance?: string; // Player's instance.
+    serverId?: number;
 }
 
 export type HandshakeCallback = (data: HandshakePacket) => void;
@@ -39,6 +42,7 @@ export interface EquipmentPacket {
     type?: Modules.Equipment; // Specified when equipping a specific item
     count?: number;
     attackStyle?: Modules.AttackStyle;
+    attackRange?: number; // Passed with attack style to update the player's attack range.
 }
 
 export type EquipmentCallback = (opcode: Opcodes.Equipment, info: EquipmentPacket) => void;
@@ -266,17 +270,33 @@ export type TradeCallback = (opcode: Opcodes.Trade, info: TradePacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// TODO
 export interface EnchantPacket {
     index: number;
-    type: string;
+    isShard?: boolean;
 }
 
 export type EnchantCallback = (opcode: Opcodes.Enchant, info: EnchantPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export type GuildCallback = (opcode: Opcodes.Guild) => void;
+export interface GuildPacket {
+    identifier?: string;
+    name?: string;
+    username?: string;
+    usernames?: string[];
+    serverId?: number;
+    member?: Member;
+    members?: Member[];
+    total?: number;
+    guilds?: ListInfo[];
+    message?: string;
+    owner?: string;
+    decoration?: Decoration;
+    experience?: number;
+    rank?: Modules.GuildRank;
+}
+
+export type GuildCallback = (opcode: Opcodes.Guild, info: GuildPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -364,8 +384,7 @@ export type MinigameCallback = (opcode: Opcodes.Minigame, info: MinigamePacket) 
 
 export interface EffectPacket {
     instance: string;
-    movementSpeed?: number;
-    state?: boolean;
+    effect: Modules.Effects;
 }
 
 export type EffectCallback = (opcode: Opcodes.Effect, info: EffectPacket) => void;
@@ -386,3 +405,43 @@ export type FriendsCallback = (opcode: Opcodes.Friends, info: FriendsPacket) => 
 export type RankCallback = (rank: Modules.Ranks) => void;
 
 //////////////////////////////s//////////////////////////////////////////////////
+
+export interface PlayerPacket {
+    username?: string;
+    serverId?: number;
+    guild?: UpdateInfo;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface CraftingPacket {
+    type?: Modules.Skills;
+    keys?: string[]; // The keys of the items we are crafting.
+    key?: string; // The key of the item we are crafting.
+    name?: string; // The name of the item we are crafting.
+    level?: number; // The level required to craft the item.
+    requirements?: CraftingRequirement[];
+    result?: number; // The amount the item we are crafting will give.
+}
+
+export type CraftingCallback = (opcode: Opcodes.Crafting, info: CraftingPacket) => void;
+
+/////////////////////////////////////////////////////////////////////////////////
+
+export interface LootBagPacket {
+    instance: string;
+    items: SlotData[];
+}
+
+export type LootBagCallback = (info: LootBagPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////
+
+export interface CountdownPacket {
+    instance: string;
+    time: number;
+}
+
+export type CountdownCallback = (info: CountdownPacket) => void;
+
+////////////////////////////////////////////////////////////////////////////////

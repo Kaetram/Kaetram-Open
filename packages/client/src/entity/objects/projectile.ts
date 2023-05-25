@@ -16,7 +16,7 @@ export default class Projectile extends Entity {
 
     private impactCallback?(): void;
 
-    public constructor(instance: string, public owner: Entity) {
+    public constructor(instance: string, public owner: Entity, private hitType: Modules.Hits) {
         super(instance, Modules.EntityType.Projectile);
     }
 
@@ -43,7 +43,7 @@ export default class Projectile extends Entity {
      */
 
     public getAnimationSpeed(): number {
-        return this.idleSpeed;
+        return this.sprite.idleSpeed;
     }
 
     /**
@@ -61,25 +61,31 @@ export default class Projectile extends Entity {
      */
 
     public getImpactEffect(): Modules.Effects {
-        switch (this.sprite.name) {
-            case 'projectile-boulder': {
+        switch (this.hitType) {
+            case Modules.Hits.Explosive: {
+                return Modules.Effects.Fireball;
+            }
+        }
+
+        switch (this.sprite.key) {
+            case 'projectiles/boulder': {
                 return Modules.Effects.Boulder;
             }
 
-            case 'projectile-poisonball': {
+            case 'projectiles/poisonball': {
                 return Modules.Effects.Poisonball;
             }
 
-            case 'projectile-fireball':
-            case 'projectile-gift6': {
+            case 'projectiles/fireball':
+            case 'projectiles/gift6': {
                 return Modules.Effects.Fireball;
             }
 
-            case 'projectile-iceball': {
+            case 'projectiles/iceball': {
                 return Modules.Effects.Iceball;
             }
 
-            case 'projectile-terror': {
+            case 'projectiles/terror': {
                 return Modules.Effects.Terror;
             }
         }

@@ -23,12 +23,16 @@
 @use 'impl/store';
 @use 'impl/trade';
 @use 'impl/zoom';
+@use 'impl/leaderboards';
+@use 'impl/guilds';
+@use 'impl/crafting';
 
 body.game {
     background: #000;
 
     #load-character,
     #create-character,
+    #reset-password,
     #error {
         display: none;
     }

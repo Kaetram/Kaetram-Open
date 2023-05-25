@@ -52,4 +52,14 @@ export function isOldApple(): boolean {
     return !!version && version < 9;
 }
 
+export function supportsWebGl(): boolean {
+    try {
+        let canvas = document.createElement('canvas');
+
+        return !!(!!window.WebGLRenderingContext && canvas.getContext('webgl'));
+    } catch {
+        return false;
+    }
+}
+
 export let useCenteredCamera = (): boolean => isOldAndroid() || isOldApple() || isIPad();

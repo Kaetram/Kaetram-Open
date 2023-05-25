@@ -3,7 +3,7 @@
 #achievements-container {
     position: absolute;
     inset: 0;
-    
+
     overflow: auto;
 
     margin: auto;
@@ -41,10 +41,13 @@
             width: 318px * $i;
             height: 26px * $i;
             padding-bottom: 8px * $i;
-            background: url('/img/#{$i}/achievements.png') 0 -96px * $i no-repeat;
+
+            background: url('/img/interface/achievements.png') 0 -96px * $i no-repeat;
+            background-size: calc(width('achievements.png') * $i);
         }
 
-        .achievement-element > p.achievement-title, .achievement-element > p.achievement-description {
+        .achievement-element > p.achievement-title,
+        .achievement-element > p.achievement-description {
             padding-top: 9px * $i;
         }
 
@@ -64,7 +67,8 @@
         .coin {
             width: 24px * $i;
             height: 26px * $i;
-            background: url('/img/#{$i}/achievements.png') no-repeat;
+            background: url('/img/interface/achievements.png') no-repeat;
+            background-size: calc(width('achievements.png') * $i);
         }
 
         // Coin used by default achievements when completed.
@@ -79,9 +83,30 @@
         .coin-kaetramdungeon {
             background-position: -120px * $i 0;
         }
+
+        .coin-lumberjacking50,
+        .coin-lumberjacking100,
+        .coin-lumberjacking500,
+        .coin-lumberjacking1000,
+        .coin-lumberjacking5000,
+        .coin-lumberjacking10000,
+        .coin-mining50,
+        .coin-mining100,
+        .coin-mining500,
+        .coin-mining1000,
+        .coin-mining5000,
+        .coin-mining10000,
+        .coin-fishing50,
+        .coin-fishing100,
+        .coin-fishing500,
+        .coin-fishing1000,
+        .coin-fishing5000,
+        .coin-fishing10000 {
+            background-position: -72px * $i -26px * $i;
+        }
     }
 
-    @media(--md) {
+    @media (--md) {
         .achievement-element > p.achievement-title {
             font-size: 16px;
         }
@@ -91,7 +116,7 @@
         }
     }
 
-    @media(--sm) {
+    @media (--sm) {
         .achievement-element > p.achievement-title {
             font-size: 10px;
         }

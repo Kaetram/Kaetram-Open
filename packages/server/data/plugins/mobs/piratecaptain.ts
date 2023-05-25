@@ -1,7 +1,7 @@
 import Default from './default';
 
 import Utils from '@kaetram/common/util/utils';
-import { Teleport } from '@kaetram/server/src/network/packets';
+import { Teleport } from '@kaetram/common/network/impl';
 
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 import type Character from '@kaetram/server/src/game/entity/character/character';
@@ -16,17 +16,17 @@ export default class PirateCaptain extends Default {
     private lastPickedTeleport: Position = { x: 0, y: 0 };
 
     private teleportSpots: Position[] = [
-        { x: 852, y: 47 },
-        { x: 859, y: 59 },
-        { x: 844, y: 57 },
-        { x: 840, y: 47 }
+        { x: 822, y: 649 },
+        { x: 825, y: 659 },
+        { x: 836, y: 659 },
+        { x: 834, y: 649 }
     ];
 
     private minionSpots: Position[] = [
-        { x: 855, y: 51 },
-        { x: 847, y: 51 },
-        { x: 847, y: 58 },
-        { x: 854, y: 58 }
+        { x: 826, y: 651 },
+        { x: 837, y: 650 },
+        { x: 835, y: 657 },
+        { x: 824, y: 654 }
     ];
 
     public constructor(mob: Mob) {
@@ -73,20 +73,7 @@ export default class PirateCaptain extends Default {
         this.mob.attackRange = 14;
 
         // Update the position and teleport the captain with an animation.
-        this.mob.setPosition(position.x, position.y);
-
-        this.mob.teleporting = true;
-        this.mob.sendToRegions(
-            new Teleport({
-                instance: this.mob.instance,
-                x: position.x,
-                y: position.y,
-                withAnimation: true
-            })
-        );
-
-        // Remove the teleporting property after 400ms.
-        setTimeout(() => (this.mob.teleporting = false), 400);
+        this.mob.teleport(position.x, position.y, true);
     }
 
     /**
