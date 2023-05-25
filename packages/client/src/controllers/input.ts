@@ -69,7 +69,7 @@ export default class InputController {
      */
     public chatHandler: Chat;
     public hud: HUDController;
-    public targetAnimation: Animation = new Animation('move', 4, 0, 16, 16);
+    public targetAnimation: Animation = new Animation('move', 2, 0, 16, 16);
 
     public entity: Entity | undefined;
     public interactEntity: Entity | undefined; // Used to store entity while the interact menu is active.
@@ -265,7 +265,7 @@ export default class InputController {
 
                 if (!target) return;
 
-                this.setAttackTarget();
+                this.setInteractionTarget();
                 this.setPosition(target.gridX, target.gridY);
 
                 this.player.follow(target);
@@ -430,8 +430,11 @@ export default class InputController {
         this.game.menu.hide();
 
         // Handle object interaction.
-        if (this.game.map.isObject(position.gridX, position.gridY))
+        if (this.game.map.isObject(position.gridX, position.gridY)) {
+            this.setInteractionTarget();
+
             return this.player.setObjectTarget(position);
+        }
 
         // Remove player's targets prior to an action.
         this.player.removeTarget();
@@ -440,7 +443,8 @@ export default class InputController {
         this.entity = this.getEntity(position, useSearch);
 
         if (this.entity && this.entity.instance !== this.player.instance) {
-            this.setAttackTarget();
+            if (this.entity.isMob()) this.setAttackTarget();
+            else this.setInteractionTarget();
 
             // Set target and follow a targetable entity.
             if (this.isTargetable(this.entity)) {
@@ -601,13 +605,23 @@ export default class InputController {
     }
 
     /**
+     * Sets the animation for the target to the question
+     * mark sprite indicating a target-based interaction
+     * is occurring.
+     */
+
+    private setInteractionTarget(): void {
+        this.targetAnimation.setRow(1);
+    }
+
+    /**
      * Sets the animation for the target to the red
      * spinning sprite indicating a target-based
      * movement is occurring.
      */
 
     private setAttackTarget(): void {
-        this.targetAnimation.setRow(1);
+        this.targetAnimation.setRow(2);
     }
 
     /**
