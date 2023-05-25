@@ -55,7 +55,7 @@ export default class ForestDragon extends Default {
         this.mob.attackRange = useRanged ? 10 : 1;
 
         // Updates the projectile per combat loop to reset the special attack.
-        if (useRanged) this.mob.projectileName = 'projectile-fireball';
+        if (useRanged) this.mob.projectileName = 'fireball';
     }
 
     /**

@@ -6,8 +6,8 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import Creator from '@kaetram/common/database/mongodb/creator';
-import { Spawn, Friends } from '@kaetram/common/network/impl';
-import { Modules, Opcodes, Packets } from '@kaetram/common/network';
+import { Spawn } from '@kaetram/common/network/impl';
+import { Opcodes, Packets } from '@kaetram/common/network';
 
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type Entities from '../../../../controllers/entities';
@@ -162,7 +162,10 @@ export default class Incoming {
             // Format username by making it all lower case, shorter than 32 characters, and no spaces.
             this.player.username = Filter.clean(username.toLowerCase().slice(0, 32).trim());
 
-            if (password) this.player.password = password.slice(0, 32);
+            // Verify that the password fulfills the requirements.
+            if (!Utils.isValidPassword(password)) return this.connection.reject('invalidpassword');
+
+            if (password) this.player.password = password.slice(0, 64);
             if (email) this.player.email = email;
 
             // Reject connection if player is already logged in.
@@ -171,7 +174,7 @@ export default class Incoming {
 
             // Proceed directly to login with default player data if skip database is present.
             if (config.skipDatabase) {
-                this.player.load(Creator.serializePlayer(this.player));
+                this.player.load(Creator.serialize(this.player));
                 return;
             }
         }
@@ -197,7 +200,7 @@ export default class Incoming {
                 this.player.isGuest = true; // Makes sure player doesn't get saved to database.
                 this.player.username = `guest${Utils.counter++}`; // Generate a random guest username.
 
-                this.player.load(Creator.serializePlayer(this.player));
+                this.player.load(Creator.serialize(this.player));
                 return;
             }
         }
@@ -293,6 +296,12 @@ export default class Incoming {
             entity: Entity;
 
         if (this.player.isDead()) return;
+
+        // Sanitize position information to prevent cheating.
+        if (requestX) requestX = Utils.sanitizeNumber(requestX);
+        if (requestY) requestY = Utils.sanitizeNumber(requestY);
+        if (playerX) playerX = Utils.sanitizeNumber(playerX);
+        if (playerY) playerY = Utils.sanitizeNumber(playerY);
 
         switch (opcode) {
             case Opcodes.Movement.Request: {
@@ -406,10 +415,16 @@ export default class Incoming {
         this.player.chat(Filter.clean(text));
     }
 
+    /**
+     * Commands received from the server. Used by administrators to perform
+     * debugging or administrative tasks.
+     * @param message Contains the opcode and position information.
+     */
+
     private handleCommand(message: [Opcodes.Command, Coordinate]): void {
         let [opcode, position] = message;
 
-        if (this.player.rank !== Modules.Ranks.Admin) return;
+        if (!this.player.isAdmin() && !this.player.isHollowAdmin()) return;
 
         switch (opcode) {
             case Opcodes.Command.CtrlClick: {
@@ -428,6 +443,10 @@ export default class Incoming {
 
     private handleContainer(packet: ContainerPacket): void {
         //log.debug(`Received container packet: ${packet.opcode} - ${packet.type}`);
+
+        // Sanitize the incoming packet information.
+        if (packet.value) packet.value = Utils.sanitizeNumber(packet.value);
+        if (packet.fromIndex) packet.fromIndex = Utils.sanitizeNumber(packet.fromIndex);
 
         switch (packet.opcode) {
             case Opcodes.Container.Select: {
@@ -468,6 +487,9 @@ export default class Incoming {
      */
 
     private handleAbility(packet: AbilityPacket): void {
+        // Sanitize the incoming index information.
+        if (packet.index) packet.index = Utils.sanitizeNumber(packet.index);
+
         switch (packet.opcode) {
             case Opcodes.Ability.Use: {
                 return this.player.abilities.use(packet.key);
@@ -480,6 +502,9 @@ export default class Incoming {
     }
 
     private handleTrade(packet: TradePacket): void {
+        // Sanitize the incoming packet information.
+        if (packet.count) packet.count = Utils.sanitizeNumber(packet.count, true);
+
         switch (packet.opcode) {
             case Opcodes.Trade.Request: {
                 let oPlayer = this.entities.get(packet.instance!);
@@ -517,6 +542,10 @@ export default class Incoming {
         if (!this.player.canAccessContainer)
             return this.player.notify('You cannot do that right now.');
 
+        // Sanitize the index and the shard index.
+        if (packet.index) packet.index = Utils.sanitizeNumber(packet.index);
+        if (packet.shardIndex) packet.shardIndex = Utils.sanitizeNumber(packet.shardIndex);
+
         switch (packet.opcode) {
             case Opcodes.Enchant.Select: {
                 return this.world.enchanter.select(this.player, packet.index!);
@@ -541,6 +570,7 @@ export default class Incoming {
                     packet.name!,
                     packet.colour!,
                     packet.outline!,
+                    packet.outlineColour!,
                     packet.crest!
                 );
             }
@@ -588,6 +618,13 @@ export default class Incoming {
 
         // Ignore invalid packets.
         if (data.index < 0) return;
+
+        // Sanitize the packet information to prevent any funny business.
+        data.count = Utils.sanitizeNumber(data.count, true);
+        data.index = Utils.sanitizeNumber(data.index, true);
+
+        // Make sure the count is at least 1.
+        if (data.count < 1) data.count = 1;
 
         switch (data.opcode) {
             case Opcodes.Store.Buy: {
@@ -651,6 +688,9 @@ export default class Incoming {
         // Ensure the player is not maliciously trying to craft something.
         if (this.player.activeCraftingInterface === -1)
             return this.player.notify(`You cannot do that right now.`);
+
+        // Sanitize the packet information to prevent any funny business.
+        if (data.count) data.count = Utils.sanitizeNumber(data.count, true);
 
         switch (data.opcode) {
             case Opcodes.Crafting.Select: {

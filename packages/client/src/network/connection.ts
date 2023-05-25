@@ -1,28 +1,28 @@
 import { inflate } from 'pako';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
-import type Player from '../entity/character/player/player';
 import type App from '../app';
-import type Overlays from '../renderer/overlays';
-import type InfoController from '../controllers/info';
 import type Game from '../game';
 import type Map from '../map/map';
-import type Camera from '../renderer/camera';
-import type Renderer from '../renderer/renderer';
-import type InputController from '../controllers/input';
 import type Socket from './socket';
-import type PointerController from '../controllers/pointer';
-import type AudioController from '../controllers/audio';
-import type EntitiesController from '../controllers/entities';
-import type BubbleController from '../controllers/bubble';
-import type MenuController from '../controllers/menu';
-import type SpritesController from '../controllers/sprites';
 import type Messages from './messages';
-import type Entity from '../entity/entity';
-import type Item from '../entity/objects/item';
 import type NPC from '../entity/npc/npc';
+import type Camera from '../renderer/camera';
+import type Item from '../entity/objects/item';
+import type Overlays from '../renderer/overlays';
+import type Renderer from '../renderer/renderer';
+import type MenuController from '../controllers/menu';
+import type InfoController from '../controllers/info';
+import type InputController from '../controllers/input';
+import type AudioController from '../controllers/audio';
+import type BubbleController from '../controllers/bubble';
 import type Character from '../entity/character/character';
+import type SpritesController from '../controllers/sprites';
+import type Player from '../entity/character/player/player';
+import type PointerController from '../controllers/pointer';
+import type EntitiesController from '../controllers/entities';
 import type { PlayerData } from '@kaetram/common/types/player';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
@@ -59,9 +59,10 @@ import type {
     TradePacket,
     HandshakePacket,
     GuildPacket,
-    CraftingPacket
+    CraftingPacket,
+    LootBagPacket,
+    CountdownPacket
 } from '@kaetram/common/types/messages/outgoing';
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 export default class Connection {
     /**
@@ -157,6 +158,8 @@ export default class Connection {
         this.messages.onFriends(this.handleFriends.bind(this));
         this.messages.onRank(this.handleRank.bind(this));
         this.messages.onCrafting(this.handleCrafting.bind(this));
+        this.messages.onLootBag(this.handleLootBag.bind(this));
+        this.messages.onCountdown(this.handleCountdown.bind(this));
     }
 
     /**
@@ -357,8 +360,8 @@ export default class Connection {
      */
 
     private handleMovement(opcode: Opcodes.Movement, info: MovementPacket): void {
-        let entity = this.entities.get<Character>(info.instance),
-            target: Entity;
+        let entity = this.entities.get<Character>(info.instance) as Character,
+            target: Character;
 
         /**
          * We are receiving movement for an entity that doesn't exist,
@@ -396,6 +399,8 @@ export default class Connection {
                         return;
 
                     entity.follow(target);
+
+                    if (entity.isPet()) target.addFollower(entity);
                 }
 
                 break;
@@ -1377,6 +1382,15 @@ export default class Connection {
     }
 
     /**
+     * Updates the rank of the current player. Packet contains the new rank.
+     * @param rank The new rank we are updating the player to.
+     */
+
+    private handleRank(rank: Modules.Ranks): void {
+        this.game.player.setRank(rank);
+    }
+
+    /**
      * Handles receiving information about crafting. This is used to synchronize the crafting
      * user interface with the server. When a player selects an item to craft this
      * @param opcode Contains the type of crafting action that we want to perform.
@@ -1388,12 +1402,26 @@ export default class Connection {
     }
 
     /**
-     * Updates the rank of the current player. Packet contains the new rank.
-     * @param rank The new rank we are updating the player to.
+     * Handles incoming packet regarding a loot bag. This just displays the loot bag
+     * menu and allows the player to interact with it.
+     * @param slots
      */
 
-    private handleRank(rank: Modules.Ranks): void {
-        this.game.player.setRank(rank);
+    private handleLootBag(info: LootBagPacket): void {
+        console.log(info);
+    }
+
+    /**
+     * Handles countdown packet. Used to display a countdown above the player.
+     * @param info Contains the instance and the counter information.
+     */
+
+    private handleCountdown(info: CountdownPacket): void {
+        let entity = this.entities.get(info.instance);
+
+        if (!entity) return;
+
+        entity.setCountdown(info.time);
     }
 
     /**

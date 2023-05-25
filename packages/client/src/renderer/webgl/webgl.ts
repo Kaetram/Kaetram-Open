@@ -70,7 +70,7 @@ export default class WebGL extends Renderer {
     };
 
     public constructor(game: Game) {
-        super(game);
+        super(game, 'webgl');
     }
 
     /**
@@ -183,7 +183,7 @@ export default class WebGL extends Renderer {
         for (let layer of this.layers)
             layer.bindTexture(
                 context,
-                this.getShader(context).program,
+                this.getShader(context)?.program,
                 !this.isBackgroundContext(context)
             );
     }
@@ -267,6 +267,10 @@ export default class WebGL extends Renderer {
      */
 
     private draw(x = this.camera.x, y = this.camera.y): void {
+        // Used for low power mode
+        if (this.hasRenderedFrame()) return;
+
+        // Iterate through the drawing contexts and apply the necessary transformations/attributes.
         this.forEachDrawingContext((context: WebGLRenderingContext) => {
             context.enable(context.BLEND);
             context.blendEquation(this.blendMode.equation);
@@ -302,29 +306,31 @@ export default class WebGL extends Renderer {
 
             context.activeTexture(context.TEXTURE0);
 
-            let shader = this.getShader(context);
+            let shader = this.getShader(context),
+                isBackground = this.isBackgroundContext(context);
 
             // Bind the tile layer shaders to the context.
             context.useProgram(shader.program);
 
-            // Uniforms for the tile shader layer... move these later
-            context.uniform1f(shader.uniforms.uAlpha, 1);
+            /**
+             * These are uniforms for the shaders, things like alpha, repeating tiles,
+             * inverse tile count. We apply a different alpha value to the background
+             * layers as opposed to foreground since we don't want the background to
+             * obstruct certain foreground elements (tree shadows).
+             */
+
+            context.uniform1f(shader.uniforms.uAlpha, isBackground ? 1 : 2);
             context.uniform1i(shader.uniforms.uRepeatTiles, 1);
             context.uniform2fv(shader.uniforms.uInverseLayerTileCount, this.inverseTileCount);
 
             context.uniform2f(shader.uniforms.uOffset, x, y);
 
             // Do the actual drawing.
-            for (let layer of this.layers) {
-                context.bindTexture(
-                    context.TEXTURE_2D,
-                    this.isBackgroundContext(context)
-                        ? layer.backgroundTexture
-                        : layer.foregroundTexture
-                );
-                context.drawArrays(context.TRIANGLES, 0, 6);
-            }
+            for (let layer of this.layers)
+                layer.draw(context, this.game.time, !isBackground, this.isLowPowerMode());
         });
+
+        this.saveFrame();
     }
 
     /**

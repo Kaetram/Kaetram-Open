@@ -1,4 +1,5 @@
 import Renderer from './renderer';
+import Tile from './tile';
 
 import type Game from '../game';
 import type { ContextCallback } from './renderer';
@@ -27,7 +28,7 @@ interface RendererCell {
 }
 
 export default class Canvas extends Renderer {
-    private renderedFrame = [-1, -1];
+    public animatedTiles: { [index: number]: Tile } = {};
 
     // Used for storing and caching tile information.
     private tiles: { [id: string]: RendererTile } = {};
@@ -55,6 +56,9 @@ export default class Canvas extends Renderer {
 
         // Clear all the cells so they're redrawn.
         this.cells = {};
+
+        // Re-calculate visible animated tiles.
+        this.updateAnimatedTiles();
     }
 
     /**
@@ -117,9 +121,6 @@ export default class Canvas extends Renderer {
              * and if we are currently animating tiles before proceeding.
              */
             if (index in this.animatedTiles && this.animateTiles) {
-                // Advance the timing of the animated tiles with the current epoch.
-                this.animatedTiles[index].animate(this.game.time);
-
                 // Prevent double draws when drawing flipped animated tiles.
                 if (flips.length === 0 && this.animatedTiles[index].isFlipped) return;
 
@@ -298,20 +299,6 @@ export default class Canvas extends Renderer {
 
     // ---------- Rendering Functions ----------
 
-    /**
-     * Checks whether or not the current frame has already been rendererd in order
-     * to prevent drawing when there is no movement during low power mode.
-     * @returns Whether or not the current frame has been rendered.
-     */
-
-    private hasRenderedFrame(): boolean {
-        if (this.forceRendering || !this.isLowPowerMode()) return false;
-
-        if (this.stopRendering) return true;
-
-        return this.renderedFrame[0] === this.camera.x && this.renderedFrame[1] === this.camera.y;
-    }
-
     // ---------- Context Manipulation Functions ----------
 
     /**
@@ -331,20 +318,6 @@ export default class Canvas extends Renderer {
     }
 
     /**
-     * Saves the currently rendered frame in order to prevent unnecessary redraws
-     * during low power mode.
-     */
-
-    private saveFrame(): void {
-        if (!this.isLowPowerMode()) return;
-
-        this.renderedFrame[0] = this.camera.x;
-        this.renderedFrame[1] = this.camera.y;
-
-        this.forceRendering = false;
-    }
-
-    /**
      * Iterates through just the drawing contexts (low and high tiles) and restores them.
      */
 
@@ -360,6 +333,53 @@ export default class Canvas extends Renderer {
         this.forEachDrawingContext((context: CanvasRenderingContext2D) =>
             this.setCameraView(context)
         );
+    }
+
+    /**
+     * Iterates through all the currently visible tiles and appends tiles
+     * that are animated to our list of animated tiles. This function ensures
+     * that animated tiles are initialzied only once and stored for the
+     * duration of the client's session.
+     */
+
+    public override updateAnimatedTiles(): void {
+        if (!this.animateTiles) return;
+
+        this.forEachVisibleTile((tile: RegionTile, index: number) => {
+            let isFlipped = this.isFlipped(tile as RotatedTile);
+
+            if (isFlipped) tile = (tile as RotatedTile).tileId;
+
+            /**
+             * We don't want to reinitialize animated tiles that already exist
+             * and are within the visible camera proportions. This way we can parse
+             * it every time the tile moves slightly.
+             */
+
+            if (!this.map.isAnimatedTile(tile as number)) return;
+
+            /**
+             * Push the pre-existing tiles.
+             */
+
+            if (!(index in this.animatedTiles))
+                this.animatedTiles[index] = new Tile(
+                    tile as number,
+                    index,
+                    this.map.getTileAnimation(tile as number),
+                    isFlipped
+                );
+        }, 2);
+    }
+
+    /**
+     * Used for synchronization of all animated tiles when the player
+     * stops moving or every couple of steps.
+     */
+
+    public override resetAnimatedTiles(): void {
+        // Reset the animation frame index for each animated tile.
+        for (let tile in this.animatedTiles) this.animatedTiles[tile].animationIndex = 0;
     }
 
     // ---------- Getters and Checkers ----------
@@ -395,5 +415,14 @@ export default class Canvas extends Renderer {
     private forEachDrawingContext(callback: ContextCallback): void {
         for (let context in this.drawingContexts)
             callback(this.drawingContexts[context] as CanvasRenderingContext2D);
+    }
+
+    /**
+     * Iterates through each of the animated tiles.
+     * @param callback Returns the tile object for that animated tile.
+     */
+
+    private forEachAnimatedTile(callback: (tile: Tile) => void): void {
+        for (let tile in this.animatedTiles) callback(this.animatedTiles[tile]);
     }
 }

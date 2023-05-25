@@ -2,6 +2,7 @@ import CharacterHandler from '../handler';
 
 import { Packets, Opcodes } from '@kaetram/common/network';
 
+import type Character from '../character';
 import type Map from '../../../map/map';
 import type Player from './player';
 import type Game from '../../../game';
@@ -183,6 +184,12 @@ export default class Handler extends CharacterHandler {
         // Used to prevent sending double packets.
         if (this.lastStepX === this.character.gridX && this.lastStepY === this.character.gridY)
             return;
+
+        // Handle attackers
+        this.handleAttackers();
+
+        // Handle followers
+        this.handleFollowers();
 
         // Send the packet to the server to inform it that the player has moved.
         this.game.socket.send(Packets.Movement, {

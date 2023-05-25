@@ -10,7 +10,14 @@ import Formulas from '../../../info/formulas';
 import Utils from '@kaetram/common/util/utils';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Combat as CombatPacket, Effect, Movement, Points } from '@kaetram/common/network/impl';
+import {
+    Combat as CombatPacket,
+    Countdown,
+    Effect,
+    Movement,
+    Points,
+    Teleport
+} from '@kaetram/common/network/impl';
 
 import type World from '../../world';
 import type Packet from '@kaetram/common/network/packet';
@@ -18,7 +25,7 @@ import type { EntityData } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
 type PoisonCallback = (type: number, exists: boolean) => void;
-type HitCallback = (damage: number, attacker?: Character) => void;
+type HitCallback = (damage: number, attacker?: Character, isThorns?: boolean) => void;
 type DeathCallback = (attacker?: Character) => void;
 
 export default abstract class Character extends Entity {
@@ -26,13 +33,13 @@ export default abstract class Character extends Entity {
     public attackRange = 1;
     public plateauLevel = 0;
 
+    public combat: Combat;
     public hitPoints: HitPoints;
 
     public healRate: number = Modules.Constants.HEAL_RATE;
     public movementSpeed: number = Modules.Defaults.MOVEMENT_SPEED;
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public orientation: number = Modules.Orientation.Down;
-    public aoeType: number = Modules.AoEType.Character;
     public damageType: Modules.Hits = Modules.Hits.Normal;
 
     /* States */
@@ -55,7 +62,7 @@ export default abstract class Character extends Entity {
     // Effects applied onto the character.
     public statusEffects: Modules.Effects[] = [];
 
-    public projectileName = 'projectile-arrow';
+    public projectileName = 'arrow';
 
     public lastStep = -1;
     public lastMovement = -1;
@@ -171,9 +178,10 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Handles the damage of an AoE attack. We iterate through all the nearby entities
-     * within the character's AoE type and range, then apply damage proportional
-     * to the distance from the character. The farther away, the lesser the damage.
+     * Handles the damage of an AoE attack. We look through all the nearby characters
+     * and apply the damage to them. The filtering for said characters is handled in
+     * the `forEachNearbyCharacter` function. See that for more information. The damage
+     * is inversely proportional to the distance from the attacker.
      * @param damage The initial damage performed by the attack.
      * @param attacker Who is performing the initial attack.
      * @param range The AoE range of the attack.
@@ -181,12 +189,6 @@ export default abstract class Character extends Entity {
 
     private handleAoE(damage: number, attacker?: Character, range = 1): void {
         this.forEachNearbyCharacter((character: Character) => {
-            // Ignore mob-on-mob AoE damage.
-            if (character.isMob() && this.isMob()) return;
-
-            // Ignore player-on-player AoE damage unless PvP is enabled.
-            if (character.isPlayer() && this.isPlayer() && !this.pvp && !character.pvp) return;
-
             let distance = this.getDistance(character) + 1,
                 hit = new Hit(
                     Modules.Hits.Normal,
@@ -388,9 +390,10 @@ export default abstract class Character extends Entity {
      * @param attacker The attacker dealing the damage.
      * @param damage The amount of damage being dealt.
      * @param aoe Whether or not the damage is AoE based.
+     * @param isThorns Whether or not the damage is from thorns.
      */
 
-    public hit(damage: number, attacker?: Character, aoe = 0): void {
+    public hit(damage: number, attacker?: Character, aoe = 0, isThorns = false): void {
         // Stop hitting if entity is dead.
         if (this.isDead() || this.status.has(Modules.Effects.Invincible)) return;
 
@@ -404,7 +407,7 @@ export default abstract class Character extends Entity {
         if (aoe) this.handleAoE(damage, attacker, aoe);
 
         // Hit callback on each hit.
-        this.hitCallback?.(damage, attacker);
+        this.hitCallback?.(damage, attacker, isThorns);
 
         // If the character has bloodsucking, we let the handler take care of it.
         if (attacker?.hasBloodsucking()) this.handleBloodsucking(attacker!, damage);
@@ -429,12 +432,65 @@ export default abstract class Character extends Entity {
      */
 
     public follow(target?: Character): void {
+        // If the character is stunned, we stop.
+        if (this.isStunned()) return;
+
+        // If no target is specified and we don't have a target, we stop.
         if (!target && !this.hasTarget()) return;
 
         this.sendToRegions(
             new Movement(Opcodes.Movement.Follow, {
                 instance: this.instance,
                 target: target?.instance || this.target!.instance
+            })
+        );
+    }
+
+    /**
+     * Handles teleporting an entity to a specific location.
+     * @param x The x grid coordinate.
+     * @param y The y grid coordinate.
+     * @param withAnimation Whether or not to teleport with an animation.
+     */
+
+    public teleport(x: number, y: number, withAnimation = false): void {
+        this.setPosition(x, y, true);
+
+        this.sendToRegions(
+            new Teleport({
+                instance: this.instance,
+                x,
+                y,
+                withAnimation
+            })
+        );
+
+        // Untoggle the teleporting flag after 500ms.
+        setTimeout(() => (this.teleporting = false), 500);
+    }
+
+    /**
+     * Creates a countdown packet and sends it to the nearby regions.
+     * @param time The amount of time to countdown.
+     */
+
+    public countdown(time: number): void {
+        this.sendToRegions(
+            new Countdown({
+                instance: this.instance,
+                time
+            })
+        );
+    }
+
+    /**
+     * Makes a character stop moving by sending a packet to the nearby regions.
+     */
+
+    public stopMovement(): void {
+        this.sendToRegions(
+            new Movement(Opcodes.Movement.Stop, {
+                instance: this.instance
             })
         );
     }
@@ -791,6 +847,15 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * Indicates whether or not the character is able to move.
+     * @returns Whether or not the character has the stun status effect.
+     */
+
+    public isStunned(): boolean {
+        return this.status.has(Modules.Effects.Stun);
+    }
+
+    /**
      * Used for validating the attack request from the client. The primary purpose is to validate
      * or restrict attacking actions depending on certain contexts. If we're attacking a mob then
      * all is good. If we're dealing with attacking mobs in the tutorial, we need to ensure that
@@ -800,6 +865,14 @@ export default abstract class Character extends Entity {
      */
 
     protected canAttack(target: Character): boolean {
+        // Prevent pets from being attacked.
+        if (target.isPet()) {
+            if (this.isPlayer())
+                this.notify(`Are you crazy? Are you out of your mind? Why would you attack a pet?`);
+
+            return false;
+        }
+
         if (target.isMob()) {
             // Restrict the mobs in tutorial from being attacked by the player.
             if (this.isPlayer() && !this.quests.canAttackInTutorial()) {
@@ -847,15 +920,23 @@ export default abstract class Character extends Entity {
     /**
      * Override of the superclass `setPosition`. Since characters are the only
      * instances capable of movement, we need to update their position in the grids.
+     * We also add a teleport flag that we can use to prevent the character from
+     * performing actions during the teleportation process.
      * @param x The new x grid position.
      * @param y The new y grid position.
+     * @param withTeleport Whether or not the character is teleporting.
      */
 
-    public override setPosition(x: number, y: number): void {
+    public override setPosition(x: number, y: number, withTeleport = false): void {
+        if (this.teleporting) return;
+
         super.setPosition(x, y);
 
         // Updates the character's position in the grid.
         this.world.map.grids.updateEntity(this);
+
+        // Update the teleporting flag if we're teleporting.
+        if (withTeleport) this.teleporting = true;
     }
 
     /**
@@ -1043,11 +1124,12 @@ export default abstract class Character extends Entity {
     // End of packet sending functions
 
     /**
-     * Iterates through all the entities nearby and returns the ones within range. The condition for
-     * entity filtering is based on the type of AoE damage the character is producing. This varies
-     * depending on the instance. Players will deal damage to all characters if within a PvP area,
-     * otherwise the default is to only deal damage to mobs. But mobs will only deal damage to players.
-     * @param callback A character object.
+     * Iterates through all the nearby entities and looks for the character instances such
+     * as mobs and players. Depending on who is casting the AoE damage, we filter out the
+     * entities. In the case of mobs, we don't want the AoE to affect other mobs. When it
+     * comes to players, we only want that damage to affect other players if they are in
+     * a PvP area.
+     * @param callback Contains the character instance that is nearby.
      * @param range The range of the AoE damage.
      */
 
@@ -1059,14 +1141,16 @@ export default abstract class Character extends Entity {
                 // Ignores the current character.
                 if (entity.instance === this.instance) return;
 
-                if (
-                    this.aoeType === Modules.AoEType.Player
-                        ? entity.isPlayer()
-                        : this.aoeType === Modules.AoEType.Mob
-                        ? entity.isMob()
-                        : entity.isMob() || entity.isPlayer()
-                )
-                    callback(entity as Character);
+                // Ignore non-character entities and pets.
+                if (!(entity instanceof Character) || entity.isPet()) return;
+
+                // Ignore mobs if the character is a mob.
+                if (this.isMob() && entity.isMob()) return;
+
+                // Ignore player-on-player AoE if the players are not in a PvP area.
+                if (this.isPlayer() && entity.isPlayer() && !this.pvp && !entity.pvp) return;
+
+                callback(entity as Character);
             },
             range
         );

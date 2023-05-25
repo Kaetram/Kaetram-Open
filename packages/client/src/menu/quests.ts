@@ -1,6 +1,6 @@
 import Menu from './menu';
 
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Player from '../entity/character/player/player';
 import type Task from '../entity/character/player/task';
@@ -14,6 +14,7 @@ export default class Quests extends Menu {
     private shortDescription: HTMLElement = document.querySelector('#quest-log-shortdesc')!;
     private description: HTMLElement = document.querySelector('#quest-log-description')!;
     private rewards: HTMLElement = document.querySelector('#quest-log-rewards')!;
+    private requirements: HTMLElement = document.querySelector('#quest-log-requirements')!;
 
     public constructor(private player: Player) {
         super('#quests', '#close-quests', '#quests-button');
@@ -108,5 +109,38 @@ export default class Quests extends Menu {
         this.description.innerHTML = description;
 
         if (quest.rewards) this.rewards.innerHTML = quest.rewards.join('<br>');
+
+        // No requirements to display, so we stop here.
+        if (
+            Object.keys(quest.skillRequirements).length === 0 &&
+            quest.questRequirements.length === 0
+        ) {
+            this.requirements.innerHTML = 'None C:';
+            return;
+        }
+
+        let requirements = '';
+
+        // Iterate through the quest requirements and map the key to the quest name.
+        for (let info of quest.questRequirements)
+            requirements += `Completion of ${this.player.quests[info]?.name}.<br>`;
+
+        // Iterate through the skill requirements and add them to the requirements string.
+        for (let skill in quest.skillRequirements)
+            requirements += `Your ${this.formatSkillName(skill)} level must be at least ${
+                quest.skillRequirements[skill]
+            }.<br>`;
+
+        this.requirements.innerHTML = requirements;
+    }
+
+    /**
+     * Formats the skill name for presentation in the quest log. We basically
+     * captialize the first letter of the skill name.
+     * @param key The key of the skill we are formatting.
+     */
+
+    private formatSkillName(key: string): string {
+        return key.charAt(0).toUpperCase() + key.slice(1);
     }
 }

@@ -1,4 +1,5 @@
 import log from '../lib/log';
+import Character from '../entity/character/character';
 
 import type Entity from '../entity/entity';
 import type Map from '../map/map';
@@ -44,8 +45,13 @@ export default class Grids {
      * @param entity The entity parameter we are extracting instance, gridX, and gridY from.
      */
 
-    public removeFromRenderingGrid({ instance, gridX, gridY }: Entity): void {
-        delete this.renderingGrid[gridY][gridX][instance];
+    public removeFromRenderingGrid(entity: Entity): void {
+        // Clear the entity from all the paths it may be on.
+        if (entity instanceof Character && entity.hasPath())
+            for (let tile of entity.path!)
+                delete this.renderingGrid[tile[1]][tile[0]][entity.instance];
+
+        delete this.renderingGrid[entity.gridY][entity.gridX][entity.instance];
     }
 
     /**

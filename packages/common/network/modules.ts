@@ -36,7 +36,9 @@ export enum EntityType {
     Chest,
     Projectile,
     Object,
-    Pet
+    Pet,
+    LootBag,
+    Effect
 }
 
 export enum AbilityType {
@@ -96,19 +98,31 @@ export enum Hits {
     Profession,
     Freezing,
     Burning,
-    Terror
+    Terror,
+    Explosive
 }
 
 export enum Equipment {
-    Armour,
+    Helmet,
+    Chestplate,
+    Legs,
+    Skin,
     Boots,
     Pendant,
     Ring,
-    Weapon,
     Arrows,
-    WeaponSkin,
-    ArmourSkin
+    Weapon,
+    WeaponSkin
 }
+
+export let EquipmentRenderOrder = [
+    Equipment.Helmet,
+    Equipment.Legs,
+    Equipment.Chestplate,
+    Equipment.Skin,
+    Equipment.Weapon,
+    Equipment.WeaponSkin
+];
 
 export enum AttackStyle {
     None,
@@ -215,12 +229,6 @@ export enum Enchantment {
     DoubleEdged
 }
 
-export enum AoEType {
-    Character,
-    Player,
-    Mob
-}
-
 // Client sided special effects.
 export enum Effects {
     None,
@@ -241,7 +249,10 @@ export enum Effects {
     FirePotion,
     Burning,
     Freezing,
-    Invincible
+    Invincible,
+    AccuracyPotion,
+    StrengthPotion,
+    DefensePotion
 }
 
 export enum DamageStyle {
@@ -282,7 +293,8 @@ export enum Ranks {
     TierFive,
     TierSix,
     TierSeven,
-    HollowAdmin
+    HollowAdmin,
+    Booster
 }
 
 export let RankColours = {
@@ -300,7 +312,8 @@ export let RankColours = {
     [Ranks.TierFive]: '#7beb65',
     [Ranks.TierSix]: '#77e691',
     [Ranks.TierSeven]: '#77e691',
-    [Ranks.HollowAdmin]: '#3bbaff'
+    [Ranks.HollowAdmin]: '#3bbaff',
+    [Ranks.Booster]: '#f47fff'
 };
 
 export let RankTitles = {
@@ -318,7 +331,8 @@ export let RankTitles = {
     [Ranks.TierFive]: 'T5 Patron',
     [Ranks.TierSix]: 'T6 Patron',
     [Ranks.TierSeven]: 'T7 Patron',
-    [Ranks.HollowAdmin]: 'Admin'
+    [Ranks.HollowAdmin]: 'Admin',
+    [Ranks.Booster]: 'Booster'
 };
 
 export interface Colours {
@@ -329,6 +343,15 @@ export interface Colours {
 export let DamageColours = {
     // Received damage
     [Hits.Normal]: {
+        fill: 'rgb(255, 50, 50)',
+        stroke: 'rgb(255, 180, 180)',
+        inflicted: {
+            fill: 'white',
+            stroke: '#373737'
+        }
+    },
+
+    [Hits.Explosive]: {
         fill: 'rgb(255, 50, 50)',
         stroke: 'rgb(255, 180, 180)',
         inflicted: {
@@ -525,27 +548,23 @@ export enum GuildRank {
 }
 
 export enum BannerColour {
-    Green = 'green',
-    Blue = 'blue',
-    Red = 'red',
     Grey = 'grey',
-    Black = 'black',
-    Tangerine = 'tangerine',
-    Yellow = 'yellow',
-    Purple = 'purple',
-    Pink = 'pink'
+    Green = 'green',
+    Fuchsia = 'fuchsia',
+    Red = 'red',
+    Brown = 'brown',
+    Cyan = 'cyan',
+    DarkGrey = 'darkgrey',
+    Teal = 'teal',
+    GoldenYellow = 'goldenyellow'
 }
 
 export enum BannerOutline {
-    Green = 'green',
-    Blue = 'blue',
-    Orange = 'orange',
-    White = 'white',
-    Grey = 'grey',
-    Tangerine = 'tangerine',
-    Yellow = 'yellow',
-    Purple = 'purple',
-    Pink = 'pink'
+    StyleOne,
+    StyleTwo,
+    StyleThree,
+    StyleFour,
+    StyleFive
 }
 
 export enum BannerCrests {
@@ -590,7 +609,7 @@ export const Constants = {
     COLD_EFFECT_DAMAGE: 10,
     BURNING_EFFECT_DAMAGE: 20,
     ATTACKER_TIMEOUT: 20_000, // 20 seconds
-    MAX_GUILD_MEMBERS: 40, // Maximum number of members in a guild
+    MAX_GUILD_MEMBERS: 50, // Maximum number of members in a guild
     EVENTS_CHECK_INTERVAL: 3_600_000 // Every 1 hour
 };
 
@@ -625,7 +644,12 @@ export enum MobDefaults {
     RESPAWN_DELAY = 60_000, // 60 seconds to respawn
     ROAM_DISTANCE = 7, // 7 tiles away from spawn point
     ROAM_FREQUENCY = 17_000, // Roam interval every 35 seconds
+    HEALTH_LEVEL = 1,
+    ACCURACY_LEVEL = 1,
+    STRENGTH_LEVEL = 1,
     DEFENSE_LEVEL = 1,
+    MAGIC_LEVEL = 1,
+    ARCHERY_LEVEL = 1,
     ATTACK_LEVEL = 1
 }
 

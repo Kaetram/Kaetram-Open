@@ -7,6 +7,9 @@ import Chest from '../game/entity/objects/chest';
 import Mob from '../game/entity/character/mob/mob';
 import Character from '../game/entity/character/character';
 import Projectile from '../game/entity/objects/projectile';
+import LootBag from '../game/entity/objects/lootbag';
+import Pet from '../game/entity/character/pet/pet';
+import Effect from '../game/entity/objects/effect';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
@@ -18,7 +21,6 @@ import type Player from '../game/entity/character/player/player';
 import type Entity from '../game/entity/entity';
 import type Map from '../game/map/map';
 import type World from '../game/world';
-import type Pet from '../game/entity/character/pet/pet';
 import type Regions from '../game/map/regions';
 import type Grids from '../game/map/grids';
 
@@ -36,6 +38,8 @@ export default class Entities {
     private chests: { [instance: string]: Chest } = {};
     private npcs: { [instance: string]: NPC } = {};
     private pets: { [instance: string]: Pet } = {};
+    private lootBags: { [instance: string]: LootBag } = {};
+    private effects: { [instance: string]: Effect } = {};
 
     public constructor(private world: World) {
         this.map = world.map;
@@ -115,6 +119,21 @@ export default class Entities {
         owner = ''
     ): void {
         this.addItem(new Item(key, x, y, dropped, count, enchantments, owner));
+    }
+
+    /**
+     * Spawns a loot bag in the world and adds the provided items onto its container.
+     * @param x The x grid coordinate of the loot bag spawn.
+     * @param y The y grid coordinate of the loot bag spawn.
+     * @param owner The instance of the player that has priority over the loot bag.
+     * @param items The list of item entities that the loot bag will contain.
+     */
+
+    public spawnLootBag(x: number, y: number, owner: string, items: Item[]): void {
+        // Do not spawn a loot bag if it is empty.
+        if (items.length === 0) return;
+
+        this.addLootBag(new LootBag(x, y, owner, items));
     }
 
     /**
@@ -224,6 +243,34 @@ export default class Entities {
     }
 
     /**
+     * Spawns a new pet in the world and sends the spawn to the
+     * nearby players.
+     * @param owner The owner of the pet, who is spawning the pet.
+     * @param key The key of the pet we are spawning.
+     * @returns The pet object that was created.
+     */
+
+    public spawnPet(owner: Player, key: string): Pet {
+        let pet = new Pet(owner, key);
+
+        this.addPet(pet);
+
+        return pet;
+    }
+
+    /**
+     * Spawns an effect-based entity at a specific location and adds
+     * it to the world.
+     * @param key The key of the effect we are spawning.
+     * @param x The x grid coordinate of the effect spawn.
+     * @param y The y grid coordinate of the effect spawn.
+     */
+
+    public spawnEffect(key: string, x: number, y: number): void {
+        this.addEffect(new Effect(key, x, y));
+    }
+
+    /**
      * Registers an entity within the world. This is used to keep track
      * of all the entities in a single dictionary. This may contain every
      * type of entity, including players, mobs, and items, etc.
@@ -262,7 +309,7 @@ export default class Entities {
      * @param item The item object we are adding to the world.
      */
 
-    private addItem(item: Item): void {
+    public addItem(item: Item): void {
         // Callback for removing the item from the world.
         item.onDespawn(() => this.removeItem(item));
 
@@ -281,6 +328,20 @@ export default class Entities {
         this.add(item);
 
         this.items[item.instance] = item;
+    }
+
+    /**
+     * Adds a loot bag to the game world and handles the necessary
+     * callbacks for despawning it.
+     * @param lootBag The loot bag object we are adding to the world.
+     */
+
+    private addLootBag(lootBag: LootBag): void {
+        lootBag.onEmpty(() => this.removeLootBag(lootBag));
+
+        this.add(lootBag);
+
+        this.lootBags[lootBag.instance] = lootBag;
     }
 
     /**
@@ -330,6 +391,18 @@ export default class Entities {
         this.add(pet);
 
         this.pets[pet.instance] = pet;
+    }
+
+    /**
+     * Adds an effect entity to the world entity dictionary and
+     * its own dictionary.
+     * @param effect The effect entity we are adding to the world.
+     */
+
+    private addEffect(effect: Effect): void {
+        this.add(effect);
+
+        this.effects[effect.instance] = effect;
     }
 
     /**
@@ -399,6 +472,17 @@ export default class Entities {
     }
 
     /**
+     * Removes the loot bag from the world and sends the despawn packet.
+     * @param lootBag The loot bag object we are removing.
+     */
+
+    public removeLootBag(lootBag: LootBag): void {
+        this.remove(lootBag);
+
+        delete this.lootBags[lootBag.instance];
+    }
+
+    /**
      * Removes the mob from all the entities and the mobs dictionary.
      * @param mob The mob object that we are removing.
      */
@@ -418,6 +502,17 @@ export default class Entities {
         this.remove(pet);
 
         delete this.pets[pet.instance];
+    }
+
+    /**
+     * Removes the effect from the world and its dictionary.
+     * @param effect The effect object we are removing.
+     */
+
+    public removeEffect(effect: Effect): void {
+        this.remove(effect);
+
+        delete this.effects[effect.instance];
     }
 
     /**
@@ -453,6 +548,19 @@ export default class Entities {
 
     public getPlayerUsernames(): string[] {
         return Object.values(this.players).map((player: Player) => player.username);
+    }
+
+    /**
+     * Iterates through all the players and finds all the instances of the players
+     * who are connected from the same IP address.
+     * @param ip The string of the IP address we are looking for.
+     * @returns An array of player objects.
+     */
+
+    public getPlayersByIp(ip: string): Player[] {
+        return Object.values(this.players).filter(
+            (player: Player) => player.connection.address === ip
+        );
     }
 
     /**

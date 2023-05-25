@@ -45,8 +45,8 @@ export default class Character extends Entity {
     public movement = new Transition();
     public handler: Handler;
 
-    private readonly attackAnimationSpeed = 50;
-    private readonly walkAnimationSpeed = 120;
+    protected attackAnimationSpeed = 50;
+    protected walkAnimationSpeed = 120;
 
     public effect: Modules.Effects = Modules.Effects.None;
     public destination!: Position | null;
@@ -56,55 +56,55 @@ export default class Character extends Entity {
 
     private effects: { [id: number]: EffectInfo } = {
         [Modules.Effects.Critical]: {
-            key: 'effect-critical',
+            key: 'effects/critical',
             animation: new Animation('effect', 10, 0, 48, 48)
         },
         [Modules.Effects.Terror]: {
-            key: 'effect-terror',
+            key: 'effects/terror',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
         [Modules.Effects.TerrorStatus]: {
-            key: 'effect-terror2',
+            key: 'effects/terror2',
             animation: new Animation('effect', 5, 0, 32, 32),
             perpetual: true,
             speed: 200
         },
         [Modules.Effects.Stun]: {
-            key: 'effect-stun',
+            key: 'effects/stun',
             animation: new Animation('effect', 6, 0, 48, 48),
             perpetual: true
         },
         [Modules.Effects.Healing]: {
-            key: 'effect-heal',
+            key: 'effects/heal',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
         [Modules.Effects.Fireball]: {
-            key: 'effect-fireball',
+            key: 'effects/fireball',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
         [Modules.Effects.Iceball]: {
-            key: 'effect-iceball',
+            key: 'effects/iceball',
             animation: new Animation('effect', 8, 0, 64, 64)
         },
         [Modules.Effects.Burning]: {
-            key: 'effect-burn',
+            key: 'effects/burn',
             animation: new Animation('effect', 5, 0, 32, 32),
             perpetual: true,
             speed: 150
         },
         [Modules.Effects.Freezing]: {
-            key: 'effect-freeze',
+            key: 'effects/freeze',
             animation: new Animation('effect', 6, 0, 32, 32),
             perpetual: true,
             speed: 200
         },
         [Modules.Effects.Poisonball]: {
-            key: 'effect-poisonball',
+            key: 'effects/poisonball',
             animation: new Animation('effect', 10, 0, 40, 40),
             speed: 175
         },
         [Modules.Effects.Boulder]: {
-            key: 'effect-boulder',
+            key: 'effects/boulder',
             animation: new Animation('effect', 7, 0, 32, 32)
         }
     };
@@ -190,14 +190,16 @@ export default class Character extends Entity {
     }
 
     /**
-     * Override for the superclass function so that the character's `setAnimation` is called.
-     * @param callback Optional parameter for when the animation finishes.
-     * @param speed Optional parameter for the animation speed.
-     * @param count How many times to repeat the animation.
+     * Takes in consideration the death animations that may be playing and
+     * ignores updating the silhouette if so.
+     * @param active Whether or not we should update the silhouette.
      */
 
-    public override animateDeath(callback?: () => void, speed = 120, count = 0): void {
-        this.setAnimation('death', speed, count, callback);
+    public override updateSilhouette(active?: boolean): void {
+        // Default the effect to the normal sprite if the character's death animation is playing.
+        if (this.hasDeathAnimation()) active = false;
+
+        super.updateSilhouette(active);
     }
 
     /**
@@ -232,6 +234,8 @@ export default class Character extends Entity {
      */
 
     public trade(entity: Entity): void {
+        if (this.dead) return;
+
         this.trading = true;
 
         this.follow(entity);
@@ -245,6 +249,8 @@ export default class Character extends Entity {
      */
 
     public follow(entity: Entity, forced = false): void {
+        if (this.dead || this.isStunned()) return;
+
         this.following = true;
 
         this.setTarget(entity);
@@ -259,6 +265,8 @@ export default class Character extends Entity {
      */
 
     public pursue(character: Character): void {
+        if (this.dead || this.isStunned()) return;
+
         this.setTarget(character);
         this.move(character.gridX, character.gridY);
 
@@ -381,6 +389,26 @@ export default class Character extends Entity {
     }
 
     /**
+     * Used for when an entity is in the dying animation stage. This is used
+     * to prevent the character animation from freaking out when under certain
+     * circumstances.
+     * @returns Whether the character's animation is death or the sprite key is death.
+     */
+
+    private hasDeathAnimation(): boolean {
+        return this.animation?.name === 'death' || this.sprite.key === 'death';
+    }
+
+    /**
+     * Used to determine whether the current character is stunned or not.
+     * @returns Whether or not the status effects contain the stun effect.
+     */
+
+    public isStunned(): boolean {
+        return this.statusEffects.includes(Modules.Effects.Stun);
+    }
+
+    /**
      * Performs an action and updates the orientation of the character.
      * @param orientation New orientation we are setting.
      * @param action The type of action we are performing.
@@ -391,23 +419,19 @@ export default class Character extends Entity {
 
         switch (action) {
             case Modules.Actions.Idle: {
-                this.setAnimation('idle', this.sprite.idleSpeed);
-                break;
+                return this.setAnimation('idle', this.sprite.idleSpeed);
             }
 
             case Modules.Actions.Orientate: {
-                this.setAnimation('idle', this.sprite.idleSpeed);
-                break;
+                return this.setAnimation('idle', this.sprite.idleSpeed);
             }
 
             case Modules.Actions.Attack: {
-                this.setAnimation('atk', this.attackAnimationSpeed, 1);
-                break;
+                return this.setAnimation('atk', this.attackAnimationSpeed, 1);
             }
 
             case Modules.Actions.Walk: {
-                this.setAnimation('walk', this.walkAnimationSpeed);
-                break;
+                return this.setAnimation('walk', this.walkAnimationSpeed);
             }
         }
     }
@@ -501,6 +525,7 @@ export default class Character extends Entity {
         else {
             let path = this.requestPathfinding(x, y);
 
+            // Fallback pathing is used to teleport entities that cannot path correctly.
             if ((!path || path.length < 2) && fallback) return this.fallbackCallback?.(x, y);
 
             this.followPath(path);

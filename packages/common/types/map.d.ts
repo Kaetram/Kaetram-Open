@@ -131,6 +131,7 @@ export interface ProcessedTileset {
     firstGid: number;
     lastGid: number;
     path: string;
+    relativePath: string;
 }
 
 export interface ProcessedAnimation {

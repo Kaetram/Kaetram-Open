@@ -1,3 +1,5 @@
+import Item from '../../objects/item';
+
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
@@ -18,7 +20,6 @@ import {
     Trade
 } from '@kaetram/common/network/impl';
 
-import type { Enchantments } from '@kaetram/common/types/item';
 import type Light from '../../../globals/impl/light';
 import type Map from '../../../map/map';
 import type World from '../../../world';
@@ -30,6 +31,7 @@ import type Equipment from './equipment/equipment';
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Player from './player';
+import type { Enchantments } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 
 export default class Handler {
@@ -161,6 +163,9 @@ export default class Handler {
             true
         );
 
+        // Despawn the pet from the world.
+        if (this.player.hasPet()) this.world.entities.removePet(this.player.pet!);
+
         // Clear the player's target.
         this.player.damageTable = {};
 
@@ -181,12 +186,30 @@ export default class Handler {
      * Callback handler for when the player is hit.
      * @param damage The amount of damage dealt.
      * @param attacker Who is attacking the player.
+     * @param isThorns Whether the damage is from thorns.
      */
 
-    private handleHit(damage: number, attacker?: Character): void {
+    private handleHit(damage: number, attacker?: Character, isThorns = false): void {
         if (!attacker || this.player.isDead()) return;
 
         this.player.addAttacker(attacker);
+
+        // Prevent endless loops of thorn damage.
+        if (isThorns) return;
+
+        let thornsLevel = this.player.equipment.getChestplate().getThornsLevel();
+
+        // Stop if we do not have thorns on the armour.
+        if (!thornsLevel) return;
+
+        // 40% chance to activate thorns.
+        if (Utils.randomInt(0, 100) > 40) return;
+
+        // Thorns damage is 10% per level of thorns enchantment.
+        let thornsDamage = Math.floor(damage * thornsLevel * 0.1);
+
+        // Send damage packet to the attacker.
+        attacker.hit(thornsDamage, this.player);
     }
 
     /**
@@ -305,7 +328,20 @@ export default class Handler {
         this.player.plateauLevel = this.map.getPlateauLevel(x, y);
 
         // Make the pet follow the player with every movement.
-        this.player.pet?.follow(this.player);
+        if (this.player.hasPet()) {
+            let distance = this.player.getDistance(this.player.pet!);
+
+            // Send a new follow packet if the pet is too far away.
+            if (distance > 2) this.player.pet?.follow(this.player);
+
+            // If the distance exceeds 10 tiles, we despawn and respawn the pet.
+            if (distance > 10) {
+                this.world.entities.removePet(this.player.pet!);
+                this.player.pet = this.world.entities.spawnPet(this.player, this.player.pet!.key);
+
+                this.player.pet?.follow(this.player);
+            }
+        }
     }
 
     /**
@@ -513,14 +549,12 @@ export default class Handler {
     ): void {
         // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
         if (drop && !this.player.isCheater() && !this.player.isHollowAdmin()) {
-            this.world.entities.spawnItem(
-                key, // Key of the item before an action is done on the slot.
-                this.player.x,
-                this.player.y,
-                true,
-                count, // Note this is the amount we are dropping.
-                enchantments
-            );
+            let item = new Item(key, this.player.x, this.player.y, true, count, enchantments);
+
+            // Pets spawn an entity, and items spawn in the world.
+            if (item.isPetItem()) this.player.setPet(item.pet);
+            else this.world.entities.addItem(item);
+
             log.drop(`Player ${this.player.username} dropped ${count} ${key}.`);
         }
 
@@ -767,7 +801,7 @@ export default class Handler {
             this.player.connection.reject('cheating');
         }
 
-        log.debug(`[${this.player.username}] Cheat score: ${this.player.cheatScore}`);
+        log.general(`[${this.player.username}] Cheat score: ${this.player.cheatScore}`);
     }
 
     /**

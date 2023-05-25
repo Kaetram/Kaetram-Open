@@ -10,6 +10,7 @@ import log from './log';
 import config from '../config';
 import { Modules, Packets } from '../network';
 
+import bcryptjs from 'bcryptjs';
 import ipaddr from 'ipaddr.js';
 
 import type { Bonuses, Stats } from '../types/item';
@@ -184,6 +185,39 @@ export default {
     },
 
     /**
+     * Takes a string of data and uses bcrypt to hash it. We create
+     * a callback function to return the hash as a string.
+     * @param data The string that we want to hash.
+     * @param callback Contains the resulting hash as a string.
+     */
+
+    hash(data: string, callback: (hash: string) => void): void {
+        bcryptjs.hash(data, 10, (error: Error, hash: string) => {
+            // Throw an error to prevent any further execution of the database.
+            if (error) throw error;
+
+            callback(hash);
+        });
+    },
+
+    /**
+     * Compares a plaintext string against a hash (generally stored in the database).
+     * We use bcrypt for this and create a callback with the result.
+     * @param data The plaintext string we want to compare.
+     * @param hash The hash we want to compare against.
+     * @param callback Contains the result of the comparison.
+     */
+
+    compare(data: string, hash: string, callback: (result: boolean) => void): void {
+        bcryptjs.compare(data, hash, (error: Error, result: boolean) => {
+            // Throw an error to prevent any further execution of the database.
+            if (error) throw error;
+
+            callback(result);
+        });
+    },
+
+    /**
      * Compresses the data and returns a base64 of it in string format.
      * @param data Any string, generally a JSON string.
      * @param compression Compression format, can be gzip or zlib
@@ -195,6 +229,23 @@ export default {
         return compression === 'gzip'
             ? zlib.gzipSync(data).toString('base64')
             : zlib.deflateSync(data).toString('base64');
+    },
+
+    /**
+     * Sanitizes a number and ensures it is non-fractional.
+     * @param number The number we want to sanitize.
+     * @param strict Ensures that the number is not negative.
+     * @returns A sanitized number.
+     */
+
+    sanitizeNumber(number: number, strict = false): number {
+        // If the number is not a number, we return 0.
+        if (isNaN(number)) return 0;
+
+        // A fractional number is not allowed, we revert it to positive and floor it.
+        if (number % 1 !== 0 || strict) return Math.floor(Math.max(0, number));
+
+        return Math.floor(number);
     },
 
     /**
@@ -216,6 +267,16 @@ export default {
 
     isValidUsername(text: string): boolean {
         return /^[\w ]+$/.test(text);
+    },
+
+    /**
+     * Verifies that the password is within the proper parameters
+     * of length and characters.
+     * @param text The plaintext password we are trying to validate.
+     */
+
+    isValidPassword(text = ''): boolean {
+        return text.length >= 3 && text.length <= 64;
     },
 
     /**

@@ -7,14 +7,17 @@ import type Player from '../entity/character/player/player';
  */
 
 export default class Header {
-    private health: HTMLElement = document.querySelector('#health')!; // The red element within the health bar.
-    private healthBar: HTMLElement = document.querySelector('#health-bar')!;
+    // Containers used for dimension calculations.
+    private health: HTMLElement = document.querySelector('#health')!; // The health bar container element
+    private mana: HTMLElement = document.querySelector('#mana')!; // The mana bar container element
 
-    private mana: HTMLElement = document.querySelector('#mana')!;
-    private manaBar: HTMLElement = document.querySelector('#mana-bar')!;
+    // Masks used to display remaining hit points and mana.
+    private healthMask: HTMLElement = document.querySelector('#health-mask')!; // The red element within the health bar.
+    private manaMask: HTMLElement = document.querySelector('#mana-mask')!;
 
-    private healthText: HTMLElement = document.querySelector('#health-bar-text')!; // Numerical value of the health bar.
-    private manaText: HTMLElement = document.querySelector('#mana-bar-text')!;
+    // Text properties for the health and mana bars.
+    private healthText: HTMLElement = this.health.querySelector('.health-text')!; // Numerical value of the health bar.
+    private manaText: HTMLElement = this.mana.querySelector('.mana-text')!;
 
     public constructor(private player: Player) {
         this.player.onHitPoints(this.handleHitPoints.bind(this));
@@ -32,7 +35,7 @@ export default class Header {
     private handleHitPoints(hitPoints: number, maxHitPoints: number, decrease?: boolean): void {
         this.setPoints(
             this.health,
-            this.healthBar,
+            this.healthMask,
             this.healthText,
             hitPoints,
             maxHitPoints,
@@ -47,7 +50,7 @@ export default class Header {
      */
 
     public handleMana(mana: number, maxMana: number): void {
-        this.setPoints(this.mana, this.manaBar, this.manaText, mana, maxMana);
+        this.setPoints(this.mana, this.manaMask, this.manaText, mana, maxMana);
     }
 
     /**
@@ -56,9 +59,8 @@ export default class Header {
      */
 
     public handlePoison(status: boolean): void {
-        this.health.style.background = status
-            ? 'linear-gradient(to right, #046E20, #19B047)'
-            : 'linear-gradient(to right, #f00, #ef5a5a)';
+        if (status) this.healthMask.classList.add('health-mask-poison');
+        else this.healthMask.classList.remove('health-mask-poison');
     }
 
     /**
@@ -71,10 +73,12 @@ export default class Header {
     }
 
     /**
-     * Function that updates a specified element and its text value
-     * based on the points data provided.
+     * Responsible for updating the width of the mask element to represent
+     * the percentage of points remaining. The mask element uses the width
+     * of the container element (since they're the same original width) to
+     * calculate the percentage of points remaining.
      * @param element The element we are updating the width of.
-     * @param barElement Used to compare against the element's width.
+     * @param maskElement Used to compare against the element's width.
      * @param textElement The text element we are adding the points info to.
      * @param points The points value we are updating the element with.
      * @param maxPoints The maximum points value.
@@ -83,7 +87,7 @@ export default class Header {
 
     private setPoints(
         element: HTMLElement,
-        barElement: HTMLElement,
+        maskElement: HTMLElement,
         textElement: HTMLElement,
         points: number,
         maxPoints: number,
@@ -91,22 +95,22 @@ export default class Header {
     ): void {
         let percentage = points / maxPoints;
 
-        element.style.width = `${Math.floor(barElement.offsetWidth * percentage).toString()}px`;
+        maskElement.style.width = `${Math.floor(element.offsetWidth * percentage).toString()}px`;
 
         textElement.textContent = `${points}/${maxPoints}`;
 
-        if (decrease) this.flash(this.player.poison ? 'poison' : 'white');
+        if (decrease) this.flash();
     }
 
     /**
-     * Temporarily adds a class to the health (to give the visual
-     * effect of it flashing) and creates a timeout that removes
-     * it after 500 milliseconds.
+     * Temporarily replaces the mask of the health bar with the white version
+     * and then quickly changes it back. This gives the illusion of the health
+     * bar flashing white.
      */
 
-    private flash(style: string): void {
-        this.health.classList.add(style);
+    private flash(): void {
+        this.healthMask.classList.add('health-mask-white');
 
-        window.setTimeout(() => this.health.classList.remove(style), 500);
+        window.setTimeout(() => this.healthMask.classList.remove('health-mask-white'), 150);
     }
 }

@@ -9,12 +9,6 @@ varying vec2 vTextureCoord;
 uniform sampler2D uLayer;
 
 // Hardcoded for now, just has to work.
-uniform sampler2D uTilesets0;
-uniform sampler2D uTilesets1;
-uniform sampler2D uTilesets2;
-uniform sampler2D uTilesets3;
-uniform sampler2D uTilesets4;
-uniform sampler2D uTilesets5;
 uniform sampler2D uTilesets[uTilesetCount];
 
 uniform vec2 uTilesetTileSize[uTilesetCount];

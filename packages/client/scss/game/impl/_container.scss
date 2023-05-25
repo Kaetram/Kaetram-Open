@@ -58,6 +58,36 @@
     border: 0;
 }
 
+.container-frame {
+    cursor: url('/img/hand.png'), auto;
+
+    position: absolute;
+    inset: 0;
+
+    margin: auto;
+
+    border-image: url('/img/interface/slices/container.png');
+    border-image-slice: 42% fill;
+    border-image-width: 16px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+}
+
+.container-subframe {
+    cursor: url('/img/hand.png'), auto;
+
+    position: absolute;
+    inset: 0;
+
+    margin: auto;
+
+    border-image: url('/img/interface/slices/subframe.png');
+    border-image-slice: 42% fill;
+    border-image-width: 64px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+}
+
 .container {
     cursor: url('/img/hand.png'), auto;
     position: absolute;
@@ -164,16 +194,16 @@
         .new-close-container {
             width: 11px * $i;
             height: 12px * $i;
-            background: url('/img/interface/guilds/elements.png') -112px * $i 0;
+            background: url('/img/interface/guilds/elements.png') -64px * $i 0;
             background-size: calc(width('guilds/elements.png') * $i);
 
             &:hover {
-                background-position-x: -124px * $i;
+                background-position-x: -76px * $i;
             }
 
             &:active,
             &.active {
-                background-position-x: -136px * $i;
+                background-position-x: -88px * $i;
             }
         }
     }
