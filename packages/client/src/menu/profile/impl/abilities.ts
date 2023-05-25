@@ -21,7 +21,7 @@ export default class Abilities extends Menu {
 
     private draggedElement = '';
 
-    private quickSlots: QuickSlots;
+    //private quickSlots: QuickSlots;
 
     private selectCallback?: SelectCallback;
 
@@ -42,13 +42,13 @@ export default class Abilities extends Menu {
             element.addEventListener('drop', (event: DragEvent) => this.dragDrop(event, i));
         }
 
-        // Load the quickslots.
-        this.quickSlots = new QuickSlots(this.player);
+        // // Load the quickslots.
+        // this.quickSlots = new QuickSlots(this.player);
 
-        // Redirect the quick slots select callback through this class' select callback.
-        this.quickSlots.onSelect((type: Opcodes.Ability, key: string) =>
-            this.selectCallback?.(type, key)
-        );
+        // // Redirect the quick slots select callback through this class' select callback.
+        // this.quickSlots.onSelect((type: Opcodes.Ability, key: string) =>
+        //     this.selectCallback?.(type, key)
+        // );
     }
 
     /**
@@ -219,7 +219,7 @@ export default class Abilities extends Menu {
         if (active) icon.classList.add('active');
         else icon.classList.remove('active');
 
-        this.quickSlots.toggleAbility(key, active);
+        //this.quickSlots.toggleAbility(key, active);
     }
 
     /**

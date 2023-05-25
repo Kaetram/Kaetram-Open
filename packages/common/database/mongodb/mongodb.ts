@@ -1,19 +1,23 @@
+import crypto from 'node:crypto';
+
 import Creator from './creator';
 import Loader from './loader';
 
-import Quests from '@kaetram/server/data/quests.json';
-import { Modules } from '@kaetram/common/network';
-import Filter from '@kaetram/common/util/filter';
+import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
-import bcryptjs from 'bcryptjs';
-import { MongoClient } from 'mongodb';
+import Filter from '@kaetram/common/util/filter';
+import { MongoClient, ObjectId } from 'mongodb';
 
-import type { TotalExperience } from '@kaetram/common/types/leaderboards';
-import type { Db } from 'mongodb';
-import type { QuestData } from '@kaetram/common/types/quest';
-import type { PlayerInfo } from './creator';
-import type { SlotData } from '@kaetram/common/types/slot';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
+import type { Db } from 'mongodb';
+import type { Modules } from '@kaetram/common/network';
+import type { PlayerInfo, ResetToken } from './creator';
+import type {
+    MobAggregate,
+    PvpAggregate,
+    SkillExperience,
+    TotalExperience
+} from '@kaetram/common/types/leaderboards';
 
 export default class MongoDB {
     private connectionUrl: string;
@@ -33,12 +37,14 @@ export default class MongoDB {
         password: string,
         private databaseName: string,
         private tls: boolean,
-        srv: boolean
+        srv: boolean,
+        authSource: string
     ) {
         let srvInsert = srv ? 'mongodb+srv' : 'mongodb',
             authInsert = username && password ? `${username}:${password}@` : '',
-            portInsert = port > 0 ? `:${port}` : '';
-        this.connectionUrl = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}`;
+            portInsert = port > 0 ? `:${port}` : '',
+            authSourceInsert = authSource ? `?authSource=${authSource}` : '';
+        this.connectionUrl = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}${authSourceInsert}`;
 
         // Attempt to connect to MongoDB.
         this.createConnection();
@@ -94,12 +100,15 @@ export default class MongoDB {
             else {
                 let [info] = playerInfo;
 
-                bcryptjs.compare(player.password, info.password, (error: Error, result) => {
-                    if (error) throw error;
+                Utils.compare(player.password, info.password, (result: boolean) => {
+                    // Reject if the password is incorrect.
+                    if (!result) return player.connection.reject('invalidlogin');
 
-                    // Reject if password hashes don't match.
-                    if (result) player.load(info);
-                    else player.connection.reject('invalidlogin');
+                    // Successfully passed login checks, we can send packets now.
+                    player.authenticated = true;
+
+                    // Login successful, load player data.
+                    player.load(info);
                 });
             }
         });
@@ -132,11 +141,14 @@ export default class MongoDB {
                 // User exists and so we reject instead of double registering.
                 if (playerInfo.length > 0) return player.connection.reject('userexists');
 
+                // Successfully managed to create a new user.
+                player.authenticated = true;
+
                 log.debug(`No player data found for ${player.username}, creating user.`);
 
                 player.statistics.creationTime = Date.now();
 
-                player.load(Creator.serializePlayer(player));
+                player.load(Creator.serialize(player));
             });
         });
     }
@@ -155,6 +167,51 @@ export default class MongoDB {
         cursor.toArray().then((playerInfo) => {
             callback(playerInfo.length > 0);
         });
+    }
+
+    /**
+     * Checks whether or not an IP string is contained within the database collection
+     * for IP bans. We use this to prevent connections from banned IPs.
+     * @param ip The IP string that we are checking for.
+     * @param callback Contains the result of the database check.
+     */
+
+    public isIpBanned(ip: string, callback: (banned: boolean) => void): void {
+        if (!this.hasDatabase()) return callback(false);
+
+        let cursor = this.database.collection('ipbans').find({ ip });
+
+        cursor.toArray().then((bans) => callback(bans.length > 0));
+    }
+
+    /**
+     * Removes a guild from our database.
+     * @param identifier The identifier of the guild to remove.
+     */
+
+    public deleteGuild(identifier: string): void {
+        if (!this.hasDatabase()) return;
+
+        let collection = this.database.collection('guilds');
+
+        collection.deleteOne({ identifier });
+    }
+
+    /**
+     * Applies an IP ban to a specified IP address. We can use this function
+     * to both ban and unban an IP address.
+     * @param ip The IP string to ban or unban.
+     * @param banned Whether or not we are banning or unbanning the IP.
+     */
+
+    public setIpBan(ip: string, banned: boolean): void {
+        if (!this.hasDatabase()) return;
+
+        let collection = this.database.collection('ipbans');
+
+        if (banned) collection.insertOne({ ip });
+
+        if (!banned) collection.deleteOne({ ip });
     }
 
     /**
@@ -203,6 +260,116 @@ export default class MongoDB {
     }
 
     /**
+     * Attempts to creata a reset token, hashes it, and applies it to
+     * an account. We use this token later on to validate the reset.
+     * @param email The email address of the account we want to reset.
+     * @param callback Callback function which contains the user's ID and the
+     * generated (unhashed) token which we will use to generate a reset link.
+     */
+
+    public createResetToken(
+        email: string,
+        callback: (id?: ObjectId, token?: string) => void
+    ): void {
+        if (!this.hasDatabase()) return callback();
+
+        let collection = this.database.collection('player_info');
+
+        // Attempt to grab the email provided from the database.
+        collection.findOne({ email }).then((playerInfo) => {
+            // If we don't find any account matching the email, just stop here.
+            if (!playerInfo) return callback();
+
+            let token = crypto.randomBytes(32).toString('hex');
+
+            // Create a reset token and hash it.
+            Utils.hash(token, (hash) => {
+                // Create a reset token and apply a one hour expiration.
+                let resetToken: ResetToken = {
+                    token: hash,
+                    expiration: Date.now() + 60 * 60 * 1000 // 1 hour.
+                };
+
+                // Update the account with the new reset token.
+                collection.updateOne(
+                    { email },
+                    {
+                        $set: {
+                            resetToken
+                        }
+                    },
+                    { upsert: true }
+                );
+            });
+
+            // Create a callback with the player's ID and the unhashed token.
+            callback(playerInfo._id, token);
+        });
+    }
+
+    /**
+     * Handles validating a reset token and resetting the password.
+     * @param id The id of the account we are resetting.
+     * @param password The new password we are setting.
+     * @param token The token we are using to validate the reset.
+     * @param callback Contains the result of the reset.
+     */
+
+    public resetPassword(
+        id: string,
+        token: string,
+        password: string,
+        callback: (status: boolean) => void
+    ): void {
+        if (!this.hasDatabase()) return callback(false);
+
+        let collection = this.database.collection('player_info'),
+            objectId = new ObjectId(id);
+
+        // Attempt to grab the account from the database.
+        collection.findOne({ _id: objectId }).then((playerInfo) => {
+            // If we don't find any account matching the ID, just stop here.
+            if (!playerInfo) return callback(false);
+
+            // If no reset token exists, just stop here.
+            if (!playerInfo.resetToken) return callback(false);
+
+            // If the reset token is expired, just stop here.
+            if (playerInfo.resetToken.expiration < Date.now()) return callback(false);
+
+            // If the reset token doesn't match, just stop here.
+            Utils.compare(token, playerInfo.resetToken.token, (result: boolean) => {
+                if (!result) {
+                    log.warning(`Invalid reset token for ${playerInfo.username}.`);
+                    return callback(false);
+                }
+
+                /**
+                 * Create a hash of the new password and store it in the database.
+                 * We also remove the reset token so it can't be used again.
+                 */
+
+                Utils.hash(password, (hash) => {
+                    collection.updateOne(
+                        { _id: objectId },
+                        {
+                            $set: {
+                                password: hash
+                            },
+                            $unset: {
+                                resetToken: ''
+                            }
+                        },
+                        { upsert: true }
+                    );
+                });
+
+                callback(true);
+            });
+        });
+    }
+
+    /**
      * Uses MongoDB aggregations to extract the total experience from
      * each of the players. The data is then sorted in descending order.
      */
@@ -212,18 +379,108 @@ export default class MongoDB {
     ): void {
         if (!this.hasDatabase()) return;
 
-        let collection = this.database.collection('player_skills');
+        let skills = this.database.collection('player_skills');
 
         // Unwinds array, groups by total experience, sorts in descending order.
-        collection
+        skills
             .aggregate([
                 { $unwind: '$skills' }, // Unwinds (transforms into multiple objects for each skill).
-                { $group: { _id: '$username', totalExperience: { $sum: '$skills.experience' } } },
-                { $sort: { totalExperience: -1 } },
-                { $limit: 100 }
+                {
+                    $group: {
+                        _id: '$username',
+                        experience: { $sum: '$skills.experience' },
+                        cheater: { $first: '$cheater' }
+                    }
+                },
+                { $sort: { experience: -1 } },
+                { $limit: 150 }
             ])
             .toArray()
             .then((data) => callback(data as TotalExperience[]));
+    }
+
+    /**
+     * Aggregates data for a specific skill. The data is then sorted in descending order.
+     * @param skill The skill to aggregate data for.
+     * @param callback Contains a list of players and their experience for the skill.
+     */
+
+    public getSkillAggregate(
+        skill: Modules.Skills,
+        callback: (experience: SkillExperience[]) => void
+    ): void {
+        if (!this.hasDatabase()) return;
+
+        let skills = this.database.collection('player_skills');
+
+        // Unwind the array, match the skill, sort in descending order, limit to 250.
+        skills
+            .aggregate([
+                { $unwind: '$skills' },
+                { $match: { 'skills.type': skill } },
+                {
+                    $group: {
+                        _id: '$username',
+                        experience: { $first: '$skills.experience' },
+                        cheater: { $first: '$cheater' }
+                    }
+                },
+                { $sort: { experience: -1 } },
+                { $limit: 150 }
+            ])
+            .toArray()
+            .then((data) => callback(data as SkillExperience[]));
+    }
+
+    /**
+     * Gathers the aggregate data (in descending order) for the mob specified.
+     * @param key The mob key to gather data for.
+     * @param callback Contains aggregate data for the mob.
+     */
+
+    public getMobAggregate(key: string, callback: (data: MobAggregate[]) => void): void {
+        if (!this.hasDatabase()) return;
+
+        let mobs = this.database.collection('player_statistics');
+
+        mobs.aggregate([
+            {
+                $group: {
+                    _id: '$username',
+                    kills: { $sum: `$mobKills.${key}` },
+                    cheater: { $first: '$cheater' }
+                }
+            },
+            { $sort: { kills: -1 } },
+            { $limit: 150 }
+        ])
+            .toArray()
+            .then((data) => callback(data as MobAggregate[]));
+    }
+
+    /**
+     * Gathers the aggregate data (in descending order) for the pvp kills.
+     * @param callback Contains aggregate data for the pvp kills.
+     */
+
+    public getPvpAggregate(callback: (data: PvpAggregate[]) => void): void {
+        if (!this.hasDatabase()) return;
+
+        let pvp = this.database.collection('player_statistics');
+
+        pvp.aggregate([
+            {
+                $group: {
+                    _id: '$username',
+                    kills: { $sum: '$pvpKills' },
+                    cheater: { $first: '$cheater' }
+                }
+            },
+            { $sort: { kills: -1 } },
+            { $limit: 150 }
+        ])
+            .toArray()
+            .then((data) => callback(data as PvpAggregate[]));
     }
 
     /**

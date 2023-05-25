@@ -1,43 +1,60 @@
 import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 
-import type { Socket } from 'socket.io';
-import type { Packets } from '@kaetram/common/network';
-import type SocketHandler from './sockethandler';
+import type { WebSocket } from 'uws';
+import type { ConnectionInfo, MessageCallback } from '@kaetram/common/types/network';
 
-type MessageCallback = (message: [Packets, never]) => void;
+export interface HeaderWebSocket extends WebSocket<ConnectionInfo> {
+    remoteAddress: string;
+}
 
 export default class Connection {
-    private messageCallback?: MessageCallback;
-    private closeCallback?: () => void;
+    public address = '';
+
+    public messageCallback?: MessageCallback;
 
     // Used for filtering duplicate messages.
     private lastMessage = '';
     private lastMessageTime = Date.now();
     private messageDifference = 100; // Prevent duplicate messages coming in faster than 100ms.
 
-    private disconnectTimeout: NodeJS.Timeout | null = null;
+    public messageRate = 0; // The amount of messages received in the last second.
     private timeoutDuration = 1000 * 60 * 10; // 10 minutes
 
-    public constructor(
-        public instance: string,
-        public address: string,
-        private socket: Socket,
-        private socketHandler: SocketHandler
-    ) {
-        this.socket.once('disconnect', this.handleClose.bind(this));
-        this.socket.on('message', this.handleMessage.bind(this));
+    private rateInterval: NodeJS.Timeout | null = null;
+    private verifyInterval: NodeJS.Timeout | null = null;
+    private disconnectTimeout: NodeJS.Timeout | null = null;
+
+    public closed = false;
+
+    private closeCallback?: () => void;
+
+    public constructor(public instance: string, private socket: HeaderWebSocket) {
+        // Convert the IP address hex string to a readable IP address.
+        this.address =
+            socket.remoteAddress || Utils.bufferToAddress(socket.getRemoteAddressAsText());
+
+        // Reset the messages per second every second.
+        this.rateInterval = setInterval(() => (this.messageRate = 0), 1000); // 1 second
+
+        // Run the verification inteval every 30 seconds to ensure the connection is still open.
+        this.verifyInterval = setInterval(this.isClosed.bind(this), 30_000); // 30 seconds
+
+        log.info(`Received socket connection from: ${this.address}.`);
     }
 
     /**
      * Sends a UTF8 message to the client for closing the connection,
      * then closes the connection (duh).
      * @param reason UTF8 reason for why the connection was closed.
-     * @param withCallback Whether or not to call the close callback.
      */
 
-    public reject(reason: string, withCallback = false): void {
+    public reject(reason: string): void {
+        // Tried rejecting an already closed connection, attempt to destroy the player class.
+        if (this.closed) return this.handleClose(reason);
+
         this.sendUTF8(reason);
-        this.close(reason, withCallback);
+        this.close(reason);
     }
 
     /**
@@ -45,61 +62,31 @@ export default class Connection {
      * Depending on the type of socket currently present, a different function is used
      * for closing the connection.
      * @param details Optional parameter for debugging why connection was closed.
-     * @param withCallback Whether or not to call the close callback.
+     * @param force Whether or not to forcefully call the close callback.
      */
 
-    public close(details?: string, withCallback = true): void {
-        this.socket.disconnect(true);
+    public close(details?: string, force = false): void {
+        // Prevent accessing a closed connection.
+        if (!this.closed) this.socket.end();
 
         if (details) log.info(`Connection ${this.address} has closed, reason: ${details}.`);
 
-        /**
-         * Before you question the redundancy of this. SocketIO experiences an issue where the player
-         * closes the browser but the `disconnect` signal is not being fired. This is a solution to the
-         * problem. We do not want `closeCallback` called twice unnecessarily, but in the event that
-         * `handleClose` does not fire up due to the issue mentioned above, we want to call the callback
-         * forcibly through here. Since the `disconnect` signal is not fired, then the timeout will continue
-         * to countdown (`handleClose` is never fired) until it forcibly calls this function and kicks the
-         * player out. In the event that we rely on the timeout to kick the player out, this callback will
-         * only fire once, since again, the reason this exists is because `disconnect` doesn't fire properly.
-         */
-
-        if (withCallback) this.closeCallback?.();
-    }
-
-    /**
-     * Attempts to parse the string and convert it to a JSON.
-     * An error is caught if the JSON fails to properly parse.
-     * @param message JSON message string to be parsed.
-     */
-
-    private handleMessage(message: string): void {
-        // Skip duplicates in a certain timeframe.
-        if (this.isDuplicate(message)) return;
-
-        try {
-            this.messageCallback?.(JSON.parse(message));
-
-            this.lastMessage = message;
-            this.lastMessageTime = Date.now();
-        } catch (error) {
-            log.error(`Message could not be parsed: ${message}.`);
-            log.error(error);
-        }
+        if (force) this.handleClose();
     }
 
     /**
      * Receives the close signal and ends the connection with the socket.
      */
 
-    private handleClose(): void {
-        log.info(`Closed socket: ${this.address}.`);
+    public handleClose(reason?: string): void {
+        log.info(`Closing socket connection to: ${this.address}.`);
 
-        this.socketHandler.remove(this.instance);
+        if (reason) log.info(`Received reason: ${reason}.`);
 
         this.closeCallback?.();
 
         this.clearTimeout();
+        this.clearVerifyInterval();
     }
 
     /**
@@ -113,7 +100,18 @@ export default class Connection {
         this.clearTimeout();
 
         // Start a new timeout and set the player's timeout variable.
-        this.disconnectTimeout = setTimeout(() => this.reject('timeout', true), duration);
+        this.disconnectTimeout = setTimeout(() => this.reject('timeout'), duration);
+    }
+
+    /**
+     * Removes the connection verification interval.
+     */
+
+    private clearVerifyInterval(): void {
+        if (!this.verifyInterval) return;
+
+        clearInterval(this.verifyInterval);
+        this.verifyInterval = null;
     }
 
     /**
@@ -145,6 +143,20 @@ export default class Connection {
     }
 
     /**
+     * Verifies whether the connection has been closed and the
+     * player is still online. This should not occur unless the
+     * connection improperly closes.
+     */
+
+    private isClosed(): void {
+        if (!this.closed) return;
+
+        log.warning(`Connection ${this.address} closed improperly.`);
+
+        this.handleClose();
+    }
+
+    /**
      * Takes a JSON object and stringifies it. It sends that string
      * to the client in the UTF8 format.
      * @param message Typically a JSON object of some sort.
@@ -160,6 +172,12 @@ export default class Connection {
      */
 
     public sendUTF8(message: string): void {
+        // Prevent sending messages to a closed connection, log for debugging.
+        if (this.closed) {
+            log.warning(`Attempted to send message to closed connection.`);
+            return log.trace();
+        }
+
         this.socket.send(message);
     }
 

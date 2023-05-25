@@ -24,7 +24,7 @@ export default {
      */
 
     getDamage(attacker: Character, target: Character, critical = false): number {
-        let accuracyBonus = attacker.getBonuses().accuracy,
+        let accuracyBonus = attacker.getAccuracyBonus(),
             accuracyLevel = attacker.getAccuracyLevel(),
             accuracyModifier = this.getAccuracyWeight(attacker, target),
             defenseLevel = target.getDefenseLevel(),
@@ -75,19 +75,61 @@ export default {
          */
 
         // Linearly increase accuracy based on accuracy bonus, prevent from going over 50.
-        accuracy += accuracyBonus > 50 ? 0.01 : 1 - accuracyBonus / 55;
+        accuracy += accuracyBonus > 70 ? 0 : 1 - accuracyBonus / 70;
 
         // Append the accuracy level bonus, we use a 1.75 modifier since skill level matters more.
         accuracy += (Modules.Constants.MAX_LEVEL - accuracyLevel + 1) * 0.01;
 
         // Append the defense level of the target to the accuracy modifier.
-        accuracy += defenseLevel * 0.0075;
+        accuracy += defenseLevel * 0.0175;
 
         // We use the scalar difference of the stats to append onto the accuracy.
         accuracy += accuracyModifier < 0 ? 1.5 : -(Math.sqrt(accuracyModifier) / 22.36) + 1;
 
-        // Critical damage boosts accuracy by a factor of 0.05;
-        if (critical) accuracy -= 0.05;
+        // Critical damage boosts accuracy by a factor of 0.15;
+        if (critical) accuracy -= 0.15;
+
+        // Apply the attack style modifiers.
+        switch (attacker.getAttackStyle()) {
+            case Modules.AttackStyle.Fast:
+            case Modules.AttackStyle.LongRange: {
+                // Rapid attack style decreases accuracy by a factor of 0.05;
+                accuracy += 0.05;
+                break;
+            }
+
+            case Modules.AttackStyle.Stab:
+            case Modules.AttackStyle.Focused:
+            case Modules.AttackStyle.Accurate: {
+                // Rapid attack style increases accuracy by a factor of 0.11;
+                accuracy -= 0.11;
+                break;
+            }
+
+            case Modules.AttackStyle.Crush:
+            case Modules.AttackStyle.Chop: {
+                // Rapid attack style increases accuracy by a factor of 0.07
+                accuracy -= 0.07;
+                break;
+            }
+
+            case Modules.AttackStyle.Shared: {
+                // Shared attack style increases accuracy by a factor of 0.05
+                accuracy -= 0.05;
+                break;
+            }
+        }
+
+        // TODO - These potions will add a level to their respective skill, and will be removed after 60 seconds.
+
+        // Increase accuracy if the attacker has the accuracy potion effect.
+        if (attacker.status.has(Modules.Effects.AccuracyPotion)) accuracy -= 0.07;
+
+        // Decrease accuracy if the target has the defense potion effect.
+        if (target.status.has(Modules.Effects.DefensePotion)) accuracy += 0.08;
+
+        // Terror decreases overall accuracy, so we increase it by 1.
+        if (attacker.status.has(Modules.Effects.Terror)) accuracy += 1;
 
         // We apply the damage absoprtion onto the max damage. See `getDamageReduction` for more information.
         maxDamage *= target.getDamageReduction();
@@ -113,11 +155,37 @@ export default {
             level = character.getSkillDamageLevel(),
             damage = (bonus + level) * 1.25;
 
-        // Apply the critical damage multiplier onto the damage.
+        // Apply a 50% max damage boost upon critical damage.
         if (critical) damage *= 1.5;
 
         // Player characters get a boost of 5 damage.
         if (character.isPlayer()) damage += 5;
+
+        // Different attack styles give different bonuses.
+        switch (character.getAttackStyle()) {
+            // Focused attack style boosts maximum damage by 10%
+            case Modules.AttackStyle.Focused:
+            case Modules.AttackStyle.Slash: {
+                damage *= 1.1;
+                break;
+            }
+
+            // Crush gives a 5% boost.
+            case Modules.AttackStyle.Crush:
+            case Modules.AttackStyle.Hack: {
+                damage *= 1.05;
+                break;
+            }
+
+            // Shared attack style gives a 3% boost.
+            case Modules.AttackStyle.Shared: {
+                damage *= 1.03;
+                break;
+            }
+        }
+
+        // Apply a 10% damage boost if the character has the strength potion effect.
+        if (character.status.has(Modules.Effects.StrengthPotion)) damage *= 1.1;
 
         // Ensure the damage is not negative.
         if (damage < 0) damage = 0;
@@ -128,7 +196,7 @@ export default {
     /**
      * Calculates the accuracy modifier for a character given their attack and defense stats.
      * The accuracy modifier is used to determine the likelihood of attaining maximum damage
-     * in a hit. The higher the accuracy modifier, the less likely to attain maximum damage.
+     * in a hit. The higher the accuracy modifier, the more likely to attain maximum damage.
      * @param attacker The attacking character.
      * @param target The defending character.
      * @returns A float of the accuracy modifier (to be used for calculating likelihood of attaining max damage).
@@ -162,7 +230,7 @@ export default {
 
         /**
          * If we have a attack style against a defense style that is not the same, then we can
-         * remove the 1/5th of the weight and append the full weight of the attack style to the
+         * remove the 1/3th of the weight and append the full weight of the attack style to the
          * accuracy modifier.
          */
 
@@ -315,5 +383,22 @@ export default {
     getPoisonChance(level: number): number {
         // Chance is per 235 - level, each level increases the chance in poisioning.
         return Utils.randomInt(0, 235 - level);
+    },
+
+    /**
+     * @returns Whether or not the effect chance was successful.
+     */
+
+    getEffectChance(): boolean {
+        return Utils.randomInt(0, 100) < 5;
+    },
+
+    /**
+     * Calculates the chance of an item to be enchanted.
+     * @param tier The tier of the shards the player is using.
+     */
+
+    getEnchantChance(tier: number): boolean {
+        return Utils.randomInt(0, 100) < 8 * tier;
     }
 };

@@ -10,7 +10,7 @@ jobs:
         strategy:
             matrix:
                 # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-                node-version: [14.x, 16.x, 18.x]
+                node-version: [16.x, 18.x]
                 os: [ubuntu-latest, windows-latest, macos-latest]
 
         name: Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
@@ -26,6 +26,9 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: 'yarn'
+
+            - name: Enable Corepack
+              run: corepack enable
 
             - name: Install Dependencies
               run: yarn install

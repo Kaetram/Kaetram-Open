@@ -20,7 +20,7 @@ export default class LoggedInContext extends WorldContext {
         cy.get('#login-password-input').type(this.PASSWORD);
         cy.get('#login').click();
         cy.wait(1000);
-        cy.get('#health-info', { timeout: 60_000 }).should('be.visible');
+        cy.get('#health', { timeout: 60_000 }).should('be.visible');
         cy.wait(1000);
     }
 }

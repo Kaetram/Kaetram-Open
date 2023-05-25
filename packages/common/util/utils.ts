@@ -10,10 +10,15 @@ import log from './log';
 import config from '../config';
 import { Modules, Packets } from '../network';
 
+import bcryptjs from 'bcryptjs';
+import ipaddr from 'ipaddr.js';
+
 import type { Bonuses, Stats } from '../types/item';
 
 export default {
     counter: -1, // A counter to prevent conflicts in ids.
+    doubleLumberjacking: false, // Whether or not the double lumberjacking event is active.
+    doubleMining: false, // Whether or not the double mining event is active.
 
     /**
      * Takes the type of entity and creates a UNIQUE instance id.
@@ -23,14 +28,6 @@ export default {
 
     createInstance(identifier = 0): string {
         return `${identifier}${this.randomInt(1000, 100_000)}${++this.counter}`;
-    },
-
-    /**
-     * Extracts the type of entity by taking the last number of the instance.
-     */
-
-    getEntityType(instance: string): number {
-        return parseInt(instance.slice(0, 1));
     },
 
     /**
@@ -69,19 +66,6 @@ export default {
 
     randomWeightedInt(min: number, max: number, weight: number): number {
         return Math.floor(Math.pow(Math.random(), weight) * (max - min + 1) + min);
-    },
-
-    /**
-     * Gets a distance between two points in the grid space.
-     * @param startX Starting point x grid space coordinate.
-     * @param startY Starting point y grid space coordinate.
-     * @param toX Ending point x grid space coordinate.
-     * @param toY Ending point y grid space coordinate.
-     * @returns An integer of the amount of tiles between the two points.
-     */
-
-    getDistance(startX: number, startY: number, toX: number, toY: number): number {
-        return Math.abs(startX - toX) + Math.abs(startY - toY);
     },
 
     /**
@@ -167,6 +151,27 @@ export default {
     },
 
     /**
+     * Gets a distance between two points in the grid space.
+     * @param startX Starting point x grid space coordinate.
+     * @param startY Starting point y grid space coordinate.
+     * @param toX Ending point x grid space coordinate.
+     * @param toY Ending point y grid space coordinate.
+     * @returns An integer of the amount of tiles between the two points.
+     */
+
+    getDistance(startX: number, startY: number, toX: number, toY: number): number {
+        return Math.abs(startX - toX) + Math.abs(startY - toY);
+    },
+
+    /**
+     * Extracts the type of entity by taking the last number of the instance.
+     */
+
+    getEntityType(instance: string): number {
+        return parseInt(instance.slice(0, 1));
+    },
+
+    /**
      * Helper function to avoid repetitive instances of comparison between
      * the unix epoch minus an event. Cleans up the code a bit.
      *
@@ -180,17 +185,98 @@ export default {
     },
 
     /**
+     * Takes a string of data and uses bcrypt to hash it. We create
+     * a callback function to return the hash as a string.
+     * @param data The string that we want to hash.
+     * @param callback Contains the resulting hash as a string.
+     */
+
+    hash(data: string, callback: (hash: string) => void): void {
+        bcryptjs.hash(data, 10, (error: Error, hash: string) => {
+            // Throw an error to prevent any further execution of the database.
+            if (error) throw error;
+
+            callback(hash);
+        });
+    },
+
+    /**
+     * Compares a plaintext string against a hash (generally stored in the database).
+     * We use bcrypt for this and create a callback with the result.
+     * @param data The plaintext string we want to compare.
+     * @param hash The hash we want to compare against.
+     * @param callback Contains the result of the comparison.
+     */
+
+    compare(data: string, hash: string, callback: (result: boolean) => void): void {
+        bcryptjs.compare(data, hash, (error: Error, result: boolean) => {
+            // Throw an error to prevent any further execution of the database.
+            if (error) throw error;
+
+            callback(result);
+        });
+    },
+
+    /**
      * Compresses the data and returns a base64 of it in string format.
      * @param data Any string, generally a JSON string.
      * @param compression Compression format, can be gzip or zlib
      */
 
-    compress(data: string, compression = 'gzip'): string | undefined {
-        if (!data) return;
+    compress(data: string, compression = 'gzip'): string {
+        if (!data) return '';
 
         return compression === 'gzip'
             ? zlib.gzipSync(data).toString('base64')
             : zlib.deflateSync(data).toString('base64');
+    },
+
+    /**
+     * Sanitizes a number and ensures it is non-fractional.
+     * @param number The number we want to sanitize.
+     * @param strict Ensures that the number is not negative.
+     * @returns A sanitized number.
+     */
+
+    sanitizeNumber(number: number, strict = false): number {
+        // If the number is not a number, we return 0.
+        if (isNaN(number)) return 0;
+
+        // A fractional number is not allowed, we revert it to positive and floor it.
+        if (number % 1 !== 0 || strict) return Math.floor(Math.max(0, number));
+
+        return Math.floor(number);
+    },
+
+    /**
+     * Verifies the email string against RegEx.
+     * @param email Email string to verify.
+     */
+
+    isEmail(email: string): boolean {
+        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
+            email
+        );
+    },
+
+    /**
+     * Checks if the username is valid. Valid usersnames are latin
+     * characters only (lowercase and uppercase), numbers, spaces, underscores, and special symbols.
+     * @param text The text we are trying to validate.
+     */
+
+    isValidUsername(text: string): boolean {
+        return /^[\w ]+$/.test(text);
+    },
+
+    /**
+     * Verifies that the password is within the proper parameters
+     * of length and characters.
+     * @param text The plaintext password we are trying to validate.
+     */
+
+    isValidPassword(text = ''): boolean {
+        return text.length >= 3 && text.length <= 64;
     },
 
     /**
@@ -220,24 +306,17 @@ export default {
     },
 
     /**
-     * Verifies the email string against RegEx.
-     * @param email Email string to verify.
+     * Converts an IP address buffer (from UWS) into an IPv4 address.
+     * @param buffer The address buffer.
+     * @returns An IPv4 address in string format.
      */
 
-    isEmail(email: string): boolean {
-        return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
-            email
-        );
-    },
-
-    /**
-     * Checks if the username is valid. Valid usersnames are latin
-     * characters only (lowercase and uppercase), numbers, spaces, underscores, and special symbols.
-     * @param text The text we are trying to validate.
-     */
-
-    isValidUsername(text: string): boolean {
-        return /^[\w ]+$/.test(text);
+    bufferToAddress(buffer: ArrayBuffer): string {
+        try {
+            return ipaddr.process(new TextDecoder().decode(buffer)).toString();
+        } catch {
+            return '69.69.69.69';
+        }
     },
 
     /**
@@ -260,14 +339,12 @@ export default {
      * @param key Raw key from the achievement JSON.
      */
 
-    getSkill(key: string): Modules.Skills {
-        if (!key) return -1;
+    getSkill(key: string): Modules.Skills | undefined {
+        if (!key) return;
 
         key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
 
-        let skill = Modules.Skills[key as keyof typeof Modules.Skills];
-
-        return skill === undefined ? -1 : skill;
+        return Modules.Skills[key as keyof typeof Modules.Skills];
     },
 
     /**

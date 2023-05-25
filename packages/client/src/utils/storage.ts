@@ -26,6 +26,7 @@ interface Settings {
     showNames: boolean;
     showLevels: boolean;
     disableCaching: boolean;
+    webgl: boolean;
 }
 
 interface RegionMapData {
@@ -47,12 +48,14 @@ let storage = window.localStorage,
     name = 'data';
 
 export default class Storage {
-    public data: StorageData = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
+    public data: StorageData;
     public mapData!: IDBDatabase; // Where we store the region caching.
 
     public newVersion = false;
 
     public constructor() {
+        this.data = storage.data ? JSON.parse(storage.getItem(name)!) : this.create();
+
         this.newVersion = this.isNewVersion();
 
         if (this.newVersion) {
@@ -91,7 +94,8 @@ export default class Storage {
                 debugMode: false,
                 showNames: true,
                 showLevels: true,
-                disableCaching: false
+                disableCaching: false,
+                webgl: false
             }
         };
     }
@@ -314,13 +318,14 @@ export default class Storage {
     }
 
     /**
-     * Checks if the local storage version of the client
-     * matches the window's config version.
-     * @returns True if client version is the same as config version.
+     * Disables or enables WebGL rendering.
+     * @param webGl The value of the webgl toggle switch.
      */
 
-    private isNewVersion(): boolean {
-        return this.data.clientVersion !== window.config.version;
+    public setWebGl(webGl: boolean): void {
+        this.data.settings.webgl = webGl;
+
+        this.save();
     }
 
     /**
@@ -440,6 +445,24 @@ export default class Storage {
 
     public isNew(): boolean {
         return this.data.new;
+    }
+
+    /**
+     * @returns Whether or not the webgl property is on.
+     */
+
+    public isWebGl(): boolean {
+        return this.data.settings.webgl;
+    }
+
+    /**
+     * Checks if the local storage version of the client
+     * matches the window's config version.
+     * @returns True if client version is the same as config version.
+     */
+
+    private isNewVersion(): boolean {
+        return this.data.clientVersion !== window.config.version;
     }
 
     /**

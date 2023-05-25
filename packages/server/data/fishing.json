@@ -1,0 +1,31 @@
+{
+    "shrimp": {
+        "levelRequirement": 1,
+        "experience": 20,
+        "difficulty": 15,
+        "item": "rawshrimp",
+        "achievement": "firstfish"
+    },
+
+    "tuna": {
+        "levelRequirement": 1,
+        "experience": 20,
+        "difficulty": 15,
+        "item": "rawtuna",
+        "achievement": "firstfish"
+    },
+
+    "jellyfish": {
+        "levelRequirement": 5,
+        "experience": 35,
+        "difficulty": 25,
+        "item": "jellyfish"
+    },
+
+    "clam": {
+        "levelRequirement": 10,
+        "experience": 55,
+        "difficulty": 40,
+        "item": "clamobject"
+    }
+}

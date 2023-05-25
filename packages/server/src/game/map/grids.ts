@@ -1,4 +1,5 @@
 import type Entity from '../entity/entity';
+import type Effect from '../entity/objects/effect';
 
 /**
  * Grids are used to keep track of the entities in the world and their positions. They are most used
@@ -18,6 +19,27 @@ export default class Grids {
 
             for (let x = -1; x < this.width; x++) this.entityGrid[y][x] = {};
         }
+    }
+
+    /**
+     * Looks for an effect entity at a specified coordinate.
+     * @param x The grid x coordinate.
+     * @param y The grid y coordinate.
+     * @returns The effect entity at the specified coordinate or undefined if none is found.
+     */
+
+    public getEffectAt(x: number, y: number): Effect | undefined {
+        let entity: Entity | undefined;
+
+        // Look through all the entities at the specified coordinate and return an effect entity if found.
+        this.forEachEntityAt(x, y, (e: Entity) => {
+            // Ignore non-effect entities
+            if (!e.isEffect()) return;
+
+            entity = e;
+        });
+
+        return entity;
     }
 
     /**

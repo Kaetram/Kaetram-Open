@@ -1,3 +1,8 @@
+import Item from '../../objects/item';
+
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import {
     Ability as AbilityPacket,
     Achievement,
@@ -13,12 +18,7 @@ import {
     Quest,
     Skill,
     Trade
-} from '../../../../network/packets';
-
-import config from '@kaetram/common/config';
-import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import { Modules, Opcodes } from '@kaetram/common/network';
+} from '@kaetram/common/network/impl';
 
 import type Light from '../../../globals/impl/light';
 import type Map from '../../../map/map';
@@ -31,6 +31,7 @@ import type Equipment from './equipment/equipment';
 import type Areas from '../../../map/areas/areas';
 import type NPC from '../../npc/npc';
 import type Player from './player';
+import type { Enchantments } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 
 export default class Handler {
@@ -45,9 +46,6 @@ export default class Handler {
     public constructor(private player: Player) {
         this.world = player.world;
         this.map = player.world.map;
-
-        // Disconnect callback
-        this.player.connection.onClose(this.handleClose.bind(this));
 
         // Death callback
         this.player.onDeath(this.handleDeath.bind(this));
@@ -121,51 +119,20 @@ export default class Handler {
     }
 
     /**
-     * Called after receiving the ready backet. Signals to the handler that we should
+     * Called after receiving the ready packet. Signals to the handler that we should
      * start loading our update interval timer.
      */
 
     public startUpdateInterval(): void {
-        this.updateInterval = setInterval(this.handleUpdate.bind(this), this.updateTime);
-    }
+        this.updateInterval = setInterval(() => {
+            if (this.isTickInterval(4)) this.detectAggro();
+            if (this.isTickInterval(32)) {
+                this.player.loiter();
+                this.player.cheatScore = 0;
+            }
 
-    /**
-     * Callback handler for when the player's connection is closed.
-     */
-
-    private handleClose(): void {
-        this.player.stopHealing();
-
-        this.clear();
-
-        if (this.player.ready) {
-            if (config.discordEnabled)
-                this.world.discord.sendMessage(this.player.username, 'has logged out!');
-
-            if (config.hubEnabled)
-                this.world.api.sendChat(Utils.formatName(this.player.username), 'has logged out!');
-        }
-
-        if (this.player.inMinigame()) this.player.getMinigame()?.disconnect(this.player);
-
-        this.player.trade.close();
-
-        this.player.combat.stop();
-
-        this.player.skills.stop();
-
-        this.player.clearAreas();
-
-        this.player.minigameArea?.exitCallback?.(this.player);
-
-        this.world.cleanCombat(this.player);
-
-        this.world.linkFriends(this.player, true);
-
-        this.player.save();
-
-        this.world.entities.removePlayer(this.player);
-        this.world.api.sendLogout(this.player.username);
+            this.updateTicks++;
+        }, this.updateTime);
     }
 
     /**
@@ -174,6 +141,7 @@ export default class Handler {
 
     private handleDeath(attacker?: Character): void {
         this.player.dead = true;
+        this.player.status.clear();
 
         if (attacker) {
             attacker.clearTarget();
@@ -195,6 +163,9 @@ export default class Handler {
             true
         );
 
+        // Despawn the pet from the world.
+        if (this.player.hasPet()) this.world.entities.removePet(this.player.pet!);
+
         // Clear the player's target.
         this.player.damageTable = {};
 
@@ -215,12 +186,30 @@ export default class Handler {
      * Callback handler for when the player is hit.
      * @param damage The amount of damage dealt.
      * @param attacker Who is attacking the player.
+     * @param isThorns Whether the damage is from thorns.
      */
 
-    private handleHit(damage: number, attacker?: Character): void {
+    private handleHit(damage: number, attacker?: Character, isThorns = false): void {
         if (!attacker || this.player.isDead()) return;
 
-        if (!this.player.hasAttacker(attacker)) this.player.addAttacker(attacker);
+        this.player.addAttacker(attacker);
+
+        // Prevent endless loops of thorn damage.
+        if (isThorns) return;
+
+        let thornsLevel = this.player.equipment.getChestplate().getThornsLevel();
+
+        // Stop if we do not have thorns on the armour.
+        if (!thornsLevel) return;
+
+        // 40% chance to activate thorns.
+        if (Utils.randomInt(0, 100) > 40) return;
+
+        // Thorns damage is 10% per level of thorns enchantment.
+        let thornsDamage = Math.floor(damage * thornsLevel * 0.1);
+
+        // Send damage packet to the attacker.
+        attacker.hit(thornsDamage, this.player);
     }
 
     /**
@@ -254,9 +243,22 @@ export default class Handler {
         // Reset talking index when passing through any door.
         this.player.talkIndex = 0;
 
-        // Prevent the player from entering if the player's level is too low.
-        if (this.player.level < door.level)
-            return this.player.notify(`You need to be level ${door.level} to enter this door.`);
+        /**
+         * Handles entering through a door that requires a level. If no skill is specified
+         * then we use the player's combat level, otherwise we use the level of the skill
+         * that was specified.
+         */
+
+        if (door.level) {
+            let level = door.skill
+                    ? this.player.skills.get(Utils.getSkill(door.skill)!).level
+                    : this.player.level,
+                message = door.skill
+                    ? `Your ${door.skill} level needs to be at least ${door.level} to enter.`
+                    : `Your combat level must be at least ${door.level} to enter.`;
+
+            if (level < door.level) return this.player.notify(message);
+        }
 
         // If a door has a quest, redirect to the quest handler's door callback.
         if (door.quest) {
@@ -326,7 +328,20 @@ export default class Handler {
         this.player.plateauLevel = this.map.getPlateauLevel(x, y);
 
         // Make the pet follow the player with every movement.
-        this.player.pet?.follow(this.player);
+        if (this.player.hasPet()) {
+            let distance = this.player.getDistance(this.player.pet!);
+
+            // Send a new follow packet if the pet is too far away.
+            if (distance > 2) this.player.pet?.follow(this.player);
+
+            // If the distance exceeds 10 tiles, we despawn and respawn the pet.
+            if (distance > 10) {
+                this.world.entities.removePet(this.player.pet!);
+                this.player.pet = this.world.entities.spawnPet(this.player, this.player.pet!.key);
+
+                this.player.pet?.follow(this.player);
+            }
+        }
     }
 
     /**
@@ -408,7 +423,12 @@ export default class Handler {
      */
 
     private handleAttackStyle(attackStyle: Modules.AttackStyle): void {
-        this.player.send(new EquipmentPacket(Opcodes.Equipment.Style, { attackStyle }));
+        this.player.send(
+            new EquipmentPacket(Opcodes.Equipment.Style, {
+                attackStyle,
+                attackRange: this.player.attackRange
+            })
+        );
     }
 
     /**
@@ -516,20 +536,25 @@ export default class Handler {
      * @param slot The slot of the item we removed.
      * @param key The key of the slot we removed.
      * @param count The count represents the amount of item we are dropping, NOT IN THE SLOT.
+     * @param enchantments The enchantments of the item we are dropping.
      * @param drop If the item should spawn in the world upon removal.
      */
 
-    private handleInventoryRemove(slot: Slot, key: string, count: number, drop?: boolean): void {
+    private handleInventoryRemove(
+        slot: Slot,
+        key: string,
+        count: number,
+        enchantments: Enchantments,
+        drop?: boolean
+    ): void {
         // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
-        if (drop && !this.player.isCheater()) {
-            this.world.entities.spawnItem(
-                key, // Key of the item before an action is done on the slot.
-                this.player.x,
-                this.player.y,
-                true,
-                count, // Note this is the amount we are dropping.
-                slot.enchantments
-            );
+        if (drop && !this.player.isCheater() && !this.player.isHollowAdmin()) {
+            let item = new Item(key, this.player.x, this.player.y, true, count, enchantments);
+
+            // Pets spawn an entity, and items spawn in the world.
+            if (item.isPetItem()) this.player.setPet(item.pet);
+            else this.world.entities.addItem(item);
+
             log.drop(`Player ${this.player.username} dropped ${count} ${key}.`);
         }
 
@@ -690,6 +715,10 @@ export default class Handler {
         // NPC is a store.
         if (npc.store) return this.world.stores.open(this.player, npc);
 
+        // Used to toggle interaction with the containers.
+        if (npc.role === 'banker' || npc.role === 'enchanter')
+            this.player.canAccessContainer = true;
+
         switch (npc.role) {
             case 'banker': {
                 this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize(true)));
@@ -772,7 +801,7 @@ export default class Handler {
             this.player.connection.reject('cheating');
         }
 
-        log.debug(`[${this.player.username}] Cheat score: ${this.player.cheatScore}`);
+        log.general(`[${this.player.username}] Cheat score: ${this.player.cheatScore}`);
     }
 
     /**
@@ -787,22 +816,6 @@ export default class Handler {
                 maxMana: this.player.mana.getMaxMana()
             })
         );
-    }
-
-    /**
-     * Callback function for the update that gets called every `updateTime` seconds.
-     */
-
-    private handleUpdate(): void {
-        if (this.isTickInterval(4)) this.detectAggro();
-        if (this.isTickInterval(16)) {
-            this.player.cheatScore = 0;
-
-            // Cold damage is applied every 16 ticks.
-            this.player.handleColdDamage();
-        }
-
-        this.updateTicks++;
     }
 
     /**
@@ -906,8 +919,11 @@ export default class Handler {
      * Clears the timeouts and nullifies them (used for disconnection);
      */
 
-    private clear(): void {
+    public clear(): void {
         clearInterval(this.updateInterval!);
         this.updateInterval = null;
+
+        clearInterval(this.player.readyTimeout!);
+        this.player.readyTimeout = null;
     }
 }

@@ -22,6 +22,7 @@ export default class Item extends Entity {
     private itemType = 'object'; // weapon, armour, pendant, etc.
     public stackable = false;
     public edible = false;
+    public interactable = false;
     public maxStackSize = 1; // Default max stack size.
     public plugin: Plugin | undefined;
 
@@ -38,14 +39,23 @@ export default class Item extends Entity {
     // Points usage
     public manaCost = 0;
 
+    // Pet information
+    public pet = '';
+
     // Item information
     public description = '';
-    public projectileName = 'projectile-arrow';
+    public projectileName = 'arrow';
 
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
     public poisonous = false;
+    public freezing = false;
+    public burning = false;
     public weaponType = '';
+
+    // Bowl variables
+    public smallBowl = false;
+    public mediumBowl = false;
 
     // Stats
     public attackStats: Stats = Utils.getEmptyStats();
@@ -60,6 +70,7 @@ export default class Item extends Entity {
     public maxCount = -1; // Used for stores to know maximum limit.
     public lumberjacking = -1;
     public mining = -1;
+    public fishing = -1;
     public attackRange = 1;
 
     public exists = true;
@@ -87,6 +98,9 @@ export default class Item extends Entity {
     ) {
         super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
 
+        // Prevent invalid count values.
+        this.count = Utils.sanitizeNumber(this.count);
+
         this.data = (rawData as RawData)[key];
 
         if (!this.data) {
@@ -101,6 +115,7 @@ export default class Item extends Entity {
         this.name = this.data.name;
         this.stackable = this.data.stackable || this.stackable;
         this.edible = this.data.edible || this.edible;
+        this.interactable = this.data.interactable || this.interactable;
         this.maxStackSize = this.getMaxStackSize(this.data.maxStackSize);
         this.price = this.data.price || this.price;
         this.storeCount = this.data.storeCount || this.storeCount;
@@ -111,9 +126,12 @@ export default class Item extends Entity {
         this.bonuses = this.data.bonuses || this.bonuses;
         this.attackRate = this.data.attackRate || this.attackRate;
         this.poisonous = this.data.poisonous || this.poisonous;
+        this.freezing = this.data.freezing || this.freezing;
+        this.burning = this.data.burning || this.burning;
         this.movementModifier = this.data.movementModifier || this.movementModifier;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
         this.mining = this.data.mining || this.mining;
+        this.fishing = this.data.fishing || this.fishing;
         this.undroppable = this.data.undroppable || this.undroppable;
         this.respawnDelay = this.data.respawnDelay || this.respawnDelay;
         this.attackRange = this.data.attackRange || this.getDefaultAttackRange();
@@ -121,6 +139,9 @@ export default class Item extends Entity {
         this.description = this.data.description || this.description;
         this.manaCost = this.data.manaCost || this.manaCost;
         this.weaponType = this.data.weaponType || this.weaponType;
+        this.smallBowl = this.data.smallBowl || this.smallBowl;
+        this.mediumBowl = this.data.mediumBowl || this.mediumBowl;
+        this.pet = this.data.pet || this.pet;
 
         if (this.data.plugin) this.loadPlugin();
     }
@@ -145,15 +166,30 @@ export default class Item extends Entity {
      */
 
     public copy(): this {
+        // These are weird hacks because of pointer references junk.
         return new Item(
-            this.key,
+            `${this.key}`,
             this.x,
             this.y,
             this.dropped,
-            this.count,
-            this.enchantments,
+            Utils.sanitizeNumber(this.count),
+            this.copyEnchantments(),
             this.owner
         ) as this;
+    }
+
+    /**
+     * Copies the enchantments one by one in order to avoid any references
+     * to the original item's enchantments in the slot.
+     * @returns A new enchantment object that is a copy of the original.
+     */
+
+    private copyEnchantments(): Enchantments {
+        let enchantments: Enchantments = {};
+
+        for (let key in this.enchantments) enchantments[key] = this.enchantments[key];
+
+        return enchantments;
     }
 
     /**
@@ -212,7 +248,7 @@ export default class Item extends Entity {
          */
 
         if (this.skill) {
-            let skill = player.skills.get(Utils.getSkill(this.skill));
+            let skill = player.skills.get(Utils.getSkill(this.skill)!);
 
             // Separate conditional if skill exists.
             if (skill)
@@ -262,15 +298,22 @@ export default class Item extends Entity {
      * @returns Equipment type from Modules.
      */
 
-    public getEquipmentType(): Modules.Equipment {
+    public getEquipmentType(): Modules.Equipment | undefined {
         switch (this.itemType) {
-            case 'armour':
-            case 'armourarcher': {
-                return Modules.Equipment.Armour;
+            case 'helmet': {
+                return Modules.Equipment.Helmet;
             }
 
-            case 'armourskin': {
-                return Modules.Equipment.ArmourSkin;
+            case 'chestplate': {
+                return Modules.Equipment.Chestplate;
+            }
+
+            case 'legs': {
+                return Modules.Equipment.Legs;
+            }
+
+            case 'skin': {
+                return Modules.Equipment.Skin;
             }
 
             case 'weapon':
@@ -299,8 +342,6 @@ export default class Item extends Entity {
                 return Modules.Equipment.Arrows;
             }
         }
-
-        return -1;
     }
 
     /**
@@ -358,7 +399,7 @@ export default class Item extends Entity {
                 return [
                     Modules.AttackStyle.Stab,
                     Modules.AttackStyle.Slash,
-                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Shared,
                     Modules.AttackStyle.Defensive
                 ];
             }
@@ -383,8 +424,12 @@ export default class Item extends Entity {
                 return [Modules.AttackStyle.Stab, Modules.AttackStyle.Defensive];
             }
 
-            case 'club': {
-                return [Modules.AttackStyle.Crush, Modules.AttackStyle.Defensive];
+            case 'blunt': {
+                return [
+                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Shared,
+                    Modules.AttackStyle.Defensive
+                ];
             }
 
             case 'spear': {
@@ -403,6 +448,10 @@ export default class Item extends Entity {
                 ];
             }
 
+            case 'whip': {
+                return [Modules.AttackStyle.Slash, Modules.AttackStyle.Defensive];
+            }
+
             case 'staff': {
                 return [Modules.AttackStyle.Focused, Modules.AttackStyle.LongRange];
             }
@@ -412,12 +461,68 @@ export default class Item extends Entity {
     }
 
     /**
+     * Depending on the item type, they may have different enchantments available. We return
+     * a list of enchantments that we pick from based on the item type.
+     * @returns A list of enchantments that are available for the item or empty if not applicable.
+     */
+
+    public getAvailableEnchantments(): Modules.Enchantment[] {
+        switch (this.itemType) {
+            case 'weapon': {
+                return [
+                    Modules.Enchantment.Bloodsucking,
+                    Modules.Enchantment.Critical,
+                    Modules.Enchantment.DoubleEdged
+                ];
+            }
+
+            case 'weaponarcher':
+            case 'weaponmagic': {
+                return [Modules.Enchantment.Explosive, Modules.Enchantment.Stun];
+            }
+
+            case 'armour':
+            case 'armourarcher': {
+                return [
+                    Modules.Enchantment.Evasion,
+                    Modules.Enchantment.Thorns,
+                    Modules.Enchantment.AntiStun
+                ];
+            }
+
+            default: {
+                return [];
+            }
+        }
+    }
+
+    /**
+     * Grabs the enchantment level for an item based on the enchantment id. We
+     * assume that we already checked the item has the enchantment.
+     * @param enchantment The enchantment id we are checking for.
+     * @returns The level of the enchantment.
+     */
+
+    public getEnchantmentLevel(enchantment: number): number {
+        return this.enchantments[enchantment].level;
+    }
+
+    /**
      * @param id The enchantment id we are checking for.
      * @returns Whether or not the item has the enchantment.
      */
 
     public hasEnchantment(id: Modules.Enchantment): boolean {
         return id in this.enchantments;
+    }
+
+    /**
+     * Check if the item is enchanted.
+     * @returns Whether or not the item has any enchantments.
+     */
+
+    public isEnchanted(): boolean {
+        return Object.keys(this.enchantments).length > 0;
     }
 
     /**
@@ -443,9 +548,10 @@ export default class Item extends Entity {
 
     public isEquippable(): boolean {
         return (
-            this.itemType === 'armour' ||
-            this.itemType === 'armourarcher' ||
-            this.itemType === 'armourskin' ||
+            this.itemType === 'helmet' ||
+            this.itemType === 'chestplate' ||
+            this.itemType === 'legs' ||
+            this.itemType === 'skin' ||
             this.itemType === 'weapon' ||
             this.itemType === 'weaponarcher' ||
             this.itemType === 'weaponmagic' ||
@@ -481,6 +587,30 @@ export default class Item extends Entity {
 
     public isMagicWeapon(): boolean {
         return this.itemType === 'weaponmagic';
+    }
+
+    /**
+     * @returns Whether or not the item is a small bowl item.
+     */
+
+    public isSmallBowl(): boolean {
+        return this.smallBowl;
+    }
+
+    /**
+     * @returns Whether or not the item is a medium bowl item.
+     */
+
+    public isMediumBowl(): boolean {
+        return this.mediumBowl;
+    }
+
+    /**
+     * @returns Whether or not the item is a pet type, used to spawn pets.
+     */
+
+    public isPetItem(): boolean {
+        return this.pet !== '';
     }
 
     /**

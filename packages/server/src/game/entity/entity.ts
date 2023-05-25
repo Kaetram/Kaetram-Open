@@ -3,13 +3,14 @@ import Character from './character/character';
 import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
-import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type Combat from './character/combat/combat';
-import type Player from './character/player/player';
 import type NPC from './npc/npc';
 import type Item from './objects/item';
-import type Projectile from './objects/projectile';
 import type Mob from './character/mob/mob';
+import type Pet from './character/pet/pet';
+import type Effect from './objects/effect';
+import type Projectile from './objects/projectile';
+import type Player from './character/player/player';
+import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 type MovementCallback = (x: number, y: number) => void;
 
@@ -29,11 +30,8 @@ abstract class Entity {
     public oldX = -1;
     public oldY = -1;
 
-    public combat!: Combat;
-
     public dead = false;
 
-    public username!: string;
     public region = -1;
     public colour = ''; // name colour displayed for the entity
     public scale = 0; // scale of the entity (default if not specified)
@@ -197,7 +195,7 @@ abstract class Entity {
         if (!quest) return this.visible;
 
         // Check if quest is completed and check if NPC is hidden.
-        return !(quest.isFinished() && quest.isHiddenNPC(this.key));
+        return quest.isNPCVisible(this.key);
     }
 
     /**
@@ -261,6 +259,24 @@ abstract class Entity {
 
     public isProjectile(): this is Projectile {
         return this.type === Modules.EntityType.Projectile;
+    }
+
+    /**
+     * Checks whether or not the entity is a pet.
+     * @returns Whether the type is equal to the EntityType pet.
+     */
+
+    public isPet(): this is Pet {
+        return this.type === Modules.EntityType.Pet;
+    }
+
+    /**
+     * Checks whether or not the entity is an effect.
+     * @returns Whether the type is equal to the EntityType effect.
+     */
+
+    public isEffect(): this is Effect {
+        return this.type === Modules.EntityType.Effect;
     }
 
     /**

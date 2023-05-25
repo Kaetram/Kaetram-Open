@@ -6,24 +6,29 @@ import Enchanter from '../controllers/enchanter';
 import Entities from '../controllers/entities';
 import Stores from '../controllers/stores';
 import Warps from '../controllers/warps';
+import Guilds from '../controllers/guilds';
+import Crafting from '../controllers/crafting';
 import API from '../network/api';
 import Network from '../network/network';
-import { Chat } from '../network/packets';
+import Client from '../network/client';
+import Events from '../controllers/events';
 
-import Utils from '@kaetram/common/util/utils';
-import log from '@kaetram/common/util/log';
-import { PacketType } from '@kaetram/common/network/modules';
-import { Modules } from '@kaetram/common/network';
 import config from '@kaetram/common/config';
+import log from '@kaetram/common/util/log';
+import Utils from '@kaetram/common/util/utils';
 import Discord from '@kaetram/common/api/discord';
+import { Chat, Guild } from '@kaetram/common/network/impl';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { PacketType } from '@kaetram/common/network/modules';
 
 import type Grids from './map/grids';
-import type Packet from '../network/packet';
 import type Connection from '../network/connection';
-import type SocketHandler from '../network/sockethandler';
 import type Character from './entity/character/character';
+import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
+import type Packet from '@kaetram/common/network/packet';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
+import type { GuildData } from '@kaetram/common/types/guild';
 
 export interface PacketData {
     packet: Packet;
@@ -37,15 +42,19 @@ export interface PacketData {
 type ConnectionCallback = (connection: Connection) => void;
 
 export default class World {
-    public map: Map = new Map(this);
-    public api: API = new API(this);
-    public stores: Stores = new Stores(this);
-    public warps: Warps = new Warps(this);
-    public globals: Globals = new Globals(this);
-    public entities: Entities = new Entities(this);
-    public network: Network = new Network(this);
-    public minigames: Minigames = new Minigames(this);
-    public enchanter: Enchanter = new Enchanter(this);
+    public map: Map;
+    public api: API;
+    public stores: Stores;
+    public warps: Warps;
+    public globals: Globals;
+    public entities: Entities;
+    public network: Network;
+    public minigames: Minigames;
+    public enchanter: Enchanter = new Enchanter();
+    public crafting: Crafting = new Crafting();
+    public guilds: Guilds;
+    public client: Client;
+    public events: Events;
 
     public discord: Discord = new Discord(config.hubEnabled);
 
@@ -56,6 +65,18 @@ export default class World {
     public connectionCallback?: ConnectionCallback;
 
     public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
+        this.map = new Map(this);
+        this.api = new API(this);
+        this.stores = new Stores(this);
+        this.warps = new Warps(this);
+        this.globals = new Globals(this);
+        this.entities = new Entities(this);
+        this.network = new Network(this);
+        this.minigames = new Minigames(this);
+        this.guilds = new Guilds(this);
+        this.client = new Client(this);
+        this.events = new Events(this);
+
         this.discord.onMessage(this.globalMessage.bind(this));
 
         this.onConnection(this.network.handleConnection.bind(this.network));
@@ -71,8 +92,6 @@ export default class World {
      */
 
     private tick(): void {
-        if (config.hubEnabled) setInterval(() => this.api.pingHub(), config.hubPing);
-
         setInterval(() => {
             this.network.parse();
             this.map.regions.parse();
@@ -153,24 +172,7 @@ export default class World {
             if (character.target?.instance !== cleanCharacter.instance) return;
 
             character.clearTarget();
-
-            if (character.hasAttacker(cleanCharacter)) character.removeAttacker(cleanCharacter);
         });
-    }
-
-    /**
-     * Updates the status of `lPlayer` in the friends list of all players that
-     * are currently logged in and have `lPlayer` in their friends list.
-     * @param lPlayer The player that we are updating the status of relative to others.
-     * @param logout Whether the `lPlayer` is logging out or not.
-     */
-
-    public linkFriends(lPlayer: Player, logout = false): void {
-        // Parse the local friends first.
-        this.syncFriendsList(lPlayer.username, logout);
-
-        // If the hub is enabled, we request the hub to link friends across servers.
-        if (config.hubEnabled) this.api.linkFriends(lPlayer, logout);
     }
 
     /**
@@ -184,6 +186,53 @@ export default class World {
         this.entities.forEachPlayer((player: Player) => {
             if (player.friends.hasFriend(username))
                 player.friends.setStatus(username, !logout, serverId);
+        });
+    }
+
+    /**
+     * Finds a guild based on an identifier and synchronizes the online status of the
+     * `username` member to the rest of the guild members. We use this method
+     * since it is more efficient to only look through the guild members of the player
+     * logging in/out rather than all the players in the world.
+     * @param identifier The guild identifier that we are searching for.
+     * @param username The username that we are updating the status of.
+     * @param logout Whether or not we received a logout packet.
+     * @param serverId The server id that the player is currently logged in to.
+     */
+
+    public syncGuildMembers(
+        identifier: string,
+        username: string,
+        logout = false,
+        serverId = config.serverId
+    ): void {
+        if (!identifier) return;
+
+        this.database.loader.loadGuild(identifier, (guild?: GuildData) => {
+            if (!guild) return;
+
+            // Iterate through the members in the guild.
+            for (let member of guild.members) {
+                // Skip if the member is the player we are updating.
+                if (member.username === username) continue;
+
+                let player = this.getPlayerByName(member.username);
+
+                // Skip if player doesn't exist.
+                if (!player) continue;
+
+                // If the player is online, send a packet with a new status.
+                player.send(
+                    new Guild(Opcodes.Guild.Update, {
+                        members: [
+                            {
+                                username,
+                                serverId: logout ? -1 : serverId
+                            }
+                        ]
+                    })
+                );
+            }
         });
     }
 
@@ -242,6 +291,31 @@ export default class World {
 
     public getPopulation(): number {
         return Object.keys(this.entities.players).length;
+    }
+
+    /**
+     * Determines whether or not to use the double drop probability
+     * based on the current special event status. These are statuses
+     * enabled during the weekends randomly.
+     * @returns The drop probability depending on the special event status.
+     */
+
+    public getDropProbability(): number {
+        if (!this.events.isDoubleDrop()) return Modules.Constants.DROP_PROBABILITY;
+
+        return this.events.doubleDropProbability;
+    }
+
+    /**
+     * Uses the events controller to determine the experience per hit if the
+     * event is currently enabled.
+     * @returns The amount of experience per hit.
+     */
+
+    public getExperiencePerHit(): number {
+        if (!this.events.isIncreasedExperience()) return Modules.Constants.EXPERIENCE_PER_HIT;
+
+        return this.events.experiencePerHit;
     }
 
     /**
