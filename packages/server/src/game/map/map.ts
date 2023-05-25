@@ -31,7 +31,7 @@ export default class Map {
 
     // Map handlers
     public regions: Regions;
-    public grids: Grids = new Grids(this.width, this.height);
+    public grids: Grids;
 
     // Map data and collisions
     public data: (number | number[])[] = map.data;
@@ -45,6 +45,8 @@ export default class Map {
     public warps: ProcessedArea[] = map.areas.warps || [];
     public trees: ProcessedResource[] = map.trees || [];
     public rocks: ProcessedResource[] = map.rocks || [];
+    public fishSpots: ProcessedResource[] = map.fishSpots || [];
+    public foraging: ProcessedResource[] = map.foraging || [];
     public lights: ProcessedArea[] = map.areas.lights || [];
     public signs: ProcessedArea[] = map.areas.signs || [];
 
@@ -54,6 +56,8 @@ export default class Map {
     private areas: { [name: string]: Areas } = {};
 
     public constructor(public world: World) {
+        this.grids = new Grids(this.width, this.height);
+
         this.loadAreas();
         this.loadDoors();
 
@@ -116,6 +120,7 @@ export default class Map {
                 reqItem: door.reqItem || '',
                 reqItemCount: door.reqItemCount || 0,
                 stage: door.stage || 0,
+                skill: door.skill || '',
                 level: door.level || 0
             };
         }
@@ -305,16 +310,13 @@ export default class Map {
     }
 
     /**
-     * Converts the tileIndex into a position object and returns
-     * a string formatted version of the coordinate.
-     * @param tileIndex The index we are converting to a position.
-     * @returns A string of the x and y coordinate.
+     * Obtains the cursor based on the specified tile index.
+     * @param index The tile index we are checking.
+     * @returns The cursor name if it exists.
      */
 
-    private getObjectId(tileIndex: number): string {
-        let position = this.indexToCoord(tileIndex);
-
-        return `${position.x}-${position.y}`;
+    public getCursorFromIndex(index: number): string {
+        return this.getCursor(this.data[index]);
     }
 
     /**

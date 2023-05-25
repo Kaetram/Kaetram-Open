@@ -8,44 +8,45 @@ import Pointer from './controllers/pointer';
 import SpritesController from './controllers/sprites';
 import Zoning from './controllers/zoning';
 import Player from './entity/character/player/player';
-import PlayerHandler from './entity/character/player/playerhandler';
+import Handler from './entity/character/player/handler';
 import Map from './map/map';
 import Connection from './network/connection';
 import Socket from './network/socket';
-import Utils from './utils/util';
 import Camera from './renderer/camera';
 import Minigame from './renderer/minigame';
 import Overlays from './renderer/overlays';
-import Renderer from './renderer/renderer';
+import WebGL from './renderer/webgl/webgl';
+import Canvas from './renderer/canvas';
 import Updater from './renderer/updater';
-import { agent } from './utils/detect';
 import Pathfinder from './utils/pathfinder';
+import Utils from './utils/util';
+import { agent, supportsWebGl } from './utils/detect';
 
 import { Packets } from '@kaetram/common/network';
 
 import type App from './app';
-import type Character from './entity/character/character';
 import type Entity from './entity/entity';
 import type Storage from './utils/storage';
+import type Character from './entity/character/character';
+import type { TileIgnore } from './utils/pathfinder';
 
 export default class Game {
+    public player: Player;
     public storage: Storage;
 
-    public map: Map = new Map(this);
-    public camera: Camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
-
-    public player: Player = new Player('');
+    public map: Map;
+    public camera: Camera;
 
     public zoning: Zoning = new Zoning();
     public overlays: Overlays = new Overlays();
     public pathfinder: Pathfinder = new Pathfinder();
 
     public info: InfoController = new InfoController();
-    public sprites: SpritesController = new SpritesController();
+    public sprites: SpritesController;
 
     public minigame: Minigame = new Minigame();
 
-    public renderer: Renderer;
+    public renderer: WebGL | Canvas;
     public input: InputController;
 
     public socket: Socket;
@@ -64,11 +65,19 @@ export default class Game {
     public started = false;
     public ready = false;
     public pvp = false;
+    public useWebGl = false;
 
     public constructor(public app: App) {
         this.storage = app.storage;
+        this.useWebGl = supportsWebGl() && this.storage.isWebGl();
 
-        this.renderer = new Renderer(this);
+        this.player = new Player('', this);
+
+        this.map = new Map(this);
+        this.camera = new Camera(this.map.width, this.map.height, this.map.tileSize);
+        this.sprites = new SpritesController();
+
+        this.renderer = this.useWebGl ? new WebGL(this) : new Canvas(this);
         this.menu = new MenuController(this);
         this.input = new InputController(this);
         this.socket = new Socket(this);
@@ -81,7 +90,12 @@ export default class Game {
 
         app.sendStatus('Loading game');
 
-        this.map.onReady(() => app.ready());
+        this.map.onReady(() => {
+            app.ready();
+
+            // Initialize the renderer for WebGL.
+            this.renderer.load();
+        });
 
         app.onLogin(this.socket.connect.bind(this.socket));
         app.onResize(this.resize.bind(this));
@@ -166,7 +180,7 @@ export default class Game {
 
         this.camera.centreOn(this.player);
 
-        new PlayerHandler(this, this.player);
+        this.player.handler = new Handler(this.player);
 
         this.renderer.updateAnimatedTiles();
 
@@ -197,19 +211,62 @@ export default class Game {
         character: Character,
         x: number,
         y: number,
-        ignores: Character[] = []
+        ignores: TileIgnore[] = [],
+        cursor = ''
     ): number[][] {
         let path: number[][] = [];
 
-        if (this.map.isColliding(x, y) && !this.map.isObject(x, y)) return path;
+        path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y, ignores);
 
-        if (ignores) for (let entity of ignores) this.pathfinder.addIgnore(entity);
+        // Stop if there is no path.
+        if (path.length === 0) return path;
 
-        path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y);
+        // Special case for fishing where we remove the last path if it is colliding.
+        if (cursor === 'fishing') {
+            let last = path[path.length - 2];
 
-        if (ignores) this.pathfinder.clearIgnores(this.map.grid);
+            // Remove if there is a collision  at the last path only (to allow fishing from a distance).
+            if (this.map.isColliding(last[0], last[1])) path.pop();
+        }
 
         return path;
+    }
+
+    /**
+     * Used for when the player has selected low power mode and we do not
+     * actively centre the camera on the character. We check the boundaries
+     * of the camera and if the character approaches them we move the camera
+     * in the next quadrant.
+     */
+
+    public updateCameraBounds(): void {
+        // We are not using non-centred camera, so skip.
+        if (!this.zoning) return;
+
+        // Difference between the player and the camera, indicates which boundary we are approaching.
+        let x = this.player.gridX - this.camera.gridX,
+            y = this.player.gridY - this.camera.gridY;
+
+        // Left boundary
+        if (x === 0) this.zoning.setLeft();
+        // Right boundary
+        else if (x === this.camera.gridWidth - 2) this.zoning.setRight();
+        // Top boundary
+        else if (y === 0) this.zoning.setUp();
+        // Bottom boundary
+        else if (y === this.camera.gridHeight - 2) this.zoning.setDown();
+
+        // No zoning has occured, so stop here.
+        if (this.zoning.direction === null) return;
+
+        // Synchronize the camera and reset the zoning directions.
+        this.camera.zone(this.zoning.getDirection());
+
+        // Update the animated tiles.
+        this.renderer.updateAnimatedTiles();
+
+        // Reset the zoning directions.
+        this.zoning.reset();
     }
 
     /**
@@ -268,33 +325,38 @@ export default class Game {
 
     public searchForEntityAt(position: Position, radius = 2): Entity | undefined {
         let entities = this.entities.grids.getEntitiesAround(
-            position.gridX!,
-            position.gridY!,
-            radius
-        );
+                position.gridX!,
+                position.gridY!,
+                radius
+            ),
+            closest: Entity | undefined,
+            boundary = this.map.tileSize * 1.5;
 
         /**
-         * Create a slightly larger than a tile boundary around the entity and check
-         * if the position is within that boundary. If it is, then we have found the
-         * entity we are looking for.
+         * The `position` parameter contains the absolute x and y coordinates
+         * of the cursor. We iterate through the entities and try to find
+         * the distance between the cursor and the entity. We then compare
+         * the distance to the previous entity and if it is smaller, we
+         * replace the previous entity with the current one.
          */
 
         for (let entity of entities) {
-            let spriteStartX = entity.x - Utils.thirdTile,
-                spriteStartY = entity.y - Utils.thirdTile,
-                spriteEndX = entity.x + Utils.tileAndAQuarter,
-                spriteEndY = entity.y + Utils.tileAndAQuarter;
+            // Skip pets from the search.
+            if (entity.isPet()) continue;
 
-            if (
-                position.x >= spriteStartX &&
-                position.x <= spriteEndX &&
-                position.y >= spriteStartY &&
-                position.y <= spriteEndY
-            )
-                return entity;
+            let entityX = entity.x - entity.sprite.offsetX / 2,
+                entityY = entity.y - entity.sprite.offsetY / 2,
+                distance = Utils.distance(position.x, position.y, entityX, entityY);
+
+            if (distance > boundary) continue;
+
+            if (!closest || distance < closest.distance) {
+                closest = entity;
+                closest.distance = distance;
+            }
         }
 
-        return undefined;
+        return closest;
     }
 
     /**

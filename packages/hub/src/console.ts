@@ -1,7 +1,6 @@
 import log from '@kaetram/common/util/log';
 
 import type Servers from './controllers/servers';
-import type Server from './model/server';
 
 export default class Console {
     public constructor(private servers: Servers) {
@@ -22,7 +21,7 @@ export default class Console {
 
             switch (command) {
                 case 'server': {
-                    return this.servers.findEmpty((server: Server) => console.log(server));
+                    return console.log(this.servers.findEmpty());
                 }
 
                 case 'player': {

@@ -43,15 +43,19 @@ export default class App {
     private registerButton: HTMLButtonElement = document.querySelector('#new-account')!;
     private cancelRegister: HTMLButtonElement = document.querySelector('#cancel-register')!;
     private cancelWorlds: HTMLButtonElement = document.querySelector('#cancel-worlds')!;
+    private cancelForget: HTMLButtonElement = document.querySelector('#cancel-forget')!;
     private continueWorlds: HTMLButtonElement = document.querySelector('#continue-worlds')!;
+    private continueForget: HTMLButtonElement = document.querySelector('#continue-forget')!;
 
     private respawn: HTMLButtonElement = document.querySelector('#respawn')!;
 
+    private emailResetInput: HTMLInputElement = document.querySelector('#email-reset-input')!;
     private rememberMe: HTMLInputElement = document.querySelector('#remember-me input')!;
     private guest: HTMLInputElement = document.querySelector('#guest input')!;
 
     private about: HTMLElement = document.querySelector('#toggle-about')!;
     private credits: HTMLElement = document.querySelector('#toggle-credits')!;
+    private resetPassword: HTMLElement = document.querySelector('#toggle-reset-password')!;
 
     private validation: NodeListOf<HTMLElement> = document.querySelectorAll('.validation-summary')!;
     private loading: HTMLElement = document.querySelector('.loader')!;
@@ -96,12 +100,15 @@ export default class App {
 
         this.registerButton.addEventListener('click', () => this.openScroll('create-character'));
         this.cancelRegister.addEventListener('click', () => this.openScroll('load-character'));
+        this.cancelForget.addEventListener('click', () => this.openScroll('load-character'));
 
         this.cancelWorlds.addEventListener('click', () => this.openScroll('load-character'));
         this.continueWorlds.addEventListener('click', () => this.openScroll('load-character'));
+        this.continueForget.addEventListener('click', () => this.forgotPassword());
 
         this.about.addEventListener('click', () => this.openScroll('about'));
         this.credits.addEventListener('click', () => this.openScroll('credits'));
+        this.resetPassword.addEventListener('click', () => this.openScroll('reset-password'));
 
         this.respawn.addEventListener('click', () => this.respawnCallback?.());
 
@@ -168,6 +175,9 @@ export default class App {
 
     public handleKeyDown(e: KeyboardEvent): void {
         if (this.isMenuHidden()) return this.keyDownCallback?.(e);
+
+        // Ignore the login if the reset password is open.
+        if (this.currentScroll === 'reset-password') return;
 
         if (e.key === 'Enter') this.login();
     }
@@ -343,12 +353,18 @@ export default class App {
                     this.getPasswordField()
                 );
 
+            if (this.getPassword().length > 64)
+                return this.sendError(
+                    'Password must be less than 64 characters long.',
+                    this.getPasswordField()
+                );
+
             // Check that the password matches the password confirmation.
             if (this.getPassword() !== this.getPasswordConfirmation())
                 return this.sendError('Passwords do not match.', this.passwordConfirmation);
 
             // Verify email against regex.
-            if (this.getEmail() !== '' && !Util.isEmail(this.getEmail()))
+            if (!Util.isEmail(this.getEmail()))
                 return this.sendError(`The email you've entered is not valid.`, this.emailField);
         }
 
@@ -557,8 +573,7 @@ export default class App {
     }
 
     /**
-     * @returns The jQuery HTML element of the username field
-     * depending on the currently open scroll.
+     * @returns The HTML username input element of the currently open scroll.
      */
 
     private getUsernameField(): HTMLInputElement {
@@ -578,8 +593,7 @@ export default class App {
     }
 
     /**
-     * @returns The JQuery HTML element of the password field
-     * depending on the currently open scroll.
+     * @returns The HTML password input element of the currently open scroll.
      */
 
     private getPasswordField(): HTMLInputElement {
@@ -683,10 +697,44 @@ export default class App {
         this.selectedServer = server;
 
         let name = this.worldSelectButton.querySelector('strong')!;
-        name.textContent = `${server.name}`;
+        name.textContent = `${server.name} ${server.id}`;
 
         let players = this.worldSelectButton.querySelector('span')!;
         players.textContent = `(${server.players}/${server.maxPlayers} players)`;
+    }
+
+    /**
+     * Handles the forgot password button click. We send a message to the
+     * hub to request a password reset. If there is no hub then we do not proceed.
+     */
+
+    private async forgotPassword(): Promise<void> {
+        if (!this.config.hub)
+            return this.setValidation('validation-error', 'No hub is configured.');
+
+        // Grab the input field value for the email address.
+        let email = this.emailResetInput.value;
+
+        // Validate the input email.
+        if (!email || !Util.isEmail(email))
+            return this.setValidation('validation-error', 'Please enter a valid email address.');
+
+        // Send a post request to the hub to request a password reset.
+        let res = await fetch(`${this.config.hub}/api/v1/requestReset`, {
+            method: 'POST',
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        }).catch(() => null);
+
+        // If we do not get a response, then we display an error message.
+        if (!res)
+            return this.setValidation(
+                'validation-error',
+                'Please contact an administrator for support.'
+            );
+
+        // If we receive a response then just let the player know that the request was sent.
+        this.setValidation('status', 'Password reset request sent, please check your email.');
     }
 
     /**
@@ -728,7 +776,7 @@ export default class App {
             // If this is the first server in the list, select it and mark it as active
             if (parseInt(i) === 0) li.classList.add('active');
 
-            name.textContent = server.name;
+            name.textContent = `${server.name} ${server.id}`;
 
             players.textContent = `${server.players}/${server.maxPlayers} players`;
 

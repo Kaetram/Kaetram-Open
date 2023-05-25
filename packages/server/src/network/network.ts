@@ -1,14 +1,13 @@
-import { Handshake } from './packets';
-
 import Player from '../game/entity/character/player/player';
 
 import config from '@kaetram/common/config';
+import { Handshake } from '@kaetram/common/network/impl';
 
-import type Packet from './packet';
 import type World from '../game/world';
 import type Connection from './connection';
 import type Regions from '../game/map/regions';
 import type SocketHandler from './sockethandler';
+import type Packet from '@kaetram/common/network/packet';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 
 export default class Network {
@@ -55,29 +54,36 @@ export default class Network {
      */
 
     public handleConnection(connection: Connection): void {
-        let player = new Player(this.world, this.database, connection),
-            timeDifference = Date.now() - this.getLastConnection(connection);
+        this.database.isIpBanned(connection.address, (banned: boolean) => {
+            // Ensure that the connection is not banned.
+            if (banned) return connection.reject('banned');
 
-        if (!config.debugging) {
-            // Check that the connections aren't coming too fast.
-            if (timeDifference < this.timeoutThreshold) return connection.reject('toofast');
+            // Create the player instance and check the time difference between the last connection.
+            let player = new Player(this.world, this.database, connection),
+                timeDifference = Date.now() - this.getLastConnection(connection);
 
-            // Ensure that we don't have too many connections from the same IP address.
-            if (this.socketHandler.isMaxConnections(connection.address))
-                return connection.reject('toomany');
-        }
+            // Skip if we are in debug mode.
+            if (!config.debugging) {
+                // Check that the connections aren't coming too fast.
+                if (timeDifference < this.timeoutThreshold) return connection.reject('toofast');
 
-        this.socketHandler.updateLastTime(connection.address);
+                // Ensure that we don't have too many connections from the same IP address.
+                if (this.socketHandler.isMaxConnections(connection.address))
+                    return connection.reject('toomany');
+            }
 
-        this.createPacketQueue(player);
+            this.socketHandler.updateLastTime(connection.address);
 
-        this.send(
-            player,
-            new Handshake({
-                instance: player.instance,
-                serverId: config.serverId
-            })
-        );
+            this.createPacketQueue(player);
+
+            this.send(
+                player,
+                new Handshake({
+                    instance: player.instance,
+                    serverId: config.serverId
+                })
+            );
+        });
     }
 
     /**
@@ -110,7 +116,9 @@ export default class Network {
      */
 
     public broadcast(packet: Packet): void {
-        for (let queue of Object.values(this.packets)) queue.push(packet.serialize());
+        let serializedPacket = packet.serialize();
+
+        for (let queue of Object.values(this.packets)) queue.push(serializedPacket);
     }
 
     /**
@@ -186,6 +194,6 @@ export default class Network {
      */
 
     private getLastConnection(connection: Connection): number {
-        return this.socketHandler.addresses[connection.address].lastTime;
+        return this.socketHandler.addresses[connection.address]?.lastTime;
     }
 }

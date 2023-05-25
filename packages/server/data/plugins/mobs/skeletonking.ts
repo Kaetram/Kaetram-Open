@@ -2,16 +2,16 @@ import Default from './default';
 
 import Utils from '@kaetram/common/util/utils';
 
-import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
+import type Character from '@kaetram/server/src/game/entity/character/character';
 
 const MAX_MINIONS = 6;
 
 export default class SkeletonKing extends Default {
     // Two positions where the minions will spawn.
     private positions: Position[] = [
-        { x: 143, y: 403 },
-        { x: 152, y: 403 }
+        { x: 22, y: 684 },
+        { x: 28, y: 684 }
     ];
 
     private minionsSpawned = 0;

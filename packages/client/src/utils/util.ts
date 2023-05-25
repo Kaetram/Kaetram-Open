@@ -1,7 +1,10 @@
 import { onSecondaryPress } from './press';
 
+import Sprite from '../entity/sprite';
+
 import { Modules, Opcodes } from '@kaetram/common/network';
 
+import type { AnimationData } from '../entity/sprite';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
 export let isInt = (n: number): boolean => n % 1 === 0;
@@ -33,6 +36,21 @@ export default {
 
     randomInt(min: number, max: number): number {
         return min + Math.floor(Math.random() * (max - min + 1));
+    },
+
+    /**
+     * Calculates the Pythagorean distance between two points. Yes this is one
+     * of the few times that high-school math is useful, so it wasn't all for
+     * nothing.
+     * @param fromX The starting x coordinate.
+     * @param fromY The starting y coordinate.
+     * @param toX The ending x coordinate.
+     * @param toY The ending y coordinate.
+     * @returns The distance between the two points in floating point.
+     */
+
+    distance(fromX: number, fromY: number, toX: number, toY: number): number {
+        return Math.sqrt(Math.pow(fromX - toX, 2) + Math.pow(fromY - toY, 2));
     },
 
     /**
@@ -94,7 +112,12 @@ export default {
     getImageURL(key = ''): string {
         if (key === '') return '';
 
-        return `url("/img/sprites/item-${key}.png")`;
+        let blocks = key.split('/');
+
+        // Use the last block as the key if we are extracting a key path.
+        if (blocks.length > 1) key = blocks[blocks.length - 1];
+
+        return `url("/img/sprites/items/${key}.png")`;
     },
 
     /**
@@ -102,14 +125,20 @@ export default {
      * every first letter after a space.
      * Example: 'tHiS Is a usErName' -> 'This Is A Username'
      * @param name The raw username string defaulting to '' if not specified.
+     * @param trim The amount of characters to trim the name to.
      * @returns The formatted name string.
      */
 
-    formatName(name = ''): string {
-        return name.replace(
+    formatName(name = '', trim = 0): string {
+        name = name.replace(
             /\w\S*/g,
             (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
         );
+
+        // Trim the name if specified.
+        if (trim > 1 && name.length > trim) name = `${name.slice(0, Math.max(0, trim))}...`;
+
+        return name;
     },
 
     /**
@@ -141,7 +170,7 @@ export default {
      * @param menuAction Menu action that we are converting.
      */
 
-    getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container {
+    getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container | undefined {
         switch (menuAction) {
             case Modules.MenuActions.Wield:
             case Modules.MenuActions.Equip:
@@ -156,10 +185,6 @@ export default {
 
             case Modules.MenuActions.Move: {
                 return Opcodes.Container.Swap;
-            }
-
-            default: {
-                return -1;
             }
         }
     },
@@ -217,6 +242,234 @@ export default {
             archery: 0,
             magic: 0
         };
+    },
+
+    /**
+     * Given the input of a sprite, we generate a hurt sprite. A hurt sprite
+     * is one that has all non-empty pixels turned a shade of red. We assume that
+     * the sprite is loaded upon calling this function. The hurt sprite is
+     * identical and can be a clone of the original sprite.
+     * @param sprite The sprite that we want to generate a hurt sprite for.
+     */
+
+    getHurtSprite(sprite: Sprite): Sprite {
+        let canvas = document.createElement('canvas'),
+            context = canvas.getContext('2d')!,
+            hurtSprite = new Sprite(sprite.data); // Create a clone to avoid issues.
+
+        canvas.width = sprite.image.width;
+        canvas.height = sprite.image.height;
+
+        // Draw an image of the sprite onto the canvas.
+        context.drawImage(sprite.image, 0, 0, sprite.image.width, sprite.image.height);
+
+        let spriteData = context.getImageData(0, 0, sprite.image.width, sprite.image.height);
+
+        /**
+         * This function iterates through the pixel data. The context data stores pixel information
+         * in a 1D array. Each value represents a colour channel (red, green, blue, alpha). At each
+         * 4 indices, information about a single pixel is stored. For example, the first 4 indices
+         * represent the red, green, blue and alpha values of the first pixel. The next 4 indices
+         * represent the red, green, blue and alpha values of the second pixel and so on.
+         */
+
+        for (let i = 0; i < spriteData.data.length; i += 4) {
+            // Skip transparent pixels.
+            if (spriteData.data[i + 4] === 0) continue;
+
+            // 0 - red, 1 - green, 2 - blue, 3 - alpha
+            spriteData.data[i] = 255;
+            spriteData.data[i + 1] = spriteData.data[i + 2] = 75;
+        }
+
+        // Apply the new image data onto the context
+        context.putImageData(spriteData, 0, 0);
+
+        // Update the image of the hurt sprite.
+        hurtSprite.image = canvas;
+
+        // Toggle as loaded for use
+        hurtSprite.loaded = true;
+
+        return hurtSprite;
+    },
+
+    /**
+     * A silhouette is a yellow hue that is drawn around the sprite. It is used for
+     * highlighting a sprite when hovering over it.
+     */
+
+    getSilhouetteSprite(sprite: Sprite): Sprite {
+        let canvas = document.createElement('canvas'),
+            context = canvas.getContext('2d')!,
+            silhouetteSprite = new Sprite(sprite.data); // Create a clone to avoid issues.
+
+        canvas.width = sprite.image.width;
+        canvas.height = sprite.image.height;
+
+        // Draw an image of the sprite onto the canvas.
+        context.drawImage(sprite.image, 0, 0, sprite.image.width, sprite.image.height);
+
+        let spriteData = context.getImageData(0, 0, sprite.image.width, sprite.image.height),
+            cloneData = context.getImageData(0, 0, sprite.image.width, sprite.image.height);
+
+        /**
+         * We iterate each pixel (4 indices) and look for a pixel that has a zero alpha value
+         * but also has an adjacent pixel that has a non-zero alpha value. If this is the case,
+         * we set the pixel colour to (255, 255, 150) and alpha to 150.
+         */
+
+        for (let i = 0; i < cloneData.data.length; i += 4) {
+            // Non-empty pixels are skipped.
+            if (cloneData.data[i + 3] !== 0) continue;
+
+            // Extract the x and y coordinates of the pixel.
+            let x = (i / 4) % sprite.image.width,
+                y = Math.floor(i / 4 / sprite.image.width);
+
+            // Test edge cases, we don't want to draw a silhouette on the edge of the sprite.
+            if (x === 0 || x === sprite.image.width - 1 || y === 0 || y === sprite.image.height - 1)
+                continue;
+
+            // Verify the up, down, left and right pixels.
+            let adjacentPixels = [
+                cloneData.data[i - 1], // Left
+                cloneData.data[i + 7], // Right
+                cloneData.data[i - cloneData.width * 4 + 3], // Up
+                cloneData.data[i + cloneData.width * 4 + 3] // Down
+            ];
+
+            // If any of the adjacent pixels are non-empty, we set the current pixel to yellow.
+            if (adjacentPixels.some((pixel) => pixel !== 0)) {
+                spriteData.data[i] = spriteData.data[i + 1] = 255;
+                spriteData.data[i + 2] = spriteData.data[i + 3] = 150;
+            }
+        }
+
+        // Apply the new image data onto the context
+        context.putImageData(spriteData, 0, 0);
+
+        // Update the image of the silhouette sprite.
+        silhouetteSprite.image = canvas;
+
+        // Toggle as loaded for use
+        silhouetteSprite.loaded = true;
+
+        return silhouetteSprite;
+    },
+
+    /**
+     * Provides a default animation for a given type of entity. When we do not
+     * specify the animations in the `sprites.json` we use this as a default
+     * based on the type of entity.
+     * @param type The type of entity we want to get the default animations for.
+     * @returns The default animations for the given entity type.
+     */
+
+    getDefaultAnimations(type: string): AnimationData {
+        switch (type) {
+            case 'items':
+            case 'cursors': {
+                return {
+                    idle: {
+                        length: 1,
+                        row: 0
+                    }
+                };
+            }
+
+            case 'npcs': {
+                return {
+                    idle_down: {
+                        length: 2,
+                        row: 0
+                    }
+                };
+            }
+
+            case 'mobs': {
+                return {
+                    atk_right: {
+                        length: 5,
+                        row: 0
+                    },
+                    walk_right: {
+                        length: 4,
+                        row: 1
+                    },
+                    idle_right: {
+                        length: 2,
+                        row: 2
+                    },
+                    atk_up: {
+                        length: 5,
+                        row: 3
+                    },
+                    walk_up: {
+                        length: 4,
+                        row: 4
+                    },
+                    idle_up: {
+                        length: 2,
+                        row: 5
+                    },
+                    atk_down: {
+                        length: 5,
+                        row: 6
+                    },
+                    walk_down: {
+                        length: 4,
+                        row: 7
+                    },
+                    idle_down: {
+                        length: 2,
+                        row: 8
+                    }
+                };
+            }
+
+            default: {
+                // Default animations for a player/mob character.
+                return {
+                    idle_down: {
+                        length: 4,
+                        row: 0
+                    },
+                    idle_right: {
+                        length: 4,
+                        row: 1
+                    },
+                    idle_up: {
+                        length: 4,
+                        row: 2
+                    },
+                    walk_down: {
+                        length: 4,
+                        row: 6
+                    },
+                    walk_right: {
+                        length: 4,
+                        row: 7
+                    },
+                    walk_up: {
+                        length: 4,
+                        row: 8
+                    },
+                    atk_down: {
+                        length: 4,
+                        row: 3
+                    },
+                    atk_right: {
+                        length: 4,
+                        row: 4
+                    },
+                    atk_up: {
+                        length: 4,
+                        row: 5
+                    }
+                };
+            }
+        }
     },
 
     /**

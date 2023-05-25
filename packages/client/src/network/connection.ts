@@ -1,30 +1,28 @@
-import log from '../lib/log';
-
 import { inflate } from 'pako';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
 import type App from '../app';
-import type Overlays from '../renderer/overlays';
-import type InfoController from '../controllers/info';
 import type Game from '../game';
 import type Map from '../map/map';
-import type Camera from '../renderer/camera';
-import type Renderer from '../renderer/renderer';
-import type InputController from '../controllers/input';
 import type Socket from './socket';
-import type PointerController from '../controllers/pointer';
-import type AudioController from '../controllers/audio';
-import type EntitiesController from '../controllers/entities';
-import type BubbleController from '../controllers/bubble';
-import type MenuController from '../controllers/menu';
-import type SpritesController from '../controllers/sprites';
 import type Messages from './messages';
-import type Entity from '../entity/entity';
+import type NPC from '../entity/npc/npc';
+import type Camera from '../renderer/camera';
 import type Item from '../entity/objects/item';
-import type NPC from '../entity/character/npc/npc';
+import type Overlays from '../renderer/overlays';
+import type Renderer from '../renderer/renderer';
+import type MenuController from '../controllers/menu';
+import type InfoController from '../controllers/info';
+import type InputController from '../controllers/input';
+import type AudioController from '../controllers/audio';
+import type BubbleController from '../controllers/bubble';
 import type Character from '../entity/character/character';
+import type SpritesController from '../controllers/sprites';
 import type Player from '../entity/character/player/player';
+import type PointerController from '../controllers/pointer';
+import type EntitiesController from '../controllers/entities';
 import type { PlayerData } from '@kaetram/common/types/player';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
@@ -59,9 +57,12 @@ import type {
     FriendsPacket,
     ListPacket,
     TradePacket,
-    HandshakePacket
+    HandshakePacket,
+    GuildPacket,
+    CraftingPacket,
+    LootBagPacket,
+    CountdownPacket
 } from '@kaetram/common/types/messages/outgoing';
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 export default class Connection {
     /**
@@ -156,6 +157,9 @@ export default class Connection {
         this.messages.onEffect(this.handleEffect.bind(this));
         this.messages.onFriends(this.handleFriends.bind(this));
         this.messages.onRank(this.handleRank.bind(this));
+        this.messages.onCrafting(this.handleCrafting.bind(this));
+        this.messages.onLootBag(this.handleLootBag.bind(this));
+        this.messages.onCountdown(this.handleCountdown.bind(this));
     }
 
     /**
@@ -168,8 +172,8 @@ export default class Connection {
         this.app.updateLoader('Connecting to server');
 
         // Set the server id and instance
-        this.game.player.instance = data.instance;
-        this.game.player.serverId = data.serverId;
+        this.game.player.instance = data.instance!;
+        this.game.player.serverId = data.serverId!;
 
         // Guest login doesn't require any credentials, send the packet right away.
         if (this.app.isGuest())
@@ -178,6 +182,9 @@ export default class Connection {
         let username = this.app.getUsername(),
             password = this.app.getPassword(),
             email = this.app.getEmail();
+
+        // Assign username to palyer object (will get overriden after login is completed).
+        this.game.player.name = username.toLowerCase();
 
         // Send register packet if the user is registering.
         if (this.app.isRegistering())
@@ -267,6 +274,7 @@ export default class Connection {
 
             case Opcodes.Equipment.Style: {
                 this.game.player.setAttackStyle(info.attackStyle!);
+                this.game.player.attackRange = info.attackRange!;
                 break;
             }
         }
@@ -352,8 +360,8 @@ export default class Connection {
      */
 
     private handleMovement(opcode: Opcodes.Movement, info: MovementPacket): void {
-        let entity = this.entities.get<Character>(info.instance),
-            target: Entity;
+        let entity = this.entities.get<Character>(info.instance) as Character,
+            target: Character;
 
         /**
          * We are receiving movement for an entity that doesn't exist,
@@ -391,6 +399,8 @@ export default class Connection {
                         return;
 
                     entity.follow(target);
+
+                    if (entity.isPet()) target.addFollower(entity);
                 }
 
                 break;
@@ -398,6 +408,11 @@ export default class Connection {
 
             case Opcodes.Movement.Stop: {
                 if (info.forced) entity.stop(true);
+                break;
+            }
+
+            case Opcodes.Movement.Speed: {
+                entity.movementSpeed = info.movementSpeed!;
                 break;
             }
         }
@@ -410,45 +425,48 @@ export default class Connection {
      */
 
     private handleTeleport(info: TeleportPacket): void {
-        let player = this.entities.get<Player>(info.instance);
+        let entity = this.entities.get<Character>(info.instance);
 
-        if (!player) return;
+        if (!entity?.isMob() && !entity?.isPlayer()) return;
 
         this.input.selectedCellVisible = false;
 
-        // If the player is the same as our main player.
-        let currentPlayer = player.instance === this.game.player.instance;
+        // If the entity is the same as our main entity.
+        let currentPlayer = entity.instance === this.game.player.instance;
 
         // Stop and freeze the player until teleprtation is complete.
-        player.stop(true);
-        player.frozen = true;
-        player.disableAction = true;
+        entity.stop(true);
+        entity.frozen = true;
 
-        // Clears all bubbles when our main player teleports.
-        if (currentPlayer) this.bubble.clean();
-        else this.bubble.clear(player.instance); // Clears bubble of teleporting player.
+        // Clears all bubbles when our main entity teleports.
+        if (currentPlayer) {
+            this.bubble.clean();
+
+            // Disable keyboard actions until teleportation is complete.
+            this.game.player.disableAction = true;
+        } else this.bubble.clear(entity.instance); // Clears bubble of teleporting entity.
 
         // No animation, skip straight to teleporting.
-        if (!info.withAnimation) return this.game.teleport(player, info.x, info.y);
+        if (!info.withAnimation) return this.game.teleport(entity, info.x, info.y);
 
-        // Copy the player's sprite temporarily.
-        let playerSprite = player.sprite;
+        // Copy the entity's sprite temporarily.
+        let entitySprite = entity.sprite.key;
 
         // Prevent rendering of the sword.
-        player.teleporting = true;
+        entity.teleporting = true;
 
-        // Set the player's sprite to the death animation sprite.
-        player.setSprite(this.sprites.getDeath());
+        // Set the entity's sprite to the death animation sprite.
+        entity.setSprite(this.sprites.getDeath());
 
-        player.animateDeath(() => {
-            this.game.teleport(player, info.x, info.y);
+        entity.animateDeath(() => {
+            this.game.teleport(entity, info.x, info.y);
 
             // Reset the animation.
-            player.animation = null;
+            entity.animation = null;
 
-            // Restore the player's sprite.
-            player.setSprite(playerSprite);
-            player.idle();
+            // Restore the entity's sprite.
+            entity.setSprite(this.sprites.get(entitySprite));
+            entity.idle(entity.orientation, true);
         }, 160);
     }
 
@@ -514,18 +532,17 @@ export default class Connection {
         let currentPlayerTarget = target.instance === this.game.player.instance,
             currentPlayerAttacker = attacker.instance === this.game.player.instance,
             isPoison = info.hit.type === Modules.Hits.Poison,
-            isTerror = info.hit.type === Modules.Hits.Terror,
-            isCold = info.hit.type === Modules.Hits.Cold;
+            isFreezing = info.hit.type === Modules.Hits.Freezing,
+            isBurning = info.hit.type === Modules.Hits.Burning;
 
         // Set the terror effect onto the target.
-        if (isTerror) target.setEffect(Modules.Effects.Terror);
-        if (isPoison) target.setEffect(Modules.Effects.Poisonball);
+        if (isPoison) target.addEffect(Modules.Effects.Poisonball);
 
         // Perform the critical effect onto the target.
-        if (info.hit.type === Modules.Hits.Critical) target.setEffect(Modules.Effects.Critical);
+        if (info.hit.type === Modules.Hits.Critical) target.addEffect(Modules.Effects.Critical);
 
         // Perform the attack animation if the damage type isn't from AOE or poison.
-        if (!info.hit.aoe && !isPoison && !isCold) {
+        if (!info.hit.aoe && !isPoison && !isFreezing && !isBurning) {
             attacker.lookAt(target);
             attacker.performAction(attacker.orientation, Modules.Actions.Attack);
         }
@@ -540,7 +557,7 @@ export default class Connection {
         this.info.create(info.hit.type, info.hit.damage, target.x, target.y, currentPlayerTarget);
 
         // Flash the target character when a hit occurs.
-        if (target.hurtSprite) target.toggleHurt();
+        if (info.hit.damage > 0) target.toggleHurt();
 
         // Show the health bar for both entities.
         attacker.triggerHealthBar();
@@ -631,58 +648,13 @@ export default class Connection {
      */
 
     private handleCommand(info: CommandPacket): void {
-        if (info.command.includes('toggle') && this.game.player.hasEffect())
-            return this.game.player.removeEffect();
+        if (info.command.includes('toggle') && this.game.player.hasActiveEffect())
+            return this.game.player.removeAllEffects();
 
         switch (info.command) {
             case 'debug': {
                 this.renderer.debugging = !this.renderer.debugging;
                 return;
-            }
-
-            case 'toggleheal': {
-                this.game.player.setEffect(Modules.Effects.Healing);
-                break;
-            }
-
-            case 'toggleterror': {
-                this.game.player.setEffect(Modules.Effects.Terror);
-                break;
-            }
-
-            case 'togglefireball': {
-                this.game.player.setEffect(Modules.Effects.Fireball);
-                break;
-            }
-
-            case 'toggleiceball': {
-                this.game.player.setEffect(Modules.Effects.Iceball);
-                break;
-            }
-
-            case 'togglefire': {
-                this.game.player.setEffect(Modules.Effects.Burning);
-                break;
-            }
-
-            case 'togglefreeze': {
-                this.game.player.setEffect(Modules.Effects.Freezing);
-                break;
-            }
-
-            case 'togglestun': {
-                this.game.player.setEffect(Modules.Effects.Stun);
-                break;
-            }
-
-            case 'togglepoison': {
-                this.game.player.setEffect(Modules.Effects.Poisonball);
-                break;
-            }
-
-            case 'toggleboulder': {
-                this.game.player.setEffect(Modules.Effects.Boulder);
-                break;
             }
         }
     }
@@ -859,7 +831,7 @@ export default class Connection {
             case 'hitpoints': {
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
-                character.setEffect(Modules.Effects.Healing);
+                character.addEffect(Modules.Effects.Healing);
                 break;
             }
 
@@ -922,6 +894,9 @@ export default class Connection {
     private handleDeath(): void {
         // Stop player movement
         this.game.player.stop(true);
+
+        // Clear all the statuses.
+        this.game.player.removeAllEffects();
 
         // Remove the minigame interfaces.
         this.game.minigame.reset();
@@ -1079,13 +1054,7 @@ export default class Connection {
     private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacket): void {
         switch (opcode) {
             case Opcodes.Enchant.Select: {
-                //this.menu.enchant.add(info.type!, info.index!);
-                break;
-            }
-
-            case Opcodes.Enchant.Remove: {
-                //this.menu.enchant.moveBack(info.type!, info.index);
-                break;
+                return this.menu.getEnchant().move(info.index, info.isShard);
             }
         }
     }
@@ -1094,8 +1063,20 @@ export default class Connection {
      * Unimplemented guild packet.
      */
 
-    private handleGuild(opcode: Opcodes.Guild): void {
-        log.debug(`Guild Opcode: ${opcode}`);
+    private handleGuild(opcode: Opcodes.Guild, info: GuildPacket): void {
+        switch (opcode) {
+            case Opcodes.Guild.Login: {
+                this.game.player.setGuild(info);
+                break;
+            }
+
+            case Opcodes.Guild.Leave: {
+                this.game.player.setGuild();
+                break;
+            }
+        }
+
+        this.menu.getGuilds().handle(opcode, info);
     }
 
     /**
@@ -1223,7 +1204,7 @@ export default class Connection {
      * @param opcode The type of action we are performing with the camera.
      */
 
-    private handleCamera(opcode: Opcodes.Camera): void {
+    private handleCamera(_opcode: Opcodes.Camera): void {
         //
     }
 
@@ -1362,29 +1343,12 @@ export default class Connection {
         if (!entity) return;
 
         switch (opcode) {
-            case Opcodes.Effect.Speed: {
-                entity.movementSpeed = info.movementSpeed!;
-                break;
+            case Opcodes.Effect.Add: {
+                return entity.addEffect(info.effect);
             }
 
-            case Opcodes.Effect.Stun: {
-                entity.stunned = !!info.state;
-                break;
-            }
-
-            case Opcodes.Effect.Freeze: {
-                entity.setEffect(Modules.Effects.Freezing);
-                break;
-            }
-
-            case Opcodes.Effect.Burn: {
-                entity.setEffect(Modules.Effects.Burning);
-                break;
-            }
-
-            case Opcodes.Effect.None: {
-                entity.setEffect(Modules.Effects.None);
-                break;
+            case Opcodes.Effect.Remove: {
+                return entity.removeEffect(info.effect);
             }
         }
     }
@@ -1424,6 +1388,40 @@ export default class Connection {
 
     private handleRank(rank: Modules.Ranks): void {
         this.game.player.setRank(rank);
+    }
+
+    /**
+     * Handles receiving information about crafting. This is used to synchronize the crafting
+     * user interface with the server. When a player selects an item to craft this
+     * @param opcode Contains the type of crafting action that we want to perform.
+     * @param info Contains the information about the crafting action.
+     */
+
+    private handleCrafting(opcode: Opcodes.Crafting, info: CraftingPacket): void {
+        this.menu.getCrafting().handle(opcode, info);
+    }
+
+    /**
+     * Handles incoming packet regarding a loot bag. This just displays the loot bag
+     * menu and allows the player to interact with it.
+     * @param slots
+     */
+
+    private handleLootBag(info: LootBagPacket): void {
+        console.log(info);
+    }
+
+    /**
+     * Handles countdown packet. Used to display a countdown above the player.
+     * @param info Contains the instance and the counter information.
+     */
+
+    private handleCountdown(info: CountdownPacket): void {
+        let entity = this.entities.get(info.instance);
+
+        if (!entity) return;
+
+        entity.setCountdown(info.time);
     }
 
     /**

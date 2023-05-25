@@ -306,7 +306,7 @@
                                 id="register-email-input"
                                 class="stroke"
                                 name="player-email"
-                                placeholder="Email Address (optional)"
+                                placeholder="Email Address"
                                 aria-label="Email Address"
                                 maxlength="64"
                                 autocomplete="off"
@@ -321,6 +321,37 @@
                                 id="cancel-register"
                             ></button>
                             <button title="Play" aria-label="Play" type="submit" id="play"></button>
+
+                            <div class="validation-summary"></div>
+                        </form>
+                    </article>
+
+                    <article id="reset-password">
+                        <h1>
+                            <span class="left-ornament"></span>
+                            Reset Password
+                            <span class="right-ornament"></span>
+                        </h1>
+
+                        <form onsubmit="return false">
+                            <input
+                                type="text"
+                                id="email-reset-input"
+                                class="stroke"
+                                name="player-email"
+                                placeholder="Email Address"
+                                aria-label="Email Address"
+                                maxlength="32"
+                                autocomplete="off"
+                            />
+
+                            <button
+                                title="Cancel"
+                                aria-label="Cancel"
+                                type="button"
+                                id="cancel-forget"
+                            ></button>
+                            <button title="Submit" aria-label="Submit" type="submit" id="continue-forget"></button>
 
                             <div class="validation-summary"></div>
                         </form>
@@ -549,6 +580,10 @@
                         <span>Privacy</span>
                     </a>
                 </div>
+                <span>&ndash;</span>
+                <div id="reset" disabled class="clickable">
+                    <span id="toggle-reset-password">Reset Password</span>
+                </div>
             </footer>
         </div>
 
@@ -617,6 +652,10 @@
                             <div id="arrows-count" class="stroke"></div>
                         </div>
                         <div id="equipment-button"></div>
+
+                        
+                        <div id="guilds-button"></div>
+                        <div id="leaderboards-button"></div>
                     </div>
 
                     <div id="skills-page" class="page">
@@ -651,8 +690,6 @@
                             <div id="passiveability8" class="ability"></div>
                         </ul>
                     </div>
-
-                    <div id="guild-page" class="page"></div>
 
                     <div id="profile-navigator" class="navigator">
                         <div class="previous"></div>
@@ -704,6 +741,7 @@
                         <p id="show-names-checkbox-text">Show Names</p>
                         <p id="show-levels-checkbox-text">Show Levels</p>
                         <p id="disable-region-caching-text">Disable Caching</p>
+                        <p id="webgl-text">Enable WebGL</p>
                     </div>
 
                     <div id="info"></div>
@@ -731,6 +769,10 @@
                         </label>
                         <label id="disable-region-caching-checkbox" class="check">
                             <input type="checkbox" aria-labelledby="disable-region-caching-text" />
+                            <span class="checkmark"></span>
+                        </label>
+                        <label id="webgl-checkbox" class="check">
+                            <input type="checkbox" aria-labelledby="webgl-text" />
                             <span class="checkmark"></span>
                         </label>
                     </div>
@@ -830,11 +872,9 @@
 
                 <div id="enchant">
                     <div id="close-enchant" class="close"></div>
-                    <div id="confirm-enchant" class="ok"></div>
-                    <div id="enchant-container">
-                        <div id="enchant-inventory-slots" class="inventory-slots">
-                            <ul></ul>
-                        </div>
+                    <div id="confirm-enchant" class="ok-check"></div>
+                    <div id="enchant-inventory-container">
+                        <ul id="enchant-inventory-slots"></ul>
                     </div>
                     <div id="enchant-selected-item"></div>
                     <div id="enchant-shards">
@@ -844,16 +884,12 @@
 
                 <div id="store">
                     <div id="close-store" class="close"></div>
-                    <div id="store-container">
-                        <ul></ul>
-                    </div>
+                    <ul id="store-container"></ul>
 
                     <div id="store-help"></div>
 
                     <div id="store-inventory-container">
-                        <div id="store-inventory-slots">
-                            <ul></ul>
-                        </div>
+                        <ul id="store-inventory-slots"></ul>
 
                         <div id="store-sell-slot">
                             <div id="store-sell-slot-text" class="item-count"></div>
@@ -881,6 +917,24 @@
                             <div class="cancel dialog-cancel"></div>
                         </div>
                     </dialog>
+                </div>
+
+                <div id="leaderboards" class="container">
+                    <div id="close-leaderboards" class="close close-container"></div>
+
+                    <input
+                        title="Enter a search term..."
+                        id="leaderboards-search-input"
+                        class="stroke"
+                        type="text"
+                        maxlength="32"
+                        autocomplete="off"
+                        data-lpignore="true"
+                        placeholder="Enter a term to search...">
+                    </input>
+
+                    <ul id="leaderboards-search"></ul>
+                    <ul id="leaderboards-results"></ul>
                 </div>
 
                 <div id="equipments" class="container">
@@ -950,10 +1004,15 @@
                     <div id="quest-log">
                         <div id="quest-log-title" class="quest-log-h1 stroke">Quest Title</div>
                         <div id="quest-log-shortdesc" class="quest-log-p"></div>
-                        <div class="quest-log-h1 stroke">Quest Description</div>
+
+                        <div class="quest-log-h1 stroke">Description</div>
                         <div id="quest-log-description" class="quest-log-p"></div>
-                        <div class="quest-log-h1 stroke">Quest Reward</div>
+
+                        <div class="quest-log-h1 stroke">Reward</div>
                         <div id="quest-log-rewards" class="quest-log-p"></div>
+                        
+                        <div class="quest-log-h1 stroke">Requirements</div>
+                        <div id="quest-log-requirements" class="quest-log-p">None C:</div>
                     </div>
                 </div>
 
@@ -981,9 +1040,7 @@
                 <div id="action-container">
                     <div id="action-page">
                         <div class="action-item-name stroke"></div>
-
                         <div class="action-item-description"></div>
-
                         <ul></ul>
                     </div>
 
@@ -1005,6 +1062,104 @@
                     </dialog>
                 </div>
 
+                <div id="crafting">
+                    <div id="close-crafting" class="new-close-container"></div>
+
+                    <ul id="crafting-options"></ul>
+                    <ul id="crafting-requirements"></ul>
+
+                    <div id="crafting-result" class="crafting-option disabled">
+                        <div class="crafting-option-icon"></div>
+                        <div class="crafting-option-count stroke"></div>
+                    </div>
+
+                    <div id="crafting-level" class="crafting-option disabled">
+                        <div class="crafting-option-icon"></div>
+                        <div class="crafting-option-count stroke"></div>
+                    </div>
+
+                    <div id="crafting-result-name" class="stroke"></div>
+
+                    <ul class="crafting-buttons">
+                        <li id="craft-one" class="amount-button amount-one active"></li>
+                        <li id="craft-five" class="amount-button amount-five"></li>
+                        <li id="craft-ten" class="amount-button amount-ten"></li>
+                    </ul>
+
+                    <div id="craft-button" class="stroke">Craft</div>
+                </div>
+                
+                <div id="guilds" class="container-frame">
+                    <div id="close-guilds" class="new-close-container"></div>
+
+                    <div class="banner banner-grey">
+                        <div id="banner-outline" class="banner-outline"></div>
+                        <div class="banner-crest"></div>
+                    </div>
+
+                    <div id="guilds-list-container" class="container-subframe">
+                        <div id="create-guild" class="element-button element-button stroke">Create</div>
+
+                        <div class="guilds-decoration">
+                            <p class="stroke">Guilds</p>
+                        </div>
+
+                        <ul></ul>
+
+                        <p id="guilds-info" class="stroke">There are no guilds available...</p>
+                    </div>
+
+                    <div id="guilds-create-container" class="container-subframe">
+                        <span id="create-error"></span>
+
+                        <div id="banner-colour-button" class="colour-select-button button-banner-colour active"></div>
+                        <div id="banner-outline-button" class="colour-select-button outline-button-1">
+                            <div class="colour-button-arrow-left"></div>
+                            <div class="colour-button-arrow-right"></div>
+                        </div>
+
+                        <ul id="banner-colours"></ul>
+
+                        <div id="guild-back" class="element-button element-button-red stroke">Back</div>
+                        <div id="guild-create" class="element-button stroke">Create</div>
+
+                        <input
+                            id="guild-name-input"
+                            type="text"
+                            maxlength="16"
+                            autocomplete="off"
+                            data-lpignore="true"
+                            placeholder="Enter a name..."
+                            class="guild-name-input-image stroke"></input>
+                    </div>
+
+                    <div id=guilds-info-container class="container-subframe">
+                        <div id="guild-leave" class="element-button element-button-red stroke">Leave</div>
+
+                        <div id="guild-name" class="guilds-decoration"></div>
+                        <div id="guild-chat-log"></div>
+                        <input
+                            id="guild-chat-input"
+                            type="text"
+                            maxlength="256"
+                            autocomplete="off"
+                            data-lpignore="true"
+                            placeholder="Enter your message here..."
+                            class="guild-chat-input-image stroke">
+                        </input>
+
+                        <ul id="member-list"></ul>
+                        <ul id="sidebar-list">
+                            <li id="sidebar-members" class="sidebar-element active">
+                                <div class="members-icon"></div>
+                            </li>
+                            <li id="sidebar-chat" class="sidebar-element">
+                                <div class="chat-icon"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div id="interact">
                     <ul></ul>
                 </div>
@@ -1023,16 +1178,13 @@
                 </div>
 
                 <div id="player-info">
-                    <div id="health"></div>
-                    <div id="health-bar"></div>
-                    <div id="health-info">
-                        <div id="health-bar-text"></div>
+                    <div id="health">
+                        <div id="health-mask"></div>
+                        <div class="health-text"></div>
                     </div>
-
-                    <div id="mana"></div>
-                    <div id="mana-bar"></div>
-                    <div id="mana-info">
-                        <div id="mana-bar-text"></div>
+                    <div id="mana">
+                        <div id="mana-mask"></div>
+                        <div class="mana-text"></div>
                     </div>
                 </div>
             </div>

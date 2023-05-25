@@ -1,8 +1,7 @@
-import { Trade as TradePacket } from '../../../../network/packets';
-
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Opcodes } from '@kaetram/common/network';
+import { Trade as TradePacket } from '@kaetram/common/network/impl';
 
 import type Player from './player';
 import type Item from '../../objects/item';
@@ -218,6 +217,13 @@ export default class Trade {
         // Player is too far away to start trading.
         if (this.player.getDistance(target) > 1) return;
 
+        // Prevent hollow admins from trading.
+        if (this.player.isHollowAdmin())
+            return this.player.notify(`As an administrator you cannot influence the economy.`);
+
+        if (target.isHollowAdmin())
+            return this.player.notify(`That player is an administrator and cannot be traded with.`);
+
         // Prevent cheaters from trading.
         if (this.player.isCheater())
             return this.player.notify('Sorry but cheaters are not allowed to trade.');
@@ -343,25 +349,44 @@ export default class Trade {
             this.player.notify(`Thank you for using Kaetram trading system!`, '', 'TRADE');
             this.activeTrade?.notify(`Thank you for using Kaetram trading system!`, '', 'TRADE');
 
-            let offeredItems: unknown[] = [],
-                receivedItems: unknown[] = [];
-
-            // Store our player's item offers()) to an array
-            this.forEachOfferedItem((item: Item) => {
-                offeredItems.push(item.name);
-            });
-
-            // Store other player's item offer(s) to an array
-            this.getActiveTrade()?.forEachOfferedItem((item: Item) => {
-                receivedItems.push(item.name);
-            });
-
-            log.trade(
-                `Player ${this.player.username} traded [${offeredItems}] for [${receivedItems}] with player ${this.activeTrade?.username}`
-            );
+            log.trade(this.produceTradeLog());
         }
 
         this.close();
+    }
+
+    /**
+     * Trade logger helper method. Produces the line of string containing information regarding
+     * the trade between two players. The string includes the two players usernames, and all the
+     * items(with their counts) that were traded.
+     */
+    private produceTradeLog(): string {
+        let offeredItemsArry: string[] = [],
+            receivedItemsArry: string[] = [],
+            offeredItemsDict: { [key: string]: number } = {},
+            receivedItemsDict: { [key: string]: number } = {};
+
+        // Store our player's item offers()) to an array
+        this.forEachOfferedItem((item: Item) => {
+            offeredItemsDict[item.key] = item.stackable
+                ? (offeredItemsDict[item.key] || 0) + item.count
+                : (offeredItemsDict[item.key] || 0) + 1;
+        });
+
+        for (let [key, value] of Object.entries(offeredItemsDict))
+            offeredItemsArry.push(` ${value} ${key}(s)`);
+
+        // Store other player's item offer(s) to an array
+        this.getActiveTrade()?.forEachOfferedItem((item: Item) => {
+            receivedItemsDict[item.key] = item.stackable
+                ? (receivedItemsDict[item.key] || 0) + item.count
+                : (receivedItemsDict[item.key] || 0) + 1;
+        });
+
+        for (let [key, value] of Object.entries(receivedItemsDict))
+            receivedItemsArry.push(` ${value} ${key}(s)`);
+
+        return `Player ${this.player.username} traded${offeredItemsArry} for${receivedItemsArry} with player ${this.activeTrade?.username}`;
     }
 
     /**

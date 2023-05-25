@@ -76,7 +76,8 @@
         #friends-page {
             width: 100%;
             height: 100%;
-            background: url('/img/#{$i}/characterdialogsheet.png') -248px * $i -217px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -248px * $i -217px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #friends-list {
@@ -103,7 +104,8 @@
         #add-popup {
             width: 96px * $i;
             height: 38px * $i;
-            background: url('/img/#{$i}/characterdialogsheet.png') -146px * $i -272px * $i;
+            background: url('/img/interface/characterdialogsheet.png') -146px * $i -272px * $i;
+            background-size: calc(width('characterdialogsheet.png') * $i);
         }
 
         #popup-friend-input {
@@ -125,9 +127,12 @@
         .add,
         .remove {
             bottom: 8px * $i;
+
             width: 21px * $i;
             height: 17px * $i;
-            background-image: url('/img/#{$i}/characterdialogsheet.png');
+
+            background-image: url('/img/interface/characterdialogsheet.png');
+            background-size: calc(width('characterdialogsheet.png') * $i);
 
             &:hover {
                 background-position-x: -42px * $i;
@@ -156,7 +161,8 @@
         .cancel {
             width: 21px * $i;
             height: 14px * $i;
-            background-image: url('/img/#{$i}/characterdialogsheet.png');
+            background-image: url('/img/interface/characterdialogsheet.png');
+            background-size: calc(width('characterdialogsheet.png') * $i);
 
             &:hover {
                 background-position-x: -42px * $i;
@@ -171,12 +177,15 @@
     @media (--lg) {
         #friends-container {
             right: 0;
+            right: 52px;
+            bottom: 68px;
         }
     }
 
     @media (--md) {
         #friends-container {
-            right: 32px;
+            right: 36px;
+            bottom: 48px;
         }
 
         #popup-friend-input {
@@ -190,7 +199,7 @@
 
     @media (--sm) {
         #friends-container {
-            right: 80px;
+            right: 84px;
             bottom: 99px;
             transform: scale(1.5);
         }

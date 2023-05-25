@@ -22,7 +22,7 @@ export default class ChatController {
     /**
      * Handles key input from the handler. Pressing the ENTER
      * key will trigger the chat input similar to the button.
-     * @param key The key identifier from the JQuery KeyDownEvent.
+     * @param key The string of the key that was pressed.
      */
 
     public keyDown(key: string): void {
@@ -60,14 +60,14 @@ export default class ChatController {
         element.style.color = colour || 'white';
         if (notify) element.style.fontWeight = 'bold';
 
-        // Scroll to the bottom of the chat log.
-        this.log.append(element);
-        this.log.scrollTop = this.log.scrollHeight;
-
         this.displayChatBox();
 
         // Start the timeout for hiding the chatbox.
         this.hideChatBox();
+
+        // Scroll to the bottom of the chat log.
+        this.log.append(element);
+        this.log.scrollTop = this.log.scrollHeight;
     }
 
     /**

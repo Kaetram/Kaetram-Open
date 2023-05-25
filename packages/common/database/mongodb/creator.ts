@@ -1,11 +1,17 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import config from '@kaetram/common/config';
-import bcryptjs from 'bcryptjs';
 
+import type { GuildData } from '@kaetram/common/types/guild';
 import type { Modules } from '@kaetram/common/network';
 import type { Collection, Db } from 'mongodb';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
+
+// Used for password reset
+export interface ResetToken {
+    token: string;
+    expiration: number;
+}
 
 export interface PoisonInfo {
     type: number; // Type of poison.
@@ -31,12 +37,16 @@ export interface PlayerInfo {
     regionsLoaded: number[];
     friends: string[];
     lastServerId: number;
+    lastAddress: string;
+    guild: string;
+    pet: string;
+    resetToken?: ResetToken;
 }
 
 /**
- * Side-note. This version of the creator is a lot more compact and optimized.
- * The data that we are serializing ALWAYS exists. Because of this alone there
- * should be nearly no crashes since we are always working with non-null variables.
+ * The creator database class is responsible for serializing information and storing
+ * it into MongoDB. The primary idea is to store only the necessary data when serializing
+ * and avoiding redundancies.
  */
 
 export default class Creator {
@@ -166,6 +176,29 @@ export default class Creator {
     }
 
     /**
+     * Saves the guild to the guild collection.
+     * @param guild Contains the data about the guild we are saving.
+     * @param callback The callback function to execute after saving.
+     */
+
+    public saveGuild(guild: GuildData, callback?: () => void): void {
+        let collection = this.database.collection('guilds');
+
+        collection.updateOne(
+            { identifier: guild.identifier },
+            { $set: guild },
+            { upsert: true },
+            (error, result) => {
+                if (error) log.error(`An error occurred while saving guild ${guild.name}.`);
+
+                if (!result) log.error(`Unable to save guild ${guild.name}.`);
+
+                callback?.();
+            }
+        );
+    }
+
+    /**
      * The brains of the operation for storing/updating data to MongoDB.
      * We provide the collection, username, data.
      * and we save all that information into the database.
@@ -194,31 +227,17 @@ export default class Creator {
      */
 
     public getPlayerWithHash(player: Player, callback: (playerInfo: PlayerInfo) => void): void {
-        let info = Creator.serializePlayer(player);
+        let info = Creator.serialize(player);
 
-        Creator.hashPassword(player.password, (hashString: string) => {
+        Utils.hash(player.password, (hash: string) => {
             /**
              * Replace the plaintext password with the hashString we created.
              * This is the actual string that gets stored in the database and
              * is later compared to check login validity.
              */
-            info.password = hashString;
+            info.password = hash;
 
             callback(info);
-        });
-    }
-
-    /**
-     * Takes a password in plaintext and makes a callback with the hashed version.
-     * @param password The password plaintext we are trying to hash.
-     * @param callback A callback with the hashed string.
-     */
-
-    private static hashPassword(password: string, callback: (hashString: string) => void): void {
-        bcryptjs.hash(password, 10, (error: Error, hash: string) => {
-            if (error) throw error;
-
-            callback(hash);
         });
     }
 
@@ -231,19 +250,23 @@ export default class Creator {
     public static verifyPlayer(player: Player): boolean {
         if (!Utils.isValidUsername(player.username)) return false;
         if (!player.username || player.username.length === 0) return false;
-        if (!player.password || player.password.length < 3) return false;
-        if (player.email && !Utils.isEmail(player.email)) return false;
+        if (!player.password || player.password.length < 3 || player.password.length > 64)
+            return false;
+        if (!Utils.isEmail(player.email)) return false;
 
         return true;
     }
 
     /**
-     * Takes on a `player` parameter and extracts all the info in the
-     * form of `PlayerInfo` interface. It essentially serializes the player
-     * object to a dictionary format.
+     * Serializes a player object and extracts all the basic information
+     * that will be saved in the database. This is generally used for
+     * loading the player and sending the preliminary information to the client.
+     * @param player The player object that we want to serialize.
+     * @returns A serialized object that contains the player's information, we use
+     * this and store it in the database.
      */
 
-    public static serializePlayer(player: Player): PlayerInfo {
+    public static serialize(player: Player): PlayerInfo {
         return {
             username: player.username,
             password: player.password,
@@ -265,7 +288,11 @@ export default class Creator {
             mapVersion: player.mapVersion,
             regionsLoaded: player.regionsLoaded,
             friends: player.friends.serialize(),
-            lastServerId: config.serverId
+            lastServerId: config.serverId,
+            lastAddress: player.connection.address,
+            guild: player.guild,
+            pet: player.pet ? player.pet.key : '',
+            resetToken: undefined // Save token as undefined to prevent it from being saved.
         };
     }
 }

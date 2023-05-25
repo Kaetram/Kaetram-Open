@@ -1,5 +1,7 @@
-import Armour from './equipment/impl/armour';
-import ArmourSkin from './equipment/impl/armourskin';
+import Helmet from './equipment/impl/helmet';
+import Chestplate from './equipment/impl/chestplate';
+import Legs from './equipment/impl/legs';
+import Skin from './equipment/impl/skin';
 import Boots from './equipment/impl/boots';
 import Pendant from './equipment/impl/pendant';
 import Ring from './equipment/impl/ring';
@@ -19,8 +21,10 @@ import type Equipment from './equipment/equipment';
 import type Player from './player';
 
 export default class Equipments {
-    private armour: Armour = new Armour();
-    private armourSkin: ArmourSkin = new ArmourSkin();
+    private helmet: Helmet = new Helmet();
+    private chestplate: Chestplate = new Chestplate();
+    private legs: Legs = new Legs();
+    private armourSkin: Skin = new Skin();
     private boots: Boots = new Boots();
     private pendant: Pendant = new Pendant();
     private ring: Ring = new Ring();
@@ -31,14 +35,16 @@ export default class Equipments {
     // Store all equipments for parsing.
     // Make sure these are in the order of the enum.
     private equipments: Equipment[] = [
-        this.armour,
+        this.helmet,
+        this.chestplate,
+        this.legs,
+        this.armourSkin,
         this.boots,
         this.pendant,
         this.ring,
-        this.weapon,
         this.arrows,
-        this.weaponSkin,
-        this.armourSkin
+        this.weapon,
+        this.weaponSkin
     ];
 
     public totalAttackStats: Stats = Utils.getEmptyStats();
@@ -66,6 +72,9 @@ export default class Equipments {
             if (!info.key) continue; // Skip if the item is already null
 
             equipment.update(new Item(info.key, -1, -1, true, info.count, info.enchantments));
+
+            // Only weapons have attack styles, so we update the last selected one.
+            if (info.attackStyle) this.updateAttackStyle(info.attackStyle);
         }
 
         this.loadCallback?.();
@@ -86,7 +95,7 @@ export default class Equipments {
                 `[${this.player.username}] Attempted to equip something mysterious.`
             );
 
-        let type = item.getEquipmentType(),
+        let type = item.getEquipmentType()!,
             equipment = this.get(type);
 
         if (!equipment) return;
@@ -164,7 +173,11 @@ export default class Equipments {
         if (!weapon.hasAttackStyle(style))
             return log.warning(`[${this.player.username}] Invalid attack style.`);
 
+        // Set new attack style.
         this.getWeapon().updateAttackStyle(style);
+
+        // Sync the player for everyone else and update data.
+        this.player.sync();
 
         // Callback with the new attack style.
         this.attackStyleCallback?.(style);
@@ -226,17 +239,44 @@ export default class Equipments {
      */
 
     /**
-     * Grabs the armour equipment of the player.
-     * @returns Armour equipment type.
+     * Grabs the helmet equipment of the player.
+     * @returns Helmet equipment object.
      */
 
-    public getArmour(): Armour {
-        return this.get(Modules.Equipment.Armour) as Armour;
+    public getHelmet(): Helmet {
+        return this.get(Modules.Equipment.Helmet) as Helmet;
+    }
+
+    /**
+     * Grabs the chestplate equipment of the player.
+     * @returns Chestplate equipment object.
+     */
+
+    public getChestplate(): Chestplate {
+        return this.get(Modules.Equipment.Chestplate) as Chestplate;
+    }
+
+    /**
+     * Grabs the legs equipment of the player.
+     * @returns Legs equipment object.
+     */
+
+    public getLegs(): Legs {
+        return this.get(Modules.Equipment.Legs) as Legs;
+    }
+
+    /**
+     * Grabs the armour skin equipment of the player.
+     * @returns The armour skin equipment type.
+     */
+
+    public getSkin(): Skin {
+        return this.get(Modules.Equipment.Skin) as Skin;
     }
 
     /**
      * Grabs the boots equipment of the player.
-     * @returns Botos equipment type.
+     * @returns Botos equipment object.
      */
 
     public getBoots(): Boots {
@@ -245,7 +285,7 @@ export default class Equipments {
 
     /**
      * Grabs the pendant equipment of the player.
-     * @returns Pendant equipment type.
+     * @returns Pendant equipment object.
      */
 
     public getPendant(): Pendant {
@@ -254,7 +294,7 @@ export default class Equipments {
 
     /**
      * Grabs the ring equipment of the player.
-     * @returns Ring equipment type.
+     * @returns Ring equipment object.
      */
 
     public getRing(): Ring {
@@ -263,7 +303,7 @@ export default class Equipments {
 
     /**
      * Grabs the weapon equipment of the player.
-     * @returns Weapon equipment type.
+     * @returns Weapon equipment object.
      */
 
     public getWeapon(): Weapon {
@@ -272,7 +312,7 @@ export default class Equipments {
 
     /**
      * Grabs the arrows equipment of the player.
-     * @returns Arrow equipment type.
+     * @returns Arrow equipment object.
      */
 
     public getArrows(): Arrows {

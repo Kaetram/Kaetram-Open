@@ -1,4 +1,4 @@
-import { Opcodes } from '@kaetram/common/network';
+import { Modules } from '@kaetram/common/network';
 
 import type { OverlayType } from '@kaetram/common/types/map';
 import type Character from '../../entity/character/character';
@@ -88,8 +88,8 @@ export default class Area {
 
         this.players[player.instance] = player;
 
-        // TODO - Expand this to support different kinds of effects
-        if (!player.snowPotion) player.setEffect(Opcodes.Effect.Freeze);
+        // Adds a freezing effect to the player if the area is cold.
+        if (this.isStatusArea()) player.status.add(Modules.Effects.Freezing);
     }
 
     /**
@@ -114,7 +114,7 @@ export default class Area {
     public removePlayer(player: Player) {
         delete this.players[player.instance];
 
-        player.setEffect(Opcodes.Effect.None);
+        if (this.isStatusArea()) player.status.remove(Modules.Effects.Freezing);
     }
 
     /**
@@ -174,6 +174,16 @@ export default class Area {
         if (this.ignore) return false; // Skip ignorable areas.
 
         return this.polygon ? this.inPolygon(x, y) : this.inRectangularArea(x, y);
+    }
+
+    /**
+     * Status-based areas contain a special status effect that is applied onto
+     * all the players that go into the area.
+     * @returns Whether or not the area is a status area.
+     */
+
+    public isStatusArea(): boolean {
+        return this.type === 'freezing';
     }
 
     /**

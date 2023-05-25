@@ -1,6 +1,18 @@
 {
+    
+
+    "firstrock": {
+        "name": "First Rock",
+        "description": "Mine your first rock!"
+    },
+
+    "firstfish": {
+        "name": "First Fish",
+        "description": "Catch your first fish!"
+    },
+
     "ratinfestation": {
-        "name": "Rat Infestation",
+        "name": "Generic Task 1",
         "description": "Bulk Bogan needs you to defeat 20 rats!",
         "npc": "villager",
         "dialogueHidden": [
@@ -18,6 +30,49 @@
 
         "rewardSkill": "strength",
         "rewardExperience": 369
+    },
+
+    "examiner10": {
+        "name": "Examiner",
+        "description": "Inspect 10 random things around the world."
+    },
+
+    "lumberjacking10": {
+        "name": "Lumberjacker",
+        "description": "Chop down 10 trees."
+    },
+
+    "mining10": {
+        "name": "Miner Man",
+        "description": "Acquire 10 rocks."
+    },
+
+    "fishing10": {
+        "name": "Fisherman",
+        "description": "Catch 10 fishies."
+    },
+
+    "boxingman": {
+        "name": "Generic Task 2",
+        "description": "Talk to Mike Tyson in Mudwich about beating stuff up",
+        "npc": "boxingman",
+        "dialogueHidden": [
+            "Hey there, you look like you can take a punch!",
+            "I'm looking for someone to beat up some stuff for me.",
+            "If you go and beat up 25 snakes, I have a special reward for you!"
+        ],
+
+        "dialogueStarted": [
+            "Beat up 25 sneks for me!",
+            "I'll show you something special if you do!"
+        ],
+
+        "mob": ["snek"],
+        "mobCount": 25,
+
+        "rewardAbility": "run",
+        "rewardSkill": "strength",
+        "rewardExperience": 2000
     },
 
     "ahiddenpath": {
@@ -88,14 +143,35 @@
 
     "pirates": {
         "name": "Pirates",
-        "description": "There's skeleton pirates under the sea?",
-        "hidden": true
+        "description": "There's skeleton pirates under the sea?"
     },
 
     "piratestreasure": {
         "name": "Pirate's Treasure",
         "description": "Find the treasure hidden in the pirate's ship.",
         "hidden": true
+    },
+
+    "zombielovers": {
+        "name": "Zombie Lovers",
+        "description": "The worried zombie girlfriend needs your help!",
+        "npc": "zombiegf",
+        "dialogueHidden": [
+            "You! Please, you need to help me!",
+            "My boyfriend went down in that mine below and got stuck!",
+            "He looks just like one of those zombies!",
+            "Slay 20 of them just to make sure they're not my boyfriend.",
+            "What? I gotta give you a task, isn't that why you talked to me?"
+        ],
+        "dialogueStarted": [
+            "Please, slay 20 zombies for me!"
+        ],
+
+        "mob": ["zombie"],
+        "mobCount": 20,
+
+        "rewardSkill": "strength",
+        "rewardExperience": 4269
     },
 
     "babyseadragon": {
@@ -195,6 +271,12 @@
         "hidden": true
     },
 
+    "iceworld": {
+        "name": "Ice World",
+        "description": "Gain access into the ice world!",
+        "hidden": true
+    },
+
     "forestdragon": {
         "name": "Forest Dragon",
         "description": "Defeat the dragon laying dormant under Mudwich.",
@@ -202,6 +284,153 @@
 
         "rewardSkill": "health",
         "rewardExperience": 52600
+    },
+
+    "roadtohell": {
+        "name": "Road to Hell",
+        "description": "Defeat the Dark Wolf guarding the entrance to the Hellhound.",
+        "hidden": true,
+
+        "rewardSkill": "health",
+        "rewardExperience": 4000
+    },
+
+    "hellhound": {
+        "name": "Hellhound",
+        "description": "Defeat the hellhound in the hell dungeon!",
+        "hidden": true,
+
+        "rewardSkill": "strength",
+        "rewardExperience": 25600
+    },
+
+    "miniemperor": {
+        "name": "Mini Emperor",
+        "description": "Defeat the mini emperor in the mini knight's land!",
+        "hidden": true,
+
+        "rewardSkill": "loitering",
+        "rewardExperience": 3000
+    },
+
+    "examiner25": {
+        "name": "Examiner",
+        "description": "Inspect 25 random things around the world.",
+        "secret": true
+    },
+
+    "examiner50": {
+        "name": "Examiner",
+        "description": "Inspect 50 random things around the world.",
+        "secret": true
+    },
+
+    "lumberjacking50": {
+        "name": "Lumberjacker",
+        "description": "Cut down 50 trees.",
+        "secret": true
+    },
+
+    "lumberjacking100": {
+        "name": "Lumberjacker",
+        "description": "Cut down 100 trees.",
+        "secret": true
+    },
+
+    "lumberjacking500": {
+        "name": "Lumberjacker",
+        "description": "Cut down 500 trees.",
+        "secret": true
+    },
+
+    "lumberjacking1000": {
+        "name": "Lumberjacker",
+        "description": "Cut down 1000 trees.",
+        "secret": true
+    },
+
+    "lumberjacking5000": {
+        "name": "Lumberjacker",
+        "description": "Cut down 5000 trees.",
+        "secret": true
+    },
+
+    "lumberjacking10000": {
+        "name": "Lumberjacker",
+        "description": "Cut down 10000 trees.",
+        "secret": true
+    },
+
+    "mining50": {
+        "name": "Miner Man",
+        "description": "Acquire 50 ores.",
+        "secret": true
+    },
+
+    "mining100": {
+        "name": "Miner Man",
+        "description": "Acquire 100 ores.",
+        "secret": true
+    },
+
+    "mining500": {
+        "name": "Miner Man",
+        "description": "Acquire 500 ores.",
+        "secret": true
+    },
+
+    "mining1000": {
+        "name": "Miner Man",
+        "description": "Acquire 1000 ores.",
+        "secret": true
+    },
+
+    "mining5000": {
+        "name": "Miner Man",
+        "description": "Acquire 5000 ores.",
+        "secret": true
+    },
+
+    "mining10000": {
+        "name": "Miner Man",
+        "description": "Acquire 10000 ores.",
+        "secret": true
+    },
+
+    "fishing50": {
+        "name": "Fisherman",
+        "description": "Catch 50 fishies.",
+        "secret": true
+    },
+
+    "fishing100": {
+        "name": "Fisherman",
+        "description": "Catch 100 fishies.",
+        "secret": true
+    },
+
+    "fishing500": {
+        "name": "Fisherman",
+        "description": "Catch 500 fishies.",
+        "secret": true
+    },
+
+    "fishing1000": {
+        "name": "Fisherman",
+        "description": "Catch 1000 fishies.",
+        "secret": true
+    },
+
+    "fishing5000": {
+        "name": "Fisherman",
+        "description": "Catch 5000 fishies.",
+        "secret": true
+    },
+
+    "fishing10000": {
+        "name": "Fisherman",
+        "description": "Catch 10000 fishies.",
+        "secret": true
     },
 
     "gravemystery": {

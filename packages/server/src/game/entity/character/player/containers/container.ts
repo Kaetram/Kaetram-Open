@@ -5,28 +5,33 @@ import Item from '../../../objects/item';
 import log from '@kaetram/common/util/log';
 
 import type { Modules } from '@kaetram/common/network';
-import type { ContainerItem } from '@kaetram/common/types/item';
+import type { ContainerItem, Enchantments } from '@kaetram/common/types/item';
 import type { SlotData } from '@kaetram/common/types/slot';
 
 interface SerializedContainer {
     slots: SlotData[];
 }
 
+type AddCallback = (slot: Slot) => void;
+type RemoveCallback = (
+    slot: Slot,
+    key: string,
+    count: number,
+    enchantments: Enchantments,
+    drop?: boolean
+) => void;
+type NotifyCallback = (message: string) => void;
+
 export default abstract class Container {
     protected slots: Slot[] = [];
 
     protected stackSize?: number;
 
-    private loadCallback?: () => void;
+    public loadCallback?: () => void;
 
-    protected addCallback?: (slot: Slot) => void;
-    protected removeCallback?: (
-        slot: Slot,
-        key: string,
-        count: number,
-        drop?: boolean | undefined
-    ) => void;
-    protected notifyCallback?: (message: string) => void;
+    protected addCallback?: AddCallback;
+    protected removeCallback?: RemoveCallback;
+    protected notifyCallback?: NotifyCallback;
 
     public constructor(public type: Modules.ContainerType, public size: number) {
         // Create `size` amount of slots with empty data.
@@ -56,7 +61,9 @@ export default abstract class Container {
      */
 
     public empty(): void {
-        this.forEachSlot((slot: Slot) => this.remove(slot.index, slot.count));
+        this.forEachSlot((slot: Slot) => {
+            if (slot.key) this.remove(slot.index, slot.count);
+        });
     }
 
     /**
@@ -83,6 +90,9 @@ export default abstract class Container {
 
             // Update the slot with the new item count
             slot.update(itemCopy, this.stackSize);
+
+            // Slot update failed, we can't add the item
+            if (slot.isEmpty()) return -2;
 
             // Set the total to the new item count
             total += slot.count;
@@ -128,7 +138,7 @@ export default abstract class Container {
         if (count < slot.count) slot.remove(count);
         else slot.clear();
 
-        this.removeCallback?.(slot, serializedSlot.key, count, drop);
+        this.removeCallback?.(slot, serializedSlot.key, count, serializedSlot.enchantments, drop);
 
         return serializedSlot;
     }
@@ -231,15 +241,20 @@ export default abstract class Container {
                 toStackSize!: number,
                 isSameItem = false;
 
+            // If the target slot is not empty, check if the item in the target slot is addable to the item in the source slot.
             if (!toEmpty) {
                 toItem = toContainer.getItem(toSlot);
                 toStackSize = toContainer.stackSize || toItem.maxStackSize;
                 isSameItem = fromItem.key === toItem.key;
 
+                let fromFull = fromItem.count > (toContainer.stackSize || fromItem.maxStackSize),
+                    toFull = toItem.count > (this.stackSize || toItem.maxStackSize);
+
+                // If we cannot stack the items, return early.
                 if (
-                    (fromItem.count > (toContainer.stackSize || fromItem.maxStackSize) ||
-                        toItem.count > (this.stackSize || toItem.maxStackSize)) &&
-                    !isSameItem
+                    ((fromFull || toFull) && !isSameItem) ||
+                    fromItem.isEnchanted() ||
+                    toItem.isEnchanted()
                 )
                     return;
             }
@@ -259,13 +274,16 @@ export default abstract class Container {
                 // Update the item in the target slot with the item in the source slot.
                 toSlot.update(fromItem, toContainer.stackSize);
 
-                if (toSlot.count < fromSlot.count) log.critical('WHY HAVE YOU FORSAKEN ME');
-                else {
-                    fromSlot.update(toItem, this.stackSize);
+                log.assert(
+                    toSlot.count >= fromSlot.count,
+                    'source slot count is greater than target slot count'
+                );
 
-                    toItem.count -= fromSlot.count;
-                    if (toItem.count > 0) log.critical("WHAT IS THIS I DON'T EVEN");
-                }
+                fromSlot.update(toItem, this.stackSize);
+
+                toItem.count -= fromSlot.count;
+
+                log.assert(toItem.count < 1, 'target item count is greater than 0');
             }
         }
 
@@ -319,7 +337,11 @@ export default abstract class Container {
                     // If the slot's key matches the item's key
                     slot.key === item.key &&
                     // And the slot's count is less than the item's max stack size or we're ignoring the max stack size.
-                    slot.count < stackSize
+                    slot.count < stackSize &&
+                    // And the item is not enchanted.
+                    !item.isEnchanted() &&
+                    // And the slot is not enchanted.
+                    !slot.isEnchanted()
             );
 
         // If there's no slot with the same item, find an empty slot.
@@ -328,11 +350,12 @@ export default abstract class Container {
 
     /**
      * Checks if there are empty spaces in the container.
+     * @param count Optional amount of empty slots we are looking for.
      * @returns Whether or not we can find a slot that is empty.
      */
 
-    public hasSpace(): boolean {
-        return !!this.getEmptySlot();
+    public hasSpace(count = 1): boolean {
+        return count > 1 ? this.getEmptySlots() >= count : !!this.getEmptySlot();
     }
 
     /**
@@ -361,6 +384,24 @@ export default abstract class Container {
         } else contains = true;
 
         return contains;
+    }
+
+    /**
+     * Counts the amount of an item the container contains.
+     * @param key The key of the item we are counting.
+     * @returns The amount of items we found.
+     */
+
+    public count(key: string): number {
+        let found = 0;
+
+        this.forEachSlot((slot: Slot) => {
+            if (slot.key !== key) return;
+
+            found += slot.count;
+        });
+
+        return found;
     }
 
     /**
@@ -416,7 +457,7 @@ export default abstract class Container {
      * Signal for when an item is added.
      */
 
-    public onAdd(callback: (slot: Slot) => void): void {
+    public onAdd(callback: AddCallback): void {
         this.addCallback = callback;
     }
 
@@ -424,9 +465,7 @@ export default abstract class Container {
      * Signal for when an item is removed.
      */
 
-    public onRemove(
-        callback: (slot: Slot, key: string, count: number, drop?: boolean) => void
-    ): void {
+    public onRemove(callback: RemoveCallback): void {
         this.removeCallback = callback;
     }
 
@@ -435,7 +474,7 @@ export default abstract class Container {
      * @param callback A callback containing the message to notify the player with.
      */
 
-    public onNotify(callback: (message: string) => void): void {
+    public onNotify(callback: NotifyCallback): void {
         this.notifyCallback = callback;
     }
 }

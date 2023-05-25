@@ -16,8 +16,9 @@ export interface Config {
 
     hubEnabled: boolean;
     hubHost: string;
-    hubPort: number;
-    hubPing: number;
+    hubWsHost: string;
+    hubPort: number; // API port for hub
+    hubWsPort: number; // Websocket port for hub
     hubAccessToken: string;
     remoteServerHost: string;
     remoteApiHost: string;
@@ -38,6 +39,7 @@ export interface Config {
     mongodbDatabase: string;
     mongodbSrv: boolean;
     mongodbTls: boolean;
+    mongodbAuthSource: string;
     aggregateThreshold: number;
 
     tutorialEnabled: boolean;
@@ -48,6 +50,22 @@ export interface Config {
     minor: string;
     regionCache: boolean;
     saveInterval: number;
+    messageLimit: number;
+
+    smtpHost: string;
+    smtpPort: number;
+    smtpUseSecure: boolean;
+    smtpUser: string;
+    smtpPassword: string;
+
+    sentryOrg: string;
+    sentryProject: string;
+    sentryAuthToken: string;
+    sentryDsn: string;
+
+    stripeEndpoint: string;
+    stripeKeyLocal: string;
+    stripeSecretKey: string;
 
     discordEnabled: boolean;
     discordChannelId: string;
@@ -85,6 +103,7 @@ for (let key in envConfig) {
 }
 
 config.hubHost = config.hubHost || config.host;
+config.hubWsHost = config.hubWsHost || config.hubHost;
 
 if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
     console.error(

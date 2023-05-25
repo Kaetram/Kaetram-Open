@@ -8,6 +8,7 @@ import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
 export default class Slot {
     public edible = false;
+    public interactable = false;
     public equippable = false;
 
     public name = '';
@@ -17,7 +18,7 @@ export default class Slot {
     public bonuses: Bonuses = Utils.getEmptyBonuses();
 
     // Max amount of an item we can put in a slot.
-    private maxStackSize = Modules.Constants.MAX_STACK;
+    public maxStackSize = Modules.Constants.MAX_STACK;
 
     public constructor(
         public index: number,
@@ -34,11 +35,15 @@ export default class Slot {
      */
 
     public update(item: Item, stackSize = item.maxStackSize): void {
+        if (!item.exists)
+            return log.trace(`Item doesn't exist: ${item.key}, deleting from existence.`);
+
         this.key = item.key;
         this.count = Math.min(item.count, stackSize);
         this.enchantments = item.enchantments;
 
         this.edible = item.edible;
+        this.interactable = item.interactable;
         this.equippable = item.isEquippable();
 
         this.name = item.name;
@@ -91,6 +96,7 @@ export default class Slot {
         this.enchantments = {};
 
         this.edible = false;
+        this.interactable = false;
         this.equippable = false;
         this.maxStackSize = Modules.Constants.MAX_STACK;
 
@@ -123,6 +129,22 @@ export default class Slot {
     }
 
     /**
+     * @returns Whether or not the item in the slot is a shard.
+     */
+
+    public isShard(): boolean {
+        return this.key.includes('shardt');
+    }
+
+    /**
+     * @returns Whether or not the slot contains any enchantments.
+     */
+
+    public isEnchanted(): boolean {
+        return Object.keys(this.enchantments).length > 0;
+    }
+
+    /**
      * Returns the data in the slot in the form of a SlotData object.
      * @param clientInfo Whether or not to send the client information.
      * @returns SlotData interface object.
@@ -141,6 +163,7 @@ export default class Slot {
             data.name = this.name;
             data.description = this.description;
             data.edible = this.edible;
+            data.interactable = this.interactable;
             data.equippable = this.equippable;
             data.attackStats = this.attackStats;
             data.defenseStats = this.defenseStats;

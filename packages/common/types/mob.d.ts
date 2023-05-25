@@ -5,8 +5,16 @@ export interface MobData {
     drops?: { [itemKey: string]: number };
     dropTables?: string[];
     level?: number;
+    health?: number;
+    accuracy?: number;
+    strength?: number;
+    defense?: number;
+    magic?: number;
+    archery?: number;
     attackLevel?: number;
-    defenseLevel?: number;
+    attackStats?: Stats;
+    defenseStats?: Stats;
+    bonuses?: Bonuses;
     attackRange?: number;
     aggroRange?: number;
     aggressive?: boolean;
@@ -15,6 +23,8 @@ export interface MobData {
     respawnDelay?: number;
     movementSpeed?: number;
     poisonous?: boolean;
+    freezing?: boolean;
+    burning?: boolean;
     hiddenName?: boolean;
     projectileName?: string;
     roaming?: boolean;
@@ -24,4 +34,8 @@ export interface MobData {
     miniboss?: boolean;
     roamDistance?: number;
     healRate?: number;
+}
+
+export interface RawData {
+    [key: string]: MobData;
 }

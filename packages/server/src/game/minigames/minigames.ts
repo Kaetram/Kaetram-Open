@@ -18,7 +18,7 @@ export default class Minigames {
     private areas: Areas;
 
     public constructor(private world: World) {
-        this.areas = this.world.map.getMinigameAreas();
+        this.areas = world.map.getMinigameAreas();
 
         // Iterate through the minigame keys in the index and initialize them.
         for (let key in Index)
@@ -56,7 +56,7 @@ export default class Minigames {
      * @returns The minigame object if found, otherwise undefined.
      */
 
-    public get(opcode: Opcodes.Minigame): Minigame {
+    public get(opcode: Opcodes.Minigame | undefined): Minigame | undefined {
         switch (opcode) {
             case Opcodes.Minigame.TeamWar: {
                 return this.minigames.teamwar;

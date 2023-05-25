@@ -2,146 +2,100 @@
 
 import Entity from './entity';
 
+import WebSocket from 'websocket';
 import config from '@kaetram/common/config';
-import { Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
-import { io } from 'socket.io-client';
+import Map from '@kaetram/server/data/map/world.json';
 
-import type { Socket } from 'socket.io-client';
+import type { connection as Connection } from 'websocket';
 
-interface PacketInfo {
-    instance: string;
-    x: number;
-    y: number;
-}
+const BOT_COUNT = 960;
 
 export default class Bot {
-    #bots: Entity[] = [];
-    #botCount = 300;
+    private entities: { [instance: string]: Entity } = {};
+    private collisions = Array.from({ length: Map.width * Map.height });
 
     public constructor() {
-        this.load();
-    }
+        log.info(`Starting ${config.name} bot with ${BOT_COUNT} bots...`);
 
-    private load(): void {
-        let connecting = setInterval(() => {
-            this.connect();
+        this.loadCollisions();
 
-            if (--this.#botCount < 1) clearInterval(connecting);
-        }, 100);
+        log.info(`Loaded ${this.collisions.length} collisions.`);
 
+        // Begin the connection process.
         setInterval(() => {
-            for (let bot of this.#bots) {
-                this.move(bot);
-
-                if (Utils.randomInt(0, 50) === 10) this.talk(bot);
-            }
-        }, 2000);
+            if (Object.keys(this.entities).length < BOT_COUNT) this.connect();
+        }, 3000);
     }
+
+    /**
+     * Iterates through the map and determines whether or not the tile
+     * at every index is a collision. We use this so that the bots don't
+     * walk into walls.
+     */
+
+    private loadCollisions(): void {
+        log.info(`Loading collisions for ${Map.width}x${Map.height} map...`);
+
+        // Initialize empty array
+        this.collisions.fill(1);
+
+        for (let index in Map.data) {
+            let tile = Map.data[index];
+
+            if (!Array.isArray(tile)) {
+                if (!Map.collisions.includes(tile)) this.collisions[index] = 0;
+                continue;
+            }
+
+            for (let id of tile) if (Map.collisions.includes(id)) continue;
+        }
+    }
+
+    /**
+     * Creates a WebSocket connection to the server and handles the
+     * handshake process. Once the handshake is complete, the bot will
+     * begin roaming around and sending chat messages.
+     */
 
     private connect(): void {
-        let connection = io('ws://127.0.0.1:9001', {
-            transports: ['websocket'],
-            forceNew: true,
-            reconnection: false
-        });
+        let webSocket = new WebSocket.client();
 
-        connection.on('connect', () => {
-            log.info('Connection established...');
+        // Connect to the default configurations for the server.
+        webSocket.connect(`ws://${config.host}:${config.port}`);
 
-            connection.emit('client', {
-                gVer: config.gver,
-                cType: 'HTML5'
+        webSocket.on('connect', (connection: Connection) => {
+            let entity = new Entity(this, connection);
+
+            // Store the entity once the handshake is complete.
+            entity.onReady(() => (this.entities[entity.instance] = entity));
+
+            // When the connection is closed, we remove the entity from the list.
+            connection.on('close', () => {
+                log.info(`Bot #${entity.instance} disconnected.`);
+
+                delete this.entities[entity.instance];
             });
         });
 
-        connection.on('connect_error', () => {
-            log.info('Failed to establish connection.');
+        // If the connection fails, we log the error.
+        webSocket.on('connectFailed', () => {
+            log.error(`Failed to create bot #${Object.keys(this.entities).length}`);
         });
-
-        connection.on('message', (message: string) => {
-            if (message.startsWith('[')) {
-                let data = JSON.parse(message);
-
-                if (data.length > 1) for (let msg of data) this.handlePackets(connection, msg);
-                else this.handlePackets(connection, JSON.parse(message).shift());
-            } else this.handlePackets(connection, message as never, 'utf8');
-        });
-
-        // connection.on('disconnect', () => {});
     }
 
-    private handlePackets(connection: Socket, message: [Packets, PacketInfo], type?: string): void {
-        if (type === 'utf8' || !Array.isArray(message)) {
-            log.info(`Received UTF8 message ${message}.`);
+    /**
+     * Checks if the specified tile is a collision. Convers the x and y
+     * coordinates into an index and checks the collisions array.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @returns Whether or not the tile is a collision.
+     */
 
-            return;
-        }
+    public isCollision(x: number, y: number): boolean {
+        let index = x + y * Map.width;
 
-        let [opcode, info] = message;
-
-        switch (opcode) {
-            case Packets.Handshake: {
-                this.send(connection, 1, [2, `n${this.#bots.length}`, 'n', 'n']);
-
-                break;
-            }
-
-            case Packets.Welcome: {
-                this.#bots.push(new Entity(info.instance, info.x, info.y, connection));
-
-                break;
-            }
-
-            case Packets.Combat: {
-                break;
-            }
-        }
-    }
-
-    private send(connection: Socket, packet: number, data: (string | number)[]): void {
-        let json = JSON.stringify([packet, data]);
-
-        if (connection?.connected) connection.send(json);
-    }
-
-    private move(bot: Entity): void {
-        let currentX = bot.x,
-            currentY = bot.y,
-            newX = currentX + Utils.randomInt(-3, 3),
-            newY = currentY + Utils.randomInt(-3, 3);
-
-        setTimeout(() => {
-            // Movement Request
-
-            this.send(bot.connection, 9, [0, newX, newY, currentX, currentY]);
-        }, 250);
-
-        setTimeout(() => {
-            // Empty target packet
-
-            this.send(bot.connection, 13, [2]);
-        }, 250);
-
-        setTimeout(() => {
-            // Start Movement
-
-            this.send(bot.connection, 9, [1, newX, newY, currentX, currentY, 250]);
-        }, 250);
-
-        setTimeout(() => {
-            // Stop Movement
-
-            this.send(bot.connection, 9, [3, newX, newY]);
-        }, 1000);
-
-        bot.x = newX;
-        bot.y = newY;
-    }
-
-    private talk(bot: Entity): void {
-        this.send(bot.connection, 20, ['am human, hello there.']);
+        return this.collisions[index] === 1;
     }
 }
 

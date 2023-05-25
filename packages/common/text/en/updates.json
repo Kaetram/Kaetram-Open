@@ -133,5 +133,56 @@
             "- Buy/drop/etc X amount",
             "- Various bug fixes and backend improvements"
         ]
+    },
+    "alpha-2.4.0": {
+        "title": "Kaetram alpha-2.4.0",
+        "content": [
+            "- Added Defense skill, attack styles, and secret achievements",
+            "- Added freezing effect and snow potion functionality",
+            "- Added PVP areas, new quests, and new areas",
+            "- Experience gain is now on a per-hit basis",
+            "- New interfaces for profile, skills, and friends list",
+            "- Fix bank/inventory/store-related bugs",
+            "- Fix cross-server private messaging",
+            "- Loads of backend improvements and optimizations"
+        ]
+    },
+    "alpha-2.4.1": {
+        "title": "Kaetram alpha-2.4.1",
+        "content": [
+            "- Added guilds",
+            "- Added leaderboards",
+            "- Added special effects to arrows",
+            "- Added weapon enchanting",
+            "- Adjusted stats for mobs and items",
+            "- Enahanced mob attack logic",
+            "- Major improvements to the backend",
+            "- And many more bug fixes and improvements"
+        ]
+    },
+    "alpha-2.5.0": {
+        "title": "Kaetram alpha-2.5.0",
+        "content": [
+            "- Added 8 new skills",
+            "- Added new areas/bosses/achievements/quests",
+            "- Added many new items",
+            "- Increased inventory/bank size",
+            "- Fix status effects not being removed",
+            "- Fix bug with the death animation hanging",
+            "- Fix bug with character animations",
+            "- Many new features and bug fixes"
+        ]
+    },
+    "alpha-2.5.1": {
+        "title": "Kaetram alpha-2.5.1",
+        "content": [
+            "- Adds missing items to the game",
+            "- Fixed collisions around the map",
+            "- Fixed freezing bug with fishing spots",
+            "- Fixes to the death animation",
+            "- Fixes fishing bug when inventory full",
+            "- Fixed pirate captain teleport bug",
+            "- Update user interface icons"
+        ]
     }
 }
