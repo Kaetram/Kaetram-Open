@@ -458,6 +458,11 @@
             background-size: calc(width('skills/smithing.png') * $i);
         }
 
+        .skill-image-smelting {
+            background: url('/img/interface/skills/smelting.png');
+            background-size: calc(width('skills/smelting.png') * $i);
+        }
+
         .skill-image-cooking {
             background: url('/img/interface/skills/cooking.png');
             background-size: calc(width('skills/cooking.png') * $i);
