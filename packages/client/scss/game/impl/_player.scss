@@ -32,7 +32,6 @@
 
 #health,
 #mana {
-    cursor: url('/img/hand.png'), auto;
     position: absolute;
 }
 
@@ -97,12 +96,14 @@
     }
 
     @media ($size) {
-        #health, #health-mask {
+        #health,
+        #health-mask {
             width: 63px * $i;
             height: 15px * $i;
         }
 
-        #mana, #mana-mask {
+        #mana,
+        #mana-mask {
             width: 56px * $i;
             height: 11px * $i;
         }
