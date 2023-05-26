@@ -715,6 +715,51 @@
             }
         },
 
+        "bronzeboots": {
+            "level": 5,
+            "experience": 45,
+            "requirements": [
+                {
+                    "key": "bronzebar",
+                    "count": 5
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "ironboots": {
+            "level": 10,
+            "experience": 80,
+            "requirements": [
+                {
+                    "key": "ironbar",
+                    "count": 5
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "goldboots": {
+            "level": 62,
+            "experience": 350,
+            "requirements": [
+                {
+                    "key": "goldbar",
+                    "count": 15
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
         "goldbar": {
             "level": 1,
             "experience": 20,
@@ -730,7 +775,52 @@
             }
         },
 
+        "bronzering": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "bronzebar",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "ironring": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "ironbar",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
         "silverring": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "ironbar",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "silverring2": {
             "level": 1,
             "experience": 20,
             "requirements": [
@@ -760,13 +850,13 @@
             }
         },
 
-        "goldboots": {
-            "level": 62,
-            "experience": 350,
+        "goldring2": {
+            "level": 1,
+            "experience": 20,
             "requirements": [
                 {
                     "key": "goldbar",
-                    "count": 15
+                    "count": 2
                 }
             ],
 
@@ -1031,6 +1121,44 @@
                 },
                 {
                     "key": "goldring",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "berylsilverring": {
+            "level": 10,
+            "experience": 110,
+            "requirements": [
+                {
+                    "key": "beryl",
+                    "count": 1
+                },
+                {
+                    "key": "silverring2",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
+        "berylgoldring": {
+            "level": 20,
+            "experience": 145,
+            "requirements": [
+                {
+                    "key": "beryl",
+                    "count": 1
+                },
+                {
+                    "key": "goldring2",
                     "count": 1
                 }
             ],

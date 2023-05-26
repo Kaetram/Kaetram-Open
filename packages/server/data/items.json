@@ -660,7 +660,7 @@
       "accuracy": 1,
       "strength": 1,
       "archery": 0,
-      "magic": 0
+      "magic": -2
     }
   },
 
@@ -688,7 +688,7 @@
       "accuracy": 1,
       "strength": 1,
       "archery": 0,
-      "magic": 0
+      "magic": -3
     }
   },
 
@@ -710,13 +710,209 @@
       "slash": 5,
       "stab": 5,
       "archery": 0,
-      "magic": 0
+      "magic": 4
     },
     "bonuses": {
       "accuracy": 2,
       "strength": 2,
       "archery": 0,
+      "magic": -2
+    }
+  },
+
+  "bronzeboots": {
+    "type": "boots",
+    "name": "Bronze Boots",
+    "skill": "defense",
+    "level": 5,
+    "price": 100,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
       "magic": 0
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": -3
+    }
+  },
+
+  "ironboots": {
+    "type": "boots",
+    "name": "Iron Boots",
+    "skill": "defense",
+    "level": 10,
+    "price": 100,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 3,
+      "slash": 3,
+      "stab": 3,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 0,
+      "magic": -5
+    }
+  },
+
+  "goldboots": {
+    "type": "boots",
+    "name": "Golden Boots",
+    "skill": "defense",
+    "level": 20,
+    "price": 200,
+    "attackStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "archery": 0,
+      "magic": 0
+    },
+    "defenseStats": {
+      "crush": 8,
+      "slash": 7,
+      "stab": 5,
+      "archery": 0,
+      "magic": 0
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 2,
+      "archery": -2,
+      "magic": -4
+    }
+  },
+
+  "bronzering": {
+    "type": "ring",
+    "name": "Bronze Ring",
+    "price": 100,
+    "skill": "defense",
+    "level": 5,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 1,
+      "magic": 1
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 1,
+      "magic": 1
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 1
+    }
+  },
+
+  "ironring": {
+    "type": "ring",
+    "name": "Iron Ring",
+    "price": 100,
+    "skill": "defense",
+    "level": 10,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 1,
+      "magic": 1
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "archery": 2,
+      "magic": 2
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 1
+    }
+  },
+
+  "berylsilverring": {
+    "type": "ring",
+    "name": "Beryl Silver Ring",
+    "price": 200,
+    "skill": "defense",
+    "level": 15,
+    "attackStats": {
+      "crush": 2,
+      "slash": 2,
+      "stab": 2,
+      "archery": 2,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 3,
+      "archery": 1,
+      "magic": 3
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 1,
+      "archery": 1,
+      "magic": 1
+    }
+  },
+
+  "berylgoldring": {
+    "type": "ring",
+    "name": "Beryl Gold Ring",
+    "price": 200,
+    "skill": "defense",
+    "level": 20,
+    "attackStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 4,
+      "archery": 2,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": 2,
+      "slash": 3,
+      "stab": 1,
+      "archery": 1,
+      "magic": 3
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 1,
+      "archery": 1,
+      "magic": 2
     }
   },
 
@@ -1029,10 +1225,22 @@
     "name": "Gold Ring",
     "price": 2250
   },
+
+  "goldring2": {
+    "type": "ring",
+    "name": "Slotted Gold Ring",
+    "price": 2250
+  },
   
   "silverring": {
     "type": "ring",
     "name": "Silver Ring",
+    "price": 1250
+  },
+
+  "silverring2": {
+    "type": "ring",
+    "name": "Slotted Silver Ring",
     "price": 1250
   },
 
@@ -2507,32 +2715,6 @@
       "strength": 5,
       "archery": 0,
       "magic": 0
-    }
-  },
-
-  "goldboots": {
-    "type": "boots",
-    "name": "Golden Boots",
-    "price": 4500,
-    "attackStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 12
-    },
-    "defenseStats": {
-      "crush": 0,
-      "slash": 0,
-      "stab": 0,
-      "archery": 0,
-      "magic": 8
-    },
-    "bonuses": {
-      "accuracy": 0,
-      "strength": 0,
-      "archery": 0,
-      "magic": 6
     }
   },
 
