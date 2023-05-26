@@ -1,13 +1,9 @@
 @use '../../abstracts/media';
 
 #trade-container {
-    cursor: url('/img/hand.png'), auto;
-
     position: absolute;
     inset: 0;
-
     display: none;
-
     margin: auto;
 }
 

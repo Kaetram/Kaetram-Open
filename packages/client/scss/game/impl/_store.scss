@@ -1,12 +1,9 @@
 @use '../../abstracts/media';
 
 #store {
-    cursor: url('/img/hand.png'), auto;
-
     position: absolute;
     top: 17%;
     left: 50%;
-
     display: none;
 }
 

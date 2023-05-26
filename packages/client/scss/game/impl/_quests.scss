@@ -17,7 +17,7 @@
     color: white;
 }
 
-@each $size, $i in media.$sizes {
+@each $size, $i in media.$container-sizes {
     @media ($size) {
         #quests {
             background: url('/img/interface/quests.png') 0 0 no-repeat;
