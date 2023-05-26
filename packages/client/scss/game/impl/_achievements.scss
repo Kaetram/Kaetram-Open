@@ -1,18 +1,17 @@
 @use '../../abstracts/media';
 
 #achievements-container {
-    position: absolute;
-    inset: 0;
+    display: flex;
+    height: 100%;
 
-    overflow: auto;
+    ul {
+        overflow: auto;
+        height: 100%;
 
-    margin: auto;
-
-    font-family: AdvoCut, sans-serif;
-}
-
-#achievements-container > ul > li:last-child.achievement-element {
-    padding-bottom: 0 !important;
+        li:last-child.achievement-element {
+            padding-bottom: 0 !important;
+        }
+    }
 }
 
 .achievement-element > p.achievement-title {
@@ -32,16 +31,15 @@
 @each $size, $i in media.$container-sizes {
     @media ($size) {
         #achievements-container {
-            width: 318px * $i;
-            height: 130px * $i;
+            // width: 318px * $i;
+            // height: 130px * $i;
             font-size: 22px;
         }
 
         .achievement-element {
-            width: 318px * $i;
-            height: 26px * $i;
+            // width: 318px * $i;
+            // height: 26px * $i;
             padding-bottom: 8px * $i;
-
             background: url('/img/interface/achievements.png') 0 -96px * $i no-repeat;
             background-size: calc(width('achievements.png') * $i);
         }

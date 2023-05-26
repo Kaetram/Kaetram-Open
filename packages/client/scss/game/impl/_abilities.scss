@@ -23,7 +23,7 @@
     }
 }
 
-@each $size, $i in media.$b-sizes {
+@each $size, $i in media.$dialog-sizes {
     @media ($size) {
         .ability-quickslot {
             position: absolute;

@@ -59,13 +59,18 @@
     border: 0;
 }
 
-.container-frame {
+.container-slice {
     position: absolute;
     inset: 0;
+
+    display: none;
 
     box-sizing: border-box;
     margin: auto;
     padding: 1em;
+
+    font-family: AdvoCut, sans-serif;
+    color: #eee;
 
     border-image: url('/img/interface/slices/container.png');
     border-image-slice: 42% fill;
@@ -74,10 +79,13 @@
     border-image-repeat: stretch;
 }
 
-.container-subframe {
+.subcontainer-slice {
+    overflow: auto;
+
+    box-sizing: border-box;
     padding: 1em;
 
-    border-image: url('/img/interface/slices/subframe.png');
+    border-image: url('/img/interface/slices/subcontainer.png');
     border-image-slice: 42% fill;
     border-image-width: 64px;
     border-image-outset: 0;
@@ -136,6 +144,12 @@
     color: rgb(255 255 255);
 }
 
+.close-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 @each $size, $i in media.$container-sizes {
     @media ($size) {
         .container {
@@ -147,26 +161,31 @@
             background-size: calc(width('spritesheet.png') * $i);
         }
 
+        .container-slice {
+            width: 240px * $i;
+            height: 116px * $i;
+        }
+
         .container-slot {
-            width: 102px * $i;
-            height: 15px * $i;
+            width: 112px * $i;
+            height: 13px * $i;
             margin-top: 2px * $i;
 
-            background: url('/img/interface/characterdialogsheet.png') -144px * $i -256px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
+            background: url('/img/interface/main.png');
+            background-size: calc(width('main.png') * $i);
 
             &:hover {
-                background-position-y: -320px * $i;
+                background-position-y: -13px * $i;
             }
 
             &:active {
-                background-position-y: -336px * $i;
+                background-position-y: -26px * $i;
             }
         }
 
         .container-slot-large {
-            width: 166px * $i;
-            height: 15px * $i;
+            width: 112px * $i;
+            height: 13px * $i;
             margin-top: 2px * $i;
 
             background: url('/img/interface/leaderboards.png') 0 -160px * $i;
@@ -186,9 +205,13 @@
             padding-top: 4px * $i;
         }
 
-        .new-close-container {
+        .close-container {
+            top: -4px * $i;
+            right: -4px * $i;
+
             width: 11px * $i;
-            height: 12px * $i;
+            height: 11px * $i;
+
             background: url('/img/interface/guilds/elements.png') -64px * $i 0;
             background-size: calc(width('guilds/elements.png') * $i);
 
@@ -210,15 +233,4 @@
             font-size: 10px;
         }
     }
-}
-
-.close-container {
-    top: -2% !important;
-    left: 96% !important;
-}
-
-.new-close-container {
-    position: absolute;
-    top: 0;
-    right: 0;
 }

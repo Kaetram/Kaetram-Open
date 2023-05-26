@@ -182,7 +182,6 @@ export default class Actions extends Menu {
 
     public showDropDialog(): void {
         Util.fadeIn(this.dropDialog);
-        Util.fadeOut(this.description);
 
         this.page.classList.add('dimmed');
 
@@ -196,7 +195,6 @@ export default class Actions extends Menu {
 
     public hideDropDialog(): void {
         Util.fadeOut(this.dropDialog);
-        Util.fadeIn(this.description);
 
         this.page.classList.remove('dimmed');
     }
