@@ -1,3 +1,5 @@
+import Utils from '../../utils/util';
+
 import { Opcodes } from '@kaetram/common/network';
 
 export default class Arrow {
@@ -17,8 +19,8 @@ export default class Arrow {
 
     private load(): void {
         this.blinkInterval = window.setInterval(() => {
-            if (this.visible) this.hide();
-            else this.show();
+            if (this.visible) Utils.fadeOut(this.element);
+            else Utils.fadeIn(this.element);
 
             this.visible = !this.visible;
         }, 600);
