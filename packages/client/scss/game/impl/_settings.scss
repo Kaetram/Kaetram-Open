@@ -2,48 +2,53 @@
 
 #settings-page {
     display: none;
-    padding: 1em;
-
-    #settings-container {
-        display: flex;
-        gap: 2em;
-        height: 100%;
-    }
-
-    #input-settings,
-    #action-settings {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 0.5em 1em;
-    }
-
-    #input-settings {
-        flex: 3;
-        gap: 0;
-        padding: 0 1em;
-    }
-
-    #action-settings {
-        flex: 1;
-        align-items: end;
-        justify-content: end;
-    }
+    font-family: AdvoCut, sans-serif;
+    color: #eee;
 
     label {
         display: flex;
         flex-direction: row;
-
         padding: 0.25em 0;
-
-        font-family: AdvoCut, sans-serif;
-        color: #eee;
 
         span,
         input {
             flex: 1;
         }
     }
+}
+
+#settings-container {
+    display: flex;
+    gap: 0.5em;
+    height: 100%;
+}
+
+#input-settings,
+#action-settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#input-settings {
+    flex: 3;
+    padding: 0.75em 1em;
+}
+
+#action-settings {
+    flex: 1;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 1em;
+}
+
+#game-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
 }
 
 @each $size, $i in media.$container-sizes {
