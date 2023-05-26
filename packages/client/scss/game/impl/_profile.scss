@@ -345,7 +345,6 @@
         }
 
         .previous {
-            cursor: pointer;
             left: 0;
             background-position: 0 -240px * $i;
 
@@ -355,7 +354,6 @@
         }
 
         .next {
-            cursor: pointer;
             left: 21px * $i;
             background-position: -21px * $i -223px * $i;
 

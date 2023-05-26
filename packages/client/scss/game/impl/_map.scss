@@ -19,11 +19,6 @@
     background-position-y: 0;
 }
 
-#close-map-frame {
-    top: 0;
-    left: 95%;
-}
-
 .warp-button {
     position: absolute;
 }
@@ -112,10 +107,5 @@
 @media (--sm) {
     #map-frame {
         transform: scale(1.6);
-    }
-
-    #close-map-frame {
-        top: -6px;
-        left: 90%;
     }
 }

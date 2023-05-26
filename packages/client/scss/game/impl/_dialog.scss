@@ -1,5 +1,19 @@
 @use '../../abstracts/media';
 
+.dialog-slice {
+    box-sizing: border-box;
+    padding: 1em 0.5em 0.5em;
+
+    font-family: AdvoCut, sans-serif;
+    color: #eee;
+
+    border-image: url('/img/interface/slices/dialog.png');
+    border-image-slice: 45% fill;
+    border-image-width: 16px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+}
+
 dialog {
     position: absolute;
     inset: 0;
@@ -7,14 +21,12 @@ dialog {
     display: none;
 
     margin: auto;
-    padding: 0;
 
     font-family: AdvoCut, sans-serif;
     font-size: 16px;
     color: #e3e3e3;
 
-    background-color: rgb(45 45 45 / 80%);
-    border: none;
+    background: transparent;
 }
 
 .dialog-count {
@@ -32,24 +44,16 @@ dialog {
     text-align: center;
 }
 
-.dialog-accept,
-.dialog-cancel {
-    cursor: pointer;
-}
-
 .dialog-buttons {
     display: flex;
     justify-content: space-between;
-    padding: 0 10px;
 }
 
-@each $size, $i in media.$b-sizes {
+@each $size, $i in media.$dialog-sizes {
     @media ($size) {
-        .dialog {
-            width: 53px * $i;
-            height: 40px * $i;
-            background: url('/img/interface/main.png') -144px * $i -496px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
+        dialog {
+            width: 64px * $i;
+            height: 50px * $i;
         }
 
         .dialog-count {
