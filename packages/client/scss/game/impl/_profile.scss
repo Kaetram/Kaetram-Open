@@ -1,7 +1,6 @@
 @use '../../abstracts/media';
 
 .page {
-    cursor: url('/img/hand.png'), auto;
     user-select: none;
 }
 
@@ -40,7 +39,8 @@
     justify-content: center;
 }
 
-#guilds-button, #leaderboards-button {
+#guilds-button,
+#leaderboards-button {
     position: absolute;
 }
 
@@ -254,7 +254,7 @@
             background-size: calc(width('main.png') * $i);
         }
 
-                #guilds-button {
+        #guilds-button {
             background-position: -280px * $i -329px * $i;
 
             &:hover {
@@ -350,7 +350,6 @@
             background-position: 0 -240px * $i;
 
             &.disabled {
-                cursor: url('/img/hand.png'), auto;
                 background-position: 0 -223px * $i;
             }
         }
@@ -361,7 +360,6 @@
             background-position: -21px * $i -223px * $i;
 
             &.disabled {
-                cursor: url('/img/hand.png'), auto;
                 background-position: -21px * $i -240px * $i;
             }
         }
@@ -458,6 +456,11 @@
         .skill-image-smithing {
             background: url('/img/interface/skills/smithing.png');
             background-size: calc(width('skills/smithing.png') * $i);
+        }
+
+        .skill-image-smelting {
+            background: url('/img/interface/skills/smelting.png');
+            background-size: calc(width('skills/smelting.png') * $i);
         }
 
         .skill-image-cooking {
