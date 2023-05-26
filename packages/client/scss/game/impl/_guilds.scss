@@ -3,8 +3,11 @@
 #guilds {
     position: absolute;
     inset: 0;
+
     display: none;
+
     margin: auto;
+    padding: 0;
 }
 
 #guilds-list-container,
@@ -21,6 +24,12 @@
         overflow: auto;
         height: 86%;
     }
+}
+
+#guilds-list-container {
+    inset: 0;
+    margin: auto;
+    padding: 0;
 }
 
 #guilds-create-container,
