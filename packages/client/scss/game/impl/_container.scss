@@ -65,6 +65,7 @@
 
     box-sizing: border-box;
     margin: auto;
+    padding: 1em;
 
     border-image: url('/img/interface/slices/container.png');
     border-image-slice: 42% fill;
@@ -74,10 +75,7 @@
 }
 
 .container-subframe {
-    position: absolute;
-    inset: 0;
-
-    margin: auto;
+    padding: 1em;
 
     border-image: url('/img/interface/slices/subframe.png');
     border-image-slice: 42% fill;
