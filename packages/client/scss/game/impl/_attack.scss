@@ -3,11 +3,15 @@
 #attack-info {
     position: absolute;
     left: 40%;
+
     display: none;
+
+    padding-top: 0.25em;
+
+    border-image-width: 0 16px 16px 16px;
 
     .name,
     .health {
-        position: absolute;
         font-family: AdvoCut, sans-serif;
         color: white;
         text-align: center;
@@ -35,31 +39,25 @@
     }
 }
 
-@each $size, $i in media.$sizes {
+@each $size, $i in media.$dialog-sizes {
     @media ($size) {
         #attack-info {
             top: 0;
 
             width: 100px * $i;
-            height: 32px * $i;
-
-            // border: 2px * $i solid #373737;
-            // border-bottom-right-radius: 8px * $i;
-            // border-bottom-left-radius: 8px * $i;
+            height: 36px * $i;
 
             background: url('/img/interface/main.png') -32px * $i -464px * $i no-repeat;
             background-size: calc(width('main.png') * $i);
 
-            .name {
-                margin-top: 3px * $i;
-            }
-
+            .name,
             .details {
-                margin-top: 12px * $i;
+                margin-top: 3px * $i;
             }
 
             .health {
                 height: 6px * $i;
+                margin: auto;
 
                 background-color: red;
                 border: 1px * $i solid #373737;

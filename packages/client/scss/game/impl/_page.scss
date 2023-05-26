@@ -26,8 +26,6 @@
 
 .close {
     position: absolute;
-    top: -3%;
-    left: 92%;
 }
 
 .ok,
@@ -89,11 +87,15 @@
     }
 }
 
-@each $size, $i in media.$b-sizes {
+@each $size, $i in media.$dialog-sizes {
     @media ($size) {
         .close {
+            top: -3px * $i;
+            right: -3px * $i;
+
             width: 16px * $i;
             height: 16px * $i;
+
             background: url('/img/interface/containers.png') -32px * $i -166px * $i;
             background-size: calc(width('containers.png') * $i);
 

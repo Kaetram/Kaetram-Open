@@ -1,53 +1,35 @@
 @use '../../abstracts/media';
 
-#quests-container,
-#quest-log {
-    position: absolute;
-    overflow: auto;
-    font-family: AdvoCut, sans-serif;
+#quests-container {
+    display: flex;
+    gap: 0.5em;
+    height: 100%;
 }
 
-.quest-log-h1 {
+#quests-list {
+    flex: 3;
+
+    ul {
+        overflow: auto;
+        height: 100%;
+    }
+}
+
+#quests-logs {
+    flex: 2;
+}
+
+#quests-logs-container {
+    overflow: auto;
+    height: 100%;
+}
+
+.quests-logs-h1 {
     font-size: 150%;
     color: white;
     text-align: left;
 }
 
-.quest-log-p {
+.quests-logs-p {
     color: white;
-}
-
-@each $size, $i in media.$container-sizes {
-    @media ($size) {
-        #quests {
-            background: url('/img/interface/quests.png') 0 0 no-repeat;
-            background-size: calc(width('quests.png') * $i);
-        }
-
-        #quests-container {
-            width: 106px * $i;
-            height: 117px * $i;
-            margin-top: 20px * $i;
-            margin-left: 21px * $i;
-        }
-
-        #quest-log {
-            width: 172px * $i;
-            height: 117px * $i;
-            margin-top: 20px * $i;
-            margin-left: 151px * $i;
-        }
-
-        #quest-log > div {
-            margin-top: 4px * $i;
-            margin-left: 4px * $i;
-        }
-    }
-
-    @media (--sm) {
-        #quests-container,
-        #quest-log {
-            font-size: 8px;
-        }
-    }
 }

@@ -7,14 +7,14 @@ import type Task from '../entity/character/player/task';
 
 export default class Quests extends Menu {
     // Contains the list of all the quests and their respective status.
-    private list: HTMLUListElement = document.querySelector('#quests-container > ul')!;
+    private list: HTMLUListElement = document.querySelector('#quests-list > ul')!;
 
     // Contains information about a selected quest.
-    private title: HTMLElement = document.querySelector('#quest-log-title')!;
-    private shortDescription: HTMLElement = document.querySelector('#quest-log-shortdesc')!;
-    private description: HTMLElement = document.querySelector('#quest-log-description')!;
-    private rewards: HTMLElement = document.querySelector('#quest-log-rewards')!;
-    private requirements: HTMLElement = document.querySelector('#quest-log-requirements')!;
+    private title: HTMLElement = document.querySelector('#quests-logs-title')!;
+    private shortDescription: HTMLElement = document.querySelector('#quests-logs-shortdesc')!;
+    private description: HTMLElement = document.querySelector('#quests-logs-description')!;
+    private rewards: HTMLElement = document.querySelector('#quests-logs-rewards')!;
+    private requirements: HTMLElement = document.querySelector('#quests-logs-requirements')!;
 
     public constructor(private player: Player) {
         super('#quests', '#close-quests', '#quests-button');

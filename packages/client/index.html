@@ -703,11 +703,11 @@
                     </div>
                 </div>
 
-                <div id="settings-page" class="container-frame">
-                    <div id="close-settings" class="new-close-container"></div>
+                <div id="settings-page" class="container-slice">
+                    <div id="close-settings" class="close-container"></div>
 
                     <div id="settings-container">
-                        <div id="input-settings" class="container-subframe">
+                        <div id="input-settings" class="subcontainer-slice">
                             <label>
                                 <span id="music-volume-text">Music Volume</span>
 
@@ -810,12 +810,16 @@
                         </div>
 
                         <div id="action-settings">
-                            <div id="game-info" class="container-subframe">
-                                <strong>Game Version:</strong>
-                                <span id="game-info-version"></span>
+                            <div id="game-info" class="subcontainer-slice">
+                                <span>
+                                    <strong>Game Version:</strong>
+                                    <span id="game-info-version"></span>
+                                </span>
 
-                                <strong>Game World:</strong>
-                                <span id="game-info-world"></span>
+                                <span>
+                                    <strong>Game World:</strong>
+                                    <span id="game-info-world"></span>
+                                </span>
                             </div>
 
                             <div
@@ -856,7 +860,7 @@
                     </div>
                 </div>
 
-                <div id="attack-info">
+                <div id="attack-info" class="dialog-slice">
                     <div class="name"></div>
                     <div class="details"></div>
                     <div class="health"></div>
@@ -872,7 +876,7 @@
                     <div id="close-map-frame" class="close"></div>
                 </div>
 
-                <div id="inventory">
+                <div id="inventory" class="dialog-slice">
                     <div id="inventory-container">
                         <ul></ul>
                     </div>
@@ -989,8 +993,9 @@
                     <ul id="leaderboards-results"></ul>
                 </div>
 
-                <div id="equipments" class="container">
-                    <div id="close-equipments" class="close close-container"></div>
+                <div id="equipments" class="container-slice">
+                    <div id="close-equipments" class="close-container"></div>
+
                     <div id="equipment-stats"></div>
                     <div id="equipment-slots" class="page state-page">
                         <div id="equipment-container">
@@ -1041,30 +1046,37 @@
                     </div>
                 </div>
 
-                <div id="achievements" class="container">
-                    <div id="close-achievements" class="close close-container"></div>
+                <div id="achievements" class="container-slice">
+                    <div id="close-achievements" class="close-container"></div>
                     <div id="achievements-container">
                         <ul></ul>
                     </div>
                 </div>
 
-                <div id="quests" class="container">
-                    <div id="close-quests" class="close close-container"></div>
+                <div id="quests" class="container-slice">
+                    <div id="close-quests" class="close-container"></div>
+
                     <div id="quests-container">
-                        <ul></ul>
-                    </div>
-                    <div id="quest-log">
-                        <div id="quest-log-title" class="quest-log-h1 stroke">Quest Title</div>
-                        <div id="quest-log-shortdesc" class="quest-log-p"></div>
+                        <div id="quests-list" class="subcontainer-slice"><ul></ul></div>
+                        <div id="quests-logs" class="subcontainer-slice">
+                            <div id="quests-logs-container">
+                                <div id="quests-logs-title" class="quests-logs-h1 stroke">
+                                    Quest Title
+                                </div>
+                                <div id="quests-logs-shortdesc" class="quests-logs-p"></div>
 
-                        <div class="quest-log-h1 stroke">Description</div>
-                        <div id="quest-log-description" class="quest-log-p"></div>
+                                <div class="quests-logs-h1 stroke">Description</div>
+                                <div id="quests-logs-description" class="quests-logs-p"></div>
 
-                        <div class="quest-log-h1 stroke">Reward</div>
-                        <div id="quest-log-rewards" class="quest-log-p"></div>
+                                <div class="quests-logs-h1 stroke">Reward</div>
+                                <div id="quests-logs-rewards" class="quests-logs-p"></div>
 
-                        <div class="quest-log-h1 stroke">Requirements</div>
-                        <div id="quest-log-requirements" class="quest-log-p">None C:</div>
+                                <div class="quests-logs-h1 stroke">Requirements</div>
+                                <div id="quests-logs-requirements" class="quests-logs-p">
+                                    None C:
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1089,14 +1101,14 @@
                     <div id="message"></div>
                 </div>
 
-                <div id="action-container">
+                <div id="action-container" class="dialog-slice">
                     <div id="action-page">
                         <div class="action-item-name stroke"></div>
                         <div class="action-item-description"></div>
                         <ul></ul>
                     </div>
 
-                    <dialog id="action-drop">
+                    <dialog id="action-drop" class="dialog-slice">
                         <div class="dialog-title">Input Drop Amount</div>
 
                         <input
@@ -1115,7 +1127,7 @@
                 </div>
 
                 <div id="crafting">
-                    <div id="close-crafting" class="new-close-container"></div>
+                    <div id="close-crafting" class="close-container"></div>
 
                     <ul id="crafting-options"></ul>
                     <ul id="crafting-requirements"></ul>
@@ -1141,15 +1153,15 @@
                     <div id="craft-button" class="stroke">Craft</div>
                 </div>
 
-                <div id="guilds" class="container-frame">
-                    <div id="close-guilds" class="new-close-container"></div>
+                <div id="guilds" class="container-slice">
+                    <div id="close-guilds" class="close-container"></div>
 
                     <div class="banner banner-grey">
                         <div id="banner-outline" class="banner-outline"></div>
                         <div class="banner-crest"></div>
                     </div>
 
-                    <div id="guilds-list-container" class="container-subframe">
+                    <div id="guilds-list-container" class="subcontainer-slice">
                         <div id="create-guild" class="element-button element-button stroke">
                             Create
                         </div>
@@ -1163,7 +1175,7 @@
                         <p id="guilds-info" class="stroke">There are no guilds available...</p>
                     </div>
 
-                    <div id="guilds-create-container" class="container-subframe">
+                    <div id="guilds-create-container" class="subcontainer-slice">
                         <span id="create-error"></span>
 
                         <div
@@ -1196,7 +1208,7 @@
                         />
                     </div>
 
-                    <div id="guilds-info-container" class="container-subframe">
+                    <div id="guilds-info-container" class="subcontainer-slice">
                         <div id="guild-leave" class="element-button element-button-red stroke">
                             Leave
                         </div>
@@ -1225,7 +1237,7 @@
                     </div>
                 </div>
 
-                <div id="interact">
+                <div id="interact" class="dialog-slice">
                     <ul></ul>
                 </div>
 
