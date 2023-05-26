@@ -28,7 +28,7 @@ export default class Settings extends Menu {
     private webGlCheckbox: HTMLInputElement = document.querySelector('#webgl-checkbox > input')!;
 
     public constructor(private game: Game) {
-        super('#settings-page', undefined, '#settings-button');
+        super('#settings-page', '#close-settings', '#settings-button');
 
         this.musicSlider.addEventListener('input', this.handleMusic.bind(this));
         this.soundSlider.addEventListener('input', this.handleSoundVolume.bind(this));
