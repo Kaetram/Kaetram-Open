@@ -7094,5 +7094,15 @@
     { "id": "items/tinhelmet", "offsetX": 0, "offsetY": 0 },
     { "id": "items/bronzehelmet", "offsetX": 0, "offsetY": 0 },
     { "id": "items/goldhelmet", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/ironchestplate", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/ironchestplate", "offsetX": 0, "offsetY": 0 },
+    
+    { "id": "items/berylgoldring", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/berylsilverring", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/bronzeboots", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/bronzering", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/cobaltboots", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/goldring2", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ironboots", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ironring", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/silverring2", "offsetX": 0, "offsetY": 0 }
 ]

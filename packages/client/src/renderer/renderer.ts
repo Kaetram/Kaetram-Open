@@ -720,8 +720,12 @@ export default class Renderer {
 
     private drawSprite(character: Character, sprite: Sprite): void {
         let animation = character.animation!,
-            animationData = sprite.animations[animation.name],
-            { frame, row } = animation,
+            animationData = sprite.animations[animation.name];
+
+        // May occur when the death sprite is being animated.
+        if (!animationData) return;
+
+        let { frame, row } = animation,
             index =
                 frame.index < animationData.length
                     ? frame.index
