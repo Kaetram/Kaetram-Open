@@ -26,7 +26,6 @@
 @each $size, $i in media.$b-sizes {
     @media ($size) {
         .ability-quickslot {
-            cursor: url('/img/hand.png'), auto;
             position: absolute;
             width: 16px * $i;
             height: 16px * $i;
@@ -57,8 +56,6 @@
 @each $size, $i in media.$s-sizes {
     @media ($size) {
         #ability-shortcut {
-            cursor: url('/img/hand.png'), auto;
-
             bottom: 5px;
 
             width: 200px * $i;
@@ -70,10 +67,7 @@
     }
 
     .ability-quickslot {
-        cursor: url('/img/hand.png'), auto;
-
         position: absolute;
-
         width: 64px;
         height: 64px;
         margin-top: 2px;
@@ -170,8 +164,6 @@
     }
 
     .ability-quickslot {
-        cursor: url('/img/hand.png'), auto;
-
         position: absolute;
 
         width: 64px;
@@ -254,8 +246,6 @@
     }
 
     .ability-quickslot {
-        cursor: url('/img/hand.png'), auto;
-
         position: absolute;
 
         width: 32px;

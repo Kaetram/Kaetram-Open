@@ -265,13 +265,6 @@ export default class Crafting extends Menu {
     private getSkillIcon(): string {
         let name = Modules.Skills[this.type].toLowerCase();
 
-        switch (this.type) {
-            case Modules.Skills.Smelting:
-            case Modules.Skills.Smithing: {
-                return `url(/img/interface/skills/smithing.png)`;
-            }
-        }
-
         return `url(/img/interface/skills/${name}.png)`;
     }
 

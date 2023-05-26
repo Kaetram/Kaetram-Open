@@ -30,6 +30,11 @@
 body.game {
     background: #000;
 
+    label,
+    input[type] {
+        cursor: none;
+    }
+
     #load-character,
     #create-character,
     #reset-password,

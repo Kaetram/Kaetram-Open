@@ -29,7 +29,7 @@
     position: absolute;
 }
 
-@each $size, $i in media.$sizes {
+@each $size, $i in media.$container-sizes {
     @media ($size) {
         #achievements-container {
             width: 318px * $i;

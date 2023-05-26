@@ -9,6 +9,7 @@ import Defense from './skill/impl/defense';
 import Fishing from './skill/impl/fishing';
 import Cooking from './skill/impl/cooking';
 import Smithing from './skill/impl/smithing';
+// import Smelting from './skill/impl/smelting';
 import Crafting from './skill/impl/crafting';
 import Fletching from './skill/impl/fletching';
 import Foraging from './skill/impl/foraging';
@@ -38,6 +39,7 @@ export default class Skills {
     private fishing: Fishing = new Fishing();
     private cooking: Cooking = new Cooking();
     private smithing: Smithing = new Smithing();
+    // private smelting: Smelting = new Smelting();
     private crafting: Crafting = new Crafting();
     private fletching: Fletching = new Fletching();
     private foraging: Foraging = new Foraging();
@@ -56,6 +58,7 @@ export default class Skills {
         [Modules.Skills.Fishing]: this.fishing,
         [Modules.Skills.Cooking]: this.cooking,
         [Modules.Skills.Smithing]: this.smithing,
+        // [Modules.Skills.Smelting]: this.smelting,
         [Modules.Skills.Crafting]: this.crafting,
         [Modules.Skills.Fletching]: this.fletching,
         [Modules.Skills.Foraging]: this.foraging,

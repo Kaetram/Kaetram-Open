@@ -49,6 +49,7 @@ export default class InputController {
     public selectedCellVisible = false;
     public keyMovement = false;
     public targetVisible = true;
+    public isOnCanvas = false;
     public selectedX = -1;
     public selectedY = -1;
 
@@ -99,6 +100,8 @@ export default class InputController {
         this.app.onMouseMove((event: MouseEvent) => {
             if (!this.game.started) return;
 
+            this.isOnCanvas = event.target instanceof HTMLCanvasElement;
+
             this.setCoords(event);
             this.moveCursor();
         });
@@ -130,6 +133,7 @@ export default class InputController {
         this.cursors.cooking = this.game.sprites.get('cursors/cooking');
         this.cursors.fishing = this.game.sprites.get('cursors/fishing');
         this.cursors.smithing = this.game.sprites.get('cursors/smithing');
+        this.cursors.smelting = this.game.sprites.get('cursors/smelting');
         this.cursors.crafting = this.game.sprites.get('cursors/crafting');
         this.cursors.foraging = this.game.sprites.get('cursors/foraging');
 
@@ -478,6 +482,9 @@ export default class InputController {
 
     public moveCursor(): void {
         if (isMobile()) return;
+
+        // If the cursor is not on the canvas, we default to the hand cursor.
+        if (!this.isOnCanvas) return this.setCursor(this.cursors.hand);
 
         let position = this.getCoords(),
             entity = this.game.searchForEntityAt(position);

@@ -363,14 +363,16 @@ export default class Renderer {
         let { input } = this.game,
             location = input.getCoords();
 
-        if (this.isSelectedCell(location.gridX, location.gridY)) return;
+        if (!input.isOnCanvas || this.isSelectedCell(location.gridX, location.gridY)) return;
 
-        let isColliding = this.map.isColliding(location.gridX, location.gridY);
+        let canCollide =
+            this.map.isColliding(location.gridX, location.gridY) &&
+            !this.map.isObject(location.gridX, location.gridY);
 
         this.drawCellHighlight(
             location.gridX,
             location.gridY,
-            isColliding ? 'rgba(230, 0, 0, 0.7)' : input.targetColour
+            canCollide ? 'rgba(230, 0, 0, 0.7)' : input.targetColour
         );
     }
 
