@@ -116,6 +116,8 @@ export default class Commands {
 
                         this.world.guilds.kick(this.player, username);
 
+                        this.player.notify(`You have kicked ${username} from your guild.`);
+
                         break;
                     }
 
@@ -133,6 +135,10 @@ export default class Commands {
                             return this.player.notify('You cannot set a rank to landlord.');
 
                         this.world.guilds.setRank(this.player, username, parseInt(rank));
+
+                        this.player.notify(`You have set ${username}'s rank to ${rank}.`);
+
+                        break;
                     }
                 }
 
