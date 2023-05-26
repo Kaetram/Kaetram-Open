@@ -79,6 +79,8 @@ export default class Settings extends Menu {
         // Update the renderer for names and levels
         this.handleName();
         this.handleLevel();
+
+        this.handleInfo();
     }
 
     /**
@@ -178,5 +180,20 @@ export default class Settings extends Menu {
         this.game.storage.setWebGl(this.webGlCheckbox.checked);
 
         window.location.reload();
+    }
+
+    /**
+     * Handles the information section of the settings page.
+     */
+
+    private handleInfo() {
+        let { config } = this.game.app;
+        document.querySelector(
+            '#game-info-version'
+        )!.textContent = `${config.version}${config.minor}`;
+
+        let { serverId } = this.game.player;
+        document.querySelector('#game-info-world')!.textContent =
+            serverId === -1 ? 'Unknown' : serverId.toString();
     }
 }
