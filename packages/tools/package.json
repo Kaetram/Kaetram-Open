@@ -9,11 +9,11 @@
     "dependencies": {
         "@kaetram/common": "workspace:*",
         "@kaetram/server": "workspace:*",
-        "tsx": "^3.12.6",
+        "tsx": "^3.12.7",
         "websocket": "^1.0.34"
     },
     "devDependencies": {
         "@types/node": "^18.15.5",
-        "typescript": "^5.0.2"
+        "typescript": "^5.0.4"
     }
 }

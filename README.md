@@ -78,7 +78,7 @@ the server.
 
 #### NOTE: Node.js
 
-> You need to use a Node.js version greater than or equal to `v14.19.0`, following the
+> You need to use a Node.js version greater than or equal to `v16.17.1`, following the
 > [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases), to have the most stable
 > experience when developing/experimenting with Kaetram. Older versions would not work with our
 > current dependencies and package manager.
@@ -93,15 +93,17 @@ the server.
 
 #### Yarn
 
-You will also need to enable [Yarn](https://yarnpkg.com) through [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html), to manage our dependencies.
+You will also need to enable [Yarn](https://yarnpkg.com) through [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html), to manage the dependencies.
 
-Starting from Node.js `v14.19.0`, [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html) is included by default, but is currently opt-in.
-
-To enable it, run
-
-```console
-corepack enable
-```
+> The preferred way to manage Yarn is through [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html), a new binary shipped with all Node.js releases [...]
+>
+> To enable it, run the following command:
+>
+> ```console
+> corepack enable
+> ```
+>
+> <https://yarnpkg.com/getting-started/install>
 
 ### Installing
 
@@ -131,13 +133,11 @@ Then, to run each production build, use
 yarn start
 ```
 
-Add `--host` at the end to make the game visible on your network.
-
 ### Configuration
 
 Optionally, if you want some additional configuration, There is a file named
 [`.env.defaults`](.env.defaults), and it's values will be used unless overridden by a new `.env`
-file, or by setting environmental variables.
+file.
 
 Copy and rename [`.env.defaults`](.env.defaults) to `.env`, and modify the contents to fit your
 needs.
