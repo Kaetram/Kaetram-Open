@@ -49,6 +49,7 @@
 
 input[type='range'] {
     width: 100%;
+    appearance: none;
     background-image: -webkit-gradient(
         linear,
         left top,
@@ -57,16 +58,17 @@ input[type='range'] {
         color-stop(1, #4d4d4d)
     );
 
-    appearance: none;
-
     &::-webkit-slider-thumb {
+        appearance: none !important;
         background-color: #4d4d4d;
         border: 2px solid #7f7f7f;
 
-        appearance: none !important;
-
         &:active {
-            background-color: #fcda5c;
+            background-color: #7f7f7f;
+        }
+
+        &:hover {
+            border-color: #fcda5c;
         }
     }
 }

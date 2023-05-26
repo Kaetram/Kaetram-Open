@@ -100,7 +100,9 @@ export default class InputController {
             if (!this.game.started) return;
 
             this.setCoords(event);
-            this.moveCursor();
+
+            let onCanvas = event.target instanceof HTMLCanvasElement;
+            this.moveCursor(onCanvas);
         });
 
         this.interact.onButton(this.handleInteract.bind(this));
@@ -476,8 +478,11 @@ export default class InputController {
      * sprite depending on the type of entity or object.
      */
 
-    public moveCursor(): void {
+    public moveCursor(onCanvas: boolean): void {
         if (isMobile()) return;
+
+        // If the cursor is not on the canvas, we default to the hand cursor.
+        if (!onCanvas) return this.setCursor(this.cursors.hand);
 
         let position = this.getCoords(),
             entity = this.game.searchForEntityAt(position);

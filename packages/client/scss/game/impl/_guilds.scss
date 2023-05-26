@@ -1,13 +1,9 @@
 @use '../../abstracts/media';
 
 #guilds {
-    cursor: url('/img/hand.png'), auto;
-
     position: absolute;
     inset: 0;
-
     display: none;
-
     margin: auto;
 }
 
@@ -117,7 +113,7 @@
 
 .guilds-decoration {
     position: absolute;
-    inset: 0 0 auto 0;
+    inset: 0 0 auto;
     margin: auto;
 
     p {

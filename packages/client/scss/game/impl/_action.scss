@@ -6,13 +6,9 @@
 }
 
 #action-page {
-    cursor: url('/img/hand.png'), auto;
-
     position: absolute;
-
     width: 100%;
     height: 100%;
-
     font-family: AdvoCut, sans-serif;
 
     ul {
@@ -140,13 +136,12 @@
             font-size: 4px * $i;
         }
 
-
         #action-description-attack {
             left: 4px * $i;
         }
 
         #action-description-defense {
-            right: 0
+            right: 0;
         }
 
         #action-description-bonuses {
