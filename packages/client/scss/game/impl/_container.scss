@@ -33,10 +33,11 @@
 #cursor {
     cursor: none;
     user-select: none;
+}
 
-    @media (--sm) {
-        cursor: url('/img/hand.png'), auto;
-    }
+#cursor {
+    pointer-events: none;
+    z-index: 1000;
 }
 
 // #game-container {
@@ -59,8 +60,6 @@
 }
 
 .container-frame {
-    cursor: url('/img/hand.png'), auto;
-
     position: absolute;
     inset: 0;
 
@@ -75,8 +74,6 @@
 }
 
 .container-subframe {
-    cursor: url('/img/hand.png'), auto;
-
     position: absolute;
     inset: 0;
 
@@ -90,7 +87,6 @@
 }
 
 .container {
-    cursor: url('/img/hand.png'), auto;
     position: absolute;
     inset: 0;
     display: none;

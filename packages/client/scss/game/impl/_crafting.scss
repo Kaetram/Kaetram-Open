@@ -1,13 +1,9 @@
 @use '../../abstracts/media';
 
 #crafting {
-    cursor: url('/img/hand.png'), auto;
-
     position: absolute;
     inset: 0;
-
     display: none;
-
     margin: auto;
 }
 
@@ -46,12 +42,13 @@
 
 .crafting-option-icon {
     background-size: cover;
-    
+
     // Safari filters so the images aren't blurry.
     filter: opacity(100%);
 }
 
-#crafting-result-name, .crafting-option-count {
+#crafting-result-name,
+.crafting-option-count {
     font-family: KerrieFont, sans-serif;
     font-size: 14px;
     color: white;
@@ -111,7 +108,8 @@
                 background-position-y: -382px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 height: 26px * $i;
                 background-position-y: -352px * $i;
             }
@@ -149,7 +147,8 @@
                 background-position-x: -140px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position-x: -184px * $i;
             }
 
@@ -184,7 +183,8 @@
                 background-position-x: -300px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position-x: -344px * $i;
             }
         }
@@ -211,7 +211,8 @@
         .amount-one,
         .amount-five,
         .amount-ten {
-            &:hover, &.active {
+            &:hover,
+            &.active {
                 background-position-y: -480px * $i;
             }
 

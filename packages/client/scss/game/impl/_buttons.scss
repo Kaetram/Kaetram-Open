@@ -1,8 +1,6 @@
 @use '../../abstracts/media';
 
 #buttons {
-    cursor: url('/img/hand.png'), auto;
-
     position: absolute;
     right: 0;
     bottom: 0;
@@ -206,5 +204,5 @@
                 background-position-y: -81px * $i;
             }
         }
-    }   
+    }
 }

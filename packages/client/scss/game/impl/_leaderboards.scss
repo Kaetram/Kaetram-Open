@@ -20,13 +20,13 @@
     border: none;
 }
 
-@each $size, $i in media.$sizes {
+@each $size, $i in media.$container-sizes {
     @media ($size) {
         #leaderboards {
             background: url('/img/interface/leaderboards.png') 0 0 no-repeat;
             background-size: calc(width('leaderboards.png') * $i);
         }
-        
+
         #leaderboards-search-input {
             top: 20px * $i;
             left: 32px * $i;
