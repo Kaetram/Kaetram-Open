@@ -185,16 +185,7 @@
     position: absolute;
 }
 
-
-@each $size, $i in media.$sizes {
-    @if $i == 3 {
-        $i: 5;
-    } @else if $i == 2 {
-        $i: 3;
-    } @else if $i == 1 {
-        $i: 2;
-    }
-
+@each $size, $i in media.$container-sizes {
     @media ($size) {
         #guilds {
             width: 240px * $i;
@@ -454,7 +445,9 @@
             background: url('/img/interface/guilds/elements.png') -176px * $i -208px * $i;
             background-size: calc(width('guilds/elements.png') * $i);
 
-            &:active, &.active, &:focus {
+            &:active,
+            &.active,
+            &:focus {
                 background-position-y: -224px * $i;
             }
         }
@@ -465,7 +458,9 @@
             background: url('/img/interface/guilds/elements.png') -144px * $i 0;
             background-size: calc(width('guilds/elements.png') * $i);
 
-            &:active, &.active, &:focus {
+            &:active,
+            &.active,
+            &:focus {
                 background-position-y: -20px * $i;
             }
         }
@@ -556,7 +551,6 @@
             top: 6px * $i;
         }
 
-
         .banner-outline {
             background: url('/img/interface/guilds/outline1.png') 0 0 no-repeat;
             background-size: calc(width('guilds/outline1.png') * $i);
@@ -624,45 +618,46 @@
                 background-position-y: -181px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position-y: -202px * $i;
             }
         }
-        
+
         .banner-colour-button-teal {
-            background-position: -165px * $i -160px * $i
+            background-position: -165px * $i -160px * $i;
         }
 
         .banner-colour-button-green {
-            background-position: -186px * $i -160px * $i
+            background-position: -186px * $i -160px * $i;
         }
 
         .banner-colour-button-grey {
-            background-position: -207px * $i -160px * $i
+            background-position: -207px * $i -160px * $i;
         }
 
         .banner-colour-button-darkgrey {
-            background-position: -228px * $i -160px * $i
+            background-position: -228px * $i -160px * $i;
         }
 
         .banner-colour-button-red {
-            background-position: -249px * $i -160px * $i
+            background-position: -249px * $i -160px * $i;
         }
 
         .banner-colour-button-goldenyellow {
-            background-position: -165px * $i -181px * $i
+            background-position: -165px * $i -181px * $i;
         }
 
         .banner-colour-button-fuchsia {
-            background-position: -186px * $i -181px * $i
+            background-position: -186px * $i -181px * $i;
         }
 
         .banner-colour-button-brown {
-            background-position: -207px * $i -181px * $i
+            background-position: -207px * $i -181px * $i;
         }
 
         .banner-colour-button-cyan {
-            background-position: -228px * $i -181px * $i
+            background-position: -228px * $i -181px * $i;
         }
 
         .banner-grey {
@@ -801,7 +796,7 @@
                 background-position-x: -74px * $i;
             }
         }
-        
+
         .button-banner-colour {
             background-position: -115px * $i -176px * $i;
 
@@ -809,7 +804,8 @@
                 background-position: -69px * $i -176px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position: -92px * $i -176px * $i;
             }
         }
@@ -821,7 +817,8 @@
                 background-position: 0 -199px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position: -23px * $i -199px * $i;
             }
         }
@@ -833,7 +830,8 @@
                 background-position: 0 -176px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position: -23px * $i -176px * $i;
             }
         }
@@ -845,7 +843,8 @@
                 background-position: 0 -222px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position: -23px * $i -222px * $i;
             }
         }
@@ -857,7 +856,8 @@
                 background-position: -69px * $i -199px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position: -92px * $i -199px * $i;
             }
         }
@@ -869,7 +869,8 @@
                 background-position: -69px * $i -222px * $i;
             }
 
-            &:active, &.active {
+            &:active,
+            &.active {
                 background-position: -92px * $i -222px * $i;
             }
         }

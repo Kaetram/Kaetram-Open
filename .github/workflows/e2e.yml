@@ -18,8 +18,7 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v3
               with:
-                  node-version: 18.5.0
-                  cache: 'yarn'
+                  node-version: 18.7.0
 
             - name: Enable Corepack
               run: corepack enable
