@@ -139,6 +139,9 @@ export default class App {
         onSecondaryPress(document.querySelector('#canvas')!, (position) =>
             this.rightClickCallback?.(position)
         );
+
+        for (let input of document.querySelectorAll<HTMLInputElement>("input[type='number']"))
+            input.addEventListener('input', () => this.validateNumberInput(input));
     }
 
     /**
@@ -794,6 +797,14 @@ export default class App {
             // Add the <li> element to the list of worlds
             this.worldsList.append(li);
         }
+    }
+
+    /**
+     * Validates number inputs from negative and decimal values.
+     */
+
+    private validateNumberInput(input: HTMLInputElement) {
+        input.value = input.value.replace(/\D/g, '');
     }
 
     /**
