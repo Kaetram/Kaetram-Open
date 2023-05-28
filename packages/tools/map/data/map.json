@@ -5010,6 +5010,33 @@
                  "width":64,
                  "x":2176,
                  "y":12544
+                }, 
+                {
+                 "height":16,
+                 "id":1093,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"ignore",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"mObjectType",
+                         "type":"string",
+                         "value":"centre"
+                        }, 
+                        {
+                         "name":"minigame",
+                         "type":"string",
+                         "value":"coursing"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1888,
+                 "y":12864
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -11255,10 +11282,10 @@
          "y":0
         }],
  "nextlayerid":81,
- "nextobjectid":1093,
+ "nextobjectid":1094,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.10.0",
+ "tiledversion":"1.10.1",
  "tileheight":16,
  "tilesets":[
         {
