@@ -147,7 +147,10 @@ export default class Player extends Character {
 
     private currentSong: string | undefined;
 
+    // Minigame variables
     public minigameArea: Area | undefined = undefined;
+    public coursingScore = 0; // Probably will have a dictionary for this data when we have more minigames.
+    public coursingTarget = ''; // The player we are chasing.
 
     // Region data
     public regionsLoaded: number[] = [];
@@ -609,6 +612,19 @@ export default class Player extends Character {
         this.cheatScore += amount;
 
         this.cheatScoreCallback?.();
+    }
+
+    /**
+     * Updates the coursing score of the player and handles edge cases
+     * for when we are setting negative score values for the parameter.
+     * @param score The score value we wish to increment by.
+     */
+
+    public incrementCoursingScore(score: number): void {
+        this.coursingScore += score;
+
+        // If the score is negative, we set it to 0.
+        if (this.coursingScore < 0) this.coursingScore = 0;
     }
 
     /**
@@ -1268,10 +1284,8 @@ export default class Player extends Character {
 
         let entering = info !== undefined && this.minigameArea === undefined;
 
-        if (entering) {
-            info?.enterCallback?.(this);
-            this.notify('Welcome to the TeamWar lobby!');
-        } else this.minigameArea?.exitCallback?.(this);
+        if (entering) info?.enterCallback?.(this);
+        else this.minigameArea?.exitCallback?.(this);
 
         this.minigameArea = info;
     }
@@ -1696,6 +1710,18 @@ export default class Player extends Character {
     }
 
     /**
+     * Clears a minigame instance from the player and erases
+     * all the minigame data for all minigames.
+     */
+
+    public clearMinigame(): void {
+        this.minigame = undefined;
+
+        this.coursingScore = 0;
+        this.coursingTarget = '';
+    }
+
+    /**
      * Resets the NPC instance and talking index. If a parameter is specified
      * then we set that NPC's instance as the one we are talking to.
      * @param instance Optional parameter to set the NPC instance to.
@@ -1721,6 +1747,15 @@ export default class Player extends Character {
 
     public inMinigame(): boolean {
         return this.minigame !== undefined;
+    }
+
+    /**
+     * Whether or not the player is in a team war minigame.
+     * @returns The player is in a team war minigame.
+     */
+
+    public inTeamWar(): boolean {
+        return this.minigame === Opcodes.Minigame.TeamWar;
     }
 
     /**
@@ -2104,7 +2139,7 @@ export default class Player extends Character {
         data.attackRange = this.attackRange;
         data.movementSpeed = this.getMovementSpeed();
 
-        if (this.inMinigame()) data.displayInfo = this.getDisplayInfo();
+        if (this.inTeamWar()) data.displayInfo = this.getDisplayInfo();
 
         // Include equipment only when necessary.
         if (withEquipment) data.equipments = this.equipment.serialize().equipments;

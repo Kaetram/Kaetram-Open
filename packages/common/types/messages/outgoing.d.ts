@@ -373,6 +373,7 @@ export type UpdateCallback = (info: EntityDisplayInfo[]) => void;
 export interface MinigamePacket {
     action: number;
     countdown?: number;
+    score?: number;
     redTeamKills?: number;
     blueTeamKills?: number;
     started?: boolean;

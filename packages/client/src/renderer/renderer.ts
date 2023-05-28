@@ -2,9 +2,10 @@ import Utils from '../utils/util';
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
 
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { DarkMask, Vec2, Lamp, Lighting } from 'illuminated';
 
+import type Minigame from './minigame';
 import type Equipment from '../entity/character/player/equipment';
 import type Game from '../game';
 import type Map from '../map/map';
@@ -914,20 +915,47 @@ export default class Renderer {
         if (drawNames) this.drawText(entity.name, x, nameY, true, colour, stroke, fontSize, true);
 
         // Draw the level if we're drawing levels.
-        if (this.drawLevels)
+        if (this.drawLevels && entity.level)
             this.drawText(levelText, x, levelY, true, colour, stroke, fontSize, true);
     }
+
+    /**
+     * Responsible for drawing the appropriate GUI for the minigame that
+     * the player is currently in. We use the minigame's type to determine
+     * what GUI to draw.
+     */
 
     private drawMinigameGUI(): void {
         if (!this.game.minigame.exists()) return;
 
-        switch (this.game.minigame.status) {
+        switch (this.game.minigame.type) {
+            case Opcodes.Minigame.TeamWar: {
+                return this.drawTeamWarGUI(this.game.minigame);
+            }
+
+            case Opcodes.Minigame.Coursing: {
+                return this.drawCoursingGUI(this.game.minigame);
+            }
+        }
+    }
+
+    /**
+     * Draws the team war minigame GUI. This consists of the score board
+     * or the countdown timer depending on the status of the minigame.
+     * @param minigame The minigame class from which we are extracting the data.
+     */
+
+    private drawTeamWarGUI(minigame: Minigame): void {
+        let { status, started, countdown, redTeamScore, blueTeamScore } = minigame,
+            scoreX = this.textCanvas.width / 6;
+
+        switch (status) {
             case 'lobby': {
                 this.drawText(
-                    this.game.minigame.started
-                        ? `There is a game in progress: ${this.game.minigame.countdown} seconds`
-                        : `Game starts in ${this.game.minigame.countdown} seconds`,
-                    this.textCanvas.width / 6,
+                    started
+                        ? `There is a game in progress, remaining time: ${countdown} seconds`
+                        : `Game starts in ${countdown} seconds`,
+                    scoreX,
                     30,
                     true,
                     'white'
@@ -936,30 +964,35 @@ export default class Renderer {
             }
 
             case 'ingame': {
-                this.drawText(
-                    `Red: ${this.game.minigame.redTeamScore}`,
-                    this.textCanvas.width / 6 - 20,
-                    30,
-                    true,
-                    'red'
-                );
+                this.drawText(`Red: ${redTeamScore}`, scoreX - 20, 30, true, 'red');
+                this.drawText(`Blue: ${blueTeamScore}`, scoreX + 20, 30, true, 'blue');
+                this.drawText(`Time left: ${countdown} seconds`, scoreX, 50, true, 'white');
+                return;
+            }
+        }
+    }
 
-                this.drawText(
-                    `Blue: ${this.game.minigame.blueTeamScore}`,
-                    this.textCanvas.width / 6 + 20,
-                    30,
-                    true,
-                    'blue'
-                );
+    /**
+     * Draws the coursing GUI. The score is different for every player, so we
+     * are constantly updating it with the data we receive from the server.
+     * @param minigame Contains the minigame data.
+     */
 
+    private drawCoursingGUI(minigame: Minigame): void {
+        let { status, started, countdown, score } = minigame,
+            scoreX = this.textCanvas.width / 6;
+
+        switch (status) {
+            case 'lobby': {
                 this.drawText(
-                    `Time left: ${this.game.minigame.countdown} seconds`,
-                    this.textCanvas.width / 6,
-                    50,
+                    started
+                        ? `There is a game in progress, remaining time: ${countdown} seconds`
+                        : `Game starts in ${countdown} seconds`,
+                    scoreX,
+                    30,
                     true,
                     'white'
                 );
-
                 return;
             }
         }
