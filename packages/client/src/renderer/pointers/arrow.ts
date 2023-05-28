@@ -49,15 +49,6 @@ export default class Arrow {
     }
 
     /**
-     * Displays the pointer object.
-     */
-
-    private show(): void {
-        if (this.type === Opcodes.Pointer.Button) this.element.classList.add('active');
-        else this.element.style.display = 'block';
-    }
-
-    /**
      * Hides the current pointer.
      */
 

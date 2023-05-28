@@ -11,6 +11,9 @@ import type Player from '../entity/character/player/player';
 import type { MinigamePacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Minigame {
+    // The name for the minigame (used for scoreboard, entering, etc.)
+    public name = '';
+
     // State of the minigame.
     protected started = false;
 
@@ -101,7 +104,7 @@ export default class Minigame {
         this.started = false;
 
         for (let player of this.playersInGame) {
-            player.minigame = undefined;
+            player.clearMinigame();
 
             let position = this.getLobbyPosition();
 
@@ -123,6 +126,9 @@ export default class Minigame {
         this.sendPacket([player], {
             action: Opcodes.MinigameState.Lobby
         });
+
+        // Notify the player of the minigame.
+        player.notify(`You have entered the lobby for ${this.name}.`);
     }
 
     /**
@@ -136,6 +142,9 @@ export default class Minigame {
         this.sendPacket([player], {
             action: Opcodes.MinigameActions.Exit
         });
+
+        // Notify the player of the minigame.
+        player.notify(`You have left the lobby for ${this.name}.`);
     }
 
     /**
@@ -192,5 +201,17 @@ export default class Minigame {
 
     public getSpawnPoint(_var1?: unknown): Position {
         return this.getLobbyPosition();
+    }
+
+    /**
+     * Iterates through all the players in the game and calls the callback function.
+     * @param callback Contains the player object that we are iterating through.
+     */
+
+    protected forEachPlayerInGame(callback: (player: Player) => void): void {
+        // No players in game or the game hasn't started, used to prevent unnecessary overhead.
+        if (!this.started || this.playersInGame.length === 0) return;
+
+        for (let player of this.playersInGame) callback(player);
     }
 }

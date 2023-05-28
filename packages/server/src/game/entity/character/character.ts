@@ -18,6 +18,7 @@ import {
     Points,
     Teleport
 } from '@kaetram/common/network/impl';
+import { Team } from '@kaetram/common/api/minigame';
 
 import type World from '../../world';
 import type Packet from '@kaetram/common/network/packet';
@@ -902,8 +903,21 @@ export default abstract class Character extends Entity {
             return false;
         }
 
-        // Use minigame logic to determine if the players can attack each other.
-        if (this.inMinigame() && target.inMinigame()) return this.team !== target.team;
+        // Handle logic for in-minigame combat.
+        if (this.inMinigame()) {
+            if (this.team === Team.Prey) {
+                this.notify('You cannot attack while you are the prey.');
+                return false;
+            }
+
+            if (this.team === Team.Hunter && target.instance !== this.coursingTarget) {
+                this.notify('You cannot attack someone who is not your target.');
+                return false;
+            }
+
+            // Default implementation (used for team vs team minigames);
+            if (target.inMinigame()) return this.team !== target.team;
+        }
 
         // Prevent attacking in non-pvp areas.
         if (!this.pvp && !target.pvp) return false;

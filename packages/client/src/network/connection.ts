@@ -1306,8 +1306,7 @@ export default class Connection {
         switch (info.action) {
             // Game starting packet.
             case Opcodes.MinigameActions.Score: {
-                if (!isNaN(info.redTeamKills!) && !isNaN(info.blueTeamKills!))
-                    minigame.setScore(info.redTeamKills!, info.blueTeamKills!);
+                minigame.setScore(info);
 
                 return minigame.setStatus('ingame');
             }
@@ -1316,6 +1315,8 @@ export default class Connection {
             case Opcodes.MinigameActions.End:
             case Opcodes.MinigameActions.Lobby: {
                 player.nameColour = '';
+                this.pointer.clean();
+
                 return minigame.setStatus('lobby');
             }
 

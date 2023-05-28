@@ -472,7 +472,7 @@ export default class Commands {
 
                     this.player.send(
                         new Pointer(Opcodes.Pointer.Location, {
-                            id: this.player.instance,
+                            instance: this.player.instance,
                             x: posX,
                             y: posY
                         })
@@ -484,7 +484,7 @@ export default class Commands {
 
                     this.player.send(
                         new Pointer(Opcodes.Pointer.Entity, {
-                            id: instance
+                            instance
                         })
                     );
                 }
