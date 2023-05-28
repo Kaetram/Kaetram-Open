@@ -148,18 +148,6 @@ export enum Store {
     Select
 }
 
-export enum TeamWar {
-    Score,
-    End,
-    Lobby,
-    Exit
-}
-
-export enum Coursing {
-    Lobby,
-    Exit
-}
-
 export enum Overlay {
     Set,
     Remove,
@@ -192,6 +180,14 @@ export enum Minigame {
 export enum MinigameState {
     Lobby,
     End,
+    Exit
+}
+
+// Generic actions for when in a minigame.
+export enum MinigameActions {
+    Score,
+    End,
+    Lobby,
     Exit
 }
 
