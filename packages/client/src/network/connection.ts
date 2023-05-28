@@ -1305,7 +1305,7 @@ export default class Connection {
 
         switch (info.action) {
             // Game starting packet.
-            case Opcodes.TeamWar.Score: {
+            case Opcodes.MinigameActions.Score: {
                 if (!isNaN(info.redTeamKills!) && !isNaN(info.blueTeamKills!))
                     minigame.setScore(info.redTeamKills!, info.blueTeamKills!);
 
@@ -1313,14 +1313,14 @@ export default class Connection {
             }
 
             // Entering lobby packets
-            case Opcodes.TeamWar.End:
-            case Opcodes.TeamWar.Lobby: {
+            case Opcodes.MinigameActions.End:
+            case Opcodes.MinigameActions.Lobby: {
                 player.nameColour = '';
                 return minigame.setStatus('lobby');
             }
 
             // Exiting the entire minigame
-            case Opcodes.TeamWar.Exit: {
+            case Opcodes.MinigameActions.Exit: {
                 return minigame.reset();
             }
         }

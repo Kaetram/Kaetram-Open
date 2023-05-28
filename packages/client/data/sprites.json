@@ -5713,6 +5713,10 @@
             "atk": {
                 "length": 4,
                 "row": 1
+            },
+            "info": {
+                "length": 4,
+                "row": 2
             }
         }
     },
