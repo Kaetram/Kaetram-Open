@@ -616,8 +616,9 @@ export const Constants = {
 export enum MinigameConstants {
     TEAM_WAR_COUNTDOWN = 240, // 240 seconds (4 minutes) in the lobby and in-game
     TEAM_WAR_MIN_PLAYERS = 2, // Minimum number of players to start a team war
-    COURSING_COUNTDOWN = 360, // 360 seconds (6 minutes) in the lobby and in-game
-    COURSING_MIN_PLAYERS = 2 // Minimum number of players to start coursing
+    COURSING_COUNTDOWN = 45, // 360 seconds (6 minutes) in the lobby and in-game
+    COURSING_MIN_PLAYERS = 2, // Minimum number of players to start coursing
+    COURSING_SCORE_DIVISOR = 10 // Divide the score by 100 to get the number of points
 }
 
 export enum APIConstants {

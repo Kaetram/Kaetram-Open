@@ -25,7 +25,7 @@ export default class Bot {
         // Begin the connection process.
         setInterval(() => {
             if (Object.keys(this.entities).length < BOT_COUNT) this.connect();
-        }, 3000);
+        }, 1500);
     }
 
     /**
