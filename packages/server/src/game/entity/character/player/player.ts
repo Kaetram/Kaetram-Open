@@ -1605,7 +1605,7 @@ export default class Player extends Character {
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
-        if (this.inMinigame()) return this.getMinigame()!.getRespawnPoint(this.team);
+        if (this.inMinigame()) return this.getMinigame()!.getSpawnPoint(this.team);
 
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
