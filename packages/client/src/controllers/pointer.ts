@@ -83,12 +83,6 @@ export default class PointerController {
             return;
         }
 
-        console.log(
-            `boundaryX > 1: ${boundaryX > 1}, boundaryX < 0: ${boundaryX < 0}, boundaryY > 1: ${
-                boundaryY > 1
-            }, boundaryY < 0: ${boundaryY < 0}`
-        );
-
         // Handle pointers outside the boundaries of the screen.
         if (boundaryX > 1) {
             // Pointer is to the right of the screen.
