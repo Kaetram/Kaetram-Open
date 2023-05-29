@@ -46,6 +46,8 @@ export default class Minigame {
         // Specifically handle the lobby area.
         if (area.mObjectType !== 'lobby') return;
 
+        this.lobby = area;
+
         // Handle the entry and exit of players into the lobby.
         area.onEnter((player: Player) => this.addPlayer(player));
         area.onExit((player: Player) => this.removePlayer(player));
