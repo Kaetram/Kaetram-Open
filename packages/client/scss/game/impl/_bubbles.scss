@@ -28,7 +28,13 @@
     pointer-events: none;
     user-select: none;
     position: absolute;
+
     display: inline-block;
+
+    width: 72px;
+    height: 72px;
+
+    background: url('/img/pointer.png') no-repeat;
 }
 
 .bubble {

@@ -133,10 +133,9 @@ export enum Guild {
 
 export enum Pointer {
     Location, // Pointer on the map
-    Relative, // Pointer relative to the screen
     Entity, // Pointer following an entity
-    Remove,
-    Button // Pointer for a button
+    Relative,
+    Remove
 }
 
 export enum Store {
