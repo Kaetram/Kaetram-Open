@@ -74,7 +74,7 @@ export default class Renderer {
     private zoomOut: HTMLElement = document.querySelector('#zoom-out')!;
 
     protected map: Map;
-    protected camera: Camera;
+    public camera: Camera;
 
     // Variables used for calculating multiple things
     public tileSize = Utils.tileSize;

@@ -1095,36 +1095,24 @@ export default class Connection {
 
                 if (!entity) return;
 
-                this.pointer.create(entity.instance, opcode);
-                this.pointer.setToEntity(entity);
+                this.pointer.create(opcode, info.instance);
 
                 break;
             }
 
+            // Location based pointers stick to one point on the map.
             case Opcodes.Pointer.Location: {
-                this.pointer.create(info.instance, opcode);
-                this.pointer.setToPosition(
+                this.pointer.create(
+                    opcode,
                     info.instance,
                     info.x! * this.map.tileSize,
                     info.y! * this.map.tileSize
                 );
-
-                break;
-            }
-
-            case Opcodes.Pointer.Relative: {
-                this.pointer.create(info.instance, opcode);
-                this.pointer.setRelative(info.instance, info.x!, info.y!);
                 break;
             }
 
             case Opcodes.Pointer.Remove: {
                 this.pointer.clean();
-                break;
-            }
-
-            case Opcodes.Pointer.Button: {
-                this.pointer.create(info.instance, opcode, info.button);
                 break;
             }
         }
