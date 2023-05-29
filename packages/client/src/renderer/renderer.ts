@@ -995,6 +995,11 @@ export default class Renderer {
                 );
                 return;
             }
+
+            case 'ingame': {
+                this.drawText(`Score: ${score}`, scoreX, 30, true, 'white');
+                return;
+            }
         }
     }
 

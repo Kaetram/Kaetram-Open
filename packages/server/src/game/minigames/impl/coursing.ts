@@ -2,9 +2,8 @@ import Minigame from '../minigame';
 import Area from '../../map/areas/area';
 
 import Utils from '@kaetram/common/util/utils';
-import { Pointer } from '@kaetram/common/network/impl';
-import { Modules, Opcodes } from '@kaetram/common/network';
 import { Team } from '@kaetram/common/api/minigame';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type World from '../../world';
 import type Player from '../../entity/character/player/player';
@@ -193,12 +192,30 @@ export default class Coursing extends Minigame {
             let position = this.getSpawnPoint(player.team === Team.Prey);
 
             player.teleport(position.x, position.y, false, true);
+        }
 
-            // Send the pointer to each player of their respective target.
+        setTimeout(() => this.sendPointers(), 1500);
+    }
+
+    /**
+     * Stops the minigame and sends all the players back to the lobby.
+     */
+
+    public override stop(): void {
+        super.stop();
+    }
+
+    /**
+     * Sends the pointer packet to all the players in the game. This packet
+     * is sent a little time after the game starts so that all the characters
+     * have time to load in for every player.
+     */
+
+    private sendPointers(): void {
+        for (let player of this.playersInGame)
             player.pointer({
                 type: Opcodes.Pointer.Entity,
                 instance: player.coursingTarget
             });
-        }
     }
 }
