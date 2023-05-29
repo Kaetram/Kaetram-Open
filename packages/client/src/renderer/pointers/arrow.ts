@@ -45,6 +45,8 @@ export default class Arrow {
 
     public destroy(): void {
         clearInterval(this.blinkInterval);
+
+        this.element.remove();
     }
 
     /**

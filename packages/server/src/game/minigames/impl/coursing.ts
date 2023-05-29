@@ -195,11 +195,10 @@ export default class Coursing extends Minigame {
             player.teleport(position.x, position.y, false, true);
 
             // Send the pointer to each player of their respective target.
-            player.send(
-                new Pointer(Opcodes.Pointer.Entity, {
-                    instance: player.coursingTarget
-                })
-            );
+            player.pointer({
+                type: Opcodes.Pointer.Entity,
+                instance: player.coursingTarget
+            });
         }
     }
 }

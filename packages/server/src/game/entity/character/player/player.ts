@@ -2085,20 +2085,19 @@ export default class Player extends Character {
     /**
      * Sends a pointer data packet to the player. Removes all
      * existing pointers first to prevent multiple pointers.
-     * @param opcode The pointer opcode we are sending.
-     * @param info Information for the pointer such as position.
+     * @param info Generic pointer object that contains the type and
+     * associated information with the pointer.
+     * @param remove Whether or not we should remove all existing pointers.
      */
 
-    public pointer(opcode: Opcodes.Pointer, info: PointerData): void {
+    public pointer(info: PointerData, remove = true): void {
         // Remove all existing pointers first.
-        this.send(new Pointer(Opcodes.Pointer.Remove));
+        if (remove) this.send(new Pointer(Opcodes.Pointer.Remove));
 
         // Invalid pointer data received.
-        if (!(opcode in Opcodes.Pointer)) return;
+        if (!(info.type in Opcodes.Pointer)) return;
 
-        info.instance = this.instance;
-
-        this.send(new Pointer(opcode, info));
+        this.send(new Pointer(info.type, info));
     }
 
     /**
