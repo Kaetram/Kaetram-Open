@@ -83,26 +83,38 @@ export default class PointerController {
             return;
         }
 
+        console.log(
+            `boundaryX > 1: ${boundaryX > 1}, boundaryX < 0: ${boundaryX < 0}, boundaryY > 1: ${
+                boundaryY > 1
+            }, boundaryY < 0: ${boundaryY < 0}`
+        );
+
         // Handle pointers outside the boundaries of the screen.
         if (boundaryX > 1) {
             // Pointer is to the right of the screen.
             pointer.element.style.right = '0';
-            pointer.element.style.top = `50%`;
+            pointer.element.style.top = boundaryY > 1 ? '' : boundaryY < 0 ? '0' : `${relativeY}px`;
+            pointer.element.style.bottom = boundaryY > 1 ? '0' : '';
             pointer.element.style.transform = `${transform} rotate(-90deg)`;
         } else if (boundaryX < 0) {
             // Pointer is to the left of the screen.
             pointer.element.style.left = '0';
-            pointer.element.style.top = `50%`;
+            pointer.element.style.top = boundaryY > 1 ? '' : boundaryY < 0 ? '0' : `${relativeY}px`;
+            pointer.element.style.bottom = boundaryY > 1 ? '0' : '';
             pointer.element.style.transform = `${transform} rotate(90deg)`;
         } else if (boundaryY > 1) {
             // Pointer is above the screen.
             pointer.element.style.bottom = '0';
-            pointer.element.style.left = `50%`;
+            pointer.element.style.left =
+                boundaryX > 1 ? '' : boundaryX < 0 ? '0' : `${relativeX}px`;
+            pointer.element.style.right = boundaryX > 1 ? '0' : '';
             pointer.element.style.transform = transform;
         } else if (boundaryY < 0) {
             // Pointer is below the screen.
             pointer.element.style.top = '0';
-            pointer.element.style.left = `50%`;
+            pointer.element.style.left =
+                boundaryX > 1 ? '' : boundaryX < 0 ? '0' : `${relativeX}px`;
+            pointer.element.style.right = boundaryX > 1 ? '0' : '';
             pointer.element.style.transform = `${transform} rotate(180deg)`;
         }
     }
