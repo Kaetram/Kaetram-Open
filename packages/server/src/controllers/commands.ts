@@ -470,22 +470,23 @@ export default class Commands {
 
                     if (!posX || !posY) return;
 
-                    this.player.send(
-                        new Pointer(Opcodes.Pointer.Location, {
-                            instance: this.player.instance,
-                            x: posX,
-                            y: posY
-                        })
-                    );
+                    this.player.pointer({
+                        type: Opcodes.Pointer.Location,
+                        instance: this.player.instance,
+                        x: posX,
+                        y: posY
+                    });
                 } else {
                     let instance = blocks.shift()!;
 
                     if (!instance) return;
 
-                    this.player.send(
-                        new Pointer(Opcodes.Pointer.Entity, {
+                    this.player.pointer(
+                        {
+                            type: Opcodes.Pointer.Entity,
                             instance
-                        })
+                        },
+                        false
                     );
                 }
 
