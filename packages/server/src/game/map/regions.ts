@@ -168,10 +168,14 @@ export default class Regions {
          * that data to both the `data` local variable and assign it to the region itself.
          */
 
-        this.forEachRegion(
-            (region: Region, index: number) =>
-                (cache.data[index] = region.data = this.getRegionTileData(region))
-        );
+        log.debug(`There are currently ${this.regions.length} regions in the world.`);
+
+        let start = Date.now();
+
+        this.forEachRegion((region: Region, index: number) => {
+            log.debug(`Generating region data for region: ${index}`);
+            cache.data[index] = region.data = this.getRegionTileData(region);
+        });
 
         // Create the directory first.
         fs.mkdir('./cache', { recursive: true }, (error) => {
@@ -182,6 +186,8 @@ export default class Regions {
                 if (error) throw error;
             });
         });
+
+        log.debug(`Region cache generation took ${Date.now() - start}ms.`);
 
         log.notice(`Region cache has been successfully created.`);
     }
@@ -644,11 +650,11 @@ export default class Regions {
     }
 
     /**
-     * Takes the tile's position and builds a TileInfo object.
-     * This is where all the fancy stuff with dynamic objects
-     * will be happening.
-     * @param x The x position of the tile in the grid space.
-     * @param y The y position of the tile in the grid space.
+     * Given the x and y grid coordinates, we build a TileInfo object containing all
+     * the information pertaining to that tile. This includes the position, the tile data,
+     * whether it's colliding, an object, or has any cursor data.
+     * @param x The x grid position of the tile in the grid space.
+     * @param y The y grid position of the tile in the grid space.
      * @param index Optional parameter if we want to skip calculating the index ourselves.
      * @param data Optional tile data parameter used to skip grabbing the tile data if we already have it.
      * @returns Returns a `TileInfo` object based on the coordinates.
@@ -663,23 +669,32 @@ export default class Regions {
          * attempt to grab the cursor based on the
          */
 
-        let tile: RegionTileData = {
+        let info = data || this.map.getTileData(index),
+            tile: RegionTileData = {
                 x,
                 y,
-                data: data || this.map.getTileData(index)
-            },
-            cursor = this.map.getCursor(tile.data as Tile);
+                data: info
+            };
+
+        // No need to do any further processing if the tile is empty.
+        if (info === 0 || (info as number[])?.length === 0) return tile;
 
         /**
-         * A tile is colliding if it exists in our array of collisions (See
-         * `parseTileLayerData()` in `processmap.ts`). If there is no tile data
-         * (i.e. the tile is blank) it is automatically colliding.
-         * We check if a tile is an object by verifying the data extracted.
-         * If we find a cursor we set the `cursor` property to the cursor.
+         * We use this function to prevent iterating through the tile array
+         * multiple times. Since collisions, objects, and cursors all call
+         * the `forEachTile` function, we can just do it in a batch here.
          */
-        if (this.map.isCollisionIndex(index)) tile.c = true;
-        if (this.map.isObject(tile.data as Tile)) tile.o = true;
-        if (cursor) tile.cur = cursor;
+
+        this.map.forEachTile(info as Tile, (tileId: number) => {
+            if (this.map.objects.includes(tileId)) {
+                tile.o = true;
+                tile.c = true;
+            } else if (this.map.collisions.includes(tileId)) tile.c = true;
+
+            let cursor = this.map.cursors[tileId];
+
+            if (cursor) tile.cur = cursor;
+        });
 
         return tile;
     }
