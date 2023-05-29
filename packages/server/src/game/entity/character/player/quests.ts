@@ -96,7 +96,7 @@ export default class Quests {
      */
 
     private handlePointer(pointer: PointerData): void {
-        this.player.pointer(pointer.type, pointer);
+        this.player.pointer(pointer);
     }
 
     /**
