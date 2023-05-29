@@ -2,7 +2,7 @@ import { Modules } from '@kaetram/common/network';
 
 import type Character from '../entity/character/character';
 
-const MAXIMUM_ZOOM = 6,
+export const MAXIMUM_ZOOM = 6,
     DEFAULT_ZOOM = 3,
     MAX_GRID_WIDTH = 52,
     MAX_GRID_HEIGHT = 28;

@@ -81,11 +81,11 @@ export default class Game {
         this.menu = new MenuController(this);
         this.input = new InputController(this);
         this.socket = new Socket(this);
-        this.pointer = new Pointer(this);
         this.updater = new Updater(this);
         this.audio = new AudioController(this);
         this.entities = new EntitiesController(this);
         this.bubble = new BubbleController(this);
+        this.pointer = new Pointer(this.renderer, this.entities);
         this.connection = new Connection(this);
 
         app.sendStatus('Loading game');
@@ -176,6 +176,7 @@ export default class Game {
             this.camera.setZoom(this.storage.data.player.zoom);
 
             this.renderer.resize();
+            this.pointer.resize();
         }
 
         this.camera.centreOn(this.player);
@@ -397,6 +398,7 @@ export default class Game {
     public zoom(amount: number): void {
         this.camera.zoom(amount);
         this.storage.setZoom(this.camera.zoomFactor);
+        this.pointer.resize();
 
         this.renderer.resize();
     }
