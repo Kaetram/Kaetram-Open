@@ -863,7 +863,7 @@ export default class Player extends Character {
          * are used by crafting stations.
          */
 
-        let cursor = this.map.getCursorFromIndex(index);
+        let cursor = this.map.getCursor(index);
 
         if (!cursor) return;
 

@@ -31,11 +31,11 @@ export default class Map {
 
     // Map handlers
     public regions: Regions;
-    public grids: Grids;
+    public grids: Grids = new Grids(this.width, this.height);
 
     // Map data and collisions
     public data: (number | number[])[] = map.data;
-    private collisions: number[] = map.collisions || [];
+    public collisions: number[] = map.collisions || [];
     private entities: { [tileId: number]: string } = map.entities;
 
     public plateau: { [index: number]: number } = map.plateau;
@@ -56,8 +56,6 @@ export default class Map {
     private areas: { [name: string]: Areas } = {};
 
     public constructor(public world: World) {
-        this.grids = new Grids(this.width, this.height);
-
         this.loadAreas();
         this.loadDoors();
 
@@ -184,13 +182,23 @@ export default class Map {
     }
 
     /**
-     * Checks if the tileIndex exists in the map collisions.
+     * Checks if the tileIndex exists in the map collisions. We check against
+     * tile ids instead of indexes because indexes will scale exponentially as
+     * more map content is added. Think of it as this; you are more likely to add
+     * more tiles into the map than add more tilesets.
      * @param index Tile index to check.
      * @returns If the array of collision indexes contains the tileIndex.
      */
 
     public isCollisionIndex(index: number): boolean {
-        return this.collisions.includes(index);
+        let data = this.data[index],
+            colliding = false;
+
+        this.forEachTile(data, (tile: number) => {
+            if (this.collisions.includes(tile)) colliding = true;
+        });
+
+        return colliding;
     }
 
     /**
@@ -293,30 +301,20 @@ export default class Map {
     }
 
     /**
-     * Looks for cursor data in the provided tile data. The tile data
-     * is directly extracted from the map data at a certain index.
+     * Given the index we try to obtain the tile data and look through
+     * it to see if it contains a cursor name.
      * @param data The tile data we are checking.
      * @returns The cursor name if it exists.
      */
 
-    public getCursor(data: Tile): string {
+    public getCursor(index: number): string {
         let cursor = '';
 
-        this.forEachTile(data, (tileId: number) => {
+        this.forEachTile(this.data[index], (tileId: number) => {
             if (tileId in this.cursors) cursor = this.cursors[tileId];
         });
 
         return cursor;
-    }
-
-    /**
-     * Obtains the cursor based on the specified tile index.
-     * @param index The tile index we are checking.
-     * @returns The cursor name if it exists.
-     */
-
-    public getCursorFromIndex(index: number): string {
-        return this.getCursor(this.data[index]);
     }
 
     /**

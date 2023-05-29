@@ -19,7 +19,6 @@ export default class ProcessMap {
     private map: ProcessedMap;
     private tilesetEntities: { [tileId: number]: string } = {};
 
-    private collisionTiles: { [tileId: number]: boolean } = {};
     private trees: Resources = {};
     private rocks: Resources = {};
     private fishSpots: Resources = {};
@@ -191,9 +190,9 @@ export default class ProcessMap {
     private parseProperties(tileId: number, property: Property): void {
         let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { high, obstructing, objects, cursors } = this.map;
+            { collisions, high, obstructing, objects, cursors } = this.map;
 
-        if (this.isCollisionProperty(name)) this.collisionTiles[tileId] = true;
+        if (this.isCollisionProperty(name)) collisions.push(tileId);
 
         switch (name) {
             case 'v': {
@@ -301,7 +300,7 @@ export default class ProcessMap {
      */
 
     private parseTileLayerData(mapData: number[]): void {
-        let { data, collisions } = this.map;
+        let { data } = this.map;
 
         for (let i in mapData) {
             let value = mapData[i];
@@ -316,9 +315,6 @@ export default class ProcessMap {
 
             // Remove flip flags for the sake of calculating collisions.
             if (this.isFlipped(value)) value = this.removeFlipFlags(value);
-
-            // Add collision indexes to the map.
-            if (value in this.collisionTiles) collisions.push(index);
         }
     }
 
