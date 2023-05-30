@@ -86,8 +86,8 @@ export default class Storage {
             },
 
             settings: {
-                musicVolume: 100,
-                soundVolume: 100,
+                musicVolume: 25,
+                soundVolume: 25,
                 brightness: 100,
                 audioEnabled: !isMobile(),
                 lowPowerMode: false,
