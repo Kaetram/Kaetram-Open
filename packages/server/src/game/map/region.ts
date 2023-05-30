@@ -187,6 +187,16 @@ export default class Region {
     }
 
     /**
+     * Attempts to grab a resource from a region based on the index in the map.
+     * @param index The index at which we are trying to grab the resource.
+     * @returns The resource object if it exists.
+     */
+
+    public getResource(index: number): Resource | undefined {
+        for (let resource of this.resources) if (index in resource.data) return resource;
+    }
+
+    /**
      * Goes through each tile in the region and makes a callback.
      * @param callback Coordinate position of the tile.
      */

@@ -86,22 +86,22 @@
     "movementSpeed": 420,
     "respawnDelay": 20000,
     "attackStats": {
-      "crush": 1,
-      "slash": 1,
-      "stab": 1,
+      "crush": 0,
+      "slash": 0,
+      "stab": 0,
       "archery": 0,
       "magic": 0
     },
     "defenseStats": {
       "crush": 0,
-      "slash": 1,
-      "stab": 1,
-      "archery": 1,
-      "magic": 1
+      "slash": 0,
+      "stab": 0,
+      "archery": 0,
+      "magic": 0
     },
     "bonuses": {
       "accuracy": 0,
-      "strength": 2,
+      "strength": 0,
       "archery": 0,
       "magic": 0
     }
@@ -4176,6 +4176,41 @@
 
   "yellowbat": {
     "name": "Mutated Bat",
+    "hitPoints": 350,
+    "defenseLevel": 30,
+    "attackLevel": 15,
+    "level": 16,
+    "aggroRange": 1,
+    "attackRange": 1,
+    "aggressive": false,
+    "roaming": true,
+    "attackRate": 900,
+    "movementSpeed": 400,
+    "respawnDelay": 35000,
+    "attackStats": {
+      "crush": 0,
+      "slash": 6,
+      "stab": 4,
+      "archery": 0,
+      "magic": 2
+    },
+    "defenseStats": {
+      "crush": -12,
+      "slash": 10,
+      "stab": 8,
+      "archery": 6,
+      "magic": -14
+    },
+    "bonuses": {
+      "accuracy": 2,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "paladin": {
+    "name": "Paladin",
     "hitPoints": 350,
     "defenseLevel": 30,
     "attackLevel": 15,

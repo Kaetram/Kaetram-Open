@@ -689,7 +689,11 @@ export default class Regions {
             if (this.map.objects.includes(tileId)) {
                 tile.o = true;
                 tile.c = true;
-            } else if (this.map.collisions.includes(tileId)) tile.c = true;
+            } else if (
+                this.map.collisionTiles.includes(tileId) ||
+                this.map.collisionIndexes.includes(index!)
+            )
+                tile.c = true;
 
             let cursor = this.map.cursors[tileId];
 
