@@ -168,7 +168,7 @@ export default class Layer {
         // If the tileset is invalid, then we just return.
         if (!tileset) return;
 
-        let relativeId = tileId - tileset.firstGid - 1,
+        let relativeId = tileId - tileset.firstGid,
             tilesWidth = tileset.width / this.map.tileSize;
 
         // Write the texture information to the texture data array.
