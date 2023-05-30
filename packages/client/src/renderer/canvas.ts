@@ -126,7 +126,7 @@ export default class Canvas extends Renderer {
 
                 this.drawTile(
                     context,
-                    this.animatedTiles[index].id,
+                    this.animatedTiles[index].id + 1,
                     this.animatedTiles[index].index,
                     flips
                 );
@@ -134,7 +134,7 @@ export default class Canvas extends Renderer {
 
             // Skip animated tiles unless we disable animations, then just draw the tile once.
             if (!this.map.isAnimatedTile(tile as number) || !this.animateTiles)
-                this.drawTile(context, (tile as number) - 1, index, flips);
+                this.drawTile(context, tile as number, index, flips);
         });
 
         this.saveFrame();
@@ -415,14 +415,5 @@ export default class Canvas extends Renderer {
     private forEachDrawingContext(callback: ContextCallback): void {
         for (let context in this.drawingContexts)
             callback(this.drawingContexts[context] as CanvasRenderingContext2D);
-    }
-
-    /**
-     * Iterates through each of the animated tiles.
-     * @param callback Returns the tile object for that animated tile.
-     */
-
-    private forEachAnimatedTile(callback: (tile: Tile) => void): void {
-        for (let tile in this.animatedTiles) callback(this.animatedTiles[tile]);
     }
 }

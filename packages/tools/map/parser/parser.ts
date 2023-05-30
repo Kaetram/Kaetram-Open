@@ -46,7 +46,9 @@ export default class ProcessMap {
 
             data: [],
 
-            collisions: [],
+            collisionTiles: [],
+            collisionIndexes: [],
+
             entities: {},
 
             tilesets: [],
@@ -138,16 +140,19 @@ export default class ProcessMap {
     }
 
     /**
-     * We parse the tileset and extract collisions
-     * and other individual tile properties.
+     * Handles parsing an individual tileset and extracting all the necessary
+     * information, such as tile properties, animations, entities, etc.
      * @param tileset A tileset from the tilemap.
      */
 
     private parseTileset(tileset: Tileset): void {
         let { tiles, firstgid } = tileset;
 
+        // Tiled starts counting from 1 for some reason.
+        firstgid -= 1;
+
         for (let tile of tiles) {
-            let tileId = this.getTileId(tileset, tile);
+            let tileId = this.getId(firstgid, tile.id);
 
             if (tile.animation) this.parseAnimation(tileId, firstgid, tile.animation);
 
@@ -190,9 +195,9 @@ export default class ProcessMap {
     private parseProperties(tileId: number, property: Property): void {
         let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { collisions, high, obstructing, objects, cursors } = this.map;
+            { collisionTiles, high, obstructing, objects, cursors } = this.map;
 
-        if (this.isCollisionProperty(name)) collisions.push(tileId);
+        if (this.isCollisionProperty(name)) collisionTiles.push(tileId);
 
         switch (name) {
             case 'v': {
@@ -303,7 +308,7 @@ export default class ProcessMap {
         let { data } = this.map;
 
         for (let i in mapData) {
-            let value = mapData[i];
+            let value = mapData[i] - 1;
 
             if (value < 1) continue;
 
@@ -331,7 +336,7 @@ export default class ProcessMap {
         for (let index in layer.data) {
             if (layer.data[index] < 1) continue;
 
-            this.map.collisions.push(parseInt(index));
+            this.map.collisionIndexes.push(parseInt(index));
         }
     }
 
@@ -347,7 +352,7 @@ export default class ProcessMap {
         let { entities } = this.map;
 
         for (let index in layer.data) {
-            let value = layer.data[index];
+            let value = layer.data[index] - 1;
 
             if (value < 1) continue;
 
@@ -365,15 +370,15 @@ export default class ProcessMap {
 
     private parsePlateau(layer: Layer): void {
         let level = parseInt(layer.name.split('plateau')[1]),
-            { collisions, plateau } = this.map;
+            { collisionTiles, plateau } = this.map;
 
         for (let index in layer.data) {
             let value = layer.data[index];
 
             if (value < 1) continue;
 
-            // We skip collisions
-            if (collisions.includes(value)) continue;
+            // We skip collision
+            if (collisionTiles.includes(value)) continue;
 
             plateau[parseInt(index)] = level;
         }
@@ -673,21 +678,6 @@ export default class ProcessMap {
     }
 
     /**
-     * We are using a unified function in case we need to make adjustments
-     * to how we process tiling indexes. An example is not having to go through
-     * all the instances of tileId calculations to modify one variable. This
-     * is just an overall more organized way of doing work.
-     *
-     * @param tileset A tileset layer that we are parsing.
-     * @param tile The current tile that we are parsing through.
-     * @param offset The offset of the tileIndex.
-     */
-
-    private getTileId(tileset: Tileset, tile: Tile, offset = 0): number {
-        return this.getId(tileset.firstgid, tile.id, offset);
-    }
-
-    /**
      * Extracts a relative path for the client to use when laoding the tileset
      * image. Some tilesets may be placed in subdirectories, so we want to eliminate
      * the first directory if that's the case (since when we export the map and copy
@@ -713,7 +703,8 @@ export default class ProcessMap {
             height,
             tileSize,
             data,
-            collisions,
+            collisionTiles,
+            collisionIndexes,
             areas,
             plateau,
             high,
@@ -732,7 +723,8 @@ export default class ProcessMap {
             height,
             tileSize,
             data,
-            collisions,
+            collisionTiles,
+            collisionIndexes,
             areas,
             plateau,
             high,

@@ -674,55 +674,6 @@
         "offsetY": -8
     },
     {
-        "id": "mobs/boss",
-        "width": 64,
-        "height": 72,
-        "animations": {
-            "atk_right": {
-                "length": 6,
-                "row": 0
-            },
-            "walk_right": {
-                "length": 3,
-                "row": 1
-            },
-            "idle_right": {
-                "length": 4,
-                "row": 2
-            },
-            "atk_up": {
-                "length": 5,
-                "row": 3
-            },
-            "walk_up": {
-                "length": 4,
-                "row": 4
-            },
-            "idle_up": {
-                "length": 4,
-                "row": 5
-            },
-            "atk_down": {
-                "length": 6,
-                "row": 6
-            },
-            "walk_down": {
-                "length": 4,
-                "row": 7
-            },
-            "idle_down": {
-                "length": 4,
-                "row": 8
-            },
-            "Group 5": {
-                "length": 3,
-                "row": 9
-            }
-        },
-        "offsetX": -24,
-        "offsetY": -36
-    },
-    {
         "id": "npcs/boxingman",
         "width": 24,
         "height": 24,
@@ -823,6 +774,13 @@
         },
         "offsetX": -9,
         "offsetY": -32
+    },
+    {
+        "id": "mobs/paladin",
+        "width": 32,
+        "height": 32,
+        "offsetX": -5,
+        "offsetY": -8
     },
     {
         "id": "mobs/cactus",
@@ -6055,9 +6013,10 @@
         "offsetY": -13
     },
     {
-        "id": "yellowbat",
+        "id": "mobs/yellowbat",
         "width": 32,
         "height": 48,
+        "idleSpeed": 100,
         "animations": {
             "atk_right": {
                 "length": 5,

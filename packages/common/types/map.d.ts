@@ -147,7 +147,10 @@ export interface ProcessedMap {
 
     data: (number | number[])[];
 
-    collisions: number[];
+    // One corresponds to tile ids, one corresponds to an index on the map.
+    collisionTiles: number[];
+    collisionIndexes: number[];
+
     entities: { [tileId: number]: string };
 
     // tilesetId: firstGid

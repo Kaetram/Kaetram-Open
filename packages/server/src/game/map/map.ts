@@ -35,7 +35,8 @@ export default class Map {
 
     // Map data and collisions
     public data: (number | number[])[] = map.data;
-    public collisions: number[] = map.collisions || [];
+    public collisionTiles: number[] = map.collisionTiles || [];
+    public collisionIndexes: number[] = map.collisionIndexes || [];
     private entities: { [tileId: number]: string } = map.entities;
 
     public plateau: { [index: number]: number } = map.plateau;
@@ -182,6 +183,22 @@ export default class Map {
     }
 
     /**
+     * Checks if the tile data is a collision.
+     * @param data Contains tile information.
+     * @returns Whether or not the tile is a collision.
+     */
+
+    public isCollision(data: Tile): boolean {
+        let collision = false;
+
+        this.forEachTile(data, (tile: number) => {
+            if (this.collisionTiles.includes(tile)) collision = true;
+        });
+
+        return collision;
+    }
+
+    /**
      * Checks if the tileIndex exists in the map collisions. We check against
      * tile ids instead of indexes because indexes will scale exponentially as
      * more map content is added. Think of it as this; you are more likely to add
@@ -191,14 +208,15 @@ export default class Map {
      */
 
     public isCollisionIndex(index: number): boolean {
-        let data = this.data[index],
-            colliding = false;
+        // Check if we have any forced collision indexes.
+        if (this.collisionIndexes.includes(index)) return true;
 
-        this.forEachTile(data, (tile: number) => {
-            if (this.collisions.includes(tile)) colliding = true;
-        });
+        let data = this.data[index];
 
-        return colliding;
+        // Empty data means the tile is a collision.
+        if (!data) return true;
+
+        return this.isCollision(data);
     }
 
     /**
@@ -221,31 +239,35 @@ export default class Map {
          */
 
         // Verify dynamic tile collision if player is provided as a parameter.
-        if (player) {
-            let region = this.regions.get(this.regions.getRegion(x, y));
+        let region = this.regions.get(this.regions.getRegion(x, y)),
+            index = this.coordToIndex(x, y);
 
-            // Skip if there are no dynamic areas in the region.
-            if (region.hasDynamicAreas()) {
-                let dynamicArea = region.getDynamicArea(x, y);
+        // Skip if there are no dynamic areas in the region.
+        if (player && region.hasDynamicAreas()) {
+            let dynamicArea = region.getDynamicArea(x, y);
 
-                // Skip if no dynamic area is found or it doesn't fulfill requirements.
-                if (dynamicArea?.fulfillsRequirement(player)) {
-                    let mappedTile = dynamicArea.getMappedTile(x, y);
+            // Skip if no dynamic area is found or it doesn't fulfill requirements.
+            if (dynamicArea?.fulfillsRequirement(player)) {
+                let mappedTile = dynamicArea.getMappedTile(x, y);
 
-                    // Check collision if we can find a mapping tile.
-                    if (mappedTile) return this.isColliding(mappedTile.x, mappedTile.y);
-                }
+                // Check collision if we can find a mapping tile.
+                if (mappedTile) return this.isColliding(mappedTile.x, mappedTile.y);
             }
         }
 
-        let index = this.coordToIndex(x, y);
+        // Check whether a resource has collision properties.
+        if (region.hasResources()) {
+            let resource = region.getResource(index);
 
-        // If the tile is empty it's automatically a collision tile.
-        return !this.data[index] || this.isCollisionIndex(index);
+            if (resource) return this.isCollision(resource.data[index] as Tile);
+        }
+
+        // Check the collision at a specified index.
+        return this.isCollisionIndex(index);
     }
 
     /**
-     * Checks if the tile data (at an index) is an object.
+     * Checks the tile data on whether or not it contains an object tile.
      * @param data The tile data (number or number array) we are checking.
      * @returns Boolean conditional if the tile data contains an object.
      */
@@ -434,10 +456,10 @@ export default class Map {
      */
 
     public forEachEntity(callback: (position: Position, key: string) => void): void {
-        for (let tileId in this.entities) {
-            let position = this.indexToCoord(parseInt(tileId));
+        for (let index in this.entities) {
+            let position = this.indexToCoord(parseInt(index));
 
-            callback(position, this.entities[tileId]);
+            callback(position, this.entities[index]);
         }
     }
 }
