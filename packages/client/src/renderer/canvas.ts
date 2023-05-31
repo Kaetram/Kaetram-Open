@@ -346,7 +346,7 @@ export default class Canvas extends Renderer {
         if (!this.animateTiles) return;
 
         this.forEachVisibleTile((tile: RegionTile, index: number) => {
-            let isFlipped = this.isFlipped(tile as RotatedTile);
+            let isFlipped = this.map.isFlipped(tile);
 
             if (isFlipped) tile = (tile as RotatedTile).tileId;
 
@@ -367,7 +367,9 @@ export default class Canvas extends Renderer {
                     tile as number,
                     index,
                     this.map.getTileAnimation(tile as number),
-                    isFlipped
+                    isFlipped,
+                    false,
+                    this.map.dynamicAnimatedTiles[index]
                 );
         }, 2);
     }
@@ -392,11 +394,11 @@ export default class Canvas extends Renderer {
      * @returns An array containing all flip flags in order.
      */
 
-    public getFlipped(tile: RotatedTile): number[] {
+    public getFlipped(tile: RegionTile): number[] {
         let flips: number[] = [];
 
         // Return empty if tile doesn't contain flip flags.
-        if (!this.isFlipped(tile)) return flips;
+        if (!this.map.isFlipped(tile)) return flips;
 
         if (tile.v) flips.push(TileFlip.Vertical);
         if (tile.d) flips.push(TileFlip.Diagonal);
