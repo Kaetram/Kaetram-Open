@@ -120,7 +120,8 @@ export default class Area {
     }
 
     /**
-     * Checks if the player fulfills the requirements of the area.
+     * Checks if the player fulfills the requirements of the area. This can be
+     * whether the player has completed a quest or achievement or not.
      * @param player The player we are checking requirements for
      * @returns Checks if the requirement is fulfilled.
      */
