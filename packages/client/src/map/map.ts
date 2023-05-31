@@ -128,14 +128,16 @@ export default class Map {
     public loadRegion(data: RegionTileData[], region: number): void {
         for (let tile of data) {
             let index = this.coordToIndex(tile.x, tile.y),
-                objectIndex = this.objects.indexOf(index);
+                objectIndex = this.objects.indexOf(index),
+                useAnimationData =
+                    !(index in this.dynamicAnimatedTiles) && !this.game.isLowPowerMode();
 
             /**
              * If we're in low power mode just store the tile data as is. Otherwise we store
              * the animated data if specified and default to the data if not.
              */
 
-            this.data[index] = this.game.isLowPowerMode() ? tile.data : tile.animation || tile.data;
+            this.data[index] = useAnimationData ? tile.data : tile.animation || tile.data;
 
             // If the tile contains an animation flag, we store it in the dynamic animated tiles dictionary.
             if (tile.animation) this.dynamicAnimatedTiles[index] = tile.data;

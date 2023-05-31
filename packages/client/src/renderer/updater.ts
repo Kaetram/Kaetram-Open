@@ -250,6 +250,8 @@ export default class Updater {
                 this.game.map.data[tile.index] = tile.postAnimationData!;
 
                 delete (this.renderer as Canvas).animatedTiles[index];
+
+                continue;
             }
 
             tile.animate(this.game.time);
