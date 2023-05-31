@@ -19,6 +19,7 @@ export interface RegionTileData {
     x: number;
     y: number;
     data: RegionTile;
+    animation?: RegionTile; // animation data
     c?: boolean; // collision property
     cur?: string; // cursor property
     o?: boolean; // object property
@@ -93,6 +94,7 @@ export interface ProcessedArea {
     // Dynamic
     quest?: string;
     mapping?: number;
+    animation?: number;
 
     // Minigame
     minigame?: string;

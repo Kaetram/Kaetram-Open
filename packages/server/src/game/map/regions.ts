@@ -726,10 +726,21 @@ export default class Regions {
         if (!mappedTile) return original;
 
         // Gets the index of the mapped tile coordinates.
-        let index = this.map.coordToIndex(mappedTile.x, mappedTile.y);
+        let index = this.map.coordToIndex(mappedTile.x, mappedTile.y),
+            tile = this.buildTile(x, y, index), // Build tile using the mapped tile's index
+            mappedAnimationTile = area.getMappedAnimationTile(x, y);
 
-        // We build a tile using our mapped tile's index, hence why we specify the index as a parameter
-        return this.buildTile(x, y, index);
+        /**
+         * If we have a mapped animation tile we add it to the tile data. Note
+         * that this animation is purely cosmetic and does not affect the tile
+         * in any way.
+         */
+        if (mappedAnimationTile)
+            tile.animation = this.map.getTileData(
+                this.map.coordToIndex(mappedAnimationTile.x, mappedAnimationTile.y)
+            );
+
+        return tile;
     }
 
     /**

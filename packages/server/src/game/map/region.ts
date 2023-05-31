@@ -1,9 +1,9 @@
-import type { RegionTileData } from '@kaetram/common/types/map';
-import type Player from '../entity/character/player/player';
+import type Area from './areas/area';
 import type Entity from '../entity/entity';
 import type Light from '../globals/impl/light';
 import type Resource from '../globals/impl/resource';
-import type Area from './areas/area';
+import type Player from '../entity/character/player/player';
+import type { RegionTileData } from '@kaetram/common/types/map';
 
 export default class Region {
     public data: RegionTileData[] = [];
@@ -123,30 +123,6 @@ export default class Region {
     }
 
     /**
-     * Grab a list of entity instances and remove the `reject` from the list.
-     * @param player Player object used to check dynamic visibility of the entities.
-     * @param reject Entity that we are ignoring (typically a player).
-     * @returns A list of entity instances.
-     */
-
-    public getEntities(player: Player, reject?: Entity): string[] {
-        let entities: string[] = [];
-
-        for (let instance in this.entities) {
-            // Ignore if a reject is present.
-            if (reject && reject.instance === instance) continue;
-
-            // Check if the entity is visible to the player.
-            if (!this.entities[instance].isVisible(player)) continue;
-
-            // Append our instance to the list.
-            entities.push(instance);
-        }
-
-        return entities;
-    }
-
-    /**
      * Checks if any entities are joining the area.
      */
 
@@ -194,6 +170,30 @@ export default class Region {
 
     public getResource(index: number): Resource | undefined {
         for (let resource of this.resources) if (index in resource.data) return resource;
+    }
+
+    /**
+     * Grab a list of entity instances and remove the `reject` from the list.
+     * @param player Player object used to check dynamic visibility of the entities.
+     * @param reject Entity that we are ignoring (typically a player).
+     * @returns A list of entity instances.
+     */
+
+    public getEntities(player: Player, reject?: Entity): string[] {
+        let entities: string[] = [];
+
+        for (let instance in this.entities) {
+            // Ignore if a reject is present.
+            if (reject && reject.instance === instance) continue;
+
+            // Check if the entity is visible to the player.
+            if (!this.entities[instance].isVisible(player)) continue;
+
+            // Append our instance to the list.
+            entities.push(instance);
+        }
+
+        return entities;
     }
 
     /**

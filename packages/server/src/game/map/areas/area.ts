@@ -35,7 +35,9 @@ export default class Area {
 
     // Dynamic areas
     public mappedArea!: Area | undefined;
+    public mappedAnimation!: Area | undefined;
     public mapping!: number;
+    public animation!: number;
 
     // Minigame
     public minigame = '';
@@ -150,6 +152,28 @@ export default class Area {
         return {
             x: this.mappedArea.x + relativeX,
             y: this.mappedArea.y + relativeY
+        };
+    }
+
+    /**
+     * Same process as `getMappedTile` but instead we are grabbing an animation
+     * that this tile is mapped to. This is used for dynamic tiles that have an
+     * animation effect before they are mapped to the other state.
+     * @param x The x grid coordinate we are grabbing the animation for.
+     * @param y The y grid coordinate we are grabbing the animation for.
+     * @returns A position (x and y) of the mapped animation.
+     */
+
+    public getMappedAnimationTile(x: number, y: number): Position | undefined {
+        if (!this.mappedAnimation) return;
+
+        // The x and y relative to the area rather than globally.
+        let relativeX = Math.abs(this.x - x),
+            relativeY = Math.abs(this.y - y);
+
+        return {
+            x: this.mappedAnimation.x + relativeX,
+            y: this.mappedAnimation.y + relativeY
         };
     }
 
