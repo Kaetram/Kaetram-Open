@@ -16,7 +16,7 @@ import type Sprite from '../entity/sprite';
 import type Item from '../entity/objects/item';
 import type Player from '../entity/character/player/player';
 import type { SerializedLight } from '@kaetram/common/types/light';
-import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
+import type { RegionTile } from '@kaetram/common/types/map';
 
 interface RendererLight {
     origX: number;
@@ -73,7 +73,7 @@ export default class Renderer {
     private zoomIn: HTMLElement = document.querySelector('#zoom-in')!;
     private zoomOut: HTMLElement = document.querySelector('#zoom-out')!;
 
-    protected map: Map;
+    public map: Map;
     public camera: Camera;
 
     // Variables used for calculating multiple things
@@ -1177,7 +1177,7 @@ export default class Renderer {
      */
 
     protected hasRenderedFrame(): boolean {
-        if (this.forceRendering || !this.isLowPowerMode()) return false;
+        if (this.forceRendering || !this.game.isLowPowerMode()) return false;
 
         if (this.stopRendering) return true;
 
@@ -1230,7 +1230,7 @@ export default class Renderer {
      */
 
     protected saveFrame(): void {
-        if (!this.isLowPowerMode()) return;
+        if (!this.game.isLowPowerMode()) return;
 
         this.renderedFrame[0] = this.camera.x;
         this.renderedFrame[1] = this.camera.y;
@@ -1304,29 +1304,6 @@ export default class Renderer {
             position.y > this.camera.gridY - position.diff &&
             position.y < this.camera.gridY + this.camera.gridHeight + position.diff
         );
-    }
-
-    /**
-     * A flipped tile is any tile that contains a flip
-     * flag or transpose flag.
-     * @param tileInfo Tile data received from the server.
-     * @returns Whether or not the tile contains and flip flags.
-     */
-
-    protected isFlipped(tileInfo: RotatedTile): boolean {
-        if (!tileInfo) return false;
-
-        return tileInfo.v || tileInfo.h || tileInfo.d;
-    }
-
-    /**
-     * Low power mode is activated when both the camera centration and
-     * animated tiles are turned off. This is for devices that cannot
-     * sustain the constant re-drawing of the frame every second.
-     */
-
-    protected isLowPowerMode(): boolean {
-        return !this.camera.isCentered() && !this.animateTiles;
     }
 
     /**

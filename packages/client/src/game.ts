@@ -402,4 +402,13 @@ export default class Game {
 
         this.renderer.resize();
     }
+
+    /**
+     * Whether or not the game is in low power mode. This prevents the camera
+     * from following the player and disables animated tiles.
+     */
+
+    public isLowPowerMode(): boolean {
+        return !this.camera.isCentered() && !this.renderer.animateTiles;
+    }
 }
