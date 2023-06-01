@@ -2,7 +2,7 @@ import Util from '../../../utils/util';
 
 import { Modules } from '@kaetram/common/network';
 
-import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
+import type { Bonuses, Enchantments, Light, Stats } from '@kaetram/common/types/item';
 
 export default class Equipment {
     public key = '';
@@ -13,7 +13,7 @@ export default class Equipment {
     // Used for ignoring rendering of the equipment.
     public drawable = false;
 
-    public lamp = false;
+    public light: Light = {};
 
     public attackStats: Stats = Util.getEmptyStats();
     public defenseStats: Stats = Util.getEmptyStats();
@@ -47,7 +47,7 @@ export default class Equipment {
         bonuses?: Bonuses,
         attackStyle = Modules.AttackStyle.None,
         attackStyles: Modules.AttackStyle[] = [],
-        lamp = false
+        light: Light = {}
     ): void {
         this.key = key;
         this.name = name;
@@ -63,7 +63,7 @@ export default class Equipment {
         this.attackStyle = attackStyle;
         this.attackStyles = attackStyles;
 
-        this.lamp = lamp;
+        this.light = light;
     }
 
     /**

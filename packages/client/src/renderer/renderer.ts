@@ -715,7 +715,7 @@ export default class Renderer {
         // Equipment sprite based on the key of the slot.
         let sprite = this.game.sprites.get(equipment.key);
 
-        if (!sprite) return;
+        if (!sprite?.image) return;
 
         if (!sprite.loaded) sprite.load();
 
@@ -1038,7 +1038,7 @@ export default class Renderer {
         }
         // Move the light to centre if the player has a lamp, otherwise move it off screen.
         else
-            light.position = this.game.player.hasLamp()
+            light.position = this.game.player.getLight().outer
                 ? new Vec2(
                       (this.game.player.x - this.camera.x) * this.camera.zoomFactor +
                           this.actualTileSize / 2,
@@ -1198,34 +1198,70 @@ export default class Renderer {
      */
 
     public addPlayerLight(): void {
-        let x = this.overlay.width / this.tileSize / 2,
+        let light = this.game.player.getLight(),
+            x = this.overlay.width / this.tileSize / 2,
             y = this.overlay.height / this.tileSize / 2;
 
-        // Outer player light.
-        this.addLight({
-            instance: this.game.player.instance,
-            x,
-            y,
-            distance: 180,
-            diffuse: 0.2,
-            colour: 'rgba(204, 204, 0, 0.1)',
-            centre: true,
-            flickerSpeed: 300,
-            flickerIntensity: 2
-        });
+        // Handle the outer light if it exists.
+        if (light.outer)
+            this.addLight({
+                instance: this.game.player.instance,
+                x,
+                y,
+                distance: light.outer.distance,
+                diffuse: 0.2,
+                colour: light.outer.colour,
+                centre: true,
+                flickerSpeed: light.outer.flickerSpeed,
+                flickerIntensity: light.outer.flickerIntensity
+            });
 
-        // Inner player light.
-        this.addLight({
-            instance: `${this.game.player.instance}inner`,
-            x,
-            y,
-            distance: 100,
-            diffuse: 0.2,
-            colour: 'rgba(204, 204, 0, 0.2)',
-            centre: true,
-            flickerSpeed: 400,
-            flickerIntensity: 1
-        });
+        // Handle the inner light if it exists.
+        if (light.inner)
+            this.addLight({
+                instance: `${this.game.player.instance}inner`,
+                x,
+                y,
+                distance: light.inner.distance,
+                diffuse: 0.2,
+                colour: light.inner.colour,
+                centre: true,
+                flickerSpeed: light.inner.flickerSpeed,
+                flickerIntensity: light.inner.flickerIntensity
+            });
+    }
+
+    /**
+     * Responsible for synchronizing the player lighting with the latest
+     * information from the player's light equipment.
+     */
+
+    public updatePlayerLight(): void {
+        let light = this.game.player.getLight(),
+            outer = this.lightings[this.game.player.instance],
+            inner = this.lightings[`${this.game.player.instance}inner`];
+
+        // Update the outer light if it exists.
+        if (outer && light.outer) {
+            outer.light.distance = light.outer.distance;
+            outer.light.originalDistance = light.outer.distance;
+
+            outer.light.color = light.outer.colour;
+
+            outer.light.flickerSpeed = light.outer.flickerSpeed;
+            outer.light.flickerIntensity = light.outer.flickerIntensity;
+        }
+
+        // Update the inner light if it exists.
+        if (inner && light.inner) {
+            inner.light.distance = light.inner.distance;
+            inner.light.originalDistance = light.inner.distance;
+
+            inner.light.color = light.inner.colour;
+
+            inner.light.flickerSpeed = light.inner.flickerSpeed;
+            inner.light.flickerIntensity = light.inner.flickerIntensity;
+        }
     }
 
     /**
