@@ -1162,9 +1162,11 @@ export default class Connection {
     }
 
     /**
-     *
-     * @param opcode
-     * @param info
+     * Handles the logic for the overlay system. Overlay is generally a mask applied on top
+     * of the current viewport to darken the screen. Using that mask we can calculate things
+     * such as the lighting effect from a torch for example.
+     * @param opcode Contains information about the type of overlay action to perform.
+     * @param info Information about the overlay such as the image and colour (or lighting).
      */
 
     private handleOverlay(opcode: Opcodes.Overlay, info: OverlayPacket): void {
@@ -1172,6 +1174,9 @@ export default class Connection {
             case Opcodes.Overlay.Set: {
                 this.overlays.update(info.image);
                 this.renderer.updateDarkMask(info.colour);
+
+                if (info.playerLight) this.renderer.addPlayerLight();
+
                 break;
             }
 
