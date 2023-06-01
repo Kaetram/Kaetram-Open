@@ -51,6 +51,7 @@ export default class Item extends Entity {
     public poisonous = false;
     public freezing = false;
     public burning = false;
+    public lamp = false;
     public weaponType = '';
 
     // Bowl variables
@@ -128,6 +129,7 @@ export default class Item extends Entity {
         this.poisonous = this.data.poisonous || this.poisonous;
         this.freezing = this.data.freezing || this.freezing;
         this.burning = this.data.burning || this.burning;
+        this.lamp = this.data.lamp || this.lamp;
         this.movementModifier = this.data.movementModifier || this.movementModifier;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
         this.mining = this.data.mining || this.mining;
