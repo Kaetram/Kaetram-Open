@@ -1221,8 +1221,7 @@ export default class Player extends Character {
         this.send(
             new Overlay(Opcodes.Overlay.Set, {
                 image: overlay.fog || 'blank',
-                colour: `rgba(0, 0, 0, ${overlay.darkness})`,
-                playerLight: overlay.playerLight
+                colour: `rgba(0, 0, 0, ${overlay.darkness})`
             })
         );
 

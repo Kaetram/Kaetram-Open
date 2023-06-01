@@ -67,6 +67,8 @@ export interface ProcessedArea {
     distance?: number;
     diffuse?: number;
     objects?: Position[];
+    flickerSpeed?: number;
+    flickerIntensity?: number;
 
     // Chest
     entities?: number;
@@ -90,7 +92,6 @@ export interface ProcessedArea {
     // Overlay
     darkness?: number;
     fog?: string;
-    playerLight?: boolean;
 
     // Dynamic
     quest?: string;

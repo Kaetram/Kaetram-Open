@@ -17,7 +17,9 @@ export default class Light {
         public y: number,
         public colour = 'rgba(0, 0, 0, 0.2)',
         public diffuse = 0.2,
-        public distance = 100
+        public distance = 100,
+        public flickerSpeed = 300, // Use -1 to disable flickering.
+        public flickerIntensity = 1
     ) {}
 
     /**
@@ -27,11 +29,14 @@ export default class Light {
 
     public serialize(): SerializedLight {
         return {
+            instance: `${this.id}`,
             x: this.x,
             y: this.y,
             colour: this.colour,
             diffuse: this.diffuse,
-            distance: 180 // Temporarily hardcoded until distance bug is fixed.
+            distance: this.distance, // Temporarily hardcoded until distance bug is fixed.
+            flickerSpeed: this.flickerSpeed,
+            flickerIntensity: this.flickerIntensity
         };
     }
 }

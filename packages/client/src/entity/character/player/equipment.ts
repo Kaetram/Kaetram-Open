@@ -13,6 +13,8 @@ export default class Equipment {
     // Used for ignoring rendering of the equipment.
     public drawable = false;
 
+    public lamp = false;
+
     public attackStats: Stats = Util.getEmptyStats();
     public defenseStats: Stats = Util.getEmptyStats();
     public bonuses: Bonuses = Util.getEmptyBonuses();
@@ -44,7 +46,8 @@ export default class Equipment {
         defenseStats?: Stats,
         bonuses?: Bonuses,
         attackStyle = Modules.AttackStyle.None,
-        attackStyles: Modules.AttackStyle[] = []
+        attackStyles: Modules.AttackStyle[] = [],
+        lamp = false
     ): void {
         this.key = key;
         this.name = name;
@@ -59,6 +62,8 @@ export default class Equipment {
         // Attack styles are optional parameters for the weapon.
         this.attackStyle = attackStyle;
         this.attackStyles = attackStyles;
+
+        this.lamp = lamp;
     }
 
     /**

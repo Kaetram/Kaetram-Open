@@ -338,7 +338,6 @@ export interface OverlayPacket {
     image?: string;
     colour?: string;
     light?: SerializedLight;
-    playerLight?: boolean;
 }
 
 export type OverlayCallback = (opcode: Opcodes.Overlay, info: OverlayPacket) => void;

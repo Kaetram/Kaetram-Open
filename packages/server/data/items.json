@@ -1039,6 +1039,26 @@
     "projectileName": "terror"
   },
 
+  "lantern": {
+    "type": "weapon",
+    "name": "Lantern",
+    "price": 1000,
+    "lamp": true,
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 1
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "danbo": {
     "type": "skin",
     "name": "Danbo"

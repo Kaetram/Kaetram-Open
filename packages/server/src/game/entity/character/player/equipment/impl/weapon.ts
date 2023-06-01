@@ -48,6 +48,7 @@ export default class Weapon extends Equipment {
         this.poisonous = item.poisonous;
         this.freezing = item.freezing;
         this.burning = item.burning;
+        this.lamp = item.lamp;
         this.projectileName = item.projectileName;
         this.manaCost = item.manaCost;
 
@@ -223,6 +224,7 @@ export default class Weapon extends Equipment {
     /**
      * Override for the superclass where we add the attack styles.
      * @param clientInfo Whether or not to send the client information.
+     * @returns An object containing the equipment data.
      */
 
     public override serialize(clientInfo = false): EquipmentData {
@@ -234,6 +236,8 @@ export default class Weapon extends Equipment {
         if (clientInfo) {
             data.attackRange = this.attackRange;
             data.attackStyles = this.attackStyles;
+            data.archer = this.archer;
+            data.lamp = this.lamp;
         }
 
         return data;

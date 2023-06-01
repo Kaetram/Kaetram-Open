@@ -219,7 +219,8 @@ export default class Player extends Character {
             defenseStats,
             bonuses,
             attackStyle,
-            attackStyles
+            attackStyles,
+            lamp
         } = equipment;
 
         if (!key) return this.unequip(type);
@@ -240,6 +241,9 @@ export default class Player extends Character {
         if (type === Modules.Equipment.Weapon) {
             this.attackRange = attackRange || 1;
             this.setAttackStyle(attackStyle!, attackStyles!);
+
+            // If the weapon is a lamp update the flag.
+            this.equipments[type].lamp = lamp!;
         }
 
         // Disable drawing for the other equipment slots if we're wearing a skin.
@@ -765,6 +769,14 @@ export default class Player extends Character {
 
     public hasWeapon(): boolean {
         return this.equipments[Modules.Equipment.Weapon].exists();
+    }
+
+    /**
+     * @returns Whether or not the weapon slot has a lamp equipped.
+     */
+
+    public hasLamp(): boolean {
+        return this.equipments[Modules.Equipment.Weapon].lamp;
     }
 
     /**

@@ -46,6 +46,7 @@ export interface ItemData {
     poisonous?: boolean;
     freezing?: boolean;
     burning?: boolean;
+    lamp?: boolean;
     movementModifier?: number;
     lumberjacking?: number;
     mining?: number;

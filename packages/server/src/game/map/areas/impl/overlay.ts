@@ -11,7 +11,6 @@ export default class Overlay extends Areas {
         super.load(this.data, (overlayArea: Area, rawData: ProcessedArea) => {
             overlayArea.darkness = rawData.darkness!;
             overlayArea.type = (rawData.type! as OverlayType) || 'none';
-            overlayArea.playerLight = !!rawData.playerLight;
 
             if (rawData.fog) overlayArea.fog = rawData.fog;
         });
