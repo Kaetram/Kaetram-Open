@@ -280,6 +280,9 @@ export default class Connection {
         }
 
         this.game.player.sync();
+
+        // Update the lighting for the player.
+        this.renderer.updatePlayerLight();
     }
 
     /**

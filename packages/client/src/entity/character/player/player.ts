@@ -8,8 +8,9 @@ import Character from '../character';
 
 import { Modules } from '@kaetram/common/network';
 
-import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
 import type Game from '../../../game';
+import type { Light } from '@kaetram/common/types/item';
+import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
 import type { AchievementData } from '@kaetram/common/types/achievement';
 import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { PlayerData } from '@kaetram/common/types/player';
@@ -220,7 +221,7 @@ export default class Player extends Character {
             bonuses,
             attackStyle,
             attackStyles,
-            lamp
+            light
         } = equipment;
 
         if (!key) return this.unequip(type);
@@ -243,7 +244,7 @@ export default class Player extends Character {
             this.setAttackStyle(attackStyle!, attackStyles!);
 
             // If the weapon is a lamp update the flag.
-            this.equipments[type].lamp = lamp!;
+            this.equipments[type].light = light!;
         }
 
         // Disable drawing for the other equipment slots if we're wearing a skin.
@@ -574,6 +575,15 @@ export default class Player extends Character {
     }
 
     /**
+     * Grabs the light object from the weapon.
+     * @returns The light object of the weapon.
+     */
+
+    public getLight(): Light {
+        return this.getWeapon().light;
+    }
+
+    /**
      * Updates the mana of the player.
      * @param mana The current amount of mana.
      * @param maxMana Optional parameter for the max mana.
@@ -769,14 +779,6 @@ export default class Player extends Character {
 
     public hasWeapon(): boolean {
         return this.equipments[Modules.Equipment.Weapon].exists();
-    }
-
-    /**
-     * @returns Whether or not the weapon slot has a lamp equipped.
-     */
-
-    public hasLamp(): boolean {
-        return this.equipments[Modules.Equipment.Weapon].lamp;
     }
 
     /**

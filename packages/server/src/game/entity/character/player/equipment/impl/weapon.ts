@@ -48,7 +48,7 @@ export default class Weapon extends Equipment {
         this.poisonous = item.poisonous;
         this.freezing = item.freezing;
         this.burning = item.burning;
-        this.lamp = item.lamp;
+        this.light = item.light;
         this.projectileName = item.projectileName;
         this.manaCost = item.manaCost;
 
@@ -237,7 +237,7 @@ export default class Weapon extends Equipment {
             data.attackRange = this.attackRange;
             data.attackStyles = this.attackStyles;
             data.archer = this.archer;
-            data.lamp = this.lamp;
+            data.light = this.light;
         }
 
         return data;
