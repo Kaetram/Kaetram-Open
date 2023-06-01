@@ -1,3 +1,5 @@
+import { DEFAULT_ZOOM } from './camera';
+
 import Utils from '../utils/util';
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
@@ -21,6 +23,7 @@ import type { RegionTile } from '@kaetram/common/types/map';
 interface Light extends Lamp {
     originalX: number;
     originalY: number;
+    originalDistance: number;
 
     gridX: number;
     gridY: number;
@@ -193,7 +196,7 @@ export default class Renderer {
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
 
         // Remove the player's light source and re-add it.
-        this.updatePlayerLight();
+        this.resizeLights();
     }
 
     /**
@@ -1036,7 +1039,11 @@ export default class Renderer {
         // Move the light to centre if the player has a lamp, otherwise move it off screen.
         else
             light.position = this.game.player.hasLamp()
-                ? new Vec2(light.originalX, light.originalY)
+                ? new Vec2(
+                      (this.game.player.x - this.camera.x) * this.camera.zoomFactor +
+                          this.actualTileSize / 2,
+                      (this.game.player.y - this.camera.y) * this.camera.zoomFactor
+                  )
                 : new Vec2(-256, -256);
 
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
@@ -1163,6 +1170,7 @@ export default class Renderer {
         // Store the absolute position of the light.
         lighting.light.originalX = lighting.light.position.x;
         lighting.light.originalY = lighting.light.position.y;
+        lighting.light.originalDistance = lighting.light.distance;
 
         // Store whether or not the light is relative and flickers.
         lighting.light.relative = !info.centre;
@@ -1221,36 +1229,16 @@ export default class Renderer {
     }
 
     /**
-     * Called when the window has been resized. We need to re-calculate the player light
-     * position so that it is centred with the new window size.
+     * Goes through every light in the renderer and resizes it relative
+     * to the proportion of the zoom factor versus the default zoom.
      */
 
-    private updatePlayerLight(): void {
-        let outerLighting = this.lightings[this.game.player.instance],
-            innerLighting = this.lightings[`${this.game.player.instance}inner`];
+    private resizeLights(): void {
+        let scale = this.camera.zoomFactor / DEFAULT_ZOOM;
 
-        if (!outerLighting) return;
-
-        let middleX = this.overlay.width / 2 + this.tileSize,
-            middleY = this.overlay.height / 2 + this.tileSize / 2;
-
-        // Store their grid coordinates.
-        outerLighting.light.gridX = middleX / this.tileSize;
-        outerLighting.light.gridY = middleY / this.tileSize;
-        innerLighting.light.gridX = middleX / this.tileSize;
-        innerLighting.light.gridY = middleY / this.tileSize;
-
-        // Store their new original positions.
-        outerLighting.light.originalX = middleX;
-        outerLighting.light.originalY = middleY;
-        innerLighting.light.originalX = middleX + this.tileSize / 2;
-        innerLighting.light.originalY = middleY;
-
-        // Actual position of the light.
-        outerLighting.light.position.x = middleX;
-        outerLighting.light.position.y = middleY;
-        innerLighting.light.position.x = middleX;
-        innerLighting.light.position.y = middleY;
+        this.forEachLighting((lighting: RendererLighting) => {
+            lighting.light.distance = lighting.light.originalDistance * scale;
+        });
     }
 
     /**
