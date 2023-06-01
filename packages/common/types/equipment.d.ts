@@ -1,5 +1,5 @@
 import type { Modules } from '../network';
-import type { Bonuses, Enchantments, Stats } from './item';
+import type { Bonuses, Enchantments, Light, Stats } from './item';
 
 export interface EquipmentData {
     type: Modules.Equipment;
@@ -15,7 +15,7 @@ export interface EquipmentData {
     attackStyle?: Modules.AttackStyle;
     attackStyles?: Modules.AttackStyle[];
     archer?: boolean;
-    lamp?: boolean;
+    light?: Light;
 }
 
 export interface SerializedEquipment {
