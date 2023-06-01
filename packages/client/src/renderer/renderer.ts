@@ -19,14 +19,21 @@ import type { SerializedLight } from '@kaetram/common/types/light';
 import type { RegionTile } from '@kaetram/common/types/map';
 
 interface Light extends Lamp {
-    origX: number;
-    origY: number;
+    originalX: number;
+    originalY: number;
+
     gridX: number;
     gridY: number;
+
+    offset: number;
+
     relative: boolean;
+
+    flickerSpeed: number;
+    flickerIntensity: number;
 }
 
-interface RendererLighting extends Lighting {
+export interface RendererLighting extends Lighting {
     light: Light;
 }
 
@@ -91,7 +98,7 @@ export default class Renderer {
     private renderedFrame: number[] = [];
 
     // Lighting
-    protected lightings: RendererLighting[] = [];
+    protected lightings: { [instance: string]: RendererLighting } = {};
     protected darkMask: DarkMask = new DarkMask({
         lights: [],
         color: 'rgba(0, 0, 0, 0.84)'
@@ -176,14 +183,17 @@ export default class Renderer {
         this.canvasWidth = this.screenWidth * this.camera.zoomFactor;
         this.canvasHeight = this.screenHeight * this.camera.zoomFactor;
 
-        // Update the dark mask sizes
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-
         // Iterate through the canvases and apply the new size.
         this.forEachCanvas((canvas: HTMLCanvasElement) => {
             canvas.width = this.canvasWidth;
             canvas.height = this.canvasHeight;
         });
+
+        // Update the dark mask sizes
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+
+        // Remove the player's light source and re-add it.
+        this.updatePlayerLight();
     }
 
     /**
@@ -341,7 +351,7 @@ export default class Renderer {
         this.overlayContext.globalCompositeOperation = 'lighter';
 
         // Draw each lighting
-        this.forEachLighting((lighting) => this.drawLighting(lighting));
+        this.forEachLighting((lighting: RendererLighting) => this.drawLighting(lighting));
 
         // Essentially makes the overlay be drawn on top of everything.
         this.overlayContext.globalCompositeOperation = 'source-over';
@@ -1006,23 +1016,28 @@ export default class Renderer {
      */
 
     protected drawLighting(lighting: RendererLighting): void {
-        let { light } = lighting,
-            visible = this.camera.isVisible(light.gridX, light.gridY, 4, 8);
+        let { light } = lighting;
 
         /**
          * Relative lights sit in a single position in the world. We use their original position
          * to determine where it should be located relative to the camera.
          */
 
-        if (visible && light.relative) {
-            let lightX = (light.origX - this.camera.x) * this.camera.zoomFactor,
-                lightY = (light.origY - this.camera.y) * this.camera.zoomFactor;
+        if (light.relative) {
+            let visible = this.camera.isVisible(light.gridX, light.gridY, 4, 8);
 
-            light.position = new Vec2(lightX, lightY);
+            if (visible) {
+                let lightX = (light.originalX - this.camera.x) * this.camera.zoomFactor,
+                    lightY = (light.originalY - this.camera.y) * this.camera.zoomFactor;
+
+                light.position = new Vec2(lightX, lightY);
+            } else light.position = new Vec2(-256, -256);
         }
-
-        // When a player steps outside the light's range, we move it off screen.
-        if (!visible && light.relative) light.position = new Vec2(-256, -256);
+        // Move the light to centre if the player has a lamp, otherwise move it off screen.
+        else
+            light.position = this.game.player.hasLamp()
+                ? new Vec2(light.originalX, light.originalY)
+                : new Vec2(-256, -256);
 
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
 
@@ -1123,9 +1138,15 @@ export default class Renderer {
      * Creates a new light element using the provided data about its position, distance
      * and colour. We then add it to our lightings array and draw it on the overlay.
      * @param info Contains information about the light we are adding.
+     * @param relative Whether or not the light stays in a single position in the world.
+     * @param flicker Whether or not the light should flicker.
      */
 
-    public addLight(info: SerializedLight, relative = true): void {
+    public addLight(info: SerializedLight): RendererLighting | undefined {
+        // Prevent adding lighting if it already exists.
+        if (info.instance in this.lightings) return;
+
+        // Create the new lighting object and lamp with the provided data.
         let lighting = new Lighting({
             light: new Lamp(
                 this.getLightData(info.x, info.y, info.distance, info.diffuse, info.colour)
@@ -1136,22 +1157,28 @@ export default class Renderer {
         lighting.light.gridX = info.x;
         lighting.light.gridY = info.y;
 
+        // Store the offset of the light (used for flicker calculations).
+        lighting.light.offset = Utils.randomInt(0, 1000);
+
         // Store the absolute position of the light.
-        lighting.light.origX = lighting.light.position.x;
-        lighting.light.origY = lighting.light.position.y;
+        lighting.light.originalX = lighting.light.position.x;
+        lighting.light.originalY = lighting.light.position.y;
 
-        // Prevent adding lighting if it already exists.
-        if (this.hasLighting(lighting)) return;
+        // Store whether or not the light is relative and flickers.
+        lighting.light.relative = !info.centre;
 
-        lighting.light.relative = relative;
+        lighting.light.flickerSpeed = info.flickerSpeed;
+        lighting.light.flickerIntensity = info.flickerIntensity;
 
-        // Add the lighting to the lighting array and the lamp to dark mask.
-        this.lightings.push(lighting);
+        // Add the lighting to our dictionary and the dark mask dictionary.
+        this.lightings[info.instance] = lighting;
         this.darkMask.lights.push(lighting.light);
 
         // Compute the dark mask.
         this.drawLighting(lighting);
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+
+        return lighting;
     }
 
     /**
@@ -1163,46 +1190,82 @@ export default class Renderer {
      */
 
     public addPlayerLight(): void {
-        this.addLight(
-            {
-                x: this.overlay.width / this.tileSize / 2,
-                y: this.overlay.height / this.tileSize / 2,
-                distance: 180,
-                diffuse: 0.2,
-                colour: 'rgba(0, 0, 0, 0.2)'
-            },
-            false
-        );
+        let x = this.overlay.width / this.tileSize / 2,
+            y = this.overlay.height / this.tileSize / 2;
+
+        // Outer player light.
+        this.addLight({
+            instance: this.game.player.instance,
+            x,
+            y,
+            distance: 180,
+            diffuse: 0.2,
+            colour: 'rgba(204, 204, 0, 0.1)',
+            centre: true,
+            flickerSpeed: 300,
+            flickerIntensity: 2
+        });
+
+        // Inner player light.
+        this.addLight({
+            instance: `${this.game.player.instance}inner`,
+            x,
+            y,
+            distance: 100,
+            diffuse: 0.2,
+            colour: 'rgba(204, 204, 0, 0.2)',
+            centre: true,
+            flickerSpeed: 400,
+            flickerIntensity: 1
+        });
+    }
+
+    /**
+     * Called when the window has been resized. We need to re-calculate the player light
+     * position so that it is centred with the new window size.
+     */
+
+    private updatePlayerLight(): void {
+        let outerLighting = this.lightings[this.game.player.instance],
+            innerLighting = this.lightings[`${this.game.player.instance}inner`];
+
+        if (!outerLighting) return;
+
+        let middleX = this.overlay.width / 2 + this.tileSize,
+            middleY = this.overlay.height / 2 + this.tileSize / 2;
+
+        // Store their grid coordinates.
+        outerLighting.light.gridX = middleX / this.tileSize;
+        outerLighting.light.gridY = middleY / this.tileSize;
+        innerLighting.light.gridX = middleX / this.tileSize;
+        innerLighting.light.gridY = middleY / this.tileSize;
+
+        // Store their new original positions.
+        outerLighting.light.originalX = middleX;
+        outerLighting.light.originalY = middleY;
+        innerLighting.light.originalX = middleX + this.tileSize / 2;
+        innerLighting.light.originalY = middleY;
+
+        // Actual position of the light.
+        outerLighting.light.position.x = middleX;
+        outerLighting.light.position.y = middleY;
+        innerLighting.light.position.x = middleX;
+        innerLighting.light.position.y = middleY;
     }
 
     /**
      * Removes all the lightings and lamps from the renderer and recomputes the dark mask.
+     * We re-add the player light since it gets toggled depending on the player has a torch
+     * or not.
      */
 
     public removeAllLights(): void {
-        this.lightings = [];
+        this.lightings = {};
         this.darkMask.lights = [];
 
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-    }
 
-    /**
-     * Iterates through all the lightings and checks whether any of their
-     * lamps have the same position as the provided one.
-     * @param lighting The lighting to check against.
-     * @returns Whether or not the lighting exists.
-     */
-
-    private hasLighting(lighting: RendererLighting): boolean {
-        for (let { light } of this.lightings)
-            if (
-                lighting.light.gridX === light.gridX &&
-                lighting.light.gridY === light.gridY &&
-                lighting.light.distance === light.distance
-            )
-                return true;
-
-        return false;
+        this.addPlayerLight();
     }
 
     /**
@@ -1522,7 +1585,7 @@ export default class Renderer {
      * @param callback The light currently being iterated.
      */
 
-    private forEachLighting(callback: (lighting: RendererLighting) => void): void {
+    public forEachLighting(callback: (lighting: RendererLighting) => void): void {
         for (let lighting in this.lightings) callback(this.lightings[lighting]);
     }
 

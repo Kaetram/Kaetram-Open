@@ -14,6 +14,8 @@ export interface EquipmentData {
     bonuses?: Bonuses;
     attackStyle?: Modules.AttackStyle;
     attackStyles?: Modules.AttackStyle[];
+    archer?: boolean;
+    lamp?: boolean;
 }
 
 export interface SerializedEquipment {

@@ -17,6 +17,7 @@ export default class Equipment {
     public poisonous = false;
     public freezing = false;
     public burning = false;
+    public lamp = false;
     public movementModifier = -1;
 
     // Stats
@@ -67,6 +68,7 @@ export default class Equipment {
         this.poisonous = false;
         this.freezing = false;
         this.burning = false;
+        this.lamp = false;
         this.movementModifier = -1;
 
         this.attackStats = Utils.getEmptyStats();

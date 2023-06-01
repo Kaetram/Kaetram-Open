@@ -1175,8 +1175,7 @@ export default class Connection {
                 this.overlays.update(info.image);
                 this.renderer.updateDarkMask(info.colour);
 
-                if (info.playerLight) this.renderer.addPlayerLight();
-
+                this.renderer.addPlayerLight();
                 break;
             }
 
@@ -1187,7 +1186,8 @@ export default class Connection {
             }
 
             case Opcodes.Overlay.Lamp: {
-                return this.renderer.addLight(info.light!);
+                this.renderer.addLight(info.light!);
+                return;
             }
         }
     }
