@@ -90,6 +90,7 @@ export interface ProcessedArea {
     // Overlay
     darkness?: number;
     fog?: string;
+    playerLight?: boolean;
 
     // Dynamic
     quest?: string;

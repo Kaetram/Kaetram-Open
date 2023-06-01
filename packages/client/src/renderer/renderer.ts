@@ -18,21 +18,19 @@ import type Player from '../entity/character/player/player';
 import type { SerializedLight } from '@kaetram/common/types/light';
 import type { RegionTile } from '@kaetram/common/types/map';
 
-interface RendererLight {
+interface Light extends Lamp {
     origX: number;
     origY: number;
-    diff: number;
+    gridX: number;
+    gridY: number;
     relative: boolean;
-    computed: boolean;
 }
 
-type RendererLamp = RendererLight & Lamp;
+interface RendererLighting extends Lighting {
+    light: Light;
+}
 
 export type ContextType = '2d' | 'webgl';
-export interface RendererLighting extends RendererLight, Lighting {
-    light: RendererLamp;
-}
-
 export type ContextCallback = (context: CanvasRenderingContext2D) => void;
 
 export default class Renderer {
@@ -325,7 +323,7 @@ export default class Renderer {
     }
 
     /**
-     * Overlays are images drawn on top of the game. They are generally
+     * Overlays are images drawn on top of the game. They aFOvre generally
      * used in conjunction with the lighting system to give a shadow
      * effect or dark room effect. When overlays are present, the light
      * system is enabled.
@@ -343,9 +341,7 @@ export default class Renderer {
         this.overlayContext.globalCompositeOperation = 'lighter';
 
         // Draw each lighting
-        this.forEachLighting((lighting) => {
-            if (this.inRadius(lighting)) this.drawLighting(lighting);
-        });
+        this.forEachLighting((lighting) => this.drawLighting(lighting));
 
         // Essentially makes the overlay be drawn on top of everything.
         this.overlayContext.globalCompositeOperation = 'source-over';
@@ -1003,21 +999,35 @@ export default class Renderer {
         }
     }
 
-    protected drawLighting(lighting: RendererLighting): void {
-        if (lighting.relative) {
-            let lightX =
-                    (lighting.light.origX - this.camera.x / this.tileSize) * this.actualTileSize,
-                lightY =
-                    (lighting.light.origY - this.camera.y / this.tileSize) * this.actualTileSize;
+    /**
+     * Handles drawing a lighting based on the provided lighting object. We essentially
+     * update its position relative to the camera and then compute the lighting.
+     * @param lighting The lighting object that contains the lamp we are drawing.
+     */
 
-            lighting.light.position = new Vec2(lightX, lightY);
-            lighting.compute(this.canvasWidth, this.canvasHeight);
-            this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-        } else if (!lighting.computed) {
-            lighting.compute(this.canvasWidth, this.canvasHeight);
-            lighting.computed = true;
+    protected drawLighting(lighting: RendererLighting): void {
+        let { light } = lighting,
+            visible = this.camera.isVisible(light.gridX, light.gridY, 4, 8);
+
+        /**
+         * Relative lights sit in a single position in the world. We use their original position
+         * to determine where it should be located relative to the camera.
+         */
+
+        if (visible && light.relative) {
+            let lightX = (light.origX - this.camera.x) * this.camera.zoomFactor,
+                lightY = (light.origY - this.camera.y) * this.camera.zoomFactor;
+
+            light.position = new Vec2(lightX, lightY);
         }
 
+        // When a player steps outside the light's range, we move it off screen.
+        if (!visible && light.relative) light.position = new Vec2(-256, -256);
+
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+
+        // Compute and render the lighting onto the overlay canvas.
+        lighting.compute(this.canvasWidth, this.canvasHeight);
         lighting.render(this.overlayContext);
     }
 
@@ -1110,34 +1120,64 @@ export default class Renderer {
     }
 
     /**
-     * Adds a new light to the rendering screen.
+     * Creates a new light element using the provided data about its position, distance
+     * and colour. We then add it to our lightings array and draw it on the overlay.
      * @param info Contains information about the light we are adding.
      */
 
-    public addLight(info: SerializedLight): void {
-        let light = new Lamp(
+    public addLight(info: SerializedLight, relative = true): void {
+        let lighting = new Lighting({
+            light: new Lamp(
                 this.getLightData(info.x, info.y, info.distance, info.diffuse, info.colour)
-            ) as RendererLamp,
-            lighting = new Lighting({
-                light
-                // diffuse: light.diffuse
-            }) as RendererLighting;
+            )
+        }) as RendererLighting;
 
-        light.origX = light.position.x;
-        light.origY = light.position.y;
+        // Store the grid position of the light (used for camera calculations).
+        lighting.light.gridX = info.x;
+        lighting.light.gridY = info.y;
 
-        light.diff = Math.round(light.distance / this.tileSize);
+        // Store the absolute position of the light.
+        lighting.light.origX = lighting.light.position.x;
+        lighting.light.origY = lighting.light.position.y;
 
+        // Prevent adding lighting if it already exists.
         if (this.hasLighting(lighting)) return;
 
-        lighting.relative = true;
+        lighting.light.relative = relative;
 
+        // Add the lighting to the lighting array and the lamp to dark mask.
         this.lightings.push(lighting);
-        this.darkMask.lights.push(light);
+        this.darkMask.lights.push(lighting.light);
 
+        // Compute the dark mask.
         this.drawLighting(lighting);
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
+
+    /**
+     * A player light is a light that is centred on the player (actually it is a light
+     * placed in the middle of the screen). The light follows the player, this is used
+     * for situations where a player has a 'flashlight' or a 'torch'. In order to prevent
+     * cheating and someone turning this off, we also attach some form of damage to the
+     * player if they do not have the torch on.
+     */
+
+    public addPlayerLight(): void {
+        this.addLight(
+            {
+                x: this.overlay.width / this.tileSize / 2,
+                y: this.overlay.height / this.tileSize / 2,
+                distance: 180,
+                diffuse: 0.2,
+                colour: 'rgba(0, 0, 0, 0.2)'
+            },
+            false
+        );
+    }
+
+    /**
+     * Removes all the lightings and lamps from the renderer and recomputes the dark mask.
+     */
 
     public removeAllLights(): void {
         this.lightings = [];
@@ -1146,23 +1186,18 @@ export default class Renderer {
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
 
-    public removeNonRelativeLights(): void {
-        for (let i in this.lightings)
-            if (!this.lightings[i].light.relative) {
-                let index = parseInt(i);
-
-                this.lightings.splice(index, 1);
-                this.darkMask.lights.splice(index, 1);
-            }
-
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-    }
+    /**
+     * Iterates through all the lightings and checks whether any of their
+     * lamps have the same position as the provided one.
+     * @param lighting The lighting to check against.
+     * @returns Whether or not the lighting exists.
+     */
 
     private hasLighting(lighting: RendererLighting): boolean {
         for (let { light } of this.lightings)
             if (
-                lighting.light.origX === light.origX &&
-                lighting.light.origY === light.origY &&
+                lighting.light.gridX === light.gridX &&
+                lighting.light.gridY === light.gridY &&
                 lighting.light.distance === light.distance
             )
                 return true;
@@ -1286,27 +1321,6 @@ export default class Renderer {
     }
 
     /**
-     * Checks whether a light source is in the radius of the camera.
-     * @param lighting The light source we are checking for.
-     * @returns Whether or not the light source is in the camera radius.
-     */
-
-    private inRadius(lighting: RendererLighting): boolean {
-        let position = {
-            x: lighting.light.origX,
-            y: lighting.light.origY,
-            diff: lighting.light.diff
-        };
-
-        return (
-            position.x > this.camera.gridX - position.diff &&
-            position.x < this.camera.gridX + this.camera.gridWidth + position.diff &&
-            position.y > this.camera.gridY - position.diff &&
-            position.y < this.camera.gridY + this.camera.gridHeight + position.diff
-        );
-    }
-
-    /**
      * Checks if the currently request coordinates are that of a cell
      * that was already selected (has the animation onto it). We want
      * to prevent drawing a target cell onto a cell that's being selected.
@@ -1396,7 +1410,10 @@ export default class Renderer {
         color: string
     ): Partial<Lamp> {
         return {
-            position: new Vec2(x, y),
+            position: new Vec2(
+                x * this.tileSize + this.tileSize / 2,
+                y * this.tileSize + this.tileSize / 2
+            ),
             distance,
             diffuse,
             color,

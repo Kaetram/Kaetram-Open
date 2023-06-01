@@ -8,9 +8,10 @@ export default class Overlay extends Areas {
     public constructor(data: ProcessedArea[], world: World) {
         super(data, world);
 
-        super.load(this.data, (overlayArea: Area, rawData) => {
+        super.load(this.data, (overlayArea: Area, rawData: ProcessedArea) => {
             overlayArea.darkness = rawData.darkness!;
             overlayArea.type = (rawData.type! as OverlayType) || 'none';
+            overlayArea.playerLight = !!rawData.playerLight;
 
             if (rawData.fog) overlayArea.fog = rawData.fog;
         });

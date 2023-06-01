@@ -15,7 +15,7 @@ export default class Light {
         public id: number,
         public x: number,
         public y: number,
-        public colour = 'rgba(0, 0, 0, 0.3)',
+        public colour = 'rgba(0, 0, 0, 0.2)',
         public diffuse = 0.2,
         public distance = 100
     ) {}
@@ -31,7 +31,7 @@ export default class Light {
             y: this.y,
             colour: this.colour,
             diffuse: this.diffuse,
-            distance: this.distance
+            distance: 180 // Temporarily hardcoded until distance bug is fixed.
         };
     }
 }

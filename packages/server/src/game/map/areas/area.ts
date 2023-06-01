@@ -22,6 +22,7 @@ export default class Area {
     public type: OverlayType = 'none';
     public fog = '';
     public reason = ''; // Message displayed when player takes damage in the area.
+    public playerLight = false;
 
     // Properties it can hold
     public quest = '';
