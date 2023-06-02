@@ -8,5 +8,5 @@ export interface SerializedLight {
     flickerSpeed: number;
     flickerIntensity: number;
 
-    centre?: boolean;
+    entity?: string;
 }
