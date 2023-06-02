@@ -46,8 +46,7 @@ export default class ProcessMap {
 
             data: [],
 
-            collisionTiles: [],
-            collisionIndexes: [],
+            collisions: [],
 
             entities: {},
 
@@ -195,9 +194,9 @@ export default class ProcessMap {
     private parseProperties(tileId: number, property: Property): void {
         let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { collisionTiles, high, obstructing, objects, cursors } = this.map;
+            { collisions, high, obstructing, objects, cursors } = this.map;
 
-        if (this.isCollisionProperty(name)) collisionTiles.push(tileId);
+        if (this.isCollisionProperty(name)) collisions.push(tileId);
 
         switch (name) {
             case 'v': {
@@ -285,7 +284,6 @@ export default class ProcessMap {
 
         layer.data = this.getLayerData(layer.data, layer.compression)!;
 
-        if (name === 'blocking') return this.parseBlocking(layer);
         if (name === 'entities') return this.parseEntities(layer);
         if (name.startsWith('plateau')) return this.parsePlateau(layer);
 
@@ -324,23 +322,6 @@ export default class ProcessMap {
     }
 
     /**
-     * A blocking tile is a special type of collision that is
-     * added independently of tileIds. It is instead a collision
-     * that is part of the map tile index. In other words, we can
-     * add a collision to a tile in the map despite that tile
-     * not having a collision property.
-     * @param layer The tile layer containing the blocking data.
-     */
-
-    private parseBlocking(layer: Layer): void {
-        for (let index in layer.data) {
-            if (layer.data[index] < 1) continue;
-
-            this.map.collisionIndexes.push(parseInt(index));
-        }
-    }
-
-    /**
      * Static entities are spawned using the entities tileset. Each tile contains
      * a property about what entity to spawn. Whne we detect a tileId corresponding
      * to our tiles from the entities tileset, we associate that tileIndex (position)
@@ -370,7 +351,7 @@ export default class ProcessMap {
 
     private parsePlateau(layer: Layer): void {
         let level = parseInt(layer.name.split('plateau')[1]),
-            { collisionTiles, plateau } = this.map;
+            { collisions, plateau } = this.map;
 
         for (let index in layer.data) {
             let value = layer.data[index];
@@ -378,7 +359,7 @@ export default class ProcessMap {
             if (value < 1) continue;
 
             // We skip collision
-            if (collisionTiles.includes(value)) continue;
+            if (collisions.includes(value)) continue;
 
             plateau[parseInt(index)] = level;
         }
@@ -703,8 +684,7 @@ export default class ProcessMap {
             height,
             tileSize,
             data,
-            collisionTiles,
-            collisionIndexes,
+            collisions,
             areas,
             plateau,
             high,
@@ -723,8 +703,7 @@ export default class ProcessMap {
             height,
             tileSize,
             data,
-            collisionTiles,
-            collisionIndexes,
+            collisions,
             areas,
             plateau,
             high,

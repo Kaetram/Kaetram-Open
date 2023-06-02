@@ -35,8 +35,7 @@ export default class Map {
 
     // Map data and collisions
     public data: (number | number[])[] = map.data;
-    public collisionTiles: number[] = map.collisionTiles || [];
-    public collisionIndexes: number[] = map.collisionIndexes || [];
+    public collisions: number[] = map.collisions || [];
     private entities: { [tileId: number]: string } = map.entities;
 
     public plateau: { [index: number]: number } = map.plateau;
@@ -192,7 +191,7 @@ export default class Map {
         let collision = false;
 
         this.forEachTile(data, (tile: number) => {
-            if (this.collisionTiles.includes(tile)) collision = true;
+            if (this.collisions.includes(tile)) collision = true;
         });
 
         return collision;
@@ -208,9 +207,6 @@ export default class Map {
      */
 
     public isCollisionIndex(index: number): boolean {
-        // Check if we have any forced collision indexes.
-        if (this.collisionIndexes.includes(index)) return true;
-
         let data = this.data[index];
 
         // Empty data means the tile is a collision.

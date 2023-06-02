@@ -151,9 +151,8 @@ export interface ProcessedMap {
 
     data: (number | number[])[];
 
-    // One corresponds to tile ids, one corresponds to an index on the map.
-    collisionTiles: number[];
-    collisionIndexes: number[];
+    // Corresponds to the tile id of the tile that is considered a collision.
+    collisions: number[];
 
     entities: { [tileId: number]: string };
 
