@@ -352,6 +352,8 @@ export default class Connection {
         player.load(data, true);
 
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
+
+        this.renderer.updatePlayerLight(player);
     }
 
     /**
