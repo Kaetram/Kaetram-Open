@@ -1019,7 +1019,8 @@ export default class Renderer {
      */
 
     protected drawLighting(lighting: RendererLighting): void {
-        let { light } = lighting;
+        let { light } = lighting,
+            visible;
 
         /**
          * Relative lights sit in a single position in the world. We use their original position
@@ -1027,7 +1028,7 @@ export default class Renderer {
          */
 
         if (light.relative) {
-            let visible = this.camera.isVisible(light.gridX, light.gridY, 4, 8);
+            visible = this.camera.isVisible(light.gridX, light.gridY, 4, 8);
 
             if (visible) {
                 let lightX = (light.originalX - this.camera.x) * this.camera.zoomFactor,
@@ -1038,7 +1039,7 @@ export default class Renderer {
         }
         // Move the light to centre if the player has a lamp, otherwise move it off screen.
         else
-            light.position = this.game.player.getLight().outer
+            light.position = this.game.player.getLight()
                 ? new Vec2(
                       (this.game.player.x - this.camera.x) * this.camera.zoomFactor +
                           this.actualTileSize / 2,
@@ -1046,11 +1047,8 @@ export default class Renderer {
                   )
                 : new Vec2(-256, -256);
 
+        // Computes the dark mask with all the lights.
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-
-        // Compute and render the lighting onto the overlay canvas.
-        lighting.compute(this.canvasWidth, this.canvasHeight);
-        lighting.render(this.overlayContext);
     }
 
     // -------------- Drawing Methods --------------
@@ -1184,7 +1182,6 @@ export default class Renderer {
 
         // Compute the dark mask.
         this.drawLighting(lighting);
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
 
         return lighting;
     }
