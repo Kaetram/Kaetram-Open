@@ -1258,7 +1258,7 @@ export default class Renderer {
      * to the proportion of the zoom factor versus the default zoom.
      */
 
-    private resizeLights(): void {
+    public resizeLights(): void {
         let scale = this.camera.zoomFactor / DEFAULT_ZOOM;
 
         this.forEachLighting((lighting: RendererLighting) => {

@@ -1181,6 +1181,7 @@ export default class Connection {
                 this.renderer.updateDarkMask(info.colour);
 
                 this.renderer.addPlayerLight();
+                this.renderer.resizeLights();
                 break;
             }
 
