@@ -2141,7 +2141,7 @@ export default class Player extends Character {
         if (this.inTeamWar()) data.displayInfo = this.getDisplayInfo();
 
         // Include equipment only when necessary.
-        if (withEquipment) data.equipments = this.equipment.serialize().equipments;
+        if (withEquipment) data.equipments = this.equipment.serialize(true).equipments;
 
         if (withExperience) data.experience = this.getTotalExperience();
 

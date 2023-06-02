@@ -808,6 +808,17 @@ export default class Player extends Character {
     }
 
     /**
+     * Checks if the current player has a light source equipped.
+     * @returns Whether the light contains an inner or outer light source.
+     */
+
+    public hasLight(): boolean {
+        let light = this.getLight();
+
+        return !!(light?.outer || light?.inner);
+    }
+
+    /**
      * Iterates through the renderable equipments and executes the callback. This function
      * is used by the rendering system to draw the paperdoll equipments.
      * @param callback Contains the equipment currently being iterated.

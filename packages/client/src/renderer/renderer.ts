@@ -17,8 +17,9 @@ import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Item from '../entity/objects/item';
 import type Player from '../entity/character/player/player';
-import type { SerializedLight } from '@kaetram/common/types/light';
+import type { LampData } from '@kaetram/common/types/item';
 import type { RegionTile } from '@kaetram/common/types/map';
+import type { SerializedLight } from '@kaetram/common/types/light';
 
 interface Light extends Lamp {
     originalX: number;
@@ -31,6 +32,7 @@ interface Light extends Lamp {
     offset: number;
 
     relative: boolean;
+    entity?: string;
 
     flickerSpeed: number;
     flickerIntensity: number;
@@ -358,6 +360,8 @@ export default class Renderer {
 
         // Essentially makes the overlay be drawn on top of everything.
         this.overlayContext.globalCompositeOperation = 'source-over';
+
+        this.darkMask.compute(this.overlay.width, this.overlay.height);
         this.darkMask.render(this.overlayContext);
     }
 
@@ -715,9 +719,12 @@ export default class Renderer {
         // Equipment sprite based on the key of the slot.
         let sprite = this.game.sprites.get(equipment.key);
 
-        if (!sprite?.image) return;
+        if (!sprite) return;
 
         if (!sprite.loaded) sprite.load();
+
+        // Do not render until the image is ready.
+        if (!sprite.image) return;
 
         this.drawSprite(player, sprite);
     }
@@ -1013,42 +1020,45 @@ export default class Renderer {
     }
 
     /**
-     * Handles drawing a lighting based on the provided lighting object. We essentially
-     * update its position relative to the camera and then compute the lighting.
+     * Handles drawing the lighting for a given lighting object. We essentially have two
+     * different kinds of lights, entity based and relative ones. By default lights which
+     * do not have an entity are relative to the player. In the case of entity-based ones
+     * they follow the entity they belong to. Otherwise they stay in the same position
+     * on the map (even after moving the camera).
      * @param lighting The lighting object that contains the lamp we are drawing.
      */
 
     protected drawLighting(lighting: RendererLighting): void {
-        let { light } = lighting,
-            visible;
+        let { light } = lighting;
 
-        /**
-         * Relative lights sit in a single position in the world. We use their original position
-         * to determine where it should be located relative to the camera.
-         */
+        // Handle drawing the light where the entity is.
+        if (light.entity) {
+            // Use our own player if the instance of the light's entity matches our own.
+            let isPlayer = light.entity === this.game.player.instance,
+                entity: Player = isPlayer ? this.game.player : this.game.entities.get(light.entity);
 
-        if (light.relative) {
-            visible = this.camera.isVisible(light.gridX, light.gridY, 4, 8);
+            // Hide the light if there is light source from the entity.
+            light.hidden = !entity?.hasLight();
 
-            if (visible) {
-                let lightX = (light.originalX - this.camera.x) * this.camera.zoomFactor,
-                    lightY = (light.originalY - this.camera.y) * this.camera.zoomFactor;
+            if (light.hidden) return;
 
-                light.position = new Vec2(lightX, lightY);
-            } else light.position = new Vec2(-256, -256);
+            // If the entity has a light source and it's not our own player, check its visibility.
+            if (!isPlayer) light.hidden = !this.camera.isVisible(entity.gridX, entity.gridY, 4, 8);
+
+            // Stop here if the light is hidden.
+            if (light.hidden) return;
+
+            light.position = this.getLightPosition(entity.x, entity.y);
+        } else {
+            light.hidden = !this.camera.isVisible(light.gridX, light.gridY, 4, 8);
+
+            if (light.hidden) return;
+
+            let lightX = (light.originalX - this.camera.x) * this.camera.zoomFactor,
+                lightY = (light.originalY - this.camera.y) * this.camera.zoomFactor;
+
+            light.position = new Vec2(lightX, lightY);
         }
-        // Move the light to centre if the player has a lamp, otherwise move it off screen.
-        else
-            light.position = this.game.player.getLight()
-                ? new Vec2(
-                      (this.game.player.x - this.camera.x) * this.camera.zoomFactor +
-                          this.actualTileSize / 2,
-                      (this.game.player.y - this.camera.y) * this.camera.zoomFactor
-                  )
-                : new Vec2(-256, -256);
-
-        // Computes the dark mask with all the lights.
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
 
     // -------------- Drawing Methods --------------
@@ -1170,8 +1180,8 @@ export default class Renderer {
         lighting.light.originalY = lighting.light.position.y;
         lighting.light.originalDistance = lighting.light.distance;
 
-        // Store whether or not the light is relative and flickers.
-        lighting.light.relative = !info.centre;
+        // Whether the light is bound to an entity
+        lighting.light.entity = info.entity;
 
         lighting.light.flickerSpeed = info.flickerSpeed;
         lighting.light.flickerIntensity = info.flickerIntensity;
@@ -1187,56 +1197,38 @@ export default class Renderer {
     }
 
     /**
-     * A player light is a light that is centred on the player (actually it is a light
-     * placed in the middle of the screen). The light follows the player, this is used
-     * for situations where a player has a 'flashlight' or a 'torch'. In order to prevent
-     * cheating and someone turning this off, we also attach some form of damage to the
-     * player if they do not have the torch on.
+     * Adds a light to a player entity in the world. This can be our own player if we
+     * do not specify another object, or it can be another player which has a light source.
+     * @param player The player we want to add a light to, defaults to our own player.
      */
 
-    public addPlayerLight(): void {
-        let light = this.game.player.getLight(),
+    public addPlayerLight(player: Player = this.game.player): void {
+        let light = player.getLight(),
             x = this.overlay.width / this.tileSize / 2,
             y = this.overlay.height / this.tileSize / 2;
 
         // Handle the outer light if it exists.
-        if (light.outer)
-            this.addLight({
-                instance: this.game.player.instance,
-                x,
-                y,
-                distance: light.outer.distance,
-                diffuse: 0.2,
-                colour: light.outer.colour,
-                centre: true,
-                flickerSpeed: light.outer.flickerSpeed,
-                flickerIntensity: light.outer.flickerIntensity
-            });
+        if (light.outer) this.addLight(this.getSerializedLight(player.instance, x, y, light.outer));
 
         // Handle the inner light if it exists.
         if (light.inner)
-            this.addLight({
-                instance: `${this.game.player.instance}inner`,
-                x,
-                y,
-                distance: light.inner.distance,
-                diffuse: 0.2,
-                colour: light.inner.colour,
-                centre: true,
-                flickerSpeed: light.inner.flickerSpeed,
-                flickerIntensity: light.inner.flickerIntensity
-            });
+            this.addLight(this.getSerializedLight(`${player.instance}inner`, x, y, light.inner));
     }
 
     /**
      * Responsible for synchronizing the player lighting with the latest
      * information from the player's light equipment.
+     * @param player The player we want to update the light for, if not specified
+     * then we assume it's our own player.
      */
 
-    public updatePlayerLight(): void {
-        let light = this.game.player.getLight(),
-            outer = this.lightings[this.game.player.instance],
-            inner = this.lightings[`${this.game.player.instance}inner`];
+    public updatePlayerLight(player: Player = this.game.player): void {
+        let light = player.getLight(),
+            outer = this.lightings[player.instance],
+            inner = this.lightings[`${player.instance}inner`];
+
+        // No light exists for the player, so we add it.
+        if (player.hasLight() && (!outer || !inner)) this.addPlayerLight(player);
 
         // Update the outer light if it exists.
         if (outer && light.outer) {
@@ -1405,6 +1397,83 @@ export default class Renderer {
     }
 
     /**
+     * Calculates the light's position on the screen given an entity's position. This
+     * is used when our player character moves or when the light belongs to another entity.
+     * @param x The absolute x position of the entity.
+     * @param y The absolute y position of the entity.
+     * @returns A position object of where the light should be on the screen.
+     */
+
+    private getLightPosition(x: number, y: number): Vec2 {
+        return new Vec2(
+            (x - this.camera.x) * this.camera.zoomFactor + this.actualTileSize / 2,
+            (y - this.camera.y) * this.camera.zoomFactor
+        );
+    }
+
+    /**
+     * Creates a partial lamp object given the specified data.
+     * @param x The x grid position of the light.
+     * @param y The y grid position of the light.
+     * @param distance How far the light can reach.
+     * @param diffuse How much the light can diffuse.
+     * @param color The color of the light.
+     * @returns A partial lamp object.
+     */
+
+    private getLightData(
+        x: number,
+        y: number,
+        distance: number,
+        diffuse: number,
+        color: string
+    ): Partial<Lamp> {
+        return {
+            position: new Vec2(
+                x * this.tileSize + this.tileSize / 2,
+                y * this.tileSize + this.tileSize / 2
+            ),
+            distance,
+            diffuse,
+            color,
+            radius: 0,
+            samples: 2,
+            roughness: 0,
+            angle: 0
+        };
+    }
+
+    /**
+     * Given a lamp data object (generally from a player's weapon), we generate
+     * a serialized light object that can be used to render the light onto the
+     * screen.
+     * @param instance Who this light source belongs to.
+     * @param x The x grid position of the light.
+     * @param y The y grid position of the light.
+     * @param lamp Contains the lamp data from which we generate the light.
+     * @returns A serialized light object.
+     */
+
+    private getSerializedLight(
+        instance: string,
+        x: number,
+        y: number,
+        lamp: LampData
+    ): SerializedLight {
+        return {
+            instance,
+            x,
+            y,
+            distance: lamp.distance,
+            diffuse: 0.2,
+            colour: lamp.colour,
+            entity: instance.includes('inner') ? instance.split('inner')[0] : instance,
+            flickerSpeed: lamp.flickerSpeed,
+            flickerIntensity: lamp.flickerIntensity
+        };
+    }
+
+    /**
      * Checks if the currently request coordinates are that of a cell
      * that was already selected (has the animation onto it). We want
      * to prevent drawing a target cell onto a cell that's being selected.
@@ -1474,38 +1543,6 @@ export default class Renderer {
                 return this.crownTier7;
             }
         }
-    }
-
-    /**
-     * Creates a partial lamp object given the specified data.
-     * @param x The x grid position of the light.
-     * @param y The y grid position of the light.
-     * @param distance How far the light can reach.
-     * @param diffuse How much the light can diffuse.
-     * @param color The color of the light.
-     * @returns A partial lamp object.
-     */
-
-    private getLightData(
-        x: number,
-        y: number,
-        distance: number,
-        diffuse: number,
-        color: string
-    ): Partial<Lamp> {
-        return {
-            position: new Vec2(
-                x * this.tileSize + this.tileSize / 2,
-                y * this.tileSize + this.tileSize / 2
-            ),
-            distance,
-            diffuse,
-            color,
-            radius: 0,
-            samples: 2,
-            roughness: 0,
-            angle: 0
-        };
     }
 
     // -------------- Update functions --------------
