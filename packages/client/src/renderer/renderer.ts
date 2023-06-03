@@ -1059,6 +1059,12 @@ export default class Renderer {
 
             light.position = new Vec2(lightX, lightY);
         }
+
+        // Don't do any fancy lighting if we're in low power mode.
+        if (this.game.isLowPowerMode()) return;
+
+        lighting.compute(this.overlay.width, this.overlay.height);
+        lighting.render(this.overlayContext);
     }
 
     // -------------- Drawing Methods --------------
@@ -1189,9 +1195,6 @@ export default class Renderer {
         // Add the lighting to our dictionary and the dark mask dictionary.
         this.lightings[info.instance] = lighting;
         this.darkMask.lights.push(lighting.light);
-
-        // Compute the dark mask.
-        this.drawLighting(lighting);
 
         return lighting;
     }
