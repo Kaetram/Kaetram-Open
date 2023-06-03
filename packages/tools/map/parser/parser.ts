@@ -9,7 +9,7 @@ import type {
     ProcessedResource,
     ProcessedTileset
 } from '@kaetram/common/types/map';
-import type { Animation, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
+import type { Animation, Layer, LayerObject, MapData, Property, Tileset } from './mapdata';
 
 interface Resources {
     [key: string]: ProcessedResource;
