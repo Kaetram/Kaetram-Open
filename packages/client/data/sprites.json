@@ -7070,5 +7070,8 @@
     { "id": "items/goldring2", "offsetX": 0, "offsetY": 0 },
     { "id": "items/ironboots", "offsetX": 0, "offsetY": 0 },
     { "id": "items/ironring", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/silverring2", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/silverring2", "offsetX": 0, "offsetY": 0 },
+
+    { "id": "items/lantern", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/lantern2", "offsetX": 0, "offsetY": 0 }
 ]
