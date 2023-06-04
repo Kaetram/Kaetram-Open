@@ -448,7 +448,11 @@ export default class Regions {
      */
 
     public sendRegion(player: Player): void {
+        let start = Date.now();
+
         player.send(new MapPacket(this.getRegionData(player)));
+
+        log.debug(`Sent region data to ${player.username} in ${Date.now() - start}ms`);
     }
 
     /**
@@ -515,24 +519,17 @@ export default class Regions {
 
             // Parse and send resource data.
             if (region.hasResources())
-                data[surroundingRegion] = [
-                    ...data[surroundingRegion],
-                    ...this.getRegionResourceData(region, player)
-                ];
+                data[surroundingRegion].push(...this.getRegionResourceData(region, player));
 
             // Parse and send dynamic areas.
             if (region.hasDynamicAreas())
-                data[surroundingRegion] = [
-                    ...data[surroundingRegion],
-                    ...this.getRegionTileData(region, true, player)
-                ];
+                data[surroundingRegion].push(...this.getRegionTileData(region, true, player));
 
             // We skip if the region is loaded and we are not forcing static data.
             if (!player.hasLoadedRegion(surroundingRegion) || force) {
-                data[surroundingRegion] = [
-                    ...data[surroundingRegion],
+                data[surroundingRegion].push(
                     ...(config.regionCache ? region.data : this.getRegionTileData(region))
-                ];
+                );
 
                 player.loadRegion(surroundingRegion);
             }
@@ -594,7 +591,7 @@ export default class Regions {
             if (player.hasLoadedResource(resource)) return;
 
             // Parse resource tiles.
-            tileData = [...tileData, ...this.getResourceData(resource)];
+            tileData.push(...this.getResourceData(resource));
 
             player.loadResource(resource);
         });
