@@ -80,7 +80,7 @@ export default class HUDController {
 
         let { maxHitPoints } = this.hovering as Character;
 
-        this.health.style.width = `${Math.ceil((hitPoints / maxHitPoints) * 100) - 10}%`;
+        this.health.style.width = `${Math.ceil((hitPoints / maxHitPoints) * 100)}%`;
 
         this.details.innerHTML = `${hitPoints} / ${maxHitPoints}`;
     }

@@ -17,8 +17,8 @@ type SelectCallback = (
 ) => void;
 
 export default class Bank extends Menu {
-    private bankList: HTMLUListElement = document.querySelector('#bank-slot > ul')!;
-    private inventoryList: HTMLUListElement = document.querySelector('#bank-inventory-slots > ul')!;
+    private bankList: HTMLUListElement = document.querySelector('#bank-slots')!;
+    private inventoryList: HTMLUListElement = document.querySelector('#bank-inventory-slots')!;
 
     private selectCallback?: SelectCallback;
 
@@ -231,7 +231,7 @@ export default class Bank extends Menu {
      */
 
     private getBankElement(index: number): HTMLElement {
-        return this.bankList.children[index].querySelector('div') as HTMLElement;
+        return this.bankList.children[index] as HTMLElement;
     }
 
     /**
@@ -242,7 +242,7 @@ export default class Bank extends Menu {
      */
 
     private getInventoryElement(index: number): HTMLElement {
-        return this.inventoryList.children[index].querySelector('div') as HTMLElement;
+        return this.inventoryList.children[index] as HTMLElement;
     }
 
     /**

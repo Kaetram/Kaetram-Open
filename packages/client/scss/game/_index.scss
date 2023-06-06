@@ -23,6 +23,8 @@
 @use 'impl/profile';
 @use 'impl/quests';
 @use 'impl/settings';
+@use 'impl/skills';
+@use 'impl/slice';
 @use 'impl/store';
 @use 'impl/trade';
 @use 'impl/zoom';
@@ -31,7 +33,8 @@ body.game {
     background: #000;
 
     label,
-    input[type] {
+    input[type],
+    a {
         cursor: none;
     }
 
@@ -97,13 +100,6 @@ body.game {
         }
     }
 
-    .parchment-middle {
-        width: 0;
-        margin-left: 0;
-        transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out,
-            0.5s background-position ease-in-out;
-    }
-
     #game-container {
         opacity: 1;
     }
@@ -111,25 +107,5 @@ body.game {
     footer {
         display: none;
         color: #8a8a8a;
-    }
-}
-
-@media (--lg) {
-    body.game {
-        .parchment-middle {
-            background-position: -633px -882px;
-        }
-
-        &.credits,
-        &.death,
-        &.news,
-        &.git,
-        &.about {
-            .parchment-middle {
-                width: 1038px;
-                margin-left: -519px;
-                background-position-x: -114px;
-            }
-        }
     }
 }

@@ -1,13 +1,22 @@
 @use '../../abstracts/media';
 
-#settings-page label {
-    display: flex;
-    flex-direction: row;
-    padding: 0.25em 0;
+#settings-page {
+    display: none;
 
-    span,
-    input {
-        flex: 1;
+    label {
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        padding: 0.25em 0;
+
+        span,
+        input {
+            flex: 1;
+        }
+
+        span {
+            font-size: 0.75em;
+        }
     }
 }
 
@@ -20,7 +29,7 @@
 #input-settings,
 #action-settings {
     display: flex;
-    flex-direction: column;
+    flex-flow: column;
     justify-content: space-between;
 }
 
@@ -39,16 +48,11 @@
 #game-info {
     display: flex;
     flex: 1;
-    flex-direction: column;
+    flex-flow: column;
     width: 100%;
-}
 
-@each $size, $i in media.$container-sizes {
-    @media ($size) {
-        #settings-page {
-            width: 240px * $i;
-            height: 116px * $i;
-            font-size: 6px * $i;
-        }
+    strong,
+    span {
+        font-size: 0.75em;
     }
 }
