@@ -108,9 +108,9 @@ export default class Player extends Character {
     public canTalk = true;
     public noclip = false;
     public jailed = false;
+    public invalidateMovement = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
-    public invalidMovement = 0;
     public overrideMovementSpeed = -1;
 
     // Player info
@@ -1044,10 +1044,9 @@ export default class Player extends Character {
      * @param x The player's x coordinate as reported by the client.
      * @param y The player's y coordinate as reported by the client.
      * @param target If the player is requesting movement towards an entity.
-     * @param following Whether or not the player is actively following an entity.
      */
 
-    public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+    public handleMovementRequest(x: number, y: number, target: string): void {
         // Immediately clear the target to prevent combat from sticking to previous target.
         if (target !== this.target?.instance) this.target = undefined;
 
@@ -1058,18 +1057,23 @@ export default class Player extends Character {
         this.canAccessContainer = false;
         this.activeCraftingInterface = -1;
 
-        if (this.map.isDoor(x, y) || (target && following) || this.inCombat()) return;
+        if (this.map.isDoor(x, y) || this.inCombat()) return;
 
         let diffX = Math.abs(this.x - x),
             diffY = Math.abs(this.y - y);
 
-        if (diffX > 1 || diffY > 1) {
-            this.notify(`No-clip detected at ${this.x}(${x}), ${this.y}(${y}).`);
+        // No-clip detection if the difference is greater than 2 tiles.
+        if (diffX > 2 || diffY > 2) {
+            this.notify(`No-clip detected at ${this.x}(${x}), ${this.y}(${y}). Please relog.`);
 
-            this.invalidMovement++;
             this.cheatScore++;
 
             log.bug(`${this.username} has no-clipped from ${this.x}(${x}), ${this.y}(${y}).`);
+
+            this.teleport(this.oldX, this.oldY, false);
+
+            this.invalidateMovement = true;
+            return;
         }
     }
 
@@ -1084,6 +1088,13 @@ export default class Player extends Character {
      */
 
     public handleMovementStarted(x: number, y: number, speed: number, target: string): void {
+        // Stop the movement if the client is reporting a different position.
+        let diffX = Math.abs(this.x - x),
+            diffY = Math.abs(this.y - y);
+
+        // Refuse any movement if the starting point mismatches our player's position by more than 2 tiles.
+        if (diffX > 2 || diffY > 2) return;
+
         this.movementStart = Date.now();
 
         // Invalid movement speed reported by the client.
@@ -1107,8 +1118,6 @@ export default class Player extends Character {
      */
 
     public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
-        if (this.isInvalidMovement()) return;
-
         // Increment cheat score if the player is moving while stunned.
         if (this.isStunned()) {
             this.incrementCheatScore(`[${this.username}] Movement while stunned.`);
@@ -1153,7 +1162,7 @@ export default class Player extends Character {
         }
 
         // Update the player's position.
-        if (!this.isInvalidMovement()) this.setPosition(x, y);
+        this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
         if (this.map.isDoor(x, y)) {
@@ -1458,7 +1467,7 @@ export default class Player extends Character {
      */
 
     public override setPosition(x: number, y: number, forced = false, skip = false): void {
-        if (this.dead || this.verifyCollision(x, y)) return;
+        if (this.dead || this.verifyCollision(x, y) || this.invalidateMovement) return;
 
         // Sets the player's new position.
         super.setPosition(x, y);
@@ -1807,14 +1816,6 @@ export default class Player extends Character {
 
     public isNew(): boolean {
         return Date.now() - this.statistics.creationTime < 60_000;
-    }
-
-    /**
-     * @returns Whether or not the player's invalid movement count is greater than the threshold.
-     */
-
-    private isInvalidMovement(): boolean {
-        return this.invalidMovement >= Modules.Constants.INVALID_MOVEMENT_THRESHOLD;
     }
 
     /**
