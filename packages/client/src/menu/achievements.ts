@@ -7,7 +7,7 @@ import type Task from '../entity/character/player/task';
 
 export default class Achievements extends Menu {
     // List where all the achievement objects are contained.
-    private list: HTMLUListElement = document.querySelector('#achievements-container > ul')!;
+    private list: HTMLUListElement = document.querySelector('#achievements-content > ul')!;
 
     public constructor(private player: Player) {
         super('#achievements', '#close-achievements', '#achievements-button');
@@ -51,15 +51,16 @@ export default class Achievements extends Menu {
 
     private createAchievement(task: Task, key: string): void {
         let element = document.createElement('li'),
+            slot = document.createElement('div'),
             coin = document.createElement('div'),
             title = document.createElement('p'),
             description = document.createElement('p');
 
         // Adds the achievement element styling.
-        element.classList.add('achievement-element');
+        element.classList.add('achievement-element', 'slice-list');
 
-        // Adds the classes for achievement title styling.
-        title.classList.add('stroke');
+        // Adds the classes for the coin and achievement title.
+        slot.classList.add('coin-slot');
         title.classList.add('achievement-title');
 
         // Adds the classes for achievement description.
@@ -74,19 +75,18 @@ export default class Achievements extends Menu {
         title.innerHTML = task.name;
         description.innerHTML = task.description;
 
-        // Add the title and description elements onto the achievement element.
-        element.append(title);
-        element.append(description);
+        // Add the coin to the slot.
+        slot.append(coin);
+
+        // Add the elements to the achievement element.
+        element.append(slot, title, description);
 
         if (task.isFinished()) {
             // Title is displayed as gold if the achievement is completed.
-            title.style.color = '#fcda1d';
+            title.style.color = '#f4b41b';
 
             // Styling for the coin element.
-            coin.classList.add('coin', task.secret ? `coin-${key}` : 'coin-default');
-
-            // Add the coin element.
-            element.prepend(coin);
+            coin.classList.add(task.secret ? `coin-${key}` : 'coin-default');
         } else if (task.isStarted())
             // Create and add the progress to the achievement element.
             element.append(this.createProgress(task));
@@ -104,7 +104,6 @@ export default class Achievements extends Menu {
         let progress = document.createElement('p');
 
         // Add styling to the progress.
-        progress.classList.add('stroke');
         progress.classList.add('achievement-progress');
 
         // Hide the progress if task is not started and we are creating a progress object anyway.

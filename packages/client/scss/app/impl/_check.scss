@@ -1,4 +1,15 @@
-@use '../../abstracts/media';
+@use '../../abstracts/sprite';
+
+@include sprite.sheet(
+    $image: 'characterdialogsheet',
+    $x: 109,
+    $y: 240,
+    $width: 8,
+    $height: 8,
+    $hover: 1,
+    $active: 2,
+    $selectors: '.check .checkmark::before'
+);
 
 .check {
     cursor: pointer;
@@ -7,6 +18,8 @@
     position: relative;
 
     display: flex;
+    gap: 0.5em;
+    align-items: center;
 
     line-height: 1;
     text-align: left;
@@ -19,6 +32,8 @@
 
         width: 100%;
         height: 100%;
+        margin: 0;
+        padding: 0;
 
         opacity: 0;
     }
@@ -31,35 +46,22 @@
             display: block;
         }
     }
-}
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        .check {
-            .checkmark::before {
-                width: 8px * $i;
-                height: 8px * $i;
-                background: url('/img/interface/characterdialogsheet.png') -109px * $i -240px * $i;
-                background-size: calc(width('characterdialogsheet.png') * $i);
-            }
+    &:hover input ~ .checkmark::before,
+    input:focus ~ .checkmark::before {
+        background-position-x: -14.75em;
+    }
 
-            &:hover input ~ .checkmark::before,
-            input:focus ~ .checkmark::before {
-                background-position-x: -118px * $i;
-            }
+    input:active ~ .checkmark::before {
+        background-position-x: -15.875em;
+    }
 
-            input:active ~ .checkmark::before {
-                background-position-x: -127px * $i;
-            }
+    input:checked ~ .checkmark::before {
+        background-position-x: -17em;
+    }
 
-            input:checked ~ .checkmark::before {
-                background-position-x: -136px * $i;
-            }
-
-            &:hover input:checked ~ .checkmark::before,
-            input:focus:checked ~ .checkmark::before {
-                background-position-x: -145px * $i;
-            }
-        }
+    &:hover input:checked ~ .checkmark::before,
+    input:focus:checked ~ .checkmark::before {
+        background-position-x: -18.125em;
     }
 }

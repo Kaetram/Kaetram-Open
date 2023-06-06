@@ -1,0 +1,114 @@
+.slice-menu {
+    position: absolute;
+    inset: 0;
+
+    box-sizing: border-box;
+    margin: auto;
+
+    color: #eee;
+
+    border-image: url('/img/interface/slices/menu.png') 42% fill/ 1em / 0 stretch;
+}
+
+.slice-container {
+    position: absolute;
+    inset: 0;
+
+    box-sizing: border-box;
+    width: 32em;
+    height: 16em;
+    margin: auto;
+    padding: 1em;
+
+    color: #eee;
+
+    border-image: url('/img/interface/slices/container.png') 42% fill/ 1em / 0 stretch;
+}
+
+.slice-inner-container {
+    overflow: auto;
+    box-sizing: border-box;
+    padding: 0.75em;
+    border-image: url('/img/interface/slices/inner-container.png') 34% fill / 2em / 0 stretch;
+}
+
+.slice-list {
+    overflow: auto;
+    box-sizing: border-box;
+    padding: 0.5em;
+    border-image: url('/img/interface/slices/list.png') 48% fill / 1em / 0 stretch;
+
+    // &:hover {
+    //     border-image-source: url('/img/interface/slices/list-hover.png');
+    // }
+}
+
+.slice-list-item {
+    overflow: auto;
+    display: flex;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+    padding: 0.5em;
+
+    border-image: url('/img/interface/slices/list-item.png') 48% fill / 0.5em / 0 stretch;
+
+    &:hover {
+        border-image-source: url('/img/interface/slices/list-item-hover.png');
+    }
+}
+
+.slice-item-slot {
+    overflow: auto;
+    display: flex;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+    padding: 0.25em;
+
+    border-image: url('/img/interface/slices/item-slot.png') 48% fill / 0.5em / 0 stretch;
+}
+
+.slice-button {
+    box-sizing: border-box;
+    padding: 0.5em 1em;
+
+    font-size: 1em;
+    color: #eee;
+    text-align: center;
+
+    background-color: transparent;
+    border-image: url('/img/interface/slices/button.png') 49% fill/ 1em / 0 stretch;
+
+    &:hover {
+        border-image-source: url('/img/interface/slices/button-hover.png');
+    }
+
+    &:active {
+        border-image-source: url('/img/interface/slices/button-active.png');
+    }
+}
+
+.slice-input {
+    overflow: auto;
+    display: flex;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+    padding: 0.625em 0.75em;
+
+    font-size: 0.875em;
+    color: #eee;
+
+    background-color: transparent;
+    border-image: url('/img/interface/slices/input.png') 25% fill / 0.5em / 0 stretch;
+
+    &:focus,
+    &:active {
+        border-image-source: url('/img/interface/slices/input-active.png');
+    }
+
+    &.field-error {
+        border-image-source: url('/img/interface/slices/input-error.png');
+    }
+}

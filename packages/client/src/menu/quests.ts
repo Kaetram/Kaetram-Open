@@ -59,11 +59,11 @@ export default class Quests extends Menu {
 
         if (!nameElement) return;
 
-        nameElement.classList.remove('green', 'yellow');
+        nameElement.classList.remove('text-green', 'text-yellow');
 
         // Update colours of the name relative to its completion
-        if (quest.isFinished()) nameElement.classList.add('green');
-        else if (quest.isStarted()) nameElement.classList.add('yellow');
+        if (quest.isFinished()) nameElement.classList.add('text-green');
+        else if (quest.isStarted()) nameElement.classList.add('text-yellow');
     }
 
     /**
@@ -76,17 +76,14 @@ export default class Quests extends Menu {
             name = document.createElement('p');
 
         // Add the slot class to the element.
-        element.classList.add('container-slot');
-
-        // Add styling to the friend name element.
-        name.classList.add('stroke');
+        element.classList.add('slice-list-item');
 
         // Set the quest name.
         name.innerHTML = quest.name;
 
         // Update colours of the name relative to its completion
-        if (quest.isFinished()) name.classList.add('green');
-        else if (quest.isStarted()) name.classList.add('yellow');
+        if (quest.isFinished()) name.classList.add('text-green');
+        else if (quest.isStarted()) name.classList.add('text-yellow');
 
         // Add the name element to the element.
         element.append(name);
@@ -115,7 +112,7 @@ export default class Quests extends Menu {
             Object.keys(quest.skillRequirements).length === 0 &&
             quest.questRequirements.length === 0
         ) {
-            this.requirements.innerHTML = 'None C:';
+            this.requirements.innerHTML = 'None';
             return;
         }
 
