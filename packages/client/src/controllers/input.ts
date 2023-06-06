@@ -3,8 +3,8 @@ import HUDController from './hud';
 
 import Animation from '../entity/animation';
 import log from '../lib/log';
-import { isMobile } from '../utils/detect';
 import Character from '../entity/character/character';
+import { isMobile } from '../utils/detect';
 
 import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
