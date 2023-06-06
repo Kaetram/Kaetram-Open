@@ -26,6 +26,9 @@ interface Light extends Lamp {
     originalY: number;
     originalDistance: number;
 
+    scaledDistance: number;
+    scaledFlickerIntensity: number;
+
     gridX: number;
     gridY: number;
 
@@ -193,9 +196,6 @@ export default class Renderer {
             canvas.width = this.canvasWidth;
             canvas.height = this.canvasHeight;
         });
-
-        // Update the dark mask sizes
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
 
         // Remove the player's light source and re-add it.
         this.resizeLights();
@@ -1152,7 +1152,6 @@ export default class Renderer {
 
     public updateDarkMask(color = 'rgba(0, 0, 0, 0.5)'): void {
         this.darkMask.color = color;
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
 
     /**
@@ -1266,6 +1265,12 @@ export default class Renderer {
 
         this.forEachLighting((lighting: RendererLighting) => {
             lighting.light.distance = lighting.light.originalDistance * scale;
+
+            // Store the scaled distance as a reference.
+            lighting.light.scaledDistance = lighting.light.distance;
+
+            // Store the scaled flicker intensity as a reference for calculating scaled flicker.
+            lighting.light.scaledFlickerIntensity = lighting.light.flickerIntensity * scale;
         });
     }
 
@@ -1278,8 +1283,6 @@ export default class Renderer {
     public removeAllLights(): void {
         this.lightings = {};
         this.darkMask.lights = [];
-
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
 
         this.addPlayerLight();
     }
