@@ -1,4 +1,22 @@
+@use 'sass:math';
+
+@use '../abstracts/media';
+
 @use 'impl/reset';
 @use 'impl/fonts';
 @use 'impl/animations';
 @use 'impl/utils';
+
+body,
+button,
+input {
+    font-family: AdvoCut, arial, sans-serif;
+}
+
+@each $size, $scale in media.$sizes {
+    @media ($size) {
+        body {
+            font-size: 1em * $scale;
+        }
+    }
+}

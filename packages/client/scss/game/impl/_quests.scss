@@ -1,5 +1,9 @@
 @use '../../abstracts/media';
 
+#quests {
+    display: none;
+}
+
 #quests-container {
     display: flex;
     gap: 0.5em;
@@ -11,7 +15,16 @@
 
     ul {
         overflow: auto;
+        display: flex;
+        flex-flow: column;
+        gap: 0.25em;
+
         height: 100%;
+        padding-right: 0.25em;
+
+        li {
+            flex-shrink: 0;
+        }
     }
 }
 
@@ -22,14 +35,13 @@
 #quests-logs-container {
     overflow: auto;
     height: 100%;
-}
 
-.quests-logs-h1 {
-    font-size: 150%;
-    color: white;
-    text-align: left;
-}
+    h1 {
+        font-size: 1em;
+    }
 
-.quests-logs-p {
-    color: white;
+    p {
+        margin: 0.25em;
+        font-size: 0.75em;
+    }
 }

@@ -1,26 +1,35 @@
 @use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
 #action-container {
     position: absolute;
+    right: 13em;
+    bottom: 5em;
+
     display: none;
-    padding: 1.5em 0.5em 1em 1em;
-    border-image-width: 16px 0 16px 16px;
 
-    ul {
-        display: flex;
-        justify-content: space-around;
-    }
-}
+    width: 8em;
+    height: 10em;
+    padding-right: 0;
 
-.action-item-description {
-    flex: 1;
+    border-image-width: 1em 0 1em 1em;
 }
 
 #action-page {
     display: flex;
-    flex-direction: column;
+    flex-flow: column;
     height: 100%;
-    font-family: AdvoCut, sans-serif;
+
+    ul {
+        display: flex;
+        justify-content: space-evenly;
+    }
+}
+
+.action-item-description {
+    overflow: auto;
+    flex: 1;
+    font-size: 0.6875em;
 }
 
 .action-item-name {
@@ -32,104 +41,43 @@
     color: #fff;
 }
 
-@each $size, $i in media.$dialog-sizes {
-    @media ($size) {
-        #action-container {
-            right: 101px * $i;
-            bottom: 34px * $i;
-            width: 64px * $i;
-            height: 89px * $i;
-        }
-
-        .action-wield,
-        .action-equip,
-        .action-attack {
-            background: url('/img/interface/main.png') -112px * $i -16px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-drop-one {
-            background: url('/img/interface/main.png') -112px * $i -32px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-drop-many {
-            background: url('/img/interface/main.png') -112px * $i -48px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-eat {
-            background: url('/img/interface/main.png') -112px * $i -64px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-eat2 {
-            background: url('/img/interface/main.png') -112px * $i -80px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-trade {
-            background: url('/img/interface/main.png') -112px * $i -96px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-potion {
-            background: url('/img/interface/main.png') -112px * $i -112px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-follow {
-            background: url('/img/interface/main.png') -112px * $i -128px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-examine {
-            background: url('/img/interface/main.png') -112px * $i -144px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-addfriend {
-            background: url('/img/interface/main.png') -112px * $i -160px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-button {
-            width: 16px * $i;
-            height: 16px * $i;
-
-            &:hover {
-                background-position-x: -144px * $i;
-            }
-
-            &:active {
-                background-position-x: -128px * $i;
-            }
-        }
-
-        .action-item-name {
-            font-size: 6px * $i;
-        }
-
-        .action-item-description {
-            font-size: 4px * $i;
-        }
-
-        #action-description-attack {
-            left: 4px * $i;
-        }
-
-        #action-description-defense {
-            right: 0;
-        }
-
-        #action-description-bonuses {
-            bottom: 22px * $i;
-            left: 4px * $i;
-        }
-
-        #action-description-enchantments {
-            right: 0;
-            bottom: 22px * $i;
-        }
-    }
+#action-description-attack {
+    left: 0.25em;
 }
+
+#action-description-defense {
+    right: 0;
+}
+
+#action-description-bonuses {
+    bottom: 1.375em;
+    left: 0.25em;
+}
+
+#action-description-enchantments {
+    right: 0;
+    bottom: 1.375em;
+}
+
+@include sprite.sheet(
+    $image: 'main',
+    $x: 63,
+    $width: 16,
+    $height: 16,
+    $hover: 2,
+    $active: 1,
+    $selectors: (
+        '.action-button',
+        '.action-attack',
+        '.action-equip',
+        '.action-drop-one',
+        '.action-drop-many',
+        '.action-eat',
+        '.action-interact',
+        '.action-trade',
+        '.action-potion',
+        '.action-follow',
+        '.action-examine',
+        '.action-addfriend'
+    )
+);

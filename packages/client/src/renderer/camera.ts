@@ -2,12 +2,9 @@ import { Modules } from '@kaetram/common/network';
 
 import type Character from '../entity/character/character';
 
-const MAXIMUM_ZOOM = 6,
-    DEFAULT_ZOOM = 3,
+const DEFAULT_ZOOM = 3,
     MAX_GRID_WIDTH = 52,
     MAX_GRID_HEIGHT = 28;
-
-let MINIMUM_ZOOM = 2.6;
 
 export default class Camera {
     // Border is used to determine the screen size of the website (not browser).
@@ -38,6 +35,10 @@ export default class Camera {
     // Whether to bound the camera horizontally or vertically.
     public lockX = false;
     public lockY = false;
+
+    // The maximum and minimum zoom factors.
+    public maxZoom = 6;
+    public minZoom = 2.6;
 
     public constructor(private width: number, private height: number, private tileSize: number) {
         this.update();
@@ -106,7 +107,7 @@ export default class Camera {
 
     /**
      * Sets the zoom factor of the camera and clamps the limits.
-     * @param zoom The new zoom factor, defaults to DEFAULT_ZOOM value.
+     * @param zoom The new zoom factor, defaults to {@linkcode DEFAULT_ZOOM} value.
      */
 
     public setZoom(zoom = DEFAULT_ZOOM): void {
@@ -114,8 +115,8 @@ export default class Camera {
 
         if (isNaN(this.zoomFactor)) this.zoomFactor = DEFAULT_ZOOM;
 
-        if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
-        if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
+        if (this.zoomFactor > this.maxZoom) this.zoomFactor = this.maxZoom;
+        if (this.zoomFactor < this.minZoom) this.zoomFactor = this.minZoom;
     }
 
     /**
@@ -296,7 +297,7 @@ export default class Camera {
 
     public updateMinimumZoom(mobile = false): void {
         // Update the minimum zoom.
-        MINIMUM_ZOOM = mobile ? 2 : 2.6;
+        this.minZoom = mobile ? 2 : 2.6;
 
         this.zoom();
     }
