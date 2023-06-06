@@ -90,34 +90,36 @@ export default {
         // Bank item counts are a different colour.
         if (type === Modules.ContainerType.Bank) count.classList.add('bank-item-count');
 
-        // Appends image and count onto the bank slot.
+        // Appends the image to the slot.
         slot.append(image);
-        slot.append(count);
 
         if (primaryCallback) slot.addEventListener('click', () => primaryCallback(type, index));
         if (secondaryCallback) onSecondaryPress(slot, () => secondaryCallback(type, index));
 
-        // Appends the bank slot onto the list element.
-        listElement.append(slot);
+        // Appends the slot and count to the list element.
+        listElement.append(slot, count);
 
         return listElement;
     },
 
     /**
      * Converts an item's key into an image URL for the client.
-     * @param key The item's key, defaults to empty string.
+     * @param itemKey The item's key, defaults to empty string.
+     * @param defaultSprite The default sprite to use if the item key is empty.
      * @returns The CSS image URL format for the item's key.
      */
 
-    getImageURL(key = ''): string {
-        if (key === '') return '';
+    getImageURL(itemKey = '', defaultSprite = ''): string {
+        if (itemKey) {
+            let blocks = itemKey.split('/');
 
-        let blocks = key.split('/');
+            // Use the last block as the key if we are extracting a key path.
+            if (blocks.length > 1) itemKey = blocks[blocks.length - 1];
 
-        // Use the last block as the key if we are extracting a key path.
-        if (blocks.length > 1) key = blocks[blocks.length - 1];
+            return `url("/img/sprites/items/${itemKey}.png")`;
+        } else if (defaultSprite) return `url("/img/sprites/${defaultSprite}.png")`;
 
-        return `url("/img/sprites/items/${key}.png")`;
+        return '';
     },
 
     /**
@@ -172,19 +174,14 @@ export default {
 
     getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container | undefined {
         switch (menuAction) {
-            case Modules.MenuActions.Wield:
             case Modules.MenuActions.Equip:
             case Modules.MenuActions.Eat:
-            case Modules.MenuActions.Eat2: {
+            case Modules.MenuActions.Potion: {
                 return Opcodes.Container.Select;
             }
 
             case Modules.MenuActions.DropOne: {
                 return Opcodes.Container.Remove;
-            }
-
-            case Modules.MenuActions.Move: {
-                return Opcodes.Container.Swap;
             }
         }
     },
