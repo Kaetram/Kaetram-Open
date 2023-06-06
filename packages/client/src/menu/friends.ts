@@ -148,7 +148,10 @@ export default class Friends extends Menu {
         this.popupActive = true;
         this.removeActive = remove;
 
-        this.input.placeholder = remove ? 'Enter name to remove...' : 'Enter name to add...';
+        let text = remove ? 'Friend to remove' : 'Friend to add';
+
+        this.input.title = text;
+        this.input.placeholder = text;
 
         Util.fadeIn(this.popup);
 
@@ -181,16 +184,12 @@ export default class Friends extends Menu {
             world = document.createElement('p');
 
         // Add styling to the friend slot element.
-        element.classList.add('container-slot');
-
-        // Add styling to the friend name element.
-        name.classList.add('stroke', 'left');
-
-        // Add styling to the world element.
-        world.classList.add('stroke', 'right');
+        element.classList.add('slice-list-item');
 
         // If the friend is online, add the online class (makes the username green).
-        if (online) world.classList.add(this.player.serverId === serverId ? 'green' : 'yellow');
+        if (online)
+            world.classList.add(this.player.serverId === serverId ? 'text-green' : 'text-yellow');
+        else world.classList.add('text-red');
 
         // Store the username of the friend in the element.
         element.username = username.toLowerCase();
@@ -252,10 +251,10 @@ export default class Friends extends Menu {
 
         // If the friend is online, add the online class (makes the username green).
         if (online) {
-            world.classList.add(this.player.serverId === serverId ? 'green' : 'yellow');
+            world.classList.add(this.player.serverId === serverId ? 'text-green' : 'text-yellow');
             world.innerHTML = `World ${friend.serverId}`;
         } else {
-            world.classList.remove('green', 'yellow');
+            world.classList.remove('text-green', 'text-yellow');
             world.innerHTML = 'Offline';
         }
     }

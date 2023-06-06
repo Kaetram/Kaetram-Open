@@ -21,10 +21,10 @@ interface ResultInfo {
 
 export default class Leaderboards extends Menu {
     // Where we show all the possible leaderboards
-    private searchList: HTMLUListElement = document.querySelector('#leaderboards-search')!;
+    private searchList: HTMLUListElement = document.querySelector('#leaderboards-search > ul')!;
 
     // Where we display the results from the selected list
-    private resultsList: HTMLUListElement = document.querySelector('#leaderboards-results')!;
+    private resultsList: HTMLUListElement = document.querySelector('#leaderboards-results > ul')!;
 
     // The search input
     private search: HTMLInputElement = document.querySelector('#leaderboards-search-input')!;
@@ -171,7 +171,7 @@ export default class Leaderboards extends Menu {
             name = document.createElement('p');
 
         // Add the slot class to the element.
-        element.classList.add('container-slot');
+        element.classList.add('slice-list-item');
 
         // Add styling to the friend name element.
         name.classList.add('stroke', 'white');
@@ -201,13 +201,13 @@ export default class Leaderboards extends Menu {
             info = document.createElement('p');
 
         // Add the slot class to the element.
-        element.classList.add('container-slot-large');
+        element.classList.add('slice-list-item');
 
         // Bind the username to the left of the container
-        name.classList.add('stroke', result.cheater ? 'red' : 'white', 'left');
+        if (result.cheater) name.classList.add('text-red');
 
         // Bind the description to the right of the container
-        info.classList.add('stroke', result.cheater ? 'red' : 'white', 'right');
+        if (result.cheater) info.classList.add('text-red');
 
         // Set the name of the element.
         name.innerHTML = result._id;

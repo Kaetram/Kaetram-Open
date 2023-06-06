@@ -312,11 +312,11 @@ export default class Item extends Entity {
             }
 
             case 'legs': {
-                return Modules.Equipment.Legs;
+                return Modules.Equipment.Legplate;
             }
 
             case 'skin': {
-                return Modules.Equipment.Skin;
+                return Modules.Equipment.ArmourSkin;
             }
 
             case 'weapon':

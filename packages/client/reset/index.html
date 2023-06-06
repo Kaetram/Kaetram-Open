@@ -27,7 +27,7 @@
 
         <!-- Icon -->
         <link rel="shortcut icon" href="/favicon.ico" />
- 
+
         <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32x32.png" />
         <link
@@ -180,7 +180,7 @@
 
         <title>Kaetram</title>
 
-        <script type="module" src="./reset.ts"></script>
+        <script type="module" src="./main.ts"></script>
     </head>
     <body class="intro">
         <noscript>
@@ -188,97 +188,48 @@
         </noscript>
 
         <div id="intro">
-            <!-- <h1 id="logo"></h1> -->
+            <section id="parchment" class="slice-menu">
+                <article id="reset-password">
+                    <h1 class="title-decoration">Reset Password</h1>
 
-            <section id="parchment" class="load-character">
-                <div class="parchment-left"></div>
+                    <form onsubmit="return false">
+                        <input
+                            type="password"
+                            id="password-input"
+                            class="stroke slice-input"
+                            name="player-password"
+                            placeholder="Password"
+                            aria-label="Password"
+                            maxlength="64"
+                            autocomplete="off"
+                        />
+                        <input
+                            type="password"
+                            id="password-confirm-input"
+                            class="stroke slice-input"
+                            name="player-password"
+                            placeholder="Confirm Password"
+                            aria-label="Password"
+                            maxlength="64"
+                            autocomplete="off"
+                        />
 
-                <div class="parchment-middle">
-                    <article id="load-character">
-                        <h1>
-                            <span class="left-ornament"></span>
-                            Reset Password
-                            <span class="right-ornament"></span>
-                        </h1>
+                        <div class="validation-summary"></div>
 
-                        <form onsubmit="return false">
-                            <input
-                                type="password"
-                                id="password-input"
-                                class="stroke"
-                                name="player-password"
-                                placeholder="Password"
-                                aria-label="Password"
-                                maxlength="64"
-                                autocomplete="off"
-                            />
-                            <input
-                                type="password"
-                                id="password-confirm-input"
-                                class="stroke"
-                                name="player-password"
-                                placeholder="Confirm Password"
-                                aria-label="Password"
-                                maxlength="64"
-                                autocomplete="off"
-                            />
-
+                        <div>
                             <button
                                 title="Accept Reset"
                                 aria-label="Accept Reset"
                                 type="button"
                                 id="confirm-reset"
-                            ></button>
-
-                            <div style="width: 100%" class="validation-summary"></div>
-                        </form>
-                    </article>
-
-                    <div class="loader" hidden>
-                        Connecting<span class="loader-dot">.</span><span class="loader-dot">.</span
-                        ><span class="loader-dot">.</span>
-                    </div>
-                </div>
-
-                <div class="parchment-right"></div>
+                                class="stroke slice-button"
+                            >
+                                ACCEPT
+                            </button>
+                        </div>
+                    </form>
+                </article>
             </section>
-
-            <footer>
-                <div id="about-link" class="clickable">
-                    <span id="toggle-about">About</span>
-                </div>
-                <span>&ndash;</span>
-                <div id="credits-link" class="clickable">
-                    <span id="toggle-credits">Credits</span>
-                </div>
-                <span>&ndash;</span>
-                <div id="discord-link" class="clickable">
-                    <a class="footer-button" target="_blank" href="https://discord.gg/MmbGAaw">
-                        <span>Discord</span>
-                    </a>
-                </div>
-                <span>&ndash;</span>
-                <div class="clickable">
-                    <a
-                        class="footer-button"
-                        target="_blank"
-                        href="https://www.patreon.com/bePatron?u=29287394"
-                    >
-                        <span>Patreon</span>
-                    </a>
-                </div>
-                <span>&ndash;</span>
-                <div id="privacy" class="clickable">
-                    <a class="footer-button" href="/privacy">
-                        <span>Privacy</span>
-                    </a>
-                </div>
-                <span>&ndash;</span>
-                <div id="reset" disabled class="clickable">
-                    <span id="toggle-reset-password"></span>
-                </div>
-            </footer>
         </div>
-
     </body>
 </html>

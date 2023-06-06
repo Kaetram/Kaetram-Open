@@ -3,18 +3,10 @@
 #interact {
     position: absolute;
     display: none;
+    width: 8em;
 
     ul {
         display: flex;
-        justify-content: space-around;
-    }
-}
-
-@each $size, $i in media.$dialog-sizes {
-    @media ($size) {
-        #interact {
-            width: 64px * $i;
-            height: 30px * $i;
-        }
+        justify-content: space-evenly;
     }
 }

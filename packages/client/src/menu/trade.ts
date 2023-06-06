@@ -45,7 +45,7 @@ export default class Trade extends Menu {
     private closeCallback?: () => void;
 
     public constructor(private inventory: Inventory) {
-        super('#trade-container', undefined, '#close-trade');
+        super('#trade', '#close-trade');
 
         this.load();
 
@@ -301,7 +301,7 @@ export default class Trade extends Menu {
      */
 
     private getElement(index: number): HTMLElement {
-        return this.inventoryList.children[index].querySelector('div') as HTMLElement;
+        return this.inventoryList.children[index] as HTMLElement;
     }
 
     /**
