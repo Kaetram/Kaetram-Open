@@ -38,7 +38,7 @@
         "stylelint-config-prettier": "^9.0.4",
         "stylelint-config-standard-scss": "^6.1.0",
         "typescript": "^5.0.2",
-        "vite": "^4.1.1",
+        "vite": "^4.1.5",
         "vite-plugin-glsl": "^1.1.2",
         "vite-plugin-minify": "^1.5.2",
         "vite-plugin-pwa": "^0.14.1",
