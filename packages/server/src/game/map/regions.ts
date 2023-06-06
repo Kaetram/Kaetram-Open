@@ -487,11 +487,9 @@ export default class Regions {
      */
 
     public getRegion(x: number, y: number): number {
-        let region = this.regions.findIndex((region: Region) => {
+        return this.regions.findIndex((region: Region) => {
             return region.inRegion(x, y);
         });
-
-        return region;
     }
 
     /**

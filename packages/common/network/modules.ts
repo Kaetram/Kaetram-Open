@@ -585,7 +585,7 @@ export const Constants = {
     EFFECT_RATE: 10_000, // effects every 10 seconds
     STORE_UPDATE_FREQUENCY: 20_000, // update store every 20 seconds
     MAP_DIVISION_SIZE: 48, // The size of a region the map is split into.
-    SPAWN_POINT: '405,27', // Default starting point outside the tutorial
+    SPAWN_POINT: '231,796', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY: 'tutorial', // key of the tutorial quest
     TUTORIAL_SPAWN_POINT: '579,7', // 'x,y' values
     RESOURCE_RESPAWN: 30_000,
@@ -595,7 +595,6 @@ export const Constants = {
     MAX_ACCURACY: 0.45, // Maximum attainable accuracy for a character.
     EDIBLE_COOLDOWN: 1500, // 1.5 seconds between eating foods to prevent spam.
     CRAFT_COOLDOWN: 1500, // 1.5 seconds between crafting items to prevent spam.
-    INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
     ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
     EXPERIENCE_PER_HIT: 2, // Amount of experience received per 1 damage dealt.
