@@ -1,13 +1,15 @@
 import Helmet from './equipment/impl/helmet';
-import Chestplate from './equipment/impl/chestplate';
-import Legs from './equipment/impl/legs';
-import Skin from './equipment/impl/skin';
-import Boots from './equipment/impl/boots';
 import Pendant from './equipment/impl/pendant';
-import Ring from './equipment/impl/ring';
-import Weapon from './equipment/impl/weapon';
-import WeaponSkin from './equipment/impl/weaponskin';
 import Arrows from './equipment/impl/arrows';
+import Chestplate from './equipment/impl/chestplate';
+import Weapon from './equipment/impl/weapon';
+import Shield from './equipment/impl/shield';
+import Ring from './equipment/impl/ring';
+import ArmourSkin from './equipment/impl/armourskin';
+import WeaponSkin from './equipment/impl/weaponskin';
+import Legplate from './equipment/impl/legplate';
+import Cape from './equipment/impl/cape';
+import Boots from './equipment/impl/boots';
 
 import Item from '../../objects/item';
 
@@ -22,29 +24,33 @@ import type Player from './player';
 
 export default class Equipments {
     private helmet: Helmet = new Helmet();
-    private chestplate: Chestplate = new Chestplate();
-    private legs: Legs = new Legs();
-    private armourSkin: Skin = new Skin();
-    private boots: Boots = new Boots();
     private pendant: Pendant = new Pendant();
-    private ring: Ring = new Ring();
-    private weapon: Weapon = new Weapon();
-    private weaponSkin: WeaponSkin = new WeaponSkin();
     private arrows: Arrows = new Arrows();
+    private chestplate: Chestplate = new Chestplate();
+    private weapon: Weapon = new Weapon();
+    private shield: Shield = new Shield();
+    private ring: Ring = new Ring();
+    private armourSkin: ArmourSkin = new ArmourSkin();
+    private weaponSkin: WeaponSkin = new WeaponSkin();
+    private legplate: Legplate = new Legplate();
+    private cape: Cape = new Cape();
+    private boots: Boots = new Boots();
 
     // Store all equipments for parsing.
     // Make sure these are in the order of the enum.
     private equipments: Equipment[] = [
         this.helmet,
-        this.chestplate,
-        this.legs,
-        this.armourSkin,
-        this.boots,
         this.pendant,
-        this.ring,
         this.arrows,
+        this.chestplate,
         this.weapon,
-        this.weaponSkin
+        this.shield,
+        this.ring,
+        this.armourSkin,
+        this.weaponSkin,
+        this.legplate,
+        this.cape,
+        this.boots
     ];
 
     public totalAttackStats: Stats = Utils.getEmptyStats();
@@ -261,8 +267,8 @@ export default class Equipments {
      * @returns Legs equipment object.
      */
 
-    public getLegs(): Legs {
-        return this.get(Modules.Equipment.Legs) as Legs;
+    public getLegs(): Legplate {
+        return this.get(Modules.Equipment.Legplate) as Legplate;
     }
 
     /**
@@ -270,8 +276,8 @@ export default class Equipments {
      * @returns The armour skin equipment type.
      */
 
-    public getSkin(): Skin {
-        return this.get(Modules.Equipment.Skin) as Skin;
+    public getSkin(): ArmourSkin {
+        return this.get(Modules.Equipment.ArmourSkin) as ArmourSkin;
     }
 
     /**
