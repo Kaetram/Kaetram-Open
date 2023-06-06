@@ -3839,11 +3839,12 @@ __metadata:
     dotenv-parse-variables: "npm:^2.0.0"
     gl-tiled: "npm:^1.0.0"
     illuminated: "npm:^1.3.7"
+    image-size: "npm:^1.0.2"
     internal-ip: "npm:^7.0.0"
     pako: "npm:^2.1.0"
     postcss: "npm:^8.4.23"
-    postcss-assets: "npm:^6.0.0"
     postcss-custom-media: "npm:^9.1.3"
+    postcss-fontpie: "npm:^1.0.1"
     postcss-preset-env: "npm:^8.4.1"
     sass: "npm:^1.62.1"
     sirv-cli: "npm:^2.0.2"
@@ -3852,6 +3853,7 @@ __metadata:
     stylelint-config-clean-order: "npm:^5.0.1"
     stylelint-config-prettier: "npm:^9.0.5"
     stylelint-config-standard-scss: "npm:^9.0.0"
+    stylelint-rem-over-px: "npm:^1.0.0"
     typescript: "npm:^5.0.4"
     vite: "npm:^4.3.8"
     vite-plugin-glsl: "npm:^1.1.2"
@@ -4288,6 +4290,15 @@ __metadata:
     magic-string: "npm:^0.25.0"
     string.prototype.matchall: "npm:^4.0.6"
   checksum: d7d5dc8e2877694e31f652cc4dc581ba67e80a17610cfbbcc14b6c91414a2c1b5ff1bbec18d0657ab93f4cdae2870f492951216e1d2f085ed4a28d6755a457cf
+  languageName: node
+  linkType: hard
+
+"@swc/helpers@npm:^0.4.2":
+  version: 0.4.14
+  resolution: "@swc/helpers@npm:0.4.14"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  checksum: 39441920bbc95a5d13538f2250af91ec0e32b65fe3c774bbfc8912199e6a92d77705b2c7b3f3e3cbbe1e6e58978637a5b9fc5f3908fda94a73f0ed998f3dea6d
   languageName: node
   linkType: hard
 
@@ -5343,7 +5354,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base64-js@npm:^1.3.1, base64-js@npm:^1.5.1":
+"base64-js@npm:^1.1.2, base64-js@npm:^1.3.0, base64-js@npm:^1.3.1, base64-js@npm:^1.5.1":
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
   checksum: fbd7996978cfe0dd378103fa8999e4acee99b8840d49f452457fa8cb418bad4c20ec9ef6b196a0dc63591f0416a4b8c8d220607292cdaf3998b88685bc0f6c14
@@ -5432,6 +5443,15 @@ __metadata:
   dependencies:
     fill-range: "npm:^7.0.1"
   checksum: 1aa7f7f39e1dff23894196303515503dd945f36adcb78073ee067b421ecc595265556911183b24d1bc4e51011d3536d63d117cb4493e5123fcc7456596a93637
+  languageName: node
+  linkType: hard
+
+"brotli@npm:^1.3.2":
+  version: 1.3.3
+  resolution: "brotli@npm:1.3.3"
+  dependencies:
+    base64-js: "npm:^1.1.2"
+  checksum: 336c03c0aabc3cd36ba7b665c38b0a7f7511423d67a7e5493c2a52d023d3bf277553f27fb249b0b357777b350edc7774f70cfa26b33c2ab62399a641112bc493
   languageName: node
   linkType: hard
 
@@ -5895,6 +5915,13 @@ __metadata:
     strip-ansi: "npm:^6.0.1"
     wrap-ansi: "npm:^7.0.0"
   checksum: 4db0fc81f3dbd46b65840a739a43ce83a69e58d7da5ae701948fbfc14c25d82a02dd3a3dbed5a20828000e93b4bf2217b181a0a089d580af5daf9452e9c9eab3
+  languageName: node
+  linkType: hard
+
+"clone@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "clone@npm:2.1.2"
+  checksum: 499686055743e023e7a991c76fb3f002f38643efbedacaebe2314913a10c6e09131457218c9dac2c201721666c1f41d4416492a56f4509fff4d47c5f347ddd86
   languageName: node
   linkType: hard
 
@@ -6538,6 +6565,13 @@ __metadata:
   version: 1.2.0
   resolution: "destroy@npm:1.2.0"
   checksum: dc7c93cc92fefb26b1fd5251603da79b0289d06b6891743cb16ac11564aaf0cc985e89efb663322a39a477c4c7f2da51321bf82bb513280a12171cef63b60a21
+  languageName: node
+  linkType: hard
+
+"dfa@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "dfa@npm:1.2.0"
+  checksum: ea1c814eb3bb31a97bc023aa8579d7abd38aad84272555a331d2eb1b5ad0b93b2efe8b6174b272677671373d958b66affbcb4a6ca429763c14fe31d66387beec
   languageName: node
   linkType: hard
 
@@ -7971,6 +8005,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fontkit@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "fontkit@npm:2.0.2"
+  dependencies:
+    "@swc/helpers": "npm:^0.4.2"
+    brotli: "npm:^1.3.2"
+    clone: "npm:^2.1.2"
+    dfa: "npm:^1.2.0"
+    fast-deep-equal: "npm:^3.1.3"
+    restructure: "npm:^3.0.0"
+    tiny-inflate: "npm:^1.0.3"
+    unicode-properties: "npm:^1.4.0"
+    unicode-trie: "npm:^2.0.0"
+  checksum: 90b51eac1e17e2d6d9121f0a8e01d2d55921d59139b35b23d572ff6fbe8328161c93302be4a53bc386726181ce27b9624204cbcdab2443f50ee55808fd6a8e5e
+  languageName: node
+  linkType: hard
+
+"fontpie-calc@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "fontpie-calc@npm:0.2.0"
+  peerDependencies:
+    fontkit: ^2.0.2
+  checksum: b8de9512172c456a68176b0aa8702bf5627b696fd9f3d71369695d39a59bc89cea1ae6c0ee145249f883cb6a83f6f325afabddf733ff7dcaa6a5c2df556bc190
+  languageName: node
+  linkType: hard
+
 "forever-agent@npm:~0.6.1":
   version: 0.6.1
   resolution: "forever-agent@npm:0.6.1"
@@ -8689,6 +8749,17 @@ __metadata:
   version: 1.3.7
   resolution: "illuminated@npm:1.3.7"
   checksum: c6aa0a0fd43efed32f0825d9b315ef47da20f6d844fc7625c56b796823363d0f1d9f09dd3a38aa02a7812219d9aba004690e7ea16e4f8294d292909dce8ae038
+  languageName: node
+  linkType: hard
+
+"image-size@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "image-size@npm:1.0.2"
+  dependencies:
+    queue: "npm:6.0.2"
+  bin:
+    image-size: bin/image-size.js
+  checksum: 7b54fb03519d73549a5e39a45d877c47a3d8914b82157665b6d44042e75e4abcf583713ceb91e4ea1edd5cd844e6c6b7b40275f18406c19cb6b0bb1363f0abe3
   languageName: node
   linkType: hard
 
@@ -10648,6 +10719,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pako@npm:^0.2.5":
+  version: 0.2.9
+  resolution: "pako@npm:0.2.9"
+  checksum: 1d65e7a37880fdcb56be16290d61a2d2270bae182706de6db1a0e5173fe4402a3828d1110b303b26e52b38a124126f3fac56079a530096b57c9ddfc1cd67490c
+  languageName: node
+  linkType: hard
+
 "pako@npm:^2.1.0":
   version: 2.1.0
   resolution: "pako@npm:2.1.0"
@@ -10999,6 +11077,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss-fontpie@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "postcss-fontpie@npm:1.0.1"
+  dependencies:
+    "@csstools/css-parser-algorithms": "npm:^2.1.1"
+    "@csstools/css-tokenizer": "npm:^2.1.1"
+    fontkit: "npm:^2.0.2"
+    fontpie-calc: "npm:^0.2.0"
+    slashes: "npm:^3.0.12"
+  peerDependencies:
+    postcss: ^8.0.0
+  checksum: bd0b81635a944c3998dff0fce7dc562991d256da12a7c45022ccc6f2cefe5b67328084ec4690029ad9183768fcbc9007e4a6ca0d734890b117327796c9da79c6
+  languageName: node
+  linkType: hard
+
 "postcss-functions@npm:^4.0.2":
   version: 4.0.2
   resolution: "postcss-functions@npm:4.0.2"
@@ -11294,7 +11387,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-value-parser@npm:^4.0.0, postcss-value-parser@npm:^4.2.0":
+"postcss-value-parser@npm:^3.3.0 || ^4.0.2, postcss-value-parser@npm:^4.0.0, postcss-value-parser@npm:^4.2.0":
   version: 4.2.0
   resolution: "postcss-value-parser@npm:4.2.0"
   checksum: edc490e9f11336a2efb136d8a52350b5c680ca9a91ee64285732e796177eb888f559a4eafc94cdbf7ce065a388e65b3cc21a32c92458a90efc445f30e8a679dc
@@ -11477,6 +11570,15 @@ __metadata:
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
   checksum: 84624bee6c25c9d9776242ce0dcc3e15f703d897f4b7d982f32ef4d88c51048507a0999d9ff038ec46f65901655460b69240e414da1cebc2d723987ec81cbae8
+  languageName: node
+  linkType: hard
+
+"queue@npm:6.0.2":
+  version: 6.0.2
+  resolution: "queue@npm:6.0.2"
+  dependencies:
+    inherits: "npm:~2.0.3"
+  checksum: e3cdce3fe26cdb3a70f868e9fd260484482feacb77f1c9af4728118d64234bf1d9665d9342f1fdac2d30276e3a5d09cdaeab895138c9f9300fb03c54c665c5cf
   languageName: node
   linkType: hard
 
@@ -11900,6 +12002,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"restructure@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "restructure@npm:3.0.0"
+  checksum: 45d67307b5a568245065df6d503970e2ddd8f7c97e0813dad5e61c5df3f09d6fd39c87b97b3ea9eb32a2c14c61ab6db4efe638f91277599e9c5c65c98e42dd18
+  languageName: node
+  linkType: hard
+
 "retry@npm:^0.12.0":
   version: 0.12.0
   resolution: "retry@npm:0.12.0"
@@ -12284,6 +12393,13 @@ __metadata:
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
   checksum: b88a0f1086e3cd20c8b61f50d8afff5fba83f95167a86432f54387565c9424e5d1970612371f768c128ed4b5b1c427120382bafc8c9edf0b3737eb226b733687
+  languageName: node
+  linkType: hard
+
+"slashes@npm:^3.0.12":
+  version: 3.0.12
+  resolution: "slashes@npm:3.0.12"
+  checksum: f2df4a368b8f7bfa2e5b264f2c4ac258f864a4fde5461bdd7c4c9dc149a50024970bec1b1c60fbcbb8d5cbcc2e1060afd1daffe26484776091e2aad41deaa650
   languageName: node
   linkType: hard
 
@@ -12918,6 +13034,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"stylelint-rem-over-px@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "stylelint-rem-over-px@npm:1.0.0"
+  dependencies:
+    postcss-value-parser: "npm:^3.3.0 || ^4.0.2"
+  peerDependencies:
+    stylelint: ">= 8"
+  checksum: 8ea663e0dfc9088ab40a34c5dd4861a12c4f7683782a2cd6e89aaa4d0b3e51c1e0ec2246394005412641a918c70fed3e07a3ca9e22d13c37ee7c6b9fb3e3827f
+  languageName: node
+  linkType: hard
+
 "stylelint-scss@npm:^4.6.0":
   version: 4.7.0
   resolution: "stylelint-scss@npm:4.7.0"
@@ -13136,6 +13263,13 @@ __metadata:
   version: 2.3.8
   resolution: "through@npm:2.3.8"
   checksum: c9d6883ace26b3c967283827cafdd4ceee6164fa4d3754865f5032dcb564e0cbdea9dc6f43806afa51e1f2863d8e3beca141cbf7b8dcff989982aef69bb851c0
+  languageName: node
+  linkType: hard
+
+"tiny-inflate@npm:^1.0.0, tiny-inflate@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "tiny-inflate@npm:1.0.3"
+  checksum: 64223ed217b4cb1912df85566181f711f1fdfbea180c35accb8561a24fe045c4f4a3ca2fc155bdf778c4657c63977210560e882abda8b6a777c21af932b9713f
   languageName: node
   linkType: hard
 
@@ -13587,6 +13721,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"unicode-properties@npm:^1.4.0":
+  version: 1.4.1
+  resolution: "unicode-properties@npm:1.4.1"
+  dependencies:
+    base64-js: "npm:^1.3.0"
+    unicode-trie: "npm:^2.0.0"
+  checksum: 5aaece21c30da435ee2207d8c73704a26c21ca1a036ae9be11f64195b142c550c130a0127d949b59d11bba805cb56e29b5de96c0b7c3f394609300d62ea1d78e
+  languageName: node
+  linkType: hard
+
 "unicode-property-aliases-ecmascript@npm:^1.0.4":
   version: 1.1.0
   resolution: "unicode-property-aliases-ecmascript@npm:1.1.0"
@@ -13598,6 +13742,16 @@ __metadata:
   version: 2.1.0
   resolution: "unicode-property-aliases-ecmascript@npm:2.1.0"
   checksum: 2a731ceba0a6d8e6b9bc576843f54f4ce5af36c1984a5a6023e012ceaa73f76a06dfc104b12a6b06f06decbd447d88980ec6787b44f708259b190d3594a84b85
+  languageName: node
+  linkType: hard
+
+"unicode-trie@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "unicode-trie@npm:2.0.0"
+  dependencies:
+    pako: "npm:^0.2.5"
+    tiny-inflate: "npm:^1.0.0"
+  checksum: 44a0471b4b5808fb0714c40df98375e5b08cf20ec917d126694e5cae32ef87261610a9085fa0d93cc9c983fa821e7f2661f75f18f3857ae70a6bb14aa259c580
   languageName: node
   linkType: hard
 

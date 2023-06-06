@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { description, name } from '../../package.json';
 import config, { type Config } from '../common/config';
@@ -10,6 +11,12 @@ import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import { VitePWA } from 'vite-plugin-pwa';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { internalIpV4 } from 'internal-ip';
+import size from 'image-size';
+import sass from 'sass';
+import postcssFontPie from 'postcss-fontpie';
+import postcssCustomMedia from 'postcss-custom-media';
+import postcssPresetEnv from 'postcss-preset-env';
+import autoprefixer from 'autoprefixer';
 
 let expose = ['name', 'host', 'ssl', 'serverId', 'sentryDsn'] as const;
 
@@ -137,6 +144,78 @@ export default defineConfig(async ({ mode }) => {
                 port: 5183
             }
         },
-        define: { 'window.config': env }
+        define: { 'window.config': env },
+        css: {
+            postcss: {
+                plugins: [
+                    postcssFontPie({
+                        fontTypes: {
+                            AdvoCut: 'sans-serif',
+                            KerrieFont: 'sans-serif',
+                            DorfScratch: 'sans-serif'
+                        },
+                        srcUrlToFilename: (url) =>
+                            fileURLToPath(new URL(`public/${url}`, import.meta.url))
+                    }),
+                    postcssCustomMedia(),
+                    postcssPresetEnv(),
+                    autoprefixer()
+                ]
+            },
+            preprocessorOptions: {
+                scss: {
+                    functions: {
+                        'width($image)': (image: sass.types.Number) => {
+                            let { width } = size(
+                                fileURLToPath(
+                                    new URL(
+                                        `public/img/interface/${image.getValue()}`,
+                                        import.meta.url
+                                    )
+                                )
+                            );
+
+                            return new sass.types.Number(width!, 'px');
+                        },
+                        'height($image)': (image: sass.types.Number) => {
+                            let { height } = size(
+                                fileURLToPath(
+                                    new URL(
+                                        `public/img/interface/${image.getValue()}`,
+                                        import.meta.url
+                                    )
+                                )
+                            );
+
+                            return new sass.types.Number(height!, 'px');
+                        },
+                        'better-width($image)': (image: sass.types.Number) => {
+                            let { width } = size(
+                                fileURLToPath(
+                                    new URL(
+                                        `public/img/interface/${image.getValue()}.png`,
+                                        import.meta.url
+                                    )
+                                )
+                            );
+
+                            return new sass.types.Number(width!);
+                        },
+                        'better-height($image)': (image: sass.types.Number) => {
+                            let { height } = size(
+                                fileURLToPath(
+                                    new URL(
+                                        `public/img/interface/${image.getValue()}.png`,
+                                        import.meta.url
+                                    )
+                                )
+                            );
+
+                            return new sass.types.Number(height!);
+                        }
+                    }
+                }
+            }
+        }
     };
 });

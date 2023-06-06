@@ -1,4 +1,4 @@
-import '../scss/main.scss';
+import './main.scss';
 
 export default class Main {
     private config = window.config;

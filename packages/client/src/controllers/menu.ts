@@ -94,7 +94,6 @@ export default class MenuController {
 
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
         this.profile.onAttackStyle(this.handleProfileAttackStyle.bind(this));
-        this.profile.onAbility(this.handleAbility.bind(this));
 
         this.enchant.onSelect(this.handleEnchantSelect.bind(this));
         this.enchant.onConfirm(this.handleEnchantConfirm.bind(this));

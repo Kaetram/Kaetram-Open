@@ -63,7 +63,6 @@ export default class App {
     private gameVersion: HTMLElement = document.querySelector('#game-version')!;
 
     private currentScroll = 'load-character';
-    private parchmentAnimating = false;
     private loggingIn = false; // Used to prevent interactions when trying to log in.
     private menuHidden = false; // Used to reroute key input to the callback.
 
@@ -284,7 +283,7 @@ export default class App {
      */
 
     public openScroll(destination: string): void {
-        if (this.loggingIn || this.parchmentAnimating) return;
+        if (this.loggingIn) return;
 
         // Clears all errors that may have been displayed.
         this.clearErrors();
@@ -301,24 +300,16 @@ export default class App {
 
     public changeScroll(destination: string, withAnimation = false): void {
         if (withAnimation) {
-            this.parchmentAnimating = true;
-
             // Toggle animation and remove the current scroll class from parchment.
             this.parchment.classList.toggle('animate');
             this.parchment.classList.remove(this.currentScroll);
 
-            // Set a timeout for the animation before displaying data.
-            window.setTimeout(() => {
-                // Toggle so that we can allow changing scrolls again.
-                this.parchmentAnimating = false;
+            // Animate again and add the new destination scroll.
+            this.parchment.classList.toggle('animate');
+            this.parchment.classList.add(destination);
 
-                // Animate again and add the new destination scroll.
-                this.parchment.classList.toggle('animate');
-                this.parchment.classList.add(destination);
-
-                // Focus on the first text field in the new scroll.
-                document.querySelector<HTMLInputElement>(`#${destination} input`)?.focus();
-            }, 1000);
+            // Focus on the first text field in the new scroll.
+            document.querySelector<HTMLInputElement>(`#${destination} input`)?.focus();
         } else {
             this.parchment.classList.remove(this.currentScroll);
             this.parchment.classList.add(destination);
@@ -508,10 +499,11 @@ export default class App {
 
         this.loggingIn = toggle;
 
-        this.loading.hidden = !toggle;
-
         this.loginButton.disabled = toggle;
         this.registerButton.disabled = toggle;
+
+        document.querySelector(`#${this.currentScroll} .validation-summary`)?.append(this.loading);
+        this.loading.hidden = !toggle;
     }
 
     /**

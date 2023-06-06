@@ -248,7 +248,7 @@ export default class Player extends Character {
         }
 
         // Disable drawing for the other equipment slots if we're wearing a skin.
-        if (type === Modules.Equipment.Skin) this.toggleDrawableEquipments(false);
+        if (type === Modules.Equipment.ArmourSkin) this.toggleDrawableEquipments(false);
     }
 
     /**
@@ -279,7 +279,7 @@ export default class Player extends Character {
         else this.equipments[type].update();
 
         // Make the normal equipments drawable again.
-        if (type === Modules.Equipment.Skin) this.toggleDrawableEquipments(true);
+        if (type === Modules.Equipment.ArmourSkin) this.toggleDrawableEquipments(true);
     }
 
     /**
@@ -311,8 +311,8 @@ export default class Player extends Character {
 
     public getSpriteName(): string {
         // Use the armour skin if it exists.
-        if (this.equipments[Modules.Equipment.Skin].key)
-            return this.equipments[Modules.Equipment.Skin].key;
+        if (this.equipments[Modules.Equipment.ArmourSkin].key)
+            return this.equipments[Modules.Equipment.ArmourSkin].key;
 
         return 'player/base';
     }
@@ -340,35 +340,11 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns The chestplate object of the player.
+     * @returns The pendant object of the player.
      */
 
-    public getChestplate(): Equipment {
-        return this.equipments[Modules.Equipment.Chestplate];
-    }
-
-    /**
-     * @returns The legs equipment object.
-     */
-
-    public getLegs(): Equipment {
-        return this.equipments[Modules.Equipment.Legs];
-    }
-
-    /**
-     * @returns The armour skin object of the player.
-     */
-
-    public getArmourSkin(): Equipment {
-        return this.equipments[Modules.Equipment.Skin];
-    }
-
-    /**
-     * @returns The boots object of the player.
-     */
-
-    public getBoots(): Equipment {
-        return this.equipments[Modules.Equipment.Boots];
+    public getPendant(): Equipment {
+        return this.equipments[Modules.Equipment.Pendant];
     }
 
     /**
@@ -380,19 +356,11 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns The pendant object of the player.
+     * @returns The chestplate object of the player.
      */
 
-    public getPendant(): Equipment {
-        return this.equipments[Modules.Equipment.Pendant];
-    }
-
-    /**
-     * @returns The ring object of the player.
-     */
-
-    public getRing(): Equipment {
-        return this.equipments[Modules.Equipment.Ring];
+    public getChestplate(): Equipment {
+        return this.equipments[Modules.Equipment.Chestplate];
     }
 
     /**
@@ -404,11 +372,59 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns The shield object of the player.
+     */
+
+    public getShield(): Equipment {
+        return this.equipments[Modules.Equipment.Shield];
+    }
+
+    /**
+     * @returns The ring object of the player.
+     */
+
+    public getRing(): Equipment {
+        return this.equipments[Modules.Equipment.Ring];
+    }
+
+    /**
      * @returns The weapon skin object of the player.
      */
 
     public getWeaponSkin(): Equipment {
         return this.equipments[Modules.Equipment.WeaponSkin];
+    }
+
+    /**
+     * @returns The armour skin object of the player.
+     */
+
+    public getArmourSkin(): Equipment {
+        return this.equipments[Modules.Equipment.ArmourSkin];
+    }
+
+    /**
+     * @returns The legplate equipment object.
+     */
+
+    public getLegplate(): Equipment {
+        return this.equipments[Modules.Equipment.Legplate];
+    }
+
+    /**
+     * @returns The cape equipment object.
+     */
+
+    public getCape(): Equipment {
+        return this.equipments[Modules.Equipment.Cape];
+    }
+
+    /**
+     * @returns The boots object of the player.
+     */
+
+    public getBoots(): Equipment {
+        return this.equipments[Modules.Equipment.Boots];
     }
 
     /**
@@ -552,7 +568,7 @@ export default class Player extends Character {
                 return 'chestplate';
             }
 
-            case Modules.Equipment.Legs: {
+            case Modules.Equipment.Legplate: {
                 return 'legs';
             }
 
@@ -564,7 +580,7 @@ export default class Player extends Character {
                 return 'weaponskin';
             }
 
-            case Modules.Equipment.Skin: {
+            case Modules.Equipment.ArmourSkin: {
                 return 'skin';
             }
 
@@ -754,7 +770,7 @@ export default class Player extends Character {
     private toggleDrawableEquipments(state = false): void {
         this.getHelmet().drawable = state;
         this.getChestplate().drawable = state;
-        this.getLegs().drawable = state;
+        this.getLegplate().drawable = state;
     }
 
     /**
