@@ -274,9 +274,10 @@ export default class Updater {
             // -1 intensity means that the light doesn't flicker.
             if (light.flickerIntensity < 0) return;
 
-            light.distance +=
-                Math.sin((this.game.time + light.offset) / light.flickerSpeed) /
-                light.flickerIntensity;
+            light.distance =
+                light.scaledDistance +
+                Math.sin((this.game.time + light.offset) / light.flickerSpeed) *
+                    light.scaledFlickerIntensity;
         });
     }
 }
