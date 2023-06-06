@@ -69,14 +69,12 @@ export enum Actions {
 }
 
 export enum MenuActions {
+    Attack = 'attack',
+    Equip = 'equip',
     DropOne = 'drop-one',
     DropMany = 'drop-many',
-    Wield = 'wield',
-    Equip = 'equip',
-    Attack = 'attack',
     Eat = 'eat',
-    Eat2 = 'eat2',
-    Move = 'move',
+    Interact = 'interact',
     Trade = 'trade',
     Potion = 'potion',
     Follow = 'follow',
@@ -104,22 +102,24 @@ export enum Hits {
 
 export enum Equipment {
     Helmet,
-    Chestplate,
-    Legs,
-    Skin,
-    Boots,
     Pendant,
-    Ring,
     Arrows,
+    Chestplate,
     Weapon,
-    WeaponSkin
+    Shield,
+    Ring,
+    ArmourSkin,
+    WeaponSkin,
+    Legplate,
+    Cape,
+    Boots
 }
 
 export let EquipmentRenderOrder = [
     Equipment.Helmet,
-    Equipment.Legs,
+    Equipment.Legplate,
     Equipment.Chestplate,
-    Equipment.Skin,
+    Equipment.ArmourSkin,
     Equipment.Weapon,
     Equipment.WeaponSkin
 ];

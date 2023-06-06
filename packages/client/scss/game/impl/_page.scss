@@ -1,10 +1,29 @@
 @use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
-#profile-dialog,
-#settings-page {
+.page-slice {
+    user-select: none;
+
     position: absolute;
-    right: 0;
-    bottom: 45px;
+    bottom: 3.5em;
+
+    display: none;
+
+    box-sizing: border-box;
+    width: 12em;
+    height: 20em;
+    padding: 1em 0.675em 0.675em;
+
+    color: #eee;
+
+    border-image: url('/img/interface/slices/dialog.png');
+    border-image-slice: 45% fill;
+    border-image-width: 1em;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+}
+
+#profile-container {
     display: none;
 }
 
@@ -20,7 +39,6 @@
 }
 
 .item-count {
-    font-family: AdvoCut, sans-serif;
     color: rgb(255 255 255 / 100%);
 }
 
@@ -28,102 +46,30 @@
     position: absolute;
 }
 
-.ok,
-.ok-check {
+.ok {
     position: absolute;
 }
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #bank-inventory-container,
-        #enchant-container {
-            width: 129px * $i;
-            height: 127px * $i;
-            background-position: 0 0;
-        }
+.ok {
+    width: 1.75em;
+    height: 0.875em;
 
-        .item-count {
-            width: 16px * $i;
-            height: 7px * $i;
-            margin-left: $i;
-            text-align: center;
-        }
+    background-image: url('/img/interface/containers.png');
+    background-position: -21.3125em -4.9375em;
+    background-size: calc(width('containers.png'));
 
-        #store-sell-slot-return-text,
-        #store-sell-slot-text,
-        #shards-count {
-            margin-top: 19px * $i;
-        }
-
-        .ok,
-        .ok-check {
-            background-image: url('/img/interface/containers.png');
-            background-size: calc(width('containers.png') * $i);
-        }
-
-        .ok {
-            width: 28px * $i;
-            height: 14px * $i;
-            background-position: -341px * $i -79px * $i;
-
-            &:hover {
-                background-position-y: -65px * $i;
-            }
-        }
-
-        .ok-check {
-            width: 14px * $i;
-            height: 14px * $i;
-            background-position: -387px * $i -79px * $i;
-
-            &:hover {
-                background-position-y: -65px * $i;
-            }
-
-            &:active {
-                background-position-y: -93px * $i;
-            }
-        }
+    &:hover {
+        background-position-y: -4.0625em;
     }
 }
 
-@each $size, $i in media.$dialog-sizes {
-    @media ($size) {
-        .close {
-            top: -3px * $i;
-            right: -3px * $i;
-
-            width: 16px * $i;
-            height: 16px * $i;
-
-            background: url('/img/interface/containers.png') -32px * $i -166px * $i;
-            background-size: calc(width('containers.png') * $i);
-
-            &:hover {
-                background-position-x: -48px * $i;
-            }
-
-            &:active {
-                background-position-x: -64px * $i;
-            }
-        }
-    }
-}
-
-@media (--lg) {
-    .item-count {
-        font-size: 14px;
-    }
-}
-
-@media (--md) {
-    .item-count {
-        font-size: 11px;
-    }
-}
-
-@media (--sm) {
-    .item-count {
-        font-size: 8px;
-    }
-}
+@include sprite.sheet('bank', $width: 128, $height: 126, $selectors: #enchant-container);
+@include sprite.sheet(
+    'main',
+    $y: 119,
+    $width: 14,
+    $height: 14,
+    $hover: 1,
+    $active: 2,
+    $selectors: '.ok-check'
+);

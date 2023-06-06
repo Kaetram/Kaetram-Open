@@ -14,24 +14,25 @@ interface ListElement extends HTMLElement {
 
 export default class Guilds extends Menu {
     // The banner is the banner of the guild that the player is currently in.
-    private banner: HTMLElement = document.querySelector('#guilds > .banner')!;
+    private banner: HTMLElement = document.querySelector('#guilds .banner')!;
 
     // The default container and elements for the guilds list, displayed prior to joining a guild.
     private listContainer: HTMLElement = document.querySelector('#guilds-list-container')!;
     private createButton: HTMLButtonElement = document.querySelector('#create-guild')!;
 
     // Container for creating a new guild.
-    private create: HTMLElement = document.querySelector('#guilds-create-container')!;
+    private create: HTMLElement = document.querySelector('#guilds-create')!;
 
-    private createError: HTMLElement = document.querySelector('#create-error')!;
+    private createError: HTMLElement = document.querySelector('#guilds-create-error')!;
 
-    private backButton: HTMLElement = document.querySelector('#guild-back')!;
-    private createConfirmButton: HTMLButtonElement = document.querySelector('#guild-create')!;
+    private backButton: HTMLElement = document.querySelector('#guilds-back-button')!;
+    private createConfirmButton: HTMLButtonElement =
+        document.querySelector('#guilds-create-button')!;
 
     // The colour buttons for the banner (used when creating a guild).
     private bannerColours: HTMLUListElement = document.querySelector('#banner-colours')!;
 
-    private nameInput: HTMLInputElement = document.querySelector('#guild-name-input')!;
+    private nameInput: HTMLInputElement = document.querySelector('#guilds-name-input')!;
 
     // Decorations for the guild interface banner (updated during creation or when guild data is received).
     private bannerColour: Modules.BannerColour = Modules.BannerColour.Grey;
@@ -52,15 +53,17 @@ export default class Guilds extends Menu {
 
     // The guild information container (if the player is in a guild).
     private infoContainer: HTMLElement = document.querySelector('#guilds-info-container')!;
-    private chatLog: HTMLUListElement = document.querySelector('#guild-chat-log')!;
-    private chatInput: HTMLInputElement = document.querySelector('#guild-chat-input')!;
+    private chat: HTMLUListElement = document.querySelector('#guilds-chat')!;
+    private chatLog: HTMLUListElement = document.querySelector('#guilds-chat-log')!;
+    private chatInput: HTMLInputElement = document.querySelector('#guilds-chat-input')!;
 
-    private guildName: HTMLElement = document.querySelector('#guild-name')!;
-    private leaveButton: HTMLElement = document.querySelector('#guild-leave')!;
+    private guildName: HTMLElement = document.querySelector('#guilds-name')!;
+    private leaveButton: HTMLElement = document.querySelector('#guilds-leave')!;
 
     // List where we store players/guilds list (depending on the context).
-    private guildList: HTMLUListElement = document.querySelector('#guilds-list-container > ul')!;
-    private memberList: HTMLUListElement = document.querySelector('#member-list')!;
+    private guildList: HTMLUListElement = document.querySelector('#guilds-list > ul')!;
+    private memberListContainer: HTMLElement = document.querySelector('#member-list-container')!;
+    private memberList: HTMLUListElement = this.memberListContainer.querySelector('ul')!;
     private sidebarList: HTMLUListElement = document.querySelector('#sidebar-list')!;
 
     // Indexing - default values, used for pagination.
@@ -329,26 +332,20 @@ export default class Guilds extends Menu {
 
         switch (menu) {
             case 'sidebar-members': {
-                this.memberList.style.display = 'block';
+                this.memberListContainer.style.display = 'block';
 
-                // Hide the chat input.
-                this.chatInput.style.display = 'none';
-
-                // Hide the chat log
-                this.chatLog.style.display = 'none';
+                // Hide the chat.
+                this.chat.style.display = 'none';
 
                 break;
             }
 
             case 'sidebar-chat': {
                 // Hide the members list.
-                this.memberList.style.display = 'none';
+                this.memberListContainer.style.display = 'none';
 
                 // Show the chat input.
-                this.chatInput.style.display = 'block';
-
-                // Show the chat log.
-                this.chatLog.style.display = 'block';
+                this.chat.style.display = 'block';
 
                 break;
             }
@@ -572,8 +569,7 @@ export default class Guilds extends Menu {
             if (isNaN(index)) continue;
 
             // The class elements that we're going to add to the banner.
-            if (index === 0) this.bannerOutlineStyles.push('banner-outline');
-            else this.bannerOutlineStyles.push(`banner-outline-${index + 1}`);
+            this.bannerOutlineStyles.push(`banner-outline-${index + 1}`);
         }
     }
 
@@ -626,10 +622,10 @@ export default class Guilds extends Menu {
                 serverElement = element.querySelector('.server')!,
                 colour =
                     member.serverId === -1
-                        ? 'red'
+                        ? 'text-red'
                         : member.serverId === this.game.player.serverId
-                        ? 'green'
-                        : 'yellow';
+                        ? 'text-green'
+                        : 'text-yellow';
 
             // Update the colour based on the online status.
             nameElement.className = `name`;
@@ -757,7 +753,7 @@ export default class Guilds extends Menu {
             let serverElement = document.createElement('span'),
                 isPlayer = this.getUsername() === element.identifier;
 
-            serverElement.className = `server ${isPlayer ? 'green' : 'red'}`;
+            serverElement.className = `server ${isPlayer ? 'text-green' : 'text-red'}`;
 
             serverElement.innerHTML = isPlayer ? `Kaetram ${this.game.player.serverId}` : 'Offline';
 
@@ -792,7 +788,7 @@ export default class Guilds extends Menu {
 
     private updateBanner(): void {
         let outlineElement = this.banner.querySelector('#banner-outline')!,
-            crestElement = this.banner.querySelector('.banner-crest')!;
+            crestElement = this.banner.querySelector('#banner-crest')!;
 
         // Update the classes with the new colours.
         this.banner.className = `banner banner-${this.bannerColour}`;

@@ -1,82 +1,56 @@
 @use '../../abstracts/media';
-
-.dialog-slice {
-    box-sizing: border-box;
-    padding: 1em 0.5em 0.5em;
-
-    font-family: AdvoCut, sans-serif;
-    color: #eee;
-
-    border-image: url('/img/interface/slices/dialog.png');
-    border-image-slice: 45% fill;
-    border-image-width: 16px;
-    border-image-outset: 0;
-    border-image-repeat: stretch;
-}
+@use '../../abstracts/sprite';
 
 dialog {
-    position: absolute;
     inset: 0;
+    width: 8em;
+    color: #e3e3e3;
+
+    input {
+        display: block;
+
+        width: 7.5em;
+        margin: 0.25em;
+
+        font-size: 0.75em;
+        color: white;
+
+        background-color: rgb(0 0 0 / 50%);
+    }
+}
+
+.slice-dialog {
+    position: absolute;
 
     display: none;
 
+    box-sizing: border-box;
     margin: auto;
-
-    font-family: AdvoCut, sans-serif;
-    font-size: 16px;
-    color: #e3e3e3;
+    padding: 1em 0.675em 0.675em;
 
     background: transparent;
-}
-
-.dialog-count {
-    display: block;
-
-    margin: 0 auto;
-
-    font-family: AdvoCut, sans-serif;
-    color: white;
-
-    background-color: rgb(0 0 0 / 50%);
+    border-image: url('/img/interface/slices/dialog.png') 45% fill / 1em / 0 stretch;
 }
 
 .dialog-title {
+    font-size: 0.75em;
     text-align: center;
 }
 
 .dialog-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
-@each $size, $i in media.$dialog-sizes {
-    @media ($size) {
-        dialog {
-            width: 64px * $i;
-            height: 50px * $i;
-        }
-
-        .dialog-count {
-            width: 40px * $i;
-            margin-bottom: 1px * $i;
-        }
-
-        .dialog-title {
-            margin-top: 3px * $i;
-            margin-bottom: 3px * $i;
-            font-size: 6px * $i;
-        }
-    }
-
-    @media (--sm) {
-        .dialog-title {
-            font-size: 10px;
-        }
-
-        .dialog-buttons {
-            transform: scale(2);
-            margin-top: 8px;
-            padding: 0 30px;
-        }
-    }
-}
+@include sprite.sheet(
+    $image: 'characterdialogsheet',
+    $y: 308,
+    $width: 21,
+    $height: 14,
+    $hover: 2,
+    $active: 1,
+    $selectors: (
+        '.confirm',
+        '.cancel'
+    )
+);

@@ -65,21 +65,17 @@ export default class Blob {
 
     private createBlob(instance: string, message: string): HTMLElement {
         let blob = document.createElement('div'),
-            tip = document.createElement('div'),
             text = document.createElement('p');
 
         // Add the identifiers and classes to the blob.
         blob.id = instance;
         blob.classList.add('bubble');
 
-        // Add the identifiers and classes to the tip.
-        tip.classList.add('bubble-tip');
-
         // Add the message to the text element.
         text.innerHTML = message;
 
         // Combine elements and return the result.
-        blob.append(text, tip);
+        blob.append(text);
 
         return blob;
     }

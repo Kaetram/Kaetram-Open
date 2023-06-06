@@ -22,23 +22,23 @@ export default class Store extends Menu {
 
     private selectedBuyIndex = -1; // Index of currently selected item to buy.
 
-    private storeContainer: HTMLElement = document.querySelector('#store-container')!;
+    private storeContainer: HTMLElement = document.querySelector('#store-content')!;
 
-    private storeHelp: HTMLElement = document.querySelector('#store-help')!;
+    private storeHelp: HTMLElement = document.querySelector('#store-slots-help')!;
 
-    private confirmSell: HTMLElement = document.querySelector('#confirm-sell')!;
+    private confirmSell: HTMLElement = document.querySelector('#store-sell-confirm')!;
 
     // Sell slot information
     private sellSlot: HTMLElement = document.querySelector('#store-sell-slot')!;
-    private sellSlotText: HTMLElement = document.querySelector('#store-sell-slot-text')!;
-    private sellSlotReturn: HTMLElement = document.querySelector('#store-sell-slot-return')!;
-    private sellSlotReturnText: HTMLElement = document.querySelector(
-        '#store-sell-slot-return-text'
-    )!;
+    private sellSlotText: HTMLElement = document.querySelector('#store-sell-text')!;
+    private sellSlotReturn: HTMLElement = document.querySelector('#store-sell-return-slot')!;
+    private sellSlotReturnText: HTMLElement = document.querySelector('#store-sell-return-text')!;
 
     // Lists
-    private storeList: HTMLUListElement = document.querySelector('#store-container')!;
-    private inventoryList: HTMLUListElement = document.querySelector('#store-inventory-slots')!;
+    private storeList: HTMLUListElement = document.querySelector('#store-slots-content > ul')!;
+    private inventoryList: HTMLUListElement = document.querySelector(
+        '#store-inventory-slots > ul'
+    )!;
 
     // Buy dialog elements
     public buyDialog: HTMLElement = document.querySelector('#store-buy')!;
@@ -259,13 +259,15 @@ export default class Store extends Menu {
 
     private createStoreItem(item: SerializedStoreItem, index: number): HTMLElement {
         let listElement = document.createElement('li'),
+            slot = document.createElement('div'),
             image = document.createElement('div'),
             name = document.createElement('div'),
             count = document.createElement('div'),
             price = document.createElement('div');
 
         // Add the class to the elements.
-        listElement.classList.add('store-item');
+        listElement.classList.add('slice-list-item');
+        slot.classList.add('slice-item-slot');
         image.classList.add('store-item-image');
         name.classList.add('store-item-name', 'stroke');
         count.classList.add('store-item-count', 'stroke');
@@ -286,8 +288,11 @@ export default class Store extends Menu {
             this.showBuyDialog();
         });
 
+        // Append the image to the slot.
+        slot.append(image);
+
         // Append all the elements together and nest them.
-        listElement.append(image, name, count, price);
+        listElement.append(slot, name, count, price);
 
         return listElement;
     }
@@ -300,7 +305,7 @@ export default class Store extends Menu {
      */
 
     private getElement(index: number): HTMLElement {
-        return this.inventoryList.children[index].querySelector('div') as HTMLElement;
+        return this.inventoryList.children[index] as HTMLElement;
     }
 
     /**
