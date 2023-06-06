@@ -598,7 +598,7 @@ export const Constants = {
     INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
     ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
-    EXPERIENCE_PER_HIT: 4, // Amount of experinece received per 1 damage dealt.
+    EXPERIENCE_PER_HIT: 2, // Amount of experience received per 1 damage dealt.
     SNOW_POTION_DURATION: 60_000, // 60 seconds
     FIRE_POTION_DURATION: 60_000, // 60 seconds
     FREEZING_DURATION: 60_000, // 60 seconds
@@ -614,8 +614,11 @@ export const Constants = {
 };
 
 export enum MinigameConstants {
-    TEAM_WAR_COUNTDOWN = 240, // 240 seconds (4 minutes) in the lobby
-    TEAM_WAR_MIN_PLAYERS = 2 // Minimum number of players to start a team war
+    TEAM_WAR_COUNTDOWN = 240, // 240 seconds (4 minutes) in the lobby and in-game
+    TEAM_WAR_MIN_PLAYERS = 2, // Minimum number of players to start a team war
+    COURSING_COUNTDOWN = 45, // 360 seconds (6 minutes) in the lobby and in-game
+    COURSING_MIN_PLAYERS = 2, // Minimum number of players to start coursing
+    COURSING_SCORE_DIVISOR = 10 // Divide the score by 100 to get the number of points
 }
 
 export enum APIConstants {

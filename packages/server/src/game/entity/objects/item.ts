@@ -6,10 +6,10 @@ import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 import PluginIndex from '@kaetram/server/data/plugins/items';
 
-import type { EntityData } from '@kaetram/common/types/entity';
-import type { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/types/item';
-import type { Plugin } from '@kaetram/server/data/plugins/items';
 import type Player from '../character/player/player';
+import type { EntityData } from '@kaetram/common/types/entity';
+import type { Plugin } from '@kaetram/server/data/plugins/items';
+import type { Bonuses, Enchantments, ItemData, Light, Stats } from '@kaetram/common/types/item';
 
 interface RawData {
     [key: string]: ItemData;
@@ -51,6 +51,8 @@ export default class Item extends Entity {
     public poisonous = false;
     public freezing = false;
     public burning = false;
+
+    public light: Light = {};
     public weaponType = '';
 
     // Bowl variables
@@ -128,6 +130,7 @@ export default class Item extends Entity {
         this.poisonous = this.data.poisonous || this.poisonous;
         this.freezing = this.data.freezing || this.freezing;
         this.burning = this.data.burning || this.burning;
+        this.light = this.data.light || this.light;
         this.movementModifier = this.data.movementModifier || this.movementModifier;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
         this.mining = this.data.mining || this.mining;

@@ -1,10 +1,13 @@
+import { DEFAULT_ZOOM } from './camera';
+
 import Utils from '../utils/util';
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
 
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { DarkMask, Vec2, Lamp, Lighting } from 'illuminated';
 
+import type Minigame from './minigame';
 import type Equipment from '../entity/character/player/equipment';
 import type Game from '../game';
 import type Map from '../map/map';
@@ -14,24 +17,32 @@ import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Item from '../entity/objects/item';
 import type Player from '../entity/character/player/player';
+import type { LampData } from '@kaetram/common/types/item';
+import type { RegionTile } from '@kaetram/common/types/map';
 import type { SerializedLight } from '@kaetram/common/types/light';
-import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
 
-interface RendererLight {
-    origX: number;
-    origY: number;
-    diff: number;
+interface Light extends Lamp {
+    originalX: number;
+    originalY: number;
+    originalDistance: number;
+
+    gridX: number;
+    gridY: number;
+
+    offset: number;
+
     relative: boolean;
-    computed: boolean;
+    entity?: string;
+
+    flickerSpeed: number;
+    flickerIntensity: number;
 }
 
-type RendererLamp = RendererLight & Lamp;
+export interface RendererLighting extends Lighting {
+    light: Light;
+}
 
 export type ContextType = '2d' | 'webgl';
-export interface RendererLighting extends RendererLight, Lighting {
-    light: RendererLamp;
-}
-
 export type ContextCallback = (context: CanvasRenderingContext2D) => void;
 
 export default class Renderer {
@@ -72,8 +83,8 @@ export default class Renderer {
     private zoomIn: HTMLElement = document.querySelector('#zoom-in')!;
     private zoomOut: HTMLElement = document.querySelector('#zoom-out')!;
 
-    protected map: Map;
-    protected camera: Camera;
+    public map: Map;
+    public camera: Camera;
 
     // Variables used for calculating multiple things
     public tileSize = Utils.tileSize;
@@ -92,7 +103,7 @@ export default class Renderer {
     private renderedFrame: number[] = [];
 
     // Lighting
-    protected lightings: RendererLighting[] = [];
+    protected lightings: { [instance: string]: RendererLighting } = {};
     protected darkMask: DarkMask = new DarkMask({
         lights: [],
         color: 'rgba(0, 0, 0, 0.84)'
@@ -177,14 +188,17 @@ export default class Renderer {
         this.canvasWidth = this.screenWidth * this.camera.zoomFactor;
         this.canvasHeight = this.screenHeight * this.camera.zoomFactor;
 
-        // Update the dark mask sizes
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-
         // Iterate through the canvases and apply the new size.
         this.forEachCanvas((canvas: HTMLCanvasElement) => {
             canvas.width = this.canvasWidth;
             canvas.height = this.canvasHeight;
         });
+
+        // Update the dark mask sizes
+        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+
+        // Remove the player's light source and re-add it.
+        this.resizeLights();
     }
 
     /**
@@ -324,7 +338,7 @@ export default class Renderer {
     }
 
     /**
-     * Overlays are images drawn on top of the game. They are generally
+     * Overlays are images drawn on top of the game. They aFOvre generally
      * used in conjunction with the lighting system to give a shadow
      * effect or dark room effect. When overlays are present, the light
      * system is enabled.
@@ -342,12 +356,12 @@ export default class Renderer {
         this.overlayContext.globalCompositeOperation = 'lighter';
 
         // Draw each lighting
-        this.forEachLighting((lighting) => {
-            if (this.inRadius(lighting)) this.drawLighting(lighting);
-        });
+        this.forEachLighting((lighting: RendererLighting) => this.drawLighting(lighting));
 
         // Essentially makes the overlay be drawn on top of everything.
         this.overlayContext.globalCompositeOperation = 'source-over';
+
+        this.darkMask.compute(this.overlay.width, this.overlay.height);
         this.darkMask.render(this.overlayContext);
     }
 
@@ -709,6 +723,9 @@ export default class Renderer {
 
         if (!sprite.loaded) sprite.load();
 
+        // Do not render until the image is ready.
+        if (!sprite.image) return;
+
         this.drawSprite(player, sprite);
     }
 
@@ -914,20 +931,47 @@ export default class Renderer {
         if (drawNames) this.drawText(entity.name, x, nameY, true, colour, stroke, fontSize, true);
 
         // Draw the level if we're drawing levels.
-        if (this.drawLevels)
+        if (this.drawLevels && entity.level)
             this.drawText(levelText, x, levelY, true, colour, stroke, fontSize, true);
     }
+
+    /**
+     * Responsible for drawing the appropriate GUI for the minigame that
+     * the player is currently in. We use the minigame's type to determine
+     * what GUI to draw.
+     */
 
     private drawMinigameGUI(): void {
         if (!this.game.minigame.exists()) return;
 
-        switch (this.game.minigame.status) {
+        switch (this.game.minigame.type) {
+            case Opcodes.Minigame.TeamWar: {
+                return this.drawTeamWarGUI(this.game.minigame);
+            }
+
+            case Opcodes.Minigame.Coursing: {
+                return this.drawCoursingGUI(this.game.minigame);
+            }
+        }
+    }
+
+    /**
+     * Draws the team war minigame GUI. This consists of the score board
+     * or the countdown timer depending on the status of the minigame.
+     * @param minigame The minigame class from which we are extracting the data.
+     */
+
+    private drawTeamWarGUI(minigame: Minigame): void {
+        let { status, started, countdown, redTeamScore, blueTeamScore } = minigame,
+            scoreX = this.textCanvas.width / 6;
+
+        switch (status) {
             case 'lobby': {
                 this.drawText(
-                    this.game.minigame.started
-                        ? `There is a game in progress: ${this.game.minigame.countdown} seconds`
-                        : `Game starts in ${this.game.minigame.countdown} seconds`,
-                    this.textCanvas.width / 6,
+                    started
+                        ? `There is a game in progress, remaining time: ${countdown} seconds`
+                        : `Game starts in ${countdown} seconds`,
+                    scoreX,
                     30,
                     true,
                     'white'
@@ -936,51 +980,91 @@ export default class Renderer {
             }
 
             case 'ingame': {
-                this.drawText(
-                    `Red: ${this.game.minigame.redTeamScore}`,
-                    this.textCanvas.width / 6 - 20,
-                    30,
-                    true,
-                    'red'
-                );
-
-                this.drawText(
-                    `Blue: ${this.game.minigame.blueTeamScore}`,
-                    this.textCanvas.width / 6 + 20,
-                    30,
-                    true,
-                    'blue'
-                );
-
-                this.drawText(
-                    `Time left: ${this.game.minigame.countdown} seconds`,
-                    this.textCanvas.width / 6,
-                    50,
-                    true,
-                    'white'
-                );
-
+                this.drawText(`Red: ${redTeamScore}`, scoreX - 20, 30, true, 'red');
+                this.drawText(`Blue: ${blueTeamScore}`, scoreX + 20, 30, true, 'blue');
+                this.drawText(`Time left: ${countdown} seconds`, scoreX, 50, true, 'white');
                 return;
             }
         }
     }
 
-    protected drawLighting(lighting: RendererLighting): void {
-        if (lighting.relative) {
-            let lightX =
-                    (lighting.light.origX - this.camera.x / this.tileSize) * this.actualTileSize,
-                lightY =
-                    (lighting.light.origY - this.camera.y / this.tileSize) * this.actualTileSize;
+    /**
+     * Draws the coursing GUI. The score is different for every player, so we
+     * are constantly updating it with the data we receive from the server.
+     * @param minigame Contains the minigame data.
+     */
 
-            lighting.light.position = new Vec2(lightX, lightY);
-            lighting.compute(this.canvasWidth, this.canvasHeight);
-            this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-        } else if (!lighting.computed) {
-            lighting.compute(this.canvasWidth, this.canvasHeight);
-            lighting.computed = true;
+    private drawCoursingGUI(minigame: Minigame): void {
+        let { status, started, countdown, score } = minigame,
+            scoreX = this.textCanvas.width / 6;
+
+        switch (status) {
+            case 'lobby': {
+                this.drawText(
+                    started
+                        ? `There is a game in progress, remaining time: ${countdown} seconds`
+                        : `Game starts in ${countdown} seconds`,
+                    scoreX,
+                    30,
+                    true,
+                    'white'
+                );
+                return;
+            }
+
+            case 'ingame': {
+                this.drawText(`Score: ${score}`, scoreX, 30, true, 'white');
+                return;
+            }
+        }
+    }
+
+    /**
+     * Handles drawing the lighting for a given lighting object. We essentially have two
+     * different kinds of lights, entity based and relative ones. By default lights which
+     * do not have an entity are relative to the player. In the case of entity-based ones
+     * they follow the entity they belong to. Otherwise they stay in the same position
+     * on the map (even after moving the camera).
+     * @param lighting The lighting object that contains the lamp we are drawing.
+     */
+
+    protected drawLighting(lighting: RendererLighting): void {
+        let { light } = lighting;
+
+        // Handle drawing the light where the entity is.
+        if (light.entity) {
+            // Use our own player if the instance of the light's entity matches our own.
+            let isPlayer = light.entity === this.game.player.instance,
+                entity: Player = isPlayer ? this.game.player : this.game.entities.get(light.entity);
+
+            // Hide the light if there is light source from the entity.
+            light.hidden = !entity?.hasLight();
+
+            if (light.hidden) return;
+
+            // If the entity has a light source and it's not our own player, check its visibility.
+            if (!isPlayer) light.hidden = !this.camera.isVisible(entity.gridX, entity.gridY, 4, 8);
+
+            // Stop here if the light is hidden.
+            if (light.hidden) return;
+
+            light.position = this.getLightPosition(entity.x, entity.y);
+        } else {
+            light.hidden = !this.camera.isVisible(light.gridX, light.gridY, 4, 8);
+
+            if (light.hidden) return;
+
+            let lightX = (light.originalX - this.camera.x) * this.camera.zoomFactor,
+                lightY = (light.originalY - this.camera.y) * this.camera.zoomFactor;
+
+            light.position = new Vec2(lightX, lightY);
         }
 
-        lighting.render(this.overlayContext);
+        // // Don't do any fancy lighting if we're in low power mode.
+        // if (this.game.isLowPowerMode()) return;
+
+        // lighting.compute(this.overlay.width, this.overlay.height);
+        // lighting.render(this.overlayContext);
     }
 
     // -------------- Drawing Methods --------------
@@ -1072,64 +1156,132 @@ export default class Renderer {
     }
 
     /**
-     * Adds a new light to the rendering screen.
+     * Creates a new light element using the provided data about its position, distance
+     * and colour. We then add it to our lightings array and draw it on the overlay.
      * @param info Contains information about the light we are adding.
+     * @param relative Whether or not the light stays in a single position in the world.
+     * @param flicker Whether or not the light should flicker.
      */
 
-    public addLight(info: SerializedLight): void {
-        let light = new Lamp(
+    public addLight(info: SerializedLight): RendererLighting | undefined {
+        // Prevent adding lighting if it already exists.
+        if (info.instance in this.lightings) return;
+
+        // Create the new lighting object and lamp with the provided data.
+        let lighting = new Lighting({
+            light: new Lamp(
                 this.getLightData(info.x, info.y, info.distance, info.diffuse, info.colour)
-            ) as RendererLamp,
-            lighting = new Lighting({
-                light
-                // diffuse: light.diffuse
-            }) as RendererLighting;
+            )
+        }) as RendererLighting;
 
-        light.origX = light.position.x;
-        light.origY = light.position.y;
+        // Store the grid position of the light (used for camera calculations).
+        lighting.light.gridX = info.x;
+        lighting.light.gridY = info.y;
 
-        light.diff = Math.round(light.distance / this.tileSize);
+        // Store the offset of the light (used for flicker calculations).
+        lighting.light.offset = Utils.randomInt(0, 1000);
 
-        if (this.hasLighting(lighting)) return;
+        // Store the absolute position of the light.
+        lighting.light.originalX = lighting.light.position.x;
+        lighting.light.originalY = lighting.light.position.y;
+        lighting.light.originalDistance = lighting.light.distance;
 
-        lighting.relative = true;
+        // Whether the light is bound to an entity
+        lighting.light.entity = info.entity;
 
-        this.lightings.push(lighting);
-        this.darkMask.lights.push(light);
+        lighting.light.flickerSpeed = info.flickerSpeed;
+        lighting.light.flickerIntensity = info.flickerIntensity;
 
-        this.drawLighting(lighting);
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+        // Add the lighting to our dictionary and the dark mask dictionary.
+        this.lightings[info.instance] = lighting;
+        this.darkMask.lights.push(lighting.light);
+
+        return lighting;
     }
 
+    /**
+     * Adds a light to a player entity in the world. This can be our own player if we
+     * do not specify another object, or it can be another player which has a light source.
+     * @param player The player we want to add a light to, defaults to our own player.
+     */
+
+    public addPlayerLight(player: Player = this.game.player): void {
+        let light = player.getLight(),
+            x = this.overlay.width / this.tileSize / 2,
+            y = this.overlay.height / this.tileSize / 2;
+
+        // Handle the outer light if it exists.
+        if (light.outer) this.addLight(this.getSerializedLight(player.instance, x, y, light.outer));
+
+        // Handle the inner light if it exists.
+        if (light.inner)
+            this.addLight(this.getSerializedLight(`${player.instance}inner`, x, y, light.inner));
+    }
+
+    /**
+     * Responsible for synchronizing the player lighting with the latest
+     * information from the player's light equipment.
+     * @param player The player we want to update the light for, if not specified
+     * then we assume it's our own player.
+     */
+
+    public updatePlayerLight(player: Player = this.game.player): void {
+        let light = player.getLight(),
+            outer = this.lightings[player.instance],
+            inner = this.lightings[`${player.instance}inner`];
+
+        // No light exists for the player, so we add it.
+        if (player.hasLight() && (!outer || !inner)) this.addPlayerLight(player);
+
+        // Update the outer light if it exists.
+        if (outer && light.outer) {
+            outer.light.distance = light.outer.distance;
+            outer.light.originalDistance = light.outer.distance;
+
+            outer.light.color = light.outer.colour;
+
+            outer.light.flickerSpeed = light.outer.flickerSpeed;
+            outer.light.flickerIntensity = light.outer.flickerIntensity;
+        }
+
+        // Update the inner light if it exists.
+        if (inner && light.inner) {
+            inner.light.distance = light.inner.distance;
+            inner.light.originalDistance = light.inner.distance;
+
+            inner.light.color = light.inner.colour;
+
+            inner.light.flickerSpeed = light.inner.flickerSpeed;
+            inner.light.flickerIntensity = light.inner.flickerIntensity;
+        }
+    }
+
+    /**
+     * Goes through every light in the renderer and resizes it relative
+     * to the proportion of the zoom factor versus the default zoom.
+     */
+
+    public resizeLights(): void {
+        let scale = this.camera.zoomFactor / DEFAULT_ZOOM;
+
+        this.forEachLighting((lighting: RendererLighting) => {
+            lighting.light.distance = lighting.light.originalDistance * scale;
+        });
+    }
+
+    /**
+     * Removes all the lightings and lamps from the renderer and recomputes the dark mask.
+     * We re-add the player light since it gets toggled depending on the player has a torch
+     * or not.
+     */
+
     public removeAllLights(): void {
-        this.lightings = [];
+        this.lightings = {};
         this.darkMask.lights = [];
 
         this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-    }
 
-    public removeNonRelativeLights(): void {
-        for (let i in this.lightings)
-            if (!this.lightings[i].light.relative) {
-                let index = parseInt(i);
-
-                this.lightings.splice(index, 1);
-                this.darkMask.lights.splice(index, 1);
-            }
-
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-    }
-
-    private hasLighting(lighting: RendererLighting): boolean {
-        for (let { light } of this.lightings)
-            if (
-                lighting.light.origX === light.origX &&
-                lighting.light.origY === light.origY &&
-                lighting.light.distance === light.distance
-            )
-                return true;
-
-        return false;
+        this.addPlayerLight();
     }
 
     /**
@@ -1139,7 +1291,7 @@ export default class Renderer {
      */
 
     protected hasRenderedFrame(): boolean {
-        if (this.forceRendering || !this.isLowPowerMode()) return false;
+        if (this.forceRendering || !this.game.isLowPowerMode()) return false;
 
         if (this.stopRendering) return true;
 
@@ -1192,7 +1344,7 @@ export default class Renderer {
      */
 
     protected saveFrame(): void {
-        if (!this.isLowPowerMode()) return;
+        if (!this.game.isLowPowerMode()) return;
 
         this.renderedFrame[0] = this.camera.x;
         this.renderedFrame[1] = this.camera.y;
@@ -1248,47 +1400,80 @@ export default class Renderer {
     }
 
     /**
-     * Checks whether a light source is in the radius of the camera.
-     * @param lighting The light source we are checking for.
-     * @returns Whether or not the light source is in the camera radius.
+     * Calculates the light's position on the screen given an entity's position. This
+     * is used when our player character moves or when the light belongs to another entity.
+     * @param x The absolute x position of the entity.
+     * @param y The absolute y position of the entity.
+     * @returns A position object of where the light should be on the screen.
      */
 
-    private inRadius(lighting: RendererLighting): boolean {
-        let position = {
-            x: lighting.light.origX,
-            y: lighting.light.origY,
-            diff: lighting.light.diff
-        };
-
-        return (
-            position.x > this.camera.gridX - position.diff &&
-            position.x < this.camera.gridX + this.camera.gridWidth + position.diff &&
-            position.y > this.camera.gridY - position.diff &&
-            position.y < this.camera.gridY + this.camera.gridHeight + position.diff
+    private getLightPosition(x: number, y: number): Vec2 {
+        return new Vec2(
+            (x - this.camera.x) * this.camera.zoomFactor + this.actualTileSize / 2,
+            (y - this.camera.y) * this.camera.zoomFactor
         );
     }
 
     /**
-     * A flipped tile is any tile that contains a flip
-     * flag or transpose flag.
-     * @param tileInfo Tile data received from the server.
-     * @returns Whether or not the tile contains and flip flags.
+     * Creates a partial lamp object given the specified data.
+     * @param x The x grid position of the light.
+     * @param y The y grid position of the light.
+     * @param distance How far the light can reach.
+     * @param diffuse How much the light can diffuse.
+     * @param color The color of the light.
+     * @returns A partial lamp object.
      */
 
-    protected isFlipped(tileInfo: RotatedTile): boolean {
-        if (!tileInfo) return false;
-
-        return tileInfo.v || tileInfo.h || tileInfo.d;
+    private getLightData(
+        x: number,
+        y: number,
+        distance: number,
+        diffuse: number,
+        color: string
+    ): Partial<Lamp> {
+        return {
+            position: new Vec2(
+                x * this.tileSize + this.tileSize / 2,
+                y * this.tileSize + this.tileSize / 2
+            ),
+            distance,
+            diffuse,
+            color,
+            radius: 0,
+            samples: 2,
+            roughness: 0,
+            angle: 0
+        };
     }
 
     /**
-     * Low power mode is activated when both the camera centration and
-     * animated tiles are turned off. This is for devices that cannot
-     * sustain the constant re-drawing of the frame every second.
+     * Given a lamp data object (generally from a player's weapon), we generate
+     * a serialized light object that can be used to render the light onto the
+     * screen.
+     * @param instance Who this light source belongs to.
+     * @param x The x grid position of the light.
+     * @param y The y grid position of the light.
+     * @param lamp Contains the lamp data from which we generate the light.
+     * @returns A serialized light object.
      */
 
-    protected isLowPowerMode(): boolean {
-        return !this.camera.isCentered() && !this.animateTiles;
+    private getSerializedLight(
+        instance: string,
+        x: number,
+        y: number,
+        lamp: LampData
+    ): SerializedLight {
+        return {
+            instance,
+            x,
+            y,
+            distance: lamp.distance,
+            diffuse: 0.2,
+            colour: lamp.colour,
+            entity: instance.includes('inner') ? instance.split('inner')[0] : instance,
+            flickerSpeed: lamp.flickerSpeed,
+            flickerIntensity: lamp.flickerIntensity
+        };
     }
 
     /**
@@ -1361,35 +1546,6 @@ export default class Renderer {
                 return this.crownTier7;
             }
         }
-    }
-
-    /**
-     * Creates a partial lamp object given the specified data.
-     * @param x The x grid position of the light.
-     * @param y The y grid position of the light.
-     * @param distance How far the light can reach.
-     * @param diffuse How much the light can diffuse.
-     * @param color The color of the light.
-     * @returns A partial lamp object.
-     */
-
-    private getLightData(
-        x: number,
-        y: number,
-        distance: number,
-        diffuse: number,
-        color: string
-    ): Partial<Lamp> {
-        return {
-            position: new Vec2(x, y),
-            distance,
-            diffuse,
-            color,
-            radius: 0,
-            samples: 2,
-            roughness: 0,
-            angle: 0
-        };
     }
 
     // -------------- Update functions --------------
@@ -1490,7 +1646,7 @@ export default class Renderer {
      * @param callback The light currently being iterated.
      */
 
-    private forEachLighting(callback: (lighting: RendererLighting) => void): void {
+    public forEachLighting(callback: (lighting: RendererLighting) => void): void {
         for (let lighting in this.lightings) callback(this.lightings[lighting]);
     }
 

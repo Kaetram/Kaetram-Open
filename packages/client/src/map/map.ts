@@ -9,7 +9,8 @@ import type {
     ProcessedTileset,
     RegionData,
     RegionTile,
-    RegionTileData
+    RegionTileData,
+    RotatedTile
 } from '@kaetram/common/types/map';
 import type Game from '../game';
 
@@ -42,7 +43,9 @@ export default class Map {
     public tilesets: TilesetInfo[] = [];
     private rawTilesets: ProcessedTileset[] = mapData.tilesets; // Key is tileset id, value is the firstGID
     private cursorTiles: CursorTiles = {};
+
     private animatedTiles: { [tileId: number]: ProcessedAnimation[] } = mapData.animations;
+    public dynamicAnimatedTiles: { [index: number]: RegionTile } = {};
 
     public mapLoaded = false;
     public regionsLoaded = 0;
@@ -125,10 +128,19 @@ export default class Map {
     public loadRegion(data: RegionTileData[], region: number): void {
         for (let tile of data) {
             let index = this.coordToIndex(tile.x, tile.y),
-                objectIndex = this.objects.indexOf(index);
+                objectIndex = this.objects.indexOf(index),
+                useAnimationData =
+                    !(index in this.dynamicAnimatedTiles) && !this.game.isLowPowerMode();
 
-            // Store the tile data so that we can render it later.
-            this.data[index] = tile.data;
+            /**
+             * If we're in low power mode just store the tile data as is. Otherwise we store
+             * the animated data if specified and default to the data if not.
+             */
+
+            this.data[index] = useAnimationData ? tile.data : tile.animation || tile.data;
+
+            // If the tile contains an animation flag, we store it in the dynamic animated tiles dictionary.
+            if (tile.animation) this.dynamicAnimatedTiles[index] = tile.data;
 
             // Add collision if the tile is colliding and there's no collision.
             if (tile.c && !this.isColliding(tile.x, tile.y)) this.grid[tile.y][tile.x] = 1;
@@ -149,7 +161,7 @@ export default class Map {
             if (!tile.o && objectIndex > -1) this.objects.splice(objectIndex, 1);
 
             // Add the tile information to the WebGL renderer if it's active.
-            if (this.game.useWebGl) this.game.renderer.setTile(index, tile.data);
+            if (this.game.useWebGl) this.game.renderer.setTile(index, this.data[index]);
         }
 
         // Store the region we just saved into our local storage.
@@ -327,21 +339,6 @@ export default class Map {
     }
 
     /**
-     * Converts the x and y grid coordinate into an index and checks
-     * our cursor tiles dictionary for an entry of the index. If it's not
-     * found, it returns undefined by default.
-     * @param x The x grid coordinate we are checking.
-     * @param y The y grid coordinate we are checking.
-     * @returns The name of the cursor at the tile index if exists, otherwise undefined.
-     */
-
-    public getTileCursor(x: number, y: number): string {
-        let index = this.coordToIndex(x, y);
-
-        return this.cursorTiles[index];
-    }
-
-    /**
      * Checks if the tileId parameter is part of our high tiles array.
      * @param tileId The tileId we are checking.
      * @returns Whether the tileId is contained in our high tiles array.
@@ -394,6 +391,16 @@ export default class Map {
     }
 
     /**
+     * A flipped tile is any tile that contains a flip flag or transpose flag.
+     * @param tile Tile data received from the server.
+     * @returns Whether or not the tile contains and flip flags.
+     */
+
+    public isFlipped(tile: RegionTile): tile is RotatedTile {
+        return (tile as RotatedTile).v || (tile as RotatedTile).h || (tile as RotatedTile).d;
+    }
+
+    /**
      * Grabs an array of animated tile information based on tileId.
      * @param tileId THe tileId we are looking for.
      * @returns A ProcessedAnimation object array from our animated tiles.
@@ -415,6 +422,35 @@ export default class Map {
 
         return undefined;
     }
+
+    /**
+     * Extracts the tileId from a RegionTile object. Used to simplify redundant
+     * code when determining between a plain tile and a flipped tile.
+     * @param tile The RegionTile object we are extracting the tileId from.
+     * @returns The tileId of the RegionTile object.
+     */
+
+    private getTileId(tile: RegionTile): number {
+        if (this.isFlipped(tile)) return tile.tileId;
+
+        return tile as number;
+    }
+
+    /**
+     * Converts the x and y grid coordinate into an index and checks
+     * our cursor tiles dictionary for an entry of the index. If it's not
+     * found, it returns undefined by default.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @returns The name of the cursor at the tile index if exists, otherwise undefined.
+     */
+
+    public getTileCursor(x: number, y: number): string {
+        let index = this.coordToIndex(x, y);
+
+        return this.cursorTiles[index];
+    }
+
     /**
      * Callback for when the map is ready to be used (preliminary data is loaded).
      */

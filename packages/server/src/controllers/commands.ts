@@ -6,7 +6,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Command, Notification, NPC, Pointer, Store } from '@kaetram/common/network/impl';
+import { Command, NPC, Store } from '@kaetram/common/network/impl';
 
 import type Mob from '../game/entity/character/mob/mob';
 import type Achievement from '../game/entity/character/player/achievement/achievement';
@@ -470,22 +470,23 @@ export default class Commands {
 
                     if (!posX || !posY) return;
 
-                    this.player.send(
-                        new Pointer(Opcodes.Pointer.Location, {
-                            id: this.player.instance,
-                            x: posX,
-                            y: posY
-                        })
-                    );
+                    this.player.pointer({
+                        type: Opcodes.Pointer.Location,
+                        instance: this.player.instance,
+                        x: posX,
+                        y: posY
+                    });
                 } else {
                     let instance = blocks.shift()!;
 
                     if (!instance) return;
 
-                    this.player.send(
-                        new Pointer(Opcodes.Pointer.Entity, {
-                            id: instance
-                        })
+                    this.player.pointer(
+                        {
+                            type: Opcodes.Pointer.Entity,
+                            instance
+                        },
+                        false
                     );
                 }
 
@@ -568,7 +569,7 @@ export default class Commands {
             case 'max': {
                 this.player.skills.forEachSkill((skill: Skill) => {
                     skill.setExperience(0);
-                    skill.addExperience(669_420_769);
+                    skill.addExperience(696_420_969);
                 });
                 break;
             }
@@ -1020,6 +1021,20 @@ export default class Commands {
                 if (!time) return this.player.notify(`Malformed command, expected /countdown time`);
 
                 this.player.countdown(time);
+            }
+
+            case 'collision': {
+                let x = parseInt(blocks.shift()!),
+                    y = parseInt(blocks.shift()!);
+
+                if (!x || !y)
+                    return this.player.notify(`Malformed command, expected /collision x y`);
+
+                let index = this.world.map.coordToIndex(x, y);
+
+                this.player.notify(`${this.world.map.isColliding(x, y)} - index: ${index}`);
+
+                log.debug(`Data: ${this.world.map.data[index]}`);
             }
 
             case 'toggle': {

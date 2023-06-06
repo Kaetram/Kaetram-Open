@@ -2,7 +2,8 @@ import { Modules } from '@kaetram/common/network';
 
 import type Character from '../entity/character/character';
 
-const DEFAULT_ZOOM = 3,
+export const MAXIMUM_ZOOM = 6,
+    DEFAULT_ZOOM = 3,
     MAX_GRID_WIDTH = 52,
     MAX_GRID_HEIGHT = 28;
 
@@ -319,11 +320,11 @@ export default class Camera {
      * @returns Whether or not the coordinates are within the viewport.
      */
 
-    public isVisible(x: number, y: number, offsetX: number, offsetY: number): boolean {
+    public isVisible(x: number, y: number, offsetX: number, offsetY = offsetX): boolean {
         return (
             x > this.gridX - offsetX &&
-            x < this.gridX + this.gridWidth &&
-            y > this.gridY - offsetX &&
+            x < this.gridX + this.gridWidth + offsetX &&
+            y > this.gridY - offsetY &&
             y < this.gridY + this.gridHeight + offsetY
         );
     }

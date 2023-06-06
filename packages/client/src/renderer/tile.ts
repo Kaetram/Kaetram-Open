@@ -1,7 +1,10 @@
-import type { ProcessedAnimation } from '@kaetram/common/types/map';
+import type { ProcessedAnimation, RegionTile } from '@kaetram/common/types/map';
 
 export default class Tile {
     public animationIndex = 0;
+
+    // Denotes whether or not to delete the tile after the animation is complete.
+    public expired = false;
 
     // WebGL rendering functions.
     public uploaded = true;
@@ -13,7 +16,8 @@ export default class Tile {
         public index: number, // Index position of the tile.
         public animationInfo: ProcessedAnimation[],
         public isFlipped = false,
-        public isHighTile = false
+        public isHighTile = false, // Used by the WebGL renderer.
+        public postAnimationData?: RegionTile
     ) {}
 
     /**
@@ -32,9 +36,11 @@ export default class Tile {
 
             this.uploaded = false;
 
-            if (this.animationIndex >= Object.keys(this.animationInfo).length - 1)
+            if (this.animationIndex >= Object.keys(this.animationInfo).length - 1) {
+                if (this.postAnimationData) this.expired = true;
+
                 this.animationIndex = 0;
-            else this.animationIndex++;
+            } else this.animationIndex++;
         }
     }
 }

@@ -1039,6 +1039,72 @@
     "projectileName": "terror"
   },
 
+  "lantern": {
+    "type": "weapon",
+    "name": "Lantern",
+    "price": 1000,
+    "light": {
+      "outer": {
+        "distance": 180,
+        "colour": "rgba(204, 204, 0, 0.1)",
+        "flickerSpeed": 300,
+        "flickerIntensity": 2
+      },
+      "inner": {
+        "distance": 100,
+        "colour": "rgba(204, 204, 0, 0.2)",
+        "flickerSpeed": 400,
+        "flickerIntensity": 1
+      }
+    },
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 1
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
+  "lantern2": {
+    "type": "weapon",
+    "name": "Lantern 2",
+    "price": 1000,
+    "light": {
+      "outer": {
+        "distance": 180,
+        "colour": "rgba(204, 0, 0, 0.1)",
+        "flickerSpeed": 200,
+        "flickerIntensity": 2
+      },
+      "inner": {
+        "distance": 100,
+        "colour": "rgba(204, 0, 0, 0.2)",
+        "flickerSpeed": 400,
+        "flickerIntensity": 1
+      }
+    },
+    "attackStats": {
+      "crush": 1,
+      "slash": 1,
+      "stab": 1,
+      "archery": 0,
+      "magic": 1
+    },
+    "bonuses": {
+      "accuracy": 1,
+      "strength": 0,
+      "archery": 0,
+      "magic": 0
+    }
+  },
+
   "danbo": {
     "type": "skin",
     "name": "Danbo"
