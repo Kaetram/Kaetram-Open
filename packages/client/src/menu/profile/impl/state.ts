@@ -18,14 +18,18 @@ export default class State extends Menu {
     private attackStyleList: HTMLUListElement = document.querySelector('#attack-style-list')!;
 
     // Equipment information
-    private weapon: HTMLElement = document.querySelector('#state-page > .weapon-slot')!;
-    private weaponSkin: HTMLElement = document.querySelector('#state-page > .weapon-skin-slot')!;
-    private armour: HTMLElement = document.querySelector('#state-page > .armour-slot')!;
-    private armourSkin: HTMLElement = document.querySelector('#state-page > .armour-skin-slot')!;
-    private pendant: HTMLElement = document.querySelector('#state-page > .pendant-slot')!;
-    private ring: HTMLElement = document.querySelector('#state-page > .ring-slot')!;
-    private boots: HTMLElement = document.querySelector('#state-page > .boots-slot')!;
-    private arrow: HTMLElement = document.querySelector('#state-page > .arrows-slot')!;
+    private helmet: HTMLElement = document.querySelector('#helmet-slot > div')!;
+    private pendant: HTMLElement = document.querySelector('#pendant-slot > div')!;
+    private arrows: HTMLElement = document.querySelector('#arrows-slot > div')!;
+    private chestplate: HTMLElement = document.querySelector('#chestplate-slot > div')!;
+    private weapon: HTMLElement = document.querySelector('#weapon-slot > div')!;
+    private shield: HTMLElement = document.querySelector('#shield-slot > div')!;
+    private ring: HTMLElement = document.querySelector('#ring-slot > div')!;
+    private weaponSkin: HTMLElement = document.querySelector('#weapon-skin-slot > div')!;
+    private armourSkin: HTMLElement = document.querySelector('#armour-skin-slot > div')!;
+    private legplate: HTMLElement = document.querySelector('#legplate-slot > div')!;
+    private cape: HTMLElement = document.querySelector('#cape-slot > div')!;
+    private boots: HTMLElement = document.querySelector('#boots-slot > div')!;
 
     private unequipCallback?: UnequipCallback;
     private styleCallback?: StyleCallback;
@@ -39,18 +43,18 @@ export default class State extends Menu {
         this.weaponSkin.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.WeaponSkin)
         );
-        this.armour.addEventListener('click', () =>
+        this.chestplate.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Helmet)
         );
         this.armourSkin.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Skin)
+            this.unequipCallback?.(Modules.Equipment.ArmourSkin)
         );
         this.pendant.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Pendant)
         );
         this.ring.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Ring));
         this.boots.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Boots));
-        this.arrow.addEventListener('click', () =>
+        this.arrows.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Arrows)
         );
     }
@@ -67,17 +71,18 @@ export default class State extends Menu {
         this.experience.textContent = `${this.player.getTotalExperience()}`;
 
         // Synchronize equipment data
-        this.weapon.style.backgroundImage = Util.getImageURL(this.player.getWeapon().key);
-        this.weaponSkin.style.backgroundImage = Util.getImageURL(this.player.getWeaponSkin().key);
-        // Cloth armour shouldn't be displayed in the UI.
-        this.armour.style.backgroundImage = Util.getImageURL(
-            this.player.getHelmet().key === 'clotharmor' ? '' : this.player.getHelmet().key
-        );
-        this.armourSkin.style.backgroundImage = Util.getImageURL(this.player.getArmourSkin().key);
+        this.helmet.style.backgroundImage = Util.getImageURL(this.player.getHelmet().key);
         this.pendant.style.backgroundImage = Util.getImageURL(this.player.getPendant().key);
+        this.arrows.style.backgroundImage = Util.getImageURL(this.player.getArrows().key);
+        this.chestplate.style.backgroundImage = Util.getImageURL(this.player.getChestplate().key);
+        this.weapon.style.backgroundImage = Util.getImageURL(this.player.getWeapon().key);
+        this.shield.style.backgroundImage = Util.getImageURL(this.player.getShield().key);
         this.ring.style.backgroundImage = Util.getImageURL(this.player.getRing().key);
+        this.weaponSkin.style.backgroundImage = Util.getImageURL(this.player.getWeaponSkin().key);
+        this.armourSkin.style.backgroundImage = Util.getImageURL(this.player.getArmourSkin().key);
+        this.legplate.style.backgroundImage = Util.getImageURL(this.player.getLegplate().key);
+        this.cape.style.backgroundImage = Util.getImageURL(this.player.getCape().key);
         this.boots.style.backgroundImage = Util.getImageURL(this.player.getBoots().key);
-        this.arrow.style.backgroundImage = Util.getImageURL(this.player.getArrows().key);
 
         // Synchronize the attack styles
         this.loadAttackStyles();
