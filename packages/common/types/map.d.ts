@@ -19,6 +19,7 @@ export interface RegionTileData {
     x: number;
     y: number;
     data: RegionTile;
+    animation?: RegionTile; // animation data
     c?: boolean; // collision property
     cur?: string; // cursor property
     o?: boolean; // object property
@@ -66,6 +67,8 @@ export interface ProcessedArea {
     distance?: number;
     diffuse?: number;
     objects?: Position[];
+    flickerSpeed?: number;
+    flickerIntensity?: number;
 
     // Chest
     entities?: number;
@@ -93,6 +96,7 @@ export interface ProcessedArea {
     // Dynamic
     quest?: string;
     mapping?: number;
+    animation?: number;
 
     // Minigame
     minigame?: string;
@@ -147,7 +151,9 @@ export interface ProcessedMap {
 
     data: (number | number[])[];
 
+    // Corresponds to the tile id of the tile that is considered a collision.
     collisions: number[];
+
     entities: { [tileId: number]: string };
 
     // tilesetId: firstGid

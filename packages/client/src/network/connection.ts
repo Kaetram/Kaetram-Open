@@ -280,6 +280,9 @@ export default class Connection {
         }
 
         this.game.player.sync();
+
+        // Update the lighting for the player.
+        this.renderer.updatePlayerLight();
     }
 
     /**
@@ -349,6 +352,8 @@ export default class Connection {
         player.load(data, true);
 
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
+
+        this.renderer.updatePlayerLight(player);
     }
 
     /**
@@ -1095,36 +1100,24 @@ export default class Connection {
 
                 if (!entity) return;
 
-                this.pointer.create(entity.instance, opcode);
-                this.pointer.setToEntity(entity);
+                this.pointer.create(opcode, info.instance);
 
                 break;
             }
 
+            // Location based pointers stick to one point on the map.
             case Opcodes.Pointer.Location: {
-                this.pointer.create(info.instance, opcode);
-                this.pointer.setToPosition(
+                this.pointer.create(
+                    opcode,
                     info.instance,
                     info.x! * this.map.tileSize,
                     info.y! * this.map.tileSize
                 );
-
-                break;
-            }
-
-            case Opcodes.Pointer.Relative: {
-                this.pointer.create(info.instance, opcode);
-                this.pointer.setRelative(info.instance, info.x!, info.y!);
                 break;
             }
 
             case Opcodes.Pointer.Remove: {
                 this.pointer.clean();
-                break;
-            }
-
-            case Opcodes.Pointer.Button: {
-                this.pointer.create(info.instance, opcode, info.button);
                 break;
             }
         }
@@ -1174,9 +1167,11 @@ export default class Connection {
     }
 
     /**
-     *
-     * @param opcode
-     * @param info
+     * Handles the logic for the overlay system. Overlay is generally a mask applied on top
+     * of the current viewport to darken the screen. Using that mask we can calculate things
+     * such as the lighting effect from a torch for example.
+     * @param opcode Contains information about the type of overlay action to perform.
+     * @param info Information about the overlay such as the image and colour (or lighting).
      */
 
     private handleOverlay(opcode: Opcodes.Overlay, info: OverlayPacket): void {
@@ -1184,6 +1179,9 @@ export default class Connection {
             case Opcodes.Overlay.Set: {
                 this.overlays.update(info.image);
                 this.renderer.updateDarkMask(info.colour);
+
+                this.renderer.addPlayerLight();
+                this.renderer.resizeLights();
                 break;
             }
 
@@ -1194,7 +1192,8 @@ export default class Connection {
             }
 
             case Opcodes.Overlay.Lamp: {
-                return this.renderer.addLight(info.light!);
+                this.renderer.addLight(info.light!);
+                return;
             }
         }
     }
@@ -1305,22 +1304,23 @@ export default class Connection {
 
         switch (info.action) {
             // Game starting packet.
-            case Opcodes.TeamWar.Score: {
-                if (!isNaN(info.redTeamKills!) && !isNaN(info.blueTeamKills!))
-                    minigame.setScore(info.redTeamKills!, info.blueTeamKills!);
+            case Opcodes.MinigameActions.Score: {
+                minigame.setScore(info);
 
                 return minigame.setStatus('ingame');
             }
 
             // Entering lobby packets
-            case Opcodes.TeamWar.End:
-            case Opcodes.TeamWar.Lobby: {
+            case Opcodes.MinigameActions.End:
+            case Opcodes.MinigameActions.Lobby: {
                 player.nameColour = '';
+                this.pointer.clean();
+
                 return minigame.setStatus('lobby');
             }
 
             // Exiting the entire minigame
-            case Opcodes.TeamWar.Exit: {
+            case Opcodes.MinigameActions.Exit: {
                 return minigame.reset();
             }
         }

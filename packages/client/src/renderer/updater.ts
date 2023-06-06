@@ -1,3 +1,4 @@
+import Utils from '../utils/util';
 import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
 
@@ -8,6 +9,7 @@ import type Canvas from './canvas';
 import type Renderer from './renderer';
 import type Entity from '../entity/entity';
 import type SpritesController from '../controllers/sprites';
+import type { RendererLighting } from './renderer';
 
 export default class Updater {
     private tileSize: number;
@@ -33,6 +35,7 @@ export default class Updater {
         this.updateBubbles();
         this.updateSounds();
         this.updateAnimatedTiles();
+        this.updateLights();
     }
 
     /**
@@ -227,7 +230,9 @@ export default class Updater {
     }
 
     /**
-     * Updates the animated tiles present in the renderer.
+     * In the case of using Canvas2D renderer, we iterate through all the animated
+     * tiles currently visible and animate their frames to the game tick. We also
+     * handle removal and updating of expired tiles.
      */
 
     private updateAnimatedTiles(): void {
@@ -240,7 +245,38 @@ export default class Updater {
         if (this.renderer.isWebGl() || !this.renderer.animateTiles) return;
 
         // Update the animated tiles.
-        for (let index in (this.renderer as Canvas).animatedTiles)
-            (this.renderer as Canvas).animatedTiles[index].animate(this.game.time);
+        for (let index in (this.renderer as Canvas).animatedTiles) {
+            let tile = (this.renderer as Canvas).animatedTiles[index];
+
+            // Once the tile expires we update the map data and remove it from the renderer.
+            if (tile.expired) {
+                this.game.map.data[tile.index] = tile.postAnimationData!;
+
+                delete (this.renderer as Canvas).animatedTiles[index];
+
+                continue;
+            }
+
+            tile.animate(this.game.time);
+        }
+    }
+
+    /**
+     * Goes through each light source and flickers the light
+     * to give the effect of a candle or torch. We essentially
+     * just change the light's radius by a small amount.
+     */
+
+    private updateLights(): void {
+        this.renderer.forEachLighting((lighting: RendererLighting) => {
+            let { light } = lighting;
+
+            // -1 intensity means that the light doesn't flicker.
+            if (light.flickerIntensity < 0) return;
+
+            light.distance +=
+                Math.sin((this.game.time + light.offset) / light.flickerSpeed) /
+                light.flickerIntensity;
+        });
     }
 }

@@ -819,25 +819,27 @@ export default class Handler {
     }
 
     /**
-     * Synchronizes the lights within the region with the player.
+     * Sends the player the lights in the nearby regions.
      * @param regionId Identifier of the region we just entered.
      */
 
-    private handleLights(regionId: number): void {
-        let region = this.map.regions.get(regionId);
+    private handleLights(region: number): void {
+        if (region < 0) return;
 
-        if (!region) return;
+        this.map.regions.forEachSurroundingRegion(region, (regionId: number) => {
+            let region = this.map.regions.get(regionId);
 
-        region.forEachLight((light: Light) => {
-            if (this.player.hasLoadedLight(light.id)) return;
+            region.forEachLight((light: Light) => {
+                if (this.player.hasLoadedLight(light.id)) return;
 
-            this.player.send(
-                new Overlay(Opcodes.Overlay.Lamp, {
-                    light: light.serialize()
-                })
-            );
+                this.player.send(
+                    new Overlay(Opcodes.Overlay.Lamp, {
+                        light: light.serialize()
+                    })
+                );
 
-            this.player.lightsLoaded.push(light.id);
+                this.player.lightsLoaded.push(light.id);
+            });
         });
     }
 

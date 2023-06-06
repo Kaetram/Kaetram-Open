@@ -126,7 +126,7 @@ export default class Canvas extends Renderer {
 
                 this.drawTile(
                     context,
-                    this.animatedTiles[index].id,
+                    this.animatedTiles[index].id + 1,
                     this.animatedTiles[index].index,
                     flips
                 );
@@ -134,7 +134,7 @@ export default class Canvas extends Renderer {
 
             // Skip animated tiles unless we disable animations, then just draw the tile once.
             if (!this.map.isAnimatedTile(tile as number) || !this.animateTiles)
-                this.drawTile(context, (tile as number) - 1, index, flips);
+                this.drawTile(context, tile as number, index, flips);
         });
 
         this.saveFrame();
@@ -346,7 +346,7 @@ export default class Canvas extends Renderer {
         if (!this.animateTiles) return;
 
         this.forEachVisibleTile((tile: RegionTile, index: number) => {
-            let isFlipped = this.isFlipped(tile as RotatedTile);
+            let isFlipped = this.map.isFlipped(tile);
 
             if (isFlipped) tile = (tile as RotatedTile).tileId;
 
@@ -367,7 +367,9 @@ export default class Canvas extends Renderer {
                     tile as number,
                     index,
                     this.map.getTileAnimation(tile as number),
-                    isFlipped
+                    isFlipped,
+                    false,
+                    this.map.dynamicAnimatedTiles[index]
                 );
         }, 2);
     }
@@ -392,11 +394,11 @@ export default class Canvas extends Renderer {
      * @returns An array containing all flip flags in order.
      */
 
-    public getFlipped(tile: RotatedTile): number[] {
+    public getFlipped(tile: RegionTile): number[] {
         let flips: number[] = [];
 
         // Return empty if tile doesn't contain flip flags.
-        if (!this.isFlipped(tile)) return flips;
+        if (!this.map.isFlipped(tile)) return flips;
 
         if (tile.v) flips.push(TileFlip.Vertical);
         if (tile.d) flips.push(TileFlip.Diagonal);
@@ -415,14 +417,5 @@ export default class Canvas extends Renderer {
     private forEachDrawingContext(callback: ContextCallback): void {
         for (let context in this.drawingContexts)
             callback(this.drawingContexts[context] as CanvasRenderingContext2D);
-    }
-
-    /**
-     * Iterates through each of the animated tiles.
-     * @param callback Returns the tile object for that animated tile.
-     */
-
-    private forEachAnimatedTile(callback: (tile: Tile) => void): void {
-        for (let tile in this.animatedTiles) callback(this.animatedTiles[tile]);
     }
 }

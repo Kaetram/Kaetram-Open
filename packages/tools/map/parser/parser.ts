@@ -9,7 +9,7 @@ import type {
     ProcessedResource,
     ProcessedTileset
 } from '@kaetram/common/types/map';
-import type { Animation, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
+import type { Animation, Layer, LayerObject, MapData, Property, Tileset } from './mapdata';
 
 interface Resources {
     [key: string]: ProcessedResource;
@@ -19,7 +19,6 @@ export default class ProcessMap {
     private map: ProcessedMap;
     private tilesetEntities: { [tileId: number]: string } = {};
 
-    private collisionTiles: { [tileId: number]: boolean } = {};
     private trees: Resources = {};
     private rocks: Resources = {};
     private fishSpots: Resources = {};
@@ -48,6 +47,7 @@ export default class ProcessMap {
             data: [],
 
             collisions: [],
+
             entities: {},
 
             tilesets: [],
@@ -139,16 +139,19 @@ export default class ProcessMap {
     }
 
     /**
-     * We parse the tileset and extract collisions
-     * and other individual tile properties.
+     * Handles parsing an individual tileset and extracting all the necessary
+     * information, such as tile properties, animations, entities, etc.
      * @param tileset A tileset from the tilemap.
      */
 
     private parseTileset(tileset: Tileset): void {
         let { tiles, firstgid } = tileset;
 
+        // Tiled starts counting from 1 for some reason.
+        firstgid -= 1;
+
         for (let tile of tiles) {
-            let tileId = this.getTileId(tileset, tile);
+            let tileId = this.getId(firstgid, tile.id);
 
             if (tile.animation) this.parseAnimation(tileId, firstgid, tile.animation);
 
@@ -191,9 +194,9 @@ export default class ProcessMap {
     private parseProperties(tileId: number, property: Property): void {
         let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { high, obstructing, objects, cursors } = this.map;
+            { collisions, high, obstructing, objects, cursors } = this.map;
 
-        if (this.isCollisionProperty(name)) this.collisionTiles[tileId] = true;
+        if (this.isCollisionProperty(name)) collisions.push(tileId);
 
         switch (name) {
             case 'v': {
@@ -281,7 +284,6 @@ export default class ProcessMap {
 
         layer.data = this.getLayerData(layer.data, layer.compression)!;
 
-        if (name === 'blocking') return this.parseBlocking(layer);
         if (name === 'entities') return this.parseEntities(layer);
         if (name.startsWith('plateau')) return this.parsePlateau(layer);
 
@@ -301,10 +303,10 @@ export default class ProcessMap {
      */
 
     private parseTileLayerData(mapData: number[]): void {
-        let { data, collisions } = this.map;
+        let { data } = this.map;
 
         for (let i in mapData) {
-            let value = mapData[i];
+            let value = mapData[i] - 1;
 
             if (value < 1) continue;
 
@@ -316,26 +318,6 @@ export default class ProcessMap {
 
             // Remove flip flags for the sake of calculating collisions.
             if (this.isFlipped(value)) value = this.removeFlipFlags(value);
-
-            // Add collision indexes to the map.
-            if (value in this.collisionTiles) collisions.push(index);
-        }
-    }
-
-    /**
-     * A blocking tile is a special type of collision that is
-     * added independently of tileIds. It is instead a collision
-     * that is part of the map tile index. In other words, we can
-     * add a collision to a tile in the map despite that tile
-     * not having a collision property.
-     * @param layer The tile layer containing the blocking data.
-     */
-
-    private parseBlocking(layer: Layer): void {
-        for (let index in layer.data) {
-            if (layer.data[index] < 1) continue;
-
-            this.map.collisions.push(parseInt(index));
         }
     }
 
@@ -351,7 +333,7 @@ export default class ProcessMap {
         let { entities } = this.map;
 
         for (let index in layer.data) {
-            let value = layer.data[index];
+            let value = layer.data[index] - 1;
 
             if (value < 1) continue;
 
@@ -376,7 +358,7 @@ export default class ProcessMap {
 
             if (value < 1) continue;
 
-            // We skip collisions
+            // We skip collision
             if (collisions.includes(value)) continue;
 
             plateau[parseInt(index)] = level;
@@ -674,21 +656,6 @@ export default class ProcessMap {
 
     private getId(firstgid: number, id: number, offset = 0): number {
         return firstgid + id + offset;
-    }
-
-    /**
-     * We are using a unified function in case we need to make adjustments
-     * to how we process tiling indexes. An example is not having to go through
-     * all the instances of tileId calculations to modify one variable. This
-     * is just an overall more organized way of doing work.
-     *
-     * @param tileset A tileset layer that we are parsing.
-     * @param tile The current tile that we are parsing through.
-     * @param offset The offset of the tileIndex.
-     */
-
-    private getTileId(tileset: Tileset, tile: Tile, offset = 0): number {
-        return this.getId(tileset.firstgid, tile.id, offset);
     }
 
     /**

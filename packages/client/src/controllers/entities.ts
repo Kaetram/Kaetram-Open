@@ -280,6 +280,9 @@ export default class EntitiesController {
 
         player.ready = true;
 
+        // If the player has a light source then we add it to the renderer.
+        if (player.hasLight()) this.game.renderer.addPlayerLight(player);
+
         return player;
     }
 
