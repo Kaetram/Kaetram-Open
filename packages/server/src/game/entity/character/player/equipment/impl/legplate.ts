@@ -5,9 +5,9 @@ import { Modules } from '@kaetram/common/network';
 import type { Enchantments } from '@kaetram/common/types/item';
 import type Item from '../../../../objects/item';
 
-export default class Legs extends Equipment {
+export default class Legplate extends Equipment {
     public constructor(key = '', count = -1, enchantments: Enchantments = {}) {
-        super(Modules.Equipment.Legs, key, count, enchantments);
+        super(Modules.Equipment.Legplate, key, count, enchantments);
     }
 
     /**
