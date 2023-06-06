@@ -9,7 +9,7 @@
     "dependencies": {
         "@kaetram/common": "workspace:*",
         "gl-tiled": "^1.0.0",
-        "illuminated": "^1.3.0",
+        "illuminated": "^1.3.5",
         "pako": "^2.1.0",
         "socket.io-client": "^4.5.4"
     },

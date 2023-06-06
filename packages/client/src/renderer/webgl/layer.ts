@@ -1,5 +1,6 @@
 import Tile from '../tile';
 
+import type WebGL from './webgl';
 import type Map from '../../map/map';
 import type { RotatedTile } from '@kaetram/common/types/map';
 
@@ -22,6 +23,8 @@ interface AnimatedTiles {
 }
 
 export default class Layer {
+    private map: Map;
+
     /**
      * The background texture is for the normal tiles that are rendered on top of each other.
      * The foreground layer are tiles that are rendered on top of the background layer and that
@@ -40,7 +43,9 @@ export default class Layer {
     // Animated tiles pertaining to this layer.
     private animatedTiles: AnimatedTiles = {};
 
-    public constructor(private map: Map) {
+    public constructor(private renderer: WebGL) {
+        this.map = renderer.map;
+
         this.backgroundData = new Uint8Array(this.map.width * this.map.height * 4);
         this.foregroundData = new Uint8Array(this.map.width * this.map.height * 4);
 
@@ -168,7 +173,7 @@ export default class Layer {
         // If the tileset is invalid, then we just return.
         if (!tileset) return;
 
-        let relativeId = tileId - tileset.firstGid - 1,
+        let relativeId = tileId - tileset.firstGid,
             tilesWidth = tileset.width / this.map.tileSize;
 
         // Write the texture information to the texture data array.
@@ -187,7 +192,8 @@ export default class Layer {
                 index,
                 this.map.getTileAnimation(tileId),
                 flipped,
-                isHighTile
+                isHighTile,
+                this.map.dynamicAnimatedTiles[index]
             );
     }
 
@@ -230,6 +236,17 @@ export default class Layer {
             // Update using the current game tick.
             tile.animate(time);
 
+            // An expired tile is replaced with the post animation tile.
+            if (tile.expired) {
+                // We ask the renderer to re-set the tile with the post animation data.
+                this.renderer.setTile(tile.index, tile.postAnimationData!);
+
+                delete this.animatedTiles[index];
+
+                continue;
+            }
+
+            // Upload indicates that the tile is ready to be reloaded into the texture data.
             if (!tile.uploaded) {
                 // We update the tile in the texture data.
                 this.addTile(tile.index, tile.id + 1, tile.isFlipped);

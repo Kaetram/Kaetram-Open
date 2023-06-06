@@ -21,8 +21,15 @@
 .pointer {
     pointer-events: none;
     user-select: none;
+
     position: absolute;
+
     display: inline-block;
+
+    width: 4.5rem;
+    height: 4.5rem;
+
+    background: url('/img/pointer.png') no-repeat;
 }
 
 .bubble {

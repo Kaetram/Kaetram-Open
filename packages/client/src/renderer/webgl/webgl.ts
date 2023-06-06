@@ -327,7 +327,7 @@ export default class WebGL extends Renderer {
 
             // Do the actual drawing.
             for (let layer of this.layers)
-                layer.draw(context, this.game.time, !isBackground, this.isLowPowerMode());
+                layer.draw(context, this.game.time, !isBackground, this.game.isLowPowerMode());
         });
 
         this.saveFrame();
@@ -343,9 +343,9 @@ export default class WebGL extends Renderer {
      */
 
     private addTile(index: number, tile: number | RotatedTile, layerIndex = 0): void {
-        if (!this.layers[layerIndex]) this.layers[layerIndex] = new Layer(this.map);
+        if (!this.layers[layerIndex]) this.layers[layerIndex] = new Layer(this);
 
-        this.layers[layerIndex].addTile(index, tile, this.isFlipped(tile as RotatedTile));
+        this.layers[layerIndex].addTile(index, tile, this.map.isFlipped(tile));
     }
 
     /**

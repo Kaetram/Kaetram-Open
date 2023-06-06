@@ -72,7 +72,7 @@ export default abstract class Entity {
     public experience = 0;
     public teleporting = false;
     public pvp = false;
-    public nameColour!: string;
+    public nameColour = '';
     public customScale!: number;
     public fadingAlpha!: number;
     public lastUpdate = Date.now();

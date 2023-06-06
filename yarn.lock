@@ -3838,7 +3838,7 @@ __metadata:
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
     gl-tiled: "npm:^1.0.0"
-    illuminated: "npm:^1.3.0"
+    illuminated: "npm:^1.3.5"
     image-size: "npm:^1.0.2"
     internal-ip: "npm:^7.0.0"
     pako: "npm:^2.1.0"
@@ -8745,10 +8745,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"illuminated@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "illuminated@npm:1.3.0"
-  checksum: 4c04dc3b2d8e4ceaaf930dd678cedb63c16267777490f8889ca43c3083f1ab5e75803ecfc2e448b342bf136d90152760ba8143c3945267c0c8bc5bb1167eac9e
+"illuminated@npm:^1.3.5":
+  version: 1.3.5
+  resolution: "illuminated@npm:1.3.5"
+  checksum: b0dd40d0db7771435993bc51b8943b85f40cb3d39437a0e57931a326405022fdbd4a81defba4905e58e84cc0b22f3576e55f3c278ecb862d00317ac68105487a
   languageName: node
   linkType: hard
 

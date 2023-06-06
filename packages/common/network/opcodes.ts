@@ -133,10 +133,9 @@ export enum Guild {
 
 export enum Pointer {
     Location, // Pointer on the map
-    Relative, // Pointer relative to the screen
     Entity, // Pointer following an entity
-    Remove,
-    Button // Pointer for a button
+    Relative,
+    Remove
 }
 
 export enum Store {
@@ -146,18 +145,6 @@ export enum Store {
     Sell,
     Update,
     Select
-}
-
-export enum TeamWar {
-    Score,
-    End,
-    Lobby,
-    Exit
-}
-
-export enum Coursing {
-    Lobby,
-    Exit
 }
 
 export enum Overlay {
@@ -192,6 +179,14 @@ export enum Minigame {
 export enum MinigameState {
     Lobby,
     End,
+    Exit
+}
+
+// Generic actions for when in a minigame.
+export enum MinigameActions {
+    Score,
+    End,
+    Lobby,
     Exit
 }
 

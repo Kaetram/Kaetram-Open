@@ -147,7 +147,10 @@ export default class Player extends Character {
 
     private currentSong: string | undefined;
 
+    // Minigame variables
     public minigameArea: Area | undefined = undefined;
+    public coursingScore = 0; // Probably will have a dictionary for this data when we have more minigames.
+    public coursingTarget = ''; // The player we are chasing.
 
     // Region data
     public regionsLoaded: number[] = [];
@@ -612,6 +615,19 @@ export default class Player extends Character {
     }
 
     /**
+     * Updates the coursing score of the player and handles edge cases
+     * for when we are setting negative score values for the parameter.
+     * @param score The score value we wish to increment by.
+     */
+
+    public incrementCoursingScore(score: number): void {
+        this.coursingScore += score;
+
+        // If the score is negative, we set it to 0.
+        if (this.coursingScore < 0) this.coursingScore = 0;
+    }
+
+    /**
      * Verifies that the movement is valid and not no-clipping through collisions.
      * @param x The grid x coordinate we are checking.
      * @param y The grid y coordinate we are checking.
@@ -847,7 +863,7 @@ export default class Player extends Character {
          * are used by crafting stations.
          */
 
-        let cursor = this.map.getCursorFromIndex(index);
+        let cursor = this.map.getCursor(index);
 
         if (!cursor) return;
 
@@ -1268,10 +1284,8 @@ export default class Player extends Character {
 
         let entering = info !== undefined && this.minigameArea === undefined;
 
-        if (entering) {
-            info?.enterCallback?.(this);
-            this.notify('Welcome to the TeamWar lobby!');
-        } else this.minigameArea?.exitCallback?.(this);
+        if (entering) info?.enterCallback?.(this);
+        else this.minigameArea?.exitCallback?.(this);
 
         this.minigameArea = info;
     }
@@ -1605,7 +1619,7 @@ export default class Player extends Character {
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
-        if (this.inMinigame()) return this.getMinigame()!.getRespawnPoint(this.team);
+        if (this.inMinigame()) return this.getMinigame()!.getSpawnPoint(this.team);
 
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
@@ -1696,6 +1710,18 @@ export default class Player extends Character {
     }
 
     /**
+     * Clears a minigame instance from the player and erases
+     * all the minigame data for all minigames.
+     */
+
+    public clearMinigame(): void {
+        this.minigame = undefined;
+
+        this.coursingScore = 0;
+        this.coursingTarget = '';
+    }
+
+    /**
      * Resets the NPC instance and talking index. If a parameter is specified
      * then we set that NPC's instance as the one we are talking to.
      * @param instance Optional parameter to set the NPC instance to.
@@ -1721,6 +1747,15 @@ export default class Player extends Character {
 
     public inMinigame(): boolean {
         return this.minigame !== undefined;
+    }
+
+    /**
+     * Whether or not the player is in a team war minigame.
+     * @returns The player is in a team war minigame.
+     */
+
+    public inTeamWar(): boolean {
+        return this.minigame === Opcodes.Minigame.TeamWar;
     }
 
     /**
@@ -2050,20 +2085,19 @@ export default class Player extends Character {
     /**
      * Sends a pointer data packet to the player. Removes all
      * existing pointers first to prevent multiple pointers.
-     * @param opcode The pointer opcode we are sending.
-     * @param info Information for the pointer such as position.
+     * @param info Generic pointer object that contains the type and
+     * associated information with the pointer.
+     * @param remove Whether or not we should remove all existing pointers.
      */
 
-    public pointer(opcode: Opcodes.Pointer, info: PointerData): void {
+    public pointer(info: PointerData, remove = true): void {
         // Remove all existing pointers first.
-        this.send(new Pointer(Opcodes.Pointer.Remove));
+        if (remove) this.send(new Pointer(Opcodes.Pointer.Remove));
 
         // Invalid pointer data received.
-        if (!(opcode in Opcodes.Pointer)) return;
+        if (!(info.type in Opcodes.Pointer)) return;
 
-        info.instance = this.instance;
-
-        this.send(new Pointer(opcode, info));
+        this.send(new Pointer(info.type, info));
     }
 
     /**
@@ -2104,10 +2138,10 @@ export default class Player extends Character {
         data.attackRange = this.attackRange;
         data.movementSpeed = this.getMovementSpeed();
 
-        if (this.inMinigame()) data.displayInfo = this.getDisplayInfo();
+        if (this.inTeamWar()) data.displayInfo = this.getDisplayInfo();
 
         // Include equipment only when necessary.
-        if (withEquipment) data.equipments = this.equipment.serialize().equipments;
+        if (withEquipment) data.equipments = this.equipment.serialize(true).equipments;
 
         if (withExperience) data.experience = this.getTotalExperience();
 
