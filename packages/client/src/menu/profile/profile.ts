@@ -1,12 +1,10 @@
 import State from './impl/state';
-import Abilities from './impl/abilities';
 import Skills from './impl/skills';
 
 import Menu from '../menu';
 
 import type Player from '../../entity/character/player/player';
-import type { Modules, Opcodes } from '@kaetram/common/network';
-import type { SelectCallback } from './impl/abilities';
+import type { Modules } from '@kaetram/common/network';
 
 type UnequipCallback = (type: Modules.Equipment) => void;
 type AttackStyleCallback = (style: Modules.AttackStyle) => void;
@@ -15,7 +13,6 @@ export default class Profile extends Menu {
     // Initialize the pages separately for callbacks sake.
     private state: State;
     private skills: Skills;
-    private abilities: Abilities;
 
     // Initialize all pages here.
     private pages: Menu[] = [];
@@ -29,10 +26,9 @@ export default class Profile extends Menu {
 
     private unequipCallback?: UnequipCallback;
     private attackStyleCallback?: AttackStyleCallback;
-    private abilityCallback?: SelectCallback;
 
     public constructor(private player: Player) {
-        super('#profile-dialog', undefined, '#profile-button');
+        super('#profile-container', undefined, '#profile-button');
 
         // Initialize the state page.
         this.state = new State(this.player);
@@ -40,11 +36,8 @@ export default class Profile extends Menu {
         // Initialize the skills page.
         this.skills = new Skills(this.player);
 
-        // Initialize the abilities page.
-        this.abilities = new Abilities(this.player);
-
         // Add the abilities and skills page to the pages array.
-        this.pages.push(this.state, this.skills, this.abilities);
+        this.pages.push(this.state, this.skills);
 
         // Used to initialize the navigation buttons.
         this.update();
@@ -56,10 +49,6 @@ export default class Profile extends Menu {
         // Initialize callbacks for pages.
         this.state.onUnequip((type: Modules.Equipment) => this.unequipCallback?.(type));
         this.state.onStyle((style: Modules.AttackStyle) => this.attackStyleCallback?.(style));
-
-        this.abilities.onSelect((type: Opcodes.Ability, key: string, index?: number) =>
-            this.abilityCallback?.(type, key, index)
-        );
     }
 
     /**
@@ -178,14 +167,5 @@ export default class Profile extends Menu {
 
     public onAttackStyle(callback: AttackStyleCallback): void {
         this.attackStyleCallback = callback;
-    }
-
-    /**
-     * Callback for when an ability action occurs.
-     * @param callback Contains data about the action.
-     */
-
-    public onAbility(callback: SelectCallback): void {
-        this.abilityCallback = callback;
     }
 }
