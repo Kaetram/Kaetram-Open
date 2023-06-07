@@ -89,6 +89,7 @@ export default class Player extends Character {
         }
 
         this.equipments[Modules.Equipment.Weapon].drawable = true;
+        this.equipments[Modules.Equipment.Shield].drawable = true;
     }
 
     /**
@@ -242,10 +243,10 @@ export default class Player extends Character {
         if (type === Modules.Equipment.Weapon) {
             this.attackRange = attackRange || 1;
             this.setAttackStyle(attackStyle!, attackStyles!);
-
-            // If the weapon is a lamp update the flag.
-            this.equipments[type].light = light!;
         }
+
+        // If a light is present on the equipment just apply it.
+        if (light) this.equipments[type].light = light;
 
         // Disable drawing for the other equipment slots if we're wearing a skin.
         if (type === Modules.Equipment.ArmourSkin) this.toggleDrawableEquipments(false);
@@ -582,6 +583,14 @@ export default class Player extends Character {
 
             case Modules.Equipment.ArmourSkin: {
                 return 'skin';
+            }
+
+            case Modules.Equipment.Shield: {
+                return 'shield';
+            }
+
+            case Modules.Equipment.Cape: {
+                return 'cape';
             }
 
             default: {
