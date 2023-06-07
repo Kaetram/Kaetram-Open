@@ -7,7 +7,7 @@ import Shield from './equipment/impl/shield';
 import Ring from './equipment/impl/ring';
 import ArmourSkin from './equipment/impl/armourskin';
 import WeaponSkin from './equipment/impl/weaponskin';
-import Legplate from './equipment/impl/legplate';
+import Legplates from './equipment/impl/legplates';
 import Cape from './equipment/impl/cape';
 import Boots from './equipment/impl/boots';
 
@@ -32,7 +32,7 @@ export default class Equipments {
     private ring: Ring = new Ring();
     private armourSkin: ArmourSkin = new ArmourSkin();
     private weaponSkin: WeaponSkin = new WeaponSkin();
-    private legplate: Legplate = new Legplate();
+    private legplates: Legplates = new Legplates();
     private cape: Cape = new Cape();
     private boots: Boots = new Boots();
 
@@ -48,7 +48,7 @@ export default class Equipments {
         this.ring,
         this.armourSkin,
         this.weaponSkin,
-        this.legplate,
+        this.legplates,
         this.cape,
         this.boots
     ];
@@ -263,12 +263,12 @@ export default class Equipments {
     }
 
     /**
-     * Grabs the legs equipment of the player.
-     * @returns Legs equipment object.
+     * Grabs the legplates equipment of the player.
+     * @returns Legplates equipment object.
      */
 
-    public getLegs(): Legplate {
-        return this.get(Modules.Equipment.Legplate) as Legplate;
+    public getLegplates(): Legplates {
+        return this.get(Modules.Equipment.Legplates) as Legplates;
     }
 
     /**

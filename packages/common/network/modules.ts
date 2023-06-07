@@ -110,14 +110,14 @@ export enum Equipment {
     Ring,
     ArmourSkin,
     WeaponSkin,
-    Legplate,
+    Legplates,
     Cape,
     Boots
 }
 
 export let EquipmentRenderOrder = [
     Equipment.Helmet,
-    Equipment.Legplate,
+    Equipment.Legplates,
     Equipment.Chestplate,
     Equipment.ArmourSkin,
     Equipment.Weapon,

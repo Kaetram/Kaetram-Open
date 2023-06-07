@@ -612,9 +612,9 @@
     }
   },
 
-  "copperlegs": {
-    "type": "legs",
-    "name": "Copper Legs",
+  "copperlegplates": {
+    "type": "legplates",
+    "name": "Copper Legplates",
     "price": 100,
     "attackStats": {
       "crush": 1,
@@ -638,9 +638,9 @@
     }
   },
 
-  "tinlegs": {
-    "type": "legs",
-    "name": "Tin Legs",
+  "tinlegplates": {
+    "type": "legplates",
+    "name": "Tin Legplates",
     "price": 100,
     "attackStats": {
       "crush": 2,
@@ -664,9 +664,9 @@
     }
   },
 
-  "ironlegs": {
-    "type": "legs",
-    "name": "Iron Legs",
+  "ironlegplates": {
+    "type": "legplates",
+    "name": "Iron Legplates",
     "price": 100,
     "skill": "defense",
     "level": 10,
@@ -692,9 +692,9 @@
     }
   },
 
-  "cobaltlegs": {
-    "type": "legs",
-    "name": "Cobalt Legs",
+  "cobaltlegplates": {
+    "type": "legplates",
+    "name": "Cobalt Legplates",
     "price": 200,
     "skill": "defense",
     "level": 15,
@@ -1040,7 +1040,7 @@
   },
 
   "lantern": {
-    "type": "weapon",
+    "type": "shield",
     "name": "Lantern",
     "price": 1000,
     "light": {
@@ -1073,7 +1073,7 @@
   },
 
   "lantern2": {
-    "type": "weapon",
+    "type": "shield",
     "name": "Lantern 2",
     "price": 1000,
     "light": {
