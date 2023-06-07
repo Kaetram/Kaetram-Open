@@ -10,7 +10,7 @@
 body,
 button,
 input {
-    font-family: AdvoCut, arial, sans-serif;
+    font-family: AdvoCut, 'AdvoCut Fallback', arial, sans-serif;
 }
 
 @each $size, $scale in media.$sizes {

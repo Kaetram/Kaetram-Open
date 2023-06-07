@@ -13,10 +13,6 @@ import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { internalIpV4 } from 'internal-ip';
 import size from 'image-size';
 import sass from 'sass';
-import postcssFontPie from 'postcss-fontpie';
-import postcssCustomMedia from 'postcss-custom-media';
-import postcssPresetEnv from 'postcss-preset-env';
-import autoprefixer from 'autoprefixer';
 
 let expose = ['name', 'host', 'ssl', 'serverId', 'sentryDsn'] as const;
 
@@ -146,22 +142,6 @@ export default defineConfig(async ({ mode }) => {
         },
         define: { 'window.config': env },
         css: {
-            postcss: {
-                plugins: [
-                    postcssFontPie({
-                        fontTypes: {
-                            AdvoCut: 'sans-serif',
-                            KerrieFont: 'sans-serif',
-                            DorfScratch: 'sans-serif'
-                        },
-                        srcUrlToFilename: (url) =>
-                            fileURLToPath(new URL(`public/${url}`, import.meta.url))
-                    }),
-                    postcssCustomMedia(),
-                    postcssPresetEnv(),
-                    autoprefixer()
-                ]
-            },
             preprocessorOptions: {
                 scss: {
                     functions: {

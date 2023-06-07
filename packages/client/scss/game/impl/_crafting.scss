@@ -27,7 +27,7 @@
     align-items: center;
     justify-content: center;
 
-    font-family: KerrieFont, sans-serif;
+    font-family: KerrieFont, 'KerrieFont Fallback', sans-serif;
     color: white;
     vertical-align: middle;
 }
@@ -52,7 +52,7 @@
 
 #crafting-result-name,
 .crafting-option-count {
-    font-family: KerrieFont, sans-serif;
+    font-family: KerrieFont, 'KerrieFont Fallback', sans-serif;
     color: white;
     text-align: center;
 }
