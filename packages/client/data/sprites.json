@@ -40,8 +40,8 @@
     { "id": "player/weapon/firestaff", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
     { "id": "player/weapon/cursestaff", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
 
-    { "id": "player/weapon/lantern", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
-    { "id": "player/weapon/lantern2", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
+    { "id": "player/shield/lantern", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
+    { "id": "player/shield/lantern2", "width": 48, "height": 48, "idleSpeed": 250, "offsetX": -16, "offsetY": -20 },
 
     { "id": "crowns/artist" },
     { "id": "crowns/tier1" },
