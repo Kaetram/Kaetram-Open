@@ -1,0 +1,12 @@
+{
+    "plugins": {
+        "autoprefixer": {},
+        "postcss-preset-env": {},
+        "postcss-custom-media": {},
+        "postcss-assets": {
+            "loadPaths": [
+                "public/img/interface/"
+            ]
+        }
+    }
+}
