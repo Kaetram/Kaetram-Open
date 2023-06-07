@@ -311,8 +311,8 @@ export default class Item extends Entity {
                 return Modules.Equipment.Chestplate;
             }
 
-            case 'legs': {
-                return Modules.Equipment.Legplate;
+            case 'legplates': {
+                return Modules.Equipment.Legplates;
             }
 
             case 'skin': {
@@ -343,6 +343,10 @@ export default class Item extends Entity {
 
             case 'arrow': {
                 return Modules.Equipment.Arrows;
+            }
+
+            case 'shield': {
+                return Modules.Equipment.Shield;
             }
         }
     }
@@ -550,20 +554,23 @@ export default class Item extends Entity {
      */
 
     public isEquippable(): boolean {
-        return (
-            this.itemType === 'helmet' ||
-            this.itemType === 'chestplate' ||
-            this.itemType === 'legs' ||
-            this.itemType === 'skin' ||
-            this.itemType === 'weapon' ||
-            this.itemType === 'weaponarcher' ||
-            this.itemType === 'weaponmagic' ||
-            this.itemType === 'weaponskin' ||
-            this.itemType === 'pendant' ||
-            this.itemType === 'boots' ||
-            this.itemType === 'ring' ||
-            this.itemType === 'arrow'
-        );
+        let types = [
+            'helmet',
+            'chestplate',
+            'legplates',
+            'skin',
+            'weapon',
+            'weaponarcher',
+            'weaponmagic',
+            'weaponskin',
+            'pendant',
+            'boots',
+            'ring',
+            'arrow',
+            'shield'
+        ];
+
+        return types.includes(this.itemType);
     }
 
     /**
