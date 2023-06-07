@@ -670,7 +670,7 @@
             }
         },
 
-        "copperlegs": {
+        "copperlegplates": {
             "level": 1,
             "experience": 20,
             "requirements": [
@@ -685,7 +685,7 @@
             }
         },
 
-        "tinlegs": {
+        "tinlegplates": {
             "level": 1,
             "experience": 20,
             "requirements": [
@@ -700,7 +700,7 @@
             }
         },
 
-        "ironlegs": {
+        "ironlegplates": {
             "level": 10,
             "experience": 80,
             "requirements": [

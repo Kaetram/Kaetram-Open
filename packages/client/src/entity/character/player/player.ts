@@ -408,7 +408,7 @@ export default class Player extends Character {
      */
 
     public getLegplate(): Equipment {
-        return this.equipments[Modules.Equipment.Legplate];
+        return this.equipments[Modules.Equipment.Legplates];
     }
 
     /**
@@ -568,8 +568,8 @@ export default class Player extends Character {
                 return 'chestplate';
             }
 
-            case Modules.Equipment.Legplate: {
-                return 'legs';
+            case Modules.Equipment.Legplates: {
+                return 'legplates';
             }
 
             case Modules.Equipment.Weapon: {
@@ -596,7 +596,7 @@ export default class Player extends Character {
      */
 
     public getLight(): Light {
-        return this.getWeapon().light;
+        return this.getShield().light;
     }
 
     /**
