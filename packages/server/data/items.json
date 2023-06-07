@@ -1955,11 +1955,39 @@
     "price": 85
   },
 
-  "willowlogs": {
+  "aquasilliuslogs": {
     "type": "object",
-    "name": "Willow Logs",
+    "name": "Aquasillius Logs",
     "price": 350,
-    "description": "Classic type of wood. It's hard, it's strong, you can use it for a lot of things. But for now I guess I can sell it."
+    "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
+  },
+  
+  "alkythnlogs": {
+    "type": "object",
+    "name": "Alkythn Logs",
+    "price": 350,
+    "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
+  },
+
+  "heliphatitlogs": {
+    "type": "object",
+    "name": "Heliphatit Logs",
+    "price": 350,
+    "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
+  },
+
+  "zoncillogs": {
+    "type": "object",
+    "name": "Zoncil Logs",
+    "price": 350,
+    "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
+  },
+
+  "zondullogs": {
+    "type": "object",
+    "name": "Zondul Logs",
+    "price": 350,
+    "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
   },
 
   "bloodwoodlogs": {

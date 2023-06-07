@@ -98,11 +98,39 @@
         "item": "icepinelogs"
     },
 
-    "willow": {
+    "alkythn": {
+        "levelRequirement": 25,
+        "experience": 105,
+        "difficulty": 90,
+        "item": "alkythnlogs"
+    },
+
+    "heliphatit": {
         "levelRequirement": 30,
-        "experience": 150,
-        "difficulty": 160,
-        "item": "willowlogs"
+        "experience": 125,
+        "difficulty": 100,
+        "item": "heliphatitlogs"
+    },
+
+    "aquasillius": {
+        "levelRequirement": 35,
+        "experience": 160,
+        "difficulty": 115,
+        "item": "aquasilliuslogs"
+    },
+
+    "zoncil": {
+        "levelRequirement": 35,
+        "experience": 160,
+        "difficulty": 115,
+        "item": "zoncillogs"
+    },
+
+    "zondul": {
+        "levelRequirement": 35,
+        "experience": 160,
+        "difficulty": 115,
+        "item": "zondullogs"
     },
 
     "bloodwood": {

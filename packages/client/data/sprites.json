@@ -6949,7 +6949,7 @@
     { "id": "items/waterbucket", "offsetX": 0, "offsetY": 0 },
     { "id": "items/watermelon", "offsetX": 0, "offsetY": 0 },
     { "id": "items/watermelonslice", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/willowlogs", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/aquasilliuslogs", "offsetX": 0, "offsetY": 0 },
     { "id": "items/amethyst", "offsetX": 0, "offsetY": 0 },
     { "id": "items/beryl", "offsetX": 0, "offsetY": 0 },
     { "id": "items/citrine", "offsetX": 0, "offsetY": 0 },
@@ -7073,5 +7073,10 @@
     { "id": "items/silverring2", "offsetX": 0, "offsetY": 0 },
 
     { "id": "items/lantern", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/lantern2", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/lantern2", "offsetX": 0, "offsetY": 0 },
+
+    { "id": "items/alkythnlogs", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/heliphatitlogs", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/zoncillogs", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/zondullogs", "offsetX": 0, "offsetY": 0 }
 ]
