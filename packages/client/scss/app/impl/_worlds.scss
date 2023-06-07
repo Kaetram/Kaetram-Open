@@ -16,6 +16,10 @@
     margin: 3em;
 
     color: #eee;
+
+    &[hidden] {
+        display: none;
+    }
 }
 
 #worlds {
