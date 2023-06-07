@@ -37,26 +37,36 @@ export default class State extends Menu {
     public constructor(private player: Player) {
         super('#state-page');
 
-        this.weapon.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Weapon)
-        );
-        this.weaponSkin.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.WeaponSkin)
-        );
-        this.chestplate.addEventListener('click', () =>
+        this.helmet.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Helmet)
-        );
-        this.armourSkin.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.ArmourSkin)
         );
         this.pendant.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Pendant)
         );
-        this.ring.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Ring));
-        this.boots.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Boots));
         this.arrows.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Arrows)
         );
+        this.chestplate.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Chestplate)
+        );
+        this.weapon.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Weapon)
+        );
+        this.shield.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Shield)
+        );
+        this.ring.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Ring));
+        this.weaponSkin.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.WeaponSkin)
+        );
+        this.armourSkin.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.ArmourSkin)
+        );
+        this.legplate.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Legplate)
+        );
+        this.cape.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Cape));
+        this.boots.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Boots));
     }
 
     /**
