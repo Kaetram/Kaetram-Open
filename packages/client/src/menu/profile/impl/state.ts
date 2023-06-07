@@ -27,7 +27,7 @@ export default class State extends Menu {
     private ring: HTMLElement = document.querySelector('#ring-slot > div')!;
     private weaponSkin: HTMLElement = document.querySelector('#weapon-skin-slot > div')!;
     private armourSkin: HTMLElement = document.querySelector('#armour-skin-slot > div')!;
-    private legplate: HTMLElement = document.querySelector('#legplate-slot > div')!;
+    private legplates: HTMLElement = document.querySelector('#legplates-slot > div')!;
     private cape: HTMLElement = document.querySelector('#cape-slot > div')!;
     private boots: HTMLElement = document.querySelector('#boots-slot > div')!;
 
@@ -62,8 +62,8 @@ export default class State extends Menu {
         this.armourSkin.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.ArmourSkin)
         );
-        this.legplate.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Legplate)
+        this.legplates.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Legplates)
         );
         this.cape.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Cape));
         this.boots.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Boots));
@@ -90,7 +90,7 @@ export default class State extends Menu {
         this.ring.style.backgroundImage = Util.getImageURL(this.player.getRing().key);
         this.weaponSkin.style.backgroundImage = Util.getImageURL(this.player.getWeaponSkin().key);
         this.armourSkin.style.backgroundImage = Util.getImageURL(this.player.getArmourSkin().key);
-        this.legplate.style.backgroundImage = Util.getImageURL(this.player.getLegplate().key);
+        this.legplates.style.backgroundImage = Util.getImageURL(this.player.getLegplate().key);
         this.cape.style.backgroundImage = Util.getImageURL(this.player.getCape().key);
         this.boots.style.backgroundImage = Util.getImageURL(this.player.getBoots().key);
 
