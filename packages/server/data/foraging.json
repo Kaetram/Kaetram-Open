@@ -32,5 +32,12 @@
         "experience": 30,
         "difficulty": 1,
         "item": "peach"
+    },
+
+    "raspberry": {
+        "levelRequirement": 15,
+        "experience": 35,
+        "difficulty": 1,
+        "item": "raspberry"
     }
 }
