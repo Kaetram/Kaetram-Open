@@ -56,7 +56,7 @@
     height: 2.5em;
 
     background-image: url('/img/interface/skillslots.png');
-    background-size: calc(width('skillslots.png'));
+    background-size: calc(width('skillslots'));
 }
 
 .ability-quickslot {
@@ -69,49 +69,49 @@
 .quickslot-icon-intimidate {
     background-image: url('/img/interface/abilityicons.png');
     background-position: 0 0.0625em;
-    background-size: calc(width('abilityicons.png') * 4);
+    background-size: calc(width('abilityicons') * 0.25rem);
 }
 
 .quickslot-icon-run {
     background-image: url('/img/interface/abilityicons.png');
     background-position: -4em 0.0625em;
-    background-size: calc(width('abilityicons.png') * 4);
+    background-size: calc(width('abilityicons') * 0.25rem);
 }
 
 .quickslot-icon-awareness {
     background-image: url('/img/interface/abilityicons.png');
     background-position: -8em 0.0625em;
-    background-size: calc(width('abilityicons.png') * 4);
+    background-size: calc(width('abilityicons') * 0.25rem);
 }
 
 .quickslot-icon-dualistsmark {
     background-image: url('/img/interface/abilityicons.png');
     background-position: -12em 0.0625em;
-    background-size: calc(width('abilityicons.png') * 4);
+    background-size: calc(width('abilityicons') * 0.25rem);
 }
 
 .quickslot-icon-hotshot {
     background-image: url('/img/interface/abilityicons.png');
     background-position: -16em 0.0625em;
-    background-size: calc(width('abilityicons.png') * 4);
+    background-size: calc(width('abilityicons') * 0.25rem);
 }
 
 .quickslot-icon-thickskin {
     background-image: url('/img/interface/abilityicons.png');
     background-position: -20em 0.0625em;
-    background-size: calc(width('abilityicons.png') * 4);
+    background-size: calc(width('abilityicons') * 0.25rem);
 }
 
 .quickslot-icon-precognition {
     background-image: url('/img/interface/abilityicons.png');
     background-position: -24em 0.0625em;
-    background-size: calc(width('abilityicons.png') * 4);
+    background-size: calc(width('abilityicons') * 0.25rem);
 }
 
 .quickslot-icon-secretcalling {
     background-image: url('/img/interface/abilityicons.png');
     background-position: -28em 0.0625em;
-    background-size: calc(width('abilityicons.png') * 4);
+    background-size: calc(width('abilityicons') * 0.25rem);
 }
 
 .quickslot-icon-intimidate,

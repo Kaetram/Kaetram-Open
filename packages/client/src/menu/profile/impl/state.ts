@@ -1,8 +1,8 @@
 import Util from '../../../utils/util';
 import Menu from '../../menu';
+import { attachTooltip } from '../../../utils/tooltip';
 
 import { Modules } from '@kaetram/common/network';
-import { attachTooltip } from '@kaetram/client/src/utils/tooltip';
 
 import type Player from '../../../entity/character/player/player';
 
