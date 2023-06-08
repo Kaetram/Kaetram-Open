@@ -12,8 +12,12 @@ import type Player from '../player';
 import type Resource from '../../../../globals/impl/resource';
 import type { ResourceData, ResourceInfo } from '@kaetram/common/types/resource';
 
+type ExhaustCallback = (player: Player) => void;
+
 export default class ResourceSkill extends Skill {
     private loop?: NodeJS.Timeout | undefined;
+
+    private exhaustCallback?: ExhaustCallback;
 
     /**
      * Used to determine if the resources goes to its depleted state after a successful
@@ -107,6 +111,9 @@ export default class ResourceSkill extends Skill {
 
                 // Deplete the resource and send the signal to the region
                 if (this.shouldDeplete()) resource.deplete();
+
+                // Call the exhaust callback after we have successfully exhausted the resource.
+                this.exhaustCallback?.(player);
             }
         }, Modules.Constants.SKILL_LOOP);
     }
@@ -181,5 +188,14 @@ export default class ResourceSkill extends Skill {
 
         // 1 in 10 chance.
         return Utils.randomInt(0, 10) === 4;
+    }
+
+    /**
+     * Callback for when the resource has been exhausted. This can be
+     * used by subclasses to apply additional logic after obtaining a resource.
+     */
+
+    protected onExhaust(callback: ExhaustCallback): void {
+        this.exhaustCallback = callback;
     }
 }
