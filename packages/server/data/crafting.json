@@ -595,6 +595,21 @@
             }
         },
 
+        "coppershield": {
+            "level": 1,
+            "experience": 20,
+            "requirements": [
+                {
+                    "key": "copperbar",
+                    "count": 2
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        },
+
         "copperhelmet": {
             "level": 1,
             "experience": 20,

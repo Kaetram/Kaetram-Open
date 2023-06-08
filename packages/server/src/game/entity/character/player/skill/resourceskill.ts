@@ -12,8 +12,12 @@ import type Player from '../player';
 import type Resource from '../../../../globals/impl/resource';
 import type { ResourceData, ResourceInfo } from '@kaetram/common/types/resource';
 
+type ExhaustCallback = (player: Player, resource?: Resource) => void;
+
 export default class ResourceSkill extends Skill {
     private loop?: NodeJS.Timeout | undefined;
+
+    private exhaustCallback?: ExhaustCallback;
 
     /**
      * Used to determine if the resources goes to its depleted state after a successful
@@ -107,8 +111,46 @@ export default class ResourceSkill extends Skill {
 
                 // Deplete the resource and send the signal to the region
                 if (this.shouldDeplete()) resource.deplete();
+
+                // Call the exhaust callback after we have successfully exhausted the resource.
+                this.exhaustCallback?.(player, resource);
             }
         }, Modules.Constants.SKILL_LOOP);
+    }
+
+    /**
+     * Handles the random item logic that can be applied to all resources. A resource can have
+     * a list of random items specified in the configuration file that will be added to the
+     * player's inventory (or dropped if they don't have space) upon exhausting the resource.
+     * For example, cutting down a tree has a chance of dropping a fruit.
+     * @param player The player who has exhausted the resource.
+     * @param resourceInfo Contains the information about the resource such as the random items.
+     */
+
+    protected handleRandomItems(player: Player, resourceInfo: ResourceInfo): void {
+        // If the resource doesn't have any random items then we can just return.
+        if (!resourceInfo?.randomItems) return;
+
+        // Grab a random item from the list of random items and calculate the probability.
+        let randomItem =
+                resourceInfo.randomItems[Utils.randomInt(0, resourceInfo.randomItems.length - 1)],
+            chance = Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) < randomItem?.chance;
+
+        // Probability didn't work out so stop here.
+        if (!chance) return;
+
+        // Use the superclass `getItem` function to create the item instance since weekend events don't apply.
+        let item = this.getItem(randomItem.key, player.username);
+
+        // If the player has space in their inventory add the item there, otherwise drop it on the ground.
+        if (this.canHold(player)) player.inventory.add(item);
+        else {
+            // Set the item's position to the player's position.
+            item.x = player.x;
+            item.y = player.y;
+
+            player.world.entities.addItem(item);
+        }
     }
 
     /**
@@ -129,11 +171,12 @@ export default class ResourceSkill extends Skill {
      * Creates an item instance of the item that the resource rewards.
      * @param key The item key we are creating.
      * @param count The amount of the item we are creating.
+     * @param owner Optional parameter to make an item belong to a player.
      * @returns The newly created item instance.
      */
 
-    protected getItem(key: string): Item {
-        return new Item(key, -1, -1, false, 1);
+    protected getItem(key: string, owner = ''): Item {
+        return new Item(key, -1, -1, false, 1, {}, owner);
     }
 
     /**
@@ -181,5 +224,14 @@ export default class ResourceSkill extends Skill {
 
         // 1 in 10 chance.
         return Utils.randomInt(0, 10) === 4;
+    }
+
+    /**
+     * Callback for when the resource has been exhausted. This can be
+     * used by subclasses to apply additional logic after obtaining a resource.
+     */
+
+    protected onExhaust(callback: ExhaustCallback): void {
+        this.exhaustCallback = callback;
     }
 }
