@@ -40,11 +40,11 @@
         "eslint-plugin-unicorn": "^45.0.2",
         "husky": "^8.0.3",
         "lint-staged": "^13.1.0",
-        "postcss": "^8.4.23",
+        "postcss": "^8.4.24",
         "postcss-assets": "^6.0.0",
         "postcss-value-parser": "^4.2.0",
         "prettier": "^2.8.1",
-        "stylelint": "^15.6.2",
+        "stylelint": "^15.7.0",
         "typescript": "^5.0.4"
     },
     "workspaces": [

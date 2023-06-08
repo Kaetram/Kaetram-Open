@@ -1,23 +1,26 @@
-import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { description, name } from '../../package.json';
-import config, { type Config } from '../common/config';
 
-import ViteLegacy from '@vitejs/plugin-legacy';
+import config, { type Config } from '@kaetram/common/config';
 import glsl from 'vite-plugin-glsl';
-import { defineConfig } from 'vite';
-import { ViteMinifyPlugin } from 'vite-plugin-minify';
-import { VitePWA } from 'vite-plugin-pwa';
+import { defineConfig } from 'astro/config';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
+import { VitePWA as pwa } from 'vite-plugin-pwa';
 import { internalIpV4 } from 'internal-ip';
 import size from 'image-size';
 import sass from 'sass';
+import i18next from 'astro-i18next';
+import sitemap from '@astrojs/sitemap';
+import robotsTxt from 'astro-robots-txt';
+import critters from 'astro-critters';
+import compress from 'astro-compress';
+import webmanifest from 'astro-webmanifest';
+import compressor from 'astro-compressor';
 
 let expose = ['name', 'host', 'ssl', 'serverId', 'sentryDsn'] as const;
 
 interface ExposedConfig extends Pick<Config, typeof expose[number]> {
-    debug: boolean;
     version: string;
     minor: string;
     port: number;
@@ -26,170 +29,113 @@ interface ExposedConfig extends Pick<Config, typeof expose[number]> {
 }
 
 declare global {
-    interface Window {
-        config: ExposedConfig;
-    }
+    let globalConfig: ExposedConfig;
 }
 
-function loadEnv(isProduction: boolean): ExposedConfig {
-    let env = {} as ExposedConfig,
-        {
-            gver,
-            minor,
-            clientRemoteHost,
-            clientRemotePort,
-            hubEnabled,
-            hubHost,
-            hubPort,
-            host,
-            port,
-            ssl
-        } = config;
+let env = {} as ExposedConfig;
 
-    for (let key of expose) env[key] = config[key] as never;
+for (let key of expose) env[key] = config[key] as never;
 
-    let clientHost = clientRemoteHost || (hubEnabled ? hubHost : host),
-        clientPort = clientRemotePort || (hubEnabled ? hubPort : port),
-        hub = ssl ? `https://${clientHost}` : `http://${clientHost}:${clientPort}`;
+let clientHost = config.clientRemoteHost || (config.hubEnabled ? config.hubHost : config.host),
+    clientPort = config.clientRemotePort || (config.hubEnabled ? config.hubPort : config.port),
+    hub = config.ssl ? `https://${clientHost}` : `http://${clientHost}:${clientPort}`;
 
-    return Object.assign(env, {
-        debug: !isProduction,
-        version: gver,
-        minor,
-        host: clientHost,
-        port: clientPort,
-        hub: hubEnabled && hub
-    });
-}
+Object.assign(env, {
+    version: config.gver,
+    minor: config.minor,
+    host: clientHost,
+    port: clientPort,
+    hub: config.hubEnabled && hub
+});
 
-export default defineConfig(async ({ mode }) => {
-    let isProduction = mode === 'production',
-        env = loadEnv(isProduction),
-        ipv4 = await internalIpV4(),
-        plugins = [
-            glsl(),
-            VitePWA({
-                registerType: 'autoUpdate',
-                workbox: { cacheId: name },
-                manifest: {
-                    name: config.name,
-                    short_name: config.name,
-                    description,
-                    display: 'fullscreen',
-                    background_color: '#000000',
-                    theme_color: '#000000',
-                    icons: [192, 512].map((size) => {
-                        let sizes = `${size}x${size}`;
+let ipv4 = await internalIpV4(),
+    plugins = [
+        glsl(),
+        pwa({
+            registerType: 'autoUpdate',
+            workbox: {
+                cacheId: name,
+                globDirectory: 'dist',
+                globPatterns: ['**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}'],
+                navigateFallback: null
+            }
+        })
+    ];
 
-                        return {
-                            src: `/img/icons/android-chrome-${sizes}.png`,
-                            sizes,
-                            type: 'image/png',
-                            purpose: 'any maskable'
-                        };
-                    }),
-                    screenshots: [
-                        {
-                            src: 'screenshot.png',
-                            sizes: '750x1334',
-                            type: 'image/png'
-                        }
-                    ],
-                    categories: ['entertainment', 'games']
-                }
-            }),
-            ViteLegacy(),
-            ViteMinifyPlugin({ processScripts: ['application/ld+json'] })
-        ];
+if (config.sentryDsn && !config.debugging)
+    plugins.push(
+        sentryVitePlugin({
+            include: '.',
+            org: config.sentryOrg,
+            project: config.sentryProject,
+            authToken: config.sentryAuthToken,
+            sourcemaps: { assets: './dist/**' }
+        })
+    );
 
-    if (config.sentryDsn && !config.debugging)
-        plugins.push(
-            sentryVitePlugin({
-                include: '.',
-                org: config.sentryOrg,
-                project: config.sentryProject,
-                authToken: config.sentryAuthToken,
-                sourcemaps: {
-                    // Specify the directory containing build artifacts
-                    assets: './dist/**'
-                }
-            })
+let imageCache = new Map<string, { width?: number; height?: number }>();
+function getImageSize(image: string) {
+    if (!imageCache.has(image))
+        imageCache.set(
+            image,
+            size(fileURLToPath(new URL(`public/img/interface/${image}.png`, import.meta.url)))
         );
 
-    return {
-        appType: 'mpa',
+    return imageCache.get(image)!;
+}
+
+export default defineConfig({
+    srcDir: './',
+    site: 'https://kaetram.com',
+    integrations: [
+        i18next(),
+        webmanifest({
+            icon: 'public/icon.png',
+            name: config.name,
+            description,
+            display: 'fullscreen',
+            background_color: '#000000',
+            theme_color: '#000000',
+            categories: ['entertainment', 'games'],
+            config: {
+                insertAppleTouchLinks: true,
+                iconPurpose: ['any', 'badge', 'maskable']
+            },
+            locales: {}
+        }),
+        sitemap({ i18n: { defaultLocale: 'en', locales: { en: 'en-US' } } }),
+        robotsTxt({ host: true }),
+        critters({ logger: 2 }),
+        compress({ logger: 1 }),
+        compressor({ gzip: true, brotli: true })
+    ],
+    server: {
+        host: '0.0.0.0',
+        port: 9000
+    },
+    vite: {
         plugins,
-        build: {
-            sourcemap: true,
-            chunkSizeWarningLimit: 4e3,
-            rollupOptions: {
-                input: {
-                    index: path.resolve(__dirname, 'index.html'),
-                    privacy: path.resolve(__dirname, 'privacy.html'),
-                    reset: path.resolve(__dirname, 'reset/index.html')
-                }
-            }
-        },
+        build: { sourcemap: true },
         server: {
-            host: '0.0.0.0',
-            port: 9000,
             strictPort: true,
             hmr: {
                 protocol: 'ws',
-                host: ipv4!,
+                host: ipv4,
                 port: 5183
             }
         },
-        define: { 'window.config': env },
+        define: { globalConfig: env },
         css: {
             preprocessorOptions: {
                 scss: {
                     functions: {
-                        'width($image)': (image: sass.types.Number) => {
-                            let { width } = size(
-                                fileURLToPath(
-                                    new URL(
-                                        `public/img/interface/${image.getValue()}`,
-                                        import.meta.url
-                                    )
-                                )
-                            );
-
-                            return new sass.types.Number(width!, 'px');
-                        },
-                        'height($image)': (image: sass.types.Number) => {
-                            let { height } = size(
-                                fileURLToPath(
-                                    new URL(
-                                        `public/img/interface/${image.getValue()}`,
-                                        import.meta.url
-                                    )
-                                )
-                            );
-
-                            return new sass.types.Number(height!, 'px');
-                        },
-                        'better-width($image)': (image: sass.types.Number) => {
-                            let { width } = size(
-                                fileURLToPath(
-                                    new URL(
-                                        `public/img/interface/${image.getValue()}.png`,
-                                        import.meta.url
-                                    )
-                                )
-                            );
+                        'width($image)': (image: sass.types.String) => {
+                            let { width } = getImageSize(image.getValue());
 
                             return new sass.types.Number(width!);
                         },
-                        'better-height($image)': (image: sass.types.Number) => {
-                            let { height } = size(
-                                fileURLToPath(
-                                    new URL(
-                                        `public/img/interface/${image.getValue()}.png`,
-                                        import.meta.url
-                                    )
-                                )
-                            );
+                        'height($image)': (image: sass.types.String) => {
+                            let { height } = getImageSize(image.getValue());
 
                             return new sass.types.Number(height!);
                         }
@@ -197,5 +143,5 @@ export default defineConfig(async ({ mode }) => {
                 }
             }
         }
-    };
+    }
 });

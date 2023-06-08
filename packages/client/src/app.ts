@@ -19,7 +19,7 @@ type MouseMoveCallback = (e: MouseEvent) => void;
 type ValidationType = 'status' | 'validation-error' | 'validation-warning';
 
 export default class App {
-    public config = window.config;
+    public config = globalConfig;
 
     public storage: Storage = new Storage();
 
