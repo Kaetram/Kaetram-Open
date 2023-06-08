@@ -27,6 +27,7 @@ export default class Notification extends Menu {
 
         // Displays the notification.
         this.container.classList.add('active');
+        this.container.style.bottom = '0';
 
         // Updates the title's colour.
         this.title.style.color = colour;
@@ -52,7 +53,7 @@ export default class Notification extends Menu {
 
         // Hides the notification.
         this.container.classList.remove('active');
-        this.container.style.bottom = '5em';
+        this.container.style.bottom = '-6em';
     }
 
     /**
