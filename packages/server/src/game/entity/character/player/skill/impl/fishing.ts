@@ -26,11 +26,15 @@ export default class Fishing extends ResourceSkill {
      */
 
     private handleExhaust(player: Player): void {
-        // If the player doesn't have any space, stop here.
-        if (!this.canHold(player)) return;
+        // Failed to roll against the chance of receiving kelp.
+        if (!this.canReceiveKelp()) return;
 
-        // If the player can receive kelp, give them kelp.
-        if (this.canReceiveKelp()) player.inventory.add(new Item('kelp', -1, -1, false, 1));
+        // Create an item and make it belong to the player so others can't pick it up.
+        let item = this.getItem('kelp', player.username);
+
+        // If the player has space in their inventory add the kelp there, otherwise drop it on the ground.
+        if (this.canHold(player)) player.inventory.add(item);
+        else player.world.entities.addItem(item);
     }
 
     /**
