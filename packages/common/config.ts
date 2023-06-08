@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises';
+
 import dotenv from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
 
@@ -85,12 +87,14 @@ function camelCase(str: string): string {
 }
 
 let { NODE_ENV } = process.env,
-    env = dotenv.load({ path: `../../.env`, defaults: '../../.env.defaults' });
+    env = dotenv.load({ path: `../../.env`, defaults: '../../.env.defaults' }),
+    nodeEnvConfig = `../../.env.${NODE_ENV}`,
+    nodeEnvConfigExists = await fs.stat(nodeEnvConfig).catch(() => false);
 
-if (NODE_ENV) {
+if (NODE_ENV && nodeEnvConfigExists) {
     console.debug(`Loading additional env values from [.env.${NODE_ENV}]`);
 
-    Object.assign(env, dotenv.load({ path: `../../.env.${NODE_ENV}` }));
+    Object.assign(env, dotenv.load({ path: nodeEnvConfig }));
 }
 
 let envConfig = dotenvParseVariables(env),

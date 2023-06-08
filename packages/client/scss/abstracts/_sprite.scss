@@ -8,8 +8,8 @@ $default-font-size: 16;
     $image,
     $x: 0,
     $y: 0,
-    $width: better-width($image),
-    $height: better-height($image),
+    $width: width($image),
+    $height: height($image),
     $rows: true,
     $gap: 0,
     $scale: 2,
@@ -31,7 +31,7 @@ $default-font-size: 16;
 
         background-image: url('/img/interface/#{$image}.png');
         background-repeat: no-repeat;
-        background-size: better-width($image) * $scale better-height($image) * $scale;
+        background-size: width($image) * $scale height($image) * $scale;
 
         @if $rows {
             &:hover {
