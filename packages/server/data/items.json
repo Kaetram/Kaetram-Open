@@ -1144,13 +1144,13 @@
     "price": 1000,
     "light": {
       "outer": {
-        "distance": 180,
+        "distance": 250,
         "colour": "rgba(204, 0, 0, 0.1)",
         "flickerSpeed": 200,
         "flickerIntensity": 2
       },
       "inner": {
-        "distance": 100,
+        "distance": 130,
         "colour": "rgba(204, 0, 0, 0.2)",
         "flickerSpeed": 400,
         "flickerIntensity": 1
@@ -2556,6 +2556,34 @@
     "name": "Rice",
     "description": "You can eat this after you cook it for a bit.",
     "price": 100
+  },
+
+  "mustardplant": {
+    "type": "object",
+    "name": "Mustard",
+    "description": "A plant found throughout the kingdom of Kaetram. Might be good for some ingredients.",
+    "price": 50
+  },
+
+  "cuminplant": {
+    "type": "object",
+    "name": "Cumin",
+    "description": "A herb used in certain cooking recipes. Not sure I'm just a description.",
+    "price": 50
+  },
+
+  "paprika": {
+    "type": "object",
+    "name": "Paprika",
+    "description": "A very nice vegetable used in very nice condiments.",
+    "price": 50
+  },
+
+  "dandelion": {
+    "type": "object",
+    "name": "Dandelion",
+    "description": "A cute little yellow plant that grows in the grass. Or on tree stumps.",
+    "price": 50
   },
 
   "strawberry": {
