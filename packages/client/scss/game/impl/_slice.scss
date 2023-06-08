@@ -88,6 +88,19 @@
     }
 }
 
+.slice-dialog {
+    position: absolute;
+
+    display: none;
+
+    box-sizing: border-box;
+    margin: auto;
+    padding: 1em 0.675em 0.675em;
+
+    background: transparent;
+    border-image: url('/img/interface/slices/dialog.png') 45% fill / 1em / 0 stretch;
+}
+
 .slice-input {
     overflow: auto;
     display: flex;
