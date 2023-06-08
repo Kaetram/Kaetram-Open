@@ -1253,6 +1253,8 @@ export default class Renderer {
             inner.light.flickerSpeed = light.inner.flickerSpeed;
             inner.light.flickerIntensity = light.inner.flickerIntensity;
         }
+
+        this.resizeLights();
     }
 
     /**
