@@ -3,35 +3,65 @@
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 10,
-        "item": "logs"
+        "item": "logs",
+        "randomItems": [
+            {
+                "key": "apple",
+                "chance": 800
+            }
+        ]
     },
 
     "oak2": {
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 10,
-        "item": "logs"
+        "item": "logs",
+        "randomItems": [
+            {
+                "key": "apple",
+                "chance": 800
+            }
+        ]
     },
 
     "oak3": {
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 10,
-        "item": "logs"
+        "item": "logs",
+        "randomItems": [
+            {
+                "key": "apple",
+                "chance": 800
+            }
+        ]
     },
 
     "oak4": {
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 10,
-        "item": "logs"
+        "item": "logs",
+        "randomItems": [
+            {
+                "key": "apple",
+                "chance": 800
+            }
+        ]
     },
 
     "oak5": {
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 10,
-        "item": "logs"
+        "item": "logs",
+        "randomItems": [
+            {
+                "key": "apple",
+                "chance": 800
+            }
+        ]
     },
 
     "snowoak": {
@@ -53,7 +83,13 @@
         "levelRequirement": 5,
         "experience": 15,
         "difficulty": 25,
-        "item": "palmlogs"
+        "item": "palmlogs",
+        "randomItems": [
+            {
+                "key": "banana",
+                "chance": 10000
+            }
+        ]
     },
 
     "iceoak": {
