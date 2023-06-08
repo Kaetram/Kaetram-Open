@@ -32,5 +32,47 @@
         "experience": 30,
         "difficulty": 1,
         "item": "peach"
+    },
+
+    "raspberry": {
+        "levelRequirement": 15,
+        "experience": 35,
+        "difficulty": 1,
+        "item": "raspberry"
+    },
+
+    "blackberry": {
+        "levelRequirement": 20,
+        "experience": 40,
+        "difficulty": 1,
+        "item": "blackberry"
+    },
+
+    "mustard": {
+        "levelRequirement": 20,
+        "experience": 45,
+        "difficulty": 1,
+        "item": "mustardplant"
+    },
+
+    "paprika": {
+        "levelRequirement": 25,
+        "experience": 50,
+        "difficulty": 1,
+        "item": "paprika"
+    },
+
+    "cumin": {
+        "levelRequirement": 25,
+        "experience": 50,
+        "difficulty": 1,
+        "item": "cuminplant"
+    },
+
+    "treestump1": {
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 1,
+        "item": "dandelion"
     }
 }

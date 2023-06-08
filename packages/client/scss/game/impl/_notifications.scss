@@ -3,11 +3,8 @@
 #notify,
 #confirm {
     pointer-events: auto;
-
     position: absolute;
-    top: 45%;
     left: 35%;
-
     display: none;
 }
 
@@ -53,7 +50,7 @@
     pointer-events: none;
 
     position: absolute;
-    top: 100%;
+    bottom: -6em;
     left: 50%;
 
     display: flex;
@@ -61,13 +58,14 @@
     gap: 0.5em;
 
     width: 14em;
-    height: 7em;
+    height: 6em;
     margin-left: -7em;
     padding: 1.5em;
 
     opacity: 0.8;
+    border-image-width: 1em 1em 0 1em;
 
-    transition: 0.7s top ease;
+    transition: 0.7s bottom ease;
 }
 
 #notification-text-title {
