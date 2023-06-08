@@ -8,9 +8,8 @@ import { defineConfig } from 'astro/config';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { VitePWA as pwa } from 'vite-plugin-pwa';
 import { internalIpV4 } from 'internal-ip';
-import size from 'image-size';
+import { imageSize } from 'image-size';
 import sass from 'sass';
-import i18next from 'astro-i18next';
 import sitemap from '@astrojs/sitemap';
 import robotsTxt from 'astro-robots-txt';
 import critters from 'astro-critters';
@@ -75,11 +74,12 @@ if (config.sentryDsn && !config.debugging)
 
 let imageCache = new Map<string, { width?: number; height?: number }>();
 function getImageSize(image: string) {
-    if (!imageCache.has(image))
-        imageCache.set(
-            image,
-            size(fileURLToPath(new URL(`public/img/interface/${image}.png`, import.meta.url)))
-        );
+    if (!imageCache.has(image)) {
+        let path = fileURLToPath(new URL(`public/img/interface/${image}.png`, import.meta.url)),
+            size = imageSize(path);
+
+        imageCache.set(image, size);
+    }
 
     return imageCache.get(image)!;
 }
@@ -88,41 +88,44 @@ export default defineConfig({
     srcDir: './',
     site: 'https://kaetram.com',
     integrations: [
-        i18next(),
         webmanifest({
             icon: 'public/icon.png',
             name: config.name,
             description,
-            display: 'fullscreen',
-            background_color: '#000000',
-            theme_color: '#000000',
             categories: ['entertainment', 'games'],
+            lang: 'en-US',
+            dir: 'ltr',
+            start_url: '/',
+            theme_color: '#000000',
+            background_color: '#000000',
+            display: 'fullscreen',
+            orientation: 'landscape-primary',
+            locales: {
+                ro: { name: 'Kaetram', lang: 'ro-RO' }
+            },
             config: {
                 insertAppleTouchLinks: true,
                 iconPurpose: ['any', 'badge', 'maskable']
-            },
-            locales: {}
+            }
         }),
-        sitemap({ i18n: { defaultLocale: 'en', locales: { en: 'en-US' } } }),
+        sitemap({
+            i18n: {
+                defaultLocale: 'en',
+                locales: { en: 'en-US', ro: 'ro-RO' }
+            }
+        }),
         robotsTxt({ host: true }),
         critters({ logger: 2 }),
         compress({ logger: 1 }),
         compressor({ gzip: true, brotli: true })
     ],
-    server: {
-        host: '0.0.0.0',
-        port: 9000
-    },
+    server: { host: '0.0.0.0', port: 9000 },
     vite: {
         plugins,
         build: { sourcemap: true },
         server: {
             strictPort: true,
-            hmr: {
-                protocol: 'ws',
-                host: ipv4,
-                port: 5183
-            }
+            hmr: { protocol: 'ws', host: ipv4, port: 5183 }
         },
         define: { globalConfig: env },
         css: {
