@@ -12,6 +12,20 @@ import type Resource from '../../../../../globals/impl/resource';
 export default class Lumberjacking extends ResourceSkill {
     public constructor() {
         super(Modules.Skills.Lumberjacking, Trees);
+
+        this.onExhaust(this.handleExhaust.bind(this));
+    }
+
+    /**
+     * Handles obtaining the resource information and sending it to the superclass
+     * to process handling the random item rewarding.
+     * @param player The player that is cutting the tree.
+     * @param resource The resource belonging to the tree that was cut.
+     */
+
+    private handleExhaust(player: Player, resource?: Resource): void {
+        // Use the superclass logic to handle the random item selection.
+        super.handleRandomItems(player, Trees[resource!.type as keyof typeof Trees]);
     }
 
     /**
