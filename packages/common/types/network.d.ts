@@ -1,4 +1,4 @@
-import type { Packets } from '../network/packets';
+import type { Packets } from '@kaetram/common/network';
 
 export interface ConnectionInfo {
     instance: string;
