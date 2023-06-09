@@ -1,4 +1,4 @@
-import type Modules from '../network/modules';
+import type { Modules } from '@kaetram/common/network';
 
 export interface SkillData {
     type: Modules.Skills;

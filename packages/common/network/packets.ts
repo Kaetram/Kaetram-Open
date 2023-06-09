@@ -54,7 +54,10 @@ enum Packets {
     Relay,
     Crafting,
     LootBag,
-    Countdown
+    Countdown,
+
+    // Hub <-> Admin
+    AdminSync
 }
 
 export default Packets;

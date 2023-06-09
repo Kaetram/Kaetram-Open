@@ -359,6 +359,8 @@ export default class Commands {
                 }
 
                 this.player.notify(`Copied ${username}'s ${command} to your ${command}.`);
+
+                break;
             }
 
             case 'drop': {
@@ -370,6 +372,8 @@ export default class Commands {
                 if (!count) count = 1;
 
                 this.world.entities.spawnItem(key, this.player.x, this.player.y, true, count);
+
+                break;
             }
 
             case 'remove': {
@@ -990,6 +994,8 @@ export default class Commands {
                 if (!key) return this.player.notify(`Malformed command, expected /setpet key`);
 
                 this.player.setPet(key);
+
+                break;
             }
 
             case 'opencrafting': {
@@ -1013,6 +1019,8 @@ export default class Commands {
                 // Kick all players with the same IP.
                 for (let p of this.entities.getPlayersByIp(player.connection.address))
                     p.connection.reject('banned');
+
+                break;
             }
 
             case 'countdown': {
@@ -1021,6 +1029,8 @@ export default class Commands {
                 if (!time) return this.player.notify(`Malformed command, expected /countdown time`);
 
                 this.player.countdown(time);
+
+                break;
             }
 
             case 'collision': {
@@ -1035,6 +1045,8 @@ export default class Commands {
                 this.player.notify(`${this.world.map.isColliding(x, y)} - index: ${index}`);
 
                 log.debug(`Data: ${this.world.map.data[index]}`);
+
+                break;
             }
 
             case 'toggle': {
