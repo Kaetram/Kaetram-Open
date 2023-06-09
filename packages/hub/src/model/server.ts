@@ -1,39 +1,26 @@
-import Incoming from '../controllers/incoming';
+import Model from '.';
 
-import Utils from '@kaetram/common/util/utils';
 import Packet from '@kaetram/common/network/packet';
-import { Chat, Friends, Guild, Relay } from '@kaetram/common/network/impl';
+import { Chat, Friends, Guild } from '@kaetram/common/network/impl';
 import { Opcodes, Packets } from '@kaetram/common/network';
+import log from '@kaetram/common/util/log';
 
+import type { HandshakePacket } from '@kaetram/common/network/impl/handshake';
 import type { Member } from '@kaetram/common/types/guild';
 import type { Friend } from '@kaetram/common/types/friends';
-import type Servers from '../controllers/servers';
-import type Connection from '../network/connection';
+import type { ChatPacket, FriendsPacket, PlayerPacket } from '@kaetram/common/types/messages/hub';
 import type { SerializedServer } from '@kaetram/common/types/network';
-import type { HandshakePacket } from '@kaetram/common/types/messages/hub';
+import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
 
-export default class Server {
+export default class Server extends Model {
     public id = -1;
     public name = '';
     public host = '';
     public port = -1;
-    public address = '';
 
     public players: string[] = [];
 
     public maxPlayers = 2;
-
-    public readyCallback?: () => void;
-
-    public constructor(
-        public instance: string,
-        public controller: Servers,
-        public connection: Connection
-    ) {
-        this.address = Utils.bufferToAddress(this.connection.socket.getRemoteAddressAsText());
-
-        new Incoming(this);
-    }
 
     /**
      * Loads the information from the handshake packet into the server object.
@@ -41,12 +28,115 @@ export default class Server {
      */
 
     public load(data: HandshakePacket): void {
-        this.name = data.name;
-        this.id = data.serverId;
-        this.host = data.remoteHost;
-        this.port = data.port;
-        this.players = data.players;
-        this.maxPlayers = data.maxPlayers;
+        if (data.type === 'hub') {
+            this.name = data.name;
+            this.id = data.serverId;
+            this.host = data.remoteHost;
+            this.port = data.port;
+            this.players = data.players;
+            this.maxPlayers = data.maxPlayers;
+        } else log.error(`Invalid handshake type: ${data.type}`);
+    }
+
+    public override handlePacket(packet: Packets, opcode: never, info: never): void {
+        switch (packet) {
+            case Packets.Chat: {
+                return this.handleChat(opcode);
+            }
+
+            case Packets.Guild: {
+                return this.handleGuild(opcode, info);
+            }
+
+            case Packets.Friends: {
+                return this.handleFriends(info);
+            }
+
+            case Packets.Player: {
+                return this.handlePlayer(opcode, info);
+            }
+
+            case Packets.Relay: {
+                return this.relay(opcode);
+            }
+        }
+    }
+
+    /**
+     * Receives information about the player's login our logout activity.
+     * @param opcode What type of player event we are handling.
+     * @param info Contains the username of the player that is logging in or out.
+     */
+
+    private handlePlayer(opcode: Opcodes.Player, info: PlayerPacket): void {
+        switch (opcode) {
+            case Opcodes.Player.Login: {
+                return this.add(info.username!, info.guild!);
+            }
+
+            case Opcodes.Player.Logout: {
+                return this.remove(info.username!, info.guild!);
+            }
+        }
+    }
+
+    /**
+     * Sends a chat callback message to the server. Depending on the information received,
+     * we determine whether it's a private message or a normal message.
+     * @param info Contains information about the message, such as source, content, and optionally, a target.
+     */
+
+    private handleChat(info: ChatPacket): void {
+        return this.message(info.source, info.message!, info.target!);
+    }
+
+    /**
+     * Handles incoming messages regarding a guild. Used to broadcast to other servers
+     * actions that are performed on a guild. Things like a player joining, a player's
+     * rank being changed, or someone leaving.
+     * @param opcode The type of action that is being performed.
+     * @param info unknown (for now).
+     */
+
+    public handleGuild(opcode: Opcodes.Guild, info: GuildPacket): void {
+        switch (opcode) {
+            case Opcodes.Guild.Update: {
+                let { username, usernames: inactiveMembers } = info,
+                    activeMembers: Member[] = [];
+
+                for (let member of inactiveMembers!) {
+                    let targetServer = this.controller.findPlayer(member);
+
+                    if (targetServer)
+                        activeMembers.push({ username: member, serverId: targetServer.id });
+                }
+
+                // Send the list of active members back to the source server's player.
+                this.send(new Guild(Opcodes.Guild.Update, { username, members: activeMembers }));
+            }
+        }
+    }
+
+    /**
+     * Contains a list of inactive friends list for a given username. We relay this to the server
+     * controller so that we can check if any server has a player that is on the inactive list.
+     * @param info Contains the username and the list of inactive friends.
+     */
+
+    private handleFriends(info: FriendsPacket): void {
+        let { username, inactiveFriends } = info,
+            activeFriends: Friend = {};
+
+        // Look through all the inactive friends and try to find them on a server.
+        for (let friend of inactiveFriends!) {
+            let targetServer = this.controller.findPlayer(friend);
+
+            // If the player is online, add them to the active friends list.
+            if (targetServer) activeFriends[friend] = { online: true, serverId: targetServer.id };
+        }
+
+        // Send the active friends back to the server.
+        this.send(new Friends(Opcodes.Friends.Sync, { username, activeFriends }));
     }
 
     /**
@@ -66,7 +156,7 @@ export default class Server {
      */
 
     public broadcast(packet: Packet): void {
-        this.controller.broadcast(packet, this.instance);
+        this.controller.broadcastServers(packet, this.instance);
     }
 
     /**
@@ -99,7 +189,7 @@ export default class Server {
         this.players.push(username);
 
         // Broadcast the login to all the servers.
-        this.controller.broadcast(
+        this.controller.broadcastServers(
             new Packet(Packets.Player, Opcodes.Player.Login, { username, serverId: this.id, guild })
         );
 
@@ -117,7 +207,7 @@ export default class Server {
         this.players = this.players.filter((player) => player !== username);
 
         // Broadcast the logout to all the servers.
-        this.controller.broadcast(
+        this.controller.broadcastServers(
             new Packet(Packets.Player, Opcodes.Player.Logout, {
                 username,
                 serverId: this.id,
@@ -153,61 +243,6 @@ export default class Server {
 
         // Send a confirmation to the source server that the message was sent.
         this.send(new Chat({ source, message, target, success: true }));
-    }
-
-    /**
-     * Searches through all the game servers to see which players in the `inactiveMembers`
-     * list are online on another server. We create a dictionary of these players and
-     * pass it back to the player that is making the request.
-     * @param username The player that is making the request.
-     * @param inactiveMembers List of members to search for in other servers.
-     */
-
-    public handleGuild(username: string, inactiveMembers: string[] = []): void {
-        let activeMembers: Member[] = [];
-
-        for (let member of inactiveMembers) {
-            let targetServer = this.controller.findPlayer(member);
-
-            if (targetServer) activeMembers.push({ username: member, serverId: targetServer.id });
-        }
-
-        // Send the list of active members back to the source server's player.
-        this.send(new Guild(Opcodes.Guild.Update, { username, members: activeMembers }));
-    }
-
-    /**
-     * Searches through all the servers connected to the hub and tries to see which players
-     * among the inactive player list are online. For each player online we store them in
-     * an array. We send that array back to the source server (where the player logged in),
-     * and the source server will update the player's friend list.
-     * @param username The player that is logging in.
-     * @param inactiveFriends The list of friends that are not online on the source server.
-     */
-
-    public handleFriends(username: string, inactiveFriends: string[] = []): void {
-        let activeFriends: Friend = {};
-
-        // Look through all the inactive friends and try to find them on a server.
-        for (let friend of inactiveFriends) {
-            let targetServer = this.controller.findPlayer(friend);
-
-            // If the player is online, add them to the active friends list.
-            if (targetServer) activeFriends[friend] = { online: true, serverId: targetServer.id };
-        }
-
-        // Send the active friends back to the server.
-        this.send(new Friends(Opcodes.Friends.Sync, { username, activeFriends }));
-    }
-
-    /**
-     * Ready callback for when the server has finished initializing the handshake
-     * protocol with the hub. Once the handshake is ready and we have all the preliminary
-     * data, we can add the server to the list of servers.
-     */
-
-    public onReady(callback: () => void): void {
-        this.readyCallback = callback;
     }
 
     /**
