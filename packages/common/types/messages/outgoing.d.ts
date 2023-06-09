@@ -1,4 +1,5 @@
-import type { Decoration, ListInfo, UpdateInfo } from '../guild';
+import type { ClientHandshakePacket } from '../../network/impl/handshake';
+import type { Decoration, ListInfo, UpdateInfo, Member } from '../guild';
 import type { Friend } from '../friends';
 import type { HitData } from '../info';
 import type { SerializedLight } from '../light';
@@ -12,20 +13,13 @@ import type { SerializedSkills, SkillData } from '../skills';
 import type { AbilityData, SerializedAbility } from '../ability';
 import type { EquipmentData, SerializedEquipment } from '../equipment';
 import type { CraftingRequirement } from '../crafting';
+import type { AchievementData } from '@kaetram/common/types/achievement';
 
 /**
  * Packet interfaces of data being sent from the server to the client.
  */
 
-////////////////////////////////////////////////////////////////////////////////
-
-export interface HandshakePacket {
-    // Client-server related handshake data.
-    instance?: string; // Player's instance.
-    serverId?: number;
-}
-
-export type HandshakeCallback = (data: HandshakePacket) => void;
+export type HandshakeCallback = (data: ClientHandshakePacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -254,7 +248,7 @@ export interface RespawnPacket {
     y: number; // Spawn y coordinate
 }
 
-export type RespawnCallback = (opcode: Opcodes.Respawn, info: RespawnPacket) => void;
+export type RespawnCallback = (info: RespawnPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -405,7 +399,7 @@ export type FriendsCallback = (opcode: Opcodes.Friends, info: FriendsPacket) => 
 
 export type RankCallback = (rank: Modules.Ranks) => void;
 
-//////////////////////////////s//////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 
 export interface PlayerPacket {
     username?: string;
@@ -446,3 +440,5 @@ export interface CountdownPacket {
 export type CountdownCallback = (info: CountdownPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
+
+export type { ClientHandshakePacket as HandshakePacket } from '../../network/impl/handshake';
