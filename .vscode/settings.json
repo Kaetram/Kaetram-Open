@@ -1,0 +1,15 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": { "source.fixAll": true },
+    "npm.packageManager": "yarn",
+    "prettier.prettierPath": "node_modules/prettier",
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "eslint.format.enable": true,
+    "eslint.lintTask.enable": true,
+    "eslint.packageManager": "yarn",
+    "eslint.validate": ["javascript", "typescript", "html", "astro"],
+    "stylelint.packageManager": "yarn",
+    "stylelint.validate": ["css", "postcss", "sass", "scss", "html", "astro"]
+}
