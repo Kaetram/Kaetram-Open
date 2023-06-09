@@ -1,5 +1,6 @@
 ---
-import DefaultLayout from '../layouts/Default.astro';
+import DefaultLayout from '../layouts/default.astro';
+import '../scss/main.scss';
 ---
 
 <script src="../src/reset.ts"></script>
@@ -51,9 +52,7 @@ import DefaultLayout from '../layouts/Default.astro';
     </div>
 </DefaultLayout>
 
-<style is:global lang="scss">
-    @use '../scss/main.scss';
-
+<style is:global>
     #reset-password {
         pointer-events: auto;
         opacity: 1;
