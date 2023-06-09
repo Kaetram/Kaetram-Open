@@ -120,4 +120,12 @@ if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
     );
 }
 
+export function exposedConfig<T extends keyof Config>(...keys: T[]) {
+    let exposed = {} as Pick<Config, T>;
+
+    for (let key of keys) exposed[key] = config[key];
+
+    return exposed;
+}
+
 export default config;
