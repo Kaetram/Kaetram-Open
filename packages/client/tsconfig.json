@@ -1,6 +1,3 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "types": ["@kaetram/common", "astro/client", "vite-plugin-pwa/client"]
-    }
+    "extends": "../../tsconfig.json"
 }
