@@ -1,6 +1,5 @@
 ---
-import DefaultLayout from '../layouts/Default.astro';
-
+import DefaultLayout from '../layouts/default.astro';
 import '../scss/main.scss';
 ---
 
@@ -22,7 +21,6 @@ import '../scss/main.scss';
                         aria-label="Username"
                         maxlength="32"
                         autocomplete="off"
-                        autofocus
                     />
                     <input
                         type="password"
@@ -359,7 +357,7 @@ import '../scss/main.scss';
             </div>
         </section>
 
-        <button id="world-select-button" role="button" class="slice-button" hidden>
+        <button id="world-select-button" class="slice-button" hidden>
             <strong class="stroke"></strong>
             <span class="stroke"></span>
         </button>
@@ -654,6 +652,8 @@ import '../scss/main.scss';
                             id="logout-button"
                             class="element-button element-button-red stroke"
                             onclick="location.reload();"
+                            onkeydown="if (event.keyCode === 13) location.reload();"
+                            tabindex="0"
                         >
                             Log Out
                         </div>

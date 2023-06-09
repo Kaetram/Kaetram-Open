@@ -1,16 +1,18 @@
 ---
-import { Schema } from 'astro-seo-schema';
 import { description } from '../../../package.json';
 
-function site(path = '') {
-    return new URL(path, Astro.site).toString();
-}
+import { Schema } from 'astro-seo-schema';
+import { GoogleAnalytics } from '@astrolib/analytics';
 
 export interface Props {
     title?: string;
 }
 
 let { title } = Astro.props;
+
+function site(path = '') {
+    return new URL(path, Astro.site).toString();
+}
 ---
 
 <html dir="ltr" lang="en">
@@ -20,6 +22,10 @@ let { title } = Astro.props;
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=0"
         />
+
+        <title>Kaetram{title ? ` | ${title}` : ''}</title>
+
+        <GoogleAnalytics id="G-SLX5NNTBX4" partytown />
 
         <!-- Meta -->
         <meta name="application-name" content="Kaetram" />
@@ -121,19 +127,6 @@ let { title } = Astro.props;
         />
 
         <meta name="rating" content="General" />
-
-        <title>Kaetram{title ? ` | ${title}` : ''}</title>
-
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-SLX5NNTBX4"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag('js', new Date());
-            gtag('config', 'G-SLX5NNTBX4');
-        </script>
     </head>
     <body class="intro">
         <noscript>
