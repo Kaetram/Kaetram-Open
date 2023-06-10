@@ -1,3 +1,5 @@
+import type { ProcessedArea } from '@kaetram/common/types/map';
+
 export interface Door {
     height: number;
     id: number;

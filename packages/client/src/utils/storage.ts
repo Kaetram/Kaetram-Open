@@ -72,8 +72,8 @@ export default class Storage {
     private create(): StorageData {
         return {
             new: true,
-            world: window.config.serverId,
-            clientVersion: window.config.version,
+            world: globalConfig.serverId,
+            clientVersion: globalConfig.version,
             errorMessage: '',
 
             player: {
@@ -462,7 +462,7 @@ export default class Storage {
      */
 
     private isNewVersion(): boolean {
-        return this.data.clientVersion !== window.config.version;
+        return this.data.clientVersion !== globalConfig.version;
     }
 
     /**

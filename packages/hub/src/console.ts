@@ -1,9 +1,9 @@
 import log from '@kaetram/common/util/log';
 
-import type Servers from './controllers/servers';
+import type Models from './controllers/models';
 
 export default class Console {
-    public constructor(private servers: Servers) {
+    public constructor(private models: Models) {
         let { stdin } = process;
 
         stdin.addListener('data', (data) => {
@@ -21,7 +21,7 @@ export default class Console {
 
             switch (command) {
                 case 'server': {
-                    return console.log(this.servers.findEmpty());
+                    return console.log(this.models.findEmptyServer());
                 }
 
                 case 'player': {
@@ -32,7 +32,7 @@ export default class Console {
                         return;
                     }
 
-                    console.log(this.servers.findPlayer(username));
+                    console.log(this.models.findPlayer(username));
 
                     break;
                 }

@@ -59,6 +59,7 @@ export default class Client {
         connection.send(
             JSON.stringify(
                 new Handshake({
+                    type: 'hub',
                     gVer: config.gver,
                     name: config.name,
                     serverId: config.serverId,

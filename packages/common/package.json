@@ -4,7 +4,6 @@
     "types": "./types/index.d.ts",
     "devDependencies": {
         "@types/dotenv-parse-variables": "^2.0.1",
-        "@types/node": "^18.15.5",
         "bcryptjs": "^2.4.3",
         "discord.js": "^14.3.0",
         "dotenv-extended": "^2.9.0",

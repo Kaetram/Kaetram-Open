@@ -1,11 +1,17 @@
 import Server from '../model/server';
+import Admin from '../model/admin';
 
 import log from '@kaetram/common/util/log';
 import { Chat } from '@kaetram/common/network/impl';
+import Utils from '@kaetram/common/util/utils';
+import { Packets } from '@kaetram/common/network';
+import config from '@kaetram/common/config';
+import Packet from '@kaetram/common/network/packet';
 
-import type Packet from '@kaetram/common/network/packet';
+import type Model from '../model';
 import type Connection from '../network/connection';
 import type { SerializedServer } from '@kaetram/common/types/network';
+import type { HandshakePacket } from '@kaetram/common/network/impl/handshake';
 
 type PlayerCallback = (
     username: string,
@@ -20,8 +26,9 @@ type MessageCallback = (
     serverName?: string,
     withArrow?: boolean
 ) => void;
-export default class Servers {
-    private servers: { [instance: string]: Server } = {};
+
+export default class Models {
+    private models: { [instance: string]: Model } = {};
 
     public playerCallback?: PlayerCallback;
     public messageCallback?: MessageCallback;
@@ -37,10 +44,100 @@ export default class Servers {
      */
 
     public connect(instance: string, connection: Connection): void {
-        let server = new Server(instance, this, connection);
+        connection.onMessage(([packet, opcode, info]) => {
+            if (!Utils.validPacket(packet)) {
+                log.error(`Non-existent packet received: ${packet} data: `);
+                log.error(info);
 
-        // Callback for when the server finishes the handshake.
-        server.onReady(() => this.add(server));
+                return;
+            }
+
+            if (packet === Packets.Handshake) this.handleHandshake(opcode, instance, connection);
+            else this.models[instance].handlePacket(packet, opcode, info);
+
+            this.syncAdmins();
+        });
+    }
+
+    private handleHandshake(data: HandshakePacket, instance: string, connection: Connection) {
+        switch (data.type) {
+            case 'hub': {
+                if (config.gver !== data.gVer) {
+                    log.error(
+                        `Game version mismatch: ${config.gver} ${data.gVer} from ${data.serverId}`
+                    );
+
+                    return connection.close();
+                }
+
+                let server = new Server(this, instance, connection);
+
+                this.addServer(server);
+                server.load(data);
+
+                break;
+            }
+
+            case 'admin': {
+                let admin = new Admin(this, instance, connection);
+
+                this.addAdmin(admin);
+
+                break;
+            }
+
+            case 'client': {
+                log.error(`Client ${instance} is not a valid server.`);
+
+                break;
+            }
+        }
+    }
+
+    /**
+     * Get a server object from our list of servers.
+     * @param instance The instance of the server we are getting.
+     * @returns The server object if it exists.
+     */
+
+    private getServer(instance: string): Server | undefined {
+        let server = this.models[instance];
+
+        if (server instanceof Server) return server;
+    }
+
+    /**
+     * Get a list of all servers.
+     * @returns An array of all servers.
+     */
+
+    private getAllServers(): Server[] {
+        let servers = Object.values(this.models).filter((model) => model instanceof Server);
+
+        return servers as Server[];
+    }
+
+    /**
+     * Get an admin object from our list of admins.
+     * @param instance The instance of the admin we are getting.
+     * @returns The admin object if it exists.
+     */
+
+    private getAdmin(instance: string): Admin | undefined {
+        let admin = this.models[instance];
+
+        if (admin instanceof Admin) return admin;
+    }
+
+    /**
+     * Get a list of all admins.
+     * @returns An array of all admins.
+     */
+
+    private getAllAdmins(): Admin[] {
+        let admins = Object.values(this.models).filter((model) => model instanceof Admin);
+
+        return admins as Admin[];
     }
 
     /**
@@ -48,13 +145,30 @@ export default class Servers {
      * @param server The server object we are adding.
      */
 
-    private add(server: Server): void {
-        if (server.instance in this.servers)
+    private addServer(server: Server): void {
+        if (server.instance in this.models)
             return log.error(`Server ${server.instance} already exists.`);
 
-        this.servers[server.instance] = server;
-
+        this.models[server.instance] = server;
         this.addCallback?.(server.id, server.name);
+    }
+
+    /**
+     * Handles adding an admin to our list of admins.
+     * @param admin The admin object we are adding.
+     */
+
+    private addAdmin(admin: Admin): void {
+        if (admin.instance in this.models)
+            return log.error(`Admin ${admin.instance} already exists.`);
+
+        this.models[admin.instance] = admin;
+    }
+
+    private syncAdmins() {
+        this.broadcastAdmins(
+            new Packet(Packets.AdminSync, undefined, { servers: this.serializeServers() })
+        );
     }
 
     /**
@@ -63,12 +177,16 @@ export default class Servers {
      */
 
     public remove(instance: string): void {
+        if (!(instance in this.models)) return;
+
+        let model = this.models[instance];
+
         // Prevent crashes from removing non-existent servers.
-        if (!(instance in this.servers)) return;
+        if (model instanceof Server) this.removeCallback?.(model.id, model.name);
 
-        this.removeCallback?.(this.servers[instance].id, this.servers[instance].name);
+        delete this.models[instance];
 
-        delete this.servers[instance];
+        this.syncAdmins();
     }
 
     /**
@@ -77,11 +195,25 @@ export default class Servers {
      * @param exclude The server we are excluding from the broadcast.
      */
 
-    public broadcast(packet: Packet, exclude = ''): void {
-        for (let server in this.servers) {
-            if (server === exclude) continue;
+    public broadcastServers(packet: Packet, exclude = ''): void {
+        for (let instance in this.models) {
+            if (instance === exclude) continue;
 
-            this.servers[server].send(packet);
+            this.getServer(instance)?.send(packet);
+        }
+    }
+
+    /**
+     * Broadcasts a message to all admins. Optionally we can exclude an admin.
+     * @param packet The packet object that we want to send to the admin.
+     * @param exclude The admin we are excluding from the broadcast.
+     */
+
+    public broadcastAdmins(packet: Packet, exclude = ''): void {
+        for (let instance in this.models) {
+            if (instance === exclude) continue;
+
+            this.getAdmin(instance)?.send(packet);
         }
     }
 
@@ -93,7 +225,7 @@ export default class Servers {
      */
 
     public global(source: string, message: string, colour: string): void {
-        this.broadcast(new Chat({ source, message, colour }));
+        this.broadcastServers(new Chat({ source, message, colour }));
     }
 
     /**
@@ -117,8 +249,8 @@ export default class Servers {
      */
 
     public hasSpace(): boolean {
-        return Object.values(this.servers).some((server: Server) => {
-            return server.players.length < server.maxPlayers;
+        return Object.values(this.models).some((server) => {
+            return server instanceof Server && server.players.length < server.maxPlayers;
         });
     }
 
@@ -129,10 +261,8 @@ export default class Servers {
      * @returns The server that has space for a new player, or undefined if not found.
      */
 
-    public findEmpty(): Server | undefined {
-        for (let key in this.servers) {
-            let server = this.servers[key];
-
+    public findEmptyServer(): Server | undefined {
+        for (let server of this.getAllServers()) {
             if (server.players.length >= server.maxPlayers - 1) continue;
 
             return server;
@@ -149,8 +279,8 @@ export default class Servers {
      */
 
     public findPlayer(username: string): Server | undefined {
-        for (let key in this.servers)
-            if (this.servers[key].players.includes(username)) return this.servers[key];
+        for (let server of this.getAllServers())
+            if (server.players.includes(username)) return server;
 
         return undefined;
     }
@@ -174,12 +304,10 @@ export default class Servers {
      * @returns Contains an array of serialized server information.
      */
 
-    public serialize(): SerializedServer[] {
-        return Object.values(this.servers)
-            .map((server: Server) => server.serialize())
-            .sort((a, b) => {
-                return a.id - b.id;
-            });
+    public serializeServers(): SerializedServer[] {
+        return this.getAllServers()
+            .map((server) => server.serialize())
+            .sort((a, b) => a.id - b.id);
     }
 
     /**
@@ -188,7 +316,7 @@ export default class Servers {
      */
 
     public forEachServer(callback: (server: Server) => void): void {
-        for (let server in this.servers) callback(this.servers[server]);
+        for (let server of this.getAllServers()) callback(server);
     }
 
     /**

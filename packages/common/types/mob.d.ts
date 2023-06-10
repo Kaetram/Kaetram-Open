@@ -1,3 +1,5 @@
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+
 export interface MobData {
     name: string;
     description?: string | string[];
