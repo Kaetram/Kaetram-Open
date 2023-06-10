@@ -22,6 +22,8 @@ export interface Config {
     hubPort: number; // API port for hub
     hubWsPort: number; // Websocket port for hub
     hubAccessToken: string;
+    adminHost: string;
+    adminPort: number;
     remoteServerHost: string;
     remoteApiHost: string;
 
@@ -106,8 +108,9 @@ for (let key in envConfig) {
     config[camelCaseKey] = envConfig[key] as never;
 }
 
-config.hubHost = config.hubHost || config.host;
-config.hubWsHost = config.hubWsHost || config.hubHost;
+config.hubHost ||= config.host;
+config.hubWsHost ||= config.hubHost;
+config.adminHost ||= config.hubHost;
 
 if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
     console.error(
