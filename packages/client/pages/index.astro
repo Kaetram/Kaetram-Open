@@ -423,19 +423,6 @@ import '../scss/main.scss';
                 </div>
             </div>
 
-            <div id="chat">
-                <div id="chat-log"></div>
-
-                <input
-                    title="Enter your message!"
-                    id="chat-input"
-                    type="text"
-                    maxlength="256"
-                    autocomplete="off"
-                    data-lpignore="true"
-                />
-            </div>
-
             <div id="buttons">
                 <ul>
                     <li><div id="inventory-button"></div></li>
@@ -447,6 +434,19 @@ import '../scss/main.scss';
                     <li><div id="chat-button"></div></li>
                     <li><div id="settings-button"></div></li>
                 </ul>
+            </div>
+
+            <div id="chat">
+                <div id="chat-log"></div>
+
+                <input
+                    title="Enter your message!"
+                    id="chat-input"
+                    type="text"
+                    maxlength="256"
+                    autocomplete="off"
+                    data-lpignore="true"
+                />
             </div>
 
             <div id="zoom-buttons">
@@ -494,8 +494,8 @@ import '../scss/main.scss';
                         <div class="profile-item-image"></div>
                     </div>
                     <div id="arrows-slot" class="profile-item slice-list-item">
-                        <div class="profile-item-image"></div>
                         <div id="arrows-count" class="stroke"></div>
+                        <div class="profile-item-image"></div>
                     </div>
                     <div id="chestplate-slot" class="profile-item slice-list-item">
                         <div class="profile-item-image"></div>
@@ -798,10 +798,14 @@ import '../scss/main.scss';
                     </div>
 
                     <div id="enchant-item">
-                        <div id="enchant-item-selected" class="slice-item-slot"></div>
+                        <div id="enchant-item-selected" class="slice-item-slot">
+                            <div></div>
+                        </div>
 
                         <div>
-                            <div id="enchant-item-shards" class="slice-item-slot"></div>
+                            <div id="enchant-item-shards" class="slice-item-slot">
+                                <div></div>
+                            </div>
                             <div id="enchant-item-count"></div>
                         </div>
 
