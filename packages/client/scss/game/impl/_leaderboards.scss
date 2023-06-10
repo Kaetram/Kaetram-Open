@@ -18,7 +18,7 @@
     height: 100%;
 
     ul {
-        overflow: auto;
+        overflow: hidden auto;
         display: flex;
         flex: 1;
         flex-flow: column;
