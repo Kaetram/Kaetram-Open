@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises';
+
 import dotenv from 'dotenv-extended';
 import dotenvParseVariables from 'dotenv-parse-variables';
 
@@ -20,6 +22,8 @@ export interface Config {
     hubPort: number; // API port for hub
     hubWsPort: number; // Websocket port for hub
     hubAccessToken: string;
+    adminHost: string;
+    adminPort: number;
     remoteServerHost: string;
     remoteApiHost: string;
 
@@ -85,12 +89,14 @@ function camelCase(str: string): string {
 }
 
 let { NODE_ENV } = process.env,
-    env = dotenv.load({ path: `../../.env`, defaults: '../../.env.defaults' });
+    env = dotenv.load({ path: `../../.env`, defaults: '../../.env.defaults' }),
+    nodeEnvConfig = `../../.env.${NODE_ENV}`,
+    nodeEnvConfigExists = await fs.stat(nodeEnvConfig).catch(() => false);
 
-if (NODE_ENV) {
+if (NODE_ENV && nodeEnvConfigExists) {
     console.debug(`Loading additional env values from [.env.${NODE_ENV}]`);
 
-    Object.assign(env, dotenv.load({ path: `../../.env.${NODE_ENV}` }));
+    Object.assign(env, dotenv.load({ path: nodeEnvConfig }));
 }
 
 let envConfig = dotenvParseVariables(env),
@@ -102,8 +108,9 @@ for (let key in envConfig) {
     config[camelCaseKey] = envConfig[key] as never;
 }
 
-config.hubHost = config.hubHost || config.host;
-config.hubWsHost = config.hubWsHost || config.hubHost;
+config.hubHost ||= config.host;
+config.hubWsHost ||= config.hubHost;
+config.adminHost ||= config.hubHost;
 
 if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
     console.error(
@@ -114,6 +121,14 @@ if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
     throw new Error(
         `NODE_ENV and database name mismatch [NODE_ENV=${NODE_ENV},mongodbDatabase=${config.mongodbDatabase}]`
     );
+}
+
+export function exposedConfig<T extends keyof Config>(...keys: T[]) {
+    let exposed = {} as Pick<Config, T>;
+
+    for (let key of keys) exposed[key] = config[key];
+
+    return exposed;
 }
 
 export default config;

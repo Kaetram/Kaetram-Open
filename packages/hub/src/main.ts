@@ -2,7 +2,7 @@ import Console from './console';
 import API from './controllers/api';
 import Cache from './controllers/cache';
 import Handler from './network/handler';
-import Servers from './controllers/servers';
+import Models from './controllers/models';
 import Mailer from './controllers/mailer';
 
 import log from '@kaetram/common/util/log';
@@ -12,8 +12,8 @@ import Utils from '@kaetram/common/util/utils';
 
 export default class Main {
     private cache: Cache = new Cache();
-    private servers: Servers = new Servers();
     private handler: Handler = new Handler(); // The network handler.
+    private models: Models = new Models();
     private discord: Discord = new Discord();
     private mailer: Mailer = new Mailer();
 
@@ -21,22 +21,22 @@ export default class Main {
         log.notice(`Initializing ${config.name} Hub ${config.gver}.`);
 
         // Relay global messages from the Discord server to all servers.
-        this.discord.onMessage(this.servers.global.bind(this.servers));
+        this.discord.onMessage(this.models.global.bind(this.models));
 
         // Callbacks for the web socket server.
-        this.handler.onConnection(this.servers.connect.bind(this.servers));
-        this.handler.onDisconnect(this.servers.remove.bind(this.servers));
+        this.handler.onConnection(this.models.connect.bind(this.models));
+        this.handler.onDisconnect(this.models.remove.bind(this.models));
 
         // Callbacks for the server handler.
-        this.servers.onAdd(this.handleAdd.bind(this));
-        this.servers.onRemove(this.handleRemove.bind(this));
-        this.servers.onPlayer(this.handlePlayer.bind(this));
-        this.servers.onMessage(this.discord.sendMessage.bind(this.discord));
+        this.models.onAdd(this.handleAdd.bind(this));
+        this.models.onRemove(this.handleRemove.bind(this));
+        this.models.onPlayer(this.handlePlayer.bind(this));
+        this.models.onMessage(this.discord.sendMessage.bind(this.discord));
 
         if (this.handler.ready) log.notice(`Hub is now listening on port: ${config.hubWsPort}.`);
 
-        new Console(this.servers);
-        new API(this.servers, this.mailer, this.cache);
+        new Console(this.models);
+        new API(this.models, this.mailer, this.cache);
     }
 
     /**

@@ -38,10 +38,17 @@
         &-shards {
             width: 2em;
             height: 2em;
+
+            div {
+                width: 100%;
+                height: 100%;
+                background-size: 100%;
+            }
         }
 
         &-count {
             height: 1em;
+            text-align: center;
         }
     }
 }

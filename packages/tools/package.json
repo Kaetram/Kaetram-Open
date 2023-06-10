@@ -13,7 +13,6 @@
         "websocket": "^1.0.34"
     },
     "devDependencies": {
-        "@types/node": "^18.15.5",
         "typescript": "^5.0.4"
     }
 }
