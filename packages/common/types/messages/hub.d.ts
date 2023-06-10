@@ -5,17 +5,6 @@
 
 import type { Friend } from '../friends';
 
-export interface HandshakePacket {
-    gVer: string; // Game version.
-    name: string;
-    serverId: number;
-    accessToken: string; // Denied if mismatches
-    remoteHost: string; // Relayed to game clients as the server's IP.
-    port: number;
-    players: string[];
-    maxPlayers: number;
-}
-
 export interface PlayerPacket {
     username: string;
     serverId?: number;

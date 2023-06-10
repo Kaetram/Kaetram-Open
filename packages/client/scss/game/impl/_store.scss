@@ -16,7 +16,7 @@
 
         &-slots {
             ul {
-                overflow: auto;
+                overflow: hidden auto;
                 display: grid;
                 grid-template-columns: repeat(5, 1fr);
                 gap: 0.25em;
@@ -49,7 +49,7 @@
             flex: 1;
 
             ul {
-                overflow: auto;
+                overflow: hidden auto;
                 display: flex;
                 flex-flow: column;
                 gap: 0.25em;
