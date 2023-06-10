@@ -7,10 +7,7 @@ export default class InventoryContext extends LoggedInContext {
         super();
         this.registerLookup('inventory button', '#inventory-button');
         this.registerLookup('inventory window', '#inventory');
-        this.registerLookup(
-            'first inventory slot',
-            '#inventory-container > ul > li:first-child div.item-slot'
-        );
+        this.registerLookup('first inventory slot', '#inventory-container > ul > li:first-child');
         this.registerLookup('drop command', '.action-drop-one');
     }
 

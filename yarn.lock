@@ -3138,7 +3138,7 @@ __metadata:
     "@badeball/cypress-cucumber-preprocessor": "npm:^12.0.0"
     "@bahmutov/cypress-esbuild-preprocessor": "npm:^2.1.3"
     "@kaetram/common": "workspace:*"
-    cypress: "npm:^10.4.0"
+    cypress: "npm:^12.14.0"
     esbuild: "npm:^0.14.53"
     start-server-and-test: "npm:^1.14.0"
     tsx: "npm:^3.12.7"
@@ -5780,10 +5780,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "commander@npm:5.1.0"
-  checksum: 121debda8eeb53f3282c6a1d7995027a88ad4c22f9bd31b27a1350d483fc90dabd6dbf613782921b646e68a20ab45ed82adc3b594dbd42b60345e08059f338e4
+"commander@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "commander@npm:6.2.1"
+  checksum: c52b3cba040d015dc2788bed08041dd2e4734bc79b4ac0e1829544fa09e0844b746b956e9f5f87dee4f62870ab63239f22e2e2d30b242eef392df1501dee319d
   languageName: node
   linkType: hard
 
@@ -6150,9 +6150,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^10.4.0":
-  version: 10.4.0
-  resolution: "cypress@npm:10.4.0"
+"cypress@npm:^12.14.0":
+  version: 12.14.0
+  resolution: "cypress@npm:12.14.0"
   dependencies:
     "@cypress/request": "npm:^2.88.10"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -6168,12 +6168,12 @@ __metadata:
     check-more-types: "npm:^2.24.0"
     cli-cursor: "npm:^3.1.0"
     cli-table3: "npm:~0.6.1"
-    commander: "npm:^5.1.0"
+    commander: "npm:^6.2.1"
     common-tags: "npm:^1.8.0"
     dayjs: "npm:^1.10.4"
-    debug: "npm:^4.3.2"
+    debug: "npm:^4.3.4"
     enquirer: "npm:^2.3.6"
-    eventemitter2: "npm:^6.4.3"
+    eventemitter2: "npm:6.4.7"
     execa: "npm:4.1.0"
     executable: "npm:^4.1.1"
     extract-zip: "npm:2.0.1"
@@ -6186,7 +6186,7 @@ __metadata:
     listr2: "npm:^3.8.3"
     lodash: "npm:^4.17.21"
     log-symbols: "npm:^4.0.0"
-    minimist: "npm:^1.2.6"
+    minimist: "npm:^1.2.8"
     ospath: "npm:^1.2.2"
     pretty-bytes: "npm:^5.6.0"
     proxy-from-env: "npm:1.0.0"
@@ -6198,7 +6198,7 @@ __metadata:
     yauzl: "npm:^2.10.0"
   bin:
     cypress: bin/cypress
-  checksum: e9b132aa0d2ff141ca97811701a98d942146a96d79a21558d96f3c585e68ab56801f828fc94713904352761d1b98815f58669d97ceb12982586e9e0b429fa698
+  checksum: 5c88f8729f5d9b46600a70a807945a511da0112e9a094f70e09bca4f5a984bd81cf24fda96a9696984086e6883599ea8d237a6ac36fbf9be5fc5b2c7e62da63f
   languageName: node
   linkType: hard
 
@@ -7775,10 +7775,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventemitter2@npm:^6.4.3":
-  version: 6.4.6
-  resolution: "eventemitter2@npm:6.4.6"
-  checksum: 83adf79a3556afae5bf31b0cac88529b214de29b4c77fbc29175dd03da47efc3e35511341b0c1a1fa3bdc1653aada21af277e58f3cab54bbac4ec0b500d06bc0
+"eventemitter2@npm:6.4.7":
+  version: 6.4.7
+  resolution: "eventemitter2@npm:6.4.7"
+  checksum: 7789fb06f51d0ffd22fef2623451a449eaf38df32c61269024d4a50e42d8878e4e0c5ae1b8d60dd0f0e3cf4d97bfeb3795ce0fa773810610c40745b6eb6fe3c3
   languageName: node
   linkType: hard
 
@@ -11323,7 +11323,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.2.3":
+"minimist@npm:^1.2.3, minimist@npm:^1.2.8":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
   checksum: 8598f846f2b7546b22b01ce486df27da216a302367afe17f2a032da12fcb8d33bfbf2c523051230864abf0b806748bd60d4cd0863fae35fe104da1ff6194a185
