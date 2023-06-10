@@ -353,7 +353,7 @@
     flex: 1;
 
     ul {
-        overflow: auto;
+        overflow: hidden auto;
         display: flex;
         flex-flow: column;
         gap: 0.5em;

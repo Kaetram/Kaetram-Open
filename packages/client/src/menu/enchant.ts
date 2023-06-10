@@ -12,8 +12,8 @@ export default class Enchant extends Menu {
     private list: HTMLUListElement = document.querySelector('#enchant-inventory-slots')!;
 
     // Selected items for the enchanting process.
-    private selectedItem: HTMLElement = document.querySelector('#enchant-item-selected')!;
-    private selectedShards: HTMLElement = document.querySelector('#enchant-item-shards')!;
+    private selectedItem: HTMLElement = document.querySelector('#enchant-item-selected > div')!;
+    private selectedShards: HTMLElement = document.querySelector('#enchant-item-shards > div')!;
     private selectedShardsCount: HTMLElement = document.querySelector('#enchant-item-count')!;
 
     // Confirm button
