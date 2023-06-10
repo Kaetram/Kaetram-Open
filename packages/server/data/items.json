@@ -1114,13 +1114,13 @@
         "distance": 180,
         "colour": "rgba(204, 204, 0, 0.1)",
         "flickerSpeed": 300,
-        "flickerIntensity": 2
+        "flickerIntensity": 8
       },
       "inner": {
         "distance": 100,
         "colour": "rgba(204, 204, 0, 0.2)",
         "flickerSpeed": 400,
-        "flickerIntensity": 1
+        "flickerIntensity": 4
       }
     },
     "attackStats": {
