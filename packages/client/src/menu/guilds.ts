@@ -38,7 +38,7 @@ export default class Guilds extends Menu {
     private bannerColour: Modules.BannerColour = Modules.BannerColour.Grey;
     private bannerOutline: Modules.BannerOutline = Modules.BannerOutline.StyleOne;
     private bannerOutlineColour: Modules.BannerColour = Modules.BannerColour.GoldenYellow;
-    private bannerCrest: Modules.BannerCrests = Modules.BannerCrests.None;
+    private bannerCrest: Modules.BannerCrests | undefined = Modules.BannerCrests.None;
 
     // Buttons used for selecting which banner colours we're modifying (outline or banner).
     private bannerColourButton: HTMLElement = document.querySelector('#banner-colour-button')!;

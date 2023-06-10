@@ -1,0 +1,1179 @@
+---
+import DefaultLayout from '../layouts/default.astro';
+import '../scss/main.scss';
+---
+
+<script src="../src/main.ts"></script>
+
+<DefaultLayout>
+    <div id="intro">
+        <section id="parchment" class="load-character slice-menu">
+            <article id="load-character">
+                <h1 class="title-decoration">Kaetram</h1>
+
+                <form onsubmit={'return false'}>
+                    <input
+                        type="text"
+                        id="login-name-input"
+                        class="stroke slice-input"
+                        name="player-name"
+                        placeholder="Username"
+                        aria-label="Username"
+                        maxlength="32"
+                        autocomplete="off"
+                    />
+                    <input
+                        type="password"
+                        id="login-password-input"
+                        class="stroke slice-input"
+                        name="player-password"
+                        placeholder="Password"
+                        aria-label="Password"
+                        maxlength="64"
+                        autocomplete="off"
+                    />
+
+                    <div class="validation-summary"></div>
+
+                    <div class="button-row">
+                        <label id="remember-me" class="check">
+                            <input type="checkbox" aria-labelledby="remember-me-text" />
+                            <span class="checkmark"></span>
+
+                            <span id="remember-me-text">Remember Me</span>
+                        </label>
+                        <label id="guest" class="check">
+                            <input type="checkbox" aria-labelledby="guest-text" />
+                            <span class="checkmark"></span>
+
+                            <span id="guest-text">Play as a guest</span>
+                        </label>
+                    </div>
+
+                    <div class="button-row">
+                        <button
+                            title="Login"
+                            aria-label="Login"
+                            type="submit"
+                            id="login"
+                            class="stroke slice-button"
+                            disabled
+                        >
+                            LOGIN
+                        </button>
+                        <button
+                            title="New Account"
+                            aria-label="New Account"
+                            type="button"
+                            id="new-account"
+                            class="stroke slice-button"
+                        >
+                            NEW ACCOUNT
+                        </button>
+                    </div>
+                </form>
+            </article>
+
+            <article id="create-character">
+                <h1 class="title-decoration">New Character</h1>
+
+                <form onsubmit={'return false'}>
+                    <input
+                        type="text"
+                        id="register-name-input"
+                        class="stroke slice-input"
+                        name="player-name"
+                        placeholder="Username"
+                        aria-label="Username"
+                        maxlength="32"
+                        autocomplete="off"
+                    />
+                    <input
+                        type="password"
+                        id="register-password-input"
+                        class="stroke slice-input"
+                        name="player-password"
+                        placeholder="Password"
+                        aria-label="Password"
+                        maxlength="64"
+                        autocomplete="off"
+                    />
+                    <input
+                        type="password"
+                        id="register-password-confirmation-input"
+                        class="stroke slice-input"
+                        name="player-password2"
+                        placeholder="Confirm Password"
+                        aria-label="Confirm Password"
+                        maxlength="64"
+                        autocomplete="off"
+                    />
+                    <input
+                        type="email"
+                        id="register-email-input"
+                        class="stroke slice-input"
+                        name="player-email"
+                        placeholder="Email Address"
+                        aria-label="Email Address"
+                        maxlength="64"
+                        autocomplete="off"
+                    />
+
+                    <div class="validation-summary"></div>
+
+                    <div class="button-row">
+                        <button
+                            title="Cancel"
+                            aria-label="Cancel"
+                            type="button"
+                            id="cancel-register"
+                            class="stroke slice-button"
+                        >
+                            CANCEL
+                        </button>
+                        <button
+                            title="Play"
+                            aria-label="Play"
+                            type="submit"
+                            id="play"
+                            class="stroke slice-button"
+                        >
+                            PLAY
+                        </button>
+                    </div>
+                </form>
+            </article>
+
+            <article id="reset-password">
+                <h1>
+                    <span class="left-ornament"></span>
+                    Reset Password
+                    <span class="right-ornament"></span>
+                </h1>
+
+                <form onsubmit={'return false'}>
+                    <input
+                        type="text"
+                        id="email-reset-input"
+                        class="stroke slice-input"
+                        name="player-email"
+                        placeholder="Email Address"
+                        aria-label="Email Address"
+                        maxlength="32"
+                        autocomplete="off"
+                    />
+
+                    <div class="validation-summary"></div>
+
+                    <div class="button-row">
+                        <button
+                            title="Cancel"
+                            aria-label="Cancel"
+                            type="button"
+                            id="cancel-forget"
+                            class="stroke slice-button"
+                        >
+                            CANCEL
+                        </button>
+                        <button
+                            title="Submit"
+                            aria-label="Submit"
+                            type="submit"
+                            id="continue-forget"
+                            class="stroke slice-button"
+                        >
+                            CONTINUE
+                        </button>
+                    </div>
+                </form>
+            </article>
+
+            <article id="world-select">
+                <h1>
+                    <span class="left-ornament"></span>
+                    World Select
+                    <span class="right-ornament"></span>
+                </h1>
+
+                <form onsubmit={'return false'}>
+                    <ol id="worlds"></ol>
+
+                    <div class="button-row">
+                        <button
+                            title="Cancel"
+                            aria-label="Cancel"
+                            type="button"
+                            id="cancel-worlds"
+                            class="stroke slice-button"
+                        >
+                            CANCEL
+                        </button>
+                        <button
+                            title="Continue"
+                            aria-label="Continue"
+                            type="submit"
+                            id="continue-worlds"
+                            class="stroke slice-button"
+                        >
+                            CONTINUE
+                        </button>
+                    </div>
+                </form>
+            </article>
+
+            <article id="credits">
+                <h1 class="title-decoration">Credits</h1>
+
+                <p>
+                    <br />
+                    Special thanks to
+                    <a
+                        rel="noopener noreferrer"
+                        class="clickable"
+                        target="_blank"
+                        href="https://www.littleworkshop.fr/">Little Workshop</a
+                    >
+                    for the pixel art,
+                    <br />
+                    <br />
+                    and the Asky Team.
+                    <br />
+                    <br />
+                    More pixel assets by
+                    <a
+                        rel="noopener noreferrer"
+                        class="clickable"
+                        target="_blank"
+                        href="https://opengameart.org/users/buch">Buch</a
+                    >,
+                    <a
+                        rel="noopener noreferrer"
+                        class="clickable"
+                        target="_blank"
+                        href="https://shikashiassets.itch.io/shikashis-fantasy-icons-pack"
+                        >Shikashi</a
+                    >,
+                    <a
+                        rel="noopener noreferrer"
+                        class="clickable"
+                        target="_blank"
+                        href="https://opengameart.org/content/kyrises-free-16x16-rpg-icon-pack"
+                        >Kyrise</a
+                    >,
+                    <a
+                        rel="noopener noreferrer"
+                        class="clickable"
+                        target="_blank"
+                        href="https://game-icons.net">Game-Icons.net</a
+                    >, &amp; Boo
+                    <br />
+                    <br />
+                    Music by
+                    <a
+                        rel="noopener noreferrer"
+                        class="clickable"
+                        target="_blank"
+                        href="https://soundcloud.com/gyrowolf">Terrel O'Brien</a
+                    >,
+                    <a
+                        rel="noopener noreferrer"
+                        class="clickable"
+                        target="_blank"
+                        href="https://blog.dayjo.org">Joel Day</a
+                    >,
+                    <a
+                        rel="noopener noreferrer"
+                        class="clickable"
+                        target="_blank"
+                        href="https://www.dantilden.com">Dan Tilden</a
+                    >, &amp;
+                    <a
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        class="clickable"
+                        href="https://soundcloud.com/aaron-anderson-11">Aaron Krogh</a
+                    >
+                </p>
+
+                <div class="close-about">
+                    <span>-- Click anywhere to close --</span>
+                </div>
+            </article>
+
+            <article id="about">
+                <h1 class="title-decoration">About</h1>
+
+                <p>
+                    Kaetram is a browser-based 2D MMORPG adventure. You play as an adventurer
+                    amongst others and explore the world of Kaetram. Originally started as a fork of
+                    BrowserQuest, Kaetram has evolved into its own game. In honour to the original
+                    idea, the assets have been preserved and expanded upon. We are one of a few
+                    open-source community driven game projects. We are always looking for assistance
+                    in terms of programming, graphic artists, and/or music composers. Our
+                    source-code can be found on our
+                    <a target="_blank" href="https://github.com/Kaetram/Kaetram-Open"
+                        >GitHub Repository</a
+                    >. If you would like to stay up-to-date with the project, make sure you join our
+                    <a target="_blank" href="https://discord.gg/MmbGAaw">Discord server</a>.
+                </p>
+
+                <div class="close-about">
+                    <span>-- Click anywhere to close --</span>
+                </div>
+            </article>
+
+            <article id="git">Structure this later</article>
+
+            <article id="death">
+                <p>You have died...</p>
+                <button id="respawn" title="Respawn" aria-label="Respawn"></button>
+            </article>
+
+            <article id="news">
+                <h1>
+                    <span class="left-ornament"></span>
+                    <span id="news-title" class="title">Welcome to Kaetram!</span>
+                    <span class="right-ornament"></span>
+                </h1>
+
+                <p id="news-content">
+                    Kaetram is still in alpha development stage. We are currently looking for
+                    developers and pixel artists who are interested in helping out! If you encounter
+                    any bugs or have any suggestions, feel free to submit them on our
+                    <a target="_blank" href="https://github.com/Kaetram/Kaetram-Open">GitHub</a>
+                    or
+                    <a target="_blank" href="https://discord.gg/MmbGAaw">Discord server</a>.
+                </p>
+
+                <div class="close-news">
+                    <span>-- Click anywhere to close --</span>
+                </div>
+            </article>
+
+            <div class="loader" hidden>
+                Connecting<span class="loader-dot">.</span><span class="loader-dot">.</span><span
+                    class="loader-dot">.</span
+                >
+            </div>
+        </section>
+
+        <button id="world-select-button" class="slice-button" hidden>
+            <strong class="stroke"></strong>
+            <span class="stroke"></span>
+        </button>
+
+        <span id="game-version" class="version"></span>
+
+        <footer>
+            <div id="about-link" class="clickable">
+                <span id="toggle-about">About</span>
+            </div>
+            <span>&ndash;</span>
+            <div id="credits-link" class="clickable">
+                <span id="toggle-credits">Credits</span>
+            </div>
+            <span>&ndash;</span>
+            <div id="discord-link" class="clickable">
+                <a class="footer-button" target="_blank" href="https://discord.gg/MmbGAaw">
+                    <span>Discord</span>
+                </a>
+            </div>
+            <span>&ndash;</span>
+            <div class="clickable">
+                <a
+                    class="footer-button"
+                    target="_blank"
+                    href="https://www.patreon.com/bePatron?u=29287394"
+                >
+                    <span>Patreon</span>
+                </a>
+            </div>
+            <span>&ndash;</span>
+            <div id="privacy" class="clickable">
+                <a class="footer-button" href="/privacy">
+                    <span>Privacy</span>
+                </a>
+            </div>
+            <span>&ndash;</span>
+            <div id="reset" class="clickable">
+                <span id="toggle-reset-password">Reset Password</span>
+            </div>
+        </footer>
+    </div>
+
+    <div id="game-container">
+        <div id="border">
+            <div id="canvas">
+                <canvas id="background"></canvas>
+                <canvas id="entities"></canvas>
+                <canvas id="foreground"></canvas>
+                <canvas id="cursor"></canvas>
+                <canvas id="overlay"></canvas>
+                <canvas id="text-canvas"></canvas>
+            </div>
+
+            <div id="player-info">
+                <div id="health">
+                    <div id="health-mask"></div>
+                    <div class="health-text"></div>
+                </div>
+                <div id="mana">
+                    <div id="mana-mask"></div>
+                    <div class="mana-text"></div>
+                </div>
+            </div>
+
+            <div id="buttons">
+                <ul>
+                    <li><div id="inventory-button"></div></li>
+                    <li><div id="achievements-button"></div></li>
+                    <li><div id="quests-button"></div></li>
+                    <li><div id="warp-button"></div></li>
+                    <li><div id="profile-button"></div></li>
+                    <li><div id="friends-button"></div></li>
+                    <li><div id="chat-button"></div></li>
+                    <li><div id="settings-button"></div></li>
+                </ul>
+            </div>
+
+            <div id="chat">
+                <div id="chat-log"></div>
+
+                <input
+                    title="Enter your message!"
+                    id="chat-input"
+                    type="text"
+                    maxlength="256"
+                    autocomplete="off"
+                    data-lpignore="true"
+                />
+            </div>
+
+            <div id="zoom-buttons">
+                <button id="zoom-in" title="Zoom in"></button>
+                <button id="zoom-out" title="Zoom out"></button>
+            </div>
+
+            <div id="ability-shortcut" hidden>
+                <div id="ability-quickslot1" class="ability-quickslot"></div>
+                <div id="ability-quickslot2" class="ability-quickslot"></div>
+                <div id="ability-quickslot3" class="ability-quickslot"></div>
+                <div id="ability-quickslot4" class="ability-quickslot"></div>
+            </div>
+
+            <div id="profile-container" class="page-slice">
+                <div id="state-page">
+                    <div class="profile-info">
+                        <strong>Lvl:</strong>
+                        <span id="profile-level"></span>
+                    </div>
+                    <div class="profile-info">
+                        <strong>Xp:</strong>
+                        <span id="profile-experience"></span>
+                    </div>
+
+                    <ul id="attack-style-list">
+                        <li class="attack-style-box">
+                            <div class="attack-style attack-style-stab"></div>
+                        </li>
+                        <li class="attack-style-box">
+                            <div class="attack-style attack-style-slash"></div>
+                        </li>
+                        <li class="attack-style-box">
+                            <div class="attack-style attack-style-defensive"></div>
+                        </li>
+                        <li class="attack-style-box">
+                            <div class="attack-style attack-style-chop"></div>
+                        </li>
+                    </ul>
+
+                    <div id="helmet-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="pendant-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="arrows-slot" class="profile-item slice-list-item">
+                        <div id="arrows-count" class="stroke"></div>
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="chestplate-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="weapon-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="shield-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="ring-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="armour-skin-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="weapon-skin-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="legplates-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="cape-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+                    <div id="boots-slot" class="profile-item slice-list-item">
+                        <div class="profile-item-image"></div>
+                    </div>
+
+                    <div id="equipment-button"></div>
+
+                    <div id="guilds-button"></div>
+                    <div id="leaderboards-button"></div>
+                </div>
+
+                <div id="skills-page">
+                    <div id="skill-info" class="slice-dialog stroke">
+                        <div class="skill-info-header">
+                            <div class="slice-item-slot">
+                                <div class="skill-info-image"></div>
+                            </div>
+                            <div class="skill-info-title"></div>
+                        </div>
+                        <div class="skill-info-details"></div>
+                    </div>
+                    <div id="skills-list"><ul></ul></div>
+                </div>
+
+                <div id="profile-navigator">
+                    <div class="previous"></div>
+                    <div class="next"></div>
+                </div>
+            </div>
+
+            <div id="settings-page" class="slice-container">
+                <div id="close-settings" class="close-container"></div>
+
+                <div id="settings-container">
+                    <div id="input-settings" class="slice-inner-container">
+                        <label>
+                            <span id="music-volume-text">Music Volume</span>
+
+                            <input
+                                title="Music Volume"
+                                id="music"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="100"
+                                aria-labelledby="music-volume-text"
+                            />
+                        </label>
+
+                        <label>
+                            <span id="sound-volume-text">Sound Volume</span>
+
+                            <input
+                                title="Sound Volume"
+                                id="sound"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="100"
+                                aria-labelledby="sound-volume-text"
+                            />
+                        </label>
+
+                        <label>
+                            <span id="brightness-text">Brightness</span>
+
+                            <input
+                                title="Brightness"
+                                id="brightness"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="100"
+                                aria-labelledby="brightness-text"
+                            />
+                        </label>
+
+                        <label id="audio-enabled-checkbox" class="check">
+                            <span id="audio-enabled-checkbox-text">Audio Enabled</span>
+
+                            <input type="checkbox" aria-labelledby="audio-enabled-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="low-power-checkbox" class="check">
+                            <span id="low-power-checkbox-text">Low Power Mode</span>
+
+                            <input type="checkbox" aria-labelledby="low-power-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="debug-mode-checkbox" class="check">
+                            <span id="debug-mode-checkbox-text">Debug Mode</span>
+
+                            <input type="checkbox" aria-labelledby="debug-mode-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="show-names-checkbox" class="check">
+                            <span id="show-names-checkbox-text">Show Names</span>
+
+                            <input type="checkbox" aria-labelledby="show-names-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="show-levels-checkbox" class="check">
+                            <span id="show-levels-checkbox-text">Show Levels</span>
+
+                            <input type="checkbox" aria-labelledby="show-levels-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="disable-region-caching-checkbox" class="check">
+                            <span id="disable-region-caching-text">Disable Caching</span>
+
+                            <input type="checkbox" aria-labelledby="disable-region-caching-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="webgl-checkbox" class="check">
+                            <span id="webgl-text">Enable WebGL</span>
+
+                            <input type="checkbox" aria-labelledby="webgl-text" />
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+
+                    <div id="action-settings">
+                        <div id="game-info" class="slice-inner-container">
+                            <span>
+                                <strong>Game Version:</strong>
+                                <span id="game-info-version"></span>
+                            </span>
+
+                            <span>
+                                <strong>Game World:</strong>
+                                <span id="game-info-world"></span>
+                            </span>
+                        </div>
+
+                        <div
+                            role="button"
+                            id="logout-button"
+                            class="element-button element-button-red stroke"
+                            onclick="location.reload();"
+                            onkeydown="if (event.keyCode === 13) location.reload();"
+                            tabindex="0"
+                        >
+                            Log Out
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="friends-container" class="page-slice">
+                <div id="friends-page">
+                    <ul id="friends-list" class="slice-list stroke"></ul>
+
+                    <div class="dialog-buttons">
+                        <div id="add-friend" class="add"></div>
+                        <div id="remove-friend" class="remove"></div>
+                    </div>
+                </div>
+
+                <dialog id="popup-container" class="slice-dialog">
+                    <input
+                        id="popup-friend-input"
+                        class="stroke slice-input"
+                        type="text"
+                        maxlength="32"
+                        autocomplete="off"
+                        data-lpignore="true"
+                    />
+
+                    <div class="dialog-buttons">
+                        <div id="popup-friend-confirm" class="confirm"></div>
+                        <div id="popup-friend-cancel" class="cancel"></div>
+                    </div>
+                </dialog>
+            </div>
+
+            <div id="attack-info" class="slice-dialog">
+                <div class="name"></div>
+                <div class="details"></div>
+                <div class="health"></div>
+            </div>
+
+            <div id="map-frame">
+                <div id="warp0" class="map-button"></div>
+                <div id="warp1" class="map-button"></div>
+                <div id="warp2" class="map-button"></div>
+                <div id="warp3" class="map-button"></div>
+                <div id="warp4" class="map-button"></div>
+                <div id="warp5" class="map-button"></div>
+
+                <div id="close-map-frame" class="close-container"></div>
+            </div>
+
+            <div id="inventory" class="slice-dialog">
+                <div id="inventory-container">
+                    <ul></ul>
+                </div>
+            </div>
+
+            <div id="bank">
+                <div id="close-bank" class="close-container"></div>
+
+                <div id="bank-container">
+                    <ul id="bank-slots"></ul>
+                </div>
+                <div id="bank-inventory-container">
+                    <ul id="bank-inventory-slots"></ul>
+                </div>
+            </div>
+
+            <div id="trade" class="slice-container">
+                <div id="close-trade" class="close-container"></div>
+
+                <div id="trade-content">
+                    <div id="trade-inventory">
+                        <div class="title-decoration">Your Inventory</div>
+
+                        <div id="trade-inventory-slots" class="slice-inner-container">
+                            <ul></ul>
+
+                            <dialog id="trade-count" class="slice-dialog">
+                                <div class="dialog-title">Input Amount</div>
+
+                                <input
+                                    title="Count"
+                                    type="number"
+                                    class="dialog-count"
+                                    min="1"
+                                    step="1"
+                                    size="6"
+                                    maxlength="11"
+                                />
+
+                                <div class="dialog-buttons">
+                                    <div class="confirm dialog-accept"></div>
+                                    <div class="cancel dialog-cancel"></div>
+                                </div>
+                            </dialog>
+                        </div>
+                    </div>
+
+                    <div id="trade-player">
+                        <div id="trade-player-content">
+                            <div class="player-trade">
+                                <div id="trade-player-name" class="stroke"></div>
+                                <div id="trade-player-slots" class="slice-inner-container">
+                                    <ul></ul>
+                                </div>
+                            </div>
+
+                            <div class="player-trade">
+                                <div id="trade-oplayer-name" class="stroke"></div>
+                                <div id="trade-oplayer-slots" class="slice-inner-container">
+                                    <ul></ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="trade-status"></div>
+                        <div id="trade-accept" class="stroke slice-button">ACCEPT</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="enchant" class="slice-container">
+                <div id="close-enchant" class="close-container"></div>
+
+                <div id="enchant-content">
+                    <div id="enchant-inventory" class="slice-inner-container">
+                        <ul id="enchant-inventory-slots"></ul>
+                    </div>
+
+                    <div id="enchant-item">
+                        <div id="enchant-item-selected" class="slice-item-slot">
+                            <div></div>
+                        </div>
+
+                        <div>
+                            <div id="enchant-item-shards" class="slice-item-slot">
+                                <div></div>
+                            </div>
+                            <div id="enchant-item-count"></div>
+                        </div>
+
+                        <div id="enchant-item-confirm" class="ok-check"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="store" class="slice-container">
+                <div id="close-store" class="close-container"></div>
+
+                <div id="store-content">
+                    <div id="store-inventory">
+                        <div id="store-inventory-slots" class="slice-inner-container">
+                            <ul></ul>
+                        </div>
+
+                        <div id="store-sell">
+                            <div>
+                                <div class="slice-item-slot">
+                                    <div id="store-sell-slot"></div>
+                                </div>
+                                <div id="store-sell-text"></div>
+                            </div>
+                            <div>
+                                <div class="slice-item-slot">
+                                    <div id="store-sell-return-slot"></div>
+                                </div>
+                                <div id="store-sell-return-text"></div>
+                            </div>
+
+                            <div id="store-sell-confirm" class="ok-check"></div>
+                        </div>
+                    </div>
+
+                    <div id="store-slots">
+                        <div id="store-slots-content" class="slice-inner-container">
+                            <ul></ul>
+                        </div>
+
+                        <div id="store-slots-help"></div>
+                    </div>
+                </div>
+
+                <dialog id="store-buy" class="slice-dialog">
+                    <div class="dialog-title">Input Buy Amount</div>
+
+                    <input
+                        title="Count"
+                        type="number"
+                        class="dialog-count"
+                        min="1"
+                        step="1"
+                        size="6"
+                        maxlength="11"
+                    />
+
+                    <div class="dialog-buttons">
+                        <div class="confirm dialog-accept"></div>
+                        <div class="cancel dialog-cancel"></div>
+                    </div>
+                </dialog>
+            </div>
+
+            <div id="leaderboards" class="slice-container">
+                <div id="close-leaderboards" class="close close-container"></div>
+
+                <div id="leaderboards-content" class="stroke">
+                    <div id="leaderboards-search" class="slice-inner-container">
+                        <input
+                            title="Enter a search term..."
+                            id="leaderboards-search-input"
+                            class="slice-input"
+                            type="text"
+                            maxlength="32"
+                            autocomplete="off"
+                            data-lpignore="true"
+                            placeholder="Enter a term to search..."
+                        />
+
+                        <ul></ul>
+                    </div>
+
+                    <div id="leaderboards-results" class="slice-inner-container">
+                        <ul></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="equipments" class="slice-container">
+                <div id="close-equipments" class="close-container"></div>
+
+                <div id="equipment-slots" class="page state-page">
+                    <div id="equipment-container">
+                        <div class="profile-slot equip-weapon-slot"></div>
+                        <div class="profile-slot equip-weapon-skin-slot"></div>
+                        <div class="profile-slot equip-armour-slot"></div>
+                        <div class="profile-slot equip-armour-skin-slot"></div>
+                        <div class="profile-slot equip-pendant-slot"></div>
+                        <div class="profile-slot equip-ring-slot"></div>
+                        <div class="profile-slot equip-boots-slot"></div>
+                        <div class="profile-slot equip-arrows-slot"></div>
+                    </div>
+                </div>
+
+                <div id="player-image-armour" class="player-image"></div>
+                <div id="player-image-weapon" class="player-image"></div>
+
+                <div id="player-image-navigator">
+                    <div class="previous"></div>
+                    <div class="next"></div>
+                </div>
+
+                <div id="attack-stats">
+                    <p class="title">Attack Stats</p>
+                    <br />
+                    <p class="crush">Crush:</p>
+                    <p class="slash">Slash:</p>
+                    <p class="stab">Stab:</p>
+                    <p class="archery">Archery:</p>
+                    <p class="magic">Magic:</p>
+                </div>
+                <div id="defense-stats">
+                    <p class="title">Defense Stats</p>
+                    <br />
+                    <p class="crush">Crush:</p>
+                    <p class="slash">Slash:</p>
+                    <p class="stab">Stab:</p>
+                    <p class="archery">Archery:</p>
+                    <p class="magic">Magic:</p>
+                </div>
+                <div id="bonuses">
+                    <p class="title">Bonuses</p>
+                    <br />
+                    <p class="accuracy">Accuracy:</p>
+                    <p class="strength">Strength:</p>
+                    <p class="archery">Archery:</p>
+                    <p class="magic">Magic:</p>
+                </div>
+            </div>
+
+            <div id="achievements" class="slice-container">
+                <div id="close-achievements" class="close-container"></div>
+
+                <div id="achievements-content" class="slice-inner-container">
+                    <ul class="stroke"></ul>
+                </div>
+            </div>
+
+            <div id="quests" class="slice-container">
+                <div id="close-quests" class="close-container"></div>
+
+                <div id="quests-container">
+                    <div id="quests-list" class="slice-inner-container stroke"><ul></ul></div>
+                    <div id="quests-logs" class="slice-inner-container">
+                        <div id="quests-logs-container">
+                            <h1 id="quests-logs-title" class="stroke">Quest Title</h1>
+                            <p id="quests-logs-shortdesc"></p>
+
+                            <h1 class="stroke">Description</h1>
+                            <p id="quests-logs-description"></p>
+
+                            <h1 class="stroke">Reward</h1>
+                            <p id="quests-logs-rewards"></p>
+
+                            <h1 class="stroke">Requirements</h1>
+                            <p id="quests-logs-requirements">None</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bubbles"></div>
+
+            <div id="notification" class="slice-dialog">
+                <div id="notification-text-title"></div>
+                <div id="notification-text-description"></div>
+            </div>
+
+            <div id="notifications">
+                <div id="notify-fade" class="fade"></div>
+                <div id="notify">
+                    <div id="exclamation"></div>
+                    <div id="notify-done" class="done"></div>
+                </div>
+                <div id="confirm">
+                    <div id="question"></div>
+                    <div id="confirm-done" class="done"></div>
+                    <div id="cancel"></div>
+                </div>
+                <div id="message"></div>
+            </div>
+
+            <div id="action-container" class="slice-dialog">
+                <div id="action-page">
+                    <div class="action-item-name stroke"></div>
+                    <div class="action-item-description"></div>
+                    <ul></ul>
+                </div>
+
+                <dialog id="action-drop" class="slice-dialog">
+                    <div class="dialog-title">Input Drop Amount</div>
+
+                    <input
+                        title="Count"
+                        type="number"
+                        class="dialog-count"
+                        min="1"
+                        step="1"
+                        size="6"
+                        maxlength="11"
+                    />
+
+                    <div class="dialog-buttons">
+                        <div class="confirm dialog-accept"></div>
+                        <div class="cancel dialog-cancel"></div>
+                    </div>
+                </dialog>
+            </div>
+
+            <div id="crafting">
+                <div id="close-crafting" class="close-container"></div>
+
+                <ul id="crafting-options"></ul>
+                <ul id="crafting-requirements"></ul>
+
+                <div id="crafting-result" class="crafting-option disabled">
+                    <div class="crafting-option-icon"></div>
+                    <div class="crafting-option-count stroke"></div>
+                </div>
+
+                <div id="crafting-level" class="crafting-option disabled">
+                    <div class="crafting-option-icon"></div>
+                    <div class="crafting-option-count stroke"></div>
+                </div>
+
+                <div id="crafting-result-name" class="stroke"></div>
+
+                <ul class="crafting-buttons">
+                    <li id="craft-one" class="amount-button amount-one active"></li>
+                    <li id="craft-five" class="amount-button amount-five"></li>
+                    <li id="craft-ten" class="amount-button amount-ten"></li>
+                </ul>
+
+                <div id="craft-button" class="stroke">Craft</div>
+            </div>
+
+            <div id="guilds" class="slice-container">
+                <div id="close-guilds" class="close-container"></div>
+
+                <div id="guilds-content">
+                    <div class="banner banner-grey">
+                        <div id="banner-outline" class="banner-outline"></div>
+                        <div id="banner-crest"></div>
+                    </div>
+
+                    <div id="guilds-list-container" class="stroke">
+                        <div id="guilds-list-content">
+                            <div id="create-guild" class="element-button element-button stroke">
+                                Create
+                            </div>
+
+                            <div class="title-decoration">Guilds</div>
+
+                            <div id="guilds-list" class="slice-inner-container">
+                                <p id="guilds-info" class="stroke">
+                                    There are no guilds available...
+                                </p>
+                                <ul></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="guilds-create">
+                        <div id="guilds-create-content" class="slice-inner-container">
+                            <div id="banner-select">
+                                <div
+                                    id="banner-colour-button"
+                                    class="colour-select-button button-banner-colour active"
+                                >
+                                </div>
+                                <div
+                                    id="banner-outline-button"
+                                    class="colour-select-button outline-button-1"
+                                >
+                                    <div class="colour-button-arrow-left"></div>
+                                    <div class="colour-button-arrow-right"></div>
+                                </div>
+                            </div>
+
+                            <div id="banner-options">
+                                <input
+                                    id="guilds-name-input"
+                                    type="text"
+                                    maxlength="16"
+                                    autocomplete="off"
+                                    data-lpignore="true"
+                                    placeholder="Enter a name..."
+                                    class="guilds-name-input-image stroke slice-input"
+                                />
+
+                                <ul id="banner-colours"></ul>
+
+                                <div id="guilds-create-error"></div>
+
+                                <div class="button-row stroke">
+                                    <div
+                                        id="guilds-back-button"
+                                        class="element-button element-button-red"
+                                    >
+                                        Back
+                                    </div>
+                                    <div id="guilds-create-button" class="element-button">
+                                        Create
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="guilds-info-container">
+                        <div id="guilds-info-content">
+                            <div id="guilds-info-header">
+                                <div
+                                    id="guilds-leave"
+                                    class="element-button element-button-red stroke"
+                                >
+                                    Leave
+                                </div>
+
+                                <div id="guilds-name" class="title-decoration"></div>
+                            </div>
+
+                            <div id="member-list-container" class="slice-inner-container">
+                                <ul></ul>
+                            </div>
+
+                            <div id="guilds-chat" class="slice-inner-container">
+                                <div id="guilds-chat-content">
+                                    <div id="guilds-chat-log"></div>
+                                    <input
+                                        id="guilds-chat-input"
+                                        type="text"
+                                        maxlength="256"
+                                        autocomplete="off"
+                                        data-lpignore="true"
+                                        placeholder="Enter your message here..."
+                                        class="guilds-chat-input-image stroke slice-input"
+                                    />
+                                </div>
+                            </div>
+
+                            <ul id="sidebar-list">
+                                <li id="sidebar-members" class="sidebar-element active">
+                                    <div class="members-icon"></div>
+                                </li>
+                                <li id="sidebar-chat" class="sidebar-element">
+                                    <div class="chat-icon"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="interact" class="slice-dialog">
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+</DefaultLayout>

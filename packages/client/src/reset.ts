@@ -1,7 +1,7 @@
-import './main.scss';
+import './lib/sentry';
 
 export default class Main {
-    private config = window.config;
+    private config = globalConfig;
 
     private parameters: URLSearchParams = new URLSearchParams(window.location.search);
 
@@ -138,4 +138,4 @@ export default class Main {
     }
 }
 
-new Main();
+window.addEventListener('load', () => new Main());

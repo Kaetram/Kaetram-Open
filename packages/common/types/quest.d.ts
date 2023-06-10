@@ -20,7 +20,7 @@ export interface RawStage {
     itemRequirementCount?: number[];
 
     /** Text for the NPC. */
-    text?: DialogueItem[];
+    text?: string[];
     completedText?: string[];
     hasItemText?: string[]; // Text for if the player has a required item/count in the inventory.
 

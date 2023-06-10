@@ -14,7 +14,7 @@ export interface RawAbilityData {
 }
 
 export interface RawAbility {
-    [key: string]: RawAbilityInfo;
+    [key: string]: RawAbilityData;
 }
 
 // Object ability information

@@ -2,9 +2,9 @@
     "name": "@kaetram/hub",
     "type": "module",
     "scripts": {
-        "start": "tsx --preserve-symlinks ./src/main.ts",
         "hub": "tsx watch --preserve-symlinks --clear-screen=false ./src/main.ts",
-        "build": "tsc --noEmit"
+        "build": "tsc --noEmit",
+        "start": "tsx --preserve-symlinks ./src/main.ts"
     },
     "dependencies": {
         "@kaetram/common": "workspace:*",
@@ -26,7 +26,6 @@
         "@types/cors": "^2",
         "@types/dotenv-parse-variables": "^2.0.1",
         "@types/express": "^4.17.13",
-        "@types/node": "^18.15.5",
         "@types/nodemailer": "^6",
         "typescript": "^5.0.4"
     }
