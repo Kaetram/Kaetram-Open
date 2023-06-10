@@ -7,6 +7,9 @@ export default defineConfig({
     srcDir: './',
     output: 'server',
     adapter: node({ mode: 'standalone' }),
-    server: { host: config.hubHost, port: config.hubPort },
-    vite: { define: { globalConfig: config } }
+    server: { host: config.adminHost, port: config.adminPort },
+    vite: {
+        server: { strictPort: true },
+        define: { globalConfig: config }
+    }
 });
