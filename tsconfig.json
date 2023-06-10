@@ -4,19 +4,19 @@
         "target": "ESNext",
         "module": "ESNext",
 
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "Node",
+        "resolveJsonModule": true,
+        "verbatimModuleSyntax": true,
+        "preserveSymlinks": true,
+        "forceConsistentCasingInFileNames": true,
+
         "skipLibCheck": true,
         "incremental": true,
         "noEmit": true,
         "allowJs": false,
         "isolatedModules": true,
         "sourceMap": true,
-
-        "esModuleInterop": true,
-        "moduleResolution": "Node",
-        "resolveJsonModule": true,
-        "verbatimModuleSyntax": true,
-        "preserveSymlinks": true,
-        "forceConsistentCasingInFileNames": true,
 
         "strictNullChecks": true,
         "noImplicitAny": true,

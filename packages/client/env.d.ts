@@ -1,5 +1,4 @@
 /// <reference types="astro/client" />
-/// <reference types="astro/client" />
 /// <reference types="vite-plugin-pwa/client" />
 
 import type { env } from './astro.config';
