@@ -4,22 +4,29 @@
         "target": "ESNext",
         "module": "ESNext",
 
-        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
         "moduleResolution": "Node",
         "resolveJsonModule": true,
-        "sourceMap": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
+        "verbatimModuleSyntax": true,
         "preserveSymlinks": true,
+        "forceConsistentCasingInFileNames": true,
 
+        "skipLibCheck": true,
+        "incremental": true,
+        "noEmit": true,
+        "allowJs": false,
+        "isolatedModules": true,
+        "sourceMap": true,
+
+        "strictNullChecks": true,
         "noImplicitAny": true,
         "noImplicitOverride": true,
-        "strictNullChecks": true,
+        "noFallthroughCasesInSwitch": false,
 
-        "rootDir": ".",
+        "rootDir": "./",
         "baseUrl": "./packages",
-        "paths": {
-            "@kaetram/*": ["*"]
-        }
+        "paths": { "@kaetram/*": ["*"] },
+        "types": ["@types/node", "@kaetram/common"],
+        "plugins": [{ "name": "@astrojs/ts-plugin" }]
     }
 }

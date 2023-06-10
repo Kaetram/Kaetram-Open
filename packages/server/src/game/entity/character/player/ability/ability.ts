@@ -3,13 +3,13 @@ import Data from '../../../../../../data/abilities.json';
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import type { AbilityData, RawAbility } from '@kaetram/common/types/ability';
+import type { AbilityData, RawAbility, RawAbilityData } from '@kaetram/common/types/ability';
 import type Player from '../player';
 
 type DeactivateCallback = (player: Player) => void;
 type UpdateCallback = (key: string, level: number, quickSlot: number) => void;
 export default class Ability {
-    private data: RawAbility;
+    private data: RawAbilityData;
 
     private lastActivated = 0;
 

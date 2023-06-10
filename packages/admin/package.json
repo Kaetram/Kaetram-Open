@@ -1,0 +1,17 @@
+{
+    "name": "@kaetram/admin",
+    "type": "module",
+    "scripts": {
+        "hub": "astro dev",
+        "build": "astro check && tsc --noEmit && astro build",
+        "start": "node ./dist/server/entry.mjs"
+    },
+    "dependencies": {
+        "@astrojs/node": "^5.2.0",
+        "@kaetram/common": "workspace:*",
+        "astro": "^2.6.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.1.3"
+    }
+}

@@ -4,18 +4,7 @@ import type { Modules, Opcodes } from '../../network';
  * Packet interfaces of data being sent from the client to the server.
  */
 
-export interface HandshakePacket {
-    gVer: string;
-
-    // Hub related handshake data.
-    name?: string;
-    serverId?: number;
-    accessToken?: string; // Denied if mismatches
-    remoteHost?: string; // Relayed to game clients as the server's IP.
-    port?: number;
-    players?: string[];
-    maxPlayers?: number;
-}
+export type { HubHandshakePacket as HandshakePacket } from '../../network/impl/handshake';
 
 export interface LoginPacket {
     opcode: Opcodes.Login;
@@ -93,7 +82,7 @@ export interface GuildPacket {
     colour?: Modules.BannerColour;
     outline?: Modules.BannerOutline;
     outlineColour?: Modules.BannerColour;
-    crest?: Modules.BannerCrest;
+    crest?: Modules.BannerCrests;
     message?: string;
 }
 

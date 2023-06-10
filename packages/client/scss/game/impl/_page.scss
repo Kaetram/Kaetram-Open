@@ -42,27 +42,6 @@
     color: rgb(255 255 255 / 100%);
 }
 
-.close {
-    position: absolute;
-}
-
-.ok {
-    position: absolute;
-}
-
-.ok {
-    width: 1.75em;
-    height: 0.875em;
-
-    background-image: url('/img/interface/containers.png');
-    background-position: -21.3125em -4.9375em;
-    background-size: calc(width('containers.png'));
-
-    &:hover {
-        background-position-y: -4.0625em;
-    }
-}
-
 @include sprite.sheet('bank', $width: 128, $height: 126, $selectors: #enchant-container);
 @include sprite.sheet(
     'main',
