@@ -273,7 +273,7 @@ export default class Map {
 
                 this.regionsLoaded = keys.length;
 
-                log.info(`Preloaded map data with ${keys.length} regions.`);
+                log.debug(`Preloaded map data with ${keys.length} regions.`);
             }
         });
     }

@@ -8,10 +8,10 @@ export interface Member {
 }
 
 export interface Decoration {
-    banner: Modules.BannerColours;
+    banner: Modules.BannerColour;
     outline: Modules.BannerOutline;
-    outlineColour: Modules.BannerColours;
-    crest: Modules.BannerCrest;
+    outlineColour: Modules.BannerColour;
+    crest: Modules.BannerCrests;
 }
 
 export interface GuildData {
