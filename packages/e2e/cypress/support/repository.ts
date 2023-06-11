@@ -77,6 +77,7 @@ Cypress.Commands.add('createPlayerInventory', (playerInventory: PlayerInventory)
 });
 
 declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Cypress {
         interface Chainable {
             createPlayerInfo(playerInfo: PlayerInfo): Chainable<boolean>;

@@ -1,8 +1,0 @@
-{
-    "globals": {
-        "cy": true
-    },
-    "rules": {
-        "@typescript-eslint/no-namespace": "off"
-    }
-}
