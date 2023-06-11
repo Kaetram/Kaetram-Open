@@ -3228,7 +3228,7 @@ __metadata:
   dependencies:
     "@astrojs/node": "npm:^5.2.0"
     "@kaetram/common": "workspace:*"
-    astro: "npm:^2.6.0"
+    astro: "npm:^2.6.3"
     typescript: "npm:^5.1.3"
   languageName: unknown
   linkType: soft
@@ -3248,7 +3248,7 @@ __metadata:
     "@types/html-minifier-terser": "npm:^7.0.0"
     "@types/pako": "npm:^2.0.0"
     "@types/workbox-build": "npm:^5.0.1"
-    astro: "npm:^2.6.1"
+    astro: "npm:^2.6.3"
     astro-compress: "npm:^1.1.47"
     astro-compressor: "npm:^0.4.0"
     astro-critters: "npm:^1.1.38"
@@ -4918,9 +4918,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro@npm:^2.6.0, astro@npm:^2.6.1":
-  version: 2.6.1
-  resolution: "astro@npm:2.6.1"
+"astro@npm:^2.6.3":
+  version: 2.6.3
+  resolution: "astro@npm:2.6.3"
   dependencies:
     "@astrojs/compiler": "npm:^1.4.0"
     "@astrojs/internal-helpers": "npm:^0.1.0"
@@ -4944,7 +4944,7 @@ __metadata:
     cookie: "npm:^0.5.0"
     debug: "npm:^4.3.4"
     deepmerge-ts: "npm:^4.2.2"
-    devalue: "npm:^4.2.0"
+    devalue: "npm:^4.3.2"
     diff: "npm:^5.1.0"
     es-module-lexer: "npm:^1.1.0"
     esbuild: "npm:^0.17.18"
@@ -4986,7 +4986,7 @@ __metadata:
       optional: true
   bin:
     astro: astro.js
-  checksum: 913ba5cc5a5153227fdcf0eab005a0fa2921d10e114b5c2d258ac42ee676b4dcc0e4e97ad14662316d3e66c5d55c0f7e54a97634abdede5140ed18cc34726e9b
+  checksum: f27bd4ca1448e5d493cca0224ab2f3348fd33b2ad60911114f9f7f7bbf4402bfc5d31df8d64970bc7b66cd1455e93d4f37f3641d245262be518503a5040e8e8d
   languageName: node
   linkType: hard
 
@@ -6668,7 +6668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"devalue@npm:^4.2.0":
+"devalue@npm:^4.3.2":
   version: 4.3.2
   resolution: "devalue@npm:4.3.2"
   checksum: b373a970d59366c9fa71fc4bd9020bcfc71d2b5b03fdc4514db33d77d1cb2b004d9b1658cf6e523037b763dbed3e98cde19ee4c6da88f2dbacbb408f8ca1b458

@@ -105,7 +105,7 @@ export default defineConfig({
         compress({ logger: 1 }),
         compressor({ gzip: true, brotli: true })
     ],
-    server: { host: '0.0.0.0', port: 9000 },
+    server: { host: true, port: 9000 },
     vite: {
         plugins,
         build: { sourcemap: true },
