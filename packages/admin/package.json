@@ -2,9 +2,7 @@
     "name": "@kaetram/admin",
     "type": "module",
     "scripts": {
-        "hub": "astro dev",
-        "build": "astro check && tsc --noEmit && astro build",
-        "start": "node ./dist/server/entry.mjs"
+        "hub": "astro dev"
     },
     "dependencies": {
         "@astrojs/node": "^5.2.0",

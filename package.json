@@ -15,8 +15,8 @@
         "hub": "yarn packages hub",
         "start": "yarn packages start",
         "build": "yarn packages build",
-        "lint:script": "eslint packages/**/*.{ts,astro} --ignore-path .gitignore",
-        "lint:style": "stylelint packages/**/*.{scss,astro} --ignore-path .gitignore",
+        "lint:script": "eslint --cache packages/**/*.{ts,astro} --ignore-path .gitignore",
+        "lint:style": "stylelint --cache packages/**/*.{scss,astro} --ignore-path .gitignore",
         "lint:fix": "yarn lint:script --fix && yarn lint:style --fix",
         "lint": "yarn lint:script && yarn lint:style",
         "test:run": "yarn packages test:run",
@@ -24,11 +24,11 @@
         "map": "yarn packages map"
     },
     "lint-staged": {
-        "*.ts": "eslint --cache --fix",
-        "*.scss": "stylelint --cache --fix"
+        "*.{ts,astro}": "eslint --cache --fix",
+        "*.{scss,astro}": "stylelint --cache --fix"
     },
     "devDependencies": {
-        "@astrojs/ts-plugin": "^1.0.9",
+        "@astrojs/ts-plugin": "^1.0.10",
         "@commitlint/cli": "^17.4.2",
         "@commitlint/config-conventional": "^17.4.2",
         "@types/node": "^20.2.5",
@@ -60,7 +60,7 @@
         "stylelint-config-prettier": "^9.0.5",
         "stylelint-config-standard-scss": "^9.0.0",
         "stylelint-rem-over-px": "^1.0.0",
-        "typescript": "^5.0.4"
+        "typescript": "^5.1.3"
     },
     "workspaces": [
         "packages/*"

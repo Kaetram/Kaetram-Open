@@ -1,32 +1,52 @@
 {
     "compilerOptions": {
-        "strict": true,
-        "target": "ESNext",
-        "module": "ESNext",
-
-        "allowSyntheticDefaultImports": true,
-        "moduleResolution": "Node",
-        "resolveJsonModule": true,
-        "verbatimModuleSyntax": true,
-        "preserveSymlinks": true,
-        "forceConsistentCasingInFileNames": true,
-
-        "skipLibCheck": true,
         "incremental": true,
-        "noEmit": true,
-        "allowJs": false,
-        "isolatedModules": true,
-        "sourceMap": true,
+        // "composite": true,
+        "tsBuildInfoFile": "./.tsbuildinfo",
 
-        "strictNullChecks": true,
-        "noImplicitAny": true,
-        "noImplicitOverride": true,
-        "noFallthroughCasesInSwitch": false,
+        "target": "esnext",
+        "moduleDetection": "force",
 
+        "module": "esnext",
         "rootDir": "./",
+        "moduleResolution": "node",
         "baseUrl": "./packages",
         "paths": { "@kaetram/*": ["*"] },
         "types": ["@types/node", "@kaetram/common"],
-        "plugins": [{ "name": "@astrojs/ts-plugin" }]
+        "allowImportingTsExtensions": true,
+        // "resolvePackageJsonExports": true,
+        // "resolvePackageJsonImports": true,
+        "resolveJsonModule": true,
+        "allowArbitraryExtensions": true,
+
+        "allowJs": false,
+        "checkJs": false,
+        // "maxNodeModuleJsDepth": 1,
+
+        "disableSizeLimit": false,
+        "plugins": [{ "name": "@astrojs/ts-plugin" }],
+
+        "noEmit": true,
+
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": false,
+        "preserveSymlinks": true,
+        "forceConsistentCasingInFileNames": true,
+
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        // "exactOptionalPropertyTypes": true,
+        // "noImplicitReturns": true,
+        // "noFallthroughCasesInSwitch": true,
+        // "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+        // "noPropertyAccessFromIndexSignature": true,
+        "allowUnusedLabels": false,
+        "allowUnreachableCode": false,
+
+        "skipLibCheck": true
     }
 }

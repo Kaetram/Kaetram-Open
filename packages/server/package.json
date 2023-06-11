@@ -2,9 +2,9 @@
     "name": "@kaetram/server",
     "type": "module",
     "scripts": {
-        "start": "tsx --preserve-symlinks ./src/main.ts",
-        "dev": "tsx --watch --preserve-symlinks ./src/main.ts",
-        "build": "tsc --noEmit"
+        "dev": "tsx watch --preserve-symlinks --clear-screen=false ./src/main.ts",
+        "build": "tsc && esbuild --bundle --minify --sourcemap --platform=node --format=esm --outdir=dist src/main.ts",
+        "start": "node --enable-source-maps ./dist/main.js"
     },
     "dependencies": {
         "@kaetram/common": "workspace:*",
@@ -28,6 +28,7 @@
         "@types/express": "^4.17.13",
         "@types/sanitizer": "^0.0.28",
         "@types/websocket": "^1.0.5",
-        "typescript": "^5.0.4"
+        "esbuild": "^0.18.0",
+        "typescript": "^5.1.3"
     }
 }
