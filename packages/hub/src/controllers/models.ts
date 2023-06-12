@@ -72,8 +72,8 @@ export default class Models {
 
                 let server = new Server(this, instance, connection);
 
-                this.addServer(server);
                 server.load(data);
+                this.addServer(server);
 
                 break;
             }
@@ -148,6 +148,8 @@ export default class Models {
     private addServer(server: Server): void {
         if (server.instance in this.models)
             return log.error(`Server ${server.instance} already exists.`);
+
+        console.log({ server });
 
         this.models[server.instance] = server;
         this.addCallback?.(server.id, server.name);
