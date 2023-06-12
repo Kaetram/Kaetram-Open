@@ -1159,6 +1159,9 @@ export default class Player extends Character {
                     `This item can only be picked up by ${Utils.formatName(entity.owner)}.`
                 );
 
+            // If the item's owner is existent and the player is the owner we add it to the statistics.
+            if (entity.owner === this.username) this.statistics.addDrop(entity.key, entity.count);
+
             this.inventory.add(entity);
         }
 
