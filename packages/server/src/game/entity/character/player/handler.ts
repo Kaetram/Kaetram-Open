@@ -220,8 +220,18 @@ export default class Handler {
         if (this.player.isMagic()) {
             let { manaCost } = this.player.equipment.getWeapon();
 
-            if (!this.player.hasManaForAttack())
-                return this.player.notify('You are low on mana, your attacks will be weaker.');
+            // If the player doesn't have enough mana to attack.
+            if (!this.player.hasManaForAttack()) {
+                // Warn the player once if they don't have enough mana.
+                if (!this.player.displayedManaWarning)
+                    this.player.notify('You are low on mana, your attacks will be weaker.');
+
+                this.player.displayedManaWarning = true;
+
+                return;
+            }
+
+            this.player.displayedManaWarning = false;
 
             this.player.mana.decrement(manaCost);
         }
