@@ -415,7 +415,7 @@ export default class InputController {
      * @param position The grid coordinates of the position we're requesting.
      */
 
-    private move(position: Coordinate, useSearch = !this.keyMovement): void {
+    public move(position: Coordinate, useSearch = !this.keyMovement): void {
         if (this.player.stunned || this.player.teleporting) return;
 
         // Default the target to the passive one.
