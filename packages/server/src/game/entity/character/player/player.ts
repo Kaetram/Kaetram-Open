@@ -111,6 +111,7 @@ export default class Player extends Character {
     public invalidateMovement = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
+    public displayedManaWarning = false;
     public overrideMovementSpeed = -1;
 
     // Player info
