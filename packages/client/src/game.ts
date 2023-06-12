@@ -7,6 +7,7 @@ import MenuController from './controllers/menu';
 import Pointer from './controllers/pointer';
 import SpritesController from './controllers/sprites';
 import Zoning from './controllers/zoning';
+import JoystickController from './controllers/joystick';
 import Player from './entity/character/player/player';
 import Handler from './entity/character/player/handler';
 import Map from './map/map';
@@ -56,6 +57,7 @@ export default class Game {
     public entities: EntitiesController;
     public bubble: BubbleController;
     public menu: MenuController;
+    public joystick: JoystickController;
 
     public connection: Connection;
 
@@ -87,6 +89,7 @@ export default class Game {
         this.bubble = new BubbleController(this);
         this.pointer = new Pointer(this.renderer, this.entities);
         this.connection = new Connection(this);
+        this.joystick = new JoystickController(this);
 
         app.sendStatus('Loading game');
 
@@ -224,7 +227,7 @@ export default class Game {
 
         // Special case for fishing where we remove the last path if it is colliding.
         if (cursor === 'fishing') {
-            let last = path[path.length - 2];
+            let last = path.at(-2)!;
 
             // Remove if there is a collision  at the last path only (to allow fishing from a distance).
             if (this.map.isColliding(last[0], last[1])) path.pop();
