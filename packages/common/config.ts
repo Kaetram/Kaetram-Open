@@ -111,6 +111,7 @@ for (let key in envConfig) {
 config.hubHost ||= config.host;
 config.hubWsHost ||= config.hubHost;
 config.adminHost ||= config.hubHost;
+config.remoteServerHost ||= config.host;
 
 if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
     console.error(

@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "hub": "tsx --watch --preserve-symlinks ./src/main.ts",
-        "build": "tsc && esbuild --platform=node --format=esm --outdir=dist --bundle --minify --sourcemap src/main.ts",
+        "build": "tsc && tsx --preserve-symlinks ./build.ts",
         "start": "node --enable-source-maps ./dist/main.js"
     },
     "dependencies": {

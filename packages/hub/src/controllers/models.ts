@@ -149,8 +149,6 @@ export default class Models {
         if (server.instance in this.models)
             return log.error(`Server ${server.instance} already exists.`);
 
-        console.log({ server });
-
         this.models[server.instance] = server;
         this.addCallback?.(server.id, server.name);
     }
