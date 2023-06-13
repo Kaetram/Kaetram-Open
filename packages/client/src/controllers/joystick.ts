@@ -1,5 +1,3 @@
-import { isMobile } from '../utils/detect';
-
 import type Game from '../game';
 
 /**
@@ -14,8 +12,6 @@ export default class JoystickController {
     private moving = false;
 
     public constructor(public game: Game) {
-        if (isMobile()) this.container.hidden = false;
-
         this.container.addEventListener('touchstart', (event) => {
             this.handle.classList.add('active');
             this.onTouch(event);
@@ -23,6 +19,22 @@ export default class JoystickController {
         this.container.addEventListener('touchmove', this.onTouch.bind(this));
         this.container.addEventListener('touchend', this.onTouchEnd.bind(this));
         this.container.addEventListener('touchcancel', this.onTouchEnd.bind(this));
+    }
+
+    /**
+     * Show the joystick.
+     */
+
+    public show() {
+        this.container.hidden = false;
+    }
+
+    /**
+     * Hide the joystick.
+     */
+
+    public hide() {
+        this.container.hidden = true;
     }
 
     /**
@@ -75,8 +87,8 @@ export default class JoystickController {
             // Calculate the player's position on the grid.
             x = player.x + this.position.x * map.tileSize,
             y = player.y + this.position.y * map.tileSize,
-            gridX = Math.floor(x / map.tileSize),
-            gridY = Math.floor(y / map.tileSize);
+            gridX = player.gridX + this.position.x,
+            gridY = player.gridY + this.position.y;
 
         input.move({ x, y, gridX, gridY });
 
@@ -86,6 +98,7 @@ export default class JoystickController {
     /**
      * Handles the touch end event for the joystick.
      */
+
     private onTouchEnd() {
         this.moving = false;
 

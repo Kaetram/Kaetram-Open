@@ -1,3 +1,13 @@
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}
+
 .stroke {
     text-shadow: 0.0625em 0.0625em 0 #373737, 0.0625em -0.0625em 0 #373737, 0 0.0625em 0 #373737,
         0.0625em 0 0 #373737, -0.0625em 0.0625em 0 #373737, -0.0625em -0.0625em 0 #373737,

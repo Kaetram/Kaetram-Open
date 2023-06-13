@@ -6,16 +6,19 @@
     label {
         display: flex;
         flex-flow: row;
+        gap: 0.25em;
         align-items: center;
+
         padding: 0.25em 0;
 
         span,
         input {
-            flex: 1;
+            flex: 2;
+            font-size: 0.75em;
         }
 
-        span {
-            font-size: 0.75em;
+        .checkmark {
+            flex: 1;
         }
     }
 }
@@ -29,17 +32,24 @@
 #input-settings,
 #action-settings {
     display: flex;
-    flex-flow: column;
     justify-content: space-between;
 }
 
 #input-settings {
     flex: 5;
+    flex-flow: row;
+    gap: 1em;
     padding: 0.75em 1em;
+
+    > .col {
+        flex: 1;
+        justify-content: space-between;
+    }
 }
 
 #action-settings {
     flex: 2;
+    flex-flow: column;
     gap: 0.5em;
     align-items: center;
     justify-content: space-between;
@@ -55,4 +65,8 @@
     span {
         font-size: 0.75em;
     }
+}
+
+#joystick-enabled-checkbox[hidden] {
+    display: none;
 }
