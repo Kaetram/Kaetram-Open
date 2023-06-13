@@ -22,6 +22,7 @@ interface Settings {
     brightness: number;
     audioEnabled: boolean;
     lowPowerMode: boolean;
+    joyStickEnabled: boolean;
     debugMode: boolean;
     showNames: boolean;
     showLevels: boolean;
@@ -91,6 +92,7 @@ export default class Storage {
                 brightness: 100,
                 audioEnabled: !isMobile(),
                 lowPowerMode: false,
+                joyStickEnabled: false,
                 debugMode: false,
                 showNames: true,
                 showLevels: true,
@@ -269,6 +271,17 @@ export default class Storage {
 
     public setLowPowerMode(lowPowerMode: boolean): void {
         this.data.settings.lowPowerMode = lowPowerMode;
+
+        this.save();
+    }
+
+    /**
+     * Sets the value of the joystick in the local storage.
+     * @param joyStickEnabled New value to update in the local storage.
+     */
+
+    public setJoyStickEnabled(joyStickEnabled: boolean): void {
+        this.data.settings.joyStickEnabled = joyStickEnabled;
 
         this.save();
     }

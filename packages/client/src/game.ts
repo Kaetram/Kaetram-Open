@@ -56,8 +56,8 @@ export default class Game {
     public audio: AudioController;
     public entities: EntitiesController;
     public bubble: BubbleController;
-    public menu: MenuController;
     public joystick: JoystickController;
+    public menu: MenuController;
 
     public connection: Connection;
 
@@ -80,6 +80,7 @@ export default class Game {
         this.sprites = new SpritesController();
 
         this.renderer = this.useWebGl ? new WebGL(this) : new Canvas(this);
+        this.joystick = new JoystickController(this);
         this.menu = new MenuController(this);
         this.input = new InputController(this);
         this.socket = new Socket(this);
@@ -89,7 +90,6 @@ export default class Game {
         this.bubble = new BubbleController(this);
         this.pointer = new Pointer(this.renderer, this.entities);
         this.connection = new Connection(this);
-        this.joystick = new JoystickController(this);
 
         app.sendStatus('Loading game');
 
