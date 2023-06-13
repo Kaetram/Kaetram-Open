@@ -8,7 +8,7 @@ await esbuild.build({
     sourcemap: true,
     format: 'esm',
     platform: 'node',
-    external: ['uws'],
+    external: ['uws', 'discord.js'],
     banner: {
         js: `
             import { createRequire as topLevelCreateRequire } from 'module';
