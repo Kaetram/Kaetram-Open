@@ -29,6 +29,7 @@ export default class JoystickController {
      * Handles the touch event for the joystick.
      * @param event The touch event.
      */
+
     private onTouch(event: TouchEvent) {
         let [{ clientX, clientY }] = event.touches,
             { left, top, width, height } = this.container.getBoundingClientRect(),
@@ -49,6 +50,7 @@ export default class JoystickController {
         // If the distance is less than 0.25, we don't want to move.
         if (distance < 0.25) {
             this.moving = false;
+            this.game.player.joystickMovement = false;
 
             return;
         }
@@ -58,6 +60,7 @@ export default class JoystickController {
         // Set the position and start moving.
         this.position = { x: Math.round(ux), y: Math.round(uy) };
         this.moving = true;
+        this.game.player.joystickMovement = true;
 
         // Only call `move` if we weren't already moving.
         if (!wasMoving) this.move();
@@ -66,6 +69,7 @@ export default class JoystickController {
     /**
      * Handles the movement of the player using the joystick's position.
      */
+
     private move() {
         let { player, map, input } = this.game,
             // Calculate the player's position on the grid.
