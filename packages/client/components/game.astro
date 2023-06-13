@@ -156,96 +156,113 @@
 
             <div id="settings-container">
                 <div id="input-settings" class="slice-inner-container">
-                    <label>
-                        <span id="music-volume-text">Music Volume</span>
+                    <div class="col">
+                        <label>
+                            <span id="music-volume-text">Music Volume</span>
 
-                        <input
-                            title="Music Volume"
-                            id="music"
-                            type="range"
-                            min="0"
-                            max="100"
-                            value="100"
-                            aria-labelledby="music-volume-text"
-                        />
-                    </label>
+                            <input
+                                title="Music Volume"
+                                id="music"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="100"
+                                step="10"
+                                aria-labelledby="music-volume-text"
+                            />
+                        </label>
 
-                    <label>
-                        <span id="sound-volume-text">Sound Volume</span>
+                        <label>
+                            <span id="sound-volume-text">Sound Volume</span>
 
-                        <input
-                            title="Sound Volume"
-                            id="sound"
-                            type="range"
-                            min="0"
-                            max="100"
-                            value="100"
-                            aria-labelledby="sound-volume-text"
-                        />
-                    </label>
+                            <input
+                                title="Sound Volume"
+                                id="sound"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="100"
+                                step="10"
+                                aria-labelledby="sound-volume-text"
+                            />
+                        </label>
 
-                    <label>
-                        <span id="brightness-text">Brightness</span>
+                        <label>
+                            <span id="brightness-text">Brightness</span>
 
-                        <input
-                            title="Brightness"
-                            id="brightness"
-                            type="range"
-                            min="0"
-                            max="100"
-                            value="100"
-                            aria-labelledby="brightness-text"
-                        />
-                    </label>
+                            <input
+                                title="Brightness"
+                                id="brightness"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="100"
+                                step="10"
+                                aria-labelledby="brightness-text"
+                            />
+                        </label>
 
-                    <label id="audio-enabled-checkbox" class="check">
-                        <span id="audio-enabled-checkbox-text">Audio Enabled</span>
+                        <label id="audio-enabled-checkbox" class="check">
+                            <span id="audio-enabled-checkbox-text">Audio Enabled</span>
 
-                        <input type="checkbox" aria-labelledby="audio-enabled-checkbox-text" />
-                        <span class="checkmark"></span>
-                    </label>
+                            <input type="checkbox" aria-labelledby="audio-enabled-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
 
-                    <label id="low-power-checkbox" class="check">
-                        <span id="low-power-checkbox-text">Low Power Mode</span>
+                        <label id="low-power-checkbox" class="check">
+                            <span id="low-power-checkbox-text">Low Power Mode</span>
 
-                        <input type="checkbox" aria-labelledby="low-power-checkbox-text" />
-                        <span class="checkmark"></span>
-                    </label>
+                            <input type="checkbox" aria-labelledby="low-power-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
 
-                    <label id="debug-mode-checkbox" class="check">
-                        <span id="debug-mode-checkbox-text">Debug Mode</span>
+                        <label id="joystick-enabled-checkbox" class="check">
+                            <span id="joystick-enabled-checkbox-text">Joystick Enabled</span>
 
-                        <input type="checkbox" aria-labelledby="debug-mode-checkbox-text" />
-                        <span class="checkmark"></span>
-                    </label>
+                            <input
+                                type="checkbox"
+                                aria-labelledby="joystick-enabled-checkbox-text"
+                            />
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
 
-                    <label id="show-names-checkbox" class="check">
-                        <span id="show-names-checkbox-text">Show Names</span>
+                    <div class="col">
+                        <label id="debug-mode-checkbox" class="check">
+                            <span id="debug-mode-checkbox-text">Debug Mode</span>
 
-                        <input type="checkbox" aria-labelledby="show-names-checkbox-text" />
-                        <span class="checkmark"></span>
-                    </label>
+                            <input type="checkbox" aria-labelledby="debug-mode-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
 
-                    <label id="show-levels-checkbox" class="check">
-                        <span id="show-levels-checkbox-text">Show Levels</span>
+                        <label id="show-names-checkbox" class="check">
+                            <span id="show-names-checkbox-text">Show Names</span>
 
-                        <input type="checkbox" aria-labelledby="show-levels-checkbox-text" />
-                        <span class="checkmark"></span>
-                    </label>
+                            <input type="checkbox" aria-labelledby="show-names-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
 
-                    <label id="disable-region-caching-checkbox" class="check">
-                        <span id="disable-region-caching-text">Disable Caching</span>
+                        <label id="show-levels-checkbox" class="check">
+                            <span id="show-levels-checkbox-text">Show Levels</span>
 
-                        <input type="checkbox" aria-labelledby="disable-region-caching-text" />
-                        <span class="checkmark"></span>
-                    </label>
+                            <input type="checkbox" aria-labelledby="show-levels-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
 
-                    <label id="webgl-checkbox" class="check">
-                        <span id="webgl-text">Enable WebGL</span>
+                        <label id="disable-region-caching-checkbox" class="check">
+                            <span id="disable-region-caching-text">Disable Caching</span>
 
-                        <input type="checkbox" aria-labelledby="webgl-text" />
-                        <span class="checkmark"></span>
-                    </label>
+                            <input type="checkbox" aria-labelledby="disable-region-caching-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="webgl-checkbox" class="check">
+                            <span id="webgl-text">Enable WebGL</span>
+
+                            <input type="checkbox" aria-labelledby="webgl-text" />
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
                 </div>
 
                 <div id="action-settings">

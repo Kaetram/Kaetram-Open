@@ -1,5 +1,7 @@
 import Menu from './menu';
 
+import { isMobile } from '../utils/detect';
+
 import type Game from '../game';
 
 export default class Settings extends Menu {
@@ -12,6 +14,9 @@ export default class Settings extends Menu {
     )!;
     private lowPowerCheckbox: HTMLInputElement = document.querySelector(
         '#low-power-checkbox > input'
+    )!;
+    private joystickEnabledCheckbox: HTMLInputElement = document.querySelector(
+        '#joystick-enabled-checkbox > input'
     )!;
     private debugCheckbox: HTMLInputElement = document.querySelector(
         '#debug-mode-checkbox > input'
@@ -36,6 +41,10 @@ export default class Settings extends Menu {
 
         this.audioEnabledCheckbox.addEventListener('change', this.handleAudioEnabled.bind(this));
         this.lowPowerCheckbox.addEventListener('change', this.handleLowPower.bind(this));
+        this.joystickEnabledCheckbox.addEventListener(
+            'change',
+            this.handleJoystickEnabled.bind(this)
+        );
         this.debugCheckbox.addEventListener('change', this.handleDebug.bind(this));
         this.showNamesCheckbox.addEventListener('change', this.handleName.bind(this));
         this.showLevelsCheckbox.addEventListener('change', this.handleLevel.bind(this));
@@ -61,6 +70,7 @@ export default class Settings extends Menu {
 
         this.audioEnabledCheckbox.checked = settings.audioEnabled;
         this.lowPowerCheckbox.checked = settings.lowPowerMode;
+        this.joystickEnabledCheckbox.checked = settings.joyStickEnabled;
         this.debugCheckbox.checked = settings.debugMode;
         this.showNamesCheckbox.checked = settings.showNames;
         this.showLevelsCheckbox.checked = settings.showLevels;
@@ -75,6 +85,9 @@ export default class Settings extends Menu {
 
         // Update camera once loaded.
         this.handleLowPower();
+
+        // Update joystick once loaded.
+        this.handleJoystickEnabled();
 
         // Update the renderer for names and levels
         this.handleName();
@@ -135,6 +148,19 @@ export default class Settings extends Menu {
             this.game.camera.centreOn(this.game.player);
             this.game.renderer.updateAnimatedTiles();
         } // Remove the camera from the player.
+    }
+
+    /**
+     * Handler for when the joystick checkbox is toggled.
+     */
+
+    private handleJoystickEnabled(): void {
+        if (isMobile()) {
+            this.game.storage.setJoyStickEnabled(this.joystickEnabledCheckbox.checked);
+
+            if (this.joystickEnabledCheckbox.checked) this.game.joystick.show();
+            else this.game.joystick.hide();
+        } else document.querySelector<HTMLElement>('#joystick-enabled-checkbox')!.hidden = true;
     }
 
     /**

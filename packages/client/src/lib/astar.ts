@@ -209,10 +209,10 @@ function successors(
         result = [],
         i = 0;
 
-    $E && (result[i++] = { x: E, y });
-    $S && (result[i++] = { x, y: S });
-    $W && (result[i++] = { x: W, y });
-    $N && (result[i++] = { x, y: N });
+    if ($N) result[i++] = { x, y: N };
+    if ($E) result[i++] = { x: E, y };
+    if ($S) result[i++] = { x, y: S };
+    if ($W) result[i++] = { x: W, y };
 
     return find($N, $S, $E, $W, N, S, E, W, grid, rows, cols, result, i);
 }
