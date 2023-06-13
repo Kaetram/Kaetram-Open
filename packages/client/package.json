@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "dev": "astro dev",
-        "build": "astro check && tsc --noEmit && astro build",
+        "build": "astro check && tsc && astro build",
         "start": "sirv dist -p 9000 --no-logs"
     },
     "dependencies": {

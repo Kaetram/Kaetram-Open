@@ -5,18 +5,5 @@
         "stylelint-config-html/astro",
         "stylelint-config-clean-order",
         "stylelint-config-prettier"
-    ],
-    "plugins": [
-        "stylelint-rem-over-px"
-    ],
-    "rules": {
-        "rem-over-px/rem-over-px": [
-            true,
-            {
-                "ignoreAtRules": [
-                    "custom-media"
-                ]
-            }
-        ]
-    }
+    ]
 }
