@@ -39,6 +39,7 @@ export default class Player extends Character {
 
     public poison = false;
     public disableAction = false;
+    public joystickMovement = false;
 
     public medal: Modules.Medals = Modules.Medals.None;
 
@@ -302,6 +303,7 @@ export default class Player extends Character {
     public override idle(o?: Modules.Orientation, force = false): void {
         // Check for moving instead of path if keyboard movement is enabled.
         if (this.hasKeyboardMovement() && this.moving) return;
+        if (this.joystickMovement && this.moving) return;
 
         super.idle(o, force);
     }
