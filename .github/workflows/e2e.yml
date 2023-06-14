@@ -26,6 +26,7 @@ jobs:
             - name: Run Cypress
               uses: cypress-io/github-action@v5
               with:
+                  project: ./packages/e2e
                   command: yarn workspace @kaetram/e2e test:record
                   install-command: yarn install
               env:
