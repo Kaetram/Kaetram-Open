@@ -6,11 +6,21 @@ import type Player from '../entity/character/player/player';
 import type Task from '../entity/character/player/task';
 
 export default class Achievements extends Menu {
+    private tabArrowLeft: HTMLDivElement = document.querySelector('#achievements-tab-arrow-left')!;
+    private tabArrowRight: HTMLDivElement = document.querySelector(
+        '#achievements-tab-arrow-right'
+    )!;
+
+    private tabText: HTMLSpanElement = document.querySelector('#achievements-tab-text')!;
+
     // List where all the achievement objects are contained.
     private list: HTMLUListElement = document.querySelector('#achievements-content > ul')!;
 
     public constructor(private player: Player) {
         super('#achievements', '#close-achievements', '#achievements-button');
+
+        this.tabArrowLeft.addEventListener('click', this.handleTabArrowLeft.bind(this));
+        this.tabArrowRight.addEventListener('click', this.handleTabArrowRight.bind(this));
     }
 
     /**
@@ -165,5 +175,21 @@ export default class Achievements extends Menu {
                 element.append(progress);
             }
         }
+    }
+
+    /**
+     * Handles the tab arrow left click event.
+     */
+
+    private handleTabArrowLeft(): void {
+        console.log('left');
+    }
+
+    /**
+     * Handles the tab arrow right click event.
+     */
+
+    private handleTabArrowRight(): void {
+        console.log('right');
     }
 }
