@@ -3,6 +3,49 @@
 #achievements {
     display: none;
 
+    &-tab {
+        position: absolute;
+        top: -3em;
+        left: calc(50% - 5.5em);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 11em;
+        height: 3em;
+
+        #achievements-tab-arrow-left {
+            position: absolute;
+            top: 0.375em;
+            left: -1.6875em;
+
+            padding: 0.3125em;
+            padding-right: 0.25em;
+
+            border-image-width: 1em 0 1em 1em;
+
+            .colour-button-arrow-left {
+                position: static;
+            }
+        }
+
+        #achievements-tab-arrow-right {
+            position: absolute;
+            top: 0.375em;
+            right: -1.6875em;
+
+            padding: 0.3125em;
+            padding-left: 0.25em;
+
+            border-image-width: 1em 1em 1em 0;
+
+            .colour-button-arrow-right {
+                position: static;
+            }
+        }
+    }
+
     &-content {
         height: 100%;
         padding: 0.75em;
