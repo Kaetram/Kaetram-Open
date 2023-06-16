@@ -2,14 +2,16 @@ import { fileURLToPath } from 'node:url';
 
 import { description, name } from '../../package.json';
 
+import { locales, defaultLocale, dir, t, type Locale } from '@kaetram/common/locales';
 import { defineConfig } from 'astro/config';
 import config, { exposedConfig } from '@kaetram/common/config';
-import partytown from '@astrojs/partytown';
+import webmanifest from 'astro-webmanifest';
+import { i18n } from 'astro-i18n-aut';
 import sitemap from '@astrojs/sitemap';
 import robotsTxt from 'astro-robots-txt';
+import partytown from '@astrojs/partytown';
 import critters from 'astro-critters';
 import compress from 'astro-compress';
-import webmanifest from 'astro-webmanifest';
 import compressor from 'astro-compressor';
 import glsl from 'vite-plugin-glsl';
 import { VitePWA as pwa } from 'vite-plugin-pwa';
@@ -72,8 +74,8 @@ function getImageSize(image: string) {
 export default defineConfig({
     srcDir: './',
     site: 'https://kaetram.com',
+    trailingSlash: 'always',
     integrations: [
-        partytown({ config: { debug: false } }),
         webmanifest({
             icon: 'public/icon.png',
             name: config.name,
@@ -86,20 +88,25 @@ export default defineConfig({
             background_color: '#000000',
             display: 'fullscreen',
             orientation: 'landscape-primary',
-            locales: {
-                ro: { name: 'Kaetram', lang: 'ro-RO' }
-            },
+            locales: Object.fromEntries(
+                Object.entries(locales).map(([locale, lang]) => [
+                    locale,
+                    {
+                        lang,
+                        dir: dir(locale as Locale),
+                        name: t('game.name', { lng: locale }),
+                        description: t('game.description', { lng: locale })
+                    }
+                ])
+            ),
             config: {
                 insertAppleTouchLinks: true,
                 iconPurpose: ['any', 'maskable']
             }
         }),
-        sitemap({
-            i18n: {
-                defaultLocale: 'en',
-                locales: { en: 'en-US', ro: 'ro-RO' }
-            }
-        }),
+        partytown({ config: { debug: false } }),
+        i18n({ locales, defaultLocale }),
+        sitemap({ i18n: { locales, defaultLocale } }),
         robotsTxt({ host: true }),
         critters({ logger: 2 }),
         compress({ logger: 1 }),
