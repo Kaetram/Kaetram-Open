@@ -160,12 +160,16 @@ export default class Commands {
             case 'mute':
             case 'ban': {
                 let duration = parseInt(blocks.shift()!),
-                    targetName = blocks.join(' ');
+                    targetName = blocks.join(' ').toLowerCase();
 
                 if (!duration || !targetName)
                     return this.player.notify(
                         'Malformed command, expected /ban(mute) [duration] [username]'
                     );
+
+                // Prevent banning yourself.
+                if (targetName === this.player.username)
+                    return this.player.notify(`You cannot ban yourself you silly. Thanks James.`);
 
                 let user: Player = this.world.getPlayerByName(targetName);
 
