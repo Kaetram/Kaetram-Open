@@ -24,7 +24,6 @@
       "magic": 0
     }
   },
-
   "tinsword": {
     "type": "weapon",
     "name": "Tin Sword",
@@ -50,7 +49,6 @@
       "magic": 0
     }
   },
-
   "bronzesword": {
     "type": "weapon",
     "name": "Bronze Sword",
@@ -78,7 +76,6 @@
       "magic": 0
     }
   },
-
   "ironsword": {
     "type": "weapon",
     "name": "Iron Sword",
@@ -106,7 +103,6 @@
       "magic": 0
     }
   },
-
   "goldsword": {
     "type": "weapon",
     "name": "Gold Sword",
@@ -134,7 +130,6 @@
       "magic": 0
     }
   },
-
   "nisocsword": {
     "type": "weapon",
     "name": "Nisoc Sword",
@@ -162,7 +157,6 @@
       "magic": 0
     }
   },
-
   "cinnabarsword": {
     "type": "weapon",
     "name": "Cinnabar Sword",
@@ -190,7 +184,6 @@
       "magic": 0
     }
   },
-
   "pytharsword": {
     "type": "weapon",
     "name": "Pythar Sword",
@@ -218,7 +211,6 @@
       "magic": 0
     }
   },
-
   "ibosword": {
     "type": "weapon",
     "name": "Ibo Sword",
@@ -246,7 +238,6 @@
       "magic": 0
     }
   },
-
   "icesword": {
     "type": "weapon",
     "name": "Ice Sword",
@@ -274,7 +265,6 @@
       "magic": 0
     }
   },
-
   "bronzeaxe": {
     "type": "weapon",
     "name": "Bronze Axe",
@@ -302,7 +292,6 @@
       "magic": 0
     }
   },
-
   "ironaxe": {
     "type": "weapon",
     "name": "Iron Axe",
@@ -332,7 +321,6 @@
       "magic": 0
     }
   },
-
   "cobaltaxe": {
     "type": "weapon",
     "name": "Cobalt Axe",
@@ -362,7 +350,6 @@
       "magic": 2
     }
   },
-
   "goldaxe": {
     "type": "weapon",
     "name": "Gold Axe",
@@ -392,7 +379,6 @@
       "magic": 0
     }
   },
-
   "fishingpole": {
     "type": "weapon",
     "name": "Fishing Pole",
@@ -419,7 +405,6 @@
       "magic": 0
     }
   },
-
   "copperhelmet": {
     "type": "helmet",
     "name": "Copper Helmet",
@@ -445,7 +430,6 @@
       "magic": 0
     }
   },
-
   "tinhelmet": {
     "type": "helmet",
     "name": "Tin Helmet",
@@ -471,7 +455,6 @@
       "magic": 0
     }
   },
-
   "bronzehelmet": {
     "type": "helmet",
     "name": "Bronze Helmet",
@@ -499,7 +482,6 @@
       "magic": 0
     }
   },
-
   "ironhelmet": {
     "type": "helmet",
     "name": "Iron Helmet",
@@ -527,7 +509,6 @@
       "magic": 0
     }
   },
-
   "goldhelmet": {
     "type": "helmet",
     "name": "Gold Helmet",
@@ -555,7 +536,6 @@
       "magic": 0
     }
   },
-
   "cobalthelmet": {
     "type": "helmet",
     "name": "Cobalt Helmet",
@@ -583,7 +563,6 @@
       "magic": 0
     }
   },
-
   "crystalhood": {
     "type": "helmet",
     "name": "Crystal Hood",
@@ -611,7 +590,6 @@
       "magic": 6
     }
   },
-
   "ironchestplate": {
     "type": "chestplate",
     "name": "Iron Chestplate",
@@ -639,7 +617,6 @@
       "magic": 0
     }
   },
-
   "copperlegplates": {
     "type": "legplates",
     "name": "Copper Legplates",
@@ -665,7 +642,6 @@
       "magic": 0
     }
   },
-
   "tinlegplates": {
     "type": "legplates",
     "name": "Tin Legplates",
@@ -691,7 +667,6 @@
       "magic": -2
     }
   },
-
   "ironlegplates": {
     "type": "legplates",
     "name": "Iron Legplates",
@@ -719,7 +694,6 @@
       "magic": -3
     }
   },
-
   "cobaltlegplates": {
     "type": "legplates",
     "name": "Cobalt Legplates",
@@ -747,7 +721,6 @@
       "magic": -2
     }
   },
-
   "bronzeboots": {
     "type": "boots",
     "name": "Bronze Boots",
@@ -775,7 +748,6 @@
       "magic": -3
     }
   },
-
   "ironboots": {
     "type": "boots",
     "name": "Iron Boots",
@@ -803,7 +775,6 @@
       "magic": -5
     }
   },
-
   "goldboots": {
     "type": "boots",
     "name": "Golden Boots",
@@ -831,7 +802,6 @@
       "magic": -4
     }
   },
-
   "bronzering": {
     "type": "ring",
     "name": "Bronze Ring",
@@ -859,7 +829,6 @@
       "magic": 1
     }
   },
-
   "ironring": {
     "type": "ring",
     "name": "Iron Ring",
@@ -887,7 +856,6 @@
       "magic": 1
     }
   },
-
   "berylsilverring": {
     "type": "ring",
     "name": "Beryl Silver Ring",
@@ -915,7 +883,6 @@
       "magic": 1
     }
   },
-
   "berylgoldring": {
     "type": "ring",
     "name": "Beryl Gold Ring",
@@ -943,7 +910,6 @@
       "magic": 2
     }
   },
-
   "aquastaff": {
     "type": "weaponmagic",
     "name": "Aqua Staff",
@@ -966,7 +932,6 @@
     "attackRange": 9,
     "projectileName": "purplebolt"
   },
-
   "lightningstaff": {
     "type": "weaponmagic",
     "name": "Lightning Staff",
@@ -991,7 +956,6 @@
     "attackRange": 9,
     "projectileName": "yellowlightning"
   },
-
   "naturestaff": {
     "type": "weaponmagic",
     "name": "Nature Staff",
@@ -1016,7 +980,6 @@
     "attackRange": 9,
     "projectileName": "greenbolt"
   },
-
   "firestaff": {
     "type": "weaponmagic",
     "name": "Fire Staff",
@@ -1041,7 +1004,6 @@
     "attackRange": 9,
     "projectileName": "fireball"
   },
-
   "cursestaff": {
     "type": "weaponmagic",
     "name": "Ice Staff",
@@ -1066,7 +1028,6 @@
     "attackRange": 9,
     "projectileName": "terror"
   },
-
   "coppershield": {
     "type": "shield",
     "name": "Copper Shield",
@@ -1085,7 +1046,6 @@
       "magic": 0
     }
   },
-
   "cobaltshield": {
     "type": "shield",
     "name": "Cobalt Shield",
@@ -1104,7 +1064,6 @@
       "magic": 0
     }
   },
-
   "lantern": {
     "type": "shield",
     "name": "Lantern",
@@ -1137,7 +1096,6 @@
       "magic": 0
     }
   },
-
   "lantern2": {
     "type": "shield",
     "name": "Lantern 2",
@@ -1170,32 +1128,26 @@
       "magic": 0
     }
   },
-
   "danbo": {
     "type": "skin",
     "name": "Danbo"
   },
-
   "danboblue": {
     "type": "skin",
     "name": "Danbo"
   },
-
   "danbogreen": {
     "type": "skin",
     "name": "Danbo"
   },
-
   "danbored": {
     "type": "skin",
     "name": "Danbo"
   },
-
   "taekwondo": {
     "type": "skin",
     "name": "Taekwondo"
   },
-
   "pendant1": {
     "type": "pendant",
     "name": "Pendant",
@@ -1221,7 +1173,6 @@
       "magic": 3
     }
   },
-
   "greenpendant": {
     "type": "pendant",
     "name": "Jade Pendant",
@@ -1247,7 +1198,6 @@
       "magic": 4
     }
   },
-
   "pearlpendant": {
     "type": "pendant",
     "name": "Pearl Pendant",
@@ -1273,7 +1223,6 @@
       "magic": 6
     }
   },
-
   "berylpendant": {
     "type": "pendant",
     "name": "Beryl Pendant",
@@ -1299,7 +1248,6 @@
       "magic": 10
     }
   },
-
   "rubypendant": {
     "type": "pendant",
     "name": "Ruby Pendant",
@@ -1325,7 +1273,6 @@
       "magic": 4
     }
   },
-
   "emeraldpendant": {
     "type": "pendant",
     "name": "Emerald Pendant",
@@ -1351,31 +1298,26 @@
       "magic": 6
     }
   },
-
   "goldring": {
     "type": "ring",
     "name": "Gold Ring",
     "price": 2250
   },
-
   "goldring2": {
     "type": "ring",
     "name": "Slotted Gold Ring",
     "price": 2250
   },
-  
   "silverring": {
     "type": "ring",
     "name": "Silver Ring",
     "price": 1250
   },
-
   "silverring2": {
     "type": "ring",
     "name": "Slotted Silver Ring",
     "price": 1250
   },
-
   "ring1": {
     "type": "ring",
     "name": "Emerald Ring",
@@ -1401,7 +1343,6 @@
       "magic": 2
     }
   },
-
   "sproutring": {
     "type": "ring",
     "name": "Sprout Ring",
@@ -1427,7 +1368,6 @@
       "magic": 3
     }
   },
-
   "pearlring": {
     "type": "ring",
     "name": "Pearl Ring",
@@ -1453,7 +1393,6 @@
       "magic": 5
     }
   },
-
   "topazring": {
     "type": "ring",
     "name": "Topaz Ring",
@@ -1479,7 +1418,6 @@
       "magic": 8
     }
   },
-
   "spiritring": {
     "type": "ring",
     "name": "Spirit Ring",
@@ -1505,7 +1443,6 @@
       "magic": 12
     }
   },
-
   "essentialrage": {
     "type": "ring",
     "name": "Essential Rage",
@@ -1531,7 +1468,6 @@
       "magic": 12
     }
   },
-
   "rubyring": {
     "type": "ring",
     "name": "Ruby Ring",
@@ -1559,7 +1495,6 @@
       "magic": 8
     }
   },
-
   "sapphirering": {
     "type": "ring",
     "name": "Sapphire Ring",
@@ -1587,7 +1522,6 @@
       "magic": 11
     }
   },
-
   "emeraldring": {
     "type": "ring",
     "name": "Emerald Ring",
@@ -1615,7 +1549,6 @@
       "magic": 8
     }
   },
-
   "dolring": {
     "type": "ring",
     "name": "Fragmented Ring",
@@ -1643,7 +1576,6 @@
       "magic": 18
     }
   },
-
   "diamondring": {
     "type": "ring",
     "name": "Diamond Ring",
@@ -1671,7 +1603,6 @@
       "magic": 14
     }
   },
-
   "pytharring": {
     "type": "ring",
     "name": "Pythar Ring",
@@ -1699,7 +1630,6 @@
       "magic": 0
     }
   },
-
   "nisocring": {
     "type": "ring",
     "name": "Nisoc Ring",
@@ -1727,7 +1657,6 @@
       "magic": 0
     }
   },
-
   "flask": {
     "type": "object",
     "name": "Flask",
@@ -1740,7 +1669,6 @@
     "plugin": "healingitem",
     "healAmount": 100
   },
-
   "hotsauce": {
     "type": "object",
     "name": "Hot Sauce",
@@ -1749,7 +1677,6 @@
     "edible": true,
     "plugin": "hotsauce"
   },
-
   "cure": {
     "type": "object",
     "name": "Antidote",
@@ -1760,7 +1687,6 @@
     "edible": true,
     "plugin": "poisoncure"
   },
-
   "manaflask": {
     "type": "object",
     "name": "Mana Flask",
@@ -1773,7 +1699,6 @@
     "plugin": "healingitem",
     "manaAmount": 35
   },
-
   "burger": {
     "type": "object",
     "name": "Burger",
@@ -1786,7 +1711,6 @@
     "plugin": "healingitem",
     "healAmount": 200
   },
-
   "bigflask": {
     "type": "object",
     "name": "Big Flask",
@@ -1799,7 +1723,6 @@
     "plugin": "healingitem",
     "healAmount": 250
   },
-
   "bigmanaflask": {
     "type": "object",
     "name": "Big Mana Flask",
@@ -1812,7 +1735,6 @@
     "plugin": "healingitem",
     "manaAmount": 95
   },
-
   "firepotion": {
     "type": "object",
     "name": "Fire Potion",
@@ -1822,20 +1744,17 @@
     "edible": true,
     "plugin": "firepotion"
   },
-
   "book": {
     "type": "object",
-    "name": "Book [Quest]",
+    "name": "Book",
     "undroppable": true
   },
-
   "cd": {
     "type": "object",
     "name": "CD [Quest]",
     "description": "A CD received by some dying soldier Private Ryan. Contains his last mixtape. I should probably get this to his Sexy wife or something.",
     "undroppable": true
   },
-       
   "snowpotion": {
     "type": "object",
     "name": "Snow Potion",
@@ -1847,12 +1766,10 @@
     "edible": true,
     "plugin": "snowpotion"
   },
-
   "royalazalea": {
     "type": "object",
     "name": "Royal Azalea"
   },
-
   "blackpotion": {
     "type": "object",
     "name": "Black Potion",
@@ -1861,21 +1778,18 @@
     "plugin": "blackpotion",
     "edible": true
   },
-
   "gold": {
     "type": "object",
     "name": "Gold",
     "stackable": true,
     "description": "A very useful shiny metal that for some reason people like to exchange for goods."
   },
-
   "token": {
     "type": "object",
     "name": "Token",
     "stackable": true,
     "description": "A special token that can be exchanged for special stuff at a special store somewhere special."
   },
-
   "banana": {
     "type": "object",
     "name": "Banana",
@@ -1884,7 +1798,6 @@
     "plugin": "healingitem",
     "healAmount": 700
   },
-
   "watermelon": {
     "type": "object",
     "name": "Watermelon",
@@ -1893,7 +1806,6 @@
     "plugin": "healingitem",
     "healAmount": 800
   },
-
   "apple": {
     "type": "object",
     "name": "Apple",
@@ -1902,7 +1814,6 @@
     "plugin": "healingitem",
     "healAmount": 450
   },
-
   "orange": {
     "type": "object",
     "name": "Orange",
@@ -1911,7 +1822,6 @@
     "plugin": "healingitem",
     "healAmount": 750
   },
-
   "blueberry": {
     "type": "object",
     "name": "Blueberry",
@@ -1920,7 +1830,6 @@
     "plugin": "healingitem",
     "healAmount": 500
   },
-
   "shardt1": {
     "type": "object",
     "price": 1500,
@@ -1928,7 +1837,6 @@
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
-
   "shardt2": {
     "type": "object",
     "price": 3000,
@@ -1936,7 +1844,6 @@
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
-
   "shardt3": {
     "type": "object",
     "price": 4500,
@@ -1944,7 +1851,6 @@
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
-
   "shardt4": {
     "type": "object",
     "price": 6000,
@@ -1952,7 +1858,6 @@
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
-
   "shardt5": {
     "type": "object",
     "price": 7500,
@@ -1960,7 +1865,6 @@
     "stackable": true,
     "description": "Shards are items used to enchant equipments. Each tier represents the maximum attainable enchantment level and chance of enchanting succeeding."
   },
-
   "knife": {
     "type": "object",
     "name": "Knife",
@@ -1969,7 +1873,6 @@
     "interactable": true,
     "plugin": "knife"
   },
-
   "string": {
     "type": "object",
     "name": "String",
@@ -1977,134 +1880,114 @@
     "stackable": true,
     "price": 50
   },
-
   "logs": {
     "type": "object",
     "name": "Logs",
     "description": "Ah yes, the classic logs. Looking at them I can see that they're made out of wood.",
     "price": 65
   },
-
   "palmlogs": {
     "type": "object",
     "name": "Palm Logs",
     "description": "Funny enough, these logs are made out of palm wood. Which is not the same as the other kinds of wood.",
     "price": 75
   },
-
   "pinelogs": {
     "type": "object",
     "name": "Pine Logs",
     "description": "I think I found these when I accidentally swung my axe at a tree repeatedly until it fell down.",
     "price": 88
   },
-
   "icelogs": {
     "type": "object",
     "name": "Ice Logs",
     "price": 65,
     "description": "These logs are made out of ice. They're very cold to the touch. No matter what, they will not thaw. I wonder what happens when you put it in fire."
   },
-  
-
   "icepalmlogs": {
     "type": "object",
     "name": "Ice Palm Logs",
     "price": 50,
     "description": "These logs are made out of ice and palm wood. They're very cold to the touch."
   },
-
   "icepinelogs": {
     "type": "object",
     "name": "Ice Pine Logs",
     "description": "I think I found these when I accidentally swung my axe at a tree repeatedly until it fell down.",
     "price": 85
   },
-
   "aquasilliuslogs": {
     "type": "object",
     "name": "Aquasillius Logs",
     "price": 350,
     "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
   },
-  
   "alkythnlogs": {
     "type": "object",
     "name": "Alkythn Logs",
     "price": 350,
     "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
   },
-
   "heliphatitlogs": {
     "type": "object",
     "name": "Heliphatit Logs",
     "price": 350,
     "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
   },
-
   "zoncillogs": {
     "type": "object",
     "name": "Zoncil Logs",
     "price": 350,
     "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
   },
-
   "zondullogs": {
     "type": "object",
     "name": "Zondul Logs",
     "price": 350,
     "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
   },
-
   "bloodwoodlogs": {
     "type": "object",
     "name": "Bloodwood Logs",
     "price": 400,
     "description": "It almost looks like they're crying blood."
   },
-
   "nisocore": {
     "type": "object",
     "name": "Nisoc Ore",
     "description": "An ancient rock forming in volcanic areas. Generally used for crafting pendants and rings, and perhaps other things.",
     "price": 250
   },
-
   "cinnabarore": {
     "type": "object",
     "name": "Cinnabar Ore",
     "description": "A red ore containing special metals. May be used for crafting of certain weapons.",
     "price": 350
   },
-
   "pytharore": {
     "type": "object",
     "name": "Pythar Ore",
     "description": "A purple crystal with magical properties.",
     "price": 500
   },
-
   "goldnugget": {
     "type": "object",
     "name": "Gold Ore",
     "description": "Raw gold ore, will need to be processed before it can be turned into something nice.",
     "price": 650
   },
-
   "iboore": {
     "type": "object",
     "name": "Ibo Ore",
     "description": "A peculiar ore. Its uses are not well understood, perhaps with further research it can be used for something.",
     "price": 800
   },
-      
   "moonrockore": {
     "type": "object",
     "name": "Space Rock",
     "description": "Part of an Astroid that fell from the sky 172,000 Earthling years ago. Must be special!",
     "price": 2400
   },
-      
   "bead": {
     "type": "object",
     "name": "Magic Bead",
@@ -2113,31 +1996,26 @@
     "maxStackSize": 3,
     "description": "A bead that emanates magical properties. Can be used in conjunction with other items to create magical items."
   },
-
   "lightningbead": {
     "type": "object",
     "name": "Lightning Bead",
     "description": "A magical bead imbued with lightning properties. Can be used to craft magical items."
   },
-
   "naturebead": {
     "type": "object",
     "name": "Magic Bead",
     "description": "A magical bead imbued with the power of nature. Can be used to craft magical items."
   },
-
   "firebead": {
     "type": "object",
     "name": "Magic Bead",
     "description": "A magical bead imbued with fire. Can be used to craft magical items."
   },
-
   "icebead": {
     "type": "object",
     "name": "Magic Bead",
     "description": "A strong magical bead perpetually frozen. Can be used to craft magical items."
   },
-
   "stick": {
     "type": "object",
     "name": "Shaft",
@@ -2145,7 +2023,6 @@
     "stackable": true,
     "description": "A stick. It's a stick. What else do you want me to say about it? You can probably use it to craft stuff now that it has been added in the game."
   },
-
   "feather": {
     "type": "object",
     "name": "Feather",
@@ -2153,14 +2030,12 @@
     "price": 50,
     "description": "A feather, I think it came off of a bird or something. You could make arrows with this thing."
   },
-
   "candykey": {
     "type": "object",
     "name": "Candy Key",
     "price": 50,
     "description": "A key that allows entrance into Santa's secret chamber. Crumbles upon entering."
   },
-
   "boostpotion": {
     "type": "object",
     "name": "Boost Potion",
@@ -2169,7 +2044,6 @@
     "edible": true,
     "plugin": "boostpotion"
   },
-
   "accuracypotion": {
     "type": "object",
     "name": "Accuracy Potion",
@@ -2180,7 +2054,6 @@
     "duration": 60000,
     "plugin": "effectpotion"
   },
-  
   "defensepotion": {
     "type": "object",
     "name": "Defence Potion",
@@ -2191,7 +2064,6 @@
     "duration": 60000,
     "plugin": "effectpotion"
   },
-
   "strengthpotion": {
     "type": "object",
     "name": "Strength Potion",
@@ -2202,7 +2074,6 @@
     "duration": 60000,
     "plugin": "effectpotion"
   },
-
   "beermug": {
     "type": "object",
     "name": "Beer",
@@ -2211,14 +2082,12 @@
     "edible": true,
     "plugin": "beermug"
   },
-
   "clamobject": {
     "type": "object",
     "name": "Clam",
     "price": 100,
     "description": "It has a hard outer shell but I bet it's yummy inside."
   },
-
   "clamchowder": {
     "type": "object",
     "name": "Clam Chowder",
@@ -2229,14 +2098,12 @@
     "plugin": "healingitem",
     "healAmount": 750
   },
-
   "rawshrimp": {
     "type": "object",
     "name": "Raw Shrimp",
     "price": 100,
     "description": "Maybe if I cook this it'll become something actually edible."
   },
-
   "cookedshrimp": {
     "type": "object",
     "name": "Cooked Shrimp",
@@ -2246,14 +2113,12 @@
     "plugin": "healingitem",
     "healAmount": 450
   },
-
   "jellyfish": {
     "type": "object",
     "name": "Jellyfish",
     "price": 100,
     "description": "Did you know that jellyfish don't actually have a brain. So don't feel so bad about yourself!"
   },
-
   "jellyfishsmoothie": {
     "type": "object",
     "name": "Jellyfish Smoothie",
@@ -2263,28 +2128,24 @@
     "plugin": "healingitem",
     "healAmount": 750
   },
-
   "kelp": {
     "type": "object",
     "name": "Kelp",
     "price": 100,
     "description": "Kelp is a type of seaweed that grows in water. It's pretty tasty when combined with other stuff."
   },
-
   "rawbeef": {
     "type": "object",
     "name": "Raw Beef",
     "price": 100,
     "description": "A piece of raw beef. It's probably not the best idea to eat it raw."
   },
-
   "rawtuna": {
     "type": "object",
     "name": "Raw Tuna",
     "price": 100,
     "description": "A fish that is commonly found in water. It's pretty tasty when cooked."
   },
-
   "tunasushi": {
     "type": "object",
     "name": "Tuna Sushi",
@@ -2294,14 +2155,12 @@
     "plugin": "healingitem",
     "healAmount": 850
   },
-
   "barley": {
     "type": "object",
     "name": "Barley",
     "description": "It's a fruit, no it's a sald, no it's a grain. You can probably use it to make bread or something like that.",
     "price": 100
   },
-
   "blackberry": {
     "type": "object",
     "name": "Blackberry",
@@ -2311,77 +2170,66 @@
     "healAmount": 200,
     "price": 100
   },
-
   "borth": {
     "type": "object",
     "name": "Borth",
     "description": "A nice yummy warm and nice smelling... I really don't know what it is.",
     "price": 100
   },
-
   "bronzebar": {
     "type": "object",
     "name": "Bronze Bar",
     "description": "A bar of bronze. It's pretty heavy.",
     "price": 250
   },
-  
   "bronzeore": {
     "type": "object",
     "name": "Bronze Ore",
     "description": "A piece of bronze ore. It's pretty heavy.",
     "price": 100
   },
-
   "bucket": {
     "type": "object",
     "name": "Bucket",
     "description": "A bucket, you can use it to put a variety of liquids in it.",
     "price": 100
   },
-
   "cake": {
     "type": "object",
     "name": "Cake",
     "description": "A delicious cake. It's pretty tasty.",
     "price": 100
   },
-
   "cheese": {
     "type": "object",
     "name": "Cheese",
     "description": "A piece of cheese. I think it came from milk.",
     "price": 100
   },
-
   "cilantro": {
     "type": "object",
     "name": "Cilantro",
     "description": "A leafy herb that is commonly used in Mexican cuisine. It's pretty tasty when cooked.",
     "price": 100
   },
-
   "cloudberry": {
     "type": "object",
     "name": "Cloudberry",
     "description": "A berry that grows on bushes. It's pretty tasty when cooked.",
     "price": 100
   },
-
   "coal": {
     "type": "object",
     "name": "Coal",
     "description": "A piece of coal. You can use it smelt ores.",
     "price": 75
   },
-
   "rawchicken": {
     "type": "object",
     "name": "Raw Chicken",
     "description": "I think I should cook this before I eat it.",
     "price": 100
   },
-
   "cookedchicken": {
     "type": "object",
     "name": "Cooked Chicken",
@@ -2391,7 +2239,6 @@
     "healAmount": 400,
     "price": 250
   },
-
   "cookedbeef": {
     "type": "object",
     "name": "Cooked Beef",
@@ -2401,14 +2248,12 @@
     "healAmount": 400,
     "price": 250
   },
-
   "rawpork": {
     "type": "object",
     "name": "Raw Pork",
     "description": "I think I should cook this before I eat it.",
     "price": 250
   },
-
   "cookedpork": {
     "type": "object",
     "name": "Cooked Pork",
@@ -2418,14 +2263,12 @@
     "healAmount": 400,
     "price": 100
   },
-
   "rawsausage": {
     "type": "object",
     "name": "Raw Sausage",
     "description": "I think I should cook this before I eat it.",
     "price": 100
   },
-
   "cookedsausage": {
     "type": "object",
     "name": "Cooked Sausage",
@@ -2435,112 +2278,96 @@
     "healAmount": 650,
     "price": 100
   },
-
   "copperbar": {
     "type": "object",
     "name": "Copper Bar",
     "description": "A bar of copper. It's pretty heavy.",
     "price": 100
   },
-
   "copperore": {
     "type": "object",
     "name": "Copper Ore",
     "description": "A piece of copper ore. It's pretty heavy.",
     "price": 100
   },
-
   "corn": {
     "type": "object",
     "name": "Corn",
     "description": "It's corn, and it's on a cob.",
     "price": 100
   },
-
   "egg": {
     "type": "object",
     "name": "Egg",
     "description": "A wonderful sorta round egg, it came from a chicken, I think.",
     "price": 100
   },
-
   "goldore": {
     "type": "object",
     "name": "Gold Ore",
     "description": "A piece of gold ore. It's pretty heavy.",
     "price": 100
   },
-
   "gooseberry": {
     "type": "object",
     "name": "Gooseberry",
     "description": "A berry that grows on bushes. It's pretty tasty when cooked.",
     "price": 100
   },
-
   "ironbar": {
     "type": "object",
     "name": "Iron Bar",
     "description": "A bar of iron. It's pretty heavy.",
     "price": 100
   },
-
   "mango": {
     "type": "object",
     "name": "Mango",
     "description": "A mango, it's a fruit and it's edible",
     "price": 100
   },
-
   "milkbottle": {
     "type": "object",
     "name": "Milk Bottle",
     "description": "A bottle of milk. It's pretty tasty when cooked.",
     "price": 100
   },
-
   "mulberry": {
     "type": "object",
     "name": "Mulberry",
     "description": "A berry that grows on or in bushes.",
     "price": 100
   },
-
   "oat": {
     "type": "object",
     "name": "Oat",
     "description": "A grain that is commonly used in bread.",
     "price": 100
   },
-
   "peach": {
     "type": "object",
     "name": "Peach",
     "description": "A peach, it's a fruit and it's edible",
     "price": 100
   },
-
   "pineapple": {
     "type": "object",
     "name": "Pineapple",
     "description": "A pineapple, it's a fruit and it's edible",
     "price": 100
   },
-
   "plum": {
     "type": "object",
     "name": "Plum",
     "description": "A plum, it's a fruit and it's edible",
     "price": 100
   },
-
   "quinoa": {
     "type": "object",
     "name": "Quinoa",
     "description": "Hello this is the developer, I really don't know what this is even used in so I can't come up with a witty description.",
     "price": 100
   },
-
   "raspberry": {
     "type": "object",
     "name": "Raspberry",
@@ -2550,84 +2377,72 @@
     "healAmount": 150,
     "price": 100
   },
-
   "rice": {
     "type": "object",
     "name": "Rice",
     "description": "You can eat this after you cook it for a bit.",
     "price": 100
   },
-
   "mustardplant": {
     "type": "object",
     "name": "Mustard",
     "description": "A plant found throughout the kingdom of Kaetram. Might be good for some ingredients.",
     "price": 50
   },
-
   "cuminplant": {
     "type": "object",
     "name": "Cumin",
     "description": "A herb used in certain cooking recipes. Not sure I'm just a description.",
     "price": 50
   },
-
   "paprika": {
     "type": "object",
     "name": "Paprika",
     "description": "A very nice vegetable used in very nice condiments.",
     "price": 50
   },
-
   "dandelion": {
     "type": "object",
     "name": "Dandelion",
     "description": "A cute little yellow plant that grows in the grass. Or on tree stumps.",
     "price": 50
   },
-
   "strawberry": {
     "type": "object",
     "name": "Strawberry",
     "description": "A berry that grows on bushes.",
     "price": 100
   },
-
   "tinbar": {
     "type": "object",
     "name": "Tin Bar",
     "description": "A bar of tin. It's pretty heavy.",
     "price": 100
   },
-
   "tinore": {
     "type": "object",
     "name": "Tin Ore",
     "description": "A piece of tin ore.",
     "price": 100
   },
-
   "ironore": {
     "type": "object",
     "name": "Iron Ore",
     "description": "A piece of iron ore.",
     "price": 100
   },
-
   "goldbar": {
     "type": "object",
     "name": "Gold Bar",
     "description": "A bar of gold. It's pretty heavy and shiny.",
     "price": 1200
   },
-
   "tofu": {
     "type": "object",
     "name": "Tofu",
     "description": "A block of tofu. I don't know what to do with this, I'm not vegan.",
     "price": 100
   },
-
   "tomato": {
     "type": "object",
     "name": "Tomato",
@@ -2637,7 +2452,6 @@
     "healAmount": 100,
     "price": 100
   },
-
   "onion": {
     "type": "object",
     "name": "Onion",
@@ -2647,7 +2461,6 @@
     "healAmount": 100,
     "price": 100
   },
-
   "potato": {
     "type": "object",
     "name": "Potato",
@@ -2657,7 +2470,6 @@
     "healAmount": 120,
     "price": 100
   },
-
   "chilli": {
     "type": "object",
     "name": "Chilli",
@@ -2667,105 +2479,90 @@
     "healAmount": 100,
     "price": 100
   },
-
   "waterbucket": {
     "type": "object",
     "name": "Water Bucket",
     "description": "A bucket of water. You can use it to cook stuff with it.",
     "price": 100
   },
-
   "bowlsmall": {
     "type": "object",
     "name": "Small Bowl",
     "description": "A small bowl. Can be used to cook stuff in it.",
     "price": 100
   },
-
   "bowlmedium": {
     "type": "object",
     "name": "Medium Bowl",
     "description": "A medium bowl. Can be used to cook stuff in it.",
     "price": 100
   },
-
   "topaz": {
     "type": "object",
     "name": "Topaz",
     "description": "A topaz gemstome, it's quite pretty.",
     "price": 350
   },
-
   "beryl": {
     "type": "object",
     "name": "Beryl",
     "description": "Beryl gemstone, it's quite pretty.",
     "price": 650
   },
-
   "lapislazuli": {
     "type": "object",
     "name": "Lapis Lazuli",
     "description": "A semi-precious stone, it's quite pretty.",
     "price": 800
   },
-
   "citrine": {
     "type": "object",
     "name": "Citrine",
     "description": "It's rather shiny and nice to hold.",
     "price": 1100
   },
-
   "taaffeite": {
     "type": "object",
     "name": "Taaffeite",
     "description": "A nice purple gemstone that is somewhat valuable I guess.",
     "price": 1220
   },
-
   "ruby": {
     "type": "object",
     "name": "Ruby",
     "description": "A very nice gemstone that can be used to made rings or pendants.",
     "price": 1300
   },
-
   "peridot": {
     "type": "object",
     "name": "Peridot",
     "description": "A nice green gemstone that is somewhat valuable I guess.",
     "price": 1300
   },
-
   "opal": {
     "type": "object",
     "name": "Opal",
     "description": "A nice gemstone that is somewhat valuable I guess.",
     "price": 1300
   },
-
   "emerald": {
     "type": "object",
     "name": "Emerald",
     "description": "A very nice gemstone that can be used to made rings or pendants.",
     "price": 1400
   },
-
   "amethyst": {
     "type": "object",
     "name": "Amethyst",
     "description": "A nice purple gemstone that is somewhat valuable I guess.",
     "price": 1500
   },
-
   "bluelily": {
     "type": "object",
     "name": "Blue Lily",
     "description": "A blue lily, a flower that can be used for crafting stuff.",
     "price": 100
   },
-
   "stew": {
     "type": "object",
     "name": "Tomato Stew",
@@ -2776,7 +2573,6 @@
     "healAmount": 500,
     "price": 600
   },
-
   "stew2": {
     "type": "object",
     "name": "Corn Stew",
@@ -2787,63 +2583,54 @@
     "healAmount": 800,
     "price": 900
   },
-
   "mushroom1": {
     "type": "object",
     "name": "Shiitake",
     "description": "A mushroom that can be used for cooking.",
     "price": 250
   },
-
   "mushroom2": {
     "type": "object",
     "name": "Russula",
     "description": "A mushroom that can be used for cooking.",
     "price": 250
   },
-
   "mushroom3": {
     "type": "object",
     "name": "Kuriositas",
     "description": "A mushroom that can be used for cooking.",
     "price": 250
   },
-
   "mushroom4": {
     "type": "object",
     "name": "Matsutake",
     "description": "A mushroom that can be used for cooking.",
     "price": 250
   },
-
   "mushroom5": {
     "type": "object",
     "name": "Cortinarius",
     "description": "A mushroom that can be used for cooking.",
     "price": 250
   },
-
   "mushroom6": {
     "type": "object",
     "name": "Violet Cort",
     "description": "A mushroom that can be used for cooking.",
     "price": 250
   },
-
   "hilt1": {
     "type": "object",
     "name": "Hilt",
     "description": "May be used with certain metals to produce a sword.",
     "price": 1000
   },
-
   "hilt2": {
     "type": "object",
     "name": "Hilt",
     "description": "May be used with certain metals to produce a sword.",
     "price": 1000
   },
-
   "ratpet": {
     "type": "pet",
     "name": "Rat Pet",
@@ -2851,7 +2638,6 @@
     "description": "A little cute rat that follows you around.",
     "price": 1000
   },
-
   "rathatpet": {
     "type": "pet",
     "name": "Rat Hat Pet",
@@ -2859,7 +2645,6 @@
     "description": "A little cute rat with a little cute hat that follows you around.",
     "price": 1000
   },
-
   "leatherboots": {
     "type": "boots",
     "name": "Leather Boots",
@@ -2885,7 +2670,6 @@
       "magic": 0
     }
   },
-
   "steelboots": {
     "type": "boots",
     "name": "Steel Boots",
@@ -2911,7 +2695,6 @@
       "magic": 0
     }
   },
-
   "swiftboots": {
     "type": "boots",
     "name": "Swift Boots",
@@ -2938,7 +2721,6 @@
       "magic": 1
     }
   },
-
   "lavaboots": {
     "type": "boots",
     "name": "Lava Boots",
@@ -2964,7 +2746,6 @@
       "magic": 0
     }
   },
-
   "arrow": {
     "type": "arrow",
     "name": "Arrow",
@@ -2979,7 +2760,6 @@
     },
     "projectileName": "arrow"
   },
-
   "firearrow": {
     "type": "arrow",
     "name": "Fire Arrow",
@@ -2995,7 +2775,6 @@
     },
     "projectileName": "firearrow"
   },
-
   "poisonarrow": {
     "type": "arrow",
     "name": "Poison Arrow",
@@ -3011,7 +2790,6 @@
     },
     "projectileName": "poisonarrow"
   },
-
   "lightningarrow": {
     "type": "arrow",
     "name": "Lightning Arrow",
@@ -3026,7 +2804,6 @@
     },
     "projectileName": "lightningarrow"
   },
-
   "icearrow": {
     "type": "arrow",
     "name": "Ice Arrow",
@@ -3042,7 +2819,6 @@
     },
     "projectileName": "icearrow"
   },
-
   "nisocarrow": {
     "type": "arrow",
     "name": "Nisoc Arrow",
@@ -3058,7 +2834,6 @@
     },
     "projectileName": "nisocarrow"
   },
-
   "cinnabararrow": {
     "type": "arrow",
     "name": "Cinnabar Arrow",
@@ -3074,7 +2849,6 @@
     },
     "projectileName": "cinnabararrow"
   },
-
   "pythararrow": {
     "type": "arrow",
     "name": "Pythar Arrow",
@@ -3090,7 +2864,6 @@
     },
     "projectileName": "pythararrow"
   },
-
   "iboarrow": {
     "type": "arrow",
     "name": "Ibo Arrow",
