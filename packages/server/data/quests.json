@@ -2,7 +2,9 @@
   "tutorial": {
     "name": "Welcome to Kaetram",
     "description": "Teaching you the very basics of Kaetram.|This tutorial will teach you how to move around, attack, interact with objects and use ranged weapons. Follow the arrows and talk to the NPCs if you are stuck.",
-    "rewards": ["Knowledge of the game :)"],
+    "rewards": [
+      "Knowledge of the game :)"
+    ],
     "stages": {
       "0": {
         "task": "talk",
@@ -11,15 +13,17 @@
           "Hello there bud, I am the programmer of this world.",
           "Like most MMORPGs, this is a tutorial. You must complete it unfortunately.",
           "Do not worry, I coded it to be pretty short.",
-          "Go through those doors over there to proceed."],
-        "completedText": ["Why don't you just walk through that door over there eh?"],
+          "Go through those doors over there to proceed."
+        ],
+        "completedText": [
+          "Why don't you just walk through that door over there eh?"
+        ],
         "pointer": {
           "type": 0,
           "x": 584,
           "y": 9
         }
       },
-
       "1": {
         "task": "door",
         "pointer": {
@@ -28,7 +32,6 @@
           "y": 11
         }
       },
-
       "2": {
         "task": "talk",
         "npc": "guard",
@@ -42,7 +45,10 @@
           "But regardless, I won't ask you to kill stuff just yet.",
           "Take this axe and cut down 2 trees for me."
         ],
-        "completedText": ["What are you waiting for?", "Go cut me some trees."],
+        "completedText": [
+          "What are you waiting for?",
+          "Go cut me some trees."
+        ],
         "itemKey": "bronzeaxe",
         "popup": {
           "title": "Item acquired!",
@@ -55,13 +61,11 @@
           "y": 43
         }
       },
-
       "3": {
         "task": "tree",
         "tree": "tutorialsnowoak",
         "treeCount": 2
       },
-
       "4": {
         "task": "talk",
         "npc": "guard",
@@ -70,14 +74,14 @@
         ],
         "completedText": [
           "I'm not sure what you're waiting for...",
-          "head on over to the cave below!"],
+          "head on over to the cave below!"
+        ],
         "pointer": {
           "type": 0,
           "x": 570,
           "y": 43
         }
       },
-
       "5": {
         "task": "door",
         "pointer": {
@@ -86,36 +90,39 @@
           "y": 53
         }
       },
-
       "6": {
         "task": "talk",
         "npc": "guard",
         "text": [
-          "Soldier! We have a crab infestation!", 
+          "Soldier! We have a crab infestation!",
           "How did crabs make their way into a",
           "volcanic cave under a snowy field?",
           "You're not here to ask questions soldier!",
-          "Use the axe I just gave you to cut down 5 crabs!"],
-        "completedText": ["No more chit chatter, go slice me some crabs!"],
+          "Use the axe I just gave you to cut down 5 crabs!"
+        ],
+        "completedText": [
+          "No more chit chatter, go slice me some crabs!"
+        ],
         "pointer": {
           "type": 0,
           "x": 544,
           "y": 15
         }
       },
-
       "7": {
         "task": "kill",
-        "mob": ["crab"],
+        "mob": [
+          "crab"
+        ],
         "mobCountRequirement": 5
       },
-
       "8": {
         "task": "talk",
         "npc": "guard",
         "text": [
           "Phew, that was a close one. Those crabs can sure do some damage.",
-          "Head on over through that portal for the next part of your training!"],
+          "Head on over through that portal for the next part of your training!"
+        ],
         "completedText": [
           "Well don't just sit there, go through the portal!"
         ],
@@ -125,7 +132,6 @@
           "y": 15
         }
       },
-
       "9": {
         "task": "door",
         "pointer": {
@@ -134,7 +140,6 @@
           "y": 13
         }
       },
-
       "10": {
         "task": "talk",
         "npc": "sorcerer",
@@ -145,8 +150,12 @@
           "I'm actually going to need you to uhm...",
           "filter out the population.",
           "Take this bow and shoot 5 of them for me!",
-          "Don't worry, in this magical land, you don't need arrows!"],
-        "completedText": ["Don't be afraid young one, they'll grow back very quickly!", "Kill 5 rats for me please!"],
+          "Don't worry, in this magical land, you don't need arrows!"
+        ],
+        "completedText": [
+          "Don't be afraid young one, they'll grow back very quickly!",
+          "Kill 5 rats for me please!"
+        ],
         "itemKey": "woodenbow",
         "popup": {
           "title": "Item acquired!",
@@ -159,28 +168,30 @@
           "y": 37
         }
       },
-
       "11": {
         "task": "kill",
-        "mob": ["rat"],
+        "mob": [
+          "rat"
+        ],
         "mobCountRequirement": 5
       },
-
       "12": {
         "task": "npc",
         "npc": "sorcerer",
         "text": [
           "Thank you so much young one!",
           "Rat population tends to get out of control quickly if left unchecked.",
-          "Regardless, you are now free to exit through the portal over there!"],
-        "completedText": ["Thank you again adventurer! You're free to exit anytime!"],
+          "Regardless, you are now free to exit through the portal over there!"
+        ],
+        "completedText": [
+          "Thank you again adventurer! You're free to exit anytime!"
+        ],
         "pointer": {
           "type": 0,
           "x": 520,
           "y": 37
         }
       },
-
       "13": {
         "task": "door",
         "pointer": {
@@ -191,11 +202,13 @@
       }
     }
   },
-
   "foresting": {
     "name": "Foresting",
     "description": "Help the forester with foresting stuff.|The forester needs your help with foresting-related things such as trees and axes and stuff like that. I don't know I'm just a quest description stop asking me questions.",
-    "rewards": ["A Rusted Axe", "Access to Forester's store"],
+    "rewards": [
+      "A Rusted Axe",
+      "Access to Forester's store"
+    ],
     "stages": {
       "0": {
         "task": "talk",
@@ -213,7 +226,6 @@
           "That's all I ask from you!"
         ]
       },
-
       "1": {
         "task": "talk",
         "npc": "villager",
@@ -222,11 +234,16 @@
           "These logs seem to have too many imperfections in them",
           "Would you be so kind as to bring me another 10?"
         ],
-        "completedText": ["Please adventurer, I beg of you, just 10 more logs."],
-        "itemRequirement": ["logs"],
-        "itemRequirementCount": [10]
+        "completedText": [
+          "Please adventurer, I beg of you, just 10 more logs."
+        ],
+        "itemRequirement": [
+          "logs"
+        ],
+        "itemRequirementCount": [
+          10
+        ]
       },
-
       "2": {
         "task": "talk",
         "npc": "villager",
@@ -234,8 +251,12 @@
           "Ah yes, you see, these logs are suitable for my needs.",
           "Thank you so much dear adventurer. Please take this reward!"
         ],
-        "itemRequirement": ["logs"],
-        "itemRequirementCount": [10],
+        "itemRequirement": [
+          "logs"
+        ],
+        "itemRequirementCount": [
+          10
+        ],
         "itemKey": "rustedaxe",
         "popup": {
           "title": "Quest completed!",
@@ -245,11 +266,12 @@
       }
     }
   },
-
   "scavenger": {
     "name": "Scavenger",
     "description": "The local village girl needs your help to get out of her responsibilities.|Quick, there is a village girl who does not want to fulfill her duties towards her grandmother and you must go help her immediately. I think this quest involves scavenging for ingredients and stuff but I'm not particularly sure.",
-    "rewards": ["Nothing in particular, but it'll be fun!"],
+    "rewards": [
+      "Nothing in particular, but it'll be fun!"
+    ],
     "stages": {
       "0": {
         "task": "talk",
@@ -291,8 +313,16 @@
           "Unlike that granddaughter of mine.",
           "Here, take this gold as a reward for your troubles."
         ],
-        "itemRequirement": ["tomato", "strawberry", "string"],
-        "itemRequirementCount": [2, 2, 1],
+        "itemRequirement": [
+          "tomato",
+          "strawberry",
+          "string"
+        ],
+        "itemRequirementCount": [
+          2,
+          2,
+          1
+        ],
         "itemKey": "gold",
         "itemCount": 7500,
         "popup": {
@@ -303,11 +333,13 @@
       }
     }
   },
-
   "minersquest": {
     "name": "Miner's Quest",
     "description": "The miner needs your help with acuqiring ore.|A miner is in need of your immediate assistance. Instead of going out and looking for ore by himself, he wants to harass random adventurers to do his job for him. You can find him pretending to mine where the desert meets the volcano.",
-    "rewards": ["Access to Miner's store", "2000 Mining experience"],
+    "rewards": [
+      "Access to Miner's store",
+      "2000 Mining experience"
+    ],
     "stages": {
       "0": {
         "task": "talk",
@@ -317,11 +349,14 @@
           "I'm supposed to be mining, but I really don't feel like it.",
           "Please you must help me before my supervisor finds out.",
           "I need to collect 15 nisoc ores by the end of the day or else",
-          "I'm going to be fired!", "Bring me 15 of those ores and I'll",
-          "give you access to my store!"],
+          "I'm going to be fired!",
+          "Bring me 15 of those ores and I'll",
+          "give you access to my store!"
+        ],
         "completedText": [
           "Please hurry, the time is ticking!",
-          "Bring me 15 nisoc ores."]
+          "Bring me 15 nisoc ores."
+        ]
       },
       "1": {
         "task": "talk",
@@ -332,8 +367,12 @@
           "Come back any time and I'll buy your ores at a better price",
           "than any other store!"
         ],
-        "itemRequirement": ["nisocore"],
-        "itemRequirementCount": [15],
+        "itemRequirement": [
+          "nisocore"
+        ],
+        "itemRequirementCount": [
+          15
+        ],
         "skill": "mining",
         "experience": 2000,
         "popup": {
@@ -344,13 +383,18 @@
       }
     }
   },
-
   "minersquest2": {
     "name": "Miner's Quest II",
     "description": "The miner is at it again, this time he doesn't just need ores.|The miner requires your help once again, this time his sketch creations include bars of metals and stuff like that. You should probably go see what he's up to and whatnot.",
-    "rewards": ["Access to the mining cave"],
-    "skillRequirements": {"mining": 30},
-    "questRequirements": ["minersquest"],
+    "rewards": [
+      "Access to the mining cave"
+    ],
+    "skillRequirements": {
+      "mining": 30
+    },
+    "questRequirements": [
+      "minersquest"
+    ],
     "stages": {
       "0": {
         "task": "talk",
@@ -368,9 +412,9 @@
         ],
         "completedText": [
           "Please hurry, the time is ticking!",
-          "Bring me 5 tin bars and 5 copper bars."]
+          "Bring me 5 tin bars and 5 copper bars."
+        ]
       },
-
       "1": {
         "task": "talk",
         "npc": "miner",
@@ -380,11 +424,17 @@
         ],
         "completedText": [
           "Please hurry, the time is ticking!",
-          "Bring me 5 bronze bars."],
-        "itemRequirement": ["tinbar", "copperbar"],
-        "itemRequirementCount": [5, 5]
+          "Bring me 5 bronze bars."
+        ],
+        "itemRequirement": [
+          "tinbar",
+          "copperbar"
+        ],
+        "itemRequirementCount": [
+          5,
+          5
+        ]
       },
-
       "2": {
         "task": "talk",
         "npc": "miner",
@@ -394,8 +444,12 @@
           "the future for redundant tasks like these.",
           "Thank you for your help, I guess you can use my cave now."
         ],
-        "itemRequirement": ["bronzebar"],
-        "itemRequirementCount": [5],
+        "itemRequirement": [
+          "bronzebar"
+        ],
+        "itemRequirementCount": [
+          5
+        ],
         "popup": {
           "title": "Quest completed!",
           "text": "@green@You have just finished @crimson@Miner's Quest II@green@. You've been awarded @crimson@Access to the mining cave@green@!",
@@ -404,11 +458,13 @@
       }
     }
   },
-
   "sorcery": {
     "name": "Sorcery and Stuff",
     "description": "Learn the basics to sorcery|The sorcerer needs your help to re-assemble a long-lost magic staff that he lost on the beach. Help him out and perhaps he may teach you a thing or two about sorcery and stuff.",
-    "rewards": ["A Magic Staff", "Access to Sorcerer's store"],
+    "rewards": [
+      "A Magic Staff",
+      "Access to Sorcerer's store"
+    ],
     "stages": {
       "0": {
         "task": "talk",
@@ -420,7 +476,8 @@
           "when all of the sudden I lost my entire magic contrband!",
           "I can't run a business if I don't have my equipment.",
           "Tell you what, if you bring me back 3 magic beads, I'll",
-          "grant you access to my shop!", "You'll be taught how to",
+          "grant you access to my shop!",
+          "You'll be taught how to",
           "craft your own magic staffs!"
         ],
         "completedText": [
@@ -429,15 +486,18 @@
           "and then retreated in a cave west of here."
         ]
       },
-
       "1": {
         "task": "talk",
         "npc": "sorcerer",
         "hasItemText": [
           "Perfect, just perfect. These will surely be great."
         ],
-        "itemRequirement": ["bead"],
-        "itemRequirementCount": [3],
+        "itemRequirement": [
+          "bead"
+        ],
+        "itemRequirementCount": [
+          3
+        ],
         "itemKey": "staff",
         "popup": {
           "title": "Quest completed!",
@@ -447,12 +507,15 @@
       }
     }
   },
-
   "desertquest": {
     "name": "Desert Quest",
     "description": "Help the dying adventurer send a letter to his wife.|The adventurer is dying and is in dire need of your help with super important matters prior to his death. You can find him in the desert.",
-    "rewards": ["Secret Reward"],
-    "hideNPCs": { "lavanpc": "after" },
+    "rewards": [
+      "Secret Reward"
+    ],
+    "hideNPCs": {
+      "lavanpc": "after"
+    },
     "stages": {
       "0": {
         "task": "talk",
@@ -471,7 +534,6 @@
         ],
         "itemKey": "cd"
       },
-
       "1": {
         "task": "talk",
         "npc": "villagegirl",
@@ -492,9 +554,10 @@
         "completedText": [
           "Go on now, tell him."
         ],
-        "itemRequirement": ["cd"]
+        "itemRequirement": [
+          "cd"
+        ]
       },
-
       "2": {
         "task": "talk",
         "npc": "lavanpc",
@@ -514,54 +577,54 @@
       }
     }
   },
-
   "seaactivities": {
     "name": "Sea Activities",
     "description": "A mysterious being needs your help under the sea.|Venture under the sea by unlocking a secret entrance on the beach and talk to a fishy being about some underwater sea activities. If I remember correctly he may need your help with something.",
-    "rewards": ["1000 gold"],
+    "rewards": [
+      "1000 gold"
+    ],
     "stages": {
       "0": {
         "task": "talk",
         "npc": "sponge",
         "text": [
-          "HELP ME PLEASE!", "THE EVIL SEA CUCUMBER STOLE MY MONEY",
-          "I SWEAR!", "PLEASE HE WENT SOMEWHERE SOUTH OF HERE",
+          "HELP ME PLEASE!",
+          "THE EVIL SEA CUCUMBER STOLE MY MONEY",
+          "I SWEAR!",
+          "PLEASE HE WENT SOMEWHERE SOUTH OF HERE",
           "FIND HIM PLEASE AND GET MY MONEY BACK!"
         ],
-
         "completedText": [
           "FIND THE SEA CUCUMBER PLEASE!"
         ]
       },
-
       "1": {
         "task": "talk",
         "npc": "picklenpc",
         "text": [
-          "Wait why are you here in my house?", "Is it about that stupid sponge?",
+          "Wait why are you here in my house?",
+          "Is it about that stupid sponge?",
           "Listen man, I only took his money because he owed me",
-          "a lot of money for the last 10 years.", "I'm not giving it back.",
+          "a lot of money for the last 10 years.",
+          "I'm not giving it back.",
           "Now get out of my house."
         ],
-
         "completedText": [
           "I said I'm not giving it back, now beat it."
         ]
       },
-
       "2": {
         "task": "talk",
         "npc": "sponge",
         "text": [
-          "Did you get my money back?", "He doesn't want to give it back?",
+          "Did you get my money back?",
+          "He doesn't want to give it back?",
           "Tell that stupid cucumber to give it back or else!"
         ],
-
         "completedText": [
           "Go tell him to give me my money back!"
         ]
       },
-
       "3": {
         "task": "talk",
         "npc": "picklenpc",
@@ -570,18 +633,17 @@
           "if you don't want to do that, then I'll have to fight you.",
           "I'll meet you in my personal arena then."
         ],
-
         "completedText": [
           "Go through the door and fight me fair and square!"
         ]
       },
-
       "4": {
         "task": "kill",
-        "mob": ["picklemob"],
+        "mob": [
+          "picklemob"
+        ],
         "mobCountRequirement": 1
       },
-
       "5": {
         "task": "talk",
         "npc": "picklenpc",
@@ -596,7 +658,6 @@
           "colour": "#33cc33"
         }
       },
-
       "6": {
         "task": "talk",
         "npc": "sponge",
@@ -604,7 +665,9 @@
           "Thank you adventurer! With this gold I can finally buy a new house!",
           "Just you look at me, Mr. Sponge, homeowner!"
         ],
-        "itemRequirement": ["gold"],
+        "itemRequirement": [
+          "gold"
+        ],
         "itemKey": "gold",
         "itemCount": 10000,
         "popup": {
@@ -615,12 +678,17 @@
       }
     }
   },
-
   "royaldrama": {
     "name": "Royal Drama",
     "description": "The king of Kaetram is in need of your help.|The king of Kaetram is missing and no one knows about his whereabouts. Perhaps you should go speak to the guards and see what they might not know about him.",
-    "rewards": ["Access to the castle"],
-    "hideNPCs": { "king": "before", "king2": "after", "royalguard2": "after" },
+    "rewards": [
+      "Access to the castle"
+    ],
+    "hideNPCs": {
+      "king": "before",
+      "king2": "after",
+      "royalguard2": "after"
+    },
     "stages": {
       "0": {
         "task": "talk",
@@ -628,7 +696,8 @@
         "text": [
           "Sir, please, you must help us.",
           "We were moving the king around to this new and improved castle",
-          "and then we lost him.", "We were walking over the local sewers",
+          "and then we lost him.",
+          "We were walking over the local sewers",
           "and I think he may have fallen off into the sewers.",
           "We didn't notice until we got here, honest to god!",
           "You should try searching the sewers and see if you can find any clues."
@@ -638,12 +707,12 @@
           "Look into the sewers and see if you can find any clues."
         ]
       },
-
       "1": {
         "task": "talk",
         "npc": "ratnpc",
         "text": [
-          "No please don't hit me.", "Listen I'll tell you everything I know about the king.",
+          "No please don't hit me.",
+          "Listen I'll tell you everything I know about the king.",
           "I saw him fall into the sewers, and he went into one of these pipes.",
           "I know there should be a way to get deeper into the sewers from here.",
           "That's all I know I swear!"
@@ -653,7 +722,6 @@
           "Just look deeper into the sewer."
         ]
       },
-
       "2": {
         "task": "talk",
         "npc": "king2",
@@ -663,10 +731,8 @@
           "I will reward you greatly for your help.",
           "Now I have to go back to the castle and get my affairs in order."
         ],
-
         "itemKey": "gold",
         "itemCount": 10000,
-
         "popup": {
           "title": "Quest completed!",
           "text": "@green@You have just finished @crimson@Royal Drama@green@. You have gained 10000 gold!",
@@ -675,11 +741,123 @@
       }
     }
   },
-
+  "royalpet": {
+    "name": "Royal Pet",
+    "description": "The king needs your help with distributing the good news to the people of Kaetram.|The king has asked you personally, yes, you, to run a couple errands for him. You must deliver some stuff and whatnot. Actually why don't you go talk to him instead of reading this description and spoiling the surprise. By surprise I mean you have to run around the place doing stupid stuff, but whatever, who cares, that's why you signed up on this game didn't you. Or was it because you wanted to grind but your addiction to being a completionist leads you to complete these useless quests. Oh well, this description is long enough.",
+    "rewards": [
+      "A cute little pet kitty"
+    ],
+    "stages": {
+      "0": {
+        "task": "talk",
+        "npc": "king2",
+        "text": [
+          "Hello fellow idiot, I mean adventurer.",
+          "I must distribute the good news to the residents of Kaetram",
+          "I have all these books that I must hand out. Would you be so kind",
+          "as to deliver these to some of Kaetram's residents.",
+          "There should be a couple located throughout the city and in the swamp."
+        ],
+        "completedText": [
+          "Please deliver the books to residents of Kaetram. They're located",
+          "throughout the city and in the swamp."
+        ],
+        "itemKey": "book",
+        "itemCount": 3
+      },
+      "1": {
+        "task": "talk",
+        "subStages": [
+          {
+            "task": "talk",
+            "npc": "shepherdboy",
+            "text": [
+              "Oh hello there adventurer!"
+            ],
+            "hasItemText": [
+              "Hello there adventurer!",
+              "Oh, you have a book from the king?",
+              "Is he hiring random people to hand out pamphlets again?",
+              "Oh well, I'll take it I guess."
+            ],
+            "completedText": [
+              "Thank you for the book I guess."
+            ],
+            "itemRequirement": [
+              "book"
+            ],
+            "itemRequirementCount": [
+              1
+            ]
+          },
+          {
+            "task": "talk",
+            "npc": "redbikinigirlnpc",
+            "text": [
+              "Oh hello!"
+            ],
+            "hasItemText": [
+              "Oh, hello there, what are you doing here?",
+              "Oh, you have more propagan- I mean, news from the king?",
+              "Okay well thank you I guess..."
+            ],
+            "completedText": [
+              "Oh hello adventurer."
+            ],
+            "itemRequirement": [
+              "book"
+            ],
+            "itemRequirementCount": [
+              1
+            ]
+          },
+          {
+            "task": "talk",
+            "npc": "fisherman",
+            "text": [
+              "Oh hello there adventurer!"
+            ],
+            "hasItemText": [
+              "Oh, hello there, what are you doing here?",
+              "Oh, you have more propagan- I mean, news from the king?",
+              "Okay well thank you I guess..."
+            ],
+            "completedText": [
+              "Oh hello adventurer."
+            ],
+            "itemRequirement": [
+              "book"
+            ],
+            "itemRequirementCount": [
+              1
+            ]
+          }
+        ]
+      },
+      "2": {
+        "task": "talk",
+        "npc": "king2",
+        "text": [
+          "Thank you for delivering the books adventurer.",
+          "I have a special reward for you.",
+          "I have this cute little kitty that I want to give to you.",
+          "I hope you enjoy it."
+        ],
+        "itemKey": "catpet",
+        "popup": {
+          "title": "Quest completed!",
+          "text": "@green@You have just finished @crimson@Royal Pet@green@. You have gained a cute little pet kitty!",
+          "colour": "#33cc33"
+        }
+      }
+    }
+  },
   "artsandcrafts": {
     "name": "Arts and Crafts",
     "description": "Help the old lady on the great mountai with her crafts.|The old lady on the great mountain is very cold and needs a brave adventurer to run errands for her. In exchange you will be taught how to start crafting items.",
-    "rewards": ["Access to crafting benches"],
+    "rewards": [
+      "Access to crafting benches"
+    ],
     "stages": {
       "0": {
         "task": "talk",
@@ -693,12 +871,10 @@
           "Secondly I will need some beryl, you can find it in various caves.",
           "You can use the crafting table to make a Beryl Pendant."
         ],
-
         "completedText": [
           "Bring me some string and some beryl gemstone and use it to make a pendant."
         ]
       },
-
       "1": {
         "task": "talk",
         "npc": "iamverycoldnpc",
@@ -709,10 +885,10 @@
         "completedText": [
           "Fletch me a small bowl and bring it to me."
         ],
-
-        "itemRequirement": ["berylpendant"]
+        "itemRequirement": [
+          "berylpendant"
+        ]
       },
-
       "2": {
         "task": "talk",
         "npc": "iamverycoldnpc",
@@ -724,19 +900,20 @@
         "completedText": [
           "Try making a stew using a bowl, a tomato, and the cauldron."
         ],
-
-        "itemRequirement": ["bowlsmall"],
+        "itemRequirement": [
+          "bowlsmall"
+        ],
         "itemKey": "tomato"
       },
-
       "3": {
         "task": "talk",
         "npc": "iamverycoldnpc",
         "hasItemText": [
           "Wonderful, see, you're getting the hang of it."
         ],
-
-        "itemRequirement": ["stew"],
+        "itemRequirement": [
+          "stew"
+        ],
         "popup": {
           "title": "Quest completed!",
           "text": "@green@You have just finished @crimson@Arts and Craft@green@ quest.",
@@ -745,11 +922,13 @@
       }
     }
   },
-
   "ancientlands": {
     "name": "Ancient Lands",
     "description": "Discover the lands that lie beyond the great mountains.|A very spooky monument lies hidden in a peculiar icy place. You can find it by exploring the caves in the swamp lands. They may or may not be guarded by some ice golems or something, but you didn't hear that from me, I wouldn't possibly want to spoil anything for you.",
-    "rewards": ["Snow potion", "Access to the mountains beyond"],
+    "rewards": [
+      "Snow potion",
+      "Access to the mountains beyond"
+    ],
     "stages": {
       "0": {
         "task": "talk",
@@ -765,12 +944,10 @@
           "In exchange, I will grant you access to the ancient lands.",
           "As well as knowledge of the snow potions, necessary for your survival beyond."
         ],
-
         "completedText": [
           "Find the ancient ice sword!"
         ]
       },
-
       "1": {
         "task": "talk",
         "npc": "ancientmanumentnpc",
@@ -779,7 +956,9 @@
           "I see, you have proven yourself worthy.",
           "Take this knowledge of the snow potions, and the path shall be yours."
         ],
-        "itemRequirement": ["icesword"],
+        "itemRequirement": [
+          "icesword"
+        ],
         "itemKey": "snowpotion",
         "popup": {
           "title": "Quest completed!",
@@ -789,11 +968,12 @@
       }
     }
   },
-
   "evilsanta": {
     "name": "Evil Santa",
     "description": "The young sherpa on the mountain needs your help!|Okay so here's what's happening. You know how Santa is supposed to be nice and bring you presents? Well this one throws them in your face, so he must be stopped before he goes on one of his yearly rampages again!",
-    "rewards": ["Access to the ice world!"],
+    "rewards": [
+      "Access to the ice world!"
+    ],
     "stages": {
       "0": {
         "task": "talk",
@@ -823,7 +1003,6 @@
           "No, please, don't try to fight Santa, he's too strong!",
           "But if you really insist you must first obtain a key..."
         ],
-
         "completedText": [
           "If you really feel you can take him on, the only way",
           "is by obtaining the magical key that lets you in his chamber."
@@ -840,7 +1019,6 @@
           "However I think there is a less dangerous way to get the key.",
           "Perhaps it's worth checking out the underground factory?"
         ],
-
         "completedText": [
           "Try finding a key in the underground factory.",
           "If you manage, defeat the evil Santa and save the world!"
@@ -848,7 +1026,9 @@
       },
       "3": {
         "task": "kill",
-        "mob": ["santa"],
+        "mob": [
+          "santa"
+        ],
         "mobCountRequirement": 1
       },
       "4": {
@@ -867,12 +1047,12 @@
       }
     }
   },
-
   "clamchowder": {
     "name": "Clam Chowder",
     "description": "Some human being needs your help in the ice world.|Someone, somewhere, I can't say where because I'm spoiling what's upcoming in this game needs your help to make some clam chowder. You know, I feel like I'm spoiling it already by telling you what the quest requires but knowing how these quests are setup should tell you that it may not just be about clam chowder.",
-    "reward": ["Nothing in particular"],
-
+    "reward": [
+      "Nothing in particular"
+    ],
     "stages": {
       "0": {
         "task": "talk",
@@ -880,14 +1060,14 @@
         "text": [
           "Oh hello, you look particularly capable of running some errands.",
           "You see, I was trying to cook some clam chowder but I'm missing the ingredients",
-          "primarily the clam meat.", "Could you defeat some clams and bring me some meat?",
+          "primarily the clam meat.",
+          "Could you defeat some clams and bring me some meat?",
           "Lets say 5 of them?"
         ],
         "completedText": [
           "Please bring me 5 clam meat."
         ]
       },
-
       "1": {
         "task": "talk",
         "npc": "bluebikinigirlnpc",
@@ -897,20 +1077,22 @@
           "So you've probably heard this before but I'm too lazy",
           "to come up with a better lie.",
           "Okay, so my grandmother is very sick and I need you",
-          "to find out where she is.", "I was supposed to take care",
+          "to find out where she is.",
+          "I was supposed to take care",
           "of her but I really wanted to go to the ice beach.",
           "I know one of the villagers might've seen her recently."
         ],
-
         "completedText": [
           "Please find out where my grandmother is.",
           "If you ask some of the villagers you might find some information."
         ],
-
-        "itemRequirement": ["clamobject"],
-        "itemRequirementCount": [5]
+        "itemRequirement": [
+          "clamobject"
+        ],
+        "itemRequirementCount": [
+          5
+        ]
       },
-      
       "2": {
         "task": "talk",
         "npc": "doctor",
@@ -922,12 +1104,10 @@
           "Regardless, I can tell you where she was last seen",
           "if you bring me 2 clam chowders."
         ],
-
         "completedText": [
           "Please bring me 2 clam chowders and I'll tell you what I know."
         ]
       },
-
       "3": {
         "task": "talk",
         "npc": "doctor",
@@ -938,15 +1118,16 @@
           "into the ice forest in one of the caves trying to find mushrooms.",
           "It's probably your best bet to check out the caves nearby."
         ],
-
         "completedText": [
           "You should probably check out the caves nearby."
         ],
-
-        "itemRequirement": ["clamchowder"],
-        "itemRequirementCount": [2]
+        "itemRequirement": [
+          "clamchowder"
+        ],
+        "itemRequirementCount": [
+          2
+        ]
       },
-
       "4": {
         "task": "talk",
         "npc": "oldlady2",
@@ -958,13 +1139,11 @@
           "That granddaughter of mine doesn't care about me.",
           "Why is it such a recurring theme in this game?"
         ],
-
         "completedText": [
           "I might sorta possibly potentially move if you bring me",
           "2 hot bowls of clam chowder."
         ]
       },
-
       "5": {
         "task": "talk",
         "npc": "oldlady2",
@@ -973,15 +1152,16 @@
           "I guess I'll get out of here.",
           "Tell that granddaughter of mine that I am very hurt."
         ],
-
         "completedText": [
           "Tell that granddaughter of mine that I am very hurt."
         ],
-
-        "itemRequirement": ["clamchowder"],
-        "itemRequirementCount": [2]
+        "itemRequirement": [
+          "clamchowder"
+        ],
+        "itemRequirementCount": [
+          2
+        ]
       },
-
       "6": {
         "task": "talk",
         "npc": "bluebikinigirlnpc",
@@ -990,10 +1170,8 @@
           "Oh you even found her? That's... great!",
           "Here is a small reward for your troubles."
         ],
-
         "itemKey": "gold",
         "itemAmount": 7500,
-        
         "popup": {
           "title": "Quest completed!",
           "text": "@green@You have just finished @crimson@Clam Chowder@green@ quest.",

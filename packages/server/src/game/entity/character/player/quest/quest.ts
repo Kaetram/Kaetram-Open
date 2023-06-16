@@ -1,10 +1,12 @@
 import Item from '../../../objects/item';
-import Quests from '../../../../../../data/quests.json';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 
+import type Player from '../player';
+import type Mob from '../../mob/mob';
+import type NPC from '../../../npc/npc';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PointerData } from '@kaetram/common/types/pointer';
 import type { PopupData } from '@kaetram/common/types/popup';
@@ -15,9 +17,6 @@ import type {
     StageData,
     HideNPC
 } from '@kaetram/common/types/quest';
-import type NPC from '../../../npc/npc';
-import type Mob from '../../mob/mob';
-import type Player from '../player';
 
 type ProgressCallback = (key: string, stage: number, subStage: number) => void;
 type PointerCallback = (pointer: PointerData) => void;
@@ -27,6 +26,7 @@ type TalkCallback = (npc: NPC, player: Player) => void;
 type DoorCallback = (quest: ProcessedDoor, player: Player) => void;
 type KillCallback = (mob: Mob) => void;
 type ResourceCallback = (type: Modules.Skills, resourceType: string) => void;
+
 export default abstract class Quest {
     /**
      * An abstract quest class that takes the raw quest data and
@@ -38,16 +38,22 @@ export default abstract class Quest {
     private rewards: string[] = [];
     private skillRequirements: { [key: string]: number } = {};
     private questRequirements: string[] = []; // List of quests required to start this quest.
+    private difficulty = ''; // Difficulty of the quest.
     private hideNPCs: HideNPC = {}; // NPCs to hide after quest.
+    private completedSubStages: string[] = []; // The substages that the player has completed, used for cases such as talking to an NPC.
     protected stage = 0; // How far along in the quest we are.
-    private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats).
+    private subStage = 0; // Progress in the substage (say we're tasked to kill 20 rats, or talk to multiple NPCs).
     protected stageCount = 0; // How long the quest is.
+    private timer = 0; // Used by timer to indicate duration amount of stage.
+    private expiration = 0; // Used by timer to indicate expiration date.
 
     private stageData: StageData; // Current stage data, constantly updated when progression occurs.
     private stages: { [id: number]: RawStage } = {}; // All the stages from the JSON data.
 
     // Store all NPCs involved in the quest.
     private npcs: string[] = [];
+
+    private timerTimeout?: NodeJS.Timeout | undefined;
 
     private progressCallback?: ProgressCallback;
     private pointerCallback?: PointerCallback;
@@ -64,6 +70,7 @@ export default abstract class Quest {
         this.rewards = rawData.rewards || [];
         this.skillRequirements = rawData.skillRequirements || {};
         this.questRequirements = rawData.questRequirements || [];
+        this.difficulty = rawData.difficulty || '';
         this.hideNPCs = rawData.hideNPCs || {};
         this.stageCount = Object.keys(rawData.stages).length;
 
@@ -95,12 +102,18 @@ export default abstract class Quest {
      */
 
     private loadNPCs(): void {
-        // Iterate through the stages and extract the NPCs
-        for (let i in this.stages)
-            if (this.stages[i].npc && !this.hasNPC(this.stages[i].npc!))
-                this.npcs.push(this.stages[i].npc!);
+        // Iterate through the stages and extract the NPCs.
+        for (let stage of Object.values(this.stages)) {
+            // If the stage has sub-stages, iterate through those as well and extract the NPCs.
+            if (stage.subStages)
+                for (let subStage of stage.subStages)
+                    if (subStage.npc && !this.hasNPC(subStage.npc)) this.npcs.push(subStage.npc);
 
-        // Look through the hideNPCs object and extract the NPCs
+            // Add each NPC to the list if the stage has one and it is not already in the list.
+            if (stage.npc && !this.hasNPC(stage.npc)) this.npcs.push(stage.npc);
+        }
+
+        // Look through the hideNPCs object and extract the NPCs.
         for (let i in this.hideNPCs) if (!this.hasNPC(i)) this.npcs.push(i);
     }
 
@@ -118,15 +131,19 @@ export default abstract class Quest {
 
         if (!dialogue) return log.warning(`[${this.name}] No dialogue found for NPC: ${npc.key}.`);
 
+        // Attempt to check for substage component and use that information instead.
+        let subStageNPC = this.getSubStageByNPC(npc.key),
+            stageInfo = subStageNPC ?? this.stageData; // Use whichever stage data is present.
+
         /**
          * Ends the conversation. If the player has the required item in the inventory
          * it will check for that first. If the stage requires the player be given an item
          * it must be given before the conversation ends and quest progresses.
          */
-        if (this.stageData.npc === npc.key && dialogue.length === player.talkIndex)
+        if (stageInfo.npc === npc.key && dialogue.length === player.talkIndex)
             if (this.hasItemRequirement()) this.handleItemRequirement(player, this.stageData);
             else if (this.hasItemToGive()) {
-                if (this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount))
+                if (this.givePlayerItem(player, stageInfo.itemKey!, stageInfo.itemCount))
                     this.progress();
             } else if (this.hasAbility()) this.givePlayerAbility(player);
             else if (this.hasExperience()) this.givePlayerExperience(player);
@@ -167,6 +184,9 @@ export default abstract class Quest {
         if (!this.stageData.mob)
             return log.error(`[${this.name}] No mob data for stage: ${this.stage}.`);
 
+        // Stage progression has expired, so we don't progress.
+        if (this.timer && Date.now() - this.timer > this.expiration) return;
+
         // Substage progression when the mob killed matches the quest's list of mobs.
         if (this.stageData.mob.includes(mob.key)) this.progress(true);
 
@@ -202,14 +222,17 @@ export default abstract class Quest {
     }
 
     /**
-     * Checks the player's inventory and progresses if
-     * he contains enough of the required item.
+     * Checks the player's inventory for a particular item and its amount and takes it
+     * if the player fulfills the requirement. We also handle giving the player an item
+     * reward if the stage contains one, as well as an ability.
      * @param player The player we are checking inventory of.
+     * @param stageData The stage data we are checking against, or substage data if specified.
+     * @param subStage (Optional) Specified by subbstage progression (in case of multiple NPC requirements).
      */
 
     private handleItemRequirement(player: Player, stageData: StageData): void {
         // Extract the item key and count requirement.
-        let { itemRequirement, itemRequirementCount } = stageData;
+        let { itemRequirement, itemRequirementCount, npc } = stageData;
 
         // Skip if the player does not have the required item and count in the inventory.
         if (!this.hasAllItems(player, itemRequirement!, itemRequirementCount)) return;
@@ -227,7 +250,19 @@ export default abstract class Quest {
         // If the stage rewards an ability, we give it to the player.
         if (this.hasAbility()) this.givePlayerAbility(player);
 
-        this.progress();
+        /**
+         * A substage progression occurs if the current overall stage has a substage component
+         * and if the amount of completed NPCs is less than the amount of substages.
+         */
+        let isSubStage =
+            this.stageData.subStages &&
+            this.completedSubStages.length < this.stageData.subStages.length;
+
+        // Add the NPC to the completed list if it's not already there.
+        if (isSubStage && !this.completedSubStages.includes(npc!))
+            this.completedSubStages.push(npc!);
+
+        this.progress(isSubStage);
     }
 
     /**
@@ -235,6 +270,13 @@ export default abstract class Quest {
      */
 
     private progress(subStage?: boolean): void {
+        // Apply the expiration timer if it's present in the current stage.
+        if (this.stageData.timer) {
+            this.timer = this.stageData.timer;
+
+            this.expiration = Date.now() + this.stageData.timer;
+        }
+
         // Progress substage only if the parameter is defined.
         if (subStage) this.setStage(this.stage, this.subStage + 1);
         else this.setStage(this.stage + 1);
@@ -271,6 +313,15 @@ export default abstract class Quest {
         let skill = player.skills.get(Utils.getSkill(this.stageData.skill!)!);
 
         skill?.addExperience(this.stageData.experience!);
+    }
+
+    /**
+     * Clears the timer timeout upon progression to the next stage.
+     */
+
+    private clearTimer(): void {
+        clearTimeout(this.timerTimeout);
+        this.timerTimeout = undefined;
     }
 
     /**
@@ -423,6 +474,19 @@ export default abstract class Quest {
     }
 
     /**
+     * Attempts to grab a sub stage NPC if it exists. Sub stage NPCs are those
+     * that a player must talk to multiple (in any order) in order to progress.
+     * @param key The key of the NPC we are trying to grab.
+     * @returns A StageNPC object if it exists, undefined otherwise.
+     */
+
+    public getSubStageByNPC(key: string): RawStage | undefined {
+        if (!this.stageData.subStages) return undefined;
+
+        return this.stageData.subStages.find((subStage: RawStage) => subStage.npc === key);
+    }
+
+    /**
      * Returns a StageData object about the current stage. It contains information about
      * what NPC the player must interact with to progress, or how many mobs to kill to
      * progress.
@@ -434,20 +498,22 @@ export default abstract class Quest {
 
         return {
             task: stage.task,
-            npc: stage.npc! || '',
+            subStages: stage.subStages || [],
+            npc: stage.npc || '',
             mob: stage.mob! || '',
-            mobCountRequirement: stage.mobCountRequirement! || 0,
-            itemRequirement: stage.itemRequirement! || [],
-            itemRequirementCount: stage.itemRequirementCount! || [],
-            text: stage.text! || [''],
-            pointer: stage.pointer! || undefined,
-            popup: stage.popup! || undefined,
-            itemKey: stage.itemKey! || '',
-            itemCount: stage.itemCount! || 1,
-            tree: stage.tree! || '',
-            treeCount: stage.treeCount! || 0,
-            skill: stage.skill! || '',
-            experience: stage.experience! || 0
+            mobCountRequirement: stage.mobCountRequirement || 0,
+            itemRequirement: stage.itemRequirement || [],
+            itemRequirementCount: stage.itemRequirementCount || [],
+            text: stage.text || [''],
+            pointer: stage.pointer || undefined,
+            popup: stage.popup || undefined,
+            itemKey: stage.itemKey || '',
+            itemCount: stage.itemCount || 1,
+            tree: stage.tree || '',
+            treeCount: stage.treeCount || 0,
+            skill: stage.skill || '',
+            experience: stage.experience || 0,
+            timer: stage.timer || 0
         };
     }
 
@@ -469,10 +535,14 @@ export default abstract class Quest {
             // We do not count iterations of stages above stage we are currently on.
             if (this.stage < i) continue;
 
-            let stage = this.stages[i];
+            let stage = this.stages[i],
+                subStage = this.getSubStageByNPC(npc.key);
 
             // If no key is found, continue iterating.
-            if (stage.npc! !== npc.key) continue;
+            if (stage.npc! !== npc.key && !subStage) continue;
+
+            // Substitute the sub stage information into the stage and use that to process the dialogue.
+            if (subStage) stage = subStage;
 
             // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
             if (stage.itemRequirement! && this.stage === i) {
@@ -483,6 +553,14 @@ export default abstract class Quest {
                 // Skip to next stage iteration.
                 continue;
             }
+
+            /**
+             * If we are dealing with substages, then we want to return the completed
+             * text for the particular substage if it has been completed.
+             */
+
+            if (subStage && this.completedSubStages.includes(subStage.npc!))
+                return stage.completedText!;
 
             /**
              * If the stage we are currently on is not the same as the most
@@ -516,20 +594,53 @@ export default abstract class Quest {
         // Clear pointer preemptively if the current stage data contains it.
         if (this.stageData.pointer) this.pointerCallback?.(Modules.EmptyPointer);
 
+        // Clear the timer timeout.
+        this.clearTimer();
+
         this.stage = stage;
         this.subStage = subStage;
 
-        // Progression to a new stage.
-        if (isProgress && progressCallback)
+        /**
+         * Progression to a new stage occurs when the stage we are setting is different
+         * from the stage we are currently on. Unless we are explicitly avoiding
+         * progression callbacks, we make one.
+         */
+
+        if (isProgress && progressCallback) {
+            // Clear the completed substages.
+            this.completedSubStages = [];
+
+            // Callback so that we send information to the player.
             this.progressCallback?.(this.key, stage, this.stageCount);
+        }
 
         if (this.isFinished()) return;
 
         // Update the latest stage data.
         this.stageData = this.getStageData();
 
+        // Handle loading a stage that has a timer
+        if (this.stageData.timer)
+            if (progressCallback) {
+                this.timer = this.stageData.timer;
+                this.expiration = Date.now() + this.timer;
+
+                // Create a timeout to roll back the stage if the timer expires without progression.
+                this.timerTimeout = setTimeout(() => this.setStage(stage - 1), this.timer);
+            } else this.setStage(stage - 1);
+
         // Check if the current stage has any pointer information.
         if (this.stageData.pointer) this.pointerCallback?.(this.stageData.pointer);
+    }
+
+    /**
+     * Updates the quest's completed substages. These are the keys of the substages
+     * that the player has completed. We use this function when we load the information
+     * from the database.
+     */
+
+    public setCompletedSubStages(subStages: string[]): void {
+        this.completedSubStages = subStages;
     }
 
     /**
@@ -542,7 +653,8 @@ export default abstract class Quest {
         let data: QuestData = {
             key: this.key,
             stage: this.stage,
-            subStage: this.subStage
+            subStage: this.subStage,
+            completedSubStages: this.completedSubStages
         };
 
         if (batch) {
@@ -551,6 +663,7 @@ export default abstract class Quest {
             data.rewards = this.rewards;
             data.skillRequirements = this.skillRequirements;
             data.questRequirements = this.questRequirements;
+            data.difficulty = this.difficulty;
             data.stageCount = this.stageCount;
         }
 
