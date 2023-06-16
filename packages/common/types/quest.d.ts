@@ -1,11 +1,11 @@
 import type { PointerData } from './pointer';
 import type { PopupData } from './popup';
 
-export type Actor = 'player' | 'npc';
-
 export interface RawStage {
     task: string;
     npc?: string;
+
+    subStages?: RawStage[];
 
     /** Array of mob keys to kill. */
     mob?: string[];
@@ -45,21 +45,26 @@ export interface RawStage {
     /** Skill experience rewards */
     skill?: string;
     experience?: number;
+
+    /** Timer information for the stage */
+    timer?: number;
 }
 
 export interface RawQuest {
     name: string;
     description: string;
     rewards?: string[];
+    difficulty?: string;
     skillRequirements?: { [key: string]: number }; // Skills required to start the quest.
     questRequirements?: string[]; // Quests required to start this quest.
-    hideNPCs?: HideNPC; // NPCs to hide after quest.-
+    hideNPCs?: HideNPC; // NPCs to hide after quest.
     stages: { [id: number]: RawStage };
 }
 
 export interface StageData {
     task: string;
     npc?: string;
+    subStages?: SubStage[];
     mob?: string[];
     mobCountRequirement: number; // how many mobs we need to kill to progress
     itemRequirement?: string[];
@@ -76,18 +81,21 @@ export interface StageData {
     treeCount?: number;
     skill?: string;
     experience?: number;
+    timer?: number;
 }
 
 export interface QuestData {
     key: string;
     stage: number;
     subStage: number;
+    completedSubStages: string[];
 
     name?: string;
     description?: string;
     skillRequirements?: { [key: string]: number };
     questRequirements?: string[];
     rewards?: string[];
+    difficulty?: string;
     stageCount?: number;
 }
 
