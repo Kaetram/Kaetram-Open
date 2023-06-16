@@ -31,6 +31,7 @@ type KillCallback = (mob: Mob) => void;
 export default class Achievement {
     public name = '';
     private description = '';
+    private region = '';
     private hidden = false;
     public secret = false;
     private stage = 0; // Current stage of the achievement.
@@ -59,6 +60,7 @@ export default class Achievement {
         // Load all the data from the raw information.
         this.name = rawData.name;
         this.description = rawData.description || '';
+        this.region = rawData.region || '';
         this.hidden = !!rawData.hidden;
         this.secret = !!rawData.secret;
         this.npc = rawData.npc || '';
@@ -319,9 +321,10 @@ export default class Achievement {
         if (withInfo) {
             data.name = this.getName();
             data.description = this.getDescription();
+            data.region = this.region;
             data.stageCount = this.stageCount;
 
-            // Only send secret achievement information if the achievemnet is secret.
+            // Only send secret achievement information if the achievement is secret.
             if (this.secret) data.secret = this.secret;
         }
 

@@ -5,6 +5,7 @@
 export interface RawAchievement {
     name: string;
     description?: string;
+    region?: string; // The region that the achievement belongs to.
     hidden?: boolean; // Whether or not to display description and achievement title.
     secret?: boolean; // Secret achievements are only displayed when completed.
 
@@ -40,6 +41,7 @@ export interface AchievementData {
     key: string;
     name?: string;
     description?: string;
+    region?: string;
     stage: number;
     stageCount?: number;
     secret?: boolean;
