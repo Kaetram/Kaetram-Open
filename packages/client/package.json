@@ -29,6 +29,7 @@
         "astro-compress": "^1.1.47",
         "astro-compressor": "^0.4.0",
         "astro-critters": "^1.1.38",
+        "astro-i18n-aut": "^0.0.13",
         "astro-robots-txt": "^0.5.0",
         "astro-seo-schema": "^2.0.0",
         "astro-webmanifest": "^0.6.0",
