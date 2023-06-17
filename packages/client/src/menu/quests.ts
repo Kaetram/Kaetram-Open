@@ -1,6 +1,6 @@
 import Menu from './menu';
 
-import { Modules, Opcodes } from '@kaetram/common/network';
+import { Opcodes } from '@kaetram/common/network';
 
 import type Player from '../entity/character/player/player';
 import type Task from '../entity/character/player/task';
