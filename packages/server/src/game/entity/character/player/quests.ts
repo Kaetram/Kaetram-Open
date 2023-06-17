@@ -55,8 +55,15 @@ export default class Quests {
         for (let info of questInfo) {
             let quest = this.get(info.key);
 
-            // Set quest stage data without making a progress callback if it exists.
-            if (quest) quest.setStage(info.stage, info.subStage, false);
+            /**
+             * If the quest exists we set the stage without creating a callback (so we don't send anything
+             * to the player upon logging in). We also load the completed sub stages into the quest.
+             */
+
+            if (quest) {
+                quest.setStage(info.stage, info.subStage, false);
+                quest.setCompletedSubStages(info.completedSubStages);
+            }
         }
 
         // Trigger `loaded()` when we have no database information.

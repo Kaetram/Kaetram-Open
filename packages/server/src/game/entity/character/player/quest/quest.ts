@@ -133,20 +133,26 @@ export default abstract class Quest {
 
         // Attempt to check for substage component and use that information instead.
         let subStageNPC = this.getSubStageByNPC(npc.key),
-            stageInfo = subStageNPC ?? this.stageData; // Use whichever stage data is present.
+            stageInfo = subStageNPC || this.stageData; // Use whichever stage data is present.
 
         /**
          * Ends the conversation. If the player has the required item in the inventory
          * it will check for that first. If the stage requires the player be given an item
-         * it must be given before the conversation ends and quest progresses.
+         * it must be given before the conversation ends and quest progresses. If we are dealing
+         * with sub stages then we must first ensure the NPC isn't marked as completed and just
+         * proceed with the dialogue instead.
          */
-        if (stageInfo.npc === npc.key && dialogue.length === player.talkIndex)
-            if (this.hasItemRequirement()) this.handleItemRequirement(player, this.stageData);
-            else if (this.hasItemToGive()) {
+        if (
+            stageInfo.npc === npc.key &&
+            dialogue.length === player.talkIndex &&
+            !this.completedSubStages.includes(npc.key)
+        )
+            if (this.hasItemRequirement(stageInfo)) this.handleItemRequirement(player, stageInfo);
+            else if (this.hasItemToGive(stageInfo)) {
                 if (this.givePlayerItem(player, stageInfo.itemKey!, stageInfo.itemCount))
                     this.progress();
-            } else if (this.hasAbility()) this.givePlayerAbility(player);
-            else if (this.hasExperience()) this.givePlayerExperience(player);
+            } else if (this.hasAbility(stageInfo)) this.givePlayerAbility(player);
+            else if (this.hasExperience(stageInfo)) this.givePlayerExperience(player);
             else this.progress();
 
         // Talk to the NPC and progress the dialogue.
@@ -230,7 +236,7 @@ export default abstract class Quest {
      * @param subStage (Optional) Specified by subbstage progression (in case of multiple NPC requirements).
      */
 
-    private handleItemRequirement(player: Player, stageData: StageData): void {
+    private handleItemRequirement(player: Player, stageData: StageData | RawStage): void {
         // Extract the item key and count requirement.
         let { itemRequirement, itemRequirementCount, npc } = stageData;
 
@@ -242,13 +248,17 @@ export default abstract class Quest {
             player.inventory.removeItem(itemRequirement![i], (itemRequirementCount || [])[i]);
 
         // If the stage contains item rewards, we give it to the player.
-        if (this.hasItemToGive())
+        if (this.hasItemToGive(stageData))
             this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount);
 
-        if (this.hasExperience()) this.givePlayerExperience(player);
+        if (this.hasExperience(stageData)) this.givePlayerExperience(player);
 
         // If the stage rewards an ability, we give it to the player.
-        if (this.hasAbility()) this.givePlayerAbility(player);
+        if (this.hasAbility(stageData)) this.givePlayerAbility(player);
+
+        // If we're dealing with substages, we add the NPC to the completed list.
+        if (this.stageData.subStages && !this.completedSubStages.includes(npc!))
+            this.completedSubStages.push(npc!);
 
         /**
          * A substage progression occurs if the current overall stage has a substage component
@@ -257,10 +267,6 @@ export default abstract class Quest {
         let isSubStage =
             this.stageData.subStages &&
             this.completedSubStages.length < this.stageData.subStages.length;
-
-        // Add the NPC to the completed list if it's not already there.
-        if (isSubStage && !this.completedSubStages.includes(npc!))
-            this.completedSubStages.push(npc!);
 
         this.progress(isSubStage);
     }
@@ -336,38 +342,46 @@ export default abstract class Quest {
 
     /**
      * Checks if the current stage has an item requirement.
+     * @param stageData Contains information about the current stage in a raw format
+     * if processing a sub stage, or in a parsed format if processing the main stage.
      * @returns If the item requirement property exists in the current stage.
      */
 
-    private hasItemRequirement(): boolean {
-        return !!this.stageData.itemRequirement;
+    private hasItemRequirement(stageData: StageData | RawStage): boolean {
+        return !!stageData.itemRequirement;
     }
 
     /**
      * Checks if the current stage has an item to give to the player.
+     * @param stageData Contains information about the current stage in a raw format
+     * if processing a sub stage, or in a parsed format if processing the main stage.
      * @returns If the `itemKey` proprety exists in the current stage.
      */
 
-    private hasItemToGive(): boolean {
-        return !!this.stageData.itemKey;
+    private hasItemToGive(stageData: StageData | RawStage): boolean {
+        return !!stageData.itemKey;
     }
 
     /**
      * Checks whether or not the current stage has an ability to give to the player.
+     * @param stageData Contains information about the current stage in a raw format
+     * if processing a sub stage, or in a parsed format if processing the main stage.
      * @returns If the `ability` property exists in the current stage.
      */
 
-    private hasAbility(): boolean {
-        return !!this.stageData.ability;
+    private hasAbility(stageData: StageData | RawStage): boolean {
+        return !!stageData.ability;
     }
 
     /**
      * Whether or not the quest grants experience to a skill.
+     * @param stageData Contains information about the current stage in a raw format
+     * if processing a sub stage, or in a parsed format if processing the main stage.
      * @returns Whether the stage data has an experience property and skill which to grant towards.
      */
 
-    private hasExperience(): boolean {
-        return !!this.stageData.experience && !!this.stageData.skill;
+    private hasExperience(stageData: StageData | RawStage): boolean {
+        return !!stageData.experience && !!stageData.skill;
     }
 
     /**
@@ -544,6 +558,14 @@ export default abstract class Quest {
             // Substitute the sub stage information into the stage and use that to process the dialogue.
             if (subStage) stage = subStage;
 
+            /**
+             * If we are dealing with substages, then we want to return the completed
+             * text for the particular substage if it has been completed.
+             */
+
+            if (subStage && this.completedSubStages.includes(subStage.npc!))
+                return stage.completedText!;
+
             // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
             if (stage.itemRequirement! && this.stage === i) {
                 // Verify that the player has the required items and return the dialogue for it.
@@ -553,14 +575,6 @@ export default abstract class Quest {
                 // Skip to next stage iteration.
                 continue;
             }
-
-            /**
-             * If we are dealing with substages, then we want to return the completed
-             * text for the particular substage if it has been completed.
-             */
-
-            if (subStage && this.completedSubStages.includes(subStage.npc!))
-                return stage.completedText!;
 
             /**
              * If the stage we are currently on is not the same as the most
@@ -639,7 +653,7 @@ export default abstract class Quest {
      * from the database.
      */
 
-    public setCompletedSubStages(subStages: string[]): void {
+    public setCompletedSubStages(subStages: string[] = []): void {
         this.completedSubStages = subStages;
     }
 
