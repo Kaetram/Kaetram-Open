@@ -747,10 +747,13 @@
     "rewards": [
       "A cute little pet kitty"
     ],
+    "questRequirements": [
+      "royaldrama"
+    ],
     "stages": {
       "0": {
         "task": "talk",
-        "npc": "king2",
+        "npc": "king",
         "text": [
           "Hello fellow idiot, I mean adventurer.",
           "I must distribute the good news to the residents of Kaetram",
@@ -836,7 +839,7 @@
       },
       "2": {
         "task": "talk",
-        "npc": "king2",
+        "npc": "king",
         "text": [
           "Thank you for delivering the books adventurer.",
           "I have a special reward for you.",
