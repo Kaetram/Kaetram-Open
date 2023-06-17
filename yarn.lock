@@ -1613,7 +1613,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.20.7":
+"@babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.22.5":
   version: 7.22.5
   resolution: "@babel/runtime@npm:7.22.5"
   dependencies:
@@ -3259,6 +3259,7 @@ __metadata:
     astro-compress: "npm:^1.1.47"
     astro-compressor: "npm:^0.4.0"
     astro-critters: "npm:^1.1.38"
+    astro-i18n-aut: "npm:^0.0.13"
     astro-robots-txt: "npm:^0.5.0"
     astro-seo-schema: "npm:^2.0.0"
     astro-webmanifest: "npm:^0.6.0"
@@ -3288,6 +3289,8 @@ __metadata:
     discord.js: "npm:^14.3.0"
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
+    i18next: "npm:^23.0.2"
+    i18next-fs-backend: "npm:^2.1.5"
     ipaddr.js: "npm:^2.0.1"
   languageName: unknown
   linkType: soft
@@ -3559,17 +3562,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/browser@npm:^7.45.0":
-  version: 7.45.0
-  resolution: "@sentry/browser@npm:7.45.0"
+"@sentry-internal/tracing@npm:7.55.2":
+  version: 7.55.2
+  resolution: "@sentry-internal/tracing@npm:7.55.2"
   dependencies:
-    "@sentry-internal/tracing": "npm:7.45.0"
-    "@sentry/core": "npm:7.45.0"
-    "@sentry/replay": "npm:7.45.0"
-    "@sentry/types": "npm:7.45.0"
-    "@sentry/utils": "npm:7.45.0"
+    "@sentry/core": "npm:7.55.2"
+    "@sentry/types": "npm:7.55.2"
+    "@sentry/utils": "npm:7.55.2"
     tslib: "npm:^1.9.3"
-  checksum: afac8cffddb284fe3323ade898aedfa8018e4a37213007a532a926161c9a2babd2952dbc7ce2995552be060892aed3f585d8767927fb5c43ed7e6797f7e079cc
+  checksum: eed43456198bd3a4f34b52a6bec2a866d12dca9172baf9a9a7b5f76ccba98546689eafdaa120da194292465b1fc5bbaae362d5e205b9a39b96db1917e48ce0a5
+  languageName: node
+  linkType: hard
+
+"@sentry/browser@npm:^7.45.0":
+  version: 7.55.2
+  resolution: "@sentry/browser@npm:7.55.2"
+  dependencies:
+    "@sentry-internal/tracing": "npm:7.55.2"
+    "@sentry/core": "npm:7.55.2"
+    "@sentry/replay": "npm:7.55.2"
+    "@sentry/types": "npm:7.55.2"
+    "@sentry/utils": "npm:7.55.2"
+    tslib: "npm:^1.9.3"
+  checksum: d8e0692ad56edf60e1982a95d62a40ec649f48efd0321f8c50cc511130005b2809e4e9b83287db66677ed968d544e099e57a8814264cc7d6c09e8b8f2f1e2b02
   languageName: node
   linkType: hard
 
@@ -3615,7 +3630,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:^7.19.0, @sentry/node@npm:^7.45.0":
+"@sentry/core@npm:7.55.2":
+  version: 7.55.2
+  resolution: "@sentry/core@npm:7.55.2"
+  dependencies:
+    "@sentry/types": "npm:7.55.2"
+    "@sentry/utils": "npm:7.55.2"
+    tslib: "npm:^1.9.3"
+  checksum: 8d299a26dd14a11679e76b14ebfd78f8842b677a4943f9e928d42048f118949b3beff75e0b23de8925f70e64afab5fd598fa2153705e2e46f399c9437e51741f
+  languageName: node
+  linkType: hard
+
+"@sentry/node@npm:^7.19.0":
   version: 7.45.0
   resolution: "@sentry/node@npm:7.45.0"
   dependencies:
@@ -3631,14 +3657,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/replay@npm:7.45.0":
-  version: 7.45.0
-  resolution: "@sentry/replay@npm:7.45.0"
+"@sentry/node@npm:^7.45.0":
+  version: 7.55.2
+  resolution: "@sentry/node@npm:7.55.2"
   dependencies:
-    "@sentry/core": "npm:7.45.0"
-    "@sentry/types": "npm:7.45.0"
-    "@sentry/utils": "npm:7.45.0"
-  checksum: 3fe790920b5ab7300a069e70ce0029387e58c580655b7a2a2eab2c9d0ec0c4a9a7df8d3d9f70b01a2a10aa8db97685bd7a5ad0d76906001bdf12981f88449bd7
+    "@sentry-internal/tracing": "npm:7.55.2"
+    "@sentry/core": "npm:7.55.2"
+    "@sentry/types": "npm:7.55.2"
+    "@sentry/utils": "npm:7.55.2"
+    cookie: "npm:^0.4.1"
+    https-proxy-agent: "npm:^5.0.0"
+    lru_map: "npm:^0.3.3"
+    tslib: "npm:^1.9.3"
+  checksum: 1a4072d0861ea800b368f9fbf6004d76f7a7c48a42dd36682175b8aa96bfb32a479ccd797240f69182b834ba59f730f7fef32ed2df97b165c1e1b85204ae11c9
+  languageName: node
+  linkType: hard
+
+"@sentry/replay@npm:7.55.2":
+  version: 7.55.2
+  resolution: "@sentry/replay@npm:7.55.2"
+  dependencies:
+    "@sentry/core": "npm:7.55.2"
+    "@sentry/types": "npm:7.55.2"
+    "@sentry/utils": "npm:7.55.2"
+  checksum: c7576b98e5f6c1619230e974320dd1605fc7c9e7c16b04f811f91ce3e7934e8d7e5d4e8a642fbf229b8929531436327903fa05fe89ab814ec8c519c91e1faedd
   languageName: node
   linkType: hard
 
@@ -3658,6 +3700,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/types@npm:7.55.2":
+  version: 7.55.2
+  resolution: "@sentry/types@npm:7.55.2"
+  checksum: 80206646bdda08e9bcccc8db70a9c43923677aa2d9a29f238ccb993c005638804372f7cf06e5f7b86a1b571944570c9442aee3e7eaffdcd9bf5a6ce0eaffca1c
+  languageName: node
+  linkType: hard
+
 "@sentry/utils@npm:7.45.0":
   version: 7.45.0
   resolution: "@sentry/utils@npm:7.45.0"
@@ -3665,6 +3714,16 @@ __metadata:
     "@sentry/types": "npm:7.45.0"
     tslib: "npm:^1.9.3"
   checksum: 0304e2cfe0b5a80e61125c35ddfc5256e23577ccad1c0355c6bb1870d5a34e03a43c98d9e49f2d15ec78210052ce2eb7e4e65b4e0ec22c58336e4b0193ca8ad0
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:7.55.2":
+  version: 7.55.2
+  resolution: "@sentry/utils@npm:7.55.2"
+  dependencies:
+    "@sentry/types": "npm:7.55.2"
+    tslib: "npm:^1.9.3"
+  checksum: 3be721032602166f630e55ee948d5737a5d94f5b803ddff73a137b019fca5607d722adba70a02401a0d3e1f8a2dc42aae7a0538e35e6c054d19fb51137d035d5
   languageName: node
   linkType: hard
 
@@ -4893,6 +4952,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"astro-i18n-aut@npm:^0.0.13":
+  version: 0.0.13
+  resolution: "astro-i18n-aut@npm:0.0.13"
+  dependencies:
+    fast-glob: "npm:^3.2.12"
+    fs-extra: "npm:^11.1.1"
+  peerDependencies:
+    astro: ^2.6.1
+    kleur: ^4.1.4
+  checksum: a96bcb95776e2b0a050a56d2d6ef8617b8d34a7f05b6c347de5cc0e39d342b4ba6cea4859744ce0b3d54421c82cb990f65d33a0f1b0fbfe595f3508744207a8f
+  languageName: node
+  linkType: hard
+
 "astro-robots-txt@npm:^0.5.0":
   version: 0.5.0
   resolution: "astro-robots-txt@npm:0.5.0"
@@ -4926,8 +4998,8 @@ __metadata:
   linkType: hard
 
 "astro@npm:^2.6.3":
-  version: 2.6.3
-  resolution: "astro@npm:2.6.3"
+  version: 2.6.4
+  resolution: "astro@npm:2.6.4"
   dependencies:
     "@astrojs/compiler": "npm:^1.4.0"
     "@astrojs/internal-helpers": "npm:^0.1.0"
@@ -4993,7 +5065,7 @@ __metadata:
       optional: true
   bin:
     astro: astro.js
-  checksum: f27bd4ca1448e5d493cca0224ab2f3348fd33b2ad60911114f9f7f7bbf4402bfc5d31df8d64970bc7b66cd1455e93d4f37f3641d245262be518503a5040e8e8d
+  checksum: d5b07ebd4737fb50f41cff37a5f5f52060a6ddfe7711769a4710a3155ae0d015a7e3822f4bbcc9c612b89a55a6125892eb0687164757440581db736e4bfe8522
   languageName: node
   linkType: hard
 
@@ -5537,24 +5609,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001219":
-  version: 1.0.30001441
-  resolution: "caniuse-lite@npm:1.0.30001441"
-  checksum: f9d206ba9d6caf4cfc0e129dcb1a8b8ce085e4d2e7dd47e0209079313b26c82169ce50f6cc651ba1a82d81ff521fac93013a90da003a95ceed09923ca4a07d14
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001449":
-  version: 1.0.30001450
-  resolution: "caniuse-lite@npm:1.0.30001450"
-  checksum: 2fb0262238b10d650150804f02fa666b5d9cf53d6645e9efc3b3ebe2fa5f4cc1de161925217ebc503eedd6662084dbef0bb4743e143b46e535851b1b308de5a9
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001464":
-  version: 1.0.30001489
-  resolution: "caniuse-lite@npm:1.0.30001489"
-  checksum: 218d9b5c58472fe9e6183917ec9181180562c3e707661cf8ceecc373232a15d249066eb086321f5d2f3838be58a286f962e815059cfee7e064168e4d7ed407ec
+"caniuse-lite@npm:^1.0.30001219, caniuse-lite@npm:^1.0.30001449, caniuse-lite@npm:^1.0.30001464":
+  version: 1.0.30001503
+  resolution: "caniuse-lite@npm:1.0.30001503"
+  checksum: 9db53cb56a20a5c34685199e1df1c265d0a5f977d481f0c61c347e1758c1cc685002c22c0a0bf472e5449def46145402f5365ba98c29eef9cc118b884beab5cb
   languageName: node
   linkType: hard
 
@@ -8477,6 +8535,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fs-extra@npm:^11.1.1":
+  version: 11.1.1
+  resolution: "fs-extra@npm:11.1.1"
+  dependencies:
+    graceful-fs: "npm:^4.2.0"
+    jsonfile: "npm:^6.0.1"
+    universalify: "npm:^2.0.0"
+  checksum: 9bc3e5ce6860e97abf1fb408f1d716253e1bb16da36203b2ee3f71160e5ec1e7a9d2b9bae4c99a50598a250be6db0e3b17e8031ea7c498c24513857f48db5402
+  languageName: node
+  linkType: hard
+
 "fs-extra@npm:^9.0.1, fs-extra@npm:^9.1.0":
   version: 9.1.0
   resolution: "fs-extra@npm:9.1.0"
@@ -9269,6 +9338,22 @@ __metadata:
   bin:
     husky: lib/bin.js
   checksum: 016ab53f21f39af1b2387559faa9cb6e2bbbe6d3cccd64c186efe204ca4634fc11dca369da9aabe7cde4293573abe12f9b7251f20bef39ea33d8e1e8f0847550
+  languageName: node
+  linkType: hard
+
+"i18next-fs-backend@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "i18next-fs-backend@npm:2.1.5"
+  checksum: abe30c9d71d57dc029744e4c159194152db795f74021f5dcc7e93cf4eac7160005fe3c736b779cb39a3e69d3b581ab1ef68dbff6261fb094d11c1f603401d382
+  languageName: node
+  linkType: hard
+
+"i18next@npm:^23.0.2":
+  version: 23.0.2
+  resolution: "i18next@npm:23.0.2"
+  dependencies:
+    "@babel/runtime": "npm:^7.22.5"
+  checksum: d9ed53141e5b0f93526dfcd7189c510ead5d9f56064c78782f4c2b0e6f4250a9b32367ea618427d21b6eba2c444aaca279efdd7e72c92aba809da802599676a3
   languageName: node
   linkType: hard
 
