@@ -13,5 +13,6 @@
     "eslint.validate": ["javascript", "typescript", "html", "astro"],
     "eslint.nodePath": "node_modules",
     "stylelint.packageManager": "yarn",
-    "stylelint.validate": ["css", "postcss", "sass", "scss", "html", "astro"]
+    "stylelint.validate": ["css", "postcss", "sass", "scss", "html", "astro"],
+    "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
 }

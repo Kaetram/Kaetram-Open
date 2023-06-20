@@ -1,6 +1,10 @@
 .yarn/
+node_modules/
+dist/
+
+packages/client/data/maps/**/*.json
+packages/server/data/map/**/*.json
+packages/server/cache/**/*.json
+packages/tools/map/data/**/*.json
 
 *.md
-
-dist/
-data/**/*.json

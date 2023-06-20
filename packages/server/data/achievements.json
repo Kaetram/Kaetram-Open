@@ -19,14 +19,8 @@
             "If you slay 20 of them, I'll su-",
             "Reward you with something special!"
         ],
-        "dialogueStarted": [
-            "Please, those rats are really annoying!",
-            "They won't let me be."
-        ],
-        "mob": [
-            "rat",
-            "icerat"
-        ],
+        "dialogueStarted": ["Please, those rats are really annoying!", "They won't let me be."],
+        "mob": ["rat", "icerat"],
         "mobCount": 20,
         "rewardSkill": "strength",
         "rewardExperience": 369
@@ -60,9 +54,7 @@
             "Beat up 25 sneks for me!",
             "I'll show you something special if you do!"
         ],
-        "mob": [
-            "snek"
-        ],
+        "mob": ["snek"],
         "mobCount": 25,
         "rewardAbility": "run",
         "rewardSkill": "strength",
@@ -101,13 +93,8 @@
             "I see you're pretty good with the killing stuff.",
             "Mind killing 10 crabs for me?"
         ],
-        "dialogueStarted": [
-            "C'mon man, please kill me 10 crabs."
-        ],
-        "mob": [
-            "crab",
-            "hermitcrab"
-        ],
+        "dialogueStarted": ["C'mon man, please kill me 10 crabs."],
+        "mob": ["crab", "hermitcrab"],
         "mobCount": 10,
         "rewardSkill": "accuracy",
         "rewardExperience": 696
@@ -157,12 +144,8 @@
             "Slay 20 of them just to make sure they're not my boyfriend.",
             "What? I gotta give you a task, isn't that why you talked to me?"
         ],
-        "dialogueStarted": [
-            "Please, slay 20 zombies for me!"
-        ],
-        "mob": [
-            "zombie"
-        ],
+        "dialogueStarted": ["Please, slay 20 zombies for me!"],
+        "mob": ["zombie"],
         "mobCount": 20,
         "rewardSkill": "strength",
         "rewardExperience": 4269
