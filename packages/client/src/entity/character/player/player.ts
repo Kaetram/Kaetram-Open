@@ -173,6 +173,9 @@ export default class Player extends Character {
             // Secret tasks are displayed slightly different.
             if (achievement.secret) task.secret = true;
 
+            // Achievements may have a region specified.
+            if (achievement.region) task.region = achievement.region;
+
             this.achievements[achievement.key] = task;
         }
     }
