@@ -104,9 +104,7 @@ export default class Canvas extends Renderer {
 
             // Determine the layer of the tile depending on if it is a high tile or not.
             let isHighTile = this.map.isHighTile(tile as number),
-                context = (
-                    isHighTile ? this.foreContext : this.backContext
-                ) as CanvasRenderingContext2D;
+                context = (isHighTile ? this.foreContext : this.backContext) as CanvasRenderingContext2D;
 
             // Only do the lighting logic if there is an overlay.
             if (this.game.overlays.hasOverlay()) {
@@ -124,12 +122,7 @@ export default class Canvas extends Renderer {
                 // Prevent double draws when drawing flipped animated tiles.
                 if (flips.length === 0 && this.animatedTiles[index].isFlipped) return;
 
-                this.drawTile(
-                    context,
-                    this.animatedTiles[index].id + 1,
-                    this.animatedTiles[index].index,
-                    flips
-                );
+                this.drawTile(context, this.animatedTiles[index].id + 1, this.animatedTiles[index].index, flips);
             }
 
             // Skip animated tiles unless we disable animations, then just draw the tile once.
@@ -153,12 +146,7 @@ export default class Canvas extends Renderer {
      * @param flips An array containing transformations the tile will undergo.
      */
 
-    private drawTile(
-        context: CanvasRenderingContext2D,
-        tileId: number,
-        index: number,
-        flips: number[] = []
-    ): void {
+    private drawTile(context: CanvasRenderingContext2D, tileId: number, index: number, flips: number[] = []): void {
         if (tileId < 0) return;
 
         let tileset = this.map.getTilesetFromId(tileId);
@@ -273,8 +261,7 @@ export default class Canvas extends Renderer {
                          * when the next available flip is horizontal (essentially performing two horizontals in a row.)
                          */
 
-                        if (flips[index + 1] === TileFlip.Horizontal)
-                            flips.push(TileFlip.Horizontal);
+                        if (flips[index + 1] === TileFlip.Horizontal) flips.push(TileFlip.Horizontal);
                         else flips.push(TileFlip.Vertical);
 
                         break;
@@ -330,9 +317,7 @@ export default class Canvas extends Renderer {
      */
 
     private updateDrawingView(): void {
-        this.forEachDrawingContext((context: CanvasRenderingContext2D) =>
-            this.setCameraView(context)
-        );
+        this.forEachDrawingContext((context: CanvasRenderingContext2D) => this.setCameraView(context));
     }
 
     /**
@@ -415,7 +400,6 @@ export default class Canvas extends Renderer {
      */
 
     private forEachDrawingContext(callback: ContextCallback): void {
-        for (let context in this.drawingContexts)
-            callback(this.drawingContexts[context] as CanvasRenderingContext2D);
+        for (let context in this.drawingContexts) callback(this.drawingContexts[context] as CanvasRenderingContext2D);
     }
 }

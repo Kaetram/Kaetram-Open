@@ -8,11 +8,7 @@ export default class Item extends Entity {
     public dropped = false;
     public originalY = -1;
 
-    public constructor(
-        instance: string,
-        public count: number = 1,
-        public enchantments: Enchantments = {}
-    ) {
+    public constructor(instance: string, public count: number = 1, public enchantments: Enchantments = {}) {
         super(instance, Modules.EntityType.Item);
     }
 

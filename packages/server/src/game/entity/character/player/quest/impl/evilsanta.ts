@@ -17,8 +17,7 @@ export default class EvilSanta extends Quest {
         if (this.stage === 0) return player.notify(`Now hang on, why would I wanna go in there?`);
 
         // If the player is not on the correct stage, don't let them through.
-        if (this.stage < door.stage)
-            return player.notify(`I don't think I should go in there just yet...`);
+        if (this.stage < door.stage) return player.notify(`I don't think I should go in there just yet...`);
 
         // Handle door requiring an item to proceed (and remove the item from the player's inventory).
         if (door.reqItem) {

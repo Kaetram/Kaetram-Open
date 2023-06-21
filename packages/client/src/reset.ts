@@ -74,20 +74,13 @@ export default class Main {
         }).catch(() => null);
 
         // If we didn't get a response, we don't do anything.
-        if (!response)
-            return this.setValidation(
-                'validation-error',
-                'Something went wrong. Please try again later.'
-            );
+        if (!response) return this.setValidation('validation-error', 'Something went wrong. Please try again later.');
 
         let json = await response.json();
 
         // Generic response error.
         if (json?.status !== 'success')
-            return this.setValidation(
-                'validation-error',
-                'Your password reset link has expired. Please try again.'
-            );
+            return this.setValidation('validation-error', 'Your password reset link has expired. Please try again.');
 
         this.setValidation('status', 'Password reset successfully, redirecting in 5 seconds...');
 
@@ -105,8 +98,7 @@ export default class Main {
         this.clearValidation();
 
         // Create a validation message based on type and string message.
-        for (let validation of this.validation)
-            validation.append(this.createValidation(type, message));
+        for (let validation of this.validation) validation.append(this.createValidation(type, message));
     }
 
     /**

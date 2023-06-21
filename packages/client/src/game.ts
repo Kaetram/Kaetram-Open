@@ -211,13 +211,7 @@ export default class Game {
      * @returns A 2D array of grid coordinates that represent the path.
      */
 
-    public findPath(
-        character: Character,
-        x: number,
-        y: number,
-        ignores: TileIgnore[] = [],
-        cursor = ''
-    ): number[][] {
+    public findPath(character: Character, x: number, y: number, ignores: TileIgnore[] = [], cursor = ''): number[][] {
         let path: number[][] = [];
 
         path = this.pathfinder.find(this.map.grid, character.gridX, character.gridY, x, y, ignores);
@@ -328,11 +322,7 @@ export default class Game {
      */
 
     public searchForEntityAt(position: Position, radius = 2): Entity | undefined {
-        let entities = this.entities.grids.getEntitiesAround(
-                position.gridX!,
-                position.gridY!,
-                radius
-            ),
+        let entities = this.entities.grids.getEntitiesAround(position.gridX!, position.gridY!, radius),
             closest: Entity | undefined,
             boundary = this.map.tileSize * 1.5;
 

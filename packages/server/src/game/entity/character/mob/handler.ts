@@ -241,8 +241,7 @@ export default class Handler {
 
             if (
                 this.mob.getDistance(attacker) > this.mob.roamDistance * 2 ||
-                (!this.mob.isNearTarget() &&
-                    attacker.getLastAttack() > Modules.Constants.ATTACKER_TIMEOUT)
+                (!this.mob.isNearTarget() && attacker.getLastAttack() > Modules.Constants.ATTACKER_TIMEOUT)
             )
                 this.mob.removeAttacker(attacker);
         });

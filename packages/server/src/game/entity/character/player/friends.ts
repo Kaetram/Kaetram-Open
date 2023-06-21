@@ -56,8 +56,7 @@ export default class Friends {
             );
 
         // Ensure the player is not already on the list.
-        if (this.hasFriend(username))
-            return this.player.notify('That player is already on your friends list.');
+        if (this.hasFriend(username)) return this.player.notify('That player is already on your friends list.');
 
         // Ensure the player exists.
         this.player.database.exists(username, (exists: boolean) => {
@@ -88,8 +87,7 @@ export default class Friends {
         let username = (typeof player === 'string' ? player : player.username).toLowerCase();
 
         // No username was found in the list.
-        if (!this.hasFriend(username))
-            return this.player.notify('That player is not in your friends list.');
+        if (!this.hasFriend(username)) return this.player.notify('That player is not in your friends list.');
 
         delete this.list[username];
 

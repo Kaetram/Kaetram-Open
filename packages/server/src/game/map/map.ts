@@ -72,10 +72,7 @@ export default class Map {
         for (let key in map.areas) {
             if (!(key in AreasIndex)) continue;
 
-            this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](
-                map.areas[key],
-                this.world
-            );
+            this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](map.areas[key], this.world);
         }
     }
 
@@ -404,11 +401,7 @@ export default class Map {
             v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
             d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);
 
-        tileId &= ~(
-            Modules.MapFlags.DIAGONAL_FLAG |
-            Modules.MapFlags.VERTICAL_FLAG |
-            Modules.MapFlags.HORIZONTAL_FLAG
-        );
+        tileId &= ~(Modules.MapFlags.DIAGONAL_FLAG | Modules.MapFlags.VERTICAL_FLAG | Modules.MapFlags.HORIZONTAL_FLAG);
 
         return {
             tileId,

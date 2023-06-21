@@ -184,18 +184,13 @@ export default class Creator {
     public saveGuild(guild: GuildData, callback?: () => void): void {
         let collection = this.database.collection('guilds');
 
-        collection.updateOne(
-            { identifier: guild.identifier },
-            { $set: guild },
-            { upsert: true },
-            (error, result) => {
-                if (error) log.error(`An error occurred while saving guild ${guild.name}.`);
+        collection.updateOne({ identifier: guild.identifier }, { $set: guild }, { upsert: true }, (error, result) => {
+            if (error) log.error(`An error occurred while saving guild ${guild.name}.`);
 
-                if (!result) log.error(`Unable to save guild ${guild.name}.`);
+            if (!result) log.error(`Unable to save guild ${guild.name}.`);
 
-                callback?.();
-            }
-        );
+            callback?.();
+        });
     }
 
     /**
@@ -209,10 +204,7 @@ export default class Creator {
 
     private updateCollection<S>(collection: Collection, username: string, data: S) {
         collection.updateOne({ username }, { $set: data }, { upsert: true }, (error, result) => {
-            if (error)
-                log.error(
-                    `An error occurred while saving ${collection.collectionName} for ${username}.`
-                );
+            if (error) log.error(`An error occurred while saving ${collection.collectionName} for ${username}.`);
 
             if (!result) log.error(`Unable to save ${collection.collectionName} for ${username}.`);
         });
@@ -250,8 +242,7 @@ export default class Creator {
     public static verifyPlayer(player: Player): boolean {
         if (!Utils.isValidUsername(player.username)) return false;
         if (!player.username || player.username.length === 0) return false;
-        if (!player.password || player.password.length < 3 || player.password.length > 64)
-            return false;
+        if (!player.password || player.password.length < 3 || player.password.length > 64) return false;
         if (!Utils.isEmail(player.email)) return false;
 
         return true;

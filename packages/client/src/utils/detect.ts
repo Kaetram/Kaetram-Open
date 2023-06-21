@@ -8,8 +8,7 @@ export let isSafari = (): boolean => agent.includes('safari') && !agent.includes
 
 export let isEdge = (): boolean => agent.includes('edge/');
 
-export let isMobile = (): boolean =>
-    agent.includes('android') || agent.includes('iphone') || agent.includes('ipad');
+export let isMobile = (): boolean => agent.includes('android') || agent.includes('iphone') || agent.includes('ipad');
 
 export let isTablet = () => isMobile() && window.innerWidth >= 640;
 
@@ -17,11 +16,7 @@ export function iOSVersion(): number | undefined {
     let match = /os (\d+)_(\d+)_?(\d+?)/.exec(agent);
 
     if (match) {
-        let version = [
-            parseInt(match[1], 10),
-            parseInt(match[2], 10),
-            parseInt(match[3] || '0', 10)
-        ];
+        let version = [parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3] || '0', 10)];
 
         return parseFloat(version.join('.'));
     }

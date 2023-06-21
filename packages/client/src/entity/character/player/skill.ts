@@ -15,12 +15,7 @@ export default class Skill {
      * @param level Level we are updating to.
      */
 
-    public update(
-        experience: number,
-        nextExperience: number,
-        level: number,
-        percentage: number
-    ): void {
+    public update(experience: number, nextExperience: number, level: number, percentage: number): void {
         this.experience = experience;
         this.nextExperience = nextExperience;
         this.level = level || this.level;

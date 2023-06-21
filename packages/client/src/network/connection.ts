@@ -176,8 +176,7 @@ export default class Connection {
         this.game.player.serverId = data.serverId!;
 
         // Guest login doesn't require any credentials, send the packet right away.
-        if (this.app.isGuest())
-            return this.socket.send(Packets.Login, { opcode: Opcodes.Login.Guest });
+        if (this.app.isGuest()) return this.socket.send(Packets.Login, { opcode: Opcodes.Login.Guest });
 
         let username = this.app.getUsername(),
             password = this.app.getPassword(),
@@ -256,8 +255,7 @@ export default class Connection {
     private handleEquipment(opcode: Opcodes.Equipment, info: EquipmentPacket): void {
         switch (opcode) {
             case Opcodes.Equipment.Batch: {
-                for (let equipment of (info.data as SerializedEquipment).equipments)
-                    this.game.player.equip(equipment);
+                for (let equipment of (info.data as SerializedEquipment).equipments) this.game.player.equip(equipment);
 
                 break;
             }
@@ -295,16 +293,13 @@ export default class Connection {
     private handleEntityList(opcode: Opcodes.List, info: ListPacket): void {
         switch (opcode) {
             case Opcodes.List.Spawns: {
-                let ids = new Set(
-                        Object.values(this.entities.getAll()).map((entity) => entity.instance)
-                    ),
+                let ids = new Set(Object.values(this.entities.getAll()).map((entity) => entity.instance)),
                     known = new Set(info.entities!.filter((id) => ids.has(id))),
                     newIds = info.entities!.filter((id) => !known.has(id));
 
                 // Prepare the entities ready for despawning.
                 this.entities.decrepit = Object.values(this.entities.getAll()).filter(
-                    (entity) =>
-                        !known.has(entity.instance) && entity.instance !== this.game.player.instance
+                    (entity) => !known.has(entity.instance) && entity.instance !== this.game.player.instance
                 );
 
                 // Clear the entities in the decrepit queue.
@@ -396,11 +391,7 @@ export default class Connection {
 
                 if (target) {
                     // Prevent following a target after we've clicked off of it.
-                    if (
-                        entity.instance === this.game.player.instance &&
-                        !this.game.player.hasTarget() &&
-                        !info.forced
-                    )
+                    if (entity.instance === this.game.player.instance && !this.game.player.hasTarget() && !info.forced)
                         return;
 
                     entity.follow(target);
@@ -622,8 +613,7 @@ export default class Connection {
 
     private handleChat(info: ChatPacket): void {
         // Messages with source are static, we add them directly to the chatbox.
-        if (info.source)
-            return this.input.chatHandler.add(info.source, info.message, info.colour, true);
+        if (info.source) return this.input.chatHandler.add(info.source, info.message, info.colour, true);
 
         let entity = this.entities.get<Player>(info.instance!);
 
@@ -671,10 +661,7 @@ export default class Connection {
      */
 
     private handleContainer(opcode: Opcodes.Container, info: ContainerPacket): void {
-        let container =
-            info.type === Modules.ContainerType.Inventory
-                ? this.menu.getInventory()
-                : this.menu.getBank();
+        let container = info.type === Modules.ContainerType.Inventory ? this.menu.getInventory() : this.menu.getBank();
 
         switch (opcode) {
             case Opcodes.Container.Batch: {
@@ -771,12 +758,7 @@ export default class Connection {
             }
 
             case Opcodes.Achievement.Progress: {
-                this.game.player.setAchievement(
-                    info.key!,
-                    info.stage!,
-                    info.name!,
-                    info.description!
-                );
+                this.game.player.setAchievement(info.key!, info.stage!, info.name!, info.description!);
                 break;
             }
         }
@@ -794,12 +776,7 @@ export default class Connection {
     private handleNotification(opcode: Opcodes.Notification, info: NotificationPacket): void {
         switch (opcode) {
             case Opcodes.Notification.Text: {
-                return this.input.chatHandler.add(
-                    info.source || 'WORLD',
-                    info.message,
-                    info.colour,
-                    true
-                );
+                return this.input.chatHandler.add(info.source || 'WORLD', info.message, info.colour, true);
             }
 
             case Opcodes.Notification.Popup: {
@@ -1030,18 +1007,11 @@ export default class Connection {
             case Opcodes.Trade.Add: {
                 return this.menu
                     .getTrade()
-                    .add(
-                        info.index!,
-                        info.count!,
-                        info.key!,
-                        info.instance !== this.game.player.instance
-                    );
+                    .add(info.index!, info.count!, info.key!, info.instance !== this.game.player.instance);
             }
 
             case Opcodes.Trade.Remove: {
-                return this.menu
-                    .getTrade()
-                    .remove(info.index!, info.instance !== this.game.player.instance);
+                return this.menu.getTrade().remove(info.index!, info.instance !== this.game.player.instance);
             }
 
             case Opcodes.Trade.Accept: {
@@ -1107,12 +1077,7 @@ export default class Connection {
 
             // Location based pointers stick to one point on the map.
             case Opcodes.Pointer.Location: {
-                this.pointer.create(
-                    opcode,
-                    info.instance,
-                    info.x! * this.map.tileSize,
-                    info.y! * this.map.tileSize
-                );
+                this.pointer.create(opcode, info.instance, info.x! * this.map.tileSize, info.y! * this.map.tileSize);
                 break;
             }
 
@@ -1238,11 +1203,7 @@ export default class Connection {
 
         // Create the bubble and assign its position.
         this.bubble.create(info.instance, info.text, info.duration, position);
-        this.bubble.setTo(
-            info.instance,
-            position ? position.x : entity.x,
-            position ? position.y : entity.y
-        );
+        this.bubble.setTo(info.instance, position ? position.x : entity.x, position ? position.y : entity.y);
     }
 
     /**

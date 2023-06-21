@@ -55,8 +55,7 @@ export default class Inventory extends Menu {
         if (!this.list) return log.error(`Could not create the skeleton for the inventory.`);
 
         // Create slots based on the constants.
-        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
-            this.list.append(this.createSlot(i));
+        for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++) this.list.append(this.createSlot(i));
     }
 
     /**
@@ -159,8 +158,7 @@ export default class Inventory extends Menu {
 
         if (doubleClick) {
             if (element.edible) this.handleAction(Modules.MenuActions.Eat);
-            else if (element.equippable || element.interactable)
-                this.handleAction(Modules.MenuActions.Equip);
+            else if (element.equippable || element.interactable) this.handleAction(Modules.MenuActions.Equip);
 
             this.actions.hide();
 
@@ -343,9 +341,7 @@ export default class Inventory extends Menu {
     private formatDescription(name: string, count: number, description: string): string {
         return count < 1000
             ? description
-            : `${description} You have a stack of ${count.toLocaleString(
-                  'en-US'
-              )} ${name.toLowerCase()}. `;
+            : `${description} You have a stack of ${count.toLocaleString('en-US')} ${name.toLowerCase()}. `;
     }
 
     /**

@@ -10,14 +10,7 @@ import Formulas from '../../../info/formulas';
 import Utils from '@kaetram/common/util/utils';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import {
-    Combat as CombatPacket,
-    Countdown,
-    Effect,
-    Movement,
-    Points,
-    Teleport
-} from '@kaetram/common/network/impl';
+import { Combat as CombatPacket, Countdown, Effect, Movement, Points, Teleport } from '@kaetram/common/network/impl';
 import { Team } from '@kaetram/common/api/minigame';
 
 import type World from '../../world';
@@ -80,13 +73,7 @@ export default abstract class Character extends Entity {
     public deathCallback?: DeathCallback;
     public deathICallback?: DeathCallback;
 
-    protected constructor(
-        instance: string,
-        public world: World,
-        key: string,
-        x: number,
-        y: number
-    ) {
+    protected constructor(instance: string, public world: World, key: string, x: number, y: number) {
         super(instance, key, x, y);
 
         this.combat = new Combat(this);
@@ -191,12 +178,7 @@ export default abstract class Character extends Entity {
     private handleAoE(damage: number, attacker?: Character, range = 1): void {
         this.forEachNearbyCharacter((character: Character) => {
             let distance = this.getDistance(character) + 1,
-                hit = new Hit(
-                    Modules.Hits.Normal,
-                    Math.floor(damage / distance),
-                    false,
-                    distance
-                ).serialize();
+                hit = new Hit(Modules.Hits.Normal, Math.floor(damage / distance), false, distance).serialize();
 
             // Create a hit packet and send it to the nearby regions.
             this.sendToRegions(
@@ -247,10 +229,7 @@ export default abstract class Character extends Entity {
         if (this.status.has(Modules.Effects.FirePotion)) return;
 
         // Create a hit object for burning damage and serialize it.
-        let hit = new Hit(
-            Modules.Hits.Burning,
-            Modules.Constants.BURNING_EFFECT_DAMAGE
-        ).serialize();
+        let hit = new Hit(Modules.Hits.Burning, Modules.Constants.BURNING_EFFECT_DAMAGE).serialize();
 
         // Send a hit packet to display the info to the client.
         this.sendToRegions(
@@ -272,8 +251,7 @@ export default abstract class Character extends Entity {
 
     private handlePoisonDamage(attacker: Character): void {
         // Poison is related to the strength or archery level.
-        let isPoisoned =
-            Formulas.getPoisonChance(this.getSkillDamageLevel()) < attacker.getPoisonChance();
+        let isPoisoned = Formulas.getPoisonChance(this.getSkillDamageLevel()) < attacker.getPoisonChance();
 
         // Use venom as default for now.
         if (isPoisoned) this.setPoison(Modules.PoisonTypes.Venom);
@@ -771,12 +749,7 @@ export default abstract class Character extends Entity {
      */
 
     public inCombat(): boolean {
-        return (
-            this.combat.started ||
-            this.attackers.length > 0 ||
-            this.hasTarget() ||
-            !this.combat.expired()
-        );
+        return this.combat.started || this.attackers.length > 0 || this.hasTarget() || !this.combat.expired();
     }
 
     /**
@@ -819,10 +792,7 @@ export default abstract class Character extends Entity {
          * a lower one. This prevents players from sniping mobs on higher levels.
          */
         if (this.isRanged())
-            return (
-                this.getDistance(this.target!) <= this.attackRange &&
-                this.plateauLevel >= this.target!.plateauLevel
-            );
+            return this.getDistance(this.target!) <= this.attackRange && this.plateauLevel >= this.target!.plateauLevel;
 
         return this.isAdjacent(this.target!);
     }
@@ -868,8 +838,7 @@ export default abstract class Character extends Entity {
     protected canAttack(target: Character): boolean {
         // Prevent pets from being attacked.
         if (target.isPet()) {
-            if (this.isPlayer())
-                this.notify(`Are you crazy? Are you out of your mind? Why would you attack a pet?`);
+            if (this.isPlayer()) this.notify(`Are you crazy? Are you out of your mind? Why would you attack a pet?`);
 
             return false;
         }
@@ -896,9 +865,7 @@ export default abstract class Character extends Entity {
 
         // Prevent cheaters from starting a fight with other players.
         if (this.isCheater()) {
-            this.notify(
-                `Sorry but cheaters can't attack other players, that wouldn't be fair to them!`
-            );
+            this.notify(`Sorry but cheaters can't attack other players, that wouldn't be fair to them!`);
 
             return false;
         }
@@ -1002,35 +969,23 @@ export default abstract class Character extends Entity {
 
         switch (hit.type) {
             case Modules.Hits.Stun: {
-                return this.status.addWithTimeout(
-                    Modules.Effects.Stun,
-                    Modules.Constants.STUN_DURATION
-                );
+                return this.status.addWithTimeout(Modules.Effects.Stun, Modules.Constants.STUN_DURATION);
             }
 
             case Modules.Hits.Terror: {
-                return this.status.addWithTimeout(
-                    Modules.Effects.Terror,
-                    Modules.Constants.TERROR_DURATION
-                );
+                return this.status.addWithTimeout(Modules.Effects.Terror, Modules.Constants.TERROR_DURATION);
             }
 
             case Modules.Hits.Freezing: {
                 if (this.status.has(Modules.Effects.SnowPotion)) return;
 
-                return this.status.addWithTimeout(
-                    Modules.Effects.Freezing,
-                    Modules.Constants.FREEZING_DURATION
-                );
+                return this.status.addWithTimeout(Modules.Effects.Freezing, Modules.Constants.FREEZING_DURATION);
             }
 
             case Modules.Hits.Burning: {
                 if (this.status.has(Modules.Effects.FirePotion)) return;
 
-                return this.status.addWithTimeout(
-                    Modules.Effects.Burning,
-                    Modules.Constants.BURNING_DURATION
-                );
+                return this.status.addWithTimeout(Modules.Effects.Burning, Modules.Constants.BURNING_DURATION);
             }
         }
     }
@@ -1079,8 +1034,7 @@ export default abstract class Character extends Entity {
         if (remove) {
             clearInterval(this.poisonInterval);
             this.poisonInterval = undefined;
-        } else if (!exists)
-            this.poisonInterval = setInterval(this.handlePoison.bind(this), this.poison?.rate);
+        } else if (!exists) this.poisonInterval = setInterval(this.handlePoison.bind(this), this.poison?.rate);
 
         this.poisonCallback?.(type, !exists);
     }

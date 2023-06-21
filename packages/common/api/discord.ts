@@ -84,12 +84,7 @@ export default class Discord {
      * @param withArrow If to add an arrow ASCII character to the message.
      */
 
-    public sendMessage(
-        source: string,
-        text: string,
-        serverName = config.name,
-        withArrow = true
-    ): void {
+    public sendMessage(source: string, text: string, serverName = config.name, withArrow = true): void {
         if (!source || !config.discordEnabled) return;
 
         this.sendRawMessage(`**[${serverName}]** ${source}${withArrow ? ' »' : ''} ${text}`);

@@ -114,9 +114,7 @@ export default class Ability {
      */
 
     public getType(): Modules.AbilityType {
-        return this.data.type === 'active'
-            ? Modules.AbilityType.Active
-            : Modules.AbilityType.Passive;
+        return this.data.type === 'active' ? Modules.AbilityType.Active : Modules.AbilityType.Passive;
     }
 
     /**

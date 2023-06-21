@@ -27,8 +27,7 @@ export default class Tileset {
         let texture = this.context.createTexture();
 
         // Verify that the texture was created.
-        if (!texture || !image)
-            return log.error(`Failed to create texture for tileset: ${image.src}`);
+        if (!texture || !image) return log.error(`Failed to create texture for tileset: ${image.src}`);
 
         // Bind and apply the texture to the context
         this.context.bindTexture(this.context.TEXTURE_2D, texture);
@@ -42,26 +41,10 @@ export default class Tileset {
         );
 
         // Apply the texture parameters to the context.
-        this.context.texParameteri(
-            this.context.TEXTURE_2D,
-            this.context.TEXTURE_MAG_FILTER,
-            this.context.NEAREST
-        );
-        this.context.texParameteri(
-            this.context.TEXTURE_2D,
-            this.context.TEXTURE_MIN_FILTER,
-            this.context.NEAREST
-        );
-        this.context.texParameteri(
-            this.context.TEXTURE_2D,
-            this.context.TEXTURE_WRAP_S,
-            this.context.CLAMP_TO_EDGE
-        );
-        this.context.texParameteri(
-            this.context.TEXTURE_2D,
-            this.context.TEXTURE_WRAP_T,
-            this.context.CLAMP_TO_EDGE
-        );
+        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_MAG_FILTER, this.context.NEAREST);
+        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_MIN_FILTER, this.context.NEAREST);
+        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_WRAP_S, this.context.CLAMP_TO_EDGE);
+        this.context.texParameteri(this.context.TEXTURE_2D, this.context.TEXTURE_WRAP_T, this.context.CLAMP_TO_EDGE);
 
         // Append the texture to the list of textures.
         this.textures.push(texture);

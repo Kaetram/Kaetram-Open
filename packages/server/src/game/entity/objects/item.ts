@@ -257,9 +257,7 @@ export default class Item extends Entity {
             if (skill)
                 if (skill.level < requirement) {
                     // If the player's skill level is less than the requirement.
-                    player.notify(
-                        `Your ${skill.name} level must be at least ${requirement} to equip this item.`
-                    );
+                    player.notify(`Your ${skill.name} level must be at least ${requirement} to equip this item.`);
                     return false;
                 } else return true; // If the player's skill fulfills the requirement.
         }
@@ -412,19 +410,11 @@ export default class Item extends Entity {
             }
 
             case 'bigsword': {
-                return [
-                    Modules.AttackStyle.Slash,
-                    Modules.AttackStyle.Crush,
-                    Modules.AttackStyle.Defensive
-                ];
+                return [Modules.AttackStyle.Slash, Modules.AttackStyle.Crush, Modules.AttackStyle.Defensive];
             }
 
             case 'axe': {
-                return [
-                    Modules.AttackStyle.Hack,
-                    Modules.AttackStyle.Chop,
-                    Modules.AttackStyle.Defensive
-                ];
+                return [Modules.AttackStyle.Hack, Modules.AttackStyle.Chop, Modules.AttackStyle.Defensive];
             }
 
             case 'pickaxe': {
@@ -432,27 +422,15 @@ export default class Item extends Entity {
             }
 
             case 'blunt': {
-                return [
-                    Modules.AttackStyle.Crush,
-                    Modules.AttackStyle.Shared,
-                    Modules.AttackStyle.Defensive
-                ];
+                return [Modules.AttackStyle.Crush, Modules.AttackStyle.Shared, Modules.AttackStyle.Defensive];
             }
 
             case 'spear': {
-                return [
-                    Modules.AttackStyle.Stab,
-                    Modules.AttackStyle.Slash,
-                    Modules.AttackStyle.Defensive
-                ];
+                return [Modules.AttackStyle.Stab, Modules.AttackStyle.Slash, Modules.AttackStyle.Defensive];
             }
 
             case 'bow': {
-                return [
-                    Modules.AttackStyle.Accurate,
-                    Modules.AttackStyle.Fast,
-                    Modules.AttackStyle.LongRange
-                ];
+                return [Modules.AttackStyle.Accurate, Modules.AttackStyle.Fast, Modules.AttackStyle.LongRange];
             }
 
             case 'whip': {
@@ -490,11 +468,7 @@ export default class Item extends Entity {
 
             case 'armour':
             case 'armourarcher': {
-                return [
-                    Modules.Enchantment.Evasion,
-                    Modules.Enchantment.Thorns,
-                    Modules.Enchantment.AntiStun
-                ];
+                return [Modules.Enchantment.Evasion, Modules.Enchantment.Thorns, Modules.Enchantment.AntiStun];
             }
 
             default: {

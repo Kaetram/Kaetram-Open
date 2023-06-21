@@ -23,9 +23,7 @@ export default class QuickSlots {
         this.player.onAbility(this.handleAbility.bind(this));
 
         for (let child of this.abilityBar.children)
-            child.addEventListener('click', () =>
-                this.handleAction(parseInt(child.id.slice(-1)) - 1)
-            );
+            child.addEventListener('click', () => this.handleAction(parseInt(child.id.slice(-1)) - 1));
     }
 
     /**
@@ -116,8 +114,7 @@ export default class QuickSlots {
 
     private clean(key: string): void {
         for (let child of this.abilityBar.children)
-            if (child.classList.contains(`quickslot-icon-${key}`))
-                child.classList.remove(`quickslot-icon-${key}`);
+            if (child.classList.contains(`quickslot-icon-${key}`)) child.classList.remove(`quickslot-icon-${key}`);
     }
 
     /**

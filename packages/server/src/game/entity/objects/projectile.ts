@@ -11,12 +11,7 @@ export default class Projectile extends Entity {
     private impactCallback?: () => void;
 
     public constructor(public owner: Character, public target: Character, public hit: Hit) {
-        super(
-            Utils.createInstance(Modules.EntityType.Projectile),
-            owner.getProjectileName(),
-            owner.x,
-            owner.y
-        );
+        super(Utils.createInstance(Modules.EntityType.Projectile), owner.getProjectileName(), owner.x, owner.y);
 
         // Apply the terror hit type if the projectile is a terror projectile.
         if (this.key === 'terror') this.hit.type = Modules.Hits.Terror;

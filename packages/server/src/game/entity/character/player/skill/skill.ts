@@ -64,14 +64,7 @@ export default abstract class Skill {
 
         this.setExperience(this.experience + experience);
 
-        this.experienceCallback?.(
-            this.type,
-            this.name,
-            withInfo,
-            experience,
-            this.level,
-            this.level !== previousLevel
-        );
+        this.experienceCallback?.(this.type, this.name, withInfo, experience, this.level, this.level !== previousLevel);
     }
 
     /**

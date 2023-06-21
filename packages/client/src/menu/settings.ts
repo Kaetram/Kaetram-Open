@@ -9,24 +9,12 @@ export default class Settings extends Menu {
     private soundSlider: HTMLInputElement = document.querySelector('#sound')!;
     private brightnessSlider: HTMLInputElement = document.querySelector('#brightness')!;
 
-    private audioEnabledCheckbox: HTMLInputElement = document.querySelector(
-        '#audio-enabled-checkbox > input'
-    )!;
-    private lowPowerCheckbox: HTMLInputElement = document.querySelector(
-        '#low-power-checkbox > input'
-    )!;
-    private joystickEnabledCheckbox: HTMLInputElement = document.querySelector(
-        '#joystick-enabled-checkbox > input'
-    )!;
-    private debugCheckbox: HTMLInputElement = document.querySelector(
-        '#debug-mode-checkbox > input'
-    )!;
-    private showNamesCheckbox: HTMLInputElement = document.querySelector(
-        '#show-names-checkbox > input'
-    )!;
-    private showLevelsCheckbox: HTMLInputElement = document.querySelector(
-        '#show-levels-checkbox > input'
-    )!;
+    private audioEnabledCheckbox: HTMLInputElement = document.querySelector('#audio-enabled-checkbox > input')!;
+    private lowPowerCheckbox: HTMLInputElement = document.querySelector('#low-power-checkbox > input')!;
+    private joystickEnabledCheckbox: HTMLInputElement = document.querySelector('#joystick-enabled-checkbox > input')!;
+    private debugCheckbox: HTMLInputElement = document.querySelector('#debug-mode-checkbox > input')!;
+    private showNamesCheckbox: HTMLInputElement = document.querySelector('#show-names-checkbox > input')!;
+    private showLevelsCheckbox: HTMLInputElement = document.querySelector('#show-levels-checkbox > input')!;
     private disableCachingCheckbox: HTMLInputElement = document.querySelector(
         '#disable-region-caching-checkbox > input'
     )!;
@@ -41,10 +29,7 @@ export default class Settings extends Menu {
 
         this.audioEnabledCheckbox.addEventListener('change', this.handleAudioEnabled.bind(this));
         this.lowPowerCheckbox.addEventListener('change', this.handleLowPower.bind(this));
-        this.joystickEnabledCheckbox.addEventListener(
-            'change',
-            this.handleJoystickEnabled.bind(this)
-        );
+        this.joystickEnabledCheckbox.addEventListener('change', this.handleJoystickEnabled.bind(this));
         this.debugCheckbox.addEventListener('change', this.handleDebug.bind(this));
         this.showNamesCheckbox.addEventListener('change', this.handleName.bind(this));
         this.showLevelsCheckbox.addEventListener('change', this.handleLevel.bind(this));
@@ -214,12 +199,9 @@ export default class Settings extends Menu {
 
     private handleInfo() {
         let { config } = this.game.app;
-        document.querySelector(
-            '#game-info-version'
-        )!.textContent = `${config.version}${config.minor}`;
+        document.querySelector('#game-info-version')!.textContent = `${config.version}${config.minor}`;
 
         let { serverId } = this.game.player;
-        document.querySelector('#game-info-world')!.textContent =
-            serverId === -1 ? 'Unknown' : serverId.toString();
+        document.querySelector('#game-info-world')!.textContent = serverId === -1 ? 'Unknown' : serverId.toString();
     }
 }

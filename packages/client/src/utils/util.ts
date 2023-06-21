@@ -114,7 +114,7 @@ export default {
             let blocks = itemKey.split('/');
 
             // Use the last block as the key if we are extracting a key path.
-            if (blocks.length > 1) itemKey = blocks[blocks.length - 1];
+            if (blocks.length > 1) itemKey = blocks.at(-1);
 
             return `url("/img/sprites/items/${itemKey}.png")`;
         } else if (defaultSprite) return `url("/img/sprites/${defaultSprite}.png")`;
@@ -132,10 +132,7 @@ export default {
      */
 
     formatName(name = '', trim = 0): string {
-        name = name.replace(
-            /\w\S*/g,
-            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
-        );
+        name = name.replace(/\w\S*/g, (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase());
 
         // Trim the name if specified.
         if (trim > 1 && name.length > trim) name = `${name.slice(0, Math.max(0, trim))}...`;
@@ -325,8 +322,7 @@ export default {
                 y = Math.floor(i / 4 / sprite.image.width);
 
             // Test edge cases, we don't want to draw a silhouette on the edge of the sprite.
-            if (x === 0 || x === sprite.image.width - 1 || y === 0 || y === sprite.image.height - 1)
-                continue;
+            if (x === 0 || x === sprite.image.width - 1 || y === 0 || y === sprite.image.height - 1) continue;
 
             // Verify the up, down, left and right pixels.
             let adjacentPixels = [
