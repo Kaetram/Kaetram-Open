@@ -14,6 +14,12 @@ export default class Achievements extends Menu {
     // List where all the achievement objects are contained.
     private list: HTMLUListElement = document.querySelector('#achievements-content > ul')!;
 
+    // The current region the player is viewing.
+    private currentRegion = 'Mudwich';
+
+    // The list of regions that the player has activated.
+    private regions: string[] = [];
+
     public constructor(private player: Player) {
         super('#achievements', '#close-achievements', '#achievements-button');
 
@@ -29,11 +35,7 @@ export default class Achievements extends Menu {
 
     public handle(opcode: Opcodes.Achievement, key?: string): void {
         // Handle achievement batch creation.
-        if (opcode === Opcodes.Achievement.Batch) {
-            for (let key in this.player.achievements) this.createAchievement(this.player.achievements[key], key);
-
-            return;
-        }
+        if (opcode === Opcodes.Achievement.Batch) return this.displayAchievements();
 
         // Grab the task by key from the player. This will have been recently updated.
         let task = this.player.achievements[key!];
@@ -46,6 +48,75 @@ export default class Achievements extends Menu {
 
         // Update the achievement element.
         this.update(this.list.children[task.id] as HTMLLIElement, task);
+    }
+
+    /**
+     * Handles the tab arrow left click event.
+     */
+
+    private handleTabArrowLeft(): void {
+        let index = this.regions.indexOf(this.currentRegion);
+
+        // If the index is 0 then we set the index to the last region.
+        if (index === 0) index = this.regions.length - 1;
+        else index--;
+
+        // Set the current region to the new region.
+        this.currentRegion = this.regions[index];
+
+        // Display the achievements for the new region.
+        this.displayAchievements();
+    }
+
+    /**
+     * Handles the tab arrow right click event.
+     */
+
+    private handleTabArrowRight(): void {
+        let index = this.regions.indexOf(this.currentRegion);
+
+        // If the index is the last region then we set the index to 0.
+        if (index === this.regions.length - 1) index = 0;
+        else index++;
+
+        // Set the current region to the new region.
+        this.currentRegion = this.regions[index];
+
+        // Display the achievements for the new region.
+        this.displayAchievements();
+    }
+
+    /**
+     * Displays the achievements for the region we currently have selected. We
+     * clear the list and then iterate through the player's achievements to
+     * determine which ones we should display.
+     */
+
+    private displayAchievements(): void {
+        // Clear the existing list.
+        this.list.innerHTML = '';
+
+        // Iterate through the player's achievements.
+        for (let key in this.player.achievements) {
+            let task = this.player.achievements[key],
+                { region } = task;
+
+            // Achievements without a region are miscellaneous.
+            if (!region) region = 'Miscellaneous';
+
+            // If the region isn't in the list then we add it.
+            if (!this.regions.includes(region)) this.regions.push(region);
+
+            // If the task is in the current region then we display it.
+            if (region === this.currentRegion) this.createAchievement(task, key);
+        }
+
+        // Remove the miscellaneous region and add it to the end.
+        this.regions.splice(this.regions.indexOf('Miscellaneous'), 1);
+        this.regions.push('Miscellaneous');
+
+        // Update the tab text.
+        this.tabText.innerHTML = this.currentRegion;
     }
 
     /**
@@ -126,6 +197,9 @@ export default class Achievements extends Menu {
      */
 
     private update(element: HTMLLIElement, task: Task): void {
+        // The achievement is not visible so an undefined element is passed.
+        if (!element) return;
+
         let title = element.querySelector<HTMLElement>('.achievement-title')!,
             description = element.querySelector<HTMLElement>('.achievement-description')!,
             progress = element.querySelector<HTMLElement>('.achievement-progress')!;
@@ -169,21 +243,5 @@ export default class Achievements extends Menu {
                 element.append(progress);
             }
         }
-    }
-
-    /**
-     * Handles the tab arrow left click event.
-     */
-
-    private handleTabArrowLeft(): void {
-        console.log('left');
-    }
-
-    /**
-     * Handles the tab arrow right click event.
-     */
-
-    private handleTabArrowRight(): void {
-        console.log('right');
     }
 }
