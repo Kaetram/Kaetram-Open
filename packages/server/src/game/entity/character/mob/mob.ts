@@ -65,10 +65,10 @@ export default class Mob extends Character {
     public strength: number = Modules.MobDefaults.STRENGTH_LEVEL;
     public magic: number = Modules.MobDefaults.MAGIC_LEVEL;
     public archery: number = Modules.MobDefaults.ARCHERY_LEVEL;
-    public defense = Modules.MobDefaults.DEFENSE_LEVEL;
-    public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
-    public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
-    public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
+    public defense: number = Modules.MobDefaults.DEFENSE_LEVEL;
+    public respawnDelay: number = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
+    public aggroRange: number = Modules.MobDefaults.AGGRO_RANGE;
+    public roamDistance: number = Modules.MobDefaults.ROAM_DISTANCE;
 
     private handler?: MobHandler | DefaultPlugin;
 
