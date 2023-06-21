@@ -120,8 +120,6 @@ export default {
             }
         }
 
-        // TODO - These potions will add a level to their respective skill, and will be removed after 60 seconds.
-
         // Increase accuracy if the attacker has the accuracy potion effect.
         if (attacker.status.has(Modules.Effects.AccuracyPotion)) accuracy -= 0.07;
 

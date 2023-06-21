@@ -120,6 +120,20 @@
         "item": "icelogs"
     },
 
+    "iceoak5": {
+        "levelRequirement": 10,
+        "experience": 30,
+        "difficulty": 50,
+        "item": "icelogs"
+    },
+
+    "iceoak6": {
+        "levelRequirement": 10,
+        "experience": 30,
+        "difficulty": 50,
+        "item": "icelogs"
+    },
+
     "icepalm": {
         "levelRequirement": 15,
         "experience": 55,
