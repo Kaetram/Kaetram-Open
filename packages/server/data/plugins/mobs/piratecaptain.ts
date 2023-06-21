@@ -1,7 +1,6 @@
 import Default from './default';
 
 import Utils from '@kaetram/common/util/utils';
-import { Teleport } from '@kaetram/common/network/impl';
 
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 import type Character from '@kaetram/server/src/game/entity/character/character';
