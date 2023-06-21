@@ -2,7 +2,7 @@ import storeData from '../../data/stores.json';
 import Item from '../game/entity/objects/item';
 
 import log from '@kaetram/common/util/log';
-import StoreEn from '@kaetram/common/text/en/store';
+import { t } from '@kaetram/common/i18n';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Store as StorePacket } from '@kaetram/common/network/impl';
 
@@ -62,7 +62,7 @@ export default class Stores {
 
             // Skip if an item already exists with the same key.
             if (items.some(({ key: itemKey }) => itemKey === key)) {
-                log.warning(`${StoreEn.WARNING_DUPLICATE}'${key}'.`);
+                log.warning(`${t('store:WARNING_DUPLICATE')}'${key}'.`);
 
                 continue;
             }
@@ -148,7 +148,7 @@ export default class Stores {
     public open(player: Player, npc: NPC): void {
         let store = this.getStore(npc);
 
-        if (!store) return log.debug(`[${player.username}] ${StoreEn.INVALID_STORE}.`);
+        if (!store) return log.debug(`[${player.username}] ${t('store:INVALID_STORE')}.`);
 
         player.send(new StorePacket(Opcodes.Store.Open, this.serialize(npc.store)));
 
@@ -172,20 +172,20 @@ export default class Stores {
             item = store.items[index];
 
         // Prevent hollow admins from buying any of the items.
-        if (player.isHollowAdmin()) return player.notify(StoreEn.HOLLOW_ADMIN);
+        if (player.isHollowAdmin()) return player.notify(t('store:HOLLOW_ADMIN'));
 
         // Prevent cheaters from buying any of the items.
-        if (player.isCheater()) return player.notify(StoreEn.CHEATER);
+        if (player.isCheater()) return player.notify(t('store:CHEATER'));
 
         // First and foremost check the user has enough space.
         if (!player.inventory.hasSpace() && !player.inventory.hasItem(item.key))
-            return player.notify(StoreEn.NOT_ENOUGH_SPACE);
+            return player.notify(t('store:NOT_ENOUGH_SPACE'));
 
         // Check if item exists
-        if (!item) return log.error(`${player.username} ${StoreEn.PURCHASE_INVALID_STORE}${storeKey}.`);
+        if (!item) return log.error(`${player.username} ${t('store:PURCHASE_INVALID_STORE')}${storeKey}.`);
 
         if (item.count !== -1) {
-            if (item.count < 1) return player.notify(StoreEn.ITEM_OUT_OF_STOCK);
+            if (item.count < 1) return player.notify(t('store:ITEM_OUT_OF_STOCK'));
 
             // Prevent buying more than store has stock. Default to max stock.
             count = item.count < count ? item.count : count;
@@ -195,7 +195,7 @@ export default class Stores {
         let currency = player.inventory.getIndex(store.currency, item.price * count);
 
         // If no inventory slot index with currency is found, stop the purchase.
-        if (currency < 0) return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
+        if (currency < 0) return player.notify(t('store:NOT_ENOUGH_CURRENCY'));
 
         // Clone the item we are adding
         let itemToAdd = item.copy();
@@ -241,17 +241,17 @@ export default class Stores {
         if (!this.verifyStore(player, key)) return;
 
         // Ensure the count is correct.
-        if (count < 1) return player.notify(StoreEn.INVALID_ITEM_COUNT);
+        if (count < 1) return player.notify(t('store:INVALID_ITEM_COUNT'));
 
         let slot = player.inventory.get(index);
 
         // Ensure the item in the slot exists.
-        if (slot.isEmpty()) return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
+        if (slot.isEmpty()) return log.warning(`[${player.username}] ${t('store:INVALID_ITEM_SELECTION')}`);
 
         let store = this.stores[key];
 
         // Disable selling in restricted stores.
-        if (store.restricted) return player.notify(StoreEn.RESTRICTED_STORE);
+        if (store.restricted) return player.notify(t('store:RESTRICTED_STORE'));
 
         /**
          * Although a lot of these checks are similar to `select()` they are necessary
@@ -259,7 +259,7 @@ export default class Stores {
          * project, is to be expected and frankly, quite reasonable.
          */
 
-        if (slot.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+        if (slot.key === store.currency) return player.notify(t('store:CANNOT_SELL_ITEM'));
 
         // Temporary fix until we have a more suitable UI.
         ({ count } = slot);
@@ -270,13 +270,13 @@ export default class Stores {
             price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
 
         // Items without prices (quest items) cannot be sold.
-        if (price < 0) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+        if (price < 0) return player.notify(t('store:CANNOT_SELL_ITEM'));
 
         player.inventory.remove(index, count);
 
         // Very weird if this somehow happened at this point in the code, I'd be curious to see how.
         if (player.inventory.add(this.getCurrency(store.currency, price)) < 1)
-            return player.notify(StoreEn.NOT_ENOUGH_CURRENCY);
+            return player.notify(t('store:NOT_ENOUGH_CURRENCY'));
 
         // Increment the item count or add to store only if the player isn't a cheater :)
         if (!player.isCheater() && !player.isHollowAdmin())
@@ -304,12 +304,12 @@ export default class Stores {
         let slot = player.inventory.get(index);
 
         // This shouldn't get called unless there is a bug or client was messed with.
-        if (slot.isEmpty()) return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
+        if (slot.isEmpty()) return log.warning(`[${player.username}] ${t('store:INVALID_ITEM_SELECTION')}`);
 
         let store = this.stores[key];
 
         // Check that the player isn't trying to sell the currency to the store.
-        if (slot.key === store.currency) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+        if (slot.key === store.currency) return player.notify(t('store:CANNOT_SELL_ITEM'));
 
         // Temporary fix until we have a more suitable UI.
         ({ count } = slot);
@@ -320,7 +320,7 @@ export default class Stores {
             price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
 
         // Items without prices (quest items) cannot be sold.
-        if (price < 1) return player.notify(StoreEn.CANNOT_SELL_ITEM);
+        if (price < 1) return player.notify(t('store:CANNOT_SELL_ITEM'));
 
         // Invalid price, this shouldn't happen.
         if (isNaN(price)) return log.error(`Malformed pricing for item selection.`);
@@ -365,7 +365,7 @@ export default class Stores {
 
     private verifyStore(player: Player, storeKey: string): boolean {
         if (player.storeOpen !== storeKey) {
-            log.warning(`[${player.username}] ${StoreEn.ACTION_STORE_NOT_OPEN}`);
+            log.warning(`[${player.username}] ${t('store:ACTION_STORE_NOT_OPEN')}`);
             return false;
         }
 

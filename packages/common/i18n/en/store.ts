@@ -1,5 +1,5 @@
 export default {
-    WARNING_DUPLICATE: 'Duplicate {{item}} key found in store: ',
+    WARNING_DUPLICATE: 'Duplicate item key found in store: ',
     INVALID_STORE: 'Tried to parse a non-existent store.',
     INVALID_STORE_REFRESH: 'Tried to refresh invalid store: ',
     INVALID_ITEM_SELECTION: 'Invalid item selection.',

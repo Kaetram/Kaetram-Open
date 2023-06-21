@@ -1,8 +1,7 @@
 ---
-import { description } from '../../../package.json';
-
 import { Schema } from 'astro-seo-schema';
 import { GoogleAnalytics } from '@astrolib/analytics';
+import { locales, defaultLocale, getFixedT, dir, type Locale } from '@kaetram/common/i18n';
 
 export interface Props {
     title?: string;
@@ -13,14 +12,23 @@ let { title } = Astro.props;
 function site(path = '') {
     return new URL(path, Astro.site).toString();
 }
+
+let { pathname } = Astro.url,
+    lang = pathname.split('/')[1] as Locale;
+
+if (!Object.keys(locales).includes(lang)) lang = defaultLocale;
+
+let t = getFixedT(lang),
+    name = t('meta.name'),
+    description = t('meta.description');
 ---
 
-<html dir="ltr" lang="en">
+<html dir={dir(lang)} lang={lang}>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=0" />
 
-        <title>Kaetram{title ? ` | ${title}` : ''}</title>
+        <title>{name}{title ? ` | ${title}` : ''}</title>
 
         <GoogleAnalytics id="G-SLX5NNTBX4" partytown />
 
