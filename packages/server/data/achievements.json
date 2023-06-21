@@ -10,7 +10,7 @@
     "ratinfestation": {
         "name": "Generic Task 1",
         "description": "Bulk Bogan needs you to defeat 20 rats!",
-        "region": "mudwich",
+        "region": "Mudwich",
         "npc": "villager",
         "dialogueHidden": [
             "Hello there fellow adventurer!",
@@ -44,6 +44,7 @@
     "boxingman": {
         "name": "Generic Task 2",
         "description": "Talk to Mike Tyson in Mudwich about beating stuff up",
+        "region": "Mudwich",
         "npc": "boxingman",
         "dialogueHidden": [
             "Hey there, you look like you can take a punch!",
@@ -60,17 +61,17 @@
     "ahiddenpath": {
         "name": "Hidden Path",
         "description": "Discover the hidden path.",
-        "region": "mudwich"
+        "region": "Mudwich"
     },
     "hiddenreward": {
         "name": "Hidden Reward",
         "description": "Kill some secret spooky skeletons somewhere.",
-        "region": "mudwich"
+        "region": "Mudwich"
     },
     "wormholes": {
         "name": "Wormholes",
         "description": "Investigate the spooky occurrence in Mudwich.",
-        "region": "mudwich",
+        "region": "Mudwich",
         "hidden": true,
         "rewardAbility": "precognition"
     },
@@ -81,7 +82,7 @@
     "crabproblem": {
         "name": "Crab Problem",
         "description": "Help Bubba by defeating 10 crabs!",
-        "region": "mudwich",
+        "region": "Mudwich",
         "hidden": true,
         "npc": "beachnpc",
         "dialogueHidden": [
@@ -99,40 +100,40 @@
     "warriorcrab": {
         "name": "Warrior Crab",
         "description": "Defeat the Hermit Crab Warrior hidden on the beach.",
-        "region": "mudwich"
+        "region": "Mudwich"
     },
     "sandtreasure": {
         "name": "Sand Treasure",
         "description": "Find the treasure hidden somewhere on the beach.",
-        "region": "mudwich"
+        "region": "Mudwich"
     },
     "waterguardian": {
         "name": "Water Guardian",
         "description": "Defeat the Water Guardian!",
-        "region": "mudwich",
+        "region": "Mudwich",
         "hidden": true
     },
     "mermaidguard": {
         "name": "Mermaid Guard",
         "description": "Defeat the mermaid guarding the Sea Cucumber!",
-        "region": "underthesea",
+        "region": "Under the Sea",
         "hidden": true
     },
     "pirates": {
         "name": "Pirates",
         "description": "There's skeleton pirates under the sea?",
-        "region": "underthesea"
+        "region": "Under the Sea"
     },
     "piratestreasure": {
         "name": "Pirate's Treasure",
         "description": "Find the treasure hidden in the pirate's ship.",
-        "region": "underthesea",
+        "region": "Under the Sea",
         "hidden": true
     },
     "zombielovers": {
         "name": "Zombie Lovers",
         "description": "The worried zombie girlfriend needs your help!",
-        "region": "underthesea",
+        "region": "Under the Sea",
         "npc": "zombiegf",
         "dialogueHidden": [
             "You! Please, you need to help me!",
@@ -150,46 +151,46 @@
     "babyseadragon": {
         "name": "Baby Sea Dragon",
         "description": "Defeat the baby sea dragon guardian!",
-        "region": "underthesea"
+        "region": "Under the Sea"
     },
     "underwatertreasure": {
         "name": "Water Chest",
         "description": "Find the treasure hidden underwater.",
-        "region": "underthesea"
+        "region": "Under the Sea"
     },
     "patsow": {
         "name": "Patsow Pleateau",
         "description": "Arrive at Patsow plateau!",
-        "region": "patsow",
+        "region": "Patsow",
         "hidden": true
     },
     "ogreguardian": {
         "name": "Ogre Guardian",
         "description": "Defeat the Ogre Guardian!",
-        "region": "patsow",
+        "region": "Patsow",
         "rewardExperience": 1420
     },
     "pathofdeath": {
         "name": "Path of Death",
         "description": "Defeat the ogre defending the ogre lord.",
-        "region": "patsow",
+        "region": "Patsow",
         "hidden": true
     },
     "treadcarefully": {
         "name": "Tread Carefully",
         "description": "I literally said to tread carefully.",
-        "region": "patsow",
+        "region": "Patsow",
         "hidden": true
     },
     "goldengolem": {
         "name": "Golden Golem",
         "description": "Defeat the Golden Golem!",
-        "region": "patsow"
+        "region": "Patsow"
     },
     "skeletonking": {
         "name": "Skeleton King",
         "description": "Defeat the Skeleton King!",
-        "region": "patsow",
+        "region": "Patsow",
         "hidden": true,
         "rewardSkill": "strength",
         "rewardExperience": 12560
@@ -197,7 +198,7 @@
     "ogrelord": {
         "name": "Ogre Lord",
         "description": "Defeat the Ogre Lord!",
-        "region": "patsow",
+        "region": "Patsow",
         "hidden": true,
         "rewardSkill": "strength",
         "rewardExperience": 12560
@@ -205,7 +206,7 @@
     "queenant": {
         "name": "Queen Ant",
         "description": "Defeat the Queen Ant!",
-        "region": "crullfeld",
+        "region": "Crullfeld",
         "hidden": true,
         "rewardSkill": "health",
         "rewardExperience": 33560
@@ -220,35 +221,35 @@
     "webdeveloper": {
         "name": "Web Developer",
         "description": "Spiders are developing webs left and right!",
-        "region": "lakesworld"
+        "region": "Lakesworld"
     },
     "vulture": {
         "name": "Vulture",
         "description": "Defeat a vulture!",
-        "region": "crullfeld",
+        "region": "Crullfeld",
         "hidden": true
     },
     "ogresgateway": {
         "name": "Ogre's Gateway",
         "description": "Discover the secret portal after defeating ogres.",
-        "region": "crullfeld"
+        "region": "Crullfeld"
     },
     "frozentundra": {
         "name": "Frozen Tundra",
         "description": "Gain access to icelands by defeating the guardians.",
-        "region": "lakesworld",
+        "region": "Lakesworld",
         "hidden": true
     },
     "iceworld": {
         "name": "Ice World",
         "description": "Gain access into the ice world!",
-        "region": "yontilpass",
+        "region": "Yontil Pass",
         "hidden": true
     },
     "forestdragon": {
         "name": "Forest Dragon",
         "description": "Defeat the dragon laying dormant under Mudwich.",
-        "region": "mudwich",
+        "region": "Mudwich",
         "hidden": true,
         "rewardSkill": "health",
         "rewardExperience": 52600
@@ -256,7 +257,7 @@
     "roadtohell": {
         "name": "Road to Hell",
         "description": "Defeat the Dark Wolf guarding the entrance to the Hellhound.",
-        "region": "kingdomofkaetram",
+        "region": "Kingdom of Kaetram",
         "hidden": true,
         "rewardSkill": "health",
         "rewardExperience": 4000
@@ -264,7 +265,7 @@
     "hellhound": {
         "name": "Hellhound",
         "description": "Defeat the hellhound in the hell dungeon!",
-        "region": "kingdomofkaetram",
+        "region": "Kingdom of Kaetram",
         "hidden": true,
         "rewardSkill": "strength",
         "rewardExperience": 25600
@@ -272,7 +273,7 @@
     "miniemperor": {
         "name": "Mini Emperor",
         "description": "Defeat the mini emperor in the mini knight's land!",
-        "region": "chymos",
+        "region": "Chymos",
         "hidden": true,
         "rewardSkill": "loitering",
         "rewardExperience": 3000
