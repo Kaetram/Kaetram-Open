@@ -8,8 +8,7 @@
         "discord.js": "^14.3.0",
         "dotenv-extended": "^2.9.0",
         "dotenv-parse-variables": "^2.0.0",
-        "i18next": "^23.0.2",
-        "i18next-fs-backend": "^2.1.5",
+        "i18next": "^23.2.2",
         "ipaddr.js": "^2.0.1"
     }
 }

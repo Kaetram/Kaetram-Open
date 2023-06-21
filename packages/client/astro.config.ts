@@ -18,7 +18,7 @@ import { VitePWA as pwa } from 'vite-plugin-pwa';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { internalIpV4 } from 'internal-ip';
 import { imageSize } from 'image-size';
-import sass from 'sass';
+import * as sass from 'sass';
 
 export let env = exposedConfig('name', 'host', 'ssl', 'serverId', 'sentryDsn');
 
