@@ -21,7 +21,7 @@ type UnionToIntersection<T> = (T extends unknown ? (_: T) => unknown : never) ex
     : never;
 
 type DotFlatten<T> = T extends object
-    ? { [K in keyof T]: DotFlatten<T[K]> } & UnionToIntersection<
+    ? UnionToIntersection<
           {
               [K in keyof T]: T[K] extends object
                   ? DotFlatten<
