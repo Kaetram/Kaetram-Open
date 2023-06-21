@@ -6,6 +6,7 @@
 
 export default class Task {
     public secret = false; // Whether or not the task is a secret task.
+    public region = ''; // The region the task is located in.
 
     public constructor(
         public id: number,
