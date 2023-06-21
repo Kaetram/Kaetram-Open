@@ -11,6 +11,16 @@ declare global {
         hub: string | false;
         sentryDsn: string;
     };
+
+    declare module '*.vert' {
+        let src: string;
+        export default src;
+    }
+
+    declare module '*.frag' {
+        let src: string;
+        export default src;
+    }
 }
 
 export {};

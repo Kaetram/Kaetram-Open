@@ -1,7 +1,7 @@
 import Handshake from '@kaetram/common/network/impl/handshake';
 
-import type { SerializedServer } from '@kaetram/common';
 import type { Packets } from '@kaetram/common/network';
+import type { SerializedServer } from '@kaetram/common/types/network';
 
 class Main {
     private ws = new WebSocket(`ws://${globalConfig.hubWsHost}:${globalConfig.hubWsPort}`);
