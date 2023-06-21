@@ -15,7 +15,8 @@ import type {
     RawQuest,
     RawStage,
     StageData,
-    HideNPC
+    HideNPC,
+    QuestItem
 } from '@kaetram/common/types/quest';
 
 type ProgressCallback = (key: string, stage: number, subStage: number) => void;
@@ -148,10 +149,9 @@ export default abstract class Quest {
             !this.completedSubStages.includes(npc.key)
         )
             if (this.hasItemRequirement(stageInfo)) this.handleItemRequirement(player, stageInfo);
-            else if (this.hasItemToGive(stageInfo)) {
-                if (this.givePlayerItem(player, stageInfo.itemKey!, stageInfo.itemCount))
-                    this.progress();
-            } else if (this.hasAbility(stageInfo)) this.givePlayerAbility(player);
+            else if (this.hasItemToGive(stageInfo))
+                this.givePlayerRewards(player, stageInfo.itemRewards, true);
+            else if (this.hasAbility(stageInfo)) this.givePlayerAbility(player);
             else if (this.hasExperience(stageInfo)) this.givePlayerExperience(player);
             else this.progress();
 
@@ -238,19 +238,22 @@ export default abstract class Quest {
 
     private handleItemRequirement(player: Player, stageData: StageData | RawStage): void {
         // Extract the item key and count requirement.
-        let { itemRequirement, itemRequirementCount, npc } = stageData;
+        let { itemRequirements, itemRewards, npc } = stageData;
 
         // Skip if the player does not have the required item and count in the inventory.
-        if (!this.hasAllItems(player, itemRequirement!, itemRequirementCount)) return;
+        if (!this.hasAllItems(player, itemRequirements)) return;
+
+        // Skip if the player does not have enough space in the inventory for the item rewards.
+        if (itemRewards && !player.inventory.hasSpace(itemRewards.length))
+            return player.notify('You do not have enough space in your inventory.');
 
         // Iterate through the items and remove them from the player's inventory.
-        for (let i = 0; i < itemRequirement!.length; i++)
-            player.inventory.removeItem(itemRequirement![i], (itemRequirementCount || [])[i]);
+        for (let item of itemRequirements!) player.inventory.removeItem(item.key, item.count);
 
         // If the stage contains item rewards, we give it to the player.
-        if (this.hasItemToGive(stageData))
-            this.givePlayerItem(player, this.stageData.itemKey!, this.stageData.itemCount);
+        if (this.hasItemToGive(stageData)) this.givePlayerRewards(player, itemRewards!);
 
+        // Grant the experience from the stage.
         if (this.hasExperience(stageData)) this.givePlayerExperience(player);
 
         // If the stage rewards an ability, we give it to the player.
@@ -289,16 +292,28 @@ export default abstract class Quest {
     }
 
     /**
-     * Attemps to add an item into the player's inventory and returns
-     * the conditional status of that action.
-     * @param player The player we are adding the item to.
-     * @param key The item key's identifier.
-     * @param count The amount of the item we're adding.
-     * @returns Whether or not adding the item was successful.
+     * Responsible for giving the player the item rewards in an array. The function must first
+     * ensure that the player has enough inventory space for the item rewards.
+     * @param player The player we are giving the item to.
+     * @param itemRewards The item rewards we are giving to the player.
+     * @param progress Whether or not to progress to the next stage after giving the item rewards.
      */
 
-    private givePlayerItem(player: Player, key: string, count = 1): boolean {
-        return player.inventory.add(new Item(key, -1, -1, false, count)) > 0;
+    private givePlayerRewards(
+        player: Player,
+        itemRewards: QuestItem[] = [],
+        progress = false
+    ): void {
+        // We play it extra safe by ensuring there are at least as many empty spaces as there are reward items.
+        if (!player.inventory.hasSpace(itemRewards.length))
+            return player.notify(`Please make some room in your inventory to accept this reward.`);
+
+        // Check if the player has enough inventory space for the item rewards.
+        for (let item of itemRewards)
+            player.inventory.add(new Item(item.key, -1, -1, false, item.count));
+
+        // Progress to the next stage if the parameter is true.
+        if (progress) this.progress();
     }
 
     /**
@@ -341,25 +356,25 @@ export default abstract class Quest {
     }
 
     /**
-     * Checks if the current stage has an item requirement.
-     * @param stageData Contains information about the current stage in a raw format
-     * if processing a sub stage, or in a parsed format if processing the main stage.
-     * @returns If the item requirement property exists in the current stage.
+     * Checks whether the stage parameter provided contains any items. Since the `itemRequirements`
+     * may be undefined, we default to an empty array in case it is.
+     * @param stageData Contains information about the current stage in a raw format or in a parsed format.
+     * @returns If there are any item requirements in the stage provided.
      */
 
     private hasItemRequirement(stageData: StageData | RawStage): boolean {
-        return !!stageData.itemRequirement;
+        return (stageData.itemRequirements || []).length > 0;
     }
 
     /**
-     * Checks if the current stage has an item to give to the player.
-     * @param stageData Contains information about the current stage in a raw format
-     * if processing a sub stage, or in a parsed format if processing the main stage.
-     * @returns If the `itemKey` proprety exists in the current stage.
+     * Similarly to `hasItemRequirement`, we check if the stage parameter provided contains
+     * any item rewards. Since the `itemRewards` may be undefined, we default to an empty array in case it is.
+     * @param stageData Contains information about the current stage in a raw format or in a parsed format.
+     * @returns If there are any item rewards in the stage provided.
      */
 
     private hasItemToGive(stageData: StageData | RawStage): boolean {
-        return !!stageData.itemKey;
+        return (stageData.itemRewards || []).length > 0;
     }
 
     /**
@@ -385,25 +400,18 @@ export default abstract class Quest {
     }
 
     /**
-     * Checks that the player has all the items required to progress the next
-     * stage in the quest. We parse through every item requirement and ensure
-     * that the player has the item and count specified.
-     * @param player The player that we are checking the inventory of.
-     * @param itemRequirement The item requirement array, string array of item keys.
-     * @param itemRequirementCount The item requirement count array, number array of item counts.
-     * @returns Whether or not the player has all the items.
+     * Checks whether the player has all the items in the specified array of items.
+     * Each eleemnt contains a key and a count, we check that against the player's inventory.
+     * @param player The player we are checking the inventory of.
+     * @param items The array of items we are checking for.
      */
 
-    private hasAllItems(
-        player: Player,
-        itemRequirement: string[],
-        itemRequirementCount: number[] = []
-    ): boolean {
+    private hasAllItems(player: Player, items: QuestItem[] = []): boolean {
         let hasItems = true;
 
         // Iterate and ensure that the player has all the items.
-        for (let i = 0; i < itemRequirement!.length; i++)
-            if (!player.inventory.hasItem(itemRequirement![i], (itemRequirementCount || [])[i])) {
+        for (let item of items)
+            if (!player.inventory.hasItem(item.key, item.count)) {
                 hasItems = false;
                 break;
             }
@@ -516,13 +524,11 @@ export default abstract class Quest {
             npc: stage.npc || '',
             mob: stage.mob! || '',
             mobCountRequirement: stage.mobCountRequirement || 0,
-            itemRequirement: stage.itemRequirement || [],
-            itemRequirementCount: stage.itemRequirementCount || [],
+            itemRequirements: stage.itemRequirements || [],
+            itemRewards: stage.itemRewards || [],
             text: stage.text || [''],
             pointer: stage.pointer || undefined,
             popup: stage.popup || undefined,
-            itemKey: stage.itemKey || '',
-            itemCount: stage.itemCount || 1,
             tree: stage.tree || '',
             treeCount: stage.treeCount || 0,
             skill: stage.skill || '',
@@ -567,10 +573,9 @@ export default abstract class Quest {
                 return stage.completedText!;
 
             // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
-            if (stage.itemRequirement! && this.stage === i) {
+            if (this.hasItemRequirement(stage) && this.stage === i) {
                 // Verify that the player has the required items and return the dialogue for it.
-                if (this.hasAllItems(player, stage.itemRequirement, stage.itemRequirementCount))
-                    return stage.hasItemText!;
+                if (this.hasAllItems(player, stage.itemRequirements)) return stage.hasItemText!;
 
                 // Skip to next stage iteration.
                 continue;
