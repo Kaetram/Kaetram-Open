@@ -42,7 +42,12 @@
                     "Take this axe and cut down 2 trees for me."
                 ],
                 "completedText": ["What are you waiting for?", "Go cut me some trees."],
-                "itemKey": "bronzeaxe",
+                "itemRewards": [
+                    {
+                        "key": "bronzeaxe",
+                        "count": 1
+                    }
+                ],
                 "popup": {
                     "title": "Item acquired!",
                     "text": "You've just received an axe! Equip it using your inventory!",
@@ -141,7 +146,12 @@
                     "Don't be afraid young one, they'll grow back very quickly!",
                     "Kill 5 rats for me please!"
                 ],
-                "itemKey": "woodenbow",
+                "itemRewards": [
+                    {
+                        "key": "woodenbow",
+                        "count": 1
+                    }
+                ],
                 "popup": {
                     "title": "Item acquired!",
                     "text": "You've just received a bow! Equip it using your inventory!",
@@ -213,8 +223,12 @@
                     "Would you be so kind as to bring me another 10?"
                 ],
                 "completedText": ["Please adventurer, I beg of you, just 10 more logs."],
-                "itemRequirement": ["logs"],
-                "itemRequirementCount": [10]
+                "itemRequirements": [
+                    {
+                        "key": "logs",
+                        "count": 10
+                    }
+                ]
             },
             "2": {
                 "task": "talk",
@@ -223,9 +237,18 @@
                     "Ah yes, you see, these logs are suitable for my needs.",
                     "Thank you so much dear adventurer. Please take this reward!"
                 ],
-                "itemRequirement": ["logs"],
-                "itemRequirementCount": [10],
-                "itemKey": "rustedaxe",
+                "itemRequirements": [
+                    {
+                        "key": "logs",
+                        "count": 10
+                    }
+                ],
+                "itemRewards": [
+                    {
+                        "key": "rustedaxe",
+                        "count": 1
+                    }
+                ],
                 "popup": {
                     "title": "Quest completed!",
                     "text": "@green@You have just finished @crimson@Foresting@green@ quest. You have received a @crimson@Rusted Axe@green@!",
@@ -277,10 +300,26 @@
                     "Unlike that granddaughter of mine.",
                     "Here, take this gold as a reward for your troubles."
                 ],
-                "itemRequirement": ["tomato", "strawberry", "string"],
-                "itemRequirementCount": [2, 2, 1],
-                "itemKey": "gold",
-                "itemCount": 7500,
+                "itemRequirements": [
+                    {
+                        "key": "tomato",
+                        "count": 2
+                    },
+                    {
+                        "key": "strawberry",
+                        "count": 2
+                    },
+                    {
+                        "key": "string",
+                        "count": 1
+                    }
+                ],
+                "itemRewards": [
+                    {
+                        "key": "gold",
+                        "count": 7500
+                    }
+                ],
                 "popup": {
                     "title": "Quest completed!",
                     "text": "@green@You have just finished @crimson@Scavenger@green@. You've been awarded @crimson@7500@green@ gold coins!",
@@ -317,8 +356,12 @@
                     "Come back any time and I'll buy your ores at a better price",
                     "than any other store!"
                 ],
-                "itemRequirement": ["nisocore"],
-                "itemRequirementCount": [15],
+                "itemRequirements": [
+                    {
+                        "key": "nisocore",
+                        "count": 15
+                    }
+                ],
                 "skill": "mining",
                 "experience": 2000,
                 "popup": {
@@ -365,8 +408,16 @@
                     "I want you to bring me 5 bronze bars."
                 ],
                 "completedText": ["Please hurry, the time is ticking!", "Bring me 5 bronze bars."],
-                "itemRequirement": ["tinbar", "copperbar"],
-                "itemRequirementCount": [5, 5]
+                "itemRequirements": [
+                    {
+                        "key": "tinbar",
+                        "count": 5
+                    },
+                    {
+                        "key": "copperbar",
+                        "count": 5
+                    }
+                ]
             },
             "2": {
                 "task": "talk",
@@ -377,8 +428,12 @@
                     "the future for redundant tasks like these.",
                     "Thank you for your help, I guess you can use my cave now."
                 ],
-                "itemRequirement": ["bronzebar"],
-                "itemRequirementCount": [5],
+                "itemRequirements": [
+                    {
+                        "key": "bronzebar",
+                        "count": 5
+                    }
+                ],
                 "popup": {
                     "title": "Quest completed!",
                     "text": "@green@You have just finished @crimson@Miner's Quest II@green@. You've been awarded @crimson@Access to the mining cave@green@!",
@@ -416,9 +471,18 @@
                 "task": "talk",
                 "npc": "sorcerer",
                 "hasItemText": ["Perfect, just perfect. These will surely be great."],
-                "itemRequirement": ["bead"],
-                "itemRequirementCount": [3],
-                "itemKey": "staff",
+                "itemRequirements": [
+                    {
+                        "key": "bead",
+                        "count": 3
+                    }
+                ],
+                "itemRewards": [
+                    {
+                        "key": "staff",
+                        "count": 1
+                    }
+                ],
                 "popup": {
                     "title": "Quest completed!",
                     "text": "@green@You have just finished @crimson@Sorcery and Stuff@green@ quest. You have received a @crimson@Magic Staff@green@!",
@@ -450,7 +514,12 @@
                     "Please adventurer, deliver the CD.",
                     "It's my new Demo Tape, I must ensure she hears it."
                 ],
-                "itemKey": "cd"
+                "itemRewards": [
+                    {
+                        "key": "cd",
+                        "count": 1
+                    }
+                ]
             },
             "1": {
                 "task": "talk",
@@ -468,7 +537,12 @@
                     "Tell him I'll take it but will probably never listen to it."
                 ],
                 "completedText": ["Go on now, tell him."],
-                "itemRequirement": ["cd"]
+                "itemRequirements": [
+                    {
+                        "key": "cd",
+                        "count": 1
+                    }
+                ]
             },
             "2": {
                 "task": "talk",
@@ -549,7 +623,12 @@
                     "All right all right. You win, I'll give that stupid sponge his gold.",
                     "Here, now get out of here and leave me alone."
                 ],
-                "itemKey": "gold",
+                "itemRewards": [
+                    {
+                        "key": "gold",
+                        "count": 1
+                    }
+                ],
                 "popup": {
                     "title": "Item acquired!",
                     "text": "The mysterious pickle-looking cucumber just gave you 1 whole gold coin!",
@@ -563,9 +642,18 @@
                     "Thank you adventurer! With this gold I can finally buy a new house!",
                     "Just you look at me, Mr. Sponge, homeowner!"
                 ],
-                "itemRequirement": ["gold"],
-                "itemKey": "gold",
-                "itemCount": 10000,
+                "itemRequirements": [
+                    {
+                        "key": "gold",
+                        "count": 1
+                    }
+                ],
+                "itemRewards": [
+                    {
+                        "key": "gold",
+                        "count": 10000
+                    }
+                ],
                 "popup": {
                     "title": "Quest completed!",
                     "text": "@green@You have just finished @crimson@Sea Activities@green@. You have gained 10000 gold!",
@@ -625,8 +713,12 @@
                     "I will reward you greatly for your help.",
                     "Now I have to go back to the castle and get my affairs in order."
                 ],
-                "itemKey": "gold",
-                "itemCount": 10000,
+                "itemRewards": [
+                    {
+                        "key": "gold",
+                        "count": 10000
+                    }
+                ],
                 "popup": {
                     "title": "Quest completed!",
                     "text": "@green@You have just finished @crimson@Royal Drama@green@. You have gained 10000 gold!",
@@ -655,8 +747,12 @@
                     "Please deliver the books to residents of Kaetram. They're located",
                     "throughout the city and in the swamp."
                 ],
-                "itemKey": "book",
-                "itemCount": 3
+                "itemRewards": [
+                    {
+                        "key": "book",
+                        "count": 3
+                    }
+                ]
             },
             "1": {
                 "task": "talk",
@@ -672,8 +768,12 @@
                             "Oh well, I'll take it I guess."
                         ],
                         "completedText": ["Thank you for the book I guess."],
-                        "itemRequirement": ["book"],
-                        "itemRequirementCount": [1]
+                        "itemRequirements": [
+                            {
+                                "key": "book",
+                                "count": 1
+                            }
+                        ]
                     },
                     {
                         "task": "talk",
@@ -685,8 +785,12 @@
                             "Okay well thank you I guess..."
                         ],
                         "completedText": ["Oh hello adventurer."],
-                        "itemRequirement": ["book"],
-                        "itemRequirementCount": [1]
+                        "itemRequirements": [
+                            {
+                                "key": "book",
+                                "count": 1
+                            }
+                        ]
                     },
                     {
                         "task": "talk",
@@ -698,8 +802,12 @@
                             "Okay well thank you I guess..."
                         ],
                         "completedText": ["Oh hello adventurer."],
-                        "itemRequirement": ["book"],
-                        "itemRequirementCount": [1]
+                        "itemRequirements": [
+                            {
+                                "key": "book",
+                                "count": 1
+                            }
+                        ]
                     }
                 ]
             },
@@ -712,7 +820,12 @@
                     "I have this cute little kitty that I want to give to you.",
                     "I hope you enjoy it."
                 ],
-                "itemKey": "catpet",
+                "itemRewards": [
+                    {
+                        "key": "catpet",
+                        "count": 1
+                    }
+                ],
                 "popup": {
                     "title": "Quest completed!",
                     "text": "@green@You have just finished @crimson@Royal Pet@green@. You have gained a cute little pet kitty!",
@@ -750,7 +863,12 @@
                     "to create more complex items. Fletch a small bowl and bring it to me."
                 ],
                 "completedText": ["Fletch me a small bowl and bring it to me."],
-                "itemRequirement": ["berylpendant"]
+                "itemRequirements": [
+                    {
+                        "key": "berylpendant",
+                        "count": 1
+                    }
+                ]
             },
             "2": {
                 "task": "talk",
@@ -761,14 +879,29 @@
                     "You may need to go find the rest of the ingredients, I'm getting old."
                 ],
                 "completedText": ["Try making a stew using a bowl, a tomato, and the cauldron."],
-                "itemRequirement": ["bowlsmall"],
-                "itemKey": "tomato"
+                "itemRequirements": [
+                    {
+                        "key": "bowlsmall",
+                        "count": 1
+                    }
+                ],
+                "itemRewards": [
+                    {
+                        "key": "tomato",
+                        "count": 1
+                    }
+                ]
             },
             "3": {
                 "task": "talk",
                 "npc": "iamverycoldnpc",
                 "hasItemText": ["Wonderful, see, you're getting the hang of it."],
-                "itemRequirement": ["stew"],
+                "itemRequirements": [
+                    {
+                        "key": "stew",
+                        "count": 1
+                    }
+                ],
                 "popup": {
                     "title": "Quest completed!",
                     "text": "@green@You have just finished @crimson@Arts and Craft@green@ quest.",
@@ -806,8 +939,18 @@
                     "I see, you have proven yourself worthy.",
                     "Take this knowledge of the snow potions, and the path shall be yours."
                 ],
-                "itemRequirement": ["icesword"],
-                "itemKey": "snowpotion",
+                "itemRequirements": [
+                    {
+                        "key": "icesword",
+                        "count": 1
+                    }
+                ],
+                "itemRewards": [
+                    {
+                        "key": "snowpotion",
+                        "count": 1
+                    }
+                ],
                 "popup": {
                     "title": "Quest completed!",
                     "text": "@green@You have just finished @crimson@Ancient Lands@green@ quest. You have received a @crimson@Snow Potion@green@!",
@@ -926,8 +1069,12 @@
                     "Please find out where my grandmother is.",
                     "If you ask some of the villagers you might find some information."
                 ],
-                "itemRequirement": ["clamobject"],
-                "itemRequirementCount": [5]
+                "itemRequirements": [
+                    {
+                        "key": "clamobject",
+                        "count": 5
+                    }
+                ]
             },
             "2": {
                 "task": "talk",
@@ -953,8 +1100,12 @@
                     "It's probably your best bet to check out the caves nearby."
                 ],
                 "completedText": ["You should probably check out the caves nearby."],
-                "itemRequirement": ["clamchowder"],
-                "itemRequirementCount": [2]
+                "itemRequirements": [
+                    {
+                        "key": "clamchowder",
+                        "count": 2
+                    }
+                ]
             },
             "4": {
                 "task": "talk",
@@ -981,8 +1132,12 @@
                     "Tell that granddaughter of mine that I am very hurt."
                 ],
                 "completedText": ["Tell that granddaughter of mine that I am very hurt."],
-                "itemRequirement": ["clamchowder"],
-                "itemRequirementCount": [2]
+                "itemRequirements": [
+                    {
+                        "key": "clamchowder",
+                        "count": 2
+                    }
+                ]
             },
             "6": {
                 "task": "talk",
@@ -992,8 +1147,12 @@
                     "Oh you even found her? That's... great!",
                     "Here is a small reward for your troubles."
                 ],
-                "itemKey": "gold",
-                "itemAmount": 7500,
+                "itemRewards": [
+                    {
+                        "key": "gold",
+                        "count": 7500
+                    }
+                ],
                 "popup": {
                     "title": "Quest completed!",
                     "text": "@green@You have just finished @crimson@Clam Chowder@green@ quest.",

@@ -1,6 +1,11 @@
 import type { PointerData } from './pointer';
 import type { PopupData } from './popup';
 
+export interface QuestItem {
+    key: string;
+    count: number;
+}
+
 export interface RawStage {
     task: string;
     npc?: string;
@@ -14,10 +19,10 @@ export interface RawStage {
     mobCountRequirement?: number;
 
     /** Item required in the inventory to progress to next stage. */
-    itemRequirement?: string[];
+    itemRequirements?: QuestItem[];
 
-    /** How many of a given item we need to progress. */
-    itemRequirementCount?: number[];
+    /** The items that we are rewarding the player for the stage. */
+    itemRewards?: QuestItem[];
 
     /** Text for the NPC. */
     text?: string[];
@@ -29,10 +34,6 @@ export interface RawStage {
 
     /** Popup information */
     popup?: PopupData;
-
-    /** If the stage grants the player an item. */
-    itemKey?: string;
-    itemCount?: number;
 
     /** If the stage grants the user an ability. */
     ability?: string;
@@ -67,14 +68,12 @@ export interface StageData {
     subStages?: SubStage[];
     mob?: string[];
     mobCountRequirement: number; // how many mobs we need to kill to progress
-    itemRequirement?: string[];
-    itemRequirementCount?: number[]; // how many of an item we need for progression
+    itemRequirements?: QuestItem[];
+    itemRewards?: QuestItem[];
     text?: string[];
     completedText?: string[];
     pointer?: PointerData;
     popup?: PopupData;
-    itemKey?: string;
-    itemCount?: number;
     ability?: string;
     abilityLevel?: number;
     tree?: string;
