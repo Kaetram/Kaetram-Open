@@ -26,11 +26,7 @@ export default abstract class Menu {
      * close the user interface.
      */
 
-    public constructor(
-        private containerName?: string,
-        private closeButton?: string,
-        private toggleButton?: string
-    ) {
+    public constructor(private containerName?: string, private closeButton?: string, private toggleButton?: string) {
         this.container = document.querySelector(this.containerName!)!;
         this.close = document.querySelector(this.closeButton!)!;
         this.button = document.querySelector(this.toggleButton!)!;

@@ -16,12 +16,7 @@ import type Mailer from './mailer';
 import type { ObjectId } from 'mongodb';
 import type { Integration } from '@sentry/types';
 import type { Request, Response, Express, Router } from 'express';
-import type {
-    MobAggregate,
-    PvpAggregate,
-    SkillExperience,
-    TotalExperience
-} from '@kaetram/common/types/leaderboards';
+import type { MobAggregate, PvpAggregate, SkillExperience, TotalExperience } from '@kaetram/common/types/leaderboards';
 
 // Initialize stripe
 const stripe = new Stripe(config.stripeSecretKey, {
@@ -319,11 +314,7 @@ export default class API {
 
         try {
             // Construct an event based on the request body and signature.
-            let event = stripe.webhooks.constructEvent(
-                request.body,
-                signature,
-                config.stripeKeyLocal
-            );
+            let event = stripe.webhooks.constructEvent(request.body, signature, config.stripeKeyLocal);
 
             // Handle events as needed.
             switch (event.type) {

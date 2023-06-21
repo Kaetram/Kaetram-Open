@@ -62,24 +62,15 @@ export default class Layer {
      * @param foreground Whether we want to bind the foreground or background texture.
      */
 
-    public bindTexture(
-        context: WebGLRenderingContext,
-        program: WebGLProgram,
-        foreground = false
-    ): void {
+    public bindTexture(context: WebGLRenderingContext, program: WebGLProgram, foreground = false): void {
         // Program hasn't loaded yet so there's no need to bind the texture.
         if (!program) return;
 
         // Create the textures if they do not exist.
-        if (!this.backgroundTexture && !foreground)
-            this.backgroundTexture = context.createTexture()!;
-        if (!this.foregroundTexture && foreground)
-            this.foregroundTexture = context.createTexture()!;
+        if (!this.backgroundTexture && !foreground) this.backgroundTexture = context.createTexture()!;
+        if (!this.foregroundTexture && foreground) this.foregroundTexture = context.createTexture()!;
 
-        context.bindTexture(
-            context.TEXTURE_2D,
-            foreground ? this.foregroundTexture : this.backgroundTexture
-        );
+        context.bindTexture(context.TEXTURE_2D, foreground ? this.foregroundTexture : this.backgroundTexture);
 
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.NEAREST);
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MIN_FILTER, context.NEAREST);
@@ -205,17 +196,9 @@ export default class Layer {
      * @param lowPower Whether or not we are in low power mode, disables animated tiles.
      */
 
-    public draw(
-        context: WebGLRenderingContext,
-        time: number,
-        foreground = false,
-        lowPower = false
-    ): void {
+    public draw(context: WebGLRenderingContext, time: number, foreground = false, lowPower = false): void {
         // Bind the texture according to whether we want to draw the foreground or background.
-        context.bindTexture(
-            context.TEXTURE_2D,
-            foreground ? this.foregroundTexture : this.backgroundTexture
-        );
+        context.bindTexture(context.TEXTURE_2D, foreground ? this.foregroundTexture : this.backgroundTexture);
 
         // Draw the triangles
         context.drawArrays(context.TRIANGLES, 0, 6);

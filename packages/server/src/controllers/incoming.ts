@@ -6,12 +6,7 @@ import Packet from '@kaetram/common/network/packet';
 
 import type World from '../game/world';
 import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
-import type {
-    ChatPacket,
-    FriendsPacket,
-    PlayerPacket,
-    RelayPacket
-} from '@kaetram/common/types/messages/hub';
+import type { ChatPacket, FriendsPacket, PlayerPacket, RelayPacket } from '@kaetram/common/types/messages/hub';
 
 /**
  * This incoming is the global incoming controller. This is responsible for
@@ -65,19 +60,10 @@ export default class Incoming {
     private handlePlayer(opcode: Opcodes.Player, data: PlayerPacket): void {
         // Synchronize the player's login or logout to the guild members.
         if (data.guild)
-            this.world.syncGuildMembers(
-                data.guild,
-                data.username,
-                opcode === Opcodes.Player.Logout,
-                data.serverId
-            );
+            this.world.syncGuildMembers(data.guild, data.username, opcode === Opcodes.Player.Logout, data.serverId);
 
         // Synchronize the player's login or logout to the friends list.
-        return this.world.syncFriendsList(
-            data.username,
-            opcode === Opcodes.Player.Logout,
-            data.serverId
-        );
+        return this.world.syncFriendsList(data.username, opcode === Opcodes.Player.Logout, data.serverId);
     }
 
     /**
@@ -98,22 +84,11 @@ export default class Incoming {
         if (data.success) {
             let player = this.world.getPlayerByName(data.source!);
 
-            return player?.notify(
-                data.message!,
-                'aquamarine',
-                `[To ${Utils.formatName(data.target!)}]`,
-                true
-            );
+            return player?.notify(data.message!, 'aquamarine', `[To ${Utils.formatName(data.target!)}]`, true);
         }
 
         // No target means that the message is globally sent.
-        if (!data.target)
-            return this.world.globalMessage(
-                data.source!,
-                data.message!,
-                data.colour || 'tomato',
-                true
-            );
+        if (!data.target) return this.world.globalMessage(data.source!, data.message!, data.colour || 'tomato', true);
 
         // Find who the message is targeted towards and attempt to send them a message.
         let target = this.world.getPlayerByName(data.target!);

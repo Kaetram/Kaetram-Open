@@ -36,9 +36,7 @@ export default class Database {
 
     public getDatabase(): DatabaseType {
         if (!this.database)
-            log.error(
-                '[Database] No database is currently present. It is advised against proceeding in this state.'
-            );
+            log.error('[Database] No database is currently present. It is advised against proceeding in this state.');
 
         return this.database;
     }

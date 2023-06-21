@@ -2,12 +2,7 @@ import type { Modules } from '@kaetram/common/network';
 import type { HitData } from '@kaetram/common/types/info';
 
 export default class Hit {
-    public constructor(
-        public type: Modules.Hits,
-        private damage = 0,
-        private ranged = false,
-        public aoe = 0
-    ) {}
+    public constructor(public type: Modules.Hits, private damage = 0, private ranged = false, public aoe = 0) {}
 
     /**
      * @returns The damage integer of the hit.

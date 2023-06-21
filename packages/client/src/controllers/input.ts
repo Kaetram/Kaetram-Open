@@ -154,10 +154,7 @@ export default class InputController {
 
         // Admin command for teleporting to a location.
         if (this.isCtrlKey())
-            return this.game.socket.send(Packets.Command, [
-                Opcodes.Command.CtrlClick,
-                this.getCoords()
-            ]);
+            return this.game.socket.send(Packets.Command, [Opcodes.Command.CtrlClick, this.getCoords()]);
 
         this.move(this.getCoords());
     }
@@ -365,8 +362,7 @@ export default class InputController {
             }
 
             case Modules.MenuActions.Follow: {
-                if (this.interactEntity instanceof Character)
-                    this.game.player.pursue(this.interactEntity);
+                if (this.interactEntity instanceof Character) this.game.player.pursue(this.interactEntity);
                 break;
             }
 
@@ -454,14 +450,10 @@ export default class InputController {
             if (this.isTargetable(this.entity)) {
                 this.player.follow(this.entity);
 
-                if (this.isAttackable(this.entity))
-                    (this.entity as Character).addAttacker(this.player);
+                if (this.isAttackable(this.entity)) (this.entity as Character).addAttacker(this.player);
 
                 if (this.player.isRanged())
-                    this.game.socket.send(Packets.Target, [
-                        Opcodes.Target.Attack,
-                        this.entity.instance
-                    ]);
+                    this.game.socket.send(Packets.Target, [Opcodes.Target.Attack, this.entity.instance]);
                 return;
             }
         }
@@ -565,8 +557,7 @@ export default class InputController {
             : this.game.getEntityAt(position.gridX, position.gridY);
 
         // Remove the silhouette from the previous entity.
-        if (this.entity && (!entity || entity.instance !== this.entity.instance))
-            this.entity.updateSilhouette(false);
+        if (this.entity && (!entity || entity.instance !== this.entity.instance)) this.entity.updateSilhouette(false);
 
         return entity;
     }
@@ -754,8 +745,6 @@ export default class InputController {
      */
 
     public isMouseRendered(): boolean {
-        return (
-            this.mouse.x === this.lastMousePosition.x && this.mouse.y === this.lastMousePosition.y
-        );
+        return this.mouse.x === this.lastMousePosition.x && this.mouse.y === this.lastMousePosition.y;
     }
 }

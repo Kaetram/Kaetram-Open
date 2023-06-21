@@ -40,11 +40,7 @@ export default class UWS extends WebSocket {
      * to extract the reverse proxy IP address through the headers.
      */
 
-    private handleUpgrade(
-        response: HttpResponse,
-        request: HttpRequest,
-        context: us_socket_context_t
-    ): void {
+    private handleUpgrade(response: HttpResponse, request: HttpRequest, context: us_socket_context_t): void {
         response.upgrade(
             {
                 url: request.getUrl(),
@@ -82,8 +78,7 @@ export default class UWS extends WebSocket {
         let connection = this.socketHandler.get(socket.getUserData().instance);
 
         // Prevent the server from crashing if the connection is not found.
-        if (!connection)
-            return log.error(`No connection found for ${socket.getUserData().instance}`);
+        if (!connection) return log.error(`No connection found for ${socket.getUserData().instance}`);
 
         // Increment the rate for the connection.
         connection.messageRate++;
@@ -114,8 +109,7 @@ export default class UWS extends WebSocket {
     private handleClose(socket: WS<ConnectionInfo>): void {
         let connection = this.socketHandler.get(socket.getUserData().instance);
 
-        if (!connection)
-            return log.error(`No connection found closing ${socket.getUserData().instance}`);
+        if (!connection) return log.error(`No connection found closing ${socket.getUserData().instance}`);
 
         // Mark the connection as closed to prevent any further messages from being sent.
         connection.closed = true;

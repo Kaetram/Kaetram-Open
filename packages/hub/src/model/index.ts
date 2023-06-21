@@ -7,11 +7,7 @@ import type { Packets } from '@kaetram/common/network';
 export default abstract class Model {
     public address;
 
-    public constructor(
-        public controller: Models,
-        public instance: string,
-        public connection: Connection
-    ) {
+    public constructor(public controller: Models, public instance: string, public connection: Connection) {
         this.address = Utils.bufferToAddress(this.connection.socket.getRemoteAddressAsText());
     }
 

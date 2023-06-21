@@ -63,8 +63,7 @@ export default class Friends extends Menu {
             let name = element.children[0] as HTMLElement,
                 maxLength = this.getMaxLength();
 
-            if (friend.username.length > maxLength)
-                name.innerHTML = `${friend.username.slice(0, maxLength)}...`;
+            if (friend.username.length > maxLength) name.innerHTML = `${friend.username.slice(0, maxLength)}...`;
         }
     }
 
@@ -187,8 +186,7 @@ export default class Friends extends Menu {
         element.classList.add('slice-list-item');
 
         // If the friend is online, add the online class (makes the username green).
-        if (online)
-            world.classList.add(this.player.serverId === serverId ? 'text-green' : 'text-yellow');
+        if (online) world.classList.add(this.player.serverId === serverId ? 'text-green' : 'text-yellow');
         else world.classList.add('text-red');
 
         // Store the username of the friend in the element.
@@ -275,8 +273,7 @@ export default class Friends extends Menu {
 
     private get(username: string): FriendsElement | undefined {
         for (let child of this.list.children)
-            if ((child as FriendsElement).username === username.toLowerCase())
-                return child as FriendsElement;
+            if ((child as FriendsElement).username === username.toLowerCase()) return child as FriendsElement;
 
         return undefined;
     }

@@ -18,11 +18,7 @@ export default class Spawn extends Packet {
         super(
             Packets.Spawn,
             undefined,
-            entity.isPlayer()
-                ? entity.serialize(true)
-                : entity.isMob()
-                ? entity.serialize(player)
-                : entity.serialize()
+            entity.isPlayer() ? entity.serialize(true) : entity.isMob() ? entity.serialize(player) : entity.serialize()
         );
     }
 }

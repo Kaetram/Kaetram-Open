@@ -50,26 +50,14 @@ export default class Equipments extends Menu {
         this.next.addEventListener('click', () => this.handleNavigation('next'));
 
         // Equipment slot event listeners -- definitely not stolen from the state page :)
-        this.weapon.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Weapon)
-        );
-        this.weaponSkin.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.WeaponSkin)
-        );
-        this.armour.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Helmet)
-        );
-        this.armourSkin.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.ArmourSkin)
-        );
-        this.pendant.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Pendant)
-        );
+        this.weapon.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Weapon));
+        this.weaponSkin.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.WeaponSkin));
+        this.armour.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Helmet));
+        this.armourSkin.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.ArmourSkin));
+        this.pendant.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Pendant));
         this.ring.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Ring));
         this.boots.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Boots));
-        this.arrow.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Arrows)
-        );
+        this.arrow.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Arrows));
     }
 
     /**

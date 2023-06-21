@@ -128,8 +128,7 @@ export default class Leaderboards extends Menu {
                 this.resultsList.innerHTML = '';
 
                 // Create a result element for each result.
-                for (let result of data.list)
-                    this.createResultElement(result as ResultInfo, searchElement.type);
+                for (let result of data.list) this.createResultElement(result as ResultInfo, searchElement.type);
             })
             .catch((error: Error) => {
                 log.error(error);
@@ -213,8 +212,7 @@ export default class Leaderboards extends Menu {
         name.innerHTML = result._id;
 
         // Set the description of the element.
-        info.innerHTML =
-            type === 'skill' || type === '' ? `${result.experience}` : `${result.kills}`;
+        info.innerHTML = type === 'skill' || type === '' ? `${result.experience}` : `${result.kills}`;
 
         // Add the name element to the element.
         element.append(name, info);

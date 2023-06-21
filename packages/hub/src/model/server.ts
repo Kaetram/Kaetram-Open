@@ -107,8 +107,7 @@ export default class Server extends Model {
                 for (let member of inactiveMembers!) {
                     let targetServer = this.controller.findPlayer(member);
 
-                    if (targetServer)
-                        activeMembers.push({ username: member, serverId: targetServer.id });
+                    if (targetServer) activeMembers.push({ username: member, serverId: targetServer.id });
                 }
 
                 // Send the list of active members back to the source server's player.
@@ -229,8 +228,7 @@ export default class Server extends Model {
 
     public message(source: string, message: string, target?: string): void {
         // If we don't have a target then we just send the message to the Discord bot.
-        if (!target)
-            return this.controller.messageCallback?.(source, message, `${this.name} ${this.id}`);
+        if (!target) return this.controller.messageCallback?.(source, message, `${this.name} ${this.id}`);
 
         // Attempt to find the target player on the server.
         let targetServer = this.controller.findPlayer(target);

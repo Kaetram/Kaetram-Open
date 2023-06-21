@@ -83,9 +83,7 @@ export interface Config {
 console.debug(`Loading env values from [.env] with fallback to [.env.defaults]`);
 
 function camelCase(str: string): string {
-    return str
-        .toLowerCase()
-        .replace(/([_-][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''));
+    return str.toLowerCase().replace(/([_-][a-z])/g, (group) => group.toUpperCase().replace('-', '').replace('_', ''));
 }
 
 let { NODE_ENV } = process.env,

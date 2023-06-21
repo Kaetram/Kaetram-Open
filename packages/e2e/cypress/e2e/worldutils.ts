@@ -9,10 +9,7 @@ export function getWorldContext<WC extends WorldContext = WorldContext>(world: C
     return world.worldContext as WC;
 }
 
-export function activateWorldContext<WC extends WorldContext = WorldContext>(
-    world: Context,
-    context: WC
-): void {
+export function activateWorldContext<WC extends WorldContext = WorldContext>(world: Context, context: WC): void {
     world.worldContext = context;
     cy.visit('/');
     context.injectDefaultData();

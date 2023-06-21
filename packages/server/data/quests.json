@@ -68,10 +68,7 @@
                 "task": "talk",
                 "npc": "guard",
                 "text": ["Thank you soldier, meet me in the cave below!"],
-                "completedText": [
-                    "I'm not sure what you're waiting for...",
-                    "head on over to the cave below!"
-                ],
+                "completedText": ["I'm not sure what you're waiting for...", "head on over to the cave below!"],
                 "pointer": {
                     "type": 0,
                     "x": 570,
@@ -209,10 +206,7 @@
                     "I'm rather exhausted, would you be so kind as",
                     "to bring me 10 logs?"
                 ],
-                "completedText": [
-                    "Please adventurer, bring me 10 logs.",
-                    "That's all I ask from you!"
-                ]
+                "completedText": ["Please adventurer, bring me 10 logs.", "That's all I ask from you!"]
             },
             "1": {
                 "task": "talk",
@@ -288,9 +282,7 @@
                     "I will grant you a reward if you do.",
                     "You can find those ingredients throughout the world, just look around."
                 ],
-                "completedText": [
-                    "Please bring me 2 tomatoes, 2 strawberries, and a piece of string."
-                ]
+                "completedText": ["Please bring me 2 tomatoes, 2 strawberries, and a piece of string."]
             },
             "2": {
                 "task": "talk",
@@ -395,10 +387,7 @@
                     "my special secret cave where only miners are allowed.",
                     "Okay so anyway, I need you to bring me 5 tin bars, 5 copper bars."
                 ],
-                "completedText": [
-                    "Please hurry, the time is ticking!",
-                    "Bring me 5 tin bars and 5 copper bars."
-                ]
+                "completedText": ["Please hurry, the time is ticking!", "Bring me 5 tin bars and 5 copper bars."]
             },
             "1": {
                 "task": "talk",
@@ -851,9 +840,7 @@
                     "Secondly I will need some beryl, you can find it in various caves.",
                     "You can use the crafting table to make a Beryl Pendant."
                 ],
-                "completedText": [
-                    "Bring me some string and some beryl gemstone and use it to make a pendant."
-                ]
+                "completedText": ["Bring me some string and some beryl gemstone and use it to make a pendant."]
             },
             "1": {
                 "task": "talk",

@@ -129,8 +129,7 @@ export default class Map {
         for (let tile of data) {
             let index = this.coordToIndex(tile.x, tile.y),
                 objectIndex = this.objects.indexOf(index),
-                useAnimationData =
-                    !(index in this.dynamicAnimatedTiles) && !this.game.isLowPowerMode();
+                useAnimationData = !(index in this.dynamicAnimatedTiles) && !this.game.isLowPowerMode();
 
             /**
              * If we're in low power mode just store the tile data as is. Otherwise we store
@@ -201,11 +200,7 @@ export default class Map {
      * @param callback Parsed client tileset of type TilesetInfo.
      */
 
-    private loadTileset(
-        tileset: ProcessedTileset,
-        index: number,
-        callback: (tileset: TilesetInfo) => void
-    ): void {
+    private loadTileset(tileset: ProcessedTileset, index: number, callback: (tileset: TilesetInfo) => void): void {
         let tilesetInfo = new Image() as TilesetInfo,
             path = `/img/tilesets/${tileset.relativePath}`; // tileset path in the client.
 
@@ -417,8 +412,7 @@ export default class Map {
      */
 
     public getTilesetFromId(tileId: number): TilesetInfo | undefined {
-        for (let tileset of this.tilesets)
-            if (tileId >= tileset.firstGid && tileId <= tileset.lastGid) return tileset;
+        for (let tileset of this.tilesets) if (tileId >= tileset.firstGid && tileId <= tileset.lastGid) return tileset;
 
         return undefined;
     }

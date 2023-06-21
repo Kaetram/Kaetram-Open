@@ -58,15 +58,7 @@ export default class Mob extends Character {
     private bonuses: Bonuses = Utils.getEmptyBonuses();
 
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
-    private dropTables: string[] = [
-        'ordinary',
-        'arrows',
-        'unusual',
-        'shards',
-        'fruits',
-        'vegetables',
-        'mushrooms'
-    ]; // Default drop table for all mobs.
+    private dropTables: string[] = ['ordinary', 'arrows', 'unusual', 'shards', 'fruits', 'vegetables', 'mushrooms']; // Default drop table for all mobs.
 
     public health: number = Modules.MobDefaults.HEALTH_LEVEL;
     public accuracy: number = Modules.MobDefaults.ACCURACY_LEVEL;
@@ -298,8 +290,7 @@ export default class Mob extends Character {
 
         if (drops.length === 0) return;
 
-        for (let drop of drops)
-            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner);
+        for (let drop of drops) this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner);
     }
 
     /**
@@ -517,10 +508,7 @@ export default class Mob extends Character {
      */
 
     public outsideRoaming(entity?: Entity, distance = this.roamDistance): boolean {
-        return (
-            Utils.getDistance(entity?.x || this.x, entity?.y || this.y, this.spawnX, this.spawnY) >
-            distance
-        );
+        return Utils.getDistance(entity?.x || this.x, entity?.y || this.y, this.spawnX, this.spawnY) > distance;
     }
 
     /**
@@ -536,8 +524,7 @@ export default class Mob extends Character {
         if (this.miniboss) return Modules.NameColours[SpecialEntityTypes.Miniboss];
 
         if (player) {
-            if (player.quests.getQuestFromMob(this))
-                return Modules.NameColours[SpecialEntityTypes.Quest];
+            if (player.quests.getQuestFromMob(this)) return Modules.NameColours[SpecialEntityTypes.Quest];
             if (player?.achievements.getAchievementFromEntity(this))
                 return Modules.NameColours[SpecialEntityTypes.Achievement];
         }
@@ -571,8 +558,7 @@ export default class Mob extends Character {
      */
 
     public getDescription(): string {
-        if (Array.isArray(this.description))
-            return this.description[Utils.randomInt(0, this.description.length - 1)];
+        if (Array.isArray(this.description)) return this.description[Utils.randomInt(0, this.description.length - 1)];
 
         return this.description;
     }

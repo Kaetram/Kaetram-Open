@@ -68,8 +68,7 @@ export default class Network {
                 if (timeDifference < this.timeoutThreshold) return connection.reject('toofast');
 
                 // Ensure that we don't have too many connections from the same IP address.
-                if (this.socketHandler.isMaxConnections(connection.address))
-                    return connection.reject('toomany');
+                if (this.socketHandler.isMaxConnections(connection.address)) return connection.reject('toomany');
             }
 
             this.socketHandler.updateLastTime(connection.address);
