@@ -31,8 +31,7 @@ export default class Connection {
 
     public constructor(public instance: string, private socket: HeaderWebSocket) {
         // Convert the IP address hex string to a readable IP address.
-        this.address =
-            socket.remoteAddress || Utils.bufferToAddress(socket.getRemoteAddressAsText());
+        this.address = socket.remoteAddress || Utils.bufferToAddress(socket.getRemoteAddressAsText());
 
         // Reset the messages per second every second.
         this.rateInterval = setInterval(() => (this.messageRate = 0), 1000); // 1 second
@@ -136,10 +135,7 @@ export default class Connection {
      */
 
     public isDuplicate(message: string): boolean {
-        return (
-            message === this.lastMessage &&
-            Date.now() - this.lastMessageTime < this.messageDifference
-        );
+        return message === this.lastMessage && Date.now() - this.lastMessageTime < this.messageDifference;
     }
 
     /**

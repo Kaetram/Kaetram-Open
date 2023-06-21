@@ -96,12 +96,7 @@ export default class Grids {
      * @param radius How many tiles away from the specified coordinate we are looking.
      */
 
-    public forEachEntityNear(
-        x: number,
-        y: number,
-        callback: (entity: Entity) => void,
-        radius = 1
-    ): void {
+    public forEachEntityNear(x: number, y: number, callback: (entity: Entity) => void, radius = 1): void {
         for (let i = x - radius; i <= x + radius; i++)
             for (let j = y - radius; j <= y + radius; j++)
                 if (this.entityGrid[j]?.[i]) this.forEachEntityAt(i, j, callback);

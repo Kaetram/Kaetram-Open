@@ -23,10 +23,7 @@ function resetTimeout() {
  */
 
 // Register event listeners to detect a hold event.
-export function onSecondaryPress(
-    element: HTMLElement,
-    callback: (position: { x: number; y: number }) => void
-) {
+export function onSecondaryPress(element: HTMLElement, callback: (position: { x: number; y: number }) => void) {
     // Get the game container element.
     let gameContainer = document.querySelector<HTMLElement>('#game-container')!;
 
@@ -49,10 +46,7 @@ export function onSecondaryPress(
         let [touch] = event.touches;
 
         // Set a timeout to call the callback after HOLD_TIME ms.
-        holdTimeout = window.setTimeout(
-            () => callback({ x: touch.clientX, y: touch.clientY }),
-            HOLD_TIME
-        );
+        holdTimeout = window.setTimeout(() => callback({ x: touch.clientX, y: touch.clientY }), HOLD_TIME);
     });
 
     // Reset the hold timeout in case the touch is still active.

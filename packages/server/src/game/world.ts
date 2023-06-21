@@ -126,11 +126,7 @@ export default class World {
             }
 
             case PacketType.Regions: {
-                return this.network.sendToSurroundingRegions(
-                    data.region!,
-                    data.packet,
-                    data.ignore
-                );
+                return this.network.sendToSurroundingRegions(data.region!, data.packet, data.ignore);
             }
 
             case PacketType.RegionList: {
@@ -184,8 +180,7 @@ export default class World {
 
     public syncFriendsList(username: string, logout = false, serverId = config.serverId): void {
         this.entities.forEachPlayer((player: Player) => {
-            if (player.friends.hasFriend(username))
-                player.friends.setStatus(username, !logout, serverId);
+            if (player.friends.hasFriend(username)) player.friends.setStatus(username, !logout, serverId);
         });
     }
 
@@ -200,12 +195,7 @@ export default class World {
      * @param serverId The server id that the player is currently logged in to.
      */
 
-    public syncGuildMembers(
-        identifier: string,
-        username: string,
-        logout = false,
-        serverId = config.serverId
-    ): void {
+    public syncGuildMembers(identifier: string, username: string, logout = false, serverId = config.serverId): void {
         if (!identifier) return;
 
         this.database.loader.loadGuild(identifier, (guild?: GuildData) => {

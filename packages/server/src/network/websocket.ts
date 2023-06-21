@@ -6,11 +6,7 @@ export default abstract class WebSocket {
     public addCallback?: (connection: Connection) => void;
     public initializedCallback?: () => void;
 
-    protected constructor(
-        protected host: string,
-        protected port: number,
-        protected socketHandler: SocketHandler
-    ) {}
+    protected constructor(protected host: string, protected port: number, protected socketHandler: SocketHandler) {}
 
     /**
      * Returns an empty response if someone uses HTTP protocol

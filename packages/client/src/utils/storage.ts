@@ -493,10 +493,7 @@ export default class Storage {
         if (!this.mapData) return callback(info);
 
         // Create the transaction and begin grabbing data from each object store.
-        let transaction = this.mapData.transaction(
-                ['regions', 'objects', 'cursorTiles'],
-                'readonly'
-            ),
+        let transaction = this.mapData.transaction(['regions', 'objects', 'cursorTiles'], 'readonly'),
             regionRequest = transaction.objectStore('regions').openCursor(), // Grab all the indexes and the keys.
             objectRequest = transaction.objectStore('objects').get(0), // Only need the first index.
             cursorRequest = transaction.objectStore('cursorTiles').get(0); // Only need the first index.

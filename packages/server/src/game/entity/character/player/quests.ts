@@ -32,10 +32,7 @@ export default class Quests {
             if (!(key in QuestIndex)) continue;
 
             // Create an instance and pass the quest data along.
-            let quest = new QuestIndex[key as keyof typeof QuestIndex](
-                key,
-                quests[key as keyof typeof quests]
-            );
+            let quest = new QuestIndex[key as keyof typeof QuestIndex](key, quests[key as keyof typeof quests]);
 
             this.quests[key] = quest;
 

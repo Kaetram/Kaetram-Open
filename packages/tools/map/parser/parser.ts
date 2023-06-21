@@ -3,12 +3,7 @@ import zlib from 'node:zlib';
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import type {
-    ProcessedAnimation,
-    ProcessedMap,
-    ProcessedResource,
-    ProcessedTileset
-} from '@kaetram/common/types/map';
+import type { ProcessedAnimation, ProcessedMap, ProcessedResource, ProcessedTileset } from '@kaetram/common/types/map';
 import type { Animation, Layer, LayerObject, MapData, Property, Tileset } from './mapdata';
 
 interface Resources {
@@ -34,9 +29,7 @@ export default class ProcessMap {
             divisionSize = Modules.Constants.MAP_DIVISION_SIZE;
 
         if (width % divisionSize !== 0 || height % divisionSize !== 0)
-            log.warning(
-                'The map size specified cannot be evenly divided, server may not be able to load the map.'
-            );
+            log.warning('The map size specified cannot be evenly divided, server may not be able to load the map.');
 
         this.map = {
             width,
@@ -109,12 +102,8 @@ export default class ProcessMap {
         // As the last step of the tileset processing, we parse the resources and add them to the map.
         this.parseResources(this.trees, (tree: ProcessedResource) => this.map.trees.push(tree));
         this.parseResources(this.rocks, (rock: ProcessedResource) => this.map.rocks.push(rock));
-        this.parseResources(this.fishSpots, (fishSpot: ProcessedResource) =>
-            this.map.fishSpots.push(fishSpot)
-        );
-        this.parseResources(this.foraging, (forage: ProcessedResource) =>
-            this.map.foraging.push(forage)
-        );
+        this.parseResources(this.fishSpots, (fishSpot: ProcessedResource) => this.map.fishSpots.push(fishSpot));
+        this.parseResources(this.foraging, (forage: ProcessedResource) => this.map.foraging.push(forage));
     }
 
     /**
@@ -337,8 +326,7 @@ export default class ProcessMap {
 
             if (value < 1) continue;
 
-            if (value in this.tilesetEntities)
-                entities[parseInt(index)] = this.tilesetEntities[value];
+            if (value in this.tilesetEntities) entities[parseInt(index)] = this.tilesetEntities[value];
         }
     }
 
@@ -422,12 +410,7 @@ export default class ProcessMap {
      * @param value The value represents the resource's identifier.
      */
 
-    private parseResourceProperty(
-        resourceType: Resources,
-        name: string,
-        tileId: number,
-        value: never
-    ): void {
+    private parseResourceProperty(resourceType: Resources, name: string, tileId: number, value: never): void {
         // Create a new resource type if it does not exist.
         if (!(value in resourceType))
             resourceType[value] = {
@@ -462,10 +445,7 @@ export default class ProcessMap {
      * @param callback Contains resource currently being processed.
      */
 
-    private parseResources(
-        resources: Resources,
-        callback: (resource: ProcessedResource) => void
-    ): void {
+    private parseResources(resources: Resources, callback: (resource: ProcessedResource) => void): void {
         for (let resource of Object.values(resources)) {
             // Determine whether the normal and exhausted resource match lengths, otherwise skip.
             if (resource.base.length !== resource.depleted.length)
@@ -555,11 +535,7 @@ export default class ProcessMap {
     private removeFlipFlags(tileId: number): number {
         return (
             tileId &
-            ~(
-                Modules.MapFlags.DIAGONAL_FLAG |
-                Modules.MapFlags.VERTICAL_FLAG |
-                Modules.MapFlags.HORIZONTAL_FLAG
-            )
+            ~(Modules.MapFlags.DIAGONAL_FLAG | Modules.MapFlags.VERTICAL_FLAG | Modules.MapFlags.HORIZONTAL_FLAG)
         );
     }
 

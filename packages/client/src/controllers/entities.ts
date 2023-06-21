@@ -245,13 +245,7 @@ export default class EntitiesController {
 
             if (impactEffect !== Modules.Effects.None) target.addEffect(impactEffect);
 
-            this.game.info.create(
-                info.hitType!,
-                info.damage!,
-                target.x,
-                target.y,
-                this.isPlayer(target.instance)
-            );
+            this.game.info.create(info.hitType!, info.damage!, target.x, target.y, this.isPlayer(target.instance));
 
             target.triggerHealthBar();
 
@@ -471,8 +465,7 @@ export default class EntitiesController {
 
     public clearPlayers(exception: Player): void {
         for (let entity of Object.values(this.entities))
-            if (entity.isPlayer() && entity.instance !== exception.instance)
-                this.removeEntity(entity);
+            if (entity.isPlayer() && entity.instance !== exception.instance) this.removeEntity(entity);
     }
 
     /**

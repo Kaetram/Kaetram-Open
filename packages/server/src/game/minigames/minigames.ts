@@ -21,8 +21,7 @@ export default class Minigames {
         this.areas = world.map.getMinigameAreas();
 
         // Iterate through the minigame keys in the index and initialize them.
-        for (let key in Index)
-            this.minigames[key] = new Index[key as keyof typeof Index](this.world);
+        for (let key in Index) this.minigames[key] = new Index[key as keyof typeof Index](this.world);
 
         log.info(
             `Finished loading ${Object.keys(this.minigames).length} minigame${

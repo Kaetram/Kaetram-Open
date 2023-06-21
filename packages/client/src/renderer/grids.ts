@@ -48,8 +48,7 @@ export default class Grids {
     public removeFromRenderingGrid(entity: Entity): void {
         // Clear the entity from all the paths it may be on.
         if (entity instanceof Character && entity.hasPath())
-            for (let tile of entity.path!)
-                delete this.renderingGrid[tile[1]][tile[0]][entity.instance];
+            for (let tile of entity.path!) delete this.renderingGrid[tile[1]][tile[0]][entity.instance];
 
         delete this.renderingGrid[entity.gridY][entity.gridX][entity.instance];
     }

@@ -6,12 +6,7 @@ import StoreEn from '@kaetram/common/text/en/store';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Store as StorePacket } from '@kaetram/common/network/impl';
 
-import type {
-    RawStore,
-    SerializedStoreInfo,
-    SerializedStoreItem,
-    StoreData
-} from '@kaetram/common/types/stores';
+import type { RawStore, SerializedStoreInfo, SerializedStoreItem, StoreData } from '@kaetram/common/types/stores';
 import type Player from '../game/entity/character/player/player';
 import type NPC from '../game/entity/npc/npc';
 import type World from '../game/world';
@@ -187,8 +182,7 @@ export default class Stores {
             return player.notify(StoreEn.NOT_ENOUGH_SPACE);
 
         // Check if item exists
-        if (!item)
-            return log.error(`${player.username} ${StoreEn.PURCHASE_INVALID_STORE}${storeKey}.`);
+        if (!item) return log.error(`${player.username} ${StoreEn.PURCHASE_INVALID_STORE}${storeKey}.`);
 
         if (item.count !== -1) {
             if (item.count < 1) return player.notify(StoreEn.ITEM_OUT_OF_STOCK);
@@ -227,9 +221,7 @@ export default class Stores {
         player.inventory.remove(currency, item.price * amount);
 
         log.stores(
-            `Player ${player.username} purchased ${amount} ${item.key} for ${item.price * amount} ${
-                store.currency
-            }.`
+            `Player ${player.username} purchased ${amount} ${item.key} for ${item.price * amount} ${store.currency}.`
         );
         // Sync up new store data to all players.
         this.updatePlayers(storeKey);
@@ -254,8 +246,7 @@ export default class Stores {
         let slot = player.inventory.get(index);
 
         // Ensure the item in the slot exists.
-        if (slot.isEmpty())
-            return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
+        if (slot.isEmpty()) return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
 
         let store = this.stores[key];
 
@@ -313,8 +304,7 @@ export default class Stores {
         let slot = player.inventory.get(index);
 
         // This shouldn't get called unless there is a bug or client was messed with.
-        if (slot.isEmpty())
-            return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
+        if (slot.isEmpty()) return log.warning(`[${player.username}] ${StoreEn.INVALID_ITEM_SELECTION}`);
 
         let store = this.stores[key];
 
@@ -335,11 +325,7 @@ export default class Stores {
         // Invalid price, this shouldn't happen.
         if (isNaN(price)) return log.error(`Malformed pricing for item selection.`);
 
-        log.stores(
-            `Player ${player.username} sold ${count} ${item.key} for ${item.price * count} ${
-                store.currency
-            }.`
-        );
+        log.stores(`Player ${player.username} sold ${count} ${item.key} for ${item.price * count} ${store.currency}.`);
 
         // Create the select packet for the client to process and move the item into the slot.
         player.send(
@@ -387,9 +373,7 @@ export default class Stores {
 
         // Check if store exists.
         if (!store) {
-            log.warning(
-                `Player ${player.username} tried to refresh a non-existent store with ID: ${storeKey}.`
-            );
+            log.warning(`Player ${player.username} tried to refresh a non-existent store with ID: ${storeKey}.`);
 
             return false;
         }

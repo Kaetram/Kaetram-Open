@@ -43,8 +43,7 @@ export default class Resource {
             let flatTile = [this.data[index]].flat();
 
             // Why would you put a resource in the void? How are you even near the resource?
-            if (!Array.isArray(flatTile))
-                return log.warning(`[${index}] Could not parse tile data for tree.`);
+            if (!Array.isArray(flatTile)) return log.warning(`[${index}] Could not parse tile data for tree.`);
 
             // Find if the tile contains data or base data.
             let dataIntersect = flatTile.filter((tile) => info.data.includes(tile)),
@@ -69,9 +68,7 @@ export default class Resource {
                 this.depleted[index] = cloneTile as RegionTile;
             } else if (dataIntersect.length > 0)
                 // Remove tree data.
-                this.depleted[index] = flatTile.filter(
-                    (tile) => !dataIntersect.includes(tile)
-                ) as RegionTile;
+                this.depleted[index] = flatTile.filter((tile) => !dataIntersect.includes(tile)) as RegionTile;
 
             // Set tile data to 0 indicating nothing there instead of empty array '[]'
             if ([this.depleted[index]].flat().length === 0) this.depleted[index] = 0;
@@ -108,10 +105,7 @@ export default class Resource {
      */
 
     public getRespawnTime(): number {
-        let info =
-            this.type in Trees
-                ? (Trees as ResourceData)[this.type]
-                : (Rocks as ResourceData)[this.type];
+        let info = this.type in Trees ? (Trees as ResourceData)[this.type] : (Rocks as ResourceData)[this.type];
 
         // Return the default respawn time if not specified.
         if (!info?.respawnTime) return this.respawnTime;

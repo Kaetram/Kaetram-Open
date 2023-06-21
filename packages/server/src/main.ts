@@ -77,8 +77,7 @@ class Main {
 
         this.loadWorld();
 
-        if (withoutDatabase)
-            log.notice('Running without database - Server is now accepting connections.');
+        if (withoutDatabase) log.notice('Running without database - Server is now accepting connections.');
 
         log.notice(`Server is now listening on port: ${config.port}.`);
     }

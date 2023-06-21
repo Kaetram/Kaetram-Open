@@ -135,10 +135,7 @@ export default class Statistics {
         this.averageTimePlayed =
             this.averageTimePlayed === 0
                 ? timePlayed
-                : Math.floor(
-                      (this.averageTimePlayed * (this.loginCount - 1) + timePlayed) /
-                          this.loginCount
-                  );
+                : Math.floor((this.averageTimePlayed * (this.loginCount - 1) + timePlayed) / this.loginCount);
     }
 
     /**

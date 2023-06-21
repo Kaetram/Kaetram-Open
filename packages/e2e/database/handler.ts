@@ -35,20 +35,11 @@ export default class Handler {
         );
     }
 
-    public getByUsername(
-        collectionName: string,
-        username: string,
-        callback: (data: unknown[]) => void
-    ) {
+    public getByUsername(collectionName: string, username: string, callback: (data: unknown[]) => void) {
         this.mongo.load({ username }, collectionName, callback);
     }
 
-    public upsert(
-        collectionName: string,
-        username: string,
-        body: unknown,
-        callback: (error?: AnyError) => void
-    ) {
+    public upsert(collectionName: string, username: string, body: unknown, callback: (error?: AnyError) => void) {
         this.mongo.upsert({ username }, collectionName, body, callback);
     }
 

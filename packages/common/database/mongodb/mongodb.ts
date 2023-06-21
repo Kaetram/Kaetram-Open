@@ -12,12 +12,7 @@ import type Player from '@kaetram/server/src/game/entity/character/player/player
 import type { Db } from 'mongodb';
 import type { Modules } from '@kaetram/common/network';
 import type { PlayerInfo, ResetToken } from './creator';
-import type {
-    MobAggregate,
-    PvpAggregate,
-    SkillExperience,
-    TotalExperience
-} from '@kaetram/common/types/leaderboards';
+import type { MobAggregate, PvpAggregate, SkillExperience, TotalExperience } from '@kaetram/common/types/leaderboards';
 
 export default class MongoDB {
     private connectionUrl: string;
@@ -90,9 +85,7 @@ export default class MongoDB {
     public login(player: Player): void {
         if (!this.hasDatabase()) return;
 
-        let cursor = this.database
-            .collection<PlayerInfo>('player_info')
-            .find({ username: player.username });
+        let cursor = this.database.collection<PlayerInfo>('player_info').find({ username: player.username });
 
         cursor.toArray().then((playerInfo) => {
             // Reject if we cannot find any data about the player.
@@ -133,8 +126,7 @@ export default class MongoDB {
         // Check if email exists.
         emailCursor.toArray().then((emailData) => {
             // If email exists and is specified by player, we check database for duplicates and reject if that's the case.
-            if (emailData.length > 0 && player.email !== '')
-                return player.connection.reject('emailexists');
+            if (emailData.length > 0 && player.email !== '') return player.connection.reject('emailexists');
 
             // Check if username exists.
             usernameCursor.toArray().then((playerInfo) => {
@@ -229,8 +221,7 @@ export default class MongoDB {
             .find({ username })
             .toArray()
             .then((info) => {
-                if (info.length === 0)
-                    return log.warning(`No player found with the username ${username}.`);
+                if (info.length === 0) return log.warning(`No player found with the username ${username}.`);
 
                 collection.updateOne(
                     { username },
@@ -267,10 +258,7 @@ export default class MongoDB {
      * generated (unhashed) token which we will use to generate a reset link.
      */
 
-    public createResetToken(
-        email: string,
-        callback: (id?: ObjectId, token?: string) => void
-    ): void {
+    public createResetToken(email: string, callback: (id?: ObjectId, token?: string) => void): void {
         if (!this.hasDatabase()) return callback();
 
         let collection = this.database.collection('player_info');
@@ -315,12 +303,7 @@ export default class MongoDB {
      * @param callback Contains the result of the reset.
      */
 
-    public resetPassword(
-        id: string,
-        token: string,
-        password: string,
-        callback: (status: boolean) => void
-    ): void {
+    public resetPassword(id: string, token: string, password: string, callback: (status: boolean) => void): void {
         if (!this.hasDatabase()) return callback(false);
 
         let collection = this.database.collection('player_info'),
@@ -374,9 +357,7 @@ export default class MongoDB {
      * each of the players. The data is then sorted in descending order.
      */
 
-    public getTotalExperienceAggregate(
-        callback: (totalExperience: TotalExperience[]) => void
-    ): void {
+    public getTotalExperienceAggregate(callback: (totalExperience: TotalExperience[]) => void): void {
         if (!this.hasDatabase()) return;
 
         let skills = this.database.collection('player_skills');
@@ -405,10 +386,7 @@ export default class MongoDB {
      * @param callback Contains a list of players and their experience for the skill.
      */
 
-    public getSkillAggregate(
-        skill: Modules.Skills,
-        callback: (experience: SkillExperience[]) => void
-    ): void {
+    public getSkillAggregate(skill: Modules.Skills, callback: (experience: SkillExperience[]) => void): void {
         if (!this.hasDatabase()) return;
 
         let skills = this.database.collection('player_skills');

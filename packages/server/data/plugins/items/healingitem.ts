@@ -39,9 +39,7 @@ export default class HealingItem implements Plugin {
             player.heal(this.healAmount, 'hitpoints');
 
             // Apply eating experience to the player.
-            player.skills
-                .get(Modules.Skills.Eating)
-                .addExperience(Math.floor(this.healAmount / 10));
+            player.skills.get(Modules.Skills.Eating).addExperience(Math.floor(this.healAmount / 10));
         }
 
         return true;

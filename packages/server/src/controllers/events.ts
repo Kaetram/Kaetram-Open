@@ -55,8 +55,7 @@ export default class Events {
      */
 
     private disable(): void {
-        if (this.activeEvent)
-            this.world.globalMessage('WORLD', `The ${this.activeEvent} event has ended.`);
+        if (this.activeEvent) this.world.globalMessage('WORLD', `The ${this.activeEvent} event has ended.`);
 
         this.activeEvent = '';
 

@@ -152,10 +152,7 @@ export default class Guilds {
 
         // Attempt to grab the guild from the database.
         this.database.loader.loadGuild(identifier, (guild?: GuildData) => {
-            if (!guild)
-                return log.general(
-                    `Player ${player.username} tried to join a guild that doesn't exist.`
-                );
+            if (!guild) return log.general(`Player ${player.username} tried to join a guild that doesn't exist.`);
 
             // Ensure the guild isn't full.
             if (guild.members.length >= Modules.Constants.MAX_GUILD_MEMBERS)
@@ -206,15 +203,11 @@ export default class Guilds {
 
     public leave(player: Player): void {
         // No need to do anything if the player doesn't have a guild.
-        if (!player.guild)
-            return log.warning(`${player.username} tried to leave a guild that they're not in.`);
+        if (!player.guild) return log.warning(`${player.username} tried to leave a guild that they're not in.`);
 
         // Grab the guild from the database.
         this.database.loader.loadGuild(player.guild, (guild?: GuildData) => {
-            if (!guild)
-                return log.general(
-                    `Player ${player.username} tried to leave a guild that doesn't exist.`
-                );
+            if (!guild) return log.general(`Player ${player.username} tried to leave a guild that doesn't exist.`);
 
             // Disband the guild if the player is the owner.
             if (player.username === guild.owner) {
@@ -258,24 +251,19 @@ export default class Guilds {
 
     public kick(player: Player, username: string): void {
         if (!player.guild)
-            return log.warning(
-                `${player.username} tried to kick someone from a guild that they're not in.`
-            );
+            return log.warning(`${player.username} tried to kick someone from a guild that they're not in.`);
 
         // Grab the guild from the database.
         this.database.loader.loadGuild(player.guild, (guild?: GuildData) => {
             if (!guild)
-                return log.general(
-                    `Player ${player.username} tried to kick someone from a guild that doesn't exist.`
-                );
+                return log.general(`Player ${player.username} tried to kick someone from a guild that doesn't exist.`);
 
             // Ensure the player is the owner of the guild.
             if (player.username !== guild.owner)
                 return player.notify('You do not have permission to kick members from this guild.');
 
             // Ensure the player is not kicking themselves.
-            if (player.username === username)
-                return player.notify('You cannot kick yourself from the guild.');
+            if (player.username === username) return player.notify('You cannot kick yourself from the guild.');
 
             let otherPlayer = this.world.getPlayerByName(username);
 
@@ -302,14 +290,10 @@ export default class Guilds {
      */
 
     public chat(player: Player, message: string): void {
-        if (!player.guild)
-            return log.warning(`${player.username} tried to chat in a guild that they're not in.`);
+        if (!player.guild) return log.warning(`${player.username} tried to chat in a guild that they're not in.`);
 
         this.database.loader.loadGuild(player.guild, (guild?: GuildData) => {
-            if (!guild)
-                return log.general(
-                    `Player ${player.username} tried to chat in a guild that doesn't exist.`
-                );
+            if (!guild) return log.general(`Player ${player.username} tried to chat in a guild that doesn't exist.`);
 
             this.synchronize(guild.members, Opcodes.Guild.Chat, {
                 username: player.username,
@@ -328,15 +312,11 @@ export default class Guilds {
 
     public addExperience(player: Player, experience: number): void {
         if (!player.guild)
-            return log.warning(
-                `${player.username} tried to add experience to a guild that they're not in.`
-            );
+            return log.warning(`${player.username} tried to add experience to a guild that they're not in.`);
 
         this.database.loader.loadGuild(player.guild, (guild?: GuildData) => {
             if (!guild)
-                return log.general(
-                    `Player ${player.username} tried to add experience to a guild that doesn't exist.`
-                );
+                return log.general(`Player ${player.username} tried to add experience to a guild that doesn't exist.`);
 
             guild.experience += experience;
 
@@ -357,22 +337,15 @@ export default class Guilds {
      */
 
     public setRank(player: Player, username: string, rank: Modules.GuildRank): void {
-        if (!player.guild)
-            return log.warning(
-                `${player.username} tried to set a rank in a guild that they're not in.`
-            );
+        if (!player.guild) return log.warning(`${player.username} tried to set a rank in a guild that they're not in.`);
 
         this.database.loader.loadGuild(player.guild, (guild?: GuildData) => {
             if (!guild)
-                return log.general(
-                    `Player ${player.username} tried to set a rank in a guild that doesn't exist.`
-                );
+                return log.general(`Player ${player.username} tried to set a rank in a guild that doesn't exist.`);
 
             // Ensure the player has the correct permissions to update the rank.
             if (player.username !== guild.owner)
-                return player.notify(
-                    'You do not have permission to update the rank of this player.'
-                );
+                return player.notify('You do not have permission to update the rank of this player.');
 
             // Iterate through the members and skip if the username doesn't match.
             for (let member of guild.members) {
@@ -399,11 +372,7 @@ export default class Guilds {
      * @param data The data that we are sending to the client.
      */
 
-    private synchronize(
-        members: Member[],
-        opcode: Opcodes.Guild,
-        data?: OutgoingGuildPacket
-    ): void {
+    private synchronize(members: Member[], opcode: Opcodes.Guild, data?: OutgoingGuildPacket): void {
         for (let member of members) {
             let player = this.world.getPlayerByName(member.username),
                 packet = new GuildPacket(opcode, data);
@@ -463,8 +432,7 @@ export default class Guilds {
         this.database.loader.loadGuilds(from, to, (info: GuildData[], total: number) => {
             // Filter guild data that are full and/or invite only.
             info = info.filter(
-                (guild: GuildData) =>
-                    guild.members.length < Modules.Constants.MAX_GUILD_MEMBERS && !guild.inviteOnly
+                (guild: GuildData) => guild.members.length < Modules.Constants.MAX_GUILD_MEMBERS && !guild.inviteOnly
             );
 
             // Extract the cruical information and store it in a ListInfo array.

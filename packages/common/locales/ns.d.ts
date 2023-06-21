@@ -2,9 +2,7 @@ import type Translation from './en/translation';
 import type Store from './en/store';
 import type { TypeOptions } from 'i18next';
 
-type DotValue<T extends string> = T extends `${infer L}.${infer R}`
-    ? { [K in L]: DotValue<R> }
-    : { [K in T]: string };
+type DotValue<T extends string> = T extends `${infer L}.${infer R}` ? { [K in L]: DotValue<R> } : { [K in T]: string };
 
 type Prefix = TypeOptions['interpolationPrefix'];
 type Suffix = TypeOptions['interpolationSuffix'];
@@ -18,9 +16,7 @@ type TraverseInterpolation<T> = T extends string
     ? { [K in keyof T]: TraverseInterpolation<T[K]> }
     : never;
 
-type UnionToIntersection<T> = (T extends unknown ? (_: T) => unknown : never) extends (
-    _: infer R
-) => unknown
+type UnionToIntersection<T> = (T extends unknown ? (_: T) => unknown : never) extends (_: infer R) => unknown
     ? R
     : never;
 
