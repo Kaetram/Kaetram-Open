@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url';
 
 import { description, name } from '../../package.json';
 
-import { locales, defaultLocale, dir, t, type Locale } from '@kaetram/common/locales';
+import { locales, defaultLocale, dir, t, type Locale } from '@kaetram/common/i18n';
 import { defineConfig } from 'astro/config';
 import config, { exposedConfig } from '@kaetram/common/config';
 import webmanifest from 'astro-webmanifest';
@@ -94,8 +94,8 @@ export default defineConfig({
                     {
                         lang,
                         dir: dir(locale as Locale),
-                        name: t('game.name', { lng: locale }),
-                        description: t('game.description', { lng: locale })
+                        name: t('meta.name', { lng: locale }),
+                        description: t('meta.description', { lng: locale })
                     }
                 ])
             ),
