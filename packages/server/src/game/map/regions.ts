@@ -9,8 +9,6 @@ import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { List, Map as MapPacket, Spawn, Update } from '@kaetram/common/network/impl';
 
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type { RegionCache, RegionData, RegionTile, RegionTileData, Tile } from '@kaetram/common/types/map';
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 import type Resource from '../globals/impl/resource';
@@ -18,6 +16,8 @@ import type World from '../world';
 import type Area from './areas/area';
 import type Dynamic from './areas/impl/dynamic';
 import type Map from './map';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type { RegionCache, RegionData, RegionTile, RegionTileData, Tile } from '@kaetram/common/types/map';
 
 /**
  * Class responsible for chunking up the map.
