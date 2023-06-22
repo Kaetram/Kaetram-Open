@@ -167,6 +167,8 @@ export default class Commands {
                     if (command === 'ban' && duration > 72) duration = 72;
                 }
 
+                let hours = duration;
+
                 // Convert hours to milliseconds.
                 duration *= 60 * 60 * 1000;
 
@@ -176,14 +178,14 @@ export default class Commands {
                     user.mute = timeFrame;
                     user.save();
 
-                    this.player.notify(`${user.username} has been muted for ${duration} hours.`);
+                    this.player.notify(`${user.username} has been muted for ${hours} hours.`);
                 } else if (command === 'ban') {
                     user.ban = timeFrame;
 
                     user.connection.sendUTF8('ban');
                     user.connection.close('banned');
 
-                    this.player.notify(`${user.username} has been banned for ${duration} hours.`);
+                    this.player.notify(`${user.username} has been banned for ${hours} hours.`);
                 }
 
                 return;
