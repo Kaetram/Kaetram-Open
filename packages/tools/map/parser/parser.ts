@@ -304,9 +304,6 @@ export default class ProcessMap {
             if (!data[index]) data[index] = value;
             else if (Array.isArray(data[index])) (data[index] as number[]).push(value);
             else data[index] = [data[index] as number, value];
-
-            // Remove flip flags for the sake of calculating collisions.
-            if (this.isFlipped(value)) value = this.removeFlipFlags(value);
         }
     }
 
@@ -609,16 +606,6 @@ export default class ProcessMap {
 
     private isCollisionProperty(propertyName: string): boolean {
         return propertyName === 'c' || propertyName === 'o';
-    }
-
-    /**
-     * Checks if the tileId specified has undergone any translations.
-     * @param tileId The tileId we are checking.
-     * @returns Whether the tileId is greater than the lowest bitwise flag.
-     */
-
-    private isFlipped(tileId: number): boolean {
-        return tileId > Modules.MapFlags.DIAGONAL_FLAG;
     }
 
     /**
