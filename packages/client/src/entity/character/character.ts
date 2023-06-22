@@ -136,7 +136,7 @@ export default class Character extends Entity {
         // Iterate through all the effects and load default speed and end callback events.
         for (let key in this.effects) {
             let effect = this.effects[key],
-                keyValue = parseInt(key);
+                keyValue: Modules.Effects = parseInt(key);
 
             // Default speed
             effect.animation.setSpeed(effect.speed || 50);
