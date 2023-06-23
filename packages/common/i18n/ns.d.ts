@@ -1,6 +1,7 @@
-import type { TypeOptions } from 'i18next';
+import type { TOptions, TypeOptions } from 'i18next';
 import type { Namespaces } from './options';
-import type { UnionToIntersection } from '../types/utils';
+import type { MaybeArray, UnionToIntersection } from '../types/utils';
+import type { Locale } from '.';
 
 type DotValue<T extends string> = T extends `${infer L}.${infer R}` ? { [K in L]: DotValue<R> } : { [K in T]: string };
 
