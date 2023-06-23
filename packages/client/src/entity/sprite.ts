@@ -26,7 +26,6 @@ export interface Animations {
 export default class Sprite {
     public key = '';
 
-    private type = '';
     private path = '';
 
     public width = Utils.tileSize; // Default tile size of 16 if not specified.
