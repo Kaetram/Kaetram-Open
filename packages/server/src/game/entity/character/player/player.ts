@@ -396,10 +396,13 @@ export default class Player extends Character {
      */
 
     public intro(): void {
-        if (this.ban > Date.now()) return this.connection.reject('ban');
+        // The player's ban timestamp is in the future, so they are still banned.
+        if (this.ban > Date.now()) return this.connection.reject('banned');
 
+        // Reset hitpoints if they are unitialized.
         if (this.hitPoints.getHitPoints() < 0) this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
 
+        // Reset mana if it is unitialized.
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
 
         // Timeout the player if the ready packet is not received within 10 seconds.
