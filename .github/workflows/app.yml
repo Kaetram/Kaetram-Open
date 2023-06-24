@@ -9,8 +9,8 @@ jobs:
         runs-on: ubuntu-latest
 
         env:
-            ANDROID_HOME: $HOME/android-sdk
-            NDK_HOME: $ANDROID_HOME/ndk/25.0.8775105
+            ANDROID_HOME: '$HOME/Android/Sdk'
+            NDK_HOME: '$ANDROID_HOME/ndk/25.0.8775105'
 
         steps:
             - name: Checkout
@@ -42,6 +42,13 @@ jobs:
                   java-version: 17
                   architecture: x64
                   cache: gradle
+
+            - name: Echo environment variables
+              run: |
+                  echo "ANDROID_HOME: $ANDROID_HOME"
+                  echo "NDK_HOME: $NDK_HOME"
+                  echo "JAVA_HOME: $JAVA_HOME"
+                  echo "PATH: $PATH"
 
             - name: Install Android Tools
               run: |
