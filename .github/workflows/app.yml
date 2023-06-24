@@ -8,6 +8,10 @@ jobs:
 
         runs-on: ubuntu-latest
 
+        env:
+            ANDROID_HOME: $HOME/android-sdk
+            NDK_HOME: $ANDROID_HOME/ndk/25.0.8775105
+
         steps:
             - name: Checkout
               uses: actions/checkout@v3
@@ -41,8 +45,6 @@ jobs:
 
             - name: Install Android Tools
               run: |
-                  echo 'ANDROID_HOME=$HOME/android-sdk' >> $GITHUB_ENV
-                  echo 'NDK_HOME=$ANDROID_HOME/ndk/25.0.8775105' >> $GITHUB_ENV
                   wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
                   mkdir -p $ANDROID_HOME/cmdline-tools
                   unzip -qq commandlinetools-linux-6858069_latest.zip -d $ANDROID_HOME/cmdline-tools
@@ -50,7 +52,7 @@ jobs:
                   mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
                   yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
                   $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
-                  $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30" "ndk;25.0.8775105"
+                  $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager 'platform-tools' 'build-tools;30.0.3' 'platforms;android-30' 'ndk;25.0.8775105'
 
             - name: Install Tauri
               run: cargo install tauri-cli --version '^2.0.0-alpha.10'
