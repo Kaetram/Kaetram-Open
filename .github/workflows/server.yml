@@ -1,10 +1,11 @@
-name: Kaetram
+name: Deploy to Development Server
+
 on:
     push:
         branches: [game-content, beta]
 
 jobs:
-    build:
+    deploy:
         runs-on: ubuntu-latest
         environment: development
 
