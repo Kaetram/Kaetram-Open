@@ -41,8 +41,8 @@ jobs:
 
             - name: Install Android Tools
               run: |
-                  export ANDROID_HOME="$HOME/Android/Sdk"
-                  export NDK_HOME="$ANDROID_HOME/ndk/25.0.8775105"
+                  echo 'ANDROID_HOME=$HOME/android-sdk' >> $GITHUB_ENV
+                  echo 'NDK_HOME=$ANDROID_HOME/ndk/25.0.8775105' >> $GITHUB_ENV
                   wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
                   mkdir -p $ANDROID_HOME/cmdline-tools
                   unzip -qq commandlinetools-linux-6858069_latest.zip -d $ANDROID_HOME/cmdline-tools
