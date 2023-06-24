@@ -9,8 +9,8 @@ jobs:
         runs-on: ubuntu-latest
 
         env:
-            ANDROID_HOME: '$HOME/Android/Sdk'
-            NDK_HOME: '$ANDROID_HOME/ndk/25.0.8775105'
+            ANDROID_HOME: ~/android-sdk
+            NDK_HOME: ~/android-sdk/ndk/25.0.8775105
 
         steps:
             - name: Checkout
