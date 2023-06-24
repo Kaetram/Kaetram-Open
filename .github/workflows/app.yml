@@ -12,6 +12,9 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v3
 
+            - name: Update Submodules
+              run: git submodule update --init --recursive
+
             - name: Setup Node
               uses: actions/setup-node@v3
               with:
@@ -22,9 +25,6 @@ jobs:
 
             - name: Install Dependencies
               run: yarn install
-
-            - name: Update Submodules
-              run: git submodule update --init --recursive
 
             - name: Install Rust Toolchain
               run: |
@@ -39,8 +39,8 @@ jobs:
 
             - name: Write Key and Local Properties
               run: |
-                  echo ${{ secrets.ANDROID_KEY }} | base64 -d > ./packages/app/gen/android/app/keys.jks
-                  echo ${{ secrets.ANDROID_LOCAL_PROPERTIES }} > ./packages/app/gen/android/local.properties
+                  echo '${{ secrets.ANDROID_KEY }}' | base64 --decode > ./packages/app/gen/android/app/key.jks
+                  echo '${{ secrets.ANDROID_LOCAL_PROPERTIES }}' > ./packages/app/gen/android/local.properties
 
             - name: Build Android App
               run: cargo tauri android build --target aarch64 armv7 i686 x86_64
