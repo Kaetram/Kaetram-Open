@@ -34,6 +34,9 @@ jobs:
             - name: Install Tauri
               run: cargo install tauri-cli --version '^2.0.0-alpha.10'
 
+            - name: Install Prererequisites
+              run: sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+
             - name: Initialize Android Build
               run: cargo tauri android init
 
