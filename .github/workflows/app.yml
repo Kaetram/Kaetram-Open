@@ -1,0 +1,57 @@
+name: Build App Artifacts
+
+on: workflow_dispatch
+
+jobs:
+    build:
+        name: Build android artifacts
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Setup Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 20.0.0
+
+            - name: Enable Corepack
+              run: corepack enable
+
+            - name: Install Dependencies
+              run: yarn install
+
+            - name: Update Submodules
+              run: git submodule update --init --recursive
+
+            - name: Install Rust Toolchain
+              run: |
+                  rustup set auto-self-update disable
+                  rustup toolchain install stable --profile minimal --target aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+
+            - name: Install Tauri
+              run: cargo install tauri-cli --version '^2.0.0-alpha.10'
+
+            - name: Initialize Android Build
+              run: cargo tauri android init
+
+            - name: Write Key and Local Properties
+              run: |
+                  echo ${{ secrets.ANDROID_KEY }} | base64 -d > ./packages/app/gen/android/app/keys.jks
+                  echo ${{ secrets.ANDROID_LOCAL_PROPERTIES }} > ./packages/app/gen/android/local.properties
+
+            - name: Build Android App
+              run: cargo tauri android build --target aarch64 armv7 i686 x86_64
+
+            - name: Upload Artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: android-artifacts
+                  path: |
+                      ./packages/app/gen/android/app/build/outputs/apk/**/*.apk
+                      ./packages/app/gen/android/app/build/outputs/bundle/**/*.aab
+
+            - name: Cache Rust
+              uses: Swatinem/rust-cache@v2
