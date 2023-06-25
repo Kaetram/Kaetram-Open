@@ -104,14 +104,7 @@
 }
 
 .title-decoration {
-    @include sprite.sheet(
-        $image: 'guilds/frames',
-        $x: 286,
-        $y: 8,
-        $width: 78,
-        $height: 6,
-        $selectors: '&::after'
-    ) {
+    @include sprite.sheet($image: 'guilds/frames', $x: 286, $y: 8, $width: 78, $height: 6, $selectors: '&::after') {
         content: '';
     }
 
@@ -476,7 +469,7 @@
     box-sizing: border-box;
     padding-left: 1em;
 
-    &:hover:not(.active) {
+    &:hover:not(:active, .active) {
         padding-left: 2em;
     }
 }
