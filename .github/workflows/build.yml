@@ -29,6 +29,12 @@ jobs:
             - name: Enable Corepack
               run: corepack enable
 
+            - name: Cache `node_modules`
+              uses: actions/cache@v3
+              with:
+                  path: ./node_modules
+                  key: ${{ runner.os }}-node-${{ matrix.node-version }}
+
             - name: Install Dependencies
               run: yarn install
 
