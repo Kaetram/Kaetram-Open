@@ -79,3 +79,5 @@ jobs:
 
             - name: Cache Rust
               uses: Swatinem/rust-cache@v2
+              with:
+                  workspaces: ./pacakges/app -> target
