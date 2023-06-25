@@ -113,17 +113,8 @@ export default class Canvas extends Renderer {
                 context = isLightTile ? (this.overlayContext as CanvasRenderingContext2D) : context;
             }
 
-            /**
-             * Draws the animated tiles first so they display behind potential
-             * high tiles. We check if the current index contains an animated tile
-             * and if we are currently animating tiles before proceeding.
-             */
-            if (index in this.animatedTiles && this.animateTiles) {
-                // Prevent double draws when drawing flipped animated tiles.
-                if (flips.length === 0 && this.animatedTiles[index].isFlipped) return;
-
-                this.drawTile(context, this.animatedTiles[index].id + 1, this.animatedTiles[index].index, flips);
-            }
+            // Draw the animated tile at the index.
+            this.drawAnimatedTile(index, flips);
 
             // Skip animated tiles unless we disable animations, then just draw the tile once.
             if (!this.map.isAnimatedTile(tile as number) || !this.animateTiles)
@@ -132,6 +123,32 @@ export default class Canvas extends Renderer {
 
         this.saveFrame();
         this.restoreDrawing();
+    }
+
+    /**
+     * Given the index of the specified animated tile, we draw the tile contained at
+     * that index. We first have to check whether the tile is a foreground tile or not.
+     * @param index The index of the tile on the map.
+     * @param flips An array containing transformations the tile will undergo.
+     */
+
+    private drawAnimatedTile(index: number, flips: number[] = []): void {
+        // No drawing if we aren't animating tiles.
+        if (!this.animateTiles) return;
+
+        let animatedTile = this.animatedTiles[index];
+
+        // The tile does not exist at the specified index.
+        if (!animatedTile) return;
+
+        // Prevent double draws when drawing flipped animated tiles.
+        if (flips.length === 0 && animatedTile.isFlipped) return;
+
+        // Extract the context from the animated tile.
+        let context = animatedTile.isHighTile ? this.foreContext : this.backContext;
+
+        // Draw the tile given its context (determined when we initialize the tile).
+        this.drawTile(context, animatedTile.id + 1, animatedTile.index, flips);
     }
 
     // ---------- Primitive Drawing Functions ----------
@@ -353,7 +370,7 @@ export default class Canvas extends Renderer {
                     index,
                     this.map.getTileAnimation(tile as number),
                     isFlipped,
-                    false,
+                    this.map.isHighTile(tile as number),
                     this.map.dynamicAnimatedTiles[index]
                 );
         }, 2);
