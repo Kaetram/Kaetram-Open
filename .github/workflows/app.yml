@@ -116,5 +116,5 @@ jobs:
               with:
                   name: android-artifacts
                   path: |
-                      ./packages/app/gen/android/app/build/outputs/apk/universal/app-universal-release.apk
-                      ./packages/app/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab
+                      ./packages/app/gen/android/app/build/outputs/apk/**/*.apk
+                      ./packages/app/gen/android/app/build/outputs/bundle/**/*.aab
