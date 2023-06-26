@@ -4,6 +4,10 @@ on: workflow_dispatch
 
 jobs:
     build-android:
+        defaults:
+            run:
+                shell: bash
+
         strategy:
             matrix:
                 node-version: [20.x]
@@ -27,11 +31,36 @@ jobs:
             - name: Enable Corepack
               run: corepack enable
 
-            - name: Cache `node_modules`
+            - name: Cache node_modules
               uses: actions/cache@v3
               with:
                   path: ./node_modules
-                  key: ${{ runner.os }}-node-${{ matrix.node-version }}
+                  key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-node-${{ matrix.node-version }}
+
+            - name: Get Yarn cache directory
+              id: yarn-cache
+              run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+            - name: Cache Yarn folder
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.yarn-cache.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-yarn-${{ matrix.node-version }}
+
+            - name: Cache Yarn install state
+              uses: actions/cache@v3
+              with:
+                  path: ./.yarn/install-state.gz
+                  key: ${{ runner.os }}-yarn-install-state-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-install-state-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-yarn-install-state-${{ matrix.node-version }}
 
             - name: Install Dependencies
               run: yarn install
@@ -44,28 +73,12 @@ jobs:
                   architecture: x64
                   cache: gradle
 
-            - name: Cache `android-sdk`
-              id: cache-android-sdk
-              uses: actions/cache@v3
-              with:
-                  path: ~/android-sdk
-                  key: ${{ runner.os }}-android-sdk
-
-            - name: Install Android SDK
-              if: steps.cache-android-sdk.outputs.cache-hit != 'true'
+            - name: Install Android SDK Tools
               run: |
-                  echo ANDROID_HOME=$HOME/android-sdk >> $GITHUB_ENV
+                  echo y | $ANDROID_HOME/tools/bin/sdkmanager --sdk_root=$ANDROID_HOME --install 'platform-tools' 'build-tools;30.0.3' 'platforms;android-30' 'ndk;25.0.8775105'
                   echo NDK_HOME=$ANDROID_HOME/ndk/25.0.8775105 >> $GITHUB_ENV
-                  wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
-                  mkdir -p $ANDROID_HOME/cmdline-tools
-                  unzip -qq commandlinetools-linux-6858069_latest.zip -d $ANDROID_HOME/cmdline-tools
-                  rm commandlinetools-linux-6858069_latest.zip
-                  mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
-                  yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-                  $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
-                  $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager 'platform-tools' 'build-tools;30.0.3' 'platforms;android-30' 'ndk;25.0.8775105'
 
-            - name: Cache `.rustup`
+            - name: Cache rustup
               uses: actions/cache@v3
               with:
                   path: ~/.rustup
@@ -76,7 +89,7 @@ jobs:
                   rustup set auto-self-update disable
                   rustup toolchain install stable --profile minimal --target x86_64-unknown-linux-gnu aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 
-            - name: Cache `pacakges/app`
+            - name: Cache Rust project
               uses: Swatinem/rust-cache@v2
               with:
                   workspaces: ./pacakges/app
@@ -96,7 +109,7 @@ jobs:
                   echo '${{ secrets.ANDROID_LOCAL_PROPERTIES }}' > ./packages/app/gen/android/local.properties
 
             - name: Build Android App
-              run: cargo tauri android build --target aarch64 armv7 i686 x86_64
+              run: cargo tauri android build
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v3
