@@ -58,6 +58,12 @@
         "store": "miner"
     },
 
+    "miner2": {
+        "name": "Yet Another Miner",
+        "text": ["Leave me alone, I'm busy pretending to work!"],
+        "store": "miner"
+    },
+
     "beachnpc": {
         "name": "Bubba",
         "text": [
