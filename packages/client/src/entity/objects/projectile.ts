@@ -94,18 +94,14 @@ export default class Projectile extends Entity {
     }
 
     /**
-     * Calculates the angle between the projectile and the target.
-     * @returns Angle in radians so that the projectile faces the target.
+     * Updates the projectile's angle to face the target. We take the
+     * inverse tangent of the target's y and x coordinates.
      */
 
     public updateAngle(): void {
         if (!this.target) return;
 
-        this.angle = Math.atan2(this.target.y - this.y, this.target.x - this.x) * (180 / Math.PI) - 90;
-    }
-
-    public override getAngle(): number {
-        return (this.angle * Math.PI) / 180;
+        this.angle = Math.atan2(this.target.y - this.y, this.target.x - this.x) - Math.PI / 2;
     }
 
     /**
