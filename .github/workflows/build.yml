@@ -44,7 +44,7 @@ jobs:
 
             - name: Get Yarn cache directory
               id: yarn-cache
-              run: echo 'dir=$(yarn config get cacheFolder)' >> $GITHUB_OUTPUT
+              run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
 
             - name: Cache Yarn folder
               uses: actions/cache@v3
