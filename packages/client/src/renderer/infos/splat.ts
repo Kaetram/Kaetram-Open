@@ -22,8 +22,8 @@ export default class Splat {
     private duration: number;
     private colour: Colour;
 
-    public fill: string;
-    public stroke: string;
+    public fill = 'rgb(255, 50, 50)';
+    public stroke = 'rgb(255, 180, 180)';
 
     private destroyCallback?: (id: string) => void;
 
@@ -47,8 +47,8 @@ export default class Splat {
 
         if (skill > -1) this.colour = (Modules.SkillExpColours as Colours)[skill];
 
-        this.fill = this.colour.fill;
-        this.stroke = this.colour.stroke;
+        this.fill = this.colour?.fill || this.fill;
+        this.stroke = this.colour?.stroke || this.stroke;
 
         if (isTarget && this.hasInflicted()) {
             this.fill = this.colour.inflicted!.fill;
