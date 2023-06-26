@@ -87,7 +87,7 @@ jobs:
             - name: Install Android SDK
               if: steps.android-sdk-cache.outputs.cache-hit != 'true'
               run: |
-                  echo NDK_HOME=$ANDROID_HOME/android-sdk/ndk/25.0.8775105 >> $GITHUB_ENV
+                  echo NDK_HOME=$ANDROID_HOME/ndk/25.0.8775105 >> $GITHUB_ENV
                   wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
                   mkdir -p $ANDROID_HOME/cmdline-tools
                   unzip -qq commandlinetools-linux-6858069_latest.zip -d $ANDROID_HOME/cmdline-tools
