@@ -21,6 +21,28 @@ jobs:
             - name: Checkout on ${{ runner.os }}
               uses: actions/checkout@v3
 
+            - name: Cache node_modules
+              uses: actions/cache@v3
+              with:
+                  path: ./node_modules
+                  key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-node-${{ matrix.node-version }}
+
+            - name: Get Yarn cache directory
+              id: yarn-cache
+              run: echo 'dir=$(yarn config get cacheFolder)' >> $GITHUB_OUTPUT
+
+            - name: Cache Yarn
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.yarn-cache.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-yarn
+
             - name: Use Node.js v${{ matrix.node-version }}
               uses: actions/setup-node@v3
               with:
@@ -28,12 +50,6 @@ jobs:
 
             - name: Enable Corepack
               run: corepack enable
-
-            - name: Cache `node_modules`
-              uses: actions/cache@v3
-              with:
-                  path: ./node_modules
-                  key: ${{ runner.os }}-node-${{ matrix.node-version }}
 
             - name: Install Dependencies
               run: yarn install
