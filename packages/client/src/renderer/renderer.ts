@@ -634,7 +634,7 @@ export default class Renderer {
         if (entity.customScale) this.entitiesContext.scale(entity.customScale, entity.customScale);
 
         // Rotate using the entity's angle.
-        if (entity.angled) this.entitiesContext.rotate(entity.getAngle());
+        if (entity.angle !== 0) this.entitiesContext.rotate(entity.angle);
 
         // Draw the entity shadowf
         if (entity.hasShadow()) {
