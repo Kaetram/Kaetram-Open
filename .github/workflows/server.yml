@@ -6,7 +6,12 @@ on:
 
 jobs:
     deploy:
+        defaults:
+            run:
+                shell: bash
+
         runs-on: ubuntu-latest
+
         environment: development
 
         steps:
