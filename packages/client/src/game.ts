@@ -87,7 +87,7 @@ export default class Game {
         this.updater = new Updater(this);
         this.audio = new AudioController(this);
         this.entities = new EntitiesController(this);
-        this.bubble = new BubbleController(this);
+        this.bubble = new BubbleController(this.renderer, this.entities);
         this.pointer = new Pointer(this.renderer, this.entities);
         this.connection = new Connection(this);
 
@@ -180,6 +180,7 @@ export default class Game {
 
             this.renderer.resize();
             this.pointer.resize();
+            this.bubble.resize();
         }
 
         this.camera.centreOn(this.player);
@@ -288,6 +289,7 @@ export default class Game {
         this.renderer.resize();
 
         this.pointer.resize();
+        this.bubble.resize();
 
         this.menu.resize();
     }

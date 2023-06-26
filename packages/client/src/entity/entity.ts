@@ -46,7 +46,6 @@ export default abstract class Entity {
     public fading = false;
 
     public angle = 0;
-    public angled = false;
 
     // Counter variables
     public counter = 0;
@@ -280,15 +279,6 @@ export default abstract class Entity {
         let { gridX, gridY } = this;
 
         return Math.abs(gridX - entity.gridX) + Math.abs(gridY - entity.gridY);
-    }
-
-    /**
-     * Returns the angle of the entity in radians.
-     * @returns Angle number value.
-     */
-
-    public getAngle(): number {
-        return this.angle;
     }
 
     /**

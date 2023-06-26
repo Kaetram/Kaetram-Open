@@ -228,7 +228,6 @@ export default class EntitiesController {
         projectile.setStart(attacker.x, attacker.y);
         projectile.setTarget(target);
 
-        projectile.angled = true;
         projectile.type = info.type;
 
         /**
