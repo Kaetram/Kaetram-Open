@@ -615,8 +615,6 @@ export default class Renderer {
 
         this.entitiesContext.save();
 
-        if (entity.angled && !entity.isProjectile()) entity.angle *= Math.PI / 180;
-
         // Update the entity fading onto the context.
         if (entity.fading) this.entitiesContext.globalAlpha = entity.fadingAlpha;
 
