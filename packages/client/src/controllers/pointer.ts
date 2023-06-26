@@ -146,16 +146,6 @@ export default class PointerController {
 
     public resize(): void {
         this.scale = this.camera.zoomFactor / DEFAULT_ZOOM;
-
-        for (let instance in this.pointers) {
-            let pointer = this.pointers[instance];
-
-            if (pointer.type !== Opcodes.Pointer.Relative) continue;
-
-            // Apply the CSS styles to the pointer based on the new zoom factor.
-            pointer.element.style.left = `${pointer.x * this.camera.zoomFactor}px`;
-            pointer.element.style.top = `${pointer.y * this.camera.zoomFactor}px`;
-        }
     }
 
     /**
