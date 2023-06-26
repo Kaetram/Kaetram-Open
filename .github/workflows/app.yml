@@ -44,44 +44,21 @@ jobs:
                   architecture: x64
                   cache: gradle
 
-            - name: Echo android sdk path
-              run: |
-                  echo $ANDROID_HOME
-                  echo $NDK_HOME
-                  ls $ANDROID_HOME
-                  ls $NDK_HOME
-                  ls /usr/local/lib/android/
-                  ls /usr/local/lib/android/sdk
-                  ls /usr/local/lib/android/sdk/ndk
-                  ls /usr/local/lib/android/sdk/ndk/25.0.8775105
-
-            - name: Get home directory
-              id: home
-              run: echo dir=$HOME >> $GITHUB_OUTPUT
+            - name: Get Android home directory
+              id: android-home
+              run: echo dir=$ANDROID_HOME >> $GITHUB_OUTPUT
 
             - name: Cache `android-sdk`
               id: android-sdk-cache
               uses: actions/cache@v3
               with:
-                  path: ${{ steps.home.outputs.dir }}/android-sdk
+                  path: ${{ steps.android-home.outputs.dir }}
                   key: ${{ runner.os }}-android-sdk
-
-            - name: Echo android sdk path
-              run: |
-                  echo $ANDROID_HOME
-                  echo $NDK_HOME
-                  ls $ANDROID_HOME
-                  ls $NDK_HOME
-                  ls /usr/local/lib/android/
-                  ls /usr/local/lib/android/sdk
-                  ls /usr/local/lib/android/sdk/ndk
-                  ls /usr/local/lib/android/sdk/ndk/25.0.8775105
 
             - name: Install Android SDK
               if: steps.android-sdk-cache.outputs.cache-hit != 'true'
               run: |
-                  echo ANDROID_HOME=${{ steps.home.outputs.dir }}/android-sdk >> $GITHUB_ENV
-                  echo NDK_HOME=${{ steps.home.outputs.dir }}/android-sdk/ndk/25.0.8775105 >> $GITHUB_ENV
+                  echo NDK_HOME=$ANDROID_HOME/android-sdk/ndk/25.0.8775105 >> $GITHUB_ENV
                   wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
                   mkdir -p $ANDROID_HOME/cmdline-tools
                   unzip -qq commandlinetools-linux-6858069_latest.zip -d $ANDROID_HOME/cmdline-tools
@@ -90,17 +67,6 @@ jobs:
                   yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
                   $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
                   $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager 'platform-tools' 'build-tools;30.0.3' 'platforms;android-30' 'ndk;25.0.8775105'
-
-            - name: Echo android sdk path
-              run: |
-                  echo $ANDROID_HOME
-                  echo $NDK_HOME
-                  ls $ANDROID_HOME
-                  ls $NDK_HOME
-                  ls /usr/local/lib/android/
-                  ls /usr/local/lib/android/sdk
-                  ls /usr/local/lib/android/sdk/ndk
-                  ls /usr/local/lib/android/sdk/ndk/25.0.8775105
 
             - name: Cache `.rustup`
               uses: actions/cache@v3
