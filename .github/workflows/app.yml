@@ -19,6 +19,28 @@ jobs:
             - name: Update Submodule
               run: git submodule update --init --recursive
 
+            - name: Cache node_modules
+              uses: actions/cache@v3
+              with:
+                  path: ./node_modules
+                  key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-node-${{ matrix.node-version }}
+
+            - name: Get Yarn cache directory
+              id: yarn-cache
+              run: echo 'dir=$(yarn config get cacheFolder)' >> $GITHUB_OUTPUT
+
+            - name: Cache Yarn
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.yarn-cache.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-yarn
+
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
@@ -26,12 +48,6 @@ jobs:
 
             - name: Enable Corepack
               run: corepack enable
-
-            - name: Cache `node_modules`
-              uses: actions/cache@v3
-              with:
-                  path: ./node_modules
-                  key: ${{ runner.os }}-node-${{ matrix.node-version }}
 
             - name: Install Dependencies
               run: yarn install
@@ -48,7 +64,7 @@ jobs:
               id: android-home
               run: echo dir=$ANDROID_HOME >> $GITHUB_OUTPUT
 
-            - name: Cache `android-sdk`
+            - name: Cache android-sdk
               id: android-sdk-cache
               uses: actions/cache@v3
               with:
@@ -68,7 +84,7 @@ jobs:
                   $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
                   $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager 'platform-tools' 'build-tools;30.0.3' 'platforms;android-30' 'ndk;25.0.8775105'
 
-            - name: Cache `.rustup`
+            - name: Cache rustup
               uses: actions/cache@v3
               with:
                   path: ~/.rustup
