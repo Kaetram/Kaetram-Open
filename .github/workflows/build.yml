@@ -34,7 +34,7 @@ jobs:
               id: yarn-cache
               run: echo 'dir=$(yarn config get cacheFolder)' >> $GITHUB_OUTPUT
 
-            - name: Cache Yarn
+            - name: Cache Yarn folder
               uses: actions/cache@v3
               with:
                   path: ${{ steps.yarn-cache.outputs.dir }}
@@ -42,6 +42,15 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
                       ${{ runner.os }}-yarn
+
+            - name: Cache Yarn install state
+              uses: actions/cache@v3
+              with:
+                  path: ./.yarn/install-state.gz
+                  key: ${{ runner.os }}-yarn-install-state-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-install-state-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-yarn-install-state
 
             - name: Use Node.js v${{ matrix.node-version }}
               uses: actions/setup-node@v3
