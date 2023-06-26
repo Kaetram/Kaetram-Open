@@ -7,6 +7,10 @@ on: [push, pull_request]
 
 jobs:
     build:
+        defaults:
+            run:
+                shell: bash
+
         strategy:
             matrix:
                 # See supported Node.js release schedule at https://nodejs.org/en/about/releases/

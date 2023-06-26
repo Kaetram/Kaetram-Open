@@ -4,6 +4,10 @@ on: workflow_dispatch
 
 jobs:
     build-android:
+        defaults:
+            run:
+                shell: bash
+
         strategy:
             matrix:
                 node-version: [20.x]
