@@ -26,7 +26,27 @@
         "text": ["How's yous doings?"]
     },
 
-    "villager": {
+    "villagegirl4": {
+        "name": "Another Village Girl",
+        "text": ["How's yous doings?"]
+    },
+
+    "villagegirl5": {
+        "name": "Yet Another Village Girl",
+        "text": ["How's yous doings?"]
+    },
+
+    "villagegirl6": {
+        "name": "Just Village Girl",
+        "text": ["How's yous doings?"]
+    },
+
+    "villagegirl7": {
+        "name": "Village Girl",
+        "text": ["How's yous doings?"]
+    },
+
+    "forestnpc": {
         "name": "Forester",
         "text": ["Good day to you!"],
         "store": "forester"
@@ -131,8 +151,24 @@
         ]
     },
 
-    "forestnpc": {
-        "name": "Forester"
+    "villager": {
+        "name": "Villager",
+        "text": ["Howdy!"]
+    },
+
+    "villager2": {
+        "name": "Villager",
+        "text": ["Howdy!"]
+    },
+
+    "villager3": {
+        "name": "Villager",
+        "text": ["Howdy!"]
+    },
+
+    "villager4": {
+        "name": "Villager",
+        "text": ["Howdy!"]
     },
 
     "octocat": {

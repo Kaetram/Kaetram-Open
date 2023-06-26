@@ -197,7 +197,7 @@
         "stages": {
             "0": {
                 "task": "talk",
-                "npc": "villager",
+                "npc": "forestnpc",
                 "text": [
                     "Greetings dear adventurer!",
                     "Please, you must help me.",
@@ -210,7 +210,7 @@
             },
             "1": {
                 "task": "talk",
-                "npc": "villager",
+                "npc": "forestnpc",
                 "hasItemText": [
                     "Oh my, dear adventurer",
                     "These logs seem to have too many imperfections in them",
@@ -226,7 +226,7 @@
             },
             "2": {
                 "task": "talk",
-                "npc": "villager",
+                "npc": "forestnpc",
                 "hasItemText": [
                     "Ah yes, you see, these logs are suitable for my needs.",
                     "Thank you so much dear adventurer. Please take this reward!"
