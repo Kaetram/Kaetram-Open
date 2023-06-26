@@ -19,6 +19,10 @@
 
         .checkmark {
             flex: 1;
+
+            &::before {
+                float: right;
+            }
         }
     }
 }
@@ -36,9 +40,9 @@
 }
 
 #input-settings {
-    flex: 5;
+    flex: 6;
     flex-flow: row;
-    gap: 1em;
+    gap: 2em;
     padding: 0.75em 1em;
 
     > .col {
@@ -59,11 +63,13 @@
     display: flex;
     flex: 1;
     flex-flow: column;
+    gap: 0.5em;
+
     width: 100%;
 
     strong,
     span {
-        font-size: 0.75em;
+        font-size: 0.875em;
     }
 }
 
