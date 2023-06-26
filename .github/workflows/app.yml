@@ -93,12 +93,7 @@ jobs:
                   unzip -qq commandlinetools-linux-6858069_latest.zip -d $ANDROID_HOME/cmdline-tools
                   rm commandlinetools-linux-6858069_latest.zip
                   mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
-                  echo $ANDROID_HOME
-                  echo $NDK_HOME
-                  ls $ANDROID_HOME/cmdline-tools
-                  ls $ANDROID_HOME/cmdline-tools/latest/bin
-                  whereis sdkmanager
-                  yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+                  yes 2>/dev/null | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
                   $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
                   $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager 'platform-tools' 'build-tools;30.0.3' 'platforms;android-30' 'ndk;25.0.8775105'
 
