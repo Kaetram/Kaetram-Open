@@ -11,7 +11,7 @@
         "name": "Generic Task 1",
         "description": "Bulk Bogan needs you to defeat 20 rats!",
         "region": "Mudwich",
-        "npc": "villager",
+        "npc": "forestnpc",
         "dialogueHidden": [
             "Hello there fellow adventurer!",
             "Please...",
