@@ -4,6 +4,10 @@ on: [push, pull_request]
 
 jobs:
     test:
+        defaults:
+            run:
+                shell: bash
+
         strategy:
             matrix:
                 node-version: [20.x]
