@@ -4,6 +4,10 @@ on: [push, pull_request]
 
 jobs:
     test:
+        defaults:
+            run:
+                shell: bash
+
         strategy:
             matrix:
                 node-version: [20.x]
@@ -27,11 +31,36 @@ jobs:
             - name: Enable Corepack
               run: corepack enable
 
-            - name: Cache `node_modules`
+            - name: Cache node_modules
               uses: actions/cache@v3
               with:
                   path: ./node_modules
-                  key: ${{ runner.os }}-node-${{ matrix.node-version }}
+                  key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-node-${{ matrix.node-version }}
+
+            - name: Get Yarn cache directory
+              id: yarn-cache
+              run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+            - name: Cache Yarn folder
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.yarn-cache.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-yarn-${{ matrix.node-version }}
+
+            - name: Cache Yarn install state
+              uses: actions/cache@v3
+              with:
+                  path: ./.yarn/install-state.gz
+                  key: ${{ runner.os }}-yarn-install-state-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-install-state-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-yarn-install-state-${{ matrix.node-version }}
 
             - name: Run Cypress
               uses: cypress-io/github-action@v5
