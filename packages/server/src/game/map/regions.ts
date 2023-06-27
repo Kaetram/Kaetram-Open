@@ -17,7 +17,7 @@ import type Area from './areas/area';
 import type Dynamic from './areas/impl/dynamic';
 import type Map from './map';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type { RegionCache, RegionData, RegionTile, RegionTileData, Tile } from '@kaetram/common/types/map';
+import type { RegionCache, RegionData, RegionTileData, Tile } from '@kaetram/common/types/map';
 
 /**
  * Class responsible for chunking up the map.
@@ -590,7 +590,7 @@ export default class Regions {
     private getResourceData(resource: Resource): RegionTileData[] {
         let tileData: RegionTileData[] = [];
 
-        resource.forEachTile((data: RegionTile, index: number) => {
+        resource.forEachTile((data: Tile, index: number) => {
             // Perhaps we can optimize further by storing this directly in the resource?
             let coord = this.map.indexToCoord(index);
 
@@ -639,7 +639,7 @@ export default class Regions {
      * @returns Returns a `TileInfo` object based on the coordinates.
      */
 
-    private buildTile(x: number, y: number, index?: number, data?: RegionTile): RegionTileData {
+    private buildTile(x: number, y: number, index?: number, data?: Tile): RegionTileData {
         // Use the specified index if not undefined or calculate it.
         index ||= this.map.coordToIndex(x, y);
 
@@ -648,7 +648,7 @@ export default class Regions {
          * attempt to grab the cursor based on the
          */
 
-        let info = data || this.map.getTileData(index),
+        let info = data || this.map.data[index],
             tile: RegionTileData = {
                 x,
                 y,
@@ -665,6 +665,9 @@ export default class Regions {
          */
 
         this.map.forEachTile(info as Tile, (tileId: number) => {
+            // Remove the tile bitmasks to get the actual tile id.
+            if (this.map.isFlippedTileId(tileId)) tileId = this.map.getFlippedTileId(tileId);
+
             if (this.map.objects.includes(tileId)) {
                 tile.o = true;
                 tile.c = true;
@@ -711,7 +714,7 @@ export default class Regions {
          * in any way.
          */
         if (mappedAnimationTile)
-            tile.animation = this.map.getTileData(this.map.coordToIndex(mappedAnimationTile.x, mappedAnimationTile.y));
+            tile.animation = this.map.data[this.map.coordToIndex(mappedAnimationTile.x, mappedAnimationTile.y)];
 
         return tile;
     }
