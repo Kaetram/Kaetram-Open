@@ -18,7 +18,7 @@ import type Sprite from '../entity/sprite';
 import type Item from '../entity/objects/item';
 import type Player from '../entity/character/player/player';
 import type { LampData } from '@kaetram/common/types/item';
-import type { RegionTile } from '@kaetram/common/types/map';
+import type { ClientTile } from '@kaetram/common/types/map';
 import type { SerializedLight } from '@kaetram/common/types/light';
 
 interface Light extends Lamp {
@@ -1537,7 +1537,7 @@ export default class Renderer {
      * @param data The data with which to update the tile.
      */
 
-    public setTile(_index: number, _data: RegionTile): void {
+    public setTile(_index: number, _data: ClientTile): void {
         // unimplemented
     }
 
@@ -1573,7 +1573,7 @@ export default class Renderer {
      * @param offset How much to look outside the visible camera proportions.
      */
 
-    protected forEachVisibleTile(callback: (data: RegionTile, index: number) => void, offset?: number): void {
+    protected forEachVisibleTile(callback: (data: ClientTile, index: number) => void, offset?: number): void {
         if (!this.map?.mapLoaded) return;
 
         this.forEachVisibleIndex((index) => {
