@@ -1,4 +1,4 @@
-import type { ProcessedAnimation, RegionTile } from '@kaetram/common/types/map';
+import type { ProcessedAnimation, ClientTile } from '@kaetram/common/types/map';
 
 export default class Tile {
     public animationIndex = 0;
@@ -17,7 +17,7 @@ export default class Tile {
         public animationInfo: ProcessedAnimation[],
         public isFlipped = false,
         public isHighTile = false, // Used by the WebGL renderer.
-        public postAnimationData?: RegionTile
+        public postAnimationData?: ClientTile
     ) {}
 
     /**
