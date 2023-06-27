@@ -223,6 +223,9 @@ export default class Player extends Character {
      */
 
     public async load(data: PlayerInfo): Promise<void> {
+        // The player's ban timestamp is in the future, so they are still banned.
+        if (data.ban > Date.now()) return this.connection.reject('banned');
+
         // Store coords for when we're done loading.
         this.x = data.x;
         this.y = data.y;
@@ -396,9 +399,6 @@ export default class Player extends Character {
      */
 
     public intro(): void {
-        // The player's ban timestamp is in the future, so they are still banned.
-        if (this.ban > Date.now()) return this.connection.reject('banned');
-
         // Reset hitpoints if they are unitialized.
         if (this.hitPoints.getHitPoints() < 0) this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
 
@@ -408,7 +408,7 @@ export default class Player extends Character {
         // Timeout the player if the ready packet is not received within 10 seconds.
         this.readyTimeout = setTimeout(() => {
             if (!this.ready || this.connection.closed) this.connection.reject('error');
-        }, 5000);
+        }, 7000);
 
         this.setPosition(this.x, this.y);
 
