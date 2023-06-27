@@ -101,7 +101,7 @@ export default class Resources {
         if (intersection.length === 0) return false;
 
         // Add the entire tile data onto the resource.
-        resource.data[index] = this.map.parseTileData(this.map.data[index]);
+        resource.data[index] = structuredClone(this.map.data[index]);
 
         // Remove all tiles from the map data.
         this.map.data[index] = -1;

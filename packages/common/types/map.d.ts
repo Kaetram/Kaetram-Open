@@ -1,5 +1,5 @@
 // Tile that has undergone rotation
-export interface RotatedTile {
+export interface TransformedTile {
     tileId: number;
     h: boolean;
     v: boolean;
@@ -8,18 +8,17 @@ export interface RotatedTile {
 
 // These are tiles straight from the map file.
 export type Tile = number | number[];
+export type RotatedTile = TransformedTile | TransformedTile[];
 
-export type FlatTile = (number | RotatedTile)[];
-
-// Tiles used when sending region data to the client.
-export type RegionTile = Tile | RotatedTile | RotatedTile[];
+// Client tiles are processed tiles that are cached on the client.
+export type ClientTile = Tile | RotatedTile;
 
 // Tile data that is sent to the client.
 export interface RegionTileData {
     x: number;
     y: number;
-    data: RegionTile;
-    animation?: RegionTile; // animation data
+    data: Tile;
+    animation?: Tile; // animation data
     c?: boolean; // collision property
     cur?: string; // cursor property
     o?: boolean; // object property
