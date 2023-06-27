@@ -3,7 +3,7 @@ import Tile from './tile';
 
 import type Game from '../game';
 import type { ContextCallback } from './renderer';
-import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
+import type { ClientTile, TransformedTile } from '@kaetram/common/types/map';
 
 enum TileFlip {
     Horizontal,
@@ -96,11 +96,11 @@ export default class Canvas extends Renderer {
         // Sets the view according to the camera.
         this.updateDrawingView();
 
-        this.forEachVisibleTile((tile: RegionTile, index: number) => {
-            let flips: number[] = this.getFlipped(tile as RotatedTile);
+        this.forEachVisibleTile((tile: ClientTile, index: number) => {
+            let flips: number[] = this.getFlipped(tile as TransformedTile);
 
             // Extract the tileId from the animated region tile.
-            if (flips.length > 0) tile = (tile as RotatedTile).tileId;
+            if (flips.length > 0) tile = (tile as TransformedTile).tileId;
 
             // Determine the layer of the tile depending on if it is a high tile or not.
             let isHighTile = this.map.isHighTile(tile as number),
@@ -278,7 +278,7 @@ export default class Canvas extends Renderer {
                          * when the next available flip is horizontal (essentially performing two horizontals in a row.)
                          */
 
-                        if (flips[index + 1] === TileFlip.Horizontal) flips.push(TileFlip.Horizontal);
+                        if (flips[index + 1] === (TileFlip.Horizontal as number)) flips.push(TileFlip.Horizontal);
                         else flips.push(TileFlip.Vertical);
 
                         break;
@@ -347,10 +347,10 @@ export default class Canvas extends Renderer {
     public override updateAnimatedTiles(): void {
         if (!this.animateTiles) return;
 
-        this.forEachVisibleTile((tile: RegionTile, index: number) => {
+        this.forEachVisibleTile((tile: ClientTile, index: number) => {
             let isFlipped = this.map.isFlipped(tile);
 
-            if (isFlipped) tile = (tile as RotatedTile).tileId;
+            if (isFlipped) tile = (tile as TransformedTile).tileId;
 
             /**
              * We don't want to reinitialize animated tiles that already exist
@@ -396,7 +396,7 @@ export default class Canvas extends Renderer {
      * @returns An array containing all flip flags in order.
      */
 
-    public getFlipped(tile: RegionTile): number[] {
+    public getFlipped(tile: TransformedTile): number[] {
         let flips: number[] = [];
 
         // Return empty if tile doesn't contain flip flags.

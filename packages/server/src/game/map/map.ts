@@ -6,19 +6,10 @@ import mapData from '../../../data/map/world.json';
 
 import { Modules } from '@kaetram/common/network';
 
-import type {
-    FlatTile,
-    ProcessedArea,
-    ProcessedDoor,
-    ProcessedMap,
-    ProcessedResource,
-    RegionTile,
-    RotatedTile,
-    Tile
-} from '@kaetram/common/types/map';
-import type Player from '../entity/character/player/player';
 import type World from '../world';
 import type Areas from './areas/areas';
+import type Player from '../entity/character/player/player';
+import type { ProcessedArea, ProcessedDoor, ProcessedMap, ProcessedResource, Tile } from '@kaetram/common/types/map';
 
 let map = mapData as ProcessedMap;
 
@@ -150,8 +141,8 @@ export default class Map {
      * @param tileId The tileId we are checking.
      */
 
-    public isFlipped(tileId: number): boolean {
-        return tileId > Modules.MapFlags.DIAGONAL_FLAG;
+    public isFlippedTileId(tileId: number): boolean {
+        return tileId > (Modules.MapFlags.DIAGONAL_FLAG as number);
     }
 
     /**
@@ -188,6 +179,9 @@ export default class Map {
         let collision = false;
 
         this.forEachTile(data, (tile: number) => {
+            // Remove the tile transformation flags if they exist.
+            if (this.isFlippedTileId(tile)) tile = this.getFlippedTileId(tile);
+
             if (this.collisions.includes(tile)) collision = true;
         });
 
@@ -349,66 +343,17 @@ export default class Map {
     }
 
     /**
-     * Uses the index (see `coordToIndex`) to obtain tile inforamtion in the tilemap.
-     * The object is a region tile that is later used to send map data to the client.
-     * @param index Gets tile information at an index in the map.
-     * @returns Returns tile information (a number or number array)
+     * Extracts the original tileId from a flipped tile. We are essentially unbitmasking
+     * the tileId to get the original tileId.
+     * @param tileId The flipped tile id we are extracting.
+     * @returns The original tile id (used for collision checking).
      */
 
-    public getTileData(index: number): RegionTile {
-        let data = this.data[index];
-
-        return data ? this.parseTileData(data) : [];
-    }
-
-    /**
-     * Parses through the specified data at a given index and extracts
-     * the flipped tiles from it. Returns a formatted RegionTile ready for
-     * the client.
-     * @param data Raw data contained at an index.
-     * @returns A RegionTile object containing index tile data information.
-     */
-
-    public parseTileData(data: Tile): RegionTile {
-        let isArray = Array.isArray(data),
-            parsedData: RegionTile = isArray ? [] : 0;
-
-        this.forEachTile(data, (tileId: number) => {
-            let tile: RegionTile = tileId;
-
-            if (this.isFlipped(tileId)) tile = this.getFlippedTile(tileId);
-
-            if (isArray) (parsedData as FlatTile).push(tile);
-            else parsedData = tile;
-        });
-
-        return parsedData;
-    }
-
-    /**
-     * Grabs the rotated tile id from Tiled and performs bitwise operators
-     * on it in order to convert it to an actual tileId. The bitshifts
-     * indicate the type of rotation, and performing all the operations
-     * results in the original tileId.
-     * For more information refer to the following
-     * https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#tmx-tile-flipping
-     * @param tileId The tileId of the flipped tile.
-     * @returns A parsed tile of type `RotatedTile`.
-     */
-
-    public getFlippedTile(tileId: number): RotatedTile {
-        let h = !!(tileId & Modules.MapFlags.HORIZONTAL_FLAG),
-            v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
-            d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);
-
-        tileId &= ~(Modules.MapFlags.DIAGONAL_FLAG | Modules.MapFlags.VERTICAL_FLAG | Modules.MapFlags.HORIZONTAL_FLAG);
-
-        return {
-            tileId,
-            h,
-            v,
-            d
-        };
+    public getFlippedTileId(tileId: number): number {
+        return (
+            tileId &
+            ~(Modules.MapFlags.DIAGONAL_FLAG | Modules.MapFlags.VERTICAL_FLAG | Modules.MapFlags.HORIZONTAL_FLAG)
+        );
     }
 
     /**
@@ -429,9 +374,11 @@ export default class Map {
     }
 
     /**
-     * Tile data consists of arrays and single numerical values.
-     * This callback function is used to cleanly iterate through
-     * those Tile[] arrays. i.e. [1, 2, [1, 2, 3], 4, [5, 6]]
+     * Iterates through all the tiles at a given index if it's an array, otherwise we just return
+     * the number contained at that location. This is used to speed up code when trying to handle
+     * logic for multiple tiles at a location.
+     * @param data The raw tile data (generally contained in the umodified map) at an index.
+     * @param callback The tile id and index of the tile currently being iterated.
      */
 
     public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {

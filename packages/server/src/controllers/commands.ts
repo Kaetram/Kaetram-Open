@@ -973,8 +973,8 @@ export default class Commands {
             }
 
             case 'collision': {
-                let x = parseInt(blocks.shift()!),
-                    y = parseInt(blocks.shift()!);
+                let x = parseInt(blocks.shift()!) || this.player.x,
+                    y = parseInt(blocks.shift()!) || this.player.y;
 
                 if (!x || !y) return this.player.notify(`Malformed command, expected /collision x y`);
 

@@ -2,7 +2,7 @@ import Tile from '../tile';
 
 import type WebGL from './webgl';
 import type Map from '../../map/map';
-import type { RotatedTile } from '@kaetram/common/types/map';
+import type { TransformedTile } from '@kaetram/common/types/map';
 
 /**
  * A layer is a class object that corresponds with a layer in the map data. This is used to
@@ -141,9 +141,9 @@ export default class Layer {
      * @param foreground Whether we want to add the tile to the foreground or background texture data.
      */
 
-    public addTile(index: number, tile: number | RotatedTile, flipped = false): void {
+    public addTile(index: number, tile: number | TransformedTile, flipped = false): void {
         // Grab the index in the respective texture data array.
-        let tileId = flipped ? (tile as RotatedTile).tileId : (tile as number),
+        let tileId = flipped ? (tile as TransformedTile).tileId : (tile as number),
             isHighTile = this.map.isHighTile(tileId),
             textureData = isHighTile ? this.foregroundData : this.backgroundData,
             dataIndex = index * 4;
@@ -171,7 +171,7 @@ export default class Layer {
         textureData[dataIndex] = relativeId % tilesWidth; // tile's x coordinate in the tileset
         textureData[dataIndex + 1] = Math.floor(relativeId / tilesWidth); // tile's y coordinate in the tileset
         textureData[dataIndex + 2] = tileset.index; // tileset index
-        textureData[dataIndex + 3] = flipped ? this.getFlippedFlag(tile as RotatedTile) : 0; // tile flags
+        textureData[dataIndex + 3] = flipped ? this.getFlippedFlag(tile as TransformedTile) : 0; // tile flags
 
         // Skip if the tile is already animated.
         if (index in this.animatedTiles) return;
@@ -252,11 +252,11 @@ export default class Layer {
      * @returns The bit flag after applying all transformations.
      */
 
-    private getFlippedFlag(tile: RotatedTile): number {
+    private getFlippedFlag(tile: TransformedTile): number {
         return (
-            (tile.h ? FlipFlags.FlippedHorizontal >> 28 : 0) |
-            (tile.v ? FlipFlags.FlippedVertical >> 28 : 0) |
-            (tile.d ? FlipFlags.FlippedAntiDiagonal >> 28 : 0)
+            (tile.h ? (FlipFlags.FlippedHorizontal as number) >> 28 : 0) |
+            (tile.v ? (FlipFlags.FlippedVertical as number) >> 28 : 0) |
+            (tile.d ? (FlipFlags.FlippedAntiDiagonal as number) >> 28 : 0)
         );
     }
 }

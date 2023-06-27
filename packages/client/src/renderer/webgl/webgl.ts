@@ -7,7 +7,7 @@ import LayerVertex from '../shaders/layer.vert';
 import LayerFragment from '../shaders/layer.frag';
 
 import type Game from '../../game';
-import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
+import type { ClientTile, TransformedTile } from '@kaetram/common/types/map';
 
 /**
  * Huge thanks to the developer of `gl-tiled` for the point of reference in
@@ -50,12 +50,7 @@ export default class WebGL extends Renderer {
     private quadVertices = new Float32Array([
         //x  y  u  v
         // eslint-disable-next-line prettier/prettier
-        -1, -1, 0, 1,
-         1, -1, 1, 1,
-         1,  1, 1, 0,
-        -1, -1, 0, 1,
-         1,  1, 1, 0,
-        -1,  1, 0, 0,
+        -1, -1, 0, 1, 1, -1, 1, 1, 1, 1, 1, 0, -1, -1, 0, 1, 1, 1, 1, 0, -1, 1, 0, 0
     ]);
 
     private attributeIndices = {
@@ -142,7 +137,7 @@ export default class WebGL extends Renderer {
      * @param data The data we want to update the tile with, may be an array or a number.
      */
 
-    public override setTile(index: number, data: RegionTile): void {
+    public override setTile(index: number, data: ClientTile): void {
         // Clear all the tiles of every layer at the specified index.
         this.clearTile(index);
 
@@ -307,7 +302,7 @@ export default class WebGL extends Renderer {
      * @param layerIndex Which layer index we are drawing to.
      */
 
-    private addTile(index: number, tile: number | RotatedTile, layerIndex = 0): void {
+    private addTile(index: number, tile: number | TransformedTile, layerIndex = 0): void {
         if (!this.layers[layerIndex]) this.layers[layerIndex] = new Layer(this);
 
         this.layers[layerIndex].addTile(index, tile, this.map.isFlipped(tile));
