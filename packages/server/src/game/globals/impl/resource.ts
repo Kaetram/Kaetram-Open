@@ -6,7 +6,7 @@ import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 
 import type { ResourceData } from '@kaetram/common/types/resource';
-import type { ProcessedResource, RegionTile } from '@kaetram/common/types/map';
+import type { ProcessedResource, Tile } from '@kaetram/common/types/map';
 
 export default class Resource {
     public instance = Utils.createInstance(Modules.EntityType.Object);
@@ -15,10 +15,10 @@ export default class Resource {
     protected respawnTime: number = Modules.Constants.RESOURCE_RESPAWN;
 
     // Data contains original tile data from the map
-    public data: { [index: number]: RegionTile } = {};
+    public data: { [index: number]: Tile } = {};
 
     // Tile data containing information after the resource has been depleted.
-    private depleted: { [index: number]: RegionTile } = {};
+    private depleted: { [index: number]: Tile } = {};
 
     // The state of the resource
     public state: Modules.ResourceState = Modules.ResourceState.Default;
@@ -65,10 +65,10 @@ export default class Resource {
                 cloneTile[dataBaseIndex] = info.depleted[baseIndex];
 
                 // Store the cloned data.
-                this.depleted[index] = cloneTile as RegionTile;
+                this.depleted[index] = cloneTile as Tile;
             } else if (dataIntersect.length > 0)
                 // Remove tree data.
-                this.depleted[index] = flatTile.filter((tile) => !dataIntersect.includes(tile)) as RegionTile;
+                this.depleted[index] = flatTile.filter((tile) => !dataIntersect.includes(tile)) as Tile;
 
             // Set tile data to 0 indicating nothing there instead of empty array '[]'
             if ([this.depleted[index]].flat().length === 0) this.depleted[index] = 0;
@@ -147,7 +147,7 @@ export default class Resource {
      * @param callback The data tile alongside its parsed number index.
      */
 
-    public forEachTile(callback: (tile: RegionTile, index: number) => void): void {
+    public forEachTile(callback: (tile: Tile, index: number) => void): void {
         // Data depends on the state of the resource.
         let data = this.isDepleted() ? this.depleted : this.data;
 
