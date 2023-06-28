@@ -361,6 +361,42 @@
         }
     },
 
+    "lavaslime": {
+        "name": "Lava Slime",
+        "description": "Has a scythe and looks like it's floating.",
+        "hitPoints": 270,
+        "defenseLevel": 18,
+        "attackLevel": 12,
+        "level": 32,
+        "aggroRange": 1,
+        "attackRange": 1,
+        "aggressive": true,
+        "roaming": true,
+        "attackRate": 1100,
+        "movementSpeed": 350,
+        "respawnDelay": 35000,
+        "attackStats": {
+            "crush": 9,
+            "slash": 16,
+            "stab": 13,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 14,
+            "slash": 16,
+            "stab": 18,
+            "archery": 12,
+            "magic": -15
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 5,
+            "archery": 0,
+            "magic": 6
+        }
+    },
+
     "eye": {
         "name": "Eye",
         "description": [
