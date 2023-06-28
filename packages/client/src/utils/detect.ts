@@ -12,6 +12,8 @@ export let isMobile = (): boolean => agent.includes('android') || agent.includes
 
 export let isTablet = () => isMobile() && window.innerWidth >= 640;
 
+export let isMacintoshFirefox = (): boolean => agent.includes('mac') && agent.includes('firefox');
+
 export function iOSVersion(): number | undefined {
     let match = /os (\d+)_(\d+)_?(\d+?)/.exec(agent);
 
