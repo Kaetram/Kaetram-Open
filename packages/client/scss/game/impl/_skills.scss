@@ -89,3 +89,4 @@
 @include sprite.sheet($image: 'skills/foraging', $selectors: '.skill-image-foraging');
 @include sprite.sheet($image: 'skills/eating', $selectors: '.skill-image-eating');
 @include sprite.sheet($image: 'skills/loitering', $selectors: '.skill-image-loitering');
+@include sprite.sheet($image: 'skills/alchemy', $selectors: '.skill-image-alchemy');

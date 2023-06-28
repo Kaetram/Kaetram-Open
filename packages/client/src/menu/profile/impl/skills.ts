@@ -39,8 +39,11 @@ export default class Skills extends Menu {
         if (resize) this.list.innerHTML = '';
 
         for (let id of Modules.SkillsOrder) {
-            let skill = this.player.skills[id],
-                element = this.get(skill.name);
+            let skill = this.player.skills[id];
+
+            if (!skill) continue;
+
+            let element = this.get(skill.name);
 
             // Update the element if found.
             if (element) this.update(element, skill);
