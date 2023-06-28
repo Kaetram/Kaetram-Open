@@ -7,6 +7,7 @@
     { "id": "player/helmet/bronzehelmet", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/helmet/goldhelmet", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/helmet/crystalhood", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/helmet/fishbowl", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/chestplate/ironchestplate", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/legplates/cobaltlegplates", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/legplates/copperlegplates", "width": 32, "height": 32, "offsetX": -8 },
@@ -75,6 +76,7 @@
     { "id": "npcs/secondsonangelnpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/shepherdboy", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/scientist", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
+    { "id": "npcs/madscientist", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/redstoremannpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/purplestoremannpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/greenstoremannpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
@@ -1880,7 +1882,7 @@
     },
     { "id": "pointer", "width": 32, "height": 32 },
     { "id": "mobs/golem", "width": 32, "height": 32, "offsetX": -8, "offsetY": -17 },
-    { "id": "mobs/greenfish", "width": 32, "height": 32, "offsetX": -5, "offsetY": -13 },
+    { "id": "mobs/greenfish", "width": 32, "height": 32, "offsetX": -8, "offsetY": -12 },
     {
         "id": "mobs/greenpirateskeleton",
         "width": 32,
@@ -4045,7 +4047,7 @@
         "offsetX": -8,
         "offsetY": -12
     },
-    { "id": "mobs/redfish", "width": 32, "height": 32, "offsetX": -5, "offsetY": -13 },
+    { "id": "mobs/redfish", "width": 32, "height": 32, "offsetX": -8, "offsetY": -12 },
     { "id": "mobs/redguard", "width": 32, "height": 32, "offsetX": -8, "offsetY": -13 },
     {
         "id": "mobs/redmouse",
@@ -4604,6 +4606,51 @@
         "offsetY": -12
     },
     { "id": "mobs/slime", "width": 32, "height": 32, "offsetX": -6, "offsetY": -12 },
+    {
+        "id": "mobs/lavaslime",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "atk_right": {
+                "length": 4,
+                "row": 1
+            },
+            "walk_right": {
+                "length": 4,
+                "row": 0
+            },
+            "idle_right": {
+                "length": 4,
+                "row": 0
+            },
+            "atk_up": {
+                "length": 4,
+                "row": 1
+            },
+            "walk_up": {
+                "length": 4,
+                "row": 0
+            },
+            "idle_up": {
+                "length": 4,
+                "row": 0
+            },
+            "atk_down": {
+                "length": 4,
+                "row": 1
+            },
+            "walk_down": {
+                "length": 4,
+                "row": 0
+            },
+            "idle_down": {
+                "length": 4,
+                "row": 0
+            }
+        },
+        "offsetX": -7,
+        "offsetY": -13
+    },
     {
         "id": "mobs/smalldevil",
         "width": 42,
@@ -5518,7 +5565,7 @@
         "offsetX": -8,
         "offsetY": -24
     },
-    { "id": "mobs/yellowfish", "width": 32, "height": 32, "offsetX": -5, "offsetY": -13 },
+    { "id": "mobs/yellowfish", "width": 32, "height": 32, "offsetX": -8, "offsetY": -12 },
     {
         "id": "mobs/yellowmouse",
         "width": 26,
@@ -6512,5 +6559,8 @@
     { "id": "items/alkythnlogs", "offsetX": 0, "offsetY": 0 },
     { "id": "items/heliphatitlogs", "offsetX": 0, "offsetY": 0 },
     { "id": "items/zoncillogs", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/zondullogs", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/zondullogs", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/smallemptyvial", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/bigemptyvial", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/largeemptyvial", "offsetX": 0, "offsetY": 0 }
 ]
