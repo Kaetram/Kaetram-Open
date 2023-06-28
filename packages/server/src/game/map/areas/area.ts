@@ -19,6 +19,7 @@ export default class Area {
 
     // Overlay properties
     public darkness = 0;
+    public rgb: number[] = [];
     public type: OverlayType = 'none';
     public fog = '';
     public reason = ''; // Message displayed when player takes damage in the area.
