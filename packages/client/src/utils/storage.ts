@@ -167,7 +167,7 @@ export default class Storage {
      * Deletes the IndexedDB database and recreates it.
      */
 
-    private clearIndexedDB(): void {
+    public clearIndexedDB(): void {
         this.mapData?.close();
 
         window.indexedDB.deleteDatabase('mapCache');

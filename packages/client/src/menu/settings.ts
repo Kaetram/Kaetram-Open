@@ -1,6 +1,6 @@
 import Menu from './menu';
 
-import { isMobile } from '../utils/detect';
+import { isMobile, isMacintoshFirefox } from '../utils/detect';
 
 import type Game from '../game';
 
@@ -61,6 +61,9 @@ export default class Settings extends Menu {
         this.showLevelsCheckbox.checked = settings.showLevels;
         this.disableCachingCheckbox.checked = settings.disableCaching;
         this.webGlCheckbox.checked = settings.webgl;
+
+        // Hide webgl checkbox if not supported.
+        if (isMacintoshFirefox()) this.hideWebGlOption();
 
         // Update brightness value.
         this.handleBrightness();
@@ -190,7 +193,9 @@ export default class Settings extends Menu {
     private handleWebGl(): void {
         this.game.storage.setWebGl(this.webGlCheckbox.checked);
 
-        window.location.reload();
+        setTimeout(() => {
+            window.location.reload();
+        }, 500);
     }
 
     /**
@@ -203,5 +208,17 @@ export default class Settings extends Menu {
 
         let { serverId } = this.game.player;
         document.querySelector('#game-info-world')!.textContent = serverId === -1 ? 'Unknown' : serverId.toString();
+    }
+
+    /**
+     * Some browsers (specifically Firefox) don't play well with WebGL resizing. Since I've
+     * already spent so much time trying to figure out why it doesn't work, I'm just going
+     * to hide the option for now.
+     */
+
+    private hideWebGlOption(): void {
+        let checkbox = document.querySelector<HTMLElement>('#webgl-checkbox')!;
+
+        checkbox.style.display = 'none';
     }
 }
