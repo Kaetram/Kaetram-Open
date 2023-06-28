@@ -23,6 +23,10 @@ export default {
                 return `You must be level ${level} in order to smelt this.`;
             }
 
+            case Modules.Skills.Alchemy: {
+                return `You must be level ${level} in order to brew this.`;
+            }
+
             default: {
                 return 'INVALID_LEVEL() NOT IMPLEMENTED';
             }

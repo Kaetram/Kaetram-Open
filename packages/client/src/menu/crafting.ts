@@ -200,6 +200,11 @@ export default class Crafting extends Menu {
                 text = 'Smelt';
                 break;
             }
+
+            case Modules.Skills.Alchemy: {
+                text = 'Brew';
+                break;
+            }
         }
 
         this.craftButton.innerHTML = text;

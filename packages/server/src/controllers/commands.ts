@@ -943,6 +943,10 @@ export default class Commands {
                 return this.world.crafting.open(this.player, Modules.Skills.Crafting);
             }
 
+            case 'openalchemy': {
+                return this.world.crafting.open(this.player, Modules.Skills.Alchemy);
+            }
+
             case 'ipban': {
                 let username = blocks.join(' ');
 
