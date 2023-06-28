@@ -590,6 +590,33 @@
             "magic": 6
         }
     },
+    "fishbowl": {
+        "type": "helmet",
+        "name": "Fishbowl",
+        "price": 100,
+        "skill": "defense",
+        "level": 5,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "ironchestplate": {
         "type": "chestplate",
         "name": "Iron Chestplate",
@@ -1752,8 +1779,23 @@
     "cd": {
         "type": "object",
         "name": "CD [Quest]",
-        "description": "A CD received by some dying soldier Private Ryan. Contains his last mixtape. I should probably get this to his Sexy wife or something.",
+        "description": "A CD received by some dying soldier. Contains his last mixtape. I should probably get this to his wife or something.",
         "undroppable": true
+    },
+    "smallemptyvial": {
+        "type": "object",
+        "name": "Small Empty Vial",
+        "description": "A relatively small vial used for storing any liquid really. You could probably put water in this and it'll be just fine."
+    },
+    "bigemptyvial": {
+        "type": "object",
+        "name": "Big Empty Vial",
+        "description": "A big vial used for storing any liquid really."
+    },
+    "largeemptyvial": {
+        "type": "object",
+        "name": "Large Empty Vial",
+        "description": "A large vial used for storing any liquid really."
     },
     "snowpotion": {
         "type": "object",
@@ -2159,6 +2201,12 @@
         "type": "object",
         "name": "Barley",
         "description": "It's a fruit, no it's a sald, no it's a grain. You can probably use it to make bread or something like that.",
+        "price": 100
+    },
+    "horseradish": {
+        "type": "object",
+        "name": "Horseraddish",
+        "description": "A horse's raddish, I think. I don't know, I'm not a botanist, I'm just a text prompt.",
         "price": 100
     },
     "blackberry": {

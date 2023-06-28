@@ -90,6 +90,7 @@ export interface ProcessedArea {
 
     // Overlay
     darkness?: number;
+    rgb?: string;
     fog?: string;
 
     // Dynamic

@@ -13,6 +13,7 @@ export default class Overlay extends Areas {
             overlayArea.type = (rawData.type! as OverlayType) || 'none';
 
             if (rawData.fog) overlayArea.fog = rawData.fog;
+            if (rawData.rgb) overlayArea.rgb = rawData.rgb.split(',').map(Number);
         });
 
         super.message('overlay');
