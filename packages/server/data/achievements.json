@@ -254,6 +254,12 @@
         "rewardSkill": "health",
         "rewardExperience": 52600
     },
+    "getmaxlevel": {
+        "name": "Get Max Level!",
+        "description": "Receive max amount of experience if you talk to this inhabitant in hell.",
+        "region": "Kingdom of Kaetram",
+        "npc": "rick"
+    },
     "roadtohell": {
         "name": "Road to Hell",
         "description": "Defeat the Dark Wolf guarding the entrance to the Hellhound.",
