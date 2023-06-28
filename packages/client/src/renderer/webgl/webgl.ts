@@ -66,6 +66,8 @@ export default class WebGL extends Renderer {
 
     public constructor(game: Game) {
         super(game, 'webgl');
+
+        console.log(navigator.userAgent.toLowerCase());
     }
 
     /**
@@ -217,7 +219,7 @@ export default class WebGL extends Renderer {
             let viewPort = new Float32Array([this.screenWidth, this.screenHeight]),
                 shader = this.getShader(context);
 
-            context.viewport(0, 0, context.canvas.width, context.canvas.height);
+            context.viewport(0, 0, context.drawingBufferWidth, context.drawingBufferHeight);
 
             context.uniform2fv(shader.uniforms.uViewportSize, viewPort);
             context.uniform1f(shader.uniforms.uInverseTileScale, 1 / this.camera.zoomFactor);
