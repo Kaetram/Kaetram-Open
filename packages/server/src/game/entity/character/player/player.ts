@@ -1184,10 +1184,14 @@ export default class Player extends Character {
         // New overlay is being loaded, remove lights.
         this.lightsLoaded = [];
 
+        let colour = overlay.rgb
+            ? `rgba(${overlay.rgb[0]}, ${overlay.rgb[1]}, ${overlay.rgb[2]}, ${overlay.darkness})`
+            : `rgba(0, 0, 0, ${overlay.darkness}`;
+
         this.send(
             new Overlay(Opcodes.Overlay.Set, {
                 image: overlay.fog || 'blank',
-                colour: `rgba(0, 0, 0, ${overlay.darkness})`
+                colour
             })
         );
 
