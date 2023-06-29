@@ -583,7 +583,7 @@ export const Constants = {
     MAX_LEVEL: 135, // Maximum attainable level.
     INVENTORY_SIZE: 25, // Maximum inventory size
     BANK_SIZE: 420, // Maximum bank size
-    DROP_PROBABILITY: 10_000, // 1 in 10000
+    DROP_PROBABILITY: 100_000, // 1 in 100000
     MAX_PROFESSION_LEVEL: 99, // Totally not influenced by another game lol
     HEAL_RATE: 7000, // healing every 7 seconds
     EFFECT_RATE: 10_000, // effects every 10 seconds

@@ -1,74 +1,74 @@
 {
     "warriorcrab": {
-        "bead": 10000
+        "bead": 100000
     },
 
     "ordinary": {
-        "gold": 3000,
-        "flask": 1200,
-        "bigflask": 720,
-        "manaflask": 760,
-        "bigmanaflask": 500,
-        "burger": 680,
-        "string": 1200,
-        "feather": 1000
+        "gold": 30000,
+        "flask": 12000,
+        "bigflask": 7200,
+        "manaflask": 7600,
+        "bigmanaflask": 5000,
+        "burger": 6800,
+        "string": 12000,
+        "feather": 10000
     },
 
     "arrows": {
-        "arrow": 2400,
-        "firearrow": 750,
-        "poisonarrow": 700,
-        "lightningarrow": 650,
-        "icearrow": 400,
-        "nisocarrow": 300,
-        "cinnabararrow": 250,
-        "pythararrow": 250,
-        "iboarrow": 250
+        "arrow": 24000,
+        "firearrow": 7500,
+        "poisonarrow": 7000,
+        "lightningarrow": 6500,
+        "icearrow": 4000,
+        "nisocarrow": 3000,
+        "cinnabararrow": 2500,
+        "pythararrow": 2500,
+        "iboarrow": 2500
     },
 
     "unusual": {
-        "blackpotion": 300,
-        "hotsauce": 300,
-        "cure": 300,
-        "logs": 200,
-        "stick": 500,
-        "bead": 300,
-        "banana": 300,
-        "watermelon": 300,
-        "apple": 300
+        "blackpotion": 3000,
+        "hotsauce": 3000,
+        "cure": 3000,
+        "logs": 2000,
+        "stick": 5000,
+        "bead": 3000,
+        "banana": 3000,
+        "watermelon": 3000,
+        "apple": 3000
     },
 
     "shards": {
-        "shardt1": 200,
-        "shardt2": 150,
-        "shardt3": 100,
-        "shardt4": 50,
-        "shardt5": 20
+        "shardt1": 2000,
+        "shardt2": 1500,
+        "shardt3": 1000,
+        "shardt4": 500,
+        "shardt5": 200
     },
 
     "vegetables": {
-        "onion": 500,
-        "chilli": 500,
-        "potato": 500,
-        "tomato": 500
+        "onion": 5000,
+        "chilli": 5000,
+        "potato": 5000,
+        "tomato": 5000
     },
 
     "fruits": {
-        "strawberry": 800,
-        "raspberry": 800,
-        "plum": 800,
-        "pineapple": 800,
-        "peach": 800,
-        "mulberry": 800,
-        "mango": 800
+        "strawberry": 8000,
+        "raspberry": 8000,
+        "plum": 8000,
+        "pineapple": 8000,
+        "peach": 8000,
+        "mulberry": 8000,
+        "mango": 8000
     },
 
     "mushrooms": {
-        "mushroom1": 600,
-        "mushroom2": 600,
-        "mushroom3": 600,
-        "mushroom4": 600,
-        "mushroom5": 600,
-        "mushroom6": 600
+        "mushroom1": 6000,
+        "mushroom2": 6000,
+        "mushroom3": 6000,
+        "mushroom4": 6000,
+        "mushroom5": 6000,
+        "mushroom6": 6000
     }
 }
