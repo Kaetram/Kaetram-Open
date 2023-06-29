@@ -153,8 +153,6 @@ export default class Map {
 
         this.data[index] = useAnimationData ? tileData : animationData || tileData;
 
-        if (!this.data[index]) console.log(tile);
-
         // If the tile contains an animation flag, we store it in the dynamic animated tiles dictionary.
         if (animationData) this.dynamicAnimatedTiles[index] = tileData;
 
