@@ -66,8 +66,6 @@ export default class WebGL extends Renderer {
 
     public constructor(game: Game) {
         super(game, 'webgl');
-
-        console.log(navigator.userAgent.toLowerCase());
     }
 
     /**
