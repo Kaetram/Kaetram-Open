@@ -2,6 +2,7 @@
     "rat": {
         "name": "Rat",
         "description": "Ah yes, this rat is made out of rat.",
+        "dropTables": ["ordinary"],
         "hitPoints": 34,
         "defenseLevel": 1,
         "attackLevel": 1,
@@ -38,6 +39,7 @@
     "bat": {
         "name": "Batterfly",
         "description": "A bat that is also a butterfly, what a strange creature.",
+        "dropTables": ["ordinary"],
         "hitPoints": 68,
         "defenseLevel": 3,
         "attackLevel": 2,
@@ -74,6 +76,7 @@
     "crab": {
         "name": "Crab",
         "description": "I wonder if I can eat this.",
+        "dropTables": ["ordinary"],
         "hitPoints": 15,
         "defenseLevel": 1,
         "attackLevel": 1,
@@ -110,6 +113,7 @@
     "wizard": {
         "name": "Wizard",
         "description": "Why does every MMORPG have one of these things?",
+        "dropTables": ["ordinary", "unusual"],
         "hitPoints": 130,
         "defenseLevel": 3,
         "attackLevel": 16,
@@ -147,6 +151,7 @@
     "goblin": {
         "name": "Goblin",
         "description": "Didn't I see this same style of goblin in RuneScape?",
+        "dropTables": ["ordinary", "arrows", "unusual", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 90,
         "defenseLevel": 4,
         "attackLevel": 4,
@@ -183,6 +188,7 @@
     "skeleton": {
         "name": "Spooky Skeleton",
         "description": "I wonder if this skeleton is made out of bones.",
+        "dropTables": ["ordinary", "arrows"],
         "hitPoints": 140,
         "defenseLevel": 6,
         "attackLevel": 6,
@@ -219,6 +225,7 @@
     "ogre": {
         "name": "Ogre",
         "description": "I really feel like the developers had to include generic fantasy creatures.",
+        "dropTables": ["ordinary", "unusual", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 150,
         "defenseLevel": 9,
         "attackLevel": 9,
@@ -255,6 +262,7 @@
     "skeleton2": {
         "name": "Scary Skeleton",
         "description": "Ah yes, it's not spooky, this one is scary.",
+        "dropTables": ["ordinary", "shards", "arrows", "unusual"],
         "hitPoints": 375,
         "defenseLevel": 10,
         "attackLevel": 10,
@@ -291,6 +299,7 @@
     "snek": {
         "name": "Snek",
         "description": "Snek, where you going? Snek, stahp!",
+        "dropTables": ["ordinary"],
         "hitPoints": 85,
         "defenseLevel": 7,
         "attackLevel": 12,
@@ -328,6 +337,7 @@
     "spectre": {
         "name": "Spectre",
         "description": "Has a scythe and looks like it's floating.",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 270,
         "defenseLevel": 18,
         "attackLevel": 12,
@@ -363,7 +373,8 @@
 
     "lavaslime": {
         "name": "Lava Slime",
-        "description": "Has a scythe and looks like it's floating.",
+        "description": "A cute little slime made out of molten rock.",
+        "dropTables": ["ordinary", "shards"],
         "hitPoints": 270,
         "defenseLevel": 18,
         "attackLevel": 12,
@@ -403,6 +414,7 @@
             "Must have really poor depth perception when you think about it.",
             "Eye really can't seem to figure out how that thing works."
         ],
+        "dropTables": ["ordinary", "unusual", "shards"],
         "hitPoints": 160,
         "defenseLevel": 8,
         "attackLevel": 20,
@@ -439,6 +451,7 @@
     "deathknight": {
         "name": "Death Knight",
         "description": "Seriously, who comes up with the names for these things?",
+        "dropTables": ["ordinary", "unusual", "shards"],
         "hitPoints": 185,
         "defenseLevel": 19,
         "attackLevel": 12,
@@ -475,6 +488,8 @@
     "adherer": {
         "name": "Dark Mage",
         "description": "I heard that these things drop roses that I can then use to hit things with.",
+        "drops": { "darkmagehood": 600, "darkmagehoodgold": 20 },
+        "dropTables": ["ordinary", "unusual", "shards"],
         "hitPoints": 200,
         "defenseLevel": 18,
         "attackLevel": 31,
@@ -548,6 +563,7 @@
     "ant": {
         "name": "Worker Ant",
         "description": "A hardworking small itty bitty ant!",
+        "dropTables": ["ordinary", "fruits", "mushrooms", "vegetables"],
         "hitPoints": 300,
         "defenseLevel": 30,
         "attackLevel": 14,
@@ -692,6 +708,7 @@
     "cowwarrior": {
         "name": "Cow Warrior",
         "description": "The cows are rising up!",
+        "dropTables": ["ordinary", "shards", "unusual", "fruits", "mushrooms", "vegetables"],
         "hitPoints": 800,
         "defenseLevel": 15,
         "attackLevel": 35,
@@ -728,6 +745,7 @@
     "rooster": {
         "name": "Angry Rooster",
         "description": "It's a sleeping rooster that attacks you...",
+        "dropTables": ["ordinary", "shards", "unusual", "fruits", "mushrooms", "vegetables"],
         "hitPoints": 800,
         "defenseLevel": 15,
         "attackLevel": 35,
@@ -763,6 +781,7 @@
 
     "pirateskeleton": {
         "name": "Pirate Skeleton",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 460,
         "defenseLevel": 18,
         "attackLevel": 22,
@@ -799,6 +818,7 @@
     "greenpirateskeleton": {
         "name": "Green Pirate Skeleton",
         "description": "Isn't this just a skeleton but wearing a pirate hat?",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 585,
         "defenseLevel": 42,
         "attackLevel": 24,
@@ -834,6 +854,7 @@
 
     "redpirateskeleton": {
         "name": "Red Pirate Skeleton",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 640,
         "defenseLevel": 13,
         "attackLevel": 18,
@@ -870,6 +891,7 @@
     "blackpirateskeleton": {
         "name": "Blue Pirate Skeleton",
         "description": "Isn't this just a skeleton but wearing a pirate hat?",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 625,
         "defenseLevel": 14,
         "attackLevel": 18,
