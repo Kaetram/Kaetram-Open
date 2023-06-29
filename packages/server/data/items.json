@@ -563,6 +563,114 @@
             "magic": 0
         }
     },
+    "darkmagehood": {
+        "type": "helmet",
+        "name": "Dark Mage Hood",
+        "price": 1000,
+        "skill": "magic",
+        "level": 30,
+        "attackStats": {
+            "crush": 2,
+            "slash": 4,
+            "stab": 2,
+            "archery": 0,
+            "magic": 8
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 1,
+            "stab": 1,
+            "archery": -4,
+            "magic": 14
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 4
+        }
+    },
+    "darkmagehoodblue": {
+        "type": "helmet",
+        "name": "Dark Mage Hood",
+        "price": 1000,
+        "skill": "magic",
+        "level": 30,
+        "attackStats": {
+            "crush": 3,
+            "slash": 4,
+            "stab": 3,
+            "archery": 0,
+            "magic": 9
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 5,
+            "stab": 4,
+            "archery": -2,
+            "magic": 14
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 5
+        }
+    },
+    "darkmagehoodgreen": {
+        "type": "helmet",
+        "name": "Dark Mage Hood",
+        "price": 1000,
+        "skill": "magic",
+        "level": 30,
+        "attackStats": {
+            "crush": 3,
+            "slash": 4,
+            "stab": 3,
+            "archery": 0,
+            "magic": 9
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 5,
+            "stab": 4,
+            "archery": -2,
+            "magic": 14
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 5
+        }
+    },
+    "darkmagehoodgold": {
+        "type": "helmet",
+        "name": "Dark Mage Hood",
+        "price": 1000,
+        "skill": "magic",
+        "level": 30,
+        "attackStats": {
+            "crush": 3,
+            "slash": 4,
+            "stab": 3,
+            "archery": 0,
+            "magic": 9
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 5,
+            "stab": 4,
+            "archery": -2,
+            "magic": 14
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 5
+        }
+    },
     "crystalhood": {
         "type": "helmet",
         "name": "Crystal Hood",

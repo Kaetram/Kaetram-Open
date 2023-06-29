@@ -8,6 +8,10 @@
     { "id": "player/helmet/goldhelmet", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/helmet/crystalhood", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/helmet/fishbowl", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/helmet/darkmagehood", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/helmet/darkmagehoodblue", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/helmet/darkmagehoodgreen", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/helmet/darkmagehoodgold", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/chestplate/ironchestplate", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/legplates/cobaltlegplates", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/legplates/copperlegplates", "width": 32, "height": 32, "offsetX": -8 },
@@ -6562,5 +6566,10 @@
     { "id": "items/zondullogs", "offsetX": 0, "offsetY": 0 },
     { "id": "items/smallemptyvial", "offsetX": 0, "offsetY": 0 },
     { "id": "items/bigemptyvial", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/largeemptyvial", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/largeemptyvial", "offsetX": 0, "offsetY": 0 },
+
+    { "id": "items/darkmagehood", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/darkmagehoodblue", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/darkmagehoodgreen", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/darkmagehoodgold", "offsetX": 0, "offsetY": 0 }
 ]
