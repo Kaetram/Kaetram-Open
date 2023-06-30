@@ -59,7 +59,8 @@ export default class Trade {
 
         let offerIndex = this.getEmptySlot();
 
-        if (offerIndex === -1) return this.player.notify(`You cannot add any more items to the trade.`, '', 'TRADE');
+        if (offerIndex === -1)
+            return this.player.notify(`You cannot add any more items to the trade.`, '', 'TRADE');
 
         // Grab the slot from the inventory.
         let slot = this.player.inventory.get(index);
@@ -102,7 +103,10 @@ export default class Trade {
              */
 
             if (offer.inventoryIndex === index && item.stackable)
-                item.count = offer.item.count + count > offer.maxCount ? offer.maxCount : offer.item.count + count;
+                item.count =
+                    offer.item.count + count > offer.maxCount
+                        ? offer.maxCount
+                        : offer.item.count + count;
             else existingIndex = -1;
         }
 
@@ -187,7 +191,8 @@ export default class Trade {
             // The difference indicates who is geting more items than they have available spaces
             if (diff !== emptySlots) {
                 if (diff < 0 && emptySlots < Math.abs(diff)) return this.notEnoughSpace();
-                if (diff > 0 && otherPlayerEmptySlots < diff) return this.getActiveTrade()?.notEnoughSpace();
+                if (diff > 0 && otherPlayerEmptySlots < diff)
+                    return this.getActiveTrade()?.notEnoughSpace();
             }
 
             return this.exchange();
@@ -220,9 +225,11 @@ export default class Trade {
             return this.player.notify(`That player is an administrator and cannot be traded with.`);
 
         // Prevent cheaters from trading.
-        if (this.player.isCheater()) return this.player.notify('Sorry but cheaters are not allowed to trade.');
+        if (this.player.isCheater())
+            return this.player.notify('Sorry but cheaters are not allowed to trade.');
 
-        if (target.isCheater()) return this.player.notify('That player is a cheater, he might sell you contraband!');
+        if (target.isCheater())
+            return this.player.notify('That player is a cheater, he might sell you contraband!');
 
         if (target.trade.lastRequest === this.player.instance) return this.open(target);
 
@@ -234,7 +241,11 @@ export default class Trade {
             'TRADE'
         );
 
-        this.player.notify(`You have requested to trade with ${Utils.formatName(target.username)}.`, '', 'TRADE');
+        this.player.notify(
+            `You have requested to trade with ${Utils.formatName(target.username)}.`,
+            '',
+            'TRADE'
+        );
     }
 
     /**
@@ -270,7 +281,9 @@ export default class Trade {
     public close(): void {
         if (!this.activeTrade) return;
 
-        log.debug(`Closing trade between ${this.player.username} and ${this.activeTrade?.username}.`);
+        log.debug(
+            `Closing trade between ${this.player.username} and ${this.activeTrade?.username}.`
+        );
 
         // Close the trade for the player.
         this.player.send(new TradePacket(Opcodes.Trade.Close, {}));
@@ -296,7 +309,11 @@ export default class Trade {
         this.acceptCallback?.();
         this.getActiveTrade()?.acceptCallback?.();
 
-        this.activeTrade?.notify(`The other player does not have enough space in their inventory.`, '', 'TRADE');
+        this.activeTrade?.notify(
+            `The other player does not have enough space in their inventory.`,
+            '',
+            'TRADE'
+        );
         return this.player.notify(`You do not have enough space in your inventory.`, '', 'TRADE');
     }
 
@@ -314,7 +331,9 @@ export default class Trade {
 
         if (flagged) {
             this.player.notify(`Please report a bug error, an error has occurred.`, '', 'TRADE');
-            log.warning(`Trade exchange failed for ${this.player.username} and ${this.activeTrade?.username}.`);
+            log.warning(
+                `Trade exchange failed for ${this.player.username} and ${this.activeTrade?.username}.`
+            );
             return this.close();
         }
 
@@ -354,7 +373,8 @@ export default class Trade {
                 : (offeredItemsDict[item.key] || 0) + 1;
         });
 
-        for (let [key, value] of Object.entries(offeredItemsDict)) offeredItemsArry.push(` ${value} ${key}(s)`);
+        for (let [key, value] of Object.entries(offeredItemsDict))
+            offeredItemsArry.push(` ${value} ${key}(s)`);
 
         // Store other player's item offer(s) to an array
         this.getActiveTrade()?.forEachOfferedItem((item: Item) => {
@@ -363,7 +383,8 @@ export default class Trade {
                 : (receivedItemsDict[item.key] || 0) + 1;
         });
 
-        for (let [key, value] of Object.entries(receivedItemsDict)) receivedItemsArry.push(` ${value} ${key}(s)`);
+        for (let [key, value] of Object.entries(receivedItemsDict))
+            receivedItemsArry.push(` ${value} ${key}(s)`);
 
         return `Player ${this.player.username} traded${offeredItemsArry} for${receivedItemsArry} with player ${this.activeTrade?.username}`;
     }

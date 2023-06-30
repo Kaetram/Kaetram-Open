@@ -194,7 +194,12 @@ export default abstract class Entity {
      * @param onEndCount A function to be called upon animation completion.
      */
 
-    public setAnimation(name: string, speed = this.sprite.idleSpeed, count = 1, onEndCount?: () => void): void {
+    public setAnimation(
+        name: string,
+        speed = this.sprite.idleSpeed,
+        count = 1,
+        onEndCount?: () => void
+    ): void {
         // Prevent setting animation if no sprite or it's the same animation.
         if (this.animation?.name === name) return;
 

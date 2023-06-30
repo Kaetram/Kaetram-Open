@@ -37,7 +37,9 @@ export default class Enchant extends Menu {
 
         // Create an empty inventory slot list.
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
-            this.list.append(Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this)));
+            this.list.append(
+                Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
+            );
     }
 
     /**
@@ -129,7 +131,8 @@ export default class Enchant extends Menu {
         else this.selectedSlot = index;
 
         // Update the slot depending on whether or not the item is a shard.
-        (isShard ? this.selectedShards : this.selectedItem).style.backgroundImage = image.style.backgroundImage;
+        (isShard ? this.selectedShards : this.selectedItem).style.backgroundImage =
+            image.style.backgroundImage;
 
         // Shards also have counts so we will update that as well.
         if (isShard) this.selectedShardsCount.textContent = count.textContent;

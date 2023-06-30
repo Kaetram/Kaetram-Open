@@ -170,7 +170,8 @@ export default class Skills {
             );
 
             // Update the player's max health if they have gained a level in health skill.
-            if (type === Modules.Skills.Health) this.player.setHitPoints(Formulas.getMaxHitPoints(level));
+            if (type === Modules.Skills.Health)
+                this.player.setHitPoints(Formulas.getMaxHitPoints(level));
 
             // Update the player's level if they have gained a level in a combat skill.
             this.sync();

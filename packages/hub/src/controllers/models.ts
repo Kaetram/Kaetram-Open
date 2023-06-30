@@ -13,9 +13,19 @@ import type Connection from '../network/connection';
 import type { SerializedServer } from '@kaetram/common/types/network';
 import type { HandshakePacket } from '@kaetram/common/network/impl/handshake';
 
-type PlayerCallback = (username: string, serverId: number, logout: boolean, population: number) => void;
+type PlayerCallback = (
+    username: string,
+    serverId: number,
+    logout: boolean,
+    population: number
+) => void;
 type ServerCallback = (id: number, name: string) => void;
-type MessageCallback = (source: string, message: string, serverName?: string, withArrow?: boolean) => void;
+type MessageCallback = (
+    source: string,
+    message: string,
+    serverName?: string,
+    withArrow?: boolean
+) => void;
 
 export default class Models {
     private models: { [instance: string]: Model } = {};
@@ -53,7 +63,9 @@ export default class Models {
         switch (data.type) {
             case 'hub': {
                 if (config.gver !== data.gVer) {
-                    log.error(`Game version mismatch: ${config.gver} ${data.gVer} from ${data.serverId}`);
+                    log.error(
+                        `Game version mismatch: ${config.gver} ${data.gVer} from ${data.serverId}`
+                    );
 
                     return connection.close();
                 }
@@ -134,7 +146,8 @@ export default class Models {
      */
 
     private addServer(server: Server): void {
-        if (server.instance in this.models) return log.error(`Server ${server.instance} already exists.`);
+        if (server.instance in this.models)
+            return log.error(`Server ${server.instance} already exists.`);
 
         this.models[server.instance] = server;
         this.addCallback?.(server.id, server.name);
@@ -146,13 +159,16 @@ export default class Models {
      */
 
     private addAdmin(admin: Admin): void {
-        if (admin.instance in this.models) return log.error(`Admin ${admin.instance} already exists.`);
+        if (admin.instance in this.models)
+            return log.error(`Admin ${admin.instance} already exists.`);
 
         this.models[admin.instance] = admin;
     }
 
     private syncAdmins() {
-        this.broadcastAdmins(new Packet(Packets.AdminSync, undefined, { servers: this.serializeServers() }));
+        this.broadcastAdmins(
+            new Packet(Packets.AdminSync, undefined, { servers: this.serializeServers() })
+        );
     }
 
     /**
@@ -263,7 +279,8 @@ export default class Models {
      */
 
     public findPlayer(username: string): Server | undefined {
-        for (let server of this.getAllServers()) if (server.players.includes(username)) return server;
+        for (let server of this.getAllServers())
+            if (server.players.includes(username)) return server;
 
         return undefined;
     }

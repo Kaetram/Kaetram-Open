@@ -3,7 +3,9 @@ import type { Namespaces } from './options';
 import type { MaybeArray, UnionToIntersection } from '../types/utils';
 import type { Locale } from '.';
 
-type DotValue<T extends string> = T extends `${infer L}.${infer R}` ? { [K in L]: DotValue<R> } : { [K in T]: string };
+type DotValue<T extends string> = T extends `${infer L}.${infer R}`
+    ? { [K in L]: DotValue<R> }
+    : { [K in T]: string };
 
 type Prefix = TypeOptions['interpolationPrefix'];
 type Suffix = TypeOptions['interpolationSuffix'];
@@ -25,7 +27,9 @@ type FlattenKeys<T> = T extends object
                   ? FlattenKeys<
                         {
                             [L in keyof T[K]]: {
-                                [M in `${K & string}${KeySeparator}${L & string}`]: FlattenKeys<T[K][L]>;
+                                [M in `${K & string}${KeySeparator}${L & string}`]: FlattenKeys<
+                                    T[K][L]
+                                >;
                             };
                         }[keyof T[K]]
                     >
@@ -44,7 +48,10 @@ export type TFunction = <
         ? keyof NsInter[NS]
         : MaybeArray<
               | keyof NsInter[NS]
-              | { [NS in keyof NsInter]: `${NS & string}${NsSeparator}${keyof NsInter[NS] & string}` }[keyof NsInter]
+              | {
+                    [NS in keyof NsInter]: `${NS & string}${NsSeparator}${keyof NsInter[NS] &
+                        string}`;
+                }[keyof NsInter]
           >,
     const O extends { ns?: NS },
     const KK = K extends readonly (infer KK)[] ? KK : K,
@@ -55,7 +62,11 @@ export type TFunction = <
         : TypeOptions['defaultNS']
 >(
     key: K,
-    options?: TOptions<O & NsInter[NS][(KK extends `${string}${NsSeparator}${infer N}` ? N : KK) & keyof NsInter[NS]]>
+    options?: TOptions<
+        O &
+            NsInter[NS][(KK extends `${string}${NsSeparator}${infer N}` ? N : KK) &
+                keyof NsInter[NS]]
+    >
 ) => string;
 
 export type GetFixedTFunction = <

@@ -59,7 +59,8 @@ export default class Crafting {
             craftingData = (CraftingData as CraftingInfo)[skillName];
 
         // Another layer of checking the validity of the crafting data.
-        if (!craftingData) return player.notify(`Invalid crafting data, please submit a bug report.`);
+        if (!craftingData)
+            return player.notify(`Invalid crafting data, please submit a bug report.`);
 
         // Get the item key from the crafting keys based on the index the player selected.
         let craftingItem = craftingData[key];
@@ -104,7 +105,8 @@ export default class Crafting {
             craftingData = (CraftingData as CraftingInfo)[skillName];
 
         // Verify the crafting data
-        if (!craftingData) return player.notify(`Invalid crafting data, please submit a bug report.`);
+        if (!craftingData)
+            return player.notify(`Invalid crafting data, please submit a bug report.`);
 
         // The skill that is being used to craft the item.
         let craftingItem = craftingData[key],
@@ -119,7 +121,9 @@ export default class Crafting {
 
         // Ensure the player has the correct level to craft the item.
         if (skill.level < craftingItem.level)
-            return player.notify(CraftingEn.INVALID_LEVEL(player.activeCraftingInterface, craftingItem.level));
+            return player.notify(
+                CraftingEn.INVALID_LEVEL(player.activeCraftingInterface, craftingItem.level)
+            );
 
         /**
          * The actual count refers to the maximum amount of items that the player can craft. So if
@@ -140,7 +144,8 @@ export default class Crafting {
                 requestedAmount = requirement.count * count;
 
             // Requested amount is greater than the amount of items the player has.
-            if (requestedAmount > itemCount) actualCount = Math.floor(itemCount / requirement.count);
+            if (requestedAmount > itemCount)
+                actualCount = Math.floor(itemCount / requirement.count);
         }
 
         // Remove the items from the player's inventory.
@@ -157,7 +162,8 @@ export default class Crafting {
         actualCount -= failures;
 
         // Notify the players of the amount of failures.
-        if (failures > 0) player.notify(`You have failed to craft ${failures}x ${(Items as RawData)[key].name}.`);
+        if (failures > 0)
+            player.notify(`You have failed to craft ${failures}x ${(Items as RawData)[key].name}.`);
 
         // Award experience to the player.
         skill.addExperience(craftingItem.experience * actualCount);

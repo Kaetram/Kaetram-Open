@@ -174,7 +174,8 @@ export default class Achievement {
         if (loading) return;
 
         // Handle quest progress callback after updating stage to grab latest name.
-        if (isProgress) this.progressCallback?.(this.key, stage, this.getName(), this.getDescription());
+        if (isProgress)
+            this.progressCallback?.(this.key, stage, this.getName(), this.getDescription());
 
         /**
          * We use an else-if to ensure that if the achievement is discovered and finished at the

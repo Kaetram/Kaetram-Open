@@ -79,12 +79,22 @@ export default class Entities {
         // Spawns the static chests throughout the world.
 
         for (let info of this.map.chest)
-            this.spawnChest(info.items?.split(',') || [], info.x, info.y, true, info.achievement, info.mimic);
+            this.spawnChest(
+                info.items?.split(',') || [],
+                info.x,
+                info.y,
+                true,
+                info.achievement,
+                info.mimic
+            );
 
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
 
         // Initialize the roaming interval for mobs
-        setInterval(() => this.forEachMob((mob) => mob.roamingCallback?.()), Modules.MobDefaults.ROAM_FREQUENCY);
+        setInterval(
+            () => this.forEachMob((mob) => mob.roamingCallback?.()),
+            Modules.MobDefaults.ROAM_FREQUENCY
+        );
     }
 
     /**
@@ -268,7 +278,8 @@ export default class Entities {
      */
 
     private add(entity: Entity): void {
-        if (entity.instance in this.entities) log.warning(`Entity ${entity.instance} already exists.`);
+        if (entity.instance in this.entities)
+            log.warning(`Entity ${entity.instance} already exists.`);
 
         this.entities[entity.instance] = entity;
 
@@ -547,7 +558,9 @@ export default class Entities {
      */
 
     public getPlayersByIp(ip: string): Player[] {
-        return Object.values(this.players).filter((player: Player) => player.connection.address === ip);
+        return Object.values(this.players).filter(
+            (player: Player) => player.connection.address === ip
+        );
     }
 
     /**
