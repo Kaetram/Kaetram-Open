@@ -269,7 +269,7 @@ export enum DamageStyle {
     Archery
 }
 
-export enum Medals {
+export enum Crowns {
     None,
     Silver,
     Gold,

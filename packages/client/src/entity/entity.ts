@@ -324,11 +324,11 @@ export default abstract class Entity {
     }
 
     /**
-     * Default implementation for medal.
+     * Default implementation for crown.
      * @returns Defaults to false.
      */
 
-    public hasMedal(): boolean {
+    public hasCrown(): boolean {
         return false;
     }
 
