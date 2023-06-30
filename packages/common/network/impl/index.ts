@@ -46,3 +46,4 @@ export { default as Player } from './player';
 export { default as Relay } from './relay';
 export { default as Crafting } from './crafting';
 export { default as Countdown } from './countdown';
+export { default as LootBag } from './lootbag';
