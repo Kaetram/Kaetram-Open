@@ -524,6 +524,44 @@
         }
     },
 
+    "regionhenchman": {
+        "name": "Dark Region Henchman",
+        "description": "I heard that these things drop roses that I can then use to hit things with.",
+        "dropTables": ["ordinary", "unusual", "shards"],
+        "hitPoints": 200,
+        "defenseLevel": 18,
+        "attackLevel": 31,
+        "level": 38,
+        "aggroRange": 6,
+        "attackRange": 4,
+        "aggressive": true,
+        "roaming": true,
+        "attackRate": 1200,
+        "movementSpeed": 450,
+        "projectileName": "fireball",
+        "respawnDelay": 35000,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 31
+        },
+        "defenseStats": {
+            "crush": -5,
+            "slash": -8,
+            "stab": -9,
+            "archery": -6,
+            "magic": 32
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 0,
+            "archery": 0,
+            "magic": 16
+        }
+    },
+
     "angel": {
         "name": "Angel",
         "description": "Holy moly, this is nothing like how they're described in the bible.",
