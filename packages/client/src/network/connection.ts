@@ -1368,8 +1368,8 @@ export default class Connection {
      * @param slots
      */
 
-    private handleLootBag(info: LootBagPacket): void {
-        console.log(info);
+    private handleLootBag(opcode: Opcodes.LootBag, info: LootBagPacket): void {
+        this.menu.getLootBag().handle(opcode, info);
     }
 
     /**

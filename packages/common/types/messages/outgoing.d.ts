@@ -424,11 +424,11 @@ export type CraftingCallback = (opcode: Opcodes.Crafting, info: CraftingPacket) 
 /////////////////////////////////////////////////////////////////////////////////
 
 export interface LootBagPacket {
-    instance: string;
-    items: SlotData[];
+    items?: SlotData[];
+    index?: number;
 }
 
-export type LootBagCallback = (info: LootBagPacket) => void;
+export type LootBagCallback = (opcode: Opcodes.LootBag, info: LootBagPacket) => void;
 
 ////////////////////////////////////////////////////////////////////////////////
 
