@@ -237,7 +237,8 @@ export default class Handler {
         }
 
         if (this.player.isArcher()) {
-            if (!this.player.hasArrows()) return this.player.notify('You do not have any arrows to shoot.');
+            if (!this.player.hasArrows())
+                return this.player.notify('You do not have any arrows to shoot.');
 
             this.player.equipment.decrementArrows();
         }
@@ -259,7 +260,9 @@ export default class Handler {
          */
 
         if (door.level) {
-            let level = door.skill ? this.player.skills.get(Utils.getSkill(door.skill)!).level : this.player.level,
+            let level = door.skill
+                    ? this.player.skills.get(Utils.getSkill(door.skill)!).level
+                    : this.player.level,
                 message = door.skill
                     ? `Your ${door.skill} level needs to be at least ${door.level} to enter.`
                     : `Your combat level must be at least ${door.level} to enter.`;
@@ -292,7 +295,9 @@ export default class Handler {
             let quest = this.player.quests.get(door.reqQuest);
 
             if (!quest?.isFinished())
-                return this.player.notify(`You need to complete the quest ${quest?.name} to pass through this door.`);
+                return this.player.notify(
+                    `You need to complete the quest ${quest?.name} to pass through this door.`
+                );
         }
 
         // Handle door requiring an item to proceed (and remove the item from the player's inventory).
@@ -300,7 +305,9 @@ export default class Handler {
             let count = door.reqItemCount || 1;
 
             if (!this.player.inventory.hasItem(door.reqItem, count))
-                return this.player.notify('You do not have the required key to pass through this door.');
+                return this.player.notify(
+                    'You do not have the required key to pass through this door.'
+                );
 
             this.player.inventory.removeItem(door.reqItem, count);
 
@@ -582,7 +589,9 @@ export default class Handler {
      */
 
     private handleAchievements(): void {
-        this.player.send(new Achievement(Opcodes.Achievement.Batch, this.player.achievements?.serialize(true)));
+        this.player.send(
+            new Achievement(Opcodes.Achievement.Batch, this.player.achievements?.serialize(true))
+        );
     }
 
     /**
@@ -599,7 +608,9 @@ export default class Handler {
      */
 
     private handleAbilities(): void {
-        this.player.send(new AbilityPacket(Opcodes.Ability.Batch, this.player.abilities?.serialize(true)));
+        this.player.send(
+            new AbilityPacket(Opcodes.Ability.Batch, this.player.abilities?.serialize(true))
+        );
     }
 
     /**
@@ -697,7 +708,9 @@ export default class Handler {
     private handleTalkToNPC(npc: NPC): void {
         // Primarily for the prevention of packet injection.
         if (!this.player.isAdjacent(npc))
-            return log.warning(`Player ${this.player.username} tried to talk to NPC ${npc.key} but is not adjacent.`);
+            return log.warning(
+                `Player ${this.player.username} tried to talk to NPC ${npc.key} but is not adjacent.`
+            );
 
         // Checks if the NPC has an active quest associated with it.
         let quest = this.player.quests.getQuestFromNPC(npc);
@@ -713,7 +726,8 @@ export default class Handler {
         if (npc.store) return this.world.stores.open(this.player, npc);
 
         // Used to toggle interaction with the containers.
-        if (npc.role === 'banker' || npc.role === 'enchanter') this.player.canAccessContainer = true;
+        if (npc.role === 'banker' || npc.role === 'enchanter')
+            this.player.canAccessContainer = true;
 
         switch (npc.role) {
             case 'banker': {

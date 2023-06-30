@@ -65,7 +65,13 @@ export default class Crafting extends Menu {
             }
 
             case Opcodes.Crafting.Select: {
-                return this.handleSelect(info.key!, info.name!, info.level!, info.result!, info.requirements!);
+                return this.handleSelect(
+                    info.key!,
+                    info.name!,
+                    info.level!,
+                    info.result!,
+                    info.requirements!
+                );
             }
         }
     }

@@ -256,7 +256,9 @@ export default class Player extends Character {
         this.loadAbilities();
 
         // Synchronize login with the hub's server list.
-        this.world.client.send(new PlayerPacket(Opcodes.Player.Login, { username: this.username, guild: this.guild }));
+        this.world.client.send(
+            new PlayerPacket(Opcodes.Player.Login, { username: this.username, guild: this.guild })
+        );
 
         // Quests and achievements have to be loaded prior to introducing the player.
         await this.loadQuests();
@@ -401,7 +403,8 @@ export default class Player extends Character {
 
     public intro(): void {
         // Reset hitpoints if they are unitialized.
-        if (this.hitPoints.getHitPoints() < 0) this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
+        if (this.hitPoints.getHitPoints() < 0)
+            this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
 
         // Reset mana if it is unitialized.
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
@@ -457,9 +460,11 @@ export default class Player extends Character {
         let population = this.world.getPopulation(),
             { activeEvent } = this.world.events;
 
-        if (population > 1) this.notify(`There are currently ${population} players online.`, '', '', true);
+        if (population > 1)
+            this.notify(`There are currently ${population} players online.`, '', '', true);
 
-        if (activeEvent) this.notify(`The ${activeEvent} event is currently active!`, 'crimsonred', '', true);
+        if (activeEvent)
+            this.notify(`The ${activeEvent} event is currently active!`, 'crimsonred', '', true);
     }
 
     /**
@@ -474,7 +479,8 @@ export default class Player extends Character {
         switch (type) {
             case 'passive': {
                 // Increment mana by 1% of the max mana.
-                if (!this.mana.isFull()) this.mana.increment(Math.floor(this.mana.getMaxMana() * 0.01));
+                if (!this.mana.isFull())
+                    this.mana.increment(Math.floor(this.mana.getMaxMana() * 0.01));
 
                 // Base healing amount by 0.5% of the max hitpoints.
                 let healAmount = this.hitPoints.getMaxHitPoints() * 0.005;
@@ -641,7 +647,10 @@ export default class Player extends Character {
              * If the old coordinate values are invalid or they may cause a loop
              * in the `teleport` function, we instead send the player to the spawn point.
              */
-            if ((this.oldX === -1 && this.oldY === -1) || (this.oldX === this.x && this.oldY === this.y)) {
+            if (
+                (this.oldX === -1 && this.oldY === -1) ||
+                (this.oldX === this.x && this.oldY === this.y)
+            ) {
                 this.sendToSpawn();
                 return true;
             }
@@ -740,8 +749,10 @@ export default class Player extends Character {
                     this.inventory.remove(fromIndex, 1);
                     this.lastEdible = Date.now();
 
-                    if (item.isSmallBowl()) this.inventory.add(new Item('bowlsmall', -1, -1, false, 1));
-                    else if (item.isMediumBowl()) this.inventory.add(new Item('bowlmedium', -1, -1, false, 1));
+                    if (item.isSmallBowl())
+                        this.inventory.add(new Item('bowlsmall', -1, -1, false, 1));
+                    else if (item.isMediumBowl())
+                        this.inventory.add(new Item('bowlmedium', -1, -1, false, 1));
                 }
 
                 if (item.isEquippable() && item.canEquip(this)) {
@@ -755,7 +766,8 @@ export default class Player extends Character {
             case Modules.ContainerType.Bank: {
                 if (!this.canAccessContainer) return this.notify(`You cannot do that right now.`);
 
-                let from = fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
+                let from =
+                        fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
                     to = toContainer === Modules.ContainerType.Bank ? this.bank : this.inventory;
 
                 from.move(fromIndex, to, toIndex);
@@ -792,9 +804,15 @@ export default class Player extends Character {
      * @param toIndex The index at which we are swapping the item with.
      */
 
-    public handleContainerSwap(type: Modules.ContainerType, fromIndex: number, toIndex: number): void {
+    public handleContainerSwap(
+        type: Modules.ContainerType,
+        fromIndex: number,
+        toIndex: number
+    ): void {
         if (isNaN(fromIndex) || isNaN(toIndex) || fromIndex < 0 || toIndex < 0)
-            return log.warning(`[${this.username}] Invalid container swap [${fromIndex}, ${toIndex}}]`);
+            return log.warning(
+                `[${this.username}] Invalid container swap [${fromIndex}, ${toIndex}}]`
+            );
 
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
@@ -929,11 +947,15 @@ export default class Player extends Character {
 
         // Archery directs experience to the archery skill.
         if (this.isArcher())
-            return this.skills.get(Modules.Skills.Archery).addExperience(Math.ceil(experience * 0.75), false);
+            return this.skills
+                .get(Modules.Skills.Archery)
+                .addExperience(Math.ceil(experience * 0.75), false);
 
         // Magic directs experience to the magic skill.
         if (this.isMagic())
-            return this.skills.get(Modules.Skills.Magic).addExperience(Math.ceil(experience * 0.75), false);
+            return this.skills
+                .get(Modules.Skills.Magic)
+                .addExperience(Math.ceil(experience * 0.75), false);
 
         /**
          * The rest of the experiences are distributed according to the attack style selected.
@@ -942,54 +964,80 @@ export default class Player extends Character {
         switch (weapon.attackStyle) {
             // Stab gives the remaining accuracy experience.
             case Modules.AttackStyle.Stab: {
-                this.skills.get(Modules.Skills.Accuracy).addExperience(Math.ceil(experience * 0.75), false);
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.75), false);
                 break;
             }
 
             // Slash gives the remaining strength experience.
             case Modules.AttackStyle.Slash: {
-                this.skills.get(Modules.Skills.Strength).addExperience(Math.ceil(experience * 0.75), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.75), false);
                 break;
             }
 
             // Defense gives the remaining defence experience.
             case Modules.AttackStyle.Defensive: {
-                this.skills.get(Modules.Skills.Defense).addExperience(Math.ceil(experience * 0.75), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.75), false);
                 break;
             }
 
             // Crush gives accuracy + strength experience.
             case Modules.AttackStyle.Crush: {
-                this.skills.get(Modules.Skills.Accuracy).addExperience(Math.ceil(experience * 0.375), false);
-                this.skills.get(Modules.Skills.Strength).addExperience(Math.ceil(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.375), false);
                 break;
             }
 
             // Shared experience evenly distributes the experience between all skills.
             case Modules.AttackStyle.Shared: {
-                this.skills.get(Modules.Skills.Accuracy).addExperience(Math.ceil(experience * 0.25), false);
-                this.skills.get(Modules.Skills.Strength).addExperience(Math.ceil(experience * 0.25), false);
-                this.skills.get(Modules.Skills.Defense).addExperience(Math.ceil(experience * 0.25), false);
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.25), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.25), false);
                 break;
             }
 
             // Axe hacking attack style gives strength + defence experience.
             case Modules.AttackStyle.Hack: {
-                this.skills.get(Modules.Skills.Strength).addExperience(Math.ceil(experience * 0.375), false);
-                this.skills.get(Modules.Skills.Defense).addExperience(Math.ceil(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.ceil(experience * 0.375), false);
                 break;
             }
 
             // Axe chop gives accuracy + defence experience.
             case Modules.AttackStyle.Chop: {
-                this.skills.get(Modules.Skills.Accuracy).addExperience(Math.floor(experience * 0.375), false);
-                this.skills.get(Modules.Skills.Defense).addExperience(Math.floor(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Accuracy)
+                    .addExperience(Math.floor(experience * 0.375), false);
+                this.skills
+                    .get(Modules.Skills.Defense)
+                    .addExperience(Math.floor(experience * 0.375), false);
                 break;
             }
 
             // Default (unarmed)
             default: {
-                this.skills.get(Modules.Skills.Strength).addExperience(Math.ceil(experience * 0.75), false);
+                this.skills
+                    .get(Modules.Skills.Strength)
+                    .addExperience(Math.ceil(experience * 0.75), false);
                 break;
             }
         }
@@ -1111,7 +1159,9 @@ export default class Player extends Character {
         if (entity?.isItem()) {
             // Prevent picking up dropped items that belong to other players.
             if (!entity.isOwner(this.username))
-                return this.notify(`This item can only be picked up by ${Utils.formatName(entity.owner)}.`);
+                return this.notify(
+                    `This item can only be picked up by ${Utils.formatName(entity.owner)}.`
+                );
 
             // If the item's owner is existent and the player is the owner we add it to the statistics.
             if (entity.owner === this.username) this.statistics.addDrop(entity.key, entity.count);
@@ -1284,7 +1334,10 @@ export default class Player extends Character {
         if (this.status.has(Modules.Effects.HotSauce)) speed = Math.floor(speed * 0.8);
 
         // Apply freezing movement speed effect, make the player move 25% slower.
-        if (this.status.has(Modules.Effects.Freezing) && !this.status.has(Modules.Effects.SnowPotion))
+        if (
+            this.status.has(Modules.Effects.Freezing) &&
+            !this.status.has(Modules.Effects.SnowPotion)
+        )
             speed = Math.floor(speed * 1.25);
 
         // Update the movement speed if there is a change from default.
@@ -1359,14 +1412,21 @@ export default class Player extends Character {
 
     public setSnowPotion(): void {
         // Remove freezing effect if it has been caused by a timeout (attack).
-        if (this.status.hasTimeout(Modules.Effects.Freezing)) this.status.remove(Modules.Effects.Freezing);
+        if (this.status.hasTimeout(Modules.Effects.Freezing))
+            this.status.remove(Modules.Effects.Freezing);
 
-        this.status.addWithTimeout(Modules.Effects.SnowPotion, Modules.Constants.SNOW_POTION_DURATION, () => {
-            this.notify('Your immunity to freezing effects has worn off.');
-        });
+        this.status.addWithTimeout(
+            Modules.Effects.SnowPotion,
+            Modules.Constants.SNOW_POTION_DURATION,
+            () => {
+                this.notify('Your immunity to freezing effects has worn off.');
+            }
+        );
 
         this.notify(
-            `You are now immune to freezing effects for ${Modules.Constants.SNOW_POTION_DURATION / 1000} seconds.`
+            `You are now immune to freezing effects for ${
+                Modules.Constants.SNOW_POTION_DURATION / 1000
+            } seconds.`
         );
     }
 
@@ -1379,11 +1439,19 @@ export default class Player extends Character {
         // Remove burning effect if present
         if (this.status.has(Modules.Effects.Burning)) this.status.remove(Modules.Effects.Burning);
 
-        this.status.addWithTimeout(Modules.Effects.FirePotion, Modules.Constants.FIRE_POTION_DURATION, () => {
-            this.notify('Your immunity to fire effects has worn off.');
-        });
+        this.status.addWithTimeout(
+            Modules.Effects.FirePotion,
+            Modules.Constants.FIRE_POTION_DURATION,
+            () => {
+                this.notify('Your immunity to fire effects has worn off.');
+            }
+        );
 
-        this.notify(`You are now immune to fire effects for ${Modules.Constants.FIRE_POTION_DURATION / 1000} seconds.`);
+        this.notify(
+            `You are now immune to fire effects for ${
+                Modules.Constants.FIRE_POTION_DURATION / 1000
+            } seconds.`
+        );
     }
 
     /**
@@ -1632,7 +1700,10 @@ export default class Player extends Character {
      */
 
     public hasLoadedResource(resource: Resource): boolean {
-        return resource.instance in this.resourcesLoaded && this.resourcesLoaded[resource.instance] === resource.state;
+        return (
+            resource.instance in this.resourcesLoaded &&
+            this.resourcesLoaded[resource.instance] === resource.state
+        );
     }
 
     public hasLoadedLight(light: number): boolean {
@@ -1876,7 +1947,9 @@ export default class Player extends Character {
 
     public sendPrivateMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
-            this.world.client.send(new Chat({ source: this.username, message, target: playerName }));
+            this.world.client.send(
+                new Chat({ source: this.username, message, target: playerName })
+            );
             return;
         }
 
@@ -2061,7 +2134,11 @@ export default class Player extends Character {
      * @returns PlayerData containing all of the player info.
      */
 
-    public override serialize(withEquipment = false, withExperience = false, withMana = false): PlayerData {
+    public override serialize(
+        withEquipment = false,
+        withExperience = false,
+        withMana = false
+    ): PlayerData {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
@@ -2318,7 +2395,9 @@ export default class Player extends Character {
      */
 
     public override getBloodsuckingLevel(): number {
-        return this.equipment.getWeapon().enchantments[Modules.Enchantment.Bloodsucking]?.level || 1;
+        return (
+            this.equipment.getWeapon().enchantments[Modules.Enchantment.Bloodsucking]?.level || 1
+        );
     }
 
     /**
@@ -2331,7 +2410,8 @@ export default class Player extends Character {
 
     public override getAttackRate(): number {
         // Dualists mark status effect boosts attack speed by 200 milliseconds.
-        if (this.status.has(Modules.Effects.DualistsMark)) return this.equipment.getWeapon().attackRate - 200;
+        if (this.status.has(Modules.Effects.DualistsMark))
+            return this.equipment.getWeapon().attackRate - 200;
 
         return this.equipment.getWeapon().attackRate;
     }

@@ -37,16 +37,34 @@ export default class State extends Menu {
     public constructor(private player: Player) {
         super('#state-page');
 
-        this.helmet.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Helmet));
-        this.pendant.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Pendant));
-        this.arrows.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Arrows));
-        this.chestplate.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Chestplate));
-        this.weapon.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Weapon));
-        this.shield.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Shield));
+        this.helmet.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Helmet)
+        );
+        this.pendant.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Pendant)
+        );
+        this.arrows.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Arrows)
+        );
+        this.chestplate.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Chestplate)
+        );
+        this.weapon.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Weapon)
+        );
+        this.shield.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Shield)
+        );
         this.ring.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Ring));
-        this.weaponSkin.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.WeaponSkin));
-        this.armourSkin.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.ArmourSkin));
-        this.legplates.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Legplates));
+        this.weaponSkin.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.WeaponSkin)
+        );
+        this.armourSkin.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.ArmourSkin)
+        );
+        this.legplates.addEventListener('click', () =>
+            this.unequipCallback?.(Modules.Equipment.Legplates)
+        );
         this.cape.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Cape));
         this.boots.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Boots));
     }
@@ -91,7 +109,8 @@ export default class State extends Menu {
         this.attackStyleList.innerHTML = '';
 
         // Iterate through all the attack styles and create the HTML element for each one.
-        for (let style of this.player.getWeapon().attackStyles) this.attackStyleList.append(this.createStyle(style));
+        for (let style of this.player.getWeapon().attackStyles)
+            this.attackStyleList.append(this.createStyle(style));
     }
 
     /**
@@ -112,7 +131,10 @@ export default class State extends Menu {
         attachTooltip(element, this.getTooltip(style));
 
         // Add the attack style image.
-        image.classList.add('attack-style', `attack-style-${Modules.AttackStyle[style].toLowerCase()}`);
+        image.classList.add(
+            'attack-style',
+            `attack-style-${Modules.AttackStyle[style].toLowerCase()}`
+        );
 
         // If the style is the same as the player's current style, we add the active class.
         if (style === this.player.getWeapon().attackStyle) element.classList.add('active');

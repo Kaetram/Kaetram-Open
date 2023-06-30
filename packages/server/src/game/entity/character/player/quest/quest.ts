@@ -10,7 +10,14 @@ import type NPC from '../../../npc/npc';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PointerData } from '@kaetram/common/types/pointer';
 import type { PopupData } from '@kaetram/common/types/popup';
-import type { QuestData, RawQuest, RawStage, StageData, HideNPC, QuestItem } from '@kaetram/common/types/quest';
+import type {
+    QuestData,
+    RawQuest,
+    RawStage,
+    StageData,
+    HideNPC,
+    QuestItem
+} from '@kaetram/common/types/quest';
 
 type ProgressCallback = (key: string, stage: number, subStage: number) => void;
 type PointerCallback = (pointer: PointerData) => void;
@@ -142,7 +149,8 @@ export default abstract class Quest {
             !this.completedSubStages.includes(npc.key)
         )
             if (this.hasItemRequirement(stageInfo)) this.handleItemRequirement(player, stageInfo);
-            else if (this.hasItemToGive(stageInfo)) this.givePlayerRewards(player, stageInfo.itemRewards, true);
+            else if (this.hasItemToGive(stageInfo))
+                this.givePlayerRewards(player, stageInfo.itemRewards, true);
             else if (this.hasAbility(stageInfo)) this.givePlayerAbility(player);
             else if (this.hasExperience(stageInfo)) this.givePlayerExperience(player);
             else this.progress();
@@ -175,9 +183,12 @@ export default abstract class Quest {
      */
 
     private handleKill(mob: Mob): void {
-        log.debug(`[${this.name}] Killing mob: ${mob.key}, stage: ${this.stage}, subStage: ${this.subStage}.`);
+        log.debug(
+            `[${this.name}] Killing mob: ${mob.key}, stage: ${this.stage}, subStage: ${this.subStage}.`
+        );
 
-        if (!this.stageData.mob) return log.error(`[${this.name}] No mob data for stage: ${this.stage}.`);
+        if (!this.stageData.mob)
+            return log.error(`[${this.name}] No mob data for stage: ${this.stage}.`);
 
         // Stage progression has expired, so we don't progress.
         if (this.timer && Date.now() - this.timer > this.expiration) return;
@@ -249,13 +260,16 @@ export default abstract class Quest {
         if (this.hasAbility(stageData)) this.givePlayerAbility(player);
 
         // If we're dealing with substages, we add the NPC to the completed list.
-        if (this.stageData.subStages && !this.completedSubStages.includes(npc!)) this.completedSubStages.push(npc!);
+        if (this.stageData.subStages && !this.completedSubStages.includes(npc!))
+            this.completedSubStages.push(npc!);
 
         /**
          * A substage progression occurs if the current overall stage has a substage component
          * and if the amount of completed NPCs is less than the amount of substages.
          */
-        let isSubStage = this.stageData.subStages && this.completedSubStages.length < this.stageData.subStages.length;
+        let isSubStage =
+            this.stageData.subStages &&
+            this.completedSubStages.length < this.stageData.subStages.length;
 
         this.progress(isSubStage);
     }
@@ -285,13 +299,18 @@ export default abstract class Quest {
      * @param progress Whether or not to progress to the next stage after giving the item rewards.
      */
 
-    private givePlayerRewards(player: Player, itemRewards: QuestItem[] = [], progress = false): void {
+    private givePlayerRewards(
+        player: Player,
+        itemRewards: QuestItem[] = [],
+        progress = false
+    ): void {
         // We play it extra safe by ensuring there are at least as many empty spaces as there are reward items.
         if (!player.inventory.hasSpace(itemRewards.length))
             return player.notify(`Please make some room in your inventory to accept this reward.`);
 
         // Check if the player has enough inventory space for the item rewards.
-        for (let item of itemRewards) player.inventory.add(new Item(item.key, -1, -1, false, item.count));
+        for (let item of itemRewards)
+            player.inventory.add(new Item(item.key, -1, -1, false, item.count));
 
         // Progress to the next stage if the parameter is true.
         if (progress) this.progress();
@@ -409,7 +428,8 @@ export default abstract class Quest {
     public hasRequirements(player: Player): boolean {
         // Iterate through the skills and check if the player has the required level.
         for (let skill in this.skillRequirements)
-            if (player.skills.get(Utils.getSkill(skill)!).level < this.skillRequirements[skill]) return false;
+            if (player.skills.get(Utils.getSkill(skill)!).level < this.skillRequirements[skill])
+                return false;
 
         // Iterate through the quests and check if the player has completed them.
         for (let index in this.questRequirements)
@@ -549,7 +569,8 @@ export default abstract class Quest {
              * text for the particular substage if it has been completed.
              */
 
-            if (subStage && this.completedSubStages.includes(subStage.npc!)) return stage.completedText!;
+            if (subStage && this.completedSubStages.includes(subStage.npc!))
+                return stage.completedText!;
 
             // Ensure we are on the correct stage and that it has an item requirement, otherwise skip.
             if (this.hasItemRequirement(stage) && this.stage === i) {

@@ -19,7 +19,11 @@ type CollectionName =
  */
 Cypress.Commands.add('createPlayerInfo', (playerInfo: PlayerInfo) => {
     return cy
-        .request('POST', `http://localhost:3000/api/v1/player_info/username/${playerInfo.username}`, playerInfo)
+        .request(
+            'POST',
+            `http://localhost:3000/api/v1/player_info/username/${playerInfo.username}`,
+            playerInfo
+        )
         .then(() => {
             return true;
         });
@@ -29,11 +33,16 @@ Cypress.Commands.add('createPlayerInfo', (playerInfo: PlayerInfo) => {
  * Sample usage:
  *  cy.removePlayerFromCollection('player_info', 'fvantom');
  */
-Cypress.Commands.add('removePlayerFromCollection', (collection: CollectionName, username: string) => {
-    return cy.request('DELETE', `http://localhost:3000/api/v1/${collection}/username/${username}`).then(() => {
-        return true;
-    });
-});
+Cypress.Commands.add(
+    'removePlayerFromCollection',
+    (collection: CollectionName, username: string) => {
+        return cy
+            .request('DELETE', `http://localhost:3000/api/v1/${collection}/username/${username}`)
+            .then(() => {
+                return true;
+            });
+    }
+);
 
 /**
  * Sample usage:
@@ -42,11 +51,13 @@ Cypress.Commands.add('removePlayerFromCollection', (collection: CollectionName, 
  *  });
  */
 Cypress.Commands.add('getPlayerInfo', (username: string) => {
-    return cy.request(`http://localhost:3000/api/v1/player_info/username/${username}`).then((res) => {
-        // redirect status code is 302
-        expect(res.body).to.exist;
-        return res.body[0] as PlayerInfo;
-    });
+    return cy
+        .request(`http://localhost:3000/api/v1/player_info/username/${username}`)
+        .then((res) => {
+            // redirect status code is 302
+            expect(res.body).to.exist;
+            return res.body[0] as PlayerInfo;
+        });
 });
 
 /**
@@ -70,7 +81,10 @@ declare global {
     namespace Cypress {
         interface Chainable {
             createPlayerInfo(playerInfo: PlayerInfo): Chainable<boolean>;
-            removePlayerFromCollection(collection: CollectionName, username: string): Chainable<boolean>;
+            removePlayerFromCollection(
+                collection: CollectionName,
+                username: string
+            ): Chainable<boolean>;
             getPlayerInfo(username: string): Chainable<PlayerInfo>;
             createPlayerInventory(playerInventory: PlayerInventory): Chainable<boolean>;
         }

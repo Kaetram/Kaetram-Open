@@ -40,7 +40,12 @@ type MathFunction = (
  * @license Mit Style License
  */
 
-function AStar(grid: number[][], start: [number, number], end: [number, number], f: FunctionTypes): number[][] {
+function AStar(
+    grid: number[][],
+    start: [number, number],
+    end: [number, number],
+    f: FunctionTypes
+): number[][] {
     let cols = grid[0].length,
         rows = grid.length,
         limit = cols * rows,
@@ -151,7 +156,21 @@ let diagonalSuccessors: Successor = ($N, $S, $E, $W, N, S, E, W, grid, _rows, _c
 
         return result;
     },
-    diagonalSuccessorsFree: Successor = ($N, $S, $E, $W, N, S, E, W, grid, rows, cols, result, i) => {
+    diagonalSuccessorsFree: Successor = (
+        $N,
+        $S,
+        $E,
+        $W,
+        N,
+        S,
+        E,
+        W,
+        grid,
+        rows,
+        cols,
+        result,
+        i
+    ) => {
         $N = N > -1;
         $S = S < rows;
         $E = E < cols;
@@ -168,9 +187,17 @@ let diagonalSuccessors: Successor = ($N, $S, $E, $W, N, S, E, W, grid, _rows, _c
 
         return result;
     },
-    nothingToDo: Successor = (_$N, _$S, _$E, _$W, _N, _S, _E, _W, _grid, _rows, _cols, result) => result;
+    nothingToDo: Successor = (_$N, _$S, _$E, _$W, _N, _S, _E, _W, _grid, _rows, _cols, result) =>
+        result;
 
-function successors(find: Successor, x: number, y: number, grid: number[][], rows: number, cols: number) {
+function successors(
+    find: Successor,
+    x: number,
+    y: number,
+    grid: number[][],
+    rows: number,
+    cols: number
+) {
     let N = y - 1,
         S = y + 1,
         E = x + 1,

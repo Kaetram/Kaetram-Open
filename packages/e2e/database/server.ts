@@ -31,7 +31,9 @@ router.delete<MongoRestParams>('/:collectionName/username/:username', (req, res)
 
 router.get<MongoRestParams>('/:collectionName/username/:username', (req, res) => {
     let { collectionName, username } = req.params;
-    handler.getByUsername(collectionName, username, (entities) => res.end(JSON.stringify(entities)));
+    handler.getByUsername(collectionName, username, (entities) =>
+        res.end(JSON.stringify(entities))
+    );
 });
 
 router.delete<MongoRestParams>('/:collectionName', (req, res) => {

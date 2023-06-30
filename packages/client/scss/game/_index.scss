@@ -17,6 +17,7 @@
 @use 'impl/inventory';
 @use 'impl/joystick';
 @use 'impl/leaderboards';
+@use 'impl/lootbag';
 @use 'impl/map';
 @use 'impl/notifications';
 @use 'impl/page';
@@ -29,7 +30,6 @@
 @use 'impl/store';
 @use 'impl/trade';
 @use 'impl/zoom';
-@use 'impl/lootbag';
 
 body.game {
     background: #000;

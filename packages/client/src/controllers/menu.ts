@@ -292,7 +292,11 @@ export default class MenuController {
      * @param toIndex Optional parameter that is used either for count (drop packet) or index (swap packet).
      */
 
-    private handleInventorySelect(opcode: Opcodes.Container, fromIndex: number, toIndex?: number): void {
+    private handleInventorySelect(
+        opcode: Opcodes.Container,
+        fromIndex: number,
+        toIndex?: number
+    ): void {
         this.game.socket.send(Packets.Container, {
             opcode,
             type: Modules.ContainerType.Inventory,

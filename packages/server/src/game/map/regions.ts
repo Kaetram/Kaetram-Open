@@ -77,7 +77,9 @@ export default class Regions {
 
         if (this.map.width % this.divisionSize !== 0) {
             log.error(`Corrupted map regions. Unable to evenly divide into sections.`);
-            log.error(`Map: ${this.map.width}x${this.map.height} - divisions: ${this.divisionSize}.`);
+            log.error(
+                `Map: ${this.map.width}x${this.map.height} - divisions: ${this.divisionSize}.`
+            );
             return;
         }
 
@@ -140,9 +142,13 @@ export default class Regions {
                 if (cache.version !== this.map.version) return this.loadRegionCache(true);
 
                 // Iterate through all the regions and assign the data to them according to their index.
-                this.forEachRegion((region: Region, index: number) => (region.data = cache.data[index]));
+                this.forEachRegion(
+                    (region: Region, index: number) => (region.data = cache.data[index])
+                );
 
-                log.debug(`Successfully loaded ${Object.keys(cache.data).length} regions from cache.`);
+                log.debug(
+                    `Successfully loaded ${Object.keys(cache.data).length} regions from cache.`
+                );
             });
 
             return;
@@ -504,14 +510,18 @@ export default class Regions {
             data[surroundingRegion] = [];
 
             // Parse and send resource data.
-            if (region.hasResources()) data[surroundingRegion].push(...this.getRegionResourceData(region, player));
+            if (region.hasResources())
+                data[surroundingRegion].push(...this.getRegionResourceData(region, player));
 
             // Parse and send dynamic areas.
-            if (region.hasDynamicAreas()) data[surroundingRegion].push(...this.getRegionTileData(region, true, player));
+            if (region.hasDynamicAreas())
+                data[surroundingRegion].push(...this.getRegionTileData(region, true, player));
 
             // We skip if the region is loaded and we are not forcing static data.
             if (!player.hasLoadedRegion(surroundingRegion) || force) {
-                data[surroundingRegion].push(...(config.regionCache ? region.data : this.getRegionTileData(region)));
+                data[surroundingRegion].push(
+                    ...(config.regionCache ? region.data : this.getRegionTileData(region))
+                );
 
                 player.loadRegion(surroundingRegion);
             }
@@ -714,7 +724,8 @@ export default class Regions {
          * in any way.
          */
         if (mappedAnimationTile)
-            tile.animation = this.map.data[this.map.coordToIndex(mappedAnimationTile.x, mappedAnimationTile.y)];
+            tile.animation =
+                this.map.data[this.map.coordToIndex(mappedAnimationTile.x, mappedAnimationTile.y)];
 
         return tile;
     }

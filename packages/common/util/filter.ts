@@ -14,7 +14,8 @@ export default {
      */
 
     isProfane: (message: string): boolean => {
-        for (let profanity of Profanities) if (message.toLowerCase().includes(profanity)) return true;
+        for (let profanity of Profanities)
+            if (message.toLowerCase().includes(profanity)) return true;
 
         return false;
     },

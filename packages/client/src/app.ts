@@ -34,7 +34,9 @@ export default class App {
 
     private worldsList: HTMLOListElement = document.querySelector('#worlds')!;
 
-    private passwordConfirmation: HTMLInputElement = document.querySelector('#register-password-confirmation-input')!;
+    private passwordConfirmation: HTMLInputElement = document.querySelector(
+        '#register-password-confirmation-input'
+    )!;
     private emailField: HTMLInputElement = document.querySelector('#register-email-input')!;
 
     private loginButton: HTMLButtonElement = document.querySelector('#login')!;
@@ -133,7 +135,9 @@ export default class App {
         window.addEventListener('focus', () => this.focusCallback?.());
 
         // Body callbacks
-        onSecondaryPress(document.querySelector('#canvas')!, (position) => this.rightClickCallback?.(position));
+        onSecondaryPress(document.querySelector('#canvas')!, (position) =>
+            this.rightClickCallback?.(position)
+        );
 
         for (let input of document.querySelectorAll<HTMLInputElement>("input[type='number']"))
             input.addEventListener('input', () => this.validateNumberInput(input));
@@ -327,19 +331,27 @@ export default class App {
         if (this.isGuest()) return true;
 
         // Check the username is not empty.
-        if (!this.getUsername()) return this.sendError('Please enter a username.', this.getUsernameField());
+        if (!this.getUsername())
+            return this.sendError('Please enter a username.', this.getUsernameField());
 
         // Check if the password is not empty.
-        if (!this.getPassword()) return this.sendError('Please enter a password.', this.getPasswordField());
+        if (!this.getPassword())
+            return this.sendError('Please enter a password.', this.getPasswordField());
 
         // Handle registration page.
         if (this.isRegistering()) {
             // Password must be at least 3 characters long.
             if (this.getPassword().length < 3)
-                return this.sendError('Password must be at least 3 characters long.', this.getPasswordField());
+                return this.sendError(
+                    'Password must be at least 3 characters long.',
+                    this.getPasswordField()
+                );
 
             if (this.getPassword().length > 64)
-                return this.sendError('Password must be less than 64 characters long.', this.getPasswordField());
+                return this.sendError(
+                    'Password must be less than 64 characters long.',
+                    this.getPasswordField()
+                );
 
             // Check that the password matches the password confirmation.
             if (this.getPassword() !== this.getPasswordConfirmation())
@@ -513,7 +525,10 @@ export default class App {
      */
 
     private hasFooterOpen(): boolean {
-        return this.parchment.classList.contains('about') || this.parchment.classList.contains('credits');
+        return (
+            this.parchment.classList.contains('about') ||
+            this.parchment.classList.contains('credits')
+        );
     }
 
     /**
@@ -557,7 +572,9 @@ export default class App {
      */
 
     private getUsernameField(): HTMLInputElement {
-        return document.querySelector(this.isRegistering() ? '#register-name-input' : '#login-name-input')!;
+        return document.querySelector(
+            this.isRegistering() ? '#register-name-input' : '#login-name-input'
+        )!;
     }
 
     /**
@@ -575,7 +592,9 @@ export default class App {
      */
 
     private getPasswordField(): HTMLInputElement {
-        return document.querySelector(this.isRegistering() ? '#register-password-input' : '#login-password-input')!;
+        return document.querySelector(
+            this.isRegistering() ? '#register-password-input' : '#login-password-input'
+        )!;
     }
 
     /**
@@ -639,7 +658,8 @@ export default class App {
         this.clearValidation();
 
         // Create a validation message based on type and string message.
-        for (let validation of this.validation) validation.append(this.createValidation(type, message));
+        for (let validation of this.validation)
+            validation.append(this.createValidation(type, message));
     }
 
     /**
@@ -684,7 +704,8 @@ export default class App {
      */
 
     private async forgotPassword(): Promise<void> {
-        if (!this.config.hub) return this.setValidation('validation-error', 'No hub is configured.');
+        if (!this.config.hub)
+            return this.setValidation('validation-error', 'No hub is configured.');
 
         // Grab the input field value for the email address.
         let email = this.emailResetInput.value;
@@ -701,7 +722,11 @@ export default class App {
         }).catch(() => null);
 
         // If we do not get a response, then we display an error message.
-        if (!res) return this.setValidation('validation-error', 'Please contact an administrator for support.');
+        if (!res)
+            return this.setValidation(
+                'validation-error',
+                'Please contact an administrator for support.'
+            );
 
         // If we receive a response then just let the player know that the request was sent.
         this.setValidation('status', 'Password reset request sent, please check your email.');

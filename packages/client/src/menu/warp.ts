@@ -12,7 +12,8 @@ export default class Warp extends Menu {
     public constructor(private socket: Socket) {
         super('#map-frame', '#close-map-frame', '#warp-button');
 
-        for (let element of this.list) element.addEventListener('click', () => this.handleWarp(element));
+        for (let element of this.list)
+            element.addEventListener('click', () => this.handleWarp(element));
     }
 
     /**
