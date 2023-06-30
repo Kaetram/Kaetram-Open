@@ -164,7 +164,8 @@ export default class Player extends Character {
 
     // Anti-cheat container
     public canAccessContainer = false;
-    public activeCraftingInterface = -1; // The skill ID
+    public activeCraftingInterface = -1; // The skill ID\
+    public activeLootBag = ''; // The instance of the loot bag currently open
 
     // Minigame status of the player.
     public minigame?: Opcodes.Minigame;

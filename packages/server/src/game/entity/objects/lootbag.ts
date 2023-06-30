@@ -1,10 +1,13 @@
 import Entity from '../entity';
 
+import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
+import { LootBag as LootBagPacket } from '@kaetram/common/network/impl';
 
-import type Player from '../character/player/player';
 import type Item from './item';
+import type Player from '../character/player/player';
+import type { SlotData } from '@kaetram/common/types/slot';
 
 /**
  * The loot bag functions similarly to an item, it drops on the ground and floats.
@@ -24,7 +27,7 @@ export default class LootBag extends Entity {
     private blinkTimeout?: NodeJS.Timeout | undefined;
     private destroyTimeout?: NodeJS.Timeout | undefined;
 
-    public constructor(x: number, y: number, private owner: string, items: Item[]) {
+    public constructor(x: number, y: number, public owner: string, items: Item[]) {
         super(Utils.createInstance(Modules.EntityType.LootBag), 'lootbag', x, y);
 
         // Iterate through the items and add them to the loot bag.
@@ -73,7 +76,17 @@ export default class LootBag extends Entity {
      */
 
     public open(player: Player): void {
-        //
+        // Prevent cheating and packet manipulation.
+        if (this.getDistance(player) > 1)
+            return log.warning(`open(): Player ${player.username} tried to open a loot bag that was too far away.`);
+
+        player.activeLootBag = this.instance;
+
+        player.send(
+            new LootBagPacket(Opcodes.LootBag.Open, {
+                items: this.getItems()
+            })
+        );
     }
 
     /**
@@ -84,7 +97,19 @@ export default class LootBag extends Entity {
      * player is requesting to take.
      */
 
-    public take(player: Player, index: number): void {
+    public take(player: Player, index: number, count = 1): void {
+        if (this.instance !== player.activeLootBag)
+            return log.warning(`Player ${player.username} tried to take an item from a loot bag without opening it.`);
+
+        // Double check that the player has access to the loot bag.
+        if (!this.isOwner(player.username)) return player.notify(`You cannot access this loot bag right now.`);
+
+        // Verify that the player is close enough to the lootbag.
+        if (this.getDistance(player) > 1)
+            return log.warning(
+                `take(): Player ${player.username} tried to take an item from a loot bag that was too far away.`
+            );
+
         let item = this.container[index];
 
         // This is to prevent taking items at the same time/that don't exist.
@@ -99,6 +124,9 @@ export default class LootBag extends Entity {
         if (this.owner && this.owner !== player.username)
             return player.notify(`You cannot access this loot bag right now.`);
 
+        // Ensure the player has enough space in their inventory.
+        if (!player.inventory.hasSpace()) return player.notify(`You do not have enough space in your inventory.`);
+
         // Removes the item from the loot bag.
         delete this.container[index];
 
@@ -106,21 +134,23 @@ export default class LootBag extends Entity {
         player.inventory.add(item);
 
         // Destroy the loot bag if it is empty.
-        if (this.isEmpty()) this.destroy();
+        if (this.isEmpty()) {
+            player.sendToRegions(new LootBagPacket(Opcodes.LootBag.Close, {}));
+            this.destroy();
+        } else player.sendToRegions(new LootBagPacket(Opcodes.LootBag.Take, { index }));
     }
 
     /**
      * Used to limit actions to the owner of the loot bag. If no owner
      * is set then the loot bag is freely accessible from any player.
-     * @param instance The instance of the player that is attempting to
-     * access the loot bag.
+     * @param username The username of the owner of the loot bag.
      * @returns Whether or not the player is the owner of the loot bag.
      */
 
-    public isOwner(instance: string): boolean {
+    public isOwner(username: string): boolean {
         if (!this.owner) return true;
 
-        return this.owner === instance;
+        return this.owner === username;
     }
 
     /**
@@ -130,6 +160,32 @@ export default class LootBag extends Entity {
 
     private isEmpty(): boolean {
         return Object.keys(this.container).length === 0;
+    }
+
+    /**
+     * Obtains the list of items in a simple array format that is then
+     * read by the client and displayed in the loot bag menu. We convert
+     * each item to a simple SlotData object.
+     * @returns The list of items in the loot bag in the SlotData format.
+     */
+
+    private getItems(): SlotData[] {
+        let items: SlotData[] = [];
+
+        for (let i in this.container) {
+            let item = this.container[i];
+
+            if (!item) continue;
+
+            items.push({
+                index: parseInt(i),
+                key: item.key,
+                count: item.count,
+                enchantments: item.enchantments
+            });
+        }
+
+        return items;
     }
 
     /**
