@@ -830,28 +830,32 @@ export default class Renderer {
     }
 
     /**
-     * Draws a special medal above the player's name.
-     * @param key The key of the medal we are drawing.
+     * Draws a special crown above the player's name.
+     * @param key The key of the crown we are drawing.
      * @param x The x coordinate on the screen we are drawing at.
      * @param y The y coordinate on the screen we are drawing at.
      */
 
-    private drawMedal(key: string, x: number, y: number): void {
-        let medal = this.getMedal(key);
+    private drawCrown(key: string, x: number, y: number): void {
+        let crown = this.getCrown(key);
 
-        if (!medal) return;
+        if (!crown) return;
+
+        this.setCameraView(this.textContext);
 
         this.textContext.drawImage(
-            medal.image,
+            crown.image,
             0,
             0,
-            medal.width,
-            medal.height,
-            (x - 5) * this.camera.zoomFactor,
-            (y - 17) * this.camera.zoomFactor,
-            medal.width * 2,
-            medal.height * 2
+            crown.width,
+            crown.height,
+            x * this.camera.zoomFactor - crown.width,
+            y * this.camera.zoomFactor - crown.height * 3,
+            crown.width * 2,
+            crown.height * 2
         );
+
+        this.textContext.restore();
     }
 
     /**
@@ -914,6 +918,13 @@ export default class Renderer {
             nameY = this.drawLevels ? y - 7 : y - 4,
             levelY = this.drawLevels ? y : y - 7,
             levelText = `Level ${entity.level}`;
+
+        // Handle additional player rank and crown logic.
+        if (entity.isPlayer()) {
+            if (entity.hasRank()) colour = Modules.RankColours[entity.rank];
+
+            if (drawNames && entity.hasCrown()) this.drawCrown(entity.getCrownKey(), x, nameY);
+        }
 
         // If there's a rank aside from default then we use that rank's colour.
         if (entity.isPlayer() && entity.rank !== Modules.Ranks.None)
@@ -1502,12 +1513,12 @@ export default class Renderer {
     }
 
     /**
-     * Given a key we return the sprite associated with the medal.
-     * @param key The key of the medal.
+     * Given a key we return the sprite associated with the crown.
+     * @param key The key of the crown.
      * @returns A sprite element or undefined if the key is invalid.
      */
 
-    protected getMedal(key: string): Sprite | undefined {
+    protected getCrown(key: string): Sprite | undefined {
         switch (key) {
             case 'goldmedal': {
                 return this.goldMedal;

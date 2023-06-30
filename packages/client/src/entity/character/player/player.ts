@@ -25,8 +25,6 @@ type PoisonCallback = (status: boolean) => void;
 type ManaCallback = (mana: number, maxMana: number) => void;
 
 export default class Player extends Character {
-    public rank: Modules.Ranks = Modules.Ranks.None;
-
     public serverId = -1;
 
     public pvpKills = -1;
@@ -41,7 +39,8 @@ export default class Player extends Character {
     public disableAction = false;
     public joystickMovement = false;
 
-    public medal: Modules.Medals = Modules.Medals.None;
+    public rank: Modules.Ranks = Modules.Ranks.None;
+    public crown: Modules.Crowns = Modules.Crowns.None;
 
     public guild!: Partial<GuildData> | undefined;
 
@@ -463,48 +462,48 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns The key of the medal based on the player's medal type.
+     * @returns The key of the crown based on the player's crown type.
      */
 
-    public getMedalKey(): string {
-        switch (this.medal) {
-            case Modules.Medals.Silver: {
+    public getCrownKey(): string {
+        switch (this.crown) {
+            case Modules.Crowns.Silver: {
                 return 'silvermedal';
             }
 
-            case Modules.Medals.Gold: {
+            case Modules.Crowns.Gold: {
                 return 'goldmedal';
             }
 
-            case Modules.Medals.Artist: {
+            case Modules.Crowns.Artist: {
                 return 'crown-artist';
             }
 
-            case Modules.Medals.Tier1: {
+            case Modules.Crowns.Tier1: {
                 return 'crown-tier1';
             }
 
-            case Modules.Medals.Tier2: {
+            case Modules.Crowns.Tier2: {
                 return 'crown-tier2';
             }
 
-            case Modules.Medals.Tier3: {
+            case Modules.Crowns.Tier3: {
                 return 'crown-tier3';
             }
 
-            case Modules.Medals.Tier4: {
+            case Modules.Crowns.Tier4: {
                 return 'crown-tier4';
             }
 
-            case Modules.Medals.Tier5: {
+            case Modules.Crowns.Tier5: {
                 return 'crown-tier5';
             }
 
-            case Modules.Medals.Tier6: {
+            case Modules.Crowns.Tier6: {
                 return 'crown-tier6';
             }
 
-            case Modules.Medals.Tier7: {
+            case Modules.Crowns.Tier7: {
                 return 'crown-tier7';
             }
 
@@ -515,46 +514,46 @@ export default class Player extends Character {
     }
 
     /**
-     * Returns a medal based on the player's rank.
-     * @returns The medal type for the player's rank.
+     * Returns a crown based on the player's rank.
+     * @returns The crown type for the player's rank.
      */
 
-    private getRankMedal(): Modules.Medals {
+    private getRankCrown(): Modules.Crowns {
         switch (this.rank) {
             case Modules.Ranks.Artist: {
-                return Modules.Medals.Artist;
+                return Modules.Crowns.Artist;
             }
 
             case Modules.Ranks.TierOne: {
-                return Modules.Medals.Tier1;
+                return Modules.Crowns.Tier1;
             }
 
             case Modules.Ranks.TierTwo: {
-                return Modules.Medals.Tier2;
+                return Modules.Crowns.Tier2;
             }
 
             case Modules.Ranks.TierThree: {
-                return Modules.Medals.Tier3;
+                return Modules.Crowns.Tier3;
             }
 
             case Modules.Ranks.TierFour: {
-                return Modules.Medals.Tier4;
+                return Modules.Crowns.Tier4;
             }
 
             case Modules.Ranks.TierFive: {
-                return Modules.Medals.Tier5;
+                return Modules.Crowns.Tier5;
             }
 
             case Modules.Ranks.TierSix: {
-                return Modules.Medals.Tier6;
+                return Modules.Crowns.Tier6;
             }
 
             case Modules.Ranks.TierSeven: {
-                return Modules.Medals.Tier7;
+                return Modules.Crowns.Tier7;
             }
 
             default: {
-                return Modules.Medals.None;
+                return Modules.Crowns.None;
             }
         }
     }
@@ -740,13 +739,13 @@ export default class Player extends Character {
     }
 
     /**
-     * Updates the player's rank and synchronizes the medals.
+     * Updates the player's rank and synchronizes the Crowns.
      * @param rank The new rank of the player.
      */
 
     public setRank(rank: Modules.Ranks): void {
         this.rank = rank;
-        this.medal = this.getRankMedal();
+        this.crown = this.getRankCrown();
     }
 
     /**
@@ -812,11 +811,19 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns Whether or not the player has a medal.
+     * @returns Whether or not the player has a rank.
      */
 
-    public override hasMedal(): boolean {
-        return this.medal !== Modules.Medals.None;
+    public hasRank(): boolean {
+        return this.rank !== Modules.Ranks.None;
+    }
+
+    /**
+     * @returns Whether or not the player has a crown.
+     */
+
+    public override hasCrown(): boolean {
+        return this.crown !== Modules.Crowns.None;
     }
 
     /**
