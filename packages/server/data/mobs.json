@@ -966,6 +966,7 @@
     "blackwizard": {
         "name": "Dark Wizard",
         "description": "They don't look all that different from the other ones.",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 170,
         "defenseLevel": 30,
         "attackLevel": 46,
@@ -1003,6 +1004,7 @@
     "icewizard": {
         "name": "Ice Wizard",
         "description": "It's like similar to some other type of wizard I've encountered before.",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 470,
         "defenseLevel": 30,
         "attackLevel": 46,
@@ -1041,6 +1043,7 @@
     "babyspider": {
         "name": "Baby Spooder",
         "description": "It's cute now but give it a while...",
+        "dropTables": ["ordinary", "unusual"],
         "hitPoints": 400,
         "defenseLevel": 44,
         "attackLevel": 34,
@@ -1076,6 +1079,7 @@
 
     "spider": {
         "name": "Spooder",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 650,
         "defenseLevel": 45,
         "attackLevel": 26,
@@ -1113,6 +1117,7 @@
     "poisonspider": {
         "name": "Poison Spooder",
         "description": "I swear this thing is gonna poison me as soon as I engage it.",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 990,
         "defenseLevel": 40,
         "attackLevel": 63,
@@ -1150,6 +1155,7 @@
     "firespider": {
         "name": "Fire Spooder",
         "description": "Damn, that is one hot spider.",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 850,
         "defenseLevel": 50,
         "attackLevel": 40,
@@ -1186,6 +1192,7 @@
     "blazespider": {
         "name": "Blaze Spooder",
         "description": "I wonder how high this spider is...",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 1350,
         "defenseLevel": 44,
         "attackLevel": 50,
@@ -1222,6 +1229,7 @@
     "hellspider": {
         "name": "Hell Spooder",
         "description": "Aren't all spiders technically from hell?",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 780,
         "defenseLevel": 60,
         "attackLevel": 28,
@@ -1258,6 +1266,7 @@
 
     "bluepreta": {
         "name": "Blue Preta",
+        "dropTables": ["ordinary", "shards", "unusual", "fruits", "vegetables"],
         "hitPoints": 600,
         "defenseLevel": 50,
         "attackLevel": 80,
@@ -1294,6 +1303,7 @@
     "cactus": {
         "name": "Cactus",
         "description": "So it's like, a cactus, that can move?",
+        "dropTables": ["ordinary", "shards", "unusual", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 160,
         "defenseLevel": 34,
         "attackLevel": 10,
@@ -1366,6 +1376,7 @@
     "clam": {
         "name": "Clam",
         "description": "Now this would make a good stew!",
+        "dropTables": ["ordinary", "shards", "unusual", "mushrooms"],
         "hitPoints": 450,
         "defenseLevel": 36,
         "attackLevel": 28,
@@ -1437,6 +1448,7 @@
     "crystalscorpion": {
         "name": "Crystal Scorpion",
         "description": "It's a scorpion that is made out of crystal, that's really original.",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 1450,
         "defenseLevel": 35,
         "attackLevel": 45,
@@ -1472,6 +1484,7 @@
 
     "cursedhahoemask": {
         "name": "Cursed Hahoe Mask",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 2100,
         "defenseLevel": 25,
         "attackLevel": 5,
@@ -1507,6 +1520,7 @@
 
     "curseddjangseung": {
         "name": "Cursed Djangseung",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 1900,
         "defenseLevel": 25,
         "attackLevel": 10,
@@ -1543,6 +1557,7 @@
     "darkogre": {
         "name": "Dark Ogre",
         "description": "It didn't get to see much sun...",
+        "dropTables": ["ordinary", "shards", "unusual", "mushrooms"],
         "hitPoints": 900,
         "defenseLevel": 89,
         "attackLevel": 45,
@@ -1578,6 +1593,7 @@
 
     "darkscorpion": {
         "name": "Dark Scorpion",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 1150,
         "defenseLevel": 20,
         "attackLevel": 35,
@@ -1613,6 +1629,7 @@
 
     "darkskeleton": {
         "name": "Dark Skeleton",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 740,
         "defenseLevel": 15,
         "attackLevel": 32,
@@ -1648,6 +1665,7 @@
 
     "desertscorpion": {
         "name": "Desert Scorpion",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 124,
         "defenseLevel": 16,
         "attackLevel": 16,
@@ -1719,6 +1737,7 @@
     "earthworm": {
         "name": "Earth Worm",
         "description": "You know, it would make sense that earth worms are underground.",
+        "dropTables": ["ordinary", "shards", "unusual", "fruits", "vegetables", "mushrooms"],
         "hitPoints": 815,
         "defenseLevel": 88,
         "attackLevel": 55,
@@ -1754,6 +1773,7 @@
 
     "flaredanceknight": {
         "name": "Cursed Knight",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 1000,
         "defenseLevel": 15,
         "attackLevel": 10,
@@ -1790,6 +1810,7 @@
     "frog": {
         "name": "Frog",
         "description": "Just look at it hop around and things and stuff.",
+        "dropTables": ["ordinary", "shards", "unusual", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 788,
         "defenseLevel": 7,
         "attackLevel": 15,
@@ -1861,6 +1882,7 @@
 
     "goldgolem": {
         "name": "Golden Golem",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 1200,
         "defenseLevel": 10,
         "attackLevel": 15,
@@ -1896,6 +1918,7 @@
 
     "golem": {
         "name": "Golem",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 350,
         "defenseLevel": 25,
         "attackLevel": 15,
@@ -1931,6 +1954,7 @@
 
     "redfish": {
         "name": "Red Fesh",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 100,
         "defenseLevel": 1,
         "attackLevel": 1,
@@ -1966,6 +1990,7 @@
 
     "yellowfish": {
         "name": "Yellow Fesh",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 135,
         "defenseLevel": 3,
         "attackLevel": 1,
@@ -2001,6 +2026,7 @@
 
     "greenfish": {
         "name": "Green Fesh",
+        "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 200,
         "defenseLevel": 1,
         "attackLevel": 1,
@@ -2036,6 +2062,7 @@
 
     "hermitcrab": {
         "name": "Hermit Crab",
+        "dropTables": ["ordinary", "unusual"],
         "hitPoints": 155,
         "defenseLevel": 12,
         "attackLevel": 4,
@@ -2071,6 +2098,7 @@
 
     "hobgoblin": {
         "name": "Hobgoblin",
+        "dropTables": ["ordinary", "shards", "unusual", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 260,
         "defenseLevel": 8,
         "attackLevel": 8,
@@ -2141,6 +2169,7 @@
 
     "icegolem": {
         "name": "Ice Golem",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 700,
         "defenseLevel": 9,
         "attackLevel": 5,
@@ -2178,6 +2207,7 @@
 
     "iceknight": {
         "name": "Ice Knight",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 550,
         "defenseLevel": 12,
         "attackLevel": 8,
@@ -2214,6 +2244,7 @@
     "icevulture": {
         "name": "Ice Vulture",
         "description": "It's like a frozen version of the vicious bird I've seen before.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 300,
         "defenseLevel": 1,
         "attackLevel": 3,
@@ -2249,6 +2280,7 @@
 
     "infectedguard": {
         "name": "Infected Guard",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 750,
         "defenseLevel": 18,
         "attackLevel": 30,
@@ -2284,6 +2316,7 @@
 
     "ironogre": {
         "name": "Iron Ogre",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 300,
         "defenseLevel": 5,
         "attackLevel": 4,
@@ -2319,6 +2352,7 @@
 
     "livingarmor": {
         "name": "Living armor",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 340,
         "defenseLevel": 4,
         "attackLevel": 1,
@@ -2354,6 +2388,7 @@
 
     "mantis": {
         "name": "Praying Mantis",
+        "dropTables": ["ordinary", "shards", "unusual", "vegetables", "fruits", "mushrooms", "arrows"],
         "hitPoints": 1000,
         "defenseLevel": 7,
         "attackLevel": 15,
@@ -2389,6 +2424,7 @@
 
     "mermaid": {
         "name": "Mermaid",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 150,
         "defenseLevel": 12,
         "attackLevel": 14,
@@ -2424,6 +2460,7 @@
 
     "mimic": {
         "name": "Mimic",
+        "dropTables": ["ordinary", "shards", "unusual", "mushrooms", "vegetables", "fruits", "arrows"],
         "hitPoints": 1200,
         "defenseLevel": 12,
         "attackLevel": 8,
@@ -2462,6 +2499,7 @@
     "miniiceknight1": {
         "name": "Mini Ice Knight",
         "description": "It's a little teeny tiny knight in a little teeny tiny suit of armor.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 1100,
         "defenseLevel": 44,
         "attackLevel": 23,
@@ -2498,6 +2536,7 @@
     "miniiceknight2": {
         "name": "Mini Ice Knight",
         "description": "It's a little teeny tiny knight in a little teeny tiny suit of armor.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 1100,
         "defenseLevel": 44,
         "attackLevel": 23,
@@ -2534,6 +2573,7 @@
     "miniiceknight3": {
         "name": "Mini Ice Knight",
         "description": "It's a little teeny tiny knight in a little teeny tiny suit of armor.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 1100,
         "defenseLevel": 44,
         "attackLevel": 23,
@@ -2570,6 +2610,7 @@
     "miniiceknight4": {
         "name": "Mini Ice Knight",
         "description": "It's a little teeny tiny knight in a little teeny tiny suit of armor.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 1100,
         "defenseLevel": 44,
         "attackLevel": 23,
@@ -2606,6 +2647,7 @@
     "miniiceknight5": {
         "name": "Mini Ice Knight",
         "description": "It's a little teeny tiny knight in a little teeny tiny suit of armor.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 1100,
         "defenseLevel": 44,
         "attackLevel": 23,
@@ -2642,6 +2684,7 @@
     "miniknight1": {
         "name": "Mini Knight",
         "description": "A little ferocious tiny knight that might actually hurt me.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 950,
         "defenseLevel": 23,
         "attackLevel": 25,
@@ -2678,6 +2721,7 @@
     "miniknight2": {
         "name": "Mini Knight",
         "description": "A little ferocious tiny knight that might actually hurt me.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 950,
         "defenseLevel": 23,
         "attackLevel": 25,
@@ -2714,6 +2758,7 @@
     "miniknight3": {
         "name": "Mini Knight",
         "description": "A little ferocious tiny knight that might actually hurt me.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 950,
         "defenseLevel": 23,
         "attackLevel": 25,
@@ -2750,6 +2795,7 @@
     "miniknight4": {
         "name": "Mini Knight",
         "description": "A little ferocious tiny knight that might actually hurt me.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 950,
         "defenseLevel": 23,
         "attackLevel": 25,
@@ -2786,6 +2832,7 @@
     "miniknight5": {
         "name": "Mini Knight",
         "description": "A little ferocious tiny knight that might actually hurt me.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 950,
         "defenseLevel": 23,
         "attackLevel": 25,
@@ -2822,6 +2869,7 @@
     "miniknight6": {
         "name": "Mini Knight",
         "description": "A little ferocious tiny knight that might actually hurt me.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 950,
         "defenseLevel": 23,
         "attackLevel": 25,
@@ -2858,6 +2906,7 @@
     "miniemperor": {
         "name": "Mini Emperor",
         "description": "It looks like the leader of this band of mini knights.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 3950,
         "defenseLevel": 93,
         "attackLevel": 75,
@@ -2895,6 +2944,7 @@
     "oldogre": {
         "name": "Old Ogre",
         "description": "He's old, and balding, but still dangerous.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 256,
         "defenseLevel": 5,
         "attackLevel": 1,
@@ -2930,6 +2980,7 @@
 
     "orc": {
         "name": "Orc",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 275,
         "defenseLevel": 5,
         "attackLevel": 4,
@@ -2965,6 +3016,7 @@
 
     "pain": {
         "name": "Infected Villager",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 1550,
         "defenseLevel": 5,
         "attackLevel": 1,
@@ -3000,6 +3052,7 @@
 
     "penguin": {
         "name": "Penguin",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 526,
         "defenseLevel": 4,
         "attackLevel": 1,
@@ -3035,6 +3088,7 @@
 
     "pierrot": {
         "name": "Clown",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 150,
         "defenseLevel": 30,
         "attackLevel": 15,
@@ -3071,6 +3125,7 @@
     "pinkelf": {
         "name": "Pink Elf",
         "description": "A pink elf, it's pink, what else do you want to know.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 925,
         "defenseLevel": 28,
         "attackLevel": 24,
@@ -3106,6 +3161,7 @@
 
     "preta": {
         "name": "Preta",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 495,
         "defenseLevel": 1,
         "attackLevel": 7,
@@ -3141,6 +3197,7 @@
 
     "purplepreta": {
         "name": "Purple Preta",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 431,
         "defenseLevel": 1,
         "attackLevel": 6,
@@ -3177,6 +3234,7 @@
     "greencockroach": {
         "name": "Blue Cockroach",
         "description": "Ew, a cockroach.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 785,
         "defenseLevel": 5,
         "attackLevel": 0,
@@ -3212,6 +3270,7 @@
 
     "redcockroach": {
         "name": "Red Cockroach",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 669,
         "defenseLevel": 10,
         "attackLevel": 5,
@@ -3248,6 +3307,7 @@
     "redelf": {
         "name": "Red Elf",
         "description": "It's an elf, and it is red, kinda looks like the developer ran out of assets.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 850,
         "defenseLevel": 35,
         "attackLevel": 25,
@@ -3283,6 +3343,7 @@
 
     "guardsword": {
         "name": "Guard",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 625,
         "defenseLevel": 30,
         "attackLevel": 25,
@@ -3318,6 +3379,7 @@
 
     "guardmace": {
         "name": "Guard",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 625,
         "defenseLevel": 30,
         "attackLevel": 28,
@@ -3353,6 +3415,7 @@
 
     "redguard": {
         "name": "Bandit",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 335,
         "defenseLevel": 10,
         "attackLevel": 5,
@@ -3388,6 +3451,7 @@
 
     "redmouse": {
         "name": "Red Mouse",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 160,
         "defenseLevel": 1,
         "attackLevel": 1,
@@ -3423,6 +3487,7 @@
 
     "rhaphidophoridae": {
         "name": "Cricket",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 3500,
         "defenseLevel": 5,
         "attackLevel": 10,
@@ -3458,6 +3523,7 @@
 
     "rudolf": {
         "name": "Raindeer",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 5550,
         "defenseLevel": 10,
         "attackLevel": 15,
@@ -3493,6 +3559,7 @@
 
     "santaelf": {
         "name": "Santa's Elf",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 610,
         "defenseLevel": 15,
         "attackLevel": 35,
@@ -3528,6 +3595,7 @@
 
     "scorpion": {
         "name": "Scorpion",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 2700,
         "defenseLevel": 10,
         "attackLevel": 15,
@@ -3564,6 +3632,7 @@
     "skyelf": {
         "name": "Sky Elf",
         "description": "An elf that lives in the sky... What is it doing here?",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 1000,
         "defenseLevel": 36,
         "attackLevel": 26,
@@ -3600,6 +3669,7 @@
     "slime": {
         "name": "Slime",
         "description": "Why does every game have a slime in it?",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits"],
         "hitPoints": 694,
         "defenseLevel": 42,
         "attackLevel": 10,
@@ -3637,6 +3707,7 @@
 
     "smalldevil": {
         "name": "Corrupted Bat",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 100,
         "defenseLevel": 3,
         "attackLevel": 5,
@@ -3673,6 +3744,7 @@
     "snowelf": {
         "name": "Snow Elf",
         "description": "A magical tiny elf from the snow realm.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 920,
         "defenseLevel": 20,
         "attackLevel": 25,
@@ -3709,6 +3781,7 @@
     "snowman": {
         "name": "Snowman",
         "description": "A magical snowman from the snow realm.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 750,
         "defenseLevel": 3,
         "attackLevel": 3,
@@ -3745,6 +3818,7 @@
     "snowman2": {
         "name": "Snowman",
         "description": "I wonder if it'll be resilient to fire.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 850,
         "defenseLevel": 23,
         "attackLevel": 33,
@@ -3781,6 +3855,7 @@
     "rabbitman": {
         "name": "The Rabbit Man",
         "description": "A dude... dressed as a rabbit... why?",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 385,
         "defenseLevel": 8,
         "attackLevel": 6,
@@ -3816,6 +3891,7 @@
 
     "snowrabbit": {
         "name": "Snow Rabbit",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 340,
         "defenseLevel": 4,
         "attackLevel": 5,
@@ -3852,6 +3928,7 @@
     "snowwolf": {
         "name": "Snow Wolf",
         "description": "I really expected the wolf to be made out of snow :(",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 1185,
         "defenseLevel": 8,
         "attackLevel": 3,
@@ -3887,6 +3964,7 @@
 
     "icegoblin": {
         "name": "Frost Goblin",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 475,
         "defenseLevel": 3,
         "attackLevel": 8,
@@ -3922,6 +4000,7 @@
 
     "soldierant": {
         "name": "Soldier Ant",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 526,
         "defenseLevel": 42,
         "attackLevel": 28,
@@ -3957,6 +4036,7 @@
 
     "soybeanbug": {
         "name": "Soy Bean Bug",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 3500,
         "defenseLevel": 30,
         "attackLevel": 15,
@@ -3992,6 +4072,7 @@
 
     "suicideghost": {
         "name": "Ghost",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 750,
         "defenseLevel": 1,
         "attackLevel": 5,
@@ -4027,6 +4108,7 @@
 
     "vulture": {
         "name": "Vulture",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 100,
         "defenseLevel": 5,
         "attackLevel": 1,
@@ -4062,6 +4144,7 @@
 
     "whitebear": {
         "name": "Molar Bear",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 1300,
         "defenseLevel": 7,
         "attackLevel": 10,
@@ -4097,6 +4180,7 @@
 
     "whitemouse": {
         "name": "Mouse",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 750,
         "defenseLevel": 16,
         "attackLevel": 3,
@@ -4132,6 +4216,7 @@
 
     "whitetiger": {
         "name": "Tiger",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 3350,
         "defenseLevel": 1,
         "attackLevel": 15,
@@ -4167,6 +4252,7 @@
 
     "wolf": {
         "name": "Wolf",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 350,
         "defenseLevel": 3,
         "attackLevel": 12,
@@ -4202,6 +4288,7 @@
 
     "darkwolf": {
         "name": "Dark Wolf",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 850,
         "defenseLevel": 33,
         "attackLevel": 45,
@@ -4237,6 +4324,7 @@
 
     "yellowbat": {
         "name": "Mutated Bat",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 350,
         "defenseLevel": 30,
         "attackLevel": 15,
@@ -4272,6 +4360,7 @@
 
     "paladin": {
         "name": "Paladin",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 350,
         "defenseLevel": 30,
         "attackLevel": 15,
@@ -4307,6 +4396,7 @@
 
     "yellowmouse": {
         "name": "Yellow Mouse",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 750,
         "defenseLevel": 3,
         "attackLevel": 1,
@@ -4342,6 +4432,7 @@
 
     "yellowpreta": {
         "name": "Yellow Preta",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 526,
         "defenseLevel": 4,
         "attackLevel": 4,
@@ -4377,6 +4468,7 @@
 
     "zombie": {
         "name": "Zombie",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 1250,
         "defenseLevel": 1,
         "attackLevel": 1,
@@ -4413,6 +4505,7 @@
     "skeletonking": {
         "name": "Skeleton King",
         "description": "Here he is, the chad of r/neverbrokeabone.",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 1850,
         "defenseLevel": 35,
         "attackLevel": 27,
@@ -4453,6 +4546,7 @@
     "ogrelord": {
         "name": "Ogre Lord",
         "description": "I better keep a distance before this thing turns me into a stew!",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 2850,
         "defenseLevel": 40,
         "attackLevel": 38,
@@ -4493,6 +4587,7 @@
     "hellhound": {
         "name": "Hellhound",
         "description": "I better keep a distance before this thing turns me into a stew!",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 4550,
         "defenseLevel": 80,
         "attackLevel": 58,
@@ -4533,6 +4628,7 @@
 
     "windguardian": {
         "name": "Wind Guardian",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 15000,
         "defenseLevel": 40,
         "attackLevel": 100,
@@ -4569,6 +4665,7 @@
 
     "lightningguardian": {
         "name": "Lightning Guardian",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 4500,
         "defenseLevel": 25,
         "attackLevel": 35,
@@ -4604,6 +4701,7 @@
 
     "darkregion": {
         "name": "Tenebris",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 4000,
         "defenseLevel": 20,
         "attackLevel": 40,
@@ -4675,6 +4773,7 @@
     "miniseadragon": {
         "name": "Mini Sea Dragon",
         "description": "Aww it's a little version of something that's gonna stomp me later!",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 1200,
         "defenseLevel": 22,
         "attackLevel": 15,
@@ -4711,6 +4810,7 @@
     "forestdragon": {
         "name": "Forest Dragon",
         "description": "Keros' favourite pet!",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 6942,
         "defenseLevel": 80,
         "attackLevel": 100,
@@ -4749,6 +4849,7 @@
 
     "enel": {
         "name": "Lucendi",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 25000,
         "defenseLevel": 150,
         "attackLevel": 120,
@@ -4784,6 +4885,7 @@
 
     "seadragon": {
         "name": "Sea Dragon",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 100,
         "defenseLevel": 5,
         "attackLevel": 10,
@@ -4819,6 +4921,7 @@
 
     "minidragon": {
         "name": "Mini Dragon",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 380,
         "defenseLevel": 5,
         "attackLevel": 15,
@@ -4855,6 +4958,7 @@
 
     "queenant": {
         "name": "Queen Ant",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 4200,
         "defenseLevel": 85,
         "attackLevel": 70,
@@ -4895,6 +4999,7 @@
 
     "skydinosaur": {
         "name": "Fulgur",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 50000,
         "defenseLevel": 400,
         "attackLevel": 200,
@@ -4930,6 +5035,7 @@
 
     "squid": {
         "name": "Great Squid",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 2800,
         "defenseLevel": 45,
         "attackLevel": 30,
@@ -4966,6 +5072,7 @@
 
     "snowlady": {
         "name": "Queen of Snow",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 2800,
         "defenseLevel": 10,
         "attackLevel": 90,
@@ -5002,6 +5109,7 @@
 
     "frostqueen": {
         "name": "Frost Queen",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 2800,
         "defenseLevel": 10,
         "attackLevel": 90,
@@ -5038,6 +5146,7 @@
 
     "eliminator": {
         "name": "Eliminator",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 2000,
         "defenseLevel": 45,
         "attackLevel": 30,
@@ -5073,6 +5182,7 @@
 
     "santa": {
         "name": "Santa",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 7500,
         "defenseLevel": 95,
         "attackLevel": 105,
@@ -5111,6 +5221,7 @@
 
     "brownmouse": {
         "name": "Brown Mouse",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 140,
         "defenseLevel": 1,
         "attackLevel": 1,
@@ -5146,6 +5257,7 @@
 
     "picklemob": {
         "name": "Sea Cucumber",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 1250,
         "defenseLevel": 34,
         "attackLevel": 35,
@@ -5182,6 +5294,7 @@
 
     "icerat": {
         "name": "Ice Rat",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 710,
         "defenseLevel": 2,
         "attackLevel": 5,
@@ -5217,6 +5330,7 @@
 
     "icebat": {
         "name": "Frozen Bat",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 825,
         "defenseLevel": 22,
         "attackLevel": 26,
@@ -5252,6 +5366,7 @@
 
     "icecrab": {
         "name": "Ice Crab",
+        "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 860,
         "defenseLevel": 22,
         "attackLevel": 27,
