@@ -218,3 +218,9 @@ export enum Crafting {
     Select,
     Craft
 }
+
+export enum LootBag {
+    Open,
+    Take,
+    Close
+}
