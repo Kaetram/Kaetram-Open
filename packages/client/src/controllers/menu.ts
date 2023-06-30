@@ -17,6 +17,7 @@ import Interact from '../menu/interact';
 import Leaderboards from '../menu/leaderboards';
 import Guilds from '../menu/guilds';
 import Crafting from '../menu/crafting';
+import LootBag from '../menu/lootbag';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -43,6 +44,7 @@ export default class MenuController {
     private interact: Interact;
     private leaderboards: Leaderboards;
     private guilds: Guilds;
+    private lootBag: LootBag;
 
     public header: Header;
 
@@ -66,6 +68,7 @@ export default class MenuController {
         this.interact = new Interact(game.player);
         this.leaderboards = new Leaderboards(game.app);
         this.guilds = new Guilds(game);
+        this.lootBag = new LootBag(this.inventory);
 
         this.menus = {
             inventory: this.inventory,
@@ -272,6 +275,14 @@ export default class MenuController {
 
     public getCrafting(): Crafting {
         return this.crafting;
+    }
+
+    /**
+     * @returns The loot bag menu object.
+     */
+
+    public getLootBag(): LootBag {
+        return this.lootBag;
     }
 
     /**

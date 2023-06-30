@@ -18,7 +18,8 @@ export enum PacketType {
 export enum ContainerType {
     Bank,
     Inventory,
-    Trade
+    Trade,
+    LootBag
 }
 
 export enum Orientation {
