@@ -103,7 +103,10 @@ export default {
      */
 
     formatName(name = ''): string {
-        return name.replace(/\w\S*/g, (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase());
+        return name.replace(
+            /\w\S*/g,
+            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+        );
     },
 
     /**

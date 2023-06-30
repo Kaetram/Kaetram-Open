@@ -49,14 +49,16 @@ export default class Exporter {
 
         // Write the server map file.
         fs.writeFile(resolve(serverDestination), parser.getMap(), (error) => {
-            if (error) throw new Error(`An error has occurred while writing map files:`, { cause: error });
+            if (error)
+                throw new Error(`An error has occurred while writing map files:`, { cause: error });
 
             log.notice(`Map file successfully saved at ${relative(serverDestination)}.`);
         });
 
         // Write the client map file.
         fs.writeFile(resolve(clientDestination), parser.getClientMap(), (error) => {
-            if (error) throw new Error(`An error has occurred while writing map files:`, { cause: error });
+            if (error)
+                throw new Error(`An error has occurred while writing map files:`, { cause: error });
 
             log.notice(`Map file successfully saved at ${relative(clientDestination)}.`);
         });
@@ -111,12 +113,16 @@ export default class Exporter {
      */
 
     private copyTileset(location: string, from = location): void {
-        fs.copyFile(resolve(path.join(mapDirectory, from)), resolve(path.join(tilesetDirectory, location)), (error) => {
-            if (error)
-                throw new Error(`An error has occurred while copying tilesets:\n`, {
-                    cause: error
-                });
-        });
+        fs.copyFile(
+            resolve(path.join(mapDirectory, from)),
+            resolve(path.join(tilesetDirectory, location)),
+            (error) => {
+                if (error)
+                    throw new Error(`An error has occurred while copying tilesets:\n`, {
+                        cause: error
+                    });
+            }
+        );
     }
 
     /**

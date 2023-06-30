@@ -211,7 +211,11 @@ export default class Map {
      * @param callback Parsed client tileset of type TilesetInfo.
      */
 
-    private loadTileset(tileset: ProcessedTileset, index: number, callback: (tileset: TilesetInfo) => void): void {
+    private loadTileset(
+        tileset: ProcessedTileset,
+        index: number,
+        callback: (tileset: TilesetInfo) => void
+    ): void {
         let tilesetInfo = new Image() as TilesetInfo,
             path = `/img/tilesets/${tileset.relativePath}`; // tileset path in the client.
 
@@ -325,7 +329,11 @@ export default class Map {
             v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
             d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);
 
-        tileId &= ~(Modules.MapFlags.DIAGONAL_FLAG | Modules.MapFlags.VERTICAL_FLAG | Modules.MapFlags.HORIZONTAL_FLAG);
+        tileId &= ~(
+            Modules.MapFlags.DIAGONAL_FLAG |
+            Modules.MapFlags.VERTICAL_FLAG |
+            Modules.MapFlags.HORIZONTAL_FLAG
+        );
 
         return {
             tileId,
@@ -454,7 +462,11 @@ export default class Map {
      */
 
     public isFlipped(tile: ClientTile): tile is TransformedTile {
-        return (tile as TransformedTile).v || (tile as TransformedTile).h || (tile as TransformedTile).d;
+        return (
+            (tile as TransformedTile).v ||
+            (tile as TransformedTile).h ||
+            (tile as TransformedTile).d
+        );
     }
 
     /**
@@ -484,7 +496,8 @@ export default class Map {
      */
 
     public getTilesetFromId(tileId: number): TilesetInfo | undefined {
-        for (let tileset of this.tilesets) if (tileId >= tileset.firstGid && tileId <= tileset.lastGid) return tileset;
+        for (let tileset of this.tilesets)
+            if (tileId >= tileset.firstGid && tileId <= tileset.lastGid) return tileset;
 
         return undefined;
     }

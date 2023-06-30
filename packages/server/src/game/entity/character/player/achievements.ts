@@ -72,7 +72,13 @@ export default class Achievements {
 
             // Check if we can add to the inventory, then the bank, and if both fail just drop the item.
             if (this.player.inventory.add(item) < 1 && this.player.bank.add(item) < 1)
-                this.player.world.entities.spawnItem(itemKey, this.player.x, this.player.y, true, itemCount);
+                this.player.world.entities.spawnItem(
+                    itemKey,
+                    this.player.x,
+                    this.player.y,
+                    true,
+                    itemCount
+                );
         }
 
         // Add experience if it exists.

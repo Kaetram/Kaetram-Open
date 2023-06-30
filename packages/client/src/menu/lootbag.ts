@@ -60,7 +60,9 @@ export default class LootBag extends Menu {
         if (!this.isVisible()) return;
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
-            let image: HTMLElement = this.getInventoryElement(index).querySelector('.container-item-slot-icon')!,
+            let image: HTMLElement = this.getInventoryElement(index).querySelector(
+                    '.container-item-slot-icon'
+                )!,
                 slotImage = slot.querySelector<HTMLElement>('.item-image')!;
 
             if (!slotImage) return;

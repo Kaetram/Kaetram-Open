@@ -46,7 +46,10 @@ export default class ProgramData {
 
             if (!attribute) continue;
 
-            this.attributes[attribute.name] = context.getAttribLocation(this.program, attribute.name);
+            this.attributes[attribute.name] = context.getAttribLocation(
+                this.program,
+                attribute.name
+            );
         }
 
         // Build the uniform locations based on the created program.
@@ -127,7 +130,11 @@ export default class ProgramData {
      * @returns The compiled shader object.
      */
 
-    private compileShader(context: WebGLRenderingContext, type: number, source: string): WebGLShader | undefined {
+    private compileShader(
+        context: WebGLRenderingContext,
+        type: number,
+        source: string
+    ): WebGLShader | undefined {
         let shader = context.createShader(type);
 
         // If we cannot create a shader, return undefined.

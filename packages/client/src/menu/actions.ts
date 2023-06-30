@@ -14,7 +14,9 @@ export default class Actions extends Menu {
 
     // Info about the current action.
     private name: HTMLElement = document.querySelector('#action-page > .action-item-name')!;
-    private description: HTMLElement = document.querySelector('#action-page > .action-item-description')!;
+    private description: HTMLElement = document.querySelector(
+        '#action-page > .action-item-description'
+    )!;
 
     // Drop dialog elements
     public dropDialog: HTMLElement = document.querySelector('#action-drop')!;

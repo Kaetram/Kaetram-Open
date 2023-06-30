@@ -78,8 +78,16 @@ export default class WebGL extends Renderer {
         let tilesetCount = this.map.tilesets.length;
 
         // Initialize the shaders and format the fragment shader.
-        this.backShader = new ProgramData(this.backContext, LayerVertex, this.getFragmentShader(tilesetCount));
-        this.foreShader = new ProgramData(this.foreContext, LayerVertex, this.getFragmentShader(tilesetCount));
+        this.backShader = new ProgramData(
+            this.backContext,
+            LayerVertex,
+            this.getFragmentShader(tilesetCount)
+        );
+        this.foreShader = new ProgramData(
+            this.foreContext,
+            LayerVertex,
+            this.getFragmentShader(tilesetCount)
+        );
 
         // Set the tileset texture indices.
         this.tilesetIndices = new Int32Array(tilesetCount);
@@ -114,7 +122,10 @@ export default class WebGL extends Renderer {
 
         // Load the buffer data...
         this.forEachDrawingContext((context: WebGLRenderingContext) => {
-            this.tilesets[(context.canvas as HTMLCanvasElement).id] = new Tileset(this.map, context);
+            this.tilesets[(context.canvas as HTMLCanvasElement).id] = new Tileset(
+                this.map,
+                context
+            );
 
             // Create the buffer for each context
             this.bindBuffer(context);
@@ -165,7 +176,11 @@ export default class WebGL extends Renderer {
 
     private bindTexture(context: WebGLRenderingContext): void {
         for (let layer of this.layers)
-            layer.bindTexture(context, this.getShader(context)?.program, !this.isBackgroundContext(context));
+            layer.bindTexture(
+                context,
+                this.getShader(context)?.program,
+                !this.isBackgroundContext(context)
+            );
     }
 
     /**
@@ -178,7 +193,10 @@ export default class WebGL extends Renderer {
 
         context.useProgram(shader.program);
 
-        let inverseTileSize: Float32Array = new Float32Array([1 / this.map.tileSize, 1 / this.map.tileSize]);
+        let inverseTileSize: Float32Array = new Float32Array([
+            1 / this.map.tileSize,
+            1 / this.map.tileSize
+        ]);
 
         context.uniform1i(shader.uniforms.uLayer, 0);
         context.uniform2fv(shader.uniforms.uInverseLayerTileSize!, inverseTileSize);
@@ -191,7 +209,10 @@ export default class WebGL extends Renderer {
 
         context.uniform2fv(shader.uniforms.uTilesetTileSize!, this.tilesetTileSizeBuffer);
         context.uniform2fv(shader.uniforms.uTilesetTileOffset!, this.tilesetOffsetBuffer);
-        context.uniform2fv(shader.uniforms.uInverseTilesetTextureSize!, this.inverseTilesetTextureSizeBuffer);
+        context.uniform2fv(
+            shader.uniforms.uInverseTilesetTextureSize!,
+            this.inverseTilesetTextureSizeBuffer
+        );
     }
 
     /**
@@ -254,8 +275,22 @@ export default class WebGL extends Renderer {
             context.bindBuffer(context.ARRAY_BUFFER, this.getQuadBuffer(context));
             context.enableVertexAttribArray(this.attributeIndices.aPosition);
             context.enableVertexAttribArray(this.attributeIndices.aTexture);
-            context.vertexAttribPointer(this.attributeIndices.aPosition, 2, context.FLOAT, false, 16, 0);
-            context.vertexAttribPointer(this.attributeIndices.aTexture, 2, context.FLOAT, false, 16, 8);
+            context.vertexAttribPointer(
+                this.attributeIndices.aPosition,
+                2,
+                context.FLOAT,
+                false,
+                16,
+                0
+            );
+            context.vertexAttribPointer(
+                this.attributeIndices.aTexture,
+                2,
+                context.FLOAT,
+                false,
+                16,
+                8
+            );
 
             this.tilesets[(context.canvas as HTMLCanvasElement).id].forEachTexture(
                 (texture: WebGLTexture, index: number) => {

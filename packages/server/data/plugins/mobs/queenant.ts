@@ -124,7 +124,9 @@ export default class QueenAnt extends Default {
 
         // Determine whether or not to use ranged attacks.
         let useRanged =
-            this.mob.getDistance(this.mob.target!) > 1 || this.mob.target!.isRanged() || this.mob.target!.moving;
+            this.mob.getDistance(this.mob.target!) > 1 ||
+            this.mob.target!.isRanged() ||
+            this.mob.target!.moving;
 
         // Update the mob's range distance.
         this.mob.attackRange = useRanged ? 10 : 1;

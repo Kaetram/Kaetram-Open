@@ -41,7 +41,9 @@ export default class ResourceSkill extends Skill {
 
     public interact(player: Player, resource: Resource, weaponLevel = 0): void {
         if (resource.isDepleted())
-            return log.debug(`${player.username} attempted to interact with an exhausted resource.`);
+            return log.debug(
+                `${player.username} attempted to interact with an exhausted resource.`
+            );
 
         let resourceInfo = this.data[resource.type];
 
@@ -53,10 +55,15 @@ export default class ResourceSkill extends Skill {
 
         // Level required for this resource is too high for the yplayer.
         if (resourceInfo.levelRequirement > this.level)
-            return player.notify(ResourceEn.INVALID_LEVEL(this.type, resourceInfo.levelRequirement));
+            return player.notify(
+                ResourceEn.INVALID_LEVEL(this.type, resourceInfo.levelRequirement)
+            );
 
         // Unable to interact with the resource if the player hasn't completed the required achievement.
-        if (resourceInfo.reqAchievement && !player.achievements.get(resourceInfo.reqAchievement)?.isFinished())
+        if (
+            resourceInfo.reqAchievement &&
+            !player.achievements.get(resourceInfo.reqAchievement)?.isFinished()
+        )
             return player.notify(ResourceEn.UNABLE_TO_INTERACT(this.type));
 
         // Unable to interact with the resource if the player hasn't completed the required quest.
@@ -77,7 +84,9 @@ export default class ResourceSkill extends Skill {
             if (resource.isDepleted() || !this.canHold(player)) return this.stop();
 
             // Send the animation packet to the region player is in.
-            player.sendToRegion(new Animation({ instance: player.instance, action: Modules.Actions.Attack }));
+            player.sendToRegion(
+                new Animation({ instance: player.instance, action: Modules.Actions.Attack })
+            );
 
             // Use probability to check if we can exhaust the resource.
             if (this.canExhaustResource(weaponLevel, resourceInfo)) {
@@ -91,11 +100,14 @@ export default class ResourceSkill extends Skill {
                 player.statistics.handleSkill(this.type);
 
                 // If resource has an achievement, attempt to award it if it hasn't been awarded yet.
-                if (resourceInfo.achievement) player.achievements.get(resourceInfo.achievement)?.finish();
+                if (resourceInfo.achievement)
+                    player.achievements.get(resourceInfo.achievement)?.finish();
 
                 // If the resource has a quest then we will call the resource callback.
                 if (resourceInfo.quest)
-                    player.quests.get(resourceInfo.quest)?.resourceCallback?.(this.type, resource.type);
+                    player.quests
+                        .get(resourceInfo.quest)
+                        ?.resourceCallback?.(this.type, resource.type);
 
                 // Deplete the resource and send the signal to the region
                 if (this.shouldDeplete()) resource.deplete();
@@ -120,7 +132,8 @@ export default class ResourceSkill extends Skill {
         if (!resourceInfo?.randomItems) return;
 
         // Grab a random item from the list of random items and calculate the probability.
-        let randomItem = resourceInfo.randomItems[Utils.randomInt(0, resourceInfo.randomItems.length - 1)],
+        let randomItem =
+                resourceInfo.randomItems[Utils.randomInt(0, resourceInfo.randomItems.length - 1)],
             chance = Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) < randomItem?.chance;
 
         // Probability didn't work out so stop here.

@@ -39,13 +39,21 @@ export default class Bank extends Menu {
         if (!this.inventoryList) return log.error('[Bank] Could not find the inventory slot list.');
 
         for (let i = 0; i < Modules.Constants.BANK_SIZE; i++) {
-            let slot = this.createDraggableSlot(i, Modules.ContainerType.Bank, Modules.ContainerType.Inventory);
+            let slot = this.createDraggableSlot(
+                i,
+                Modules.ContainerType.Bank,
+                Modules.ContainerType.Inventory
+            );
 
             this.bankList.append(slot);
         }
 
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++) {
-            let slot = this.createDraggableSlot(i, Modules.ContainerType.Inventory, Modules.ContainerType.Bank);
+            let slot = this.createDraggableSlot(
+                i,
+                Modules.ContainerType.Inventory,
+                Modules.ContainerType.Bank
+            );
 
             this.inventoryList.append(slot);
         }
@@ -66,7 +74,9 @@ export default class Bank extends Menu {
         fromContainer: Modules.ContainerType,
         defaultContainer: Modules.ContainerType
     ): HTMLLIElement {
-        let slot = Util.createSlot(fromContainer, index, () => this.select(fromContainer, index, defaultContainer)),
+        let slot = Util.createSlot(fromContainer, index, () =>
+                this.select(fromContainer, index, defaultContainer)
+            ),
             item = slot.querySelector<HTMLDivElement>('.item-slot')!;
 
         onDragDrop(item, this.handleHold.bind(this), () =>
@@ -92,7 +102,12 @@ export default class Bank extends Menu {
         if (isNaN(parseInt(fromContainer!)) || isNaN(parseInt(fromIndex!))) return;
         if (isNaN(parseInt(toContainer!)) || isNaN(parseInt(toIndex!))) return;
 
-        this.select(parseInt(fromContainer!), parseInt(fromIndex!), parseInt(toContainer!), parseInt(toIndex!));
+        this.select(
+            parseInt(fromContainer!),
+            parseInt(fromIndex!),
+            parseInt(toContainer!),
+            parseInt(toIndex!)
+        );
     }
 
     /**
@@ -122,7 +137,9 @@ export default class Bank extends Menu {
 
     private setSlot(slot: SlotData): void {
         let image = this.getBankElement(slot.index).querySelector<HTMLElement>('.item-image')!,
-            countElement = this.getBankElement(slot.index).querySelector<HTMLElement>('.item-count')!;
+            countElement = this.getBankElement(slot.index).querySelector<HTMLElement>(
+                '.item-count'
+            )!;
 
         image.style.backgroundImage = Util.getImageURL(slot.key);
         countElement.textContent = Util.getCount(slot.count);
@@ -202,7 +219,9 @@ export default class Bank extends Menu {
     }
 
     private getElement(index: number, container: Modules.ContainerType): HTMLElement {
-        return container === Modules.ContainerType.Bank ? this.getBankElement(index) : this.getInventoryElement(index);
+        return container === Modules.ContainerType.Bank
+            ? this.getBankElement(index)
+            : this.getInventoryElement(index);
     }
 
     /**

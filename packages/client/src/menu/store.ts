@@ -36,7 +36,9 @@ export default class Store extends Menu {
 
     // Lists
     private storeList: HTMLUListElement = document.querySelector('#store-slots-content > ul')!;
-    private inventoryList: HTMLUListElement = document.querySelector('#store-inventory-slots > ul')!;
+    private inventoryList: HTMLUListElement = document.querySelector(
+        '#store-inventory-slots > ul'
+    )!;
 
     // Buy dialog elements
     public buyDialog: HTMLElement = document.querySelector('#store-buy')!;
@@ -59,7 +61,9 @@ export default class Store extends Menu {
 
         // Create the slot elements for the inventory container.
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
-            this.inventoryList.append(Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this)));
+            this.inventoryList.append(
+                Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
+            );
     }
 
     /**
@@ -85,7 +89,8 @@ export default class Store extends Menu {
         this.key = info.key!;
         this.currency = info.currency!;
 
-        for (let i = 0; i < info.items!.length; i++) this.storeList.append(this.createStoreItem(info.items![i], i));
+        for (let i = 0; i < info.items!.length; i++)
+            this.storeList.append(this.createStoreItem(info.items![i], i));
     }
 
     /**

@@ -34,7 +34,11 @@ export default class {
      * @param duration Duration until the timeout is up.
      */
 
-    public addWithTimeout(statusEffect: Modules.Effects, duration: number, callback?: () => void): void {
+    public addWithTimeout(
+        statusEffect: Modules.Effects,
+        duration: number,
+        callback?: () => void
+    ): void {
         // A temporary freezing effect cannot be added if the player has a permanent one.
         if (statusEffect === Modules.Effects.Freezing && this.hasPermanentFreezing()) return;
 

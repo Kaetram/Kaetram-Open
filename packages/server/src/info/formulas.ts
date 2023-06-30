@@ -136,7 +136,8 @@ export default {
         let randomDamage = Utils.randomWeightedInt(0, maxDamage, accuracy);
 
         // Limit the damage to the target's remaining health.
-        if (randomDamage > target.hitPoints.getHitPoints()) randomDamage = target.hitPoints.getHitPoints();
+        if (randomDamage > target.hitPoints.getHitPoints())
+            randomDamage = target.hitPoints.getHitPoints();
 
         return randomDamage;
     },
@@ -211,7 +212,8 @@ export default {
                 magic: (attackerStats.magic - targetStats.magic) / 3,
                 archery: (attackerStats.archery - targetStats.archery) / 3
             },
-            totalWeight = weights.crush + weights.slash + weights.stab + weights.magic + weights.archery;
+            totalWeight =
+                weights.crush + weights.slash + weights.stab + weights.magic + weights.archery;
 
         // Negative values add no weight to the accuracy modifier.
         if (weights.crush < 0) totalWeight -= weights.crush;
@@ -221,7 +223,8 @@ export default {
         if (weights.archery < 0) totalWeight -= weights.archery;
 
         // If our attack style is the same or none then we do not have any advantage in our accuracy.
-        if (attackStyle === defenseStyle || attackStyle === Modules.DamageStyle.None) return totalWeight || 1;
+        if (attackStyle === defenseStyle || attackStyle === Modules.DamageStyle.None)
+            return totalWeight || 1;
 
         /**
          * If we have a attack style against a defense style that is not the same, then we can
@@ -313,7 +316,8 @@ export default {
     nextExp(experience: number): number {
         if (experience < 0) return -1;
 
-        for (let i = 1; i < this.LevelExp.length; i++) if (experience < this.LevelExp[i]) return this.LevelExp[i];
+        for (let i = 1; i < this.LevelExp.length; i++)
+            if (experience < this.LevelExp[i]) return this.LevelExp[i];
 
         return -1;
     },

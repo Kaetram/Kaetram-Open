@@ -26,7 +26,8 @@ export default class Guilds extends Menu {
     private createError: HTMLElement = document.querySelector('#guilds-create-error')!;
 
     private backButton: HTMLElement = document.querySelector('#guilds-back-button')!;
-    private createConfirmButton: HTMLButtonElement = document.querySelector('#guilds-create-button')!;
+    private createConfirmButton: HTMLButtonElement =
+        document.querySelector('#guilds-create-button')!;
 
     // The colour buttons for the banner (used when creating a guild).
     private bannerColours: HTMLUListElement = document.querySelector('#banner-colours')!;
@@ -43,8 +44,12 @@ export default class Guilds extends Menu {
     private bannerColourButton: HTMLElement = document.querySelector('#banner-colour-button')!;
     private bannerOutlineButton: HTMLElement = document.querySelector('#banner-outline-button')!;
 
-    private bannerOutlineRight: HTMLElement = this.bannerOutlineButton.querySelector('.colour-button-arrow-left')!;
-    private bannerOutlineLeft: HTMLElement = this.bannerOutlineButton.querySelector('.colour-button-arrow-right')!;
+    private bannerOutlineRight: HTMLElement = this.bannerOutlineButton.querySelector(
+        '.colour-button-arrow-left'
+    )!;
+    private bannerOutlineLeft: HTMLElement = this.bannerOutlineButton.querySelector(
+        '.colour-button-arrow-right'
+    )!;
 
     // The guild information container (if the player is in a guild).
     private infoContainer: HTMLElement = document.querySelector('#guilds-info-container')!;
@@ -83,11 +88,19 @@ export default class Guilds extends Menu {
         this.createConfirmButton.addEventListener('click', this.handleCreateConfirm.bind(this));
         this.leaveButton.addEventListener('click', this.handleLeave.bind(this));
 
-        this.bannerColourButton.addEventListener('click', () => this.handleColourSelection('banner'));
-        this.bannerOutlineButton.addEventListener('click', () => this.handleColourSelection('outline'));
+        this.bannerColourButton.addEventListener('click', () =>
+            this.handleColourSelection('banner')
+        );
+        this.bannerOutlineButton.addEventListener('click', () =>
+            this.handleColourSelection('outline')
+        );
 
-        this.bannerOutlineRight.addEventListener('click', () => this.handleBannerOutlineStyle('right'));
-        this.bannerOutlineLeft.addEventListener('click', () => this.handleBannerOutlineStyle('left'));
+        this.bannerOutlineRight.addEventListener('click', () =>
+            this.handleBannerOutlineStyle('right')
+        );
+        this.bannerOutlineLeft.addEventListener('click', () =>
+            this.handleBannerOutlineStyle('left')
+        );
 
         this.loadSidebar();
         this.loadDecorations();
@@ -249,7 +262,8 @@ export default class Guilds extends Menu {
         // Load the guild decorations.
         this.bannerColour = info.decoration?.banner || Modules.BannerColour.Grey;
         this.bannerOutline = info.decoration?.outline || Modules.BannerOutline.StyleOne;
-        this.bannerOutlineColour = info.decoration?.outlineColour || Modules.BannerColour.GoldenYellow;
+        this.bannerOutlineColour =
+            info.decoration?.outlineColour || Modules.BannerColour.GoldenYellow;
         this.bannerCrest = info.decoration?.crest;
 
         this.updateBanner();
@@ -271,7 +285,8 @@ export default class Guilds extends Menu {
         if (this.getUsername() === info.owner) this.leaveButton.innerHTML = 'Disband';
 
         // Update the guild members list.
-        for (let member of info.members!) this.createElement(this.memberList, member.rank!, member.username);
+        for (let member of info.members!)
+            this.createElement(this.memberList, member.rank!, member.username);
     }
 
     /**
@@ -386,14 +401,17 @@ export default class Guilds extends Menu {
      */
 
     private handleBannerOutlineStyle(direction: 'right' | 'left'): void {
-        this.bannerOutline = direction === 'right' ? this.bannerOutline + 1 : this.bannerOutline - 1;
+        this.bannerOutline =
+            direction === 'right' ? this.bannerOutline + 1 : this.bannerOutline - 1;
 
         // Make sure the style selection is within the bounds of the array.
         if (this.bannerOutline < 0) this.bannerOutline = this.bannerOutlineStyles.length - 1;
         else if (this.bannerOutline >= this.bannerOutlineStyles.length) this.bannerOutline = 0;
 
         // Update the banner outline selection button thingy.
-        this.bannerOutlineButton.className = `colour-select-button outline-button-${this.bannerOutline + 1} active`;
+        this.bannerOutlineButton.className = `colour-select-button outline-button-${
+            this.bannerOutline + 1
+        } active`;
 
         // Update the banner outline style.
         this.updateBanner();
@@ -468,7 +486,8 @@ export default class Guilds extends Menu {
         description.innerHTML = '';
 
         // Iterate through the guilds and create a list element for each one.
-        for (let guild of guilds) this.createElement(this.guildList, 'guild', guild.name, guild.members);
+        for (let guild of guilds)
+            this.createElement(this.guildList, 'guild', guild.name, guild.members);
     }
 
     /**
@@ -613,7 +632,9 @@ export default class Guilds extends Menu {
             serverElement.className = `server ${colour}`;
 
             serverElement.innerHTML =
-                member.serverId === -1 ? 'Offline' : `${this.game.app.config.name} ${member.serverId}`;
+                member.serverId === -1
+                    ? 'Offline'
+                    : `${this.game.app.config.name} ${member.serverId}`;
         }
     }
 
@@ -675,7 +696,12 @@ export default class Guilds extends Menu {
      * @param name The name to display in the element.
      */
 
-    private createElement(list: HTMLUListElement, type: Modules.GuildRank | 'guild', name: string, count = 0): void {
+    private createElement(
+        list: HTMLUListElement,
+        type: Modules.GuildRank | 'guild',
+        name: string,
+        count = 0
+    ): void {
         let element = document.createElement('li') as ListElement,
             nameElement = document.createElement('span'),
             imageElement = document.createElement('div'),
@@ -768,11 +794,12 @@ export default class Guilds extends Menu {
         this.banner.className = `banner banner-${this.bannerColour}`;
 
         // Update the outline and crest if specified
-        outlineElement.className = `${this.bannerOutlineStyles[this.bannerOutline]} banner-outline-${
-            this.bannerOutlineColour
-        }`;
+        outlineElement.className = `${
+            this.bannerOutlineStyles[this.bannerOutline]
+        } banner-outline-${this.bannerOutlineColour}`;
 
-        if (this.bannerCrest) crestElement.className = `banner-crest banner-crest-${this.bannerCrest}`;
+        if (this.bannerCrest)
+            crestElement.className = `banner-crest banner-crest-${this.bannerCrest}`;
     }
 
     /**

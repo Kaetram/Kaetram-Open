@@ -13,7 +13,13 @@ interface SerializedContainer {
 }
 
 type AddCallback = (slot: Slot) => void;
-type RemoveCallback = (slot: Slot, key: string, count: number, enchantments: Enchantments, drop?: boolean) => void;
+type RemoveCallback = (
+    slot: Slot,
+    key: string,
+    count: number,
+    enchantments: Enchantments,
+    drop?: boolean
+) => void;
 type NotifyCallback = (message: string) => void;
 
 export default abstract class Container {
@@ -245,7 +251,12 @@ export default abstract class Container {
                     toFull = toItem.count > (this.stackSize || toItem.maxStackSize);
 
                 // If we cannot stack the items, return early.
-                if (((fromFull || toFull) && !isSameItem) || fromItem.isEnchanted() || toItem.isEnchanted()) return;
+                if (
+                    ((fromFull || toFull) && !isSameItem) ||
+                    fromItem.isEnchanted() ||
+                    toItem.isEnchanted()
+                )
+                    return;
             }
 
             if (toEmpty || isSameItem) {
@@ -263,7 +274,10 @@ export default abstract class Container {
                 // Update the item in the target slot with the item in the source slot.
                 toSlot.update(fromItem, toContainer.stackSize);
 
-                log.assert(toSlot.count >= fromSlot.count, 'source slot count is greater than target slot count');
+                log.assert(
+                    toSlot.count >= fromSlot.count,
+                    'source slot count is greater than target slot count'
+                );
 
                 fromSlot.update(toItem, this.stackSize);
 
