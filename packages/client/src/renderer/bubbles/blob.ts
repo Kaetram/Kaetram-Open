@@ -10,7 +10,12 @@ export default class Blob {
     private timer: Timer;
     public static = false;
 
-    public constructor(public instance: string, message: string, duration = 5000, public position?: Position) {
+    public constructor(
+        public instance: string,
+        message: string,
+        duration = 5000,
+        public position?: Position
+    ) {
         this.timer = new Timer(Date.now(), duration);
 
         this.element = this.createBlob(instance, message);

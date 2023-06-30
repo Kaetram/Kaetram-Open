@@ -27,7 +27,8 @@ export default class Abilities {
      */
 
     public load(info: SerializedAbility): void {
-        for (let ability of info.abilities) this.add(ability.key, ability.level, ability.quickSlot, true);
+        for (let ability of info.abilities)
+            this.add(ability.key, ability.level, ability.quickSlot, true);
 
         this.loadCallback?.();
     }
@@ -75,10 +76,14 @@ export default class Abilities {
         if (this.has(key)) return this.setLevel(key, level);
 
         // Create ability based on the key from index of ability classes.
-        let ability = new AbilitiesIndex[key as keyof typeof AbilitiesIndex](level, quickSlot) as Ability;
+        let ability = new AbilitiesIndex[key as keyof typeof AbilitiesIndex](
+            level,
+            quickSlot
+        ) as Ability;
 
         // Ensure the ability has valid data.
-        if (!ability?.isValid()) return log.warning(`[${this.player.username}] Invalid ability: ${key}`);
+        if (!ability?.isValid())
+            return log.warning(`[${this.player.username}] Invalid ability: ${key}`);
 
         // On ability update listener.
         ability.onUpdate(this.handleUpdate.bind(this));
@@ -150,7 +155,8 @@ export default class Abilities {
     public serialize(includeType = false): SerializedAbility {
         let abilities: AbilityData[] = [];
 
-        for (let ability of Object.values(this.abilities)) abilities.push(ability.serialize(includeType));
+        for (let ability of Object.values(this.abilities))
+            abilities.push(ability.serialize(includeType));
 
         return {
             abilities

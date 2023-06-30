@@ -70,7 +70,8 @@ export default class Handler extends CharacterHandler {
             cursor = this.map.getTileCursor(x, y);
 
             // Little bit of a hack, but we ignore the tiles around the object for later.
-            if (cursor === 'fishing') ignores.push({ x: x + 1, y }, { x: x - 1, y }, { x, y: y + 1 }, { x, y: y - 1 });
+            if (cursor === 'fishing')
+                ignores.push({ x: x + 1, y }, { x: x - 1, y }, { x, y: y + 1 }, { x, y: y - 1 });
         }
 
         return this.game.findPath(this.character, x, y, ignores, cursor);
@@ -121,7 +122,8 @@ export default class Handler extends CharacterHandler {
             opcode: Opcodes.Movement.Stop,
             playerX: this.character.gridX,
             playerY: this.character.gridY,
-            targetInstance: this.character.target?.instance || this.game.getEntityAt(x, y)?.instance,
+            targetInstance:
+                this.character.target?.instance || this.game.getEntityAt(x, y)?.instance,
             orientation: this.character.orientation
         });
 
@@ -133,7 +135,10 @@ export default class Handler extends CharacterHandler {
                 instance: this.character.target?.instance
             });
 
-        this.game.socket.send(Packets.Target, [this.getTargetType(), this.character.target?.instance || '']);
+        this.game.socket.send(Packets.Target, [
+            this.getTargetType(),
+            this.character.target?.instance || ''
+        ]);
 
         // ---------------------------------------------------------
 
@@ -176,7 +181,8 @@ export default class Handler extends CharacterHandler {
         if (!this.game.camera.isCentered()) this.game.updateCameraBounds();
 
         // Used to prevent sending double packets.
-        if (this.lastStepX === this.character.gridX && this.lastStepY === this.character.gridY) return;
+        if (this.lastStepX === this.character.gridX && this.lastStepY === this.character.gridY)
+            return;
 
         // Handle attackers
         this.handleAttackers();
@@ -230,7 +236,8 @@ export default class Handler extends CharacterHandler {
         if (!this.character.target) return Opcodes.Target.None;
 
         // Interaction type for npc and chests.
-        if (this.character.target.isNPC() || this.character.target.isChest()) return Opcodes.Target.Talk;
+        if (this.character.target.isNPC() || this.character.target.isChest())
+            return Opcodes.Target.Talk;
 
         // Interaction type for objects.
         if (this.character.target.isObject()) return Opcodes.Target.Object;

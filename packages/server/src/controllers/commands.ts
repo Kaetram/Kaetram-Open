@@ -53,7 +53,9 @@ export default class Commands {
                     singular = population === 1;
 
                 this.player.notify(
-                    `There ${singular ? 'is' : 'are'} currently ${population} ${singular ? 'person' : 'people'} online.`
+                    `There ${singular ? 'is' : 'are'} currently ${population} ${
+                        singular ? 'person' : 'people'
+                    } online.`
                 );
 
                 // Show the names of the players that are online.
@@ -71,7 +73,12 @@ export default class Commands {
             }
 
             case 'global': {
-                return this.player.chat(Filter.clean(blocks.join(' ')), true, false, 'rgba(191, 161, 63, 1.0)');
+                return this.player.chat(
+                    Filter.clean(blocks.join(' ')),
+                    true,
+                    false,
+                    'rgba(191, 161, 63, 1.0)'
+                );
             }
 
             case 'pm':
@@ -102,7 +109,10 @@ export default class Commands {
                     case 'kick': {
                         let username = blocks.join(' ');
 
-                        if (!username) return this.player.notify('Malformed command, expected /guild kick [username]');
+                        if (!username)
+                            return this.player.notify(
+                                'Malformed command, expected /guild kick [username]'
+                            );
 
                         this.world.guilds.kick(this.player, username);
 
@@ -116,7 +126,9 @@ export default class Commands {
                             username = blocks.join(' ');
 
                         if (!rank || !username)
-                            return this.player.notify('Malformed command, expected /guild rank [rank 0-6] [username]');
+                            return this.player.notify(
+                                'Malformed command, expected /guild rank [rank 0-6] [username]'
+                            );
 
                         // Prevent the player from setting the rank to landlord.
                         if (parseInt(rank) === 7 || rank === 'landlord')
@@ -151,7 +163,9 @@ export default class Commands {
                     targetName = blocks.join(' ').toLowerCase();
 
                 if (!duration || !targetName)
-                    return this.player.notify('Malformed command, expected /ban(mute) [duration] [username]');
+                    return this.player.notify(
+                        'Malformed command, expected /ban(mute) [duration] [username]'
+                    );
 
                 // Prevent banning yourself.
                 if (targetName === this.player.username)
@@ -159,7 +173,8 @@ export default class Commands {
 
                 let user: Player = this.world.getPlayerByName(targetName);
 
-                if (!user) return this.player.notify(`Could not find player with name: ${targetName}.`);
+                if (!user)
+                    return this.player.notify(`Could not find player with name: ${targetName}.`);
 
                 // Moderators can only mute/ban people within certain limits.
                 if (this.player.isMod()) {
@@ -210,13 +225,18 @@ export default class Commands {
             case 'forcekick': {
                 let username = blocks.join(' ');
 
-                if (!username) return this.player.notify(`Malformed command, expected /kick username`);
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /kick username`);
 
                 let player = this.world.getPlayerByName(username);
 
-                if (!player) return this.player.notify(`Could not find player with name: ${username}`);
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
 
-                player.connection.close(`${this.player.username} kicked ${username}`, command === 'forcekick');
+                player.connection.close(
+                    `${this.player.username} kicked ${username}`,
+                    command === 'forcekick'
+                );
 
                 break;
             }
@@ -285,7 +305,8 @@ export default class Commands {
                 let containerType = container === 'inventory' ? player.inventory : player.bank,
                     slot = containerType.get(index);
 
-                if (!slot.key) return this.player.notify(`Player ${username} has no item at index ${index}.`);
+                if (!slot.key)
+                    return this.player.notify(`Player ${username} has no item at index ${index}.`);
 
                 containerType.remove(index, slot.count);
 
@@ -322,7 +343,8 @@ export default class Commands {
             case 'copyinventory': {
                 let username = blocks.join(' ');
 
-                if (!username) return this.player.notify('Invalid command, usage /copybank [username]');
+                if (!username)
+                    return this.player.notify('Invalid command, usage /copybank [username]');
 
                 let player = this.world.getPlayerByName(username);
 
@@ -331,7 +353,9 @@ export default class Commands {
                 if (command === 'copybank') {
                     this.player.bank.empty();
 
-                    player.bank.forEachSlot((slot) => this.player.bank.add(this.player.bank.getItem(slot)));
+                    player.bank.forEachSlot((slot) =>
+                        this.player.bank.add(this.player.bank.getItem(slot))
+                    );
                 } else {
                     this.player.inventory.empty();
 
@@ -429,7 +453,10 @@ export default class Commands {
                 region = this.world.map.regions.get(this.player.region);
                 target = blocks.shift()!;
 
-                if (!target) return this.player.notify(`Invalid command. Usage: /allattack [target_instance]`);
+                if (!target)
+                    return this.player.notify(
+                        `Invalid command. Usage: /allattack [target_instance]`
+                    );
 
                 if (!region) return this.player.notify('Bro what.');
 
@@ -504,7 +531,9 @@ export default class Commands {
 
                 key = key.charAt(0).toUpperCase() + key.slice(1);
 
-                this.player.skills.get(Modules.Skills[key as keyof typeof Modules.Skills])?.addExperience(x);
+                this.player.skills
+                    .get(Modules.Skills[key as keyof typeof Modules.Skills])
+                    ?.addExperience(x);
 
                 return;
             }
@@ -515,7 +544,9 @@ export default class Commands {
                 username = blocks.join(' ');
 
                 if (!username || !key || !x)
-                    return this.player.notify('Malformed command, expected /setlevel [skill] [level] [username]');
+                    return this.player.notify(
+                        'Malformed command, expected /setlevel [skill] [level] [username]'
+                    );
 
                 player = this.world.getPlayerByName(username);
 
@@ -607,7 +638,10 @@ export default class Commands {
             }
 
             case 'popup': {
-                this.player.popup('New Quest Found!', '@blue@New @darkblue@quest @green@has@red@ been discovered!');
+                this.player.popup(
+                    'New Quest Found!',
+                    '@blue@New @darkblue@quest @green@has@red@ been discovered!'
+                );
 
                 break;
             }
@@ -627,7 +661,9 @@ export default class Commands {
             }
 
             case 'resetachievements': {
-                this.player.achievements.forEachAchievement((achievement) => achievement.setStage(0));
+                this.player.achievements.forEachAchievement((achievement) =>
+                    achievement.setStage(0)
+                );
 
                 this.player.updateRegion();
 
@@ -639,7 +675,8 @@ export default class Commands {
                 x = parseInt(blocks.shift()!);
                 y = parseInt(blocks.shift()!);
 
-                if (!instance) return this.player.notify(`Malformed command, expected /movenpc instance x y`);
+                if (!instance)
+                    return this.player.notify(`Malformed command, expected /movenpc instance x y`);
 
                 entity = this.entities.get(instance) as Character;
 
@@ -655,12 +692,14 @@ export default class Commands {
                 instance = blocks.shift()!;
                 target = blocks.shift()!;
 
-                if (!instance || !target) return this.player.notify(`Malformed command, expected /nvn instance target`);
+                if (!instance || !target)
+                    return this.player.notify(`Malformed command, expected /nvn instance target`);
 
                 entity = this.entities.get(instance) as Character;
                 targetEntity = this.entities.get(target) as Character;
 
-                if (!entity || !targetEntity) return this.player.notify(`Could not find entity instances specified.`);
+                if (!entity || !targetEntity)
+                    return this.player.notify(`Could not find entity instances specified.`);
 
                 entity.combat.attack(targetEntity);
 
@@ -672,7 +711,10 @@ export default class Commands {
             case 'kill': {
                 username = blocks.join(' ');
 
-                if (!username) return this.player.notify(`Malformed command, expected /kill username/instance`);
+                if (!username)
+                    return this.player.notify(
+                        `Malformed command, expected /kill username/instance`
+                    );
 
                 player = this.world.getPlayerByName(username);
 
@@ -688,7 +730,8 @@ export default class Commands {
             case 'finishquest': {
                 questKey = blocks.shift()!;
 
-                if (!questKey) return this.player.notify(`Malformed command, expected /finishquest questKey`);
+                if (!questKey)
+                    return this.player.notify(`Malformed command, expected /finishquest questKey`);
 
                 quest = this.player.quests.get(questKey);
 
@@ -702,7 +745,9 @@ export default class Commands {
                 achievementKey = blocks.shift()!;
 
                 if (!achievementKey)
-                    return this.player.notify(`Malformed command, expected /finishachievement achievementKey`);
+                    return this.player.notify(
+                        `Malformed command, expected /finishachievement achievementKey`
+                    );
 
                 achievement = this.player.achievements.get(achievementKey);
 
@@ -713,7 +758,9 @@ export default class Commands {
             }
 
             case 'finishachievements': {
-                return this.player.achievements.forEachAchievement((achievement) => achievement.finish());
+                return this.player.achievements.forEachAchievement((achievement) =>
+                    achievement.finish()
+                );
             }
 
             case 'poison': {
@@ -724,9 +771,13 @@ export default class Commands {
 
                     entity = this.entities.get(instance) as Character;
 
-                    if (!entity) return this.player.notify(`Could not find entity with instance: ${instance}`);
+                    if (!entity)
+                        return this.player.notify(
+                            `Could not find entity with instance: ${instance}`
+                        );
 
-                    if (!entity.isMob() && !entity.isPlayer()) this.player.notify('That entity cannot be poisoned.');
+                    if (!entity.isMob() && !entity.isPlayer())
+                        this.player.notify('That entity cannot be poisoned.');
 
                     if (entity.poison) {
                         entity.setPoison();
@@ -785,11 +836,13 @@ export default class Commands {
             case 'talk': {
                 instance = blocks.shift()!;
 
-                if (!instance) return this.player.notify(`Malformed command, expected /talk instance`);
+                if (!instance)
+                    return this.player.notify(`Malformed command, expected /talk instance`);
 
                 targetEntity = this.entities.get(instance) as Character;
 
-                if (!targetEntity) return this.player.notify(`Could not find entity with instance: ${instance}`);
+                if (!targetEntity)
+                    return this.player.notify(`Could not find entity with instance: ${instance}`);
 
                 (targetEntity as Mob).talkCallback?.('This is a test talking message lol');
 
@@ -800,9 +853,12 @@ export default class Commands {
                 x = parseInt(blocks.shift()!);
                 y = parseInt(blocks.shift()!);
 
-                if (!x || !y) return this.player.notify(`Malformed command, expected /distance x y`);
+                if (!x || !y)
+                    return this.player.notify(`Malformed command, expected /distance x y`);
 
-                this.player.notify(`Distance: ${Utils.getDistance(this.player.x, this.player.y, x, y)}`);
+                this.player.notify(
+                    `Distance: ${Utils.getDistance(this.player.x, this.player.y, x, y)}`
+                );
 
                 break;
             }
@@ -821,7 +877,9 @@ export default class Commands {
                     entity.deathCallback?.(this.player);
                 });
 
-                this.player.notify('Congratulations, you killed everyone, are you happy with yourself?');
+                this.player.notify(
+                    'Congratulations, you killed everyone, are you happy with yourself?'
+                );
 
                 break;
             }
@@ -846,7 +904,8 @@ export default class Commands {
                 key = blocks.shift()!;
                 x = parseInt(blocks.shift()!);
 
-                if (!key || !x) return this.player.notify(`Malformed command, expected /setability key level`);
+                if (!key || !x)
+                    return this.player.notify(`Malformed command, expected /setability key level`);
 
                 this.player.abilities.setLevel(key, x);
 
@@ -858,7 +917,9 @@ export default class Commands {
                 x = parseInt(blocks.shift()!);
 
                 if (!key || isNaN(x))
-                    return this.player.notify(`Malformed command, expected /setquickslot key quickslot`);
+                    return this.player.notify(
+                        `Malformed command, expected /setquickslot key quickslot`
+                    );
 
                 this.player.abilities.setQuickSlot(key, x);
                 break;
@@ -893,7 +954,8 @@ export default class Commands {
             case 'openbank': {
                 let username = blocks.shift()!;
 
-                if (!username) return this.player.notify(`Malformed command, expected /openbank username`);
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /openbank username`);
 
                 let player = this.world.getPlayerByName(username);
 
@@ -917,7 +979,10 @@ export default class Commands {
                 player = this.world.getPlayerByName(username);
 
                 if (!player)
-                    return this.world.database.setRank(username, Modules.Ranks[rankText as keyof typeof Modules.Ranks]);
+                    return this.world.database.setRank(
+                        username,
+                        Modules.Ranks[rankText as keyof typeof Modules.Ranks]
+                    );
 
                 let rank = Modules.Ranks[rankText as keyof typeof Modules.Ranks];
 
@@ -950,7 +1015,8 @@ export default class Commands {
             case 'ipban': {
                 let username = blocks.join(' ');
 
-                if (!username) return log.info(`Malformed command, expected /${command} <username>`);
+                if (!username)
+                    return log.info(`Malformed command, expected /${command} <username>`);
 
                 let player = this.world.getPlayerByName(username);
 
@@ -961,7 +1027,8 @@ export default class Commands {
                 this.player.notify(`Player ${player.username} has been IP banned`);
 
                 // Kick all players with the same IP.
-                for (let p of this.entities.getPlayersByIp(player.connection.address)) p.connection.reject('banned');
+                for (let p of this.entities.getPlayersByIp(player.connection.address))
+                    p.connection.reject('banned');
 
                 break;
             }
@@ -980,7 +1047,8 @@ export default class Commands {
                 let x = parseInt(blocks.shift()!) || this.player.x,
                     y = parseInt(blocks.shift()!) || this.player.y;
 
-                if (!x || !y) return this.player.notify(`Malformed command, expected /collision x y`);
+                if (!x || !y)
+                    return this.player.notify(`Malformed command, expected /collision x y`);
 
                 let index = this.world.map.coordToIndex(x, y);
 

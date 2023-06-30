@@ -78,7 +78,9 @@ export default class LootBag extends Entity {
     public open(player: Player): void {
         // Prevent cheating and packet manipulation.
         if (this.getDistance(player) > 1)
-            return log.warning(`open(): Player ${player.username} tried to open a loot bag that was too far away.`);
+            return log.warning(
+                `open(): Player ${player.username} tried to open a loot bag that was too far away.`
+            );
 
         player.activeLootBag = this.instance;
 
@@ -99,10 +101,13 @@ export default class LootBag extends Entity {
 
     public take(player: Player, index: number, count = 1): void {
         if (this.instance !== player.activeLootBag)
-            return log.warning(`Player ${player.username} tried to take an item from a loot bag without opening it.`);
+            return log.warning(
+                `Player ${player.username} tried to take an item from a loot bag without opening it.`
+            );
 
         // Double check that the player has access to the loot bag.
-        if (!this.isOwner(player.username)) return player.notify(`You cannot access this loot bag right now.`);
+        if (!this.isOwner(player.username))
+            return player.notify(`You cannot access this loot bag right now.`);
 
         // Verify that the player is close enough to the lootbag.
         if (this.getDistance(player) > 1)
@@ -125,7 +130,8 @@ export default class LootBag extends Entity {
             return player.notify(`You cannot access this loot bag right now.`);
 
         // Ensure the player has enough space in their inventory.
-        if (!player.inventory.hasSpace()) return player.notify(`You do not have enough space in your inventory.`);
+        if (!player.inventory.hasSpace())
+            return player.notify(`You do not have enough space in your inventory.`);
 
         // Removes the item from the loot bag.
         delete this.container[index];

@@ -126,7 +126,9 @@ export default class Coursing extends Minigame {
     public override getSpawnPoint(isPrey = false): Position {
         if (!this.started) return super.getSpawnPoint();
 
-        let area = isPrey ? this.preySpawns[Utils.randomInt(0, this.preySpawns.length - 1)] : this.hunterSpawn;
+        let area = isPrey
+            ? this.preySpawns[Utils.randomInt(0, this.preySpawns.length - 1)]
+            : this.hunterSpawn;
 
         return {
             x: Utils.randomInt(area.x + 1, area.x + area.width - 1),
@@ -158,7 +160,10 @@ export default class Coursing extends Minigame {
         this.started = true;
 
         // The length of players is always even, so we check that here.
-        let count = this.playersInLobby.length % 2 === 0 ? this.playersInLobby.length : this.playersInLobby.length - 1,
+        let count =
+                this.playersInLobby.length % 2 === 0
+                    ? this.playersInLobby.length
+                    : this.playersInLobby.length - 1,
             hunters = this.playersInLobby.splice(0, count / 2),
             prey = this.playersInLobby.splice(0, count / 2);
 

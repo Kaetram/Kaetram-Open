@@ -108,7 +108,10 @@ export default class Quests extends Menu {
         if (quest.rewards) this.rewards.innerHTML = quest.rewards.join('<br>');
 
         // No requirements to display, so we stop here.
-        if (Object.keys(quest.skillRequirements).length === 0 && quest.questRequirements.length === 0) {
+        if (
+            Object.keys(quest.skillRequirements).length === 0 &&
+            quest.questRequirements.length === 0
+        ) {
             this.requirements.innerHTML = 'None';
             return;
         }

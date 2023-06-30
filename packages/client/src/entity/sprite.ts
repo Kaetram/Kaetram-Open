@@ -88,7 +88,8 @@ export default class Sprite {
             this.loaded = true;
 
             // Ignore drawing hurt sprites for item types and very small sprites.
-            if (this.key.includes('items') && this.image.width > 96) this.hurtSprite = Utils.getHurtSprite(this);
+            if (this.key.includes('items') && this.image.width > 96)
+                this.hurtSprite = Utils.getHurtSprite(this);
 
             // Load the silhouette sprite for the entity if it has one.
             if (this.hasSilhouette()) this.silhouetteSprite = Utils.getSilhouetteSprite(this);
@@ -107,7 +108,8 @@ export default class Sprite {
      */
 
     private loadAnimations(): void {
-        if (!this.data.animations) this.data.animations = Utils.getDefaultAnimations(this.getType());
+        if (!this.data.animations)
+            this.data.animations = Utils.getDefaultAnimations(this.getType());
 
         for (let name in this.data.animations) {
             let info = this.data.animations[name];
@@ -116,7 +118,13 @@ export default class Sprite {
             if (name === 'death') this.hasDeathAnimation = true;
 
             // Create an animation for the sprite.
-            this.animations[name] = new Animation(name, info.length, info.row, this.width, this.height);
+            this.animations[name] = new Animation(
+                name,
+                info.length,
+                info.row,
+                this.width,
+                this.height
+            );
         }
     }
 

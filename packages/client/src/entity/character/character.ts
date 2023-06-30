@@ -146,7 +146,8 @@ export default class Character extends Entity {
                 if (!effect.perpetual) this.removeEffect(keyValue);
 
                 // Terror effect has a secondary effect that is added to the character.
-                if (keyValue === Modules.Effects.Terror) this.addEffect(Modules.Effects.TerrorStatus);
+                if (keyValue === Modules.Effects.Terror)
+                    this.addEffect(Modules.Effects.TerrorStatus);
 
                 effect.animation.reset();
                 effect.animation.count = 1;
@@ -164,7 +165,12 @@ export default class Character extends Entity {
      * @param onEndCount A function to be called upon animation completion.
      */
 
-    public override setAnimation(name: string, speed = 120, count = 0, onEndCount?: () => void): void {
+    public override setAnimation(
+        name: string,
+        speed = 120,
+        count = 0,
+        onEndCount?: () => void
+    ): void {
         let o = ['atk', 'walk', 'idle'];
 
         // Do not perform another animation while the death one is playing.
@@ -174,7 +180,9 @@ export default class Character extends Entity {
         this.spriteFlipY = false;
 
         if (o.includes(name)) {
-            name += `_${this.orientation === Modules.Orientation.Left ? 'right' : this.orientationToString()}`;
+            name += `_${
+                this.orientation === Modules.Orientation.Left ? 'right' : this.orientationToString()
+            }`;
             this.spriteFlipX = this.orientation === Modules.Orientation.Left;
         }
 
@@ -595,7 +603,8 @@ export default class Character extends Entity {
             this.path = null;
             this.idle();
 
-            if (this.stopPathingCallback) this.stopPathingCallback(this.gridX, this.gridY, this.forced);
+            if (this.stopPathingCallback)
+                this.stopPathingCallback(this.gridX, this.gridY, this.forced);
 
             this.forced = false;
         }
@@ -612,16 +621,20 @@ export default class Character extends Entity {
         if (!path) return;
 
         // nextStepX < prevStepX -> walking to the left
-        if (path[step][0] < path[step - 1][0]) this.performAction(Modules.Orientation.Left, Modules.Actions.Walk);
+        if (path[step][0] < path[step - 1][0])
+            this.performAction(Modules.Orientation.Left, Modules.Actions.Walk);
 
         // nextStepX > prevStepX -> walking to the right
-        if (path[step][0] > path[step - 1][0]) this.performAction(Modules.Orientation.Right, Modules.Actions.Walk);
+        if (path[step][0] > path[step - 1][0])
+            this.performAction(Modules.Orientation.Right, Modules.Actions.Walk);
 
         // nextStepY < prevStepY -> walking to the top
-        if (path[step][1] < path[step - 1][1]) this.performAction(Modules.Orientation.Up, Modules.Actions.Walk);
+        if (path[step][1] < path[step - 1][1])
+            this.performAction(Modules.Orientation.Up, Modules.Actions.Walk);
 
         // nextStepY > prevStepY -> walking to the bottom
-        if (path[step][1] > path[step - 1][1]) this.performAction(Modules.Orientation.Down, Modules.Actions.Walk);
+        if (path[step][1] > path[step - 1][1])
+            this.performAction(Modules.Orientation.Down, Modules.Actions.Walk);
     }
 
     /**
@@ -773,7 +786,11 @@ export default class Character extends Entity {
          * parameter. But we are throwing in an extra.
          */
 
-        let character = new Character(`${position.gridX}-${position.gridY}`, Modules.EntityType.Object, this.game);
+        let character = new Character(
+            `${position.gridX}-${position.gridY}`,
+            Modules.EntityType.Object,
+            this.game
+        );
         character.setGridPosition(position.gridX, position.gridY);
 
         this.setTarget(character);

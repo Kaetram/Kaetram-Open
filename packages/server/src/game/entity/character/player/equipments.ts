@@ -96,7 +96,10 @@ export default class Equipments {
      */
 
     public equip(item: Item): void {
-        if (!item) return log.warning(`[${this.player.username}] Attempted to equip something mysterious.`);
+        if (!item)
+            return log.warning(
+                `[${this.player.username}] Attempted to equip something mysterious.`
+            );
 
         let type = item.getEquipmentType()!,
             equipment = this.get(type);
@@ -104,9 +107,12 @@ export default class Equipments {
         if (!equipment) return;
 
         if (!equipment.isEmpty())
-            this.player.inventory.add(new Item(equipment.key, -1, -1, false, equipment.count, equipment.enchantments));
+            this.player.inventory.add(
+                new Item(equipment.key, -1, -1, false, equipment.count, equipment.enchantments)
+            );
 
-        if (equipment instanceof Weapon) equipment.update(item, this.player.getLastAttackStyle(item.weaponType));
+        if (equipment instanceof Weapon)
+            equipment.update(item, this.player.getLastAttackStyle(item.weaponType));
         else equipment.update(item);
 
         this.equipCallback?.(equipment);
@@ -170,7 +176,8 @@ export default class Equipments {
         let weapon = this.getWeapon();
 
         // Ensure the weapon has the attack style.
-        if (!weapon.hasAttackStyle(style)) return log.warning(`[${this.player.username}] Invalid attack style.`);
+        if (!weapon.hasAttackStyle(style))
+            return log.warning(`[${this.player.username}] Invalid attack style.`);
 
         // Set new attack style.
         this.getWeapon().updateAttackStyle(style);
@@ -328,7 +335,9 @@ export default class Equipments {
     public serialize(clientInfo = false): SerializedEquipment {
         let equipments: EquipmentData[] = [];
 
-        this.forEachEquipment((equipment: Equipment) => equipments.push(equipment.serialize(clientInfo)));
+        this.forEachEquipment((equipment: Equipment) =>
+            equipments.push(equipment.serialize(clientInfo))
+        );
 
         // Store in an object so that it gets saved into Database faster.
         return { equipments };

@@ -171,7 +171,8 @@ export default class Messages {
         let packet = data.shift()!,
             message = this.messages[packet]();
 
-        if (message && typeof message === 'function') message.call(this, ...(data as unknown[] as never[]));
+        if (message && typeof message === 'function')
+            message.call(this, ...(data as unknown[] as never[]));
     }
 
     /**
@@ -235,7 +236,9 @@ export default class Messages {
             }
 
             case 'invalidinput': {
-                this.app.sendError('The input you have entered is invalid. Please do not use special characters.');
+                this.app.sendError(
+                    'The input you have entered is invalid. Please do not use special characters.'
+                );
                 break;
             }
 

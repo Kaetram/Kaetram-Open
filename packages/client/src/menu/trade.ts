@@ -16,11 +16,15 @@ type SelectCallback = (type: Modules.ContainerType, index: number, count?: numbe
 export default class Trade extends Menu {
     public override hideOnShow = false;
 
-    private inventoryList: HTMLUListElement = document.querySelector('#trade-inventory-slots > ul')!;
+    private inventoryList: HTMLUListElement = document.querySelector(
+        '#trade-inventory-slots > ul'
+    )!;
 
     // Where we visually display the changes to the trade.
     private playerSlots: HTMLUListElement = document.querySelector('#trade-player-slots > ul')!;
-    private otherPlayerSlots: HTMLUListElement = document.querySelector('#trade-oplayer-slots > ul')!;
+    private otherPlayerSlots: HTMLUListElement = document.querySelector(
+        '#trade-oplayer-slots > ul'
+    )!;
 
     private playerName: HTMLElement = document.querySelector('#trade-player-name')!;
     private otherPlayerName: HTMLElement = document.querySelector('#trade-oplayer-name')!;
@@ -73,7 +77,9 @@ export default class Trade extends Menu {
             );
 
             // Player slots
-            this.playerSlots.append(Util.createSlot(Modules.ContainerType.Trade, i, this.select.bind(this)));
+            this.playerSlots.append(
+                Util.createSlot(Modules.ContainerType.Trade, i, this.select.bind(this))
+            );
 
             // Other player slots
             this.otherPlayerSlots.append(Util.createSlot(Modules.ContainerType.Trade, i));
@@ -158,20 +164,26 @@ export default class Trade extends Menu {
      */
 
     public override add(index: number, count: number, key: string, otherPlayer = false): void {
-        let slot = otherPlayer ? this.otherPlayerSlots.children[index] : this.playerSlots.children[index],
+        let slot = otherPlayer
+                ? this.otherPlayerSlots.children[index]
+                : this.playerSlots.children[index],
             image = slot.querySelector<HTMLElement>('.item-image')!,
             slotCount = slot.querySelector<HTMLElement>('.item-count')!;
 
         // Reset the trade status when an update occurs
         this.tradeStatus.innerHTML = '';
         // Update the icon of the item that is being added.
-        image.style.backgroundImage = otherPlayer ? Util.getImageURL(key) : this.getElementImage(this.inventoryIndex);
+        image.style.backgroundImage = otherPlayer
+            ? Util.getImageURL(key)
+            : this.getElementImage(this.inventoryIndex);
 
         // Update the count of the item that is being added.
         slotCount.innerHTML = count > 1 ? Util.getCount(count) : '';
 
         if (!otherPlayer) {
-            let itemCount = this.getElement(this.inventoryIndex).querySelector<HTMLElement>('.item-count')!,
+            let itemCount = this.getElement(this.inventoryIndex).querySelector<HTMLElement>(
+                    '.item-count'
+                )!,
                 actualCount = this.inventory.getCount(this.inventoryIndex) - count;
 
             // Store the inventory slot into the trade slot if it is the current player adding the item.
@@ -192,7 +204,9 @@ export default class Trade extends Menu {
      */
 
     public override remove(index: number, otherPlayer = false): void {
-        let slot = otherPlayer ? this.otherPlayerSlots.children[index] : this.playerSlots.children[index],
+        let slot = otherPlayer
+                ? this.otherPlayerSlots.children[index]
+                : this.playerSlots.children[index],
             image = slot.querySelector<HTMLElement>('.item-image')!,
             slotCount = slot.querySelector<HTMLElement>('.item-count')!;
 
@@ -200,7 +214,11 @@ export default class Trade extends Menu {
         if (!otherPlayer) {
             let inventoryIndex = (slot as PlayerSlot).inventoryIndex!;
 
-            this.setSlot(inventoryIndex, image.style.backgroundImage, this.inventory.getCount(inventoryIndex));
+            this.setSlot(
+                inventoryIndex,
+                image.style.backgroundImage,
+                this.inventory.getCount(inventoryIndex)
+            );
         }
 
         // Clear the image and count of the slot.

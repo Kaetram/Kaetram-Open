@@ -31,7 +31,8 @@ export default class Enchanter {
             return player.send(new Enchant(Opcodes.Enchant.Select, { index, isShard: true }));
 
         // Check that the item is enchantable.
-        if (slot.count > 1 || !slot.equippable || slot.maxStackSize > 1) return player.notify(EnchantEn.CANNOT_ENCHANT);
+        if (slot.count > 1 || !slot.equippable || slot.maxStackSize > 1)
+            return player.notify(EnchantEn.CANNOT_ENCHANT);
 
         // Check that the item has available enchantments.
         if (player.inventory.getItem(slot).getAvailableEnchantments().length === 0)
@@ -90,7 +91,8 @@ export default class Enchanter {
         let enchantment = enchantments[Utils.randomInt(0, enchantments.length - 1)],
             level = Utils.randomInt(1, tier);
 
-        if (!this.canEnchant(item, enchantment, level)) return player.notify(EnchantEn.FAILED_ENCHANT);
+        if (!this.canEnchant(item, enchantment, level))
+            return player.notify(EnchantEn.FAILED_ENCHANT);
 
         // Apply the enchantment only if the level is greater or it doesn't exist.
         item.setEnchantment(enchantment, level);

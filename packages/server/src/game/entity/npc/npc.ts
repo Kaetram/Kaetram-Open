@@ -94,7 +94,8 @@ export default class NPC extends Entity {
 
     private getNameColour(player?: Player): string {
         if (player) {
-            if (player.quests.getQuestFromNPC(this)) return Modules.NameColours[SpecialEntityTypes.Quest];
+            if (player.quests.getQuestFromNPC(this))
+                return Modules.NameColours[SpecialEntityTypes.Quest];
             if (player?.achievements.getAchievementFromEntity(this))
                 return Modules.NameColours[SpecialEntityTypes.Achievement];
         }

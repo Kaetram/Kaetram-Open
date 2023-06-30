@@ -169,7 +169,8 @@ export default class Incoming {
             if (email) this.player.email = email;
 
             // Reject connection if player is already logged in.
-            if (this.world.isOnline(this.player.username)) return this.connection.reject('loggedin');
+            if (this.world.isOnline(this.player.username))
+                return this.connection.reject('loggedin');
 
             // Proceed directly to login with default player data if skip database is present.
             if (config.skipDatabase) {
@@ -250,7 +251,9 @@ export default class Incoming {
             if (!entity || entity.dead) continue;
 
             /* We handle player-specific entity statuses here. */
-            this.player.send(new Spawn(entity, entity.hasDisplayInfo(this.player) ? this.player : undefined));
+            this.player.send(
+                new Spawn(entity, entity.hasDisplayInfo(this.player) ? this.player : undefined)
+            );
         }
     }
 
@@ -278,8 +281,17 @@ export default class Incoming {
      */
 
     private handleMovement(data: MovementPacket): void {
-        let { opcode, requestX, requestY, playerX, playerY, movementSpeed, targetInstance, orientation, timestamp } =
-                data,
+        let {
+                opcode,
+                requestX,
+                requestY,
+                playerX,
+                playerY,
+                movementSpeed,
+                targetInstance,
+                orientation,
+                timestamp
+            } = data,
             entity: Entity;
 
         if (this.player.isDead()) return;
@@ -296,7 +308,12 @@ export default class Incoming {
             }
 
             case Opcodes.Movement.Started: {
-                return this.player.handleMovementStarted(playerX!, playerY!, movementSpeed!, targetInstance!);
+                return this.player.handleMovementStarted(
+                    playerX!,
+                    playerY!,
+                    movementSpeed!,
+                    targetInstance!
+                );
             }
 
             case Opcodes.Movement.Step: {
@@ -304,7 +321,12 @@ export default class Incoming {
             }
 
             case Opcodes.Movement.Stop: {
-                return this.player.handleMovementStop(playerX!, playerY!, targetInstance!, orientation!);
+                return this.player.handleMovementStop(
+                    playerX!,
+                    playerY!,
+                    targetInstance!,
+                    orientation!
+                );
             }
 
             case Opcodes.Movement.Entity: {
@@ -435,11 +457,19 @@ export default class Incoming {
             }
 
             case Opcodes.Container.Remove: {
-                return this.player.handleContainerRemove(packet.type, packet.fromIndex!, packet.value!);
+                return this.player.handleContainerRemove(
+                    packet.type,
+                    packet.fromIndex!,
+                    packet.value!
+                );
             }
 
             case Opcodes.Container.Swap: {
-                return this.player.handleContainerSwap(packet.type, packet.fromIndex!, packet.value!);
+                return this.player.handleContainerSwap(
+                    packet.type,
+                    packet.fromIndex!,
+                    packet.value!
+                );
             }
         }
     }
@@ -503,7 +533,8 @@ export default class Incoming {
      */
 
     private handleEnchant(packet: EnchantPacket): void {
-        if (!this.player.canAccessContainer) return this.player.notify('You cannot do that right now.');
+        if (!this.player.canAccessContainer)
+            return this.player.notify('You cannot do that right now.');
 
         // Sanitize the index and the shard index.
         if (packet.index) packet.index = Utils.sanitizeNumber(packet.index);
@@ -649,7 +680,8 @@ export default class Incoming {
 
     private handleCrafting(data: CraftingPacket): void {
         // Ensure the player is not maliciously trying to craft something.
-        if (this.player.activeCraftingInterface === -1) return this.player.notify(`You cannot do that right now.`);
+        if (this.player.activeCraftingInterface === -1)
+            return this.player.notify(`You cannot do that right now.`);
 
         // Sanitize the packet information to prevent any funny business.
         if (data.count) data.count = Utils.sanitizeNumber(data.count, true);
