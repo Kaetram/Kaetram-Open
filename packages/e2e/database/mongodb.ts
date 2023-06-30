@@ -66,7 +66,11 @@ export default class MongoDB {
      * @param callback Raw data from the database or nothing if a problem occurs.
      */
 
-    public load(filter: { [key: string]: string }, collection: string, callback: (data: unknown[]) => void): void {
+    public load(
+        filter: { [key: string]: string },
+        collection: string,
+        callback: (data: unknown[]) => void
+    ): void {
         // Used for when we're working without a database to return empty data.
         if (!this.database || config.skipDatabase) return callback([]);
 
@@ -91,21 +95,32 @@ export default class MongoDB {
         collection.updateOne(filter, { $set: body }, { upsert: true }, (error, result) => {
             if (error)
                 log.error(
-                    `An error occurred while saving ${collection.collectionName} for ${JSON.stringify(filter)}:`,
+                    `An error occurred while saving ${
+                        collection.collectionName
+                    } for ${JSON.stringify(filter)}:`,
                     error
                 );
 
-            if (!result) log.error(`Unable to save ${collection.collectionName} for ${JSON.stringify(filter)}.`);
+            if (!result)
+                log.error(
+                    `Unable to save ${collection.collectionName} for ${JSON.stringify(filter)}.`
+                );
             callback(error);
         });
     }
 
-    public delete(filter: { [key: string]: string }, collectionName: string, callback: (error?: AnyError) => void) {
+    public delete(
+        filter: { [key: string]: string },
+        collectionName: string,
+        callback: (error?: AnyError) => void
+    ) {
         let collection = this.database.collection(collectionName);
         collection.deleteOne(filter, (error) => {
             if (error)
                 log.error(
-                    `An error occurred while deleting ${JSON.stringify(filter)} from ${collection.collectionName}:`,
+                    `An error occurred while deleting ${JSON.stringify(filter)} from ${
+                        collection.collectionName
+                    }:`,
                     error
                 );
             callback(error);
@@ -117,7 +132,9 @@ export default class MongoDB {
         collection
             .drop()
             .then((success) => {
-                callback(success ? undefined : new Error(`Could not drop collection [${collectionName}]`));
+                callback(
+                    success ? undefined : new Error(`Could not drop collection [${collectionName}]`)
+                );
             })
             .catch(function () {
                 callback(new Error(`Could not drop collection [${collectionName}]`));

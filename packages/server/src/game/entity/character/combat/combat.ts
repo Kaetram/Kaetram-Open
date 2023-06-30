@@ -179,7 +179,11 @@ export default class Combat {
         // Only archery based weapons check for arrows.
         if (!this.character.isMagic() && !this.character.hasArrows()) return this.stop();
 
-        let projectile = this.character.world.entities.spawnProjectile(this.character, this.character.target!, hit);
+        let projectile = this.character.world.entities.spawnProjectile(
+            this.character,
+            this.character.target!,
+            hit
+        );
 
         // Spawn the projectile in the game client.
         this.character.sendToRegions(new Spawn(projectile));
@@ -196,7 +200,11 @@ export default class Combat {
 
         return new Hit(
             damageType,
-            Formulas.getDamage(this.character, this.character.target!, damageType === Modules.Hits.Critical),
+            Formulas.getDamage(
+                this.character,
+                this.character.target!,
+                damageType === Modules.Hits.Critical
+            ),
             this.character.isRanged(),
             this.character.getAoE()
         );

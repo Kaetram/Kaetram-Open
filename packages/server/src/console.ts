@@ -35,7 +35,9 @@ export default class Console {
             switch (command) {
                 case 'players': {
                     log.info(
-                        `There are a total of ${this.world.entities.getPlayerUsernames().length} player(s) logged in.`
+                        `There are a total of ${
+                            this.world.entities.getPlayerUsernames().length
+                        } player(s) logged in.`
                     );
 
                     break;
@@ -99,11 +101,15 @@ export default class Console {
 
                     if (!player) return log.info(`Player not found.`);
 
-                    player.setRank(command === 'setadmin' ? Modules.Ranks.Admin : Modules.Ranks.Moderator);
+                    player.setRank(
+                        command === 'setadmin' ? Modules.Ranks.Admin : Modules.Ranks.Moderator
+                    );
 
                     player.sync();
 
-                    log.info(`${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`);
+                    log.info(
+                        `${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`
+                    );
 
                     break;
                 }
@@ -138,7 +144,8 @@ export default class Console {
                     log.info(`IP ${ip} has been banned.`);
 
                     // Kick all players with the same IP.
-                    for (let player of this.world.entities.getPlayersByIp(ip)) player.connection.reject('banned');
+                    for (let player of this.world.entities.getPlayersByIp(ip))
+                        player.connection.reject('banned');
                 }
 
                 case 'save': {

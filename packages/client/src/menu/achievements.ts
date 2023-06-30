@@ -7,7 +7,9 @@ import type Task from '../entity/character/player/task';
 
 export default class Achievements extends Menu {
     private tabArrowLeft: HTMLDivElement = document.querySelector('#achievements-tab-arrow-left')!;
-    private tabArrowRight: HTMLDivElement = document.querySelector('#achievements-tab-arrow-right')!;
+    private tabArrowRight: HTMLDivElement = document.querySelector(
+        '#achievements-tab-arrow-right'
+    )!;
 
     private tabText: HTMLSpanElement = document.querySelector('#achievements-tab-text')!;
 
@@ -237,7 +239,10 @@ export default class Achievements extends Menu {
             coin?.remove();
 
             // No progress element found.
-            if (progress) progress.innerHTML = task.isStarted() ? `${task.stage - 1}/${task.stageCount - 1}` : '';
+            if (progress)
+                progress.innerHTML = task.isStarted()
+                    ? `${task.stage - 1}/${task.stageCount - 1}`
+                    : '';
             else {
                 progress = this.createProgress(task);
                 element.append(progress);

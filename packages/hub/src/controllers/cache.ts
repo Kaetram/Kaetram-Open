@@ -8,7 +8,12 @@ import Database from '@kaetram/common/database/database';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type { RawData } from '@kaetram/common/types/mob';
 import type { Modules } from '@kaetram/common/network';
-import type { MobAggregate, PvpAggregate, SkillExperience, TotalExperience } from '@kaetram/common/types/leaderboards';
+import type {
+    MobAggregate,
+    PvpAggregate,
+    SkillExperience,
+    TotalExperience
+} from '@kaetram/common/types/leaderboards';
 
 export default class Cache {
     /**
@@ -73,7 +78,8 @@ export default class Cache {
      */
 
     public getTotalExperience(callback?: (totalExperience: TotalExperience[]) => void): void {
-        if (!this.canAggregateData(this.lastAggregates.total)) return callback?.(this.totalExperience);
+        if (!this.canAggregateData(this.lastAggregates.total))
+            return callback?.(this.totalExperience);
 
         this.database.getTotalExperienceAggregate((data: TotalExperience[]) => {
             for (let info of data) if (!info.cheater) delete info.cheater;
@@ -92,8 +98,12 @@ export default class Cache {
      * @param callback Contains the leaderboards information for the skills (in descending order).
      */
 
-    public getSkillsExperience(skill: Modules.Skills, callback: (skillInfo: SkillExperience[]) => void): void {
-        if (!this.canAggregateData(this.lastAggregates[skill])) return callback(this.skillsExperience[skill]);
+    public getSkillsExperience(
+        skill: Modules.Skills,
+        callback: (skillInfo: SkillExperience[]) => void
+    ): void {
+        if (!this.canAggregateData(this.lastAggregates[skill]))
+            return callback(this.skillsExperience[skill]);
 
         this.database.getSkillAggregate(skill, (data: SkillExperience[]) => {
             for (let info of data) if (!info.cheater) delete info.cheater;
@@ -112,7 +122,8 @@ export default class Cache {
      */
 
     public getMobKills(key: string, callback: (mobInfo: MobAggregate[]) => void): void {
-        if (!this.canAggregateData(this.lastAggregates[key])) return callback(this.mobAggregates[key]);
+        if (!this.canAggregateData(this.lastAggregates[key]))
+            return callback(this.mobAggregates[key]);
 
         this.database.getMobAggregate(key, (data: MobAggregate[]) => {
             callback((this.mobAggregates[key] = data));

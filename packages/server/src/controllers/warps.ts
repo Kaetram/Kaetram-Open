@@ -29,9 +29,11 @@ export default class Warp {
         if (!this.warps) return;
 
         // Prevent warping outside the tutorial.
-        if (!player.quests.isTutorialFinished()) return player.notify(`You must finish the tutorial before warping.`);
+        if (!player.quests.isTutorialFinished())
+            return player.notify(`You must finish the tutorial before warping.`);
 
-        if (player.inCombat()) return player.notify(`You must wait 10 seconds after finishing combat to warp.`);
+        if (player.inCombat())
+            return player.notify(`You must wait 10 seconds after finishing combat to warp.`);
 
         // Prevent teleporting too often.
         if (!this.isCooldown(player))
@@ -104,7 +106,9 @@ export default class Warp {
             let quest = player.quests.get(warp.quest);
 
             if (!quest?.isFinished()) {
-                player.notify(`You must complete ${quest.name} to warp to ${Utils.formatName(warp.name)}.`);
+                player.notify(
+                    `You must complete ${quest.name} to warp to ${Utils.formatName(warp.name)}.`
+                );
                 return false;
             }
         }

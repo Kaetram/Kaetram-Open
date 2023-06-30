@@ -132,7 +132,10 @@ export default {
      */
 
     formatName(name = '', trim = 0): string {
-        name = name.replace(/\w\S*/g, (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase());
+        name = name.replace(
+            /\w\S*/g,
+            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+        );
 
         // Trim the name if specified.
         if (trim > 1 && name.length > trim) name = `${name.slice(0, Math.max(0, trim))}...`;
@@ -322,7 +325,8 @@ export default {
                 y = Math.floor(i / 4 / sprite.image.width);
 
             // Test edge cases, we don't want to draw a silhouette on the edge of the sprite.
-            if (x === 0 || x === sprite.image.width - 1 || y === 0 || y === sprite.image.height - 1) continue;
+            if (x === 0 || x === sprite.image.width - 1 || y === 0 || y === sprite.image.height - 1)
+                continue;
 
             // Verify the up, down, left and right pixels.
             let adjacentPixels = [

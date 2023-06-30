@@ -33,7 +33,14 @@ export default class Header {
      */
 
     private handleHitPoints(hitPoints: number, maxHitPoints: number, decrease?: boolean): void {
-        this.setPoints(this.health, this.healthMask, this.healthText, hitPoints, maxHitPoints, decrease);
+        this.setPoints(
+            this.health,
+            this.healthMask,
+            this.healthText,
+            hitPoints,
+            maxHitPoints,
+            decrease
+        );
     }
 
     /**

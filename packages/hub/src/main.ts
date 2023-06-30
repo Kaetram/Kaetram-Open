@@ -70,7 +70,12 @@ export default class Main {
      * @param population The current population of all the servers.
      */
 
-    private handlePlayer(username: string, serverId: number, logout: boolean, population: number): void {
+    private handlePlayer(
+        username: string,
+        serverId: number,
+        logout: boolean,
+        population: number
+    ): void {
         this.discord.sendMessage(
             Utils.formatName(username),
             logout ? 'has logged out!' : 'has logged in!',
@@ -79,7 +84,9 @@ export default class Main {
         );
 
         // Update the population of the Discord server.
-        this.discord.setTopic(`Currently ${population} player${population === 1 ? '' : 's'} online.`);
+        this.discord.setTopic(
+            `Currently ${population} player${population === 1 ? '' : 's'} online.`
+        );
     }
 }
 

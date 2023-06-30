@@ -186,7 +186,8 @@ export default class Player extends Character {
      */
 
     public loadAbilities(abilities: AbilityData[]): void {
-        for (let ability of abilities) this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot);
+        for (let ability of abilities)
+            this.setAbility(ability.key, ability.level, ability.type, ability.quickSlot);
     }
 
     /**
@@ -262,7 +263,12 @@ export default class Player extends Character {
      */
 
     public addFriend(username: string, status: boolean, serverId: number): void {
-        this.friends[username] = new Friend(Object.keys(this.friends).length, username, status, serverId);
+        this.friends[username] = new Friend(
+            Object.keys(this.friends).length,
+            username,
+            status,
+            serverId
+        );
     }
 
     /**
@@ -311,7 +317,8 @@ export default class Player extends Character {
 
     public getSpriteName(): string {
         // Use the armour skin if it exists.
-        if (this.equipments[Modules.Equipment.ArmourSkin].key) return this.equipments[Modules.Equipment.ArmourSkin].key;
+        if (this.equipments[Modules.Equipment.ArmourSkin].key)
+            return this.equipments[Modules.Equipment.ArmourSkin].key;
 
         return 'player/base';
     }
@@ -322,7 +329,8 @@ export default class Player extends Character {
 
     public getWeaponSpriteName(): string {
         // Use the weapon skin if it exists.
-        if (this.equipments[Modules.Equipment.WeaponSkin].key) return this.equipments[Modules.Equipment.WeaponSkin].key;
+        if (this.equipments[Modules.Equipment.WeaponSkin].key)
+            return this.equipments[Modules.Equipment.WeaponSkin].key;
 
         return this.equipments[Modules.Equipment.Weapon].key;
     }
@@ -627,7 +635,12 @@ export default class Player extends Character {
     public setSkill({ type, experience, level, percentage, nextExperience }: SkillData): void {
         if (!this.skills[type]) this.skills[type] = new Skill(type);
 
-        this.skills[type as Modules.Skills].update(experience, nextExperience!, level!, percentage!);
+        this.skills[type as Modules.Skills].update(
+            experience,
+            nextExperience!,
+            level!,
+            percentage!
+        );
     }
 
     /**
@@ -674,13 +687,19 @@ export default class Player extends Character {
      * @param quickSlot The id of the quickslot the ability is in.
      */
 
-    public setAbility(key: string, level: number, type?: Modules.AbilityType, quickSlot = -1): void {
+    public setAbility(
+        key: string,
+        level: number,
+        type?: Modules.AbilityType,
+        quickSlot = -1
+    ): void {
         // This function is used when adding abilities for the first time too.
         if (key in this.abilities) this.abilities[key]?.update(level, quickSlot);
         else this.abilities[key] = new Ability(type!, key, level, quickSlot);
 
         // If any active ability is detected then we create a callback to display the quick slots.
-        if (type === Modules.AbilityType.Active || quickSlot !== -1) this.abilityCallback?.(key, level, quickSlot);
+        if (type === Modules.AbilityType.Active || quickSlot !== -1)
+            this.abilityCallback?.(key, level, quickSlot);
     }
 
     /**

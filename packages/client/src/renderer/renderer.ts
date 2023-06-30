@@ -72,7 +72,12 @@ export default class Renderer {
     protected textContext: CanvasRenderingContext2D = this.textCanvas.getContext('2d')!;
     protected cursorContext: CanvasRenderingContext2D = this.cursor.getContext('2d')!;
 
-    protected allContexts = [this.entitiesContext, this.overlayContext, this.textContext, this.cursorContext];
+    protected allContexts = [
+        this.entitiesContext,
+        this.overlayContext,
+        this.textContext,
+        this.cursorContext
+    ];
 
     // We split contexts into two arrays, one for tilemap rendering and one for the rest.
     protected contexts = [this.entitiesContext, this.textContext, this.overlayContext];
@@ -375,7 +380,8 @@ export default class Renderer {
         if (!input.isOnCanvas || this.isSelectedCell(location.gridX, location.gridY)) return;
 
         let canCollide =
-            this.map.isColliding(location.gridX, location.gridY) && !this.map.isObject(location.gridX, location.gridY);
+            this.map.isColliding(location.gridX, location.gridY) &&
+            !this.map.isObject(location.gridX, location.gridY);
 
         this.drawCellHighlight(
             location.gridX,
@@ -598,7 +604,8 @@ export default class Renderer {
     private drawPathing(): void {
         if (!this.game.player.hasPath()) return;
 
-        for (let path of this.game.player.path!) this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)');
+        for (let path of this.game.player.path!)
+            this.drawCellHighlight(path[0], path[1], 'rgba(50, 255, 50, 0.5)');
     }
 
     /**
@@ -734,7 +741,10 @@ export default class Renderer {
         if (!animationData) return;
 
         let { frame, row } = animation,
-            index = frame.index < animationData.length ? frame.index : frame.index % animationData.length,
+            index =
+                frame.index < animationData.length
+                    ? frame.index
+                    : frame.index % animationData.length,
             spriteX = sprite.width * index,
             spriteY = sprite.height * row,
             spriteWidth = sprite.width,
@@ -761,10 +771,12 @@ export default class Renderer {
     private drawEffects(character: Character): void {
         for (let key of character.statusEffects) {
             // Do not draw the freezing effect if the character has a snow potion effect.
-            if (key === Modules.Effects.Freezing && character.hasEffect(Modules.Effects.SnowPotion)) continue;
+            if (key === Modules.Effects.Freezing && character.hasEffect(Modules.Effects.SnowPotion))
+                continue;
 
             // Do not draw the burning effect if the character has a fire potion effect.
-            if (key === Modules.Effects.Burning && character.hasEffect(Modules.Effects.FirePotion)) continue;
+            if (key === Modules.Effects.Burning && character.hasEffect(Modules.Effects.FirePotion))
+                continue;
 
             let effect = character.getEffect(key);
 
@@ -853,14 +865,21 @@ export default class Renderer {
         let barLength = this.tileSize,
             healthX = entity.x * this.camera.zoomFactor - barLength / 2 + 8,
             healthY = (entity.y - entity.sprite.height / 4) * this.camera.zoomFactor,
-            healthWidth = Math.round((entity.hitPoints / entity.maxHitPoints) * barLength * this.camera.zoomFactor),
+            healthWidth = Math.round(
+                (entity.hitPoints / entity.maxHitPoints) * barLength * this.camera.zoomFactor
+            ),
             healthHeight = 2 * this.camera.zoomFactor;
 
         this.textContext.save();
         this.setCameraView(this.textContext);
         this.textContext.strokeStyle = 'rbga(0, 0, 0, 1)';
         this.textContext.lineWidth = 1;
-        this.textContext.strokeRect(healthX, healthY, barLength * this.camera.zoomFactor, healthHeight);
+        this.textContext.strokeRect(
+            healthX,
+            healthY,
+            barLength * this.camera.zoomFactor,
+            healthHeight
+        );
         this.textContext.fillStyle = 'rgba(253, 0, 0, 1)';
         this.textContext.fillRect(healthX, healthY, healthWidth, healthHeight);
         this.textContext.restore();
@@ -882,7 +901,8 @@ export default class Renderer {
             fontSize = 11;
 
         // Handle the counter if an entity has one.
-        if (entity.hasCounter()) return this.drawText(`${entity.counter}`, x, y, true, colour, stroke, fontSize, true);
+        if (entity.hasCounter())
+            return this.drawText(`${entity.counter}`, x, y, true, colour, stroke, fontSize, true);
 
         // Handle the item amount if the entity is an item.
         if (entity.isItem() && entity.count > 1)
@@ -896,7 +916,8 @@ export default class Renderer {
             levelText = `Level ${entity.level}`;
 
         // If there's a rank aside from default then we use that rank's colour.
-        if (entity.isPlayer() && entity.rank !== Modules.Ranks.None) colour = Modules.RankColours[entity.rank];
+        if (entity.isPlayer() && entity.rank !== Modules.Ranks.None)
+            colour = Modules.RankColours[entity.rank];
 
         // If the entity is the same as our character, we draw a gold name.1
         if (entity.instance === this.game.player.instance) colour = 'rgba(252,218,92, 1)';
@@ -908,7 +929,8 @@ export default class Renderer {
         if (drawNames) this.drawText(entity.name, x, nameY, true, colour, stroke, fontSize, true);
 
         // Draw the level if we're drawing levels.
-        if (this.drawLevels && entity.level) this.drawText(levelText, x, levelY, true, colour, stroke, fontSize, true);
+        if (this.drawLevels && entity.level)
+            this.drawText(levelText, x, levelY, true, colour, stroke, fontSize, true);
     }
 
     /**
@@ -1144,7 +1166,9 @@ export default class Renderer {
 
         // Create the new lighting object and lamp with the provided data.
         let lighting = new Lighting({
-            light: new Lamp(this.getLightData(info.x, info.y, info.distance, info.diffuse, info.colour))
+            light: new Lamp(
+                this.getLightData(info.x, info.y, info.distance, info.diffuse, info.colour)
+            )
         }) as RendererLighting;
 
         // Store the grid position of the light (used for camera calculations).
@@ -1187,7 +1211,8 @@ export default class Renderer {
         if (light.outer) this.addLight(this.getSerializedLight(player.instance, x, y, light.outer));
 
         // Handle the inner light if it exists.
-        if (light.inner) this.addLight(this.getSerializedLight(`${player.instance}inner`, x, y, light.inner));
+        if (light.inner)
+            this.addLight(this.getSerializedLight(`${player.instance}inner`, x, y, light.inner));
     }
 
     /**
@@ -1363,7 +1388,10 @@ export default class Renderer {
         // Stop if we are not rendering or if there is no camera.
         if (!this.camera || this.stopRendering) return;
 
-        context.translate(-this.camera.x * this.camera.zoomFactor, -this.camera.y * this.camera.zoomFactor);
+        context.translate(
+            -this.camera.x * this.camera.zoomFactor,
+            -this.camera.y * this.camera.zoomFactor
+        );
     }
 
     // -------------- Getters and Checkers --------------
@@ -1399,9 +1427,18 @@ export default class Renderer {
      * @returns A partial lamp object.
      */
 
-    private getLightData(x: number, y: number, distance: number, diffuse: number, color: string): Partial<Lamp> {
+    private getLightData(
+        x: number,
+        y: number,
+        distance: number,
+        diffuse: number,
+        color: string
+    ): Partial<Lamp> {
         return {
-            position: new Vec2(x * this.tileSize + this.tileSize / 2, y * this.tileSize + this.tileSize / 2),
+            position: new Vec2(
+                x * this.tileSize + this.tileSize / 2,
+                y * this.tileSize + this.tileSize / 2
+            ),
             distance,
             diffuse,
             color,
@@ -1423,7 +1460,12 @@ export default class Renderer {
      * @returns A serialized light object.
      */
 
-    private getSerializedLight(instance: string, x: number, y: number, lamp: LampData): SerializedLight {
+    private getSerializedLight(
+        instance: string,
+        x: number,
+        y: number,
+        lamp: LampData
+    ): SerializedLight {
         return {
             instance,
             x,
@@ -1573,7 +1615,10 @@ export default class Renderer {
      * @param offset How much to look outside the visible camera proportions.
      */
 
-    protected forEachVisibleTile(callback: (data: ClientTile, index: number) => void, offset?: number): void {
+    protected forEachVisibleTile(
+        callback: (data: ClientTile, index: number) => void,
+        offset?: number
+    ): void {
         if (!this.map?.mapLoaded) return;
 
         this.forEachVisibleIndex((index) => {
@@ -1626,7 +1671,8 @@ export default class Renderer {
      */
 
     private forAllContexts(callback: ContextCallback): void {
-        for (let context in this.allContexts) callback(this.allContexts[context] as CanvasRenderingContext2D);
+        for (let context in this.allContexts)
+            callback(this.allContexts[context] as CanvasRenderingContext2D);
     }
 
     /**
@@ -1635,6 +1681,7 @@ export default class Renderer {
      */
 
     private forEachContext(callback: ContextCallback): void {
-        for (let context in this.contexts) callback(this.contexts[context] as CanvasRenderingContext2D);
+        for (let context in this.contexts)
+            callback(this.contexts[context] as CanvasRenderingContext2D);
     }
 }

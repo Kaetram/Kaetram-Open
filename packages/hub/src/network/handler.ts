@@ -56,7 +56,9 @@ export default class Handler {
      */
 
     private handleConnection(socket: WebSocket<ConnectionInfo>): void {
-        log.notice(`Received a connection from ${Utils.bufferToAddress(socket.getRemoteAddressAsText())}`);
+        log.notice(
+            `Received a connection from ${Utils.bufferToAddress(socket.getRemoteAddressAsText())}`
+        );
 
         let instance = Utils.createInstance();
 
@@ -78,7 +80,8 @@ export default class Handler {
     private handleMessage(socket: WebSocket<ConnectionInfo>, data: ArrayBuffer): void {
         let connection = this.get(socket.getUserData().instance);
 
-        if (!connection) return log.error(`No connection found for instance ${socket.getUserData().instance}`);
+        if (!connection)
+            return log.error(`No connection found for instance ${socket.getUserData().instance}`);
 
         try {
             let message = JSON.parse(new TextDecoder().decode(data));

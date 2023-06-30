@@ -15,7 +15,12 @@ export default class Region {
     private resources: Resource[] = [];
     private lights: Light[] = [];
 
-    public constructor(public x: number, public y: number, public width: number, public height: number) {}
+    public constructor(
+        public x: number,
+        public y: number,
+        public width: number,
+        public height: number
+    ) {}
 
     /**
      * Adds the player's instance to the array.
@@ -198,7 +203,8 @@ export default class Region {
 
     public forEachTile(callback: (x: number, y: number) => void): void {
         for (let i = this.y; i < this.y + this.height; i++)
-            for (let j = this.x; j < this.x + this.width; j++) if (!this.getDynamicArea(j, i)) callback(j, i);
+            for (let j = this.x; j < this.x + this.width; j++)
+                if (!this.getDynamicArea(j, i)) callback(j, i);
     }
 
     /**
@@ -207,7 +213,8 @@ export default class Region {
      */
 
     public forEachDynamicTile(callback: (x: number, y: number, area: Area) => void): void {
-        for (let area of this.dynamicAreas) area.forEachTile((x: number, y: number) => callback(x, y, area));
+        for (let area of this.dynamicAreas)
+            area.forEachTile((x: number, y: number) => callback(x, y, area));
     }
 
     /**
@@ -243,7 +250,8 @@ export default class Region {
      */
 
     public forEachPlayer(callback: (player: Player) => void): void {
-        for (let instance of this.players) if (instance in this.entities) callback(this.entities[instance] as Player);
+        for (let instance of this.players)
+            if (instance in this.entities) callback(this.entities[instance] as Player);
     }
 
     /**
