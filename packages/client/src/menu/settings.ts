@@ -65,6 +65,9 @@ export default class Settings extends Menu {
         // Hide webgl checkbox if not supported.
         if (isMacintoshFirefox()) this.hideWebGlOption();
 
+        // Hide the debug option if not on desktop.
+        if (import.meta.env.PROD || isMobile()) this.hideDebugOption();
+
         // Update brightness value.
         this.handleBrightness();
 
@@ -218,6 +221,16 @@ export default class Settings extends Menu {
 
     private hideWebGlOption(): void {
         let checkbox = document.querySelector<HTMLElement>('#webgl-checkbox')!;
+
+        checkbox.style.display = 'none';
+    }
+
+    /**
+     * Hides the debug mode checkbox when the game is not in debug mode.
+     */
+
+    private hideDebugOption(): void {
+        let checkbox = document.querySelector<HTMLElement>('#debug-mode-checkbox')!;
 
         checkbox.style.display = 'none';
     }
