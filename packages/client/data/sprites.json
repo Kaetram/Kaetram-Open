@@ -466,55 +466,6 @@
         "offsetY": -24
     },
     {
-        "id": "mobs/bee",
-        "width": 20,
-        "height": 19,
-        "animations": {
-            "death": {
-                "length": 1,
-                "row": 4
-            },
-            "atk_right": {
-                "length": 4,
-                "row": 1
-            },
-            "walk_right": {
-                "length": 4,
-                "row": 1
-            },
-            "idle_right": {
-                "length": 2,
-                "row": 1
-            },
-            "atk_up": {
-                "length": 4,
-                "row": 3
-            },
-            "idle_up": {
-                "length": 2,
-                "row": 3
-            },
-            "walk_up": {
-                "length": 4,
-                "row": 3
-            },
-            "atk_down": {
-                "length": 4,
-                "row": 2
-            },
-            "walk_down": {
-                "length": 4,
-                "row": 2
-            },
-            "idle_down": {
-                "length": 2,
-                "row": 2
-            }
-        },
-        "offsetX": -8,
-        "offsetY": -8
-    },
-    {
         "id": "mobs/beetle",
         "width": 64,
         "height": 72,
@@ -3436,7 +3387,7 @@
         "offsetX": -5,
         "offsetY": -13
     },
-    { "id": "mobs/pain", "width": 32, "height": 32, "offsetX": -8, "offsetY": -12 },
+    { "id": "mobs/infectedvillager", "width": 32, "height": 32, "offsetX": -8, "offsetY": -12 },
     {
         "id": "mobs/penguin",
         "width": 48,

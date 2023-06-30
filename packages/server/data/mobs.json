@@ -3014,7 +3014,7 @@
         }
     },
 
-    "pain": {
+    "infectedvillager": {
         "name": "Infected Villager",
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 1550,
