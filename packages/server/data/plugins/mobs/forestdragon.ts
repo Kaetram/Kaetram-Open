@@ -45,7 +45,9 @@ export default class ForestDragon extends Default {
 
         // Determine whether or not to use ranged attacks.
         let useRanged =
-            this.mob.getDistance(this.mob.target!) > 1 || this.mob.target!.isRanged() || this.mob.target!.moving;
+            this.mob.getDistance(this.mob.target!) > 1 ||
+            this.mob.target!.isRanged() ||
+            this.mob.target!.moving;
 
         this.mob.damageType = Modules.Hits.Normal;
 

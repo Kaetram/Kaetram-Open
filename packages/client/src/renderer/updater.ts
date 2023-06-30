@@ -87,9 +87,11 @@ export default class Updater {
 
             // Check if the type of movement is on the x or y axis.
             let isHorizontal =
-                    entity.orientation === Modules.Orientation.Left || entity.orientation === Modules.Orientation.Right,
+                    entity.orientation === Modules.Orientation.Left ||
+                    entity.orientation === Modules.Orientation.Right,
                 isVertical =
-                    entity.orientation === Modules.Orientation.Up || entity.orientation === Modules.Orientation.Down,
+                    entity.orientation === Modules.Orientation.Up ||
+                    entity.orientation === Modules.Orientation.Down,
                 isLeft,
                 isUp;
 
@@ -172,7 +174,8 @@ export default class Updater {
          * Disables updating when the player is already moving as to not spam
          * packets. If the player is frozen the input is ignored.
          */
-        if (player.moving || player.teleporting || player.frozen || !player.hasKeyboardMovement()) return;
+        if (player.moving || player.teleporting || player.frozen || !player.hasKeyboardMovement())
+            return;
 
         if (player.moveUp) position.gridY--;
         else if (player.moveDown) position.gridY++;
@@ -273,7 +276,8 @@ export default class Updater {
 
             light.distance =
                 light.scaledDistance +
-                Math.sin((this.game.time + light.offset) / light.flickerSpeed) * light.scaledFlickerIntensity;
+                Math.sin((this.game.time + light.offset) / light.flickerSpeed) *
+                    light.scaledFlickerIntensity;
         });
     }
 }

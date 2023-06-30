@@ -93,14 +93,18 @@ export default class Weapon extends Equipment {
 
         // Rapid attack style boosts attack speed by 20%
         this.attackRate =
-            attackStyle === Modules.AttackStyle.Fast ? this.defaultAttackRate * 0.8 : this.defaultAttackRate;
+            attackStyle === Modules.AttackStyle.Fast
+                ? this.defaultAttackRate * 0.8
+                : this.defaultAttackRate;
 
         // Not applicable for ranged weapons.
         if (!this.archer && !this.magic) return;
 
         // Long range boosts attack range by 2 for bows and magic weapons
         this.attackRange =
-            attackStyle === Modules.AttackStyle.LongRange ? this.defaultAttackRange + 2 : this.defaultAttackRange;
+            attackStyle === Modules.AttackStyle.LongRange
+                ? this.defaultAttackRange + 2
+                : this.defaultAttackRange;
     }
 
     /**

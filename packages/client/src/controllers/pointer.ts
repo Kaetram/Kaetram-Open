@@ -99,13 +99,15 @@ export default class PointerController {
         } else if (boundaryY > 1) {
             // Pointer is above the screen.
             pointer.element.style.bottom = '0';
-            pointer.element.style.left = boundaryX > 1 ? '' : boundaryX < 0 ? '0' : `${relativeX}px`;
+            pointer.element.style.left =
+                boundaryX > 1 ? '' : boundaryX < 0 ? '0' : `${relativeX}px`;
             pointer.element.style.right = boundaryX > 1 ? '0' : '';
             pointer.element.style.transform = transform;
         } else if (boundaryY < 0) {
             // Pointer is below the screen.
             pointer.element.style.top = '0';
-            pointer.element.style.left = boundaryX > 1 ? '' : boundaryX < 0 ? '0' : `${relativeX}px`;
+            pointer.element.style.left =
+                boundaryX > 1 ? '' : boundaryX < 0 ? '0' : `${relativeX}px`;
             pointer.element.style.right = boundaryX > 1 ? '0' : '';
             pointer.element.style.transform = `${transform} rotate(180deg)`;
         }

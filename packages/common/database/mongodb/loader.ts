@@ -164,7 +164,8 @@ export default class Loader {
 
     public loadStatistics(player: Player, callback: (statistics: StatisticsData) => void): void {
         this.load(player.username, 'player_statistics', (info: unknown) => {
-            if (!info) return log.debug(`[player_statistics] No statistics found for ${player.username}.`);
+            if (!info)
+                return log.debug(`[player_statistics] No statistics found for ${player.username}.`);
 
             let [statistics] = info as StatisticsData[];
 
@@ -180,7 +181,8 @@ export default class Loader {
 
     public loadAbilities(player: Player, callback: (abilities: SerializedAbility) => void): void {
         this.load(player.username, 'player_abilities', (info: unknown) => {
-            if (!info) return log.debug(`[player_abilities] No abilities found for ${player.username}.`);
+            if (!info)
+                return log.debug(`[player_abilities] No abilities found for ${player.username}.`);
 
             let [abilities] = info as SerializedAbility[];
 
@@ -217,7 +219,11 @@ export default class Loader {
      * @param callback Contains the guilds that we found within that range and total amount.
      */
 
-    public loadGuilds(from: number, to: number, callback: (guilds: GuildData[], total: number) => void): void {
+    public loadGuilds(
+        from: number,
+        to: number,
+        callback: (guilds: GuildData[], total: number) => void
+    ): void {
         if (!this.database || config.skipDatabase) return callback([], 0);
 
         let cursor = this.database.collection('guilds').find({});

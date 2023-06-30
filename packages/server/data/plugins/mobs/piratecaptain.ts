@@ -63,7 +63,8 @@ export default class PirateCaptain extends Default {
     private teleport(): void {
         let position = this.teleportSpots[Utils.randomInt(0, this.teleportSpots.length - 1)];
 
-        if (position.x === this.lastPickedTeleport.x && position.y === this.lastPickedTeleport.y) return;
+        if (position.x === this.lastPickedTeleport.x && position.y === this.lastPickedTeleport.y)
+            return;
 
         // Stop all players from attacking the pirate captain.
         this.mob.world.cleanCombat(this.mob);

@@ -104,7 +104,14 @@
 }
 
 .title-decoration {
-    @include sprite.sheet($image: 'guilds/frames', $x: 286, $y: 8, $width: 78, $height: 6, $selectors: '&::after') {
+    @include sprite.sheet(
+        $image: 'guilds/frames',
+        $x: 286,
+        $y: 8,
+        $width: 78,
+        $height: 6,
+        $selectors: '&::after'
+    ) {
         content: '';
     }
 

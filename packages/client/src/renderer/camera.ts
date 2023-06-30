@@ -129,7 +129,10 @@ export default class Camera {
      */
 
     public clip(): void {
-        this.setGridPosition(Math.round(this.x / this.tileSize), Math.round(this.y / this.tileSize));
+        this.setGridPosition(
+            Math.round(this.x / this.tileSize),
+            Math.round(this.y / this.tileSize)
+        );
     }
 
     /**
@@ -334,6 +337,7 @@ export default class Camera {
 
     public forEachVisiblePosition(callback: (x: number, y: number) => void, offset = 1): void {
         for (let y = this.gridY - offset, maxY = y + this.gridHeight + offset * 2; y < maxY; y++)
-            for (let x = this.gridX - offset, maxX = x + this.gridWidth + offset * 2; x < maxX; x++) callback(x, y);
+            for (let x = this.gridX - offset, maxX = x + this.gridWidth + offset * 2; x < maxX; x++)
+                callback(x, y);
     }
 }
