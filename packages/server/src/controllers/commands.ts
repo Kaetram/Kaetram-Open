@@ -597,6 +597,13 @@ export default class Commands {
                     return;
                 }
 
+                if (isNaN(movementSpeed)) {
+                    this.player.notify('Invalid movement speed specified.');
+                    return;
+                }
+
+                if (movementSpeed > 10_000) movementSpeed = 2000;
+
                 if (movementSpeed < 75)
                     // Just to not break stuff.
                     movementSpeed = 75;
@@ -948,7 +955,7 @@ export default class Commands {
             }
 
             case 'ipban': {
-                let username = blocks.join(' ');
+                let username = blocks.join(' ').toLowerCase();
 
                 if (!username) return log.info(`Malformed command, expected /${command} <username>`);
 
