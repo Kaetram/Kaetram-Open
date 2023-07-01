@@ -37,7 +37,7 @@
         "autoprefixer": "^10.4.14",
         "eslint": "^8.42.0",
         "eslint-config-prettier": "^8.8.0",
-        "eslint-plugin-astro": "^0.27.1",
+        "eslint-plugin-astro": "^0.27.2",
         "eslint-plugin-import": "^2.27.5",
         "eslint-plugin-import-order-aesthetic": "^1.0.5",
         "eslint-plugin-jsx-a11y": "^6.7.1",
