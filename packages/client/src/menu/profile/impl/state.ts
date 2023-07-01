@@ -81,7 +81,9 @@ export default class State extends Menu {
         this.experience.textContent = `${this.player.getTotalExperience()}`;
 
         // Synchronize equipment data
-        this.helmet.style.backgroundImage = Util.getImageURL(this.player.getHelmet().key);
+        this.helmet.style.backgroundImage =
+            Util.getImageURL(this.player.getHelmet().key) ||
+            this.getDefaultEquipmentIcon(Modules.Equipment.Helmet);
         this.pendant.style.backgroundImage = Util.getImageURL(this.player.getPendant().key);
         this.arrows.style.backgroundImage = Util.getImageURL(this.player.getArrows().key);
         this.chestplate.style.backgroundImage = Util.getImageURL(this.player.getChestplate().key);
@@ -196,6 +198,24 @@ export default class State extends Menu {
         }
 
         return 'Report as bug if you see this :)';
+    }
+
+    /**
+     * Grabs the placeholder icon for when the equipment slow is unequipped.
+     * @param type The type of equipment we are getting the icon for.
+     * @returns A string of the URL for the icon.
+     */
+
+    private getDefaultEquipmentIcon(type: Modules.Equipment): string {
+        switch (type) {
+            case Modules.Equipment.Helmet: {
+                return 'url("img/interface/equipment/helmet.png")';
+            }
+
+            default: {
+                return '';
+            }
+        }
     }
 
     /**
