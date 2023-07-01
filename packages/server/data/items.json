@@ -265,6 +265,61 @@
             "magic": 0
         }
     },
+    "ironspear": {
+        "type": "weapon",
+        "name": "Iron Spear",
+        "weaponType": "spear",
+        "skill": "accuracy",
+        "level": 10,
+        "attackStats": {
+            "crush": 4,
+            "slash": 4,
+            "stab": 7,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 4,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+
+    "ironscythe": {
+        "type": "weapon",
+        "name": "Iron Scythe",
+        "weaponType": "scythe",
+        "skill": "accuracy",
+        "level": 10,
+        "attackStats": {
+            "crush": 4,
+            "slash": 7,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 4,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "bronzeaxe": {
         "type": "weapon",
         "name": "Bronze Axe",
@@ -1045,6 +1100,34 @@
             "magic": 2
         }
     },
+    "magichamberge": {
+        "type": "weaponmagic",
+        "name": "Magic Hamberge",
+        "skill": "magic",
+        "level": 20,
+        "price": 200,
+        "attackStats": {
+            "crush": 2,
+            "slash": 4,
+            "stab": 4,
+            "archery": 2,
+            "magic": 8
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 1,
+            "archery": 1,
+            "magic": 6
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 2,
+            "archery": 0,
+            "magic": 4
+        }
+    },
+
     "aquastaff": {
         "type": "weaponmagic",
         "name": "Aqua Staff",
@@ -2799,6 +2882,78 @@
         "name": "Rat Hat Pet",
         "pet": "rathat",
         "description": "A little cute rat with a little cute hat that follows you around.",
+        "price": 1000
+    },
+    "arcanahypercube": {
+        "type": "object",
+        "name": "Arcan Hypercube",
+        "description": "Yoo why we going so frickin fast?",
+        "price": 1000
+    },
+    "ettispinefruit": {
+        "type": "object",
+        "name": "Etti Spine Fruit",
+        "description": "Kinda looks like a tasty noodle... for sociopaths.",
+        "price": 1000
+    },
+    "galaxylilies": {
+        "type": "object",
+        "name": "Galaxy Lilies",
+        "description": "They say that galaxies exsist everywhere looks like you found one on the ground, how careless.",
+        "price": 1000
+    },
+    "godscroissant": {
+        "type": "object",
+        "name": "God's Croissant",
+        "description": "Said to have the most heavenly taste in nature. Unfortunately it is very poisonous.",
+        "price": 1000
+    },
+    "stellarcluster": {
+        "type": "object",
+        "name": "Stellar Cluster",
+        "description": "They say this is formed by an odd mutation from the over exposure to the sun, it's quite impressive",
+        "price": 1000
+    },
+    "harmoniccrossband": {
+        "type": "object",
+        "name": "Harmonic Crossband",
+        "description": "They say the only peace that can be found is by throwing everything away... don't do it.",
+        "price": 1000
+    },
+    "livinganchorroot": {
+        "type": "object",
+        "name": "Living Anchor Root",
+        "description": "By far the heaviest plant you will ever try to take. It must be asked if it's worth it to carry it around.",
+        "price": 1000
+    },
+    "manaberry": {
+        "type": "object",
+        "name": "Mana Berry",
+        "description": "I heard a story about a wizard that killed an entire town just to taste one. Too bad he slipped on his tunic and died before he could eat it.",
+        "price": 1000
+    },
+    "nexuscross": {
+        "type": "object",
+        "name": "Nexus Cross",
+        "description": "Legend says that if buried with the dead their souls will ascend to godhood. What a crock",
+        "price": 1000
+    },
+    "orchardsbane": {
+        "type": "object",
+        "name": "Orchard's Bane",
+        "description": "If found in one's orchard be warry as either it is your crop's life or the first witness to the cursed weed.",
+        "price": 1000
+    },
+    "wartberries": {
+        "type": "object",
+        "name": "Wart Berries",
+        "description": "If observed please seek medical attention as soon as possible. Can never be too careful.",
+        "price": 1000
+    },
+    "zephyrsgaleblade": {
+        "type": "object",
+        "name": "Zephyr's Gale Blade",
+        "description": "Much like its name sake, you can never quite control its form, but it's lovely to be in the presence of.",
         "price": 1000
     },
     "leatherboots": {
