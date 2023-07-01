@@ -2282,11 +2282,12 @@
     "icevulture": {
         "name": "Ice Vulture",
         "description": "It's like a frozen version of the vicious bird I've seen before.",
+        "drops": { "feather": 25000 },
         "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 300,
         "defenseLevel": 1,
         "attackLevel": 3,
-        "level": 38,
+        "level": 96,
         "aggroRange": 1,
         "attackRange": 1,
         "aggressive": true,
@@ -4146,6 +4147,7 @@
 
     "vulture": {
         "name": "Vulture",
+        "drops": { "feather": 25000 },
         "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 100,
         "defenseLevel": 5,

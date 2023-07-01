@@ -42,6 +42,10 @@
     { "id": "player/weapon/naturestaff", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
     { "id": "player/weapon/firestaff", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
     { "id": "player/weapon/cursestaff", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
+    { "id": "player/weapon/magichamberge", "width": 48, "height": 48, "offsetX": -16, "offsetY": -22 },
+    { "id": "player/weapon/ironscythe", "width": 48, "height": 48, "offsetX": -12 },
+    { "id": "player/weapon/ironspear", "width": 48, "height": 48, "offsetX": -12 },
+
     { "id": "player/shield/lantern", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
     { "id": "player/shield/lantern2", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
     { "id": "player/shield/coppershield", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
@@ -6518,9 +6522,24 @@
     { "id": "items/smallemptyvial", "offsetX": 0, "offsetY": 0 },
     { "id": "items/bigemptyvial", "offsetX": 0, "offsetY": 0 },
     { "id": "items/largeemptyvial", "offsetX": 0, "offsetY": 0 },
-
     { "id": "items/darkmagehood", "offsetX": 0, "offsetY": 0 },
     { "id": "items/darkmagehoodblue", "offsetX": 0, "offsetY": 0 },
     { "id": "items/darkmagehoodgreen", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/darkmagehoodgold", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/darkmagehoodgold", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ironscythe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ironspear", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/magichamberge", "offsetX": 0, "offsetY": 0 },
+
+    { "id": "items/arcanahypercube", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ettispinefruit", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/galaxylilies", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/godscroissant", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/stellarcluster", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/harmoniccrossband", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/livinganchorroot", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/manaberry", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/nexuscross", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/orchardsbane", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wartberries", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/zephyrsgaleblade", "offsetX": 0, "offsetY": 0 }
 ]
