@@ -447,6 +447,14 @@ export default class Item extends Entity {
                 ];
             }
 
+            case 'scythe': {
+                return [
+                    Modules.AttackStyle.Slash,
+                    Modules.AttackStyle.Crush,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
             case 'bow': {
                 return [
                     Modules.AttackStyle.Accurate,
