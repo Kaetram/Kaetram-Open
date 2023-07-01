@@ -70,5 +70,20 @@
         "mushroom4": 6000,
         "mushroom5": 6000,
         "mushroom6": 6000
+    },
+
+    "manafruits": {
+        "arcanahypercube": 5000,
+        "ettispinefruit": 5000,
+        "galaxylilies": 5000,
+        "godscroissant": 5000,
+        "stellarcluster": 5000,
+        "harmoniccrossband": 5000,
+        "livinganchorroot": 5000,
+        "manaberry": 5000,
+        "nexuscross": 5000,
+        "orchardsbane": 5000,
+        "wartberries": 5000,
+        "zephyrsgaleblade": 5000
     }
 }
