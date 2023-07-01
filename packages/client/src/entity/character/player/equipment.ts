@@ -10,6 +10,9 @@ export default class Equipment {
     public count = -1;
     public enchantments: Enchantments = {};
 
+    // Used to determine if the weapon is a bow or not.
+    public bow = false;
+
     // Used for ignoring rendering of the equipment.
     public drawable = false;
 
