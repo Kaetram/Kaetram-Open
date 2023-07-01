@@ -171,7 +171,7 @@ export default class Character extends Entity {
         count = 0,
         onEndCount?: () => void
     ): void {
-        let o = ['atk', 'walk', 'idle'];
+        let o = ['atk', 'bow_atk', 'walk', 'idle'];
 
         // Do not perform another animation while the death one is playing.
         if (this.animation?.name === 'death') return;

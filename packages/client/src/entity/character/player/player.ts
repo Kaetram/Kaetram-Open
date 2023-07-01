@@ -766,6 +766,28 @@ export default class Player extends Character {
     }
 
     /**
+     * An override function for the superclass `setAnimation` where we adjust the animation
+     * currently performed by the player depending on the weapon they are equipping. Bows use
+     * a different animation than normal melee weapons.
+     * @param name The name of the animation that we are setting.
+     * @param speed The speed at which to animate the player.
+     * @param count The amount of times to play the animation.
+     * @param onEndCount The callback to execute when the animation has finished playing.
+     */
+
+    public override setAnimation(
+        name: string,
+        speed = 120,
+        count = 0,
+        onEndCount?: () => void
+    ): void {
+        // Update the animation name if we're using a bow.
+        if (name === 'atk' && this.getWeapon().bow) name = 'bow';
+
+        super.setAnimation(name, speed, count, onEndCount);
+    }
+
+    /**
      * Updates the active status of an ability.
      * @param key The key of the ability we are updating.
      */

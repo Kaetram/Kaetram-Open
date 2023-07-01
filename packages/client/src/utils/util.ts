@@ -426,7 +426,7 @@ export default {
             }
 
             default: {
-                // Default animations for a player/mob character.
+                // Default animations for a player character.
                 return {
                     idle_down: {
                         length: 4,
@@ -442,27 +442,39 @@ export default {
                     },
                     walk_down: {
                         length: 4,
-                        row: 6
+                        row: 3
                     },
                     walk_right: {
                         length: 4,
-                        row: 7
+                        row: 4
                     },
                     walk_up: {
                         length: 4,
-                        row: 8
+                        row: 5
                     },
                     atk_down: {
                         length: 4,
-                        row: 3
+                        row: 6
                     },
                     atk_right: {
                         length: 4,
-                        row: 4
+                        row: 7
                     },
                     atk_up: {
                         length: 4,
-                        row: 5
+                        row: 8
+                    },
+                    bow_atk_down: {
+                        length: 4,
+                        row: 9
+                    },
+                    bow_atk_right: {
+                        length: 4,
+                        row: 10
+                    },
+                    bow_atk_up: {
+                        length: 4,
+                        row: 11
                     }
                 };
             }
