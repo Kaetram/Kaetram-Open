@@ -60,6 +60,11 @@
     display: none;
 }
 
+.greyscale {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
 @include sprite.sheet(
     $image: 'guilds/elements',
     $x: 64,

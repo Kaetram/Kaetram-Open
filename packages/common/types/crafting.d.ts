@@ -1,6 +1,11 @@
+export interface CraftingItemPreview {
+    key: string;
+    level: number;
+}
 export interface CraftingRequirement {
     key: string;
     count: number;
+    name?: string;
 }
 
 export interface CraftingResult {
