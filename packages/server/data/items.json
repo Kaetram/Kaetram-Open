@@ -265,6 +265,33 @@
             "magic": 0
         }
     },
+    "bronzespear": {
+        "type": "weapon",
+        "name": "Bronze Spear",
+        "weaponType": "spear",
+        "skill": "accuracy",
+        "level": 5,
+        "attackStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 5,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 3,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "ironspear": {
         "type": "weapon",
         "name": "Iron Spear",
@@ -293,6 +320,89 @@
         }
     },
 
+    "goldspear": {
+        "type": "weapon",
+        "name": "Gold Spear",
+        "weaponType": "spear",
+        "skill": "accuracy",
+        "level": 20,
+        "attackStats": {
+            "crush": 8,
+            "slash": 8,
+            "stab": 12,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 6,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+
+    "cobaltspear": {
+        "type": "weapon",
+        "name": "Cobalt Spear",
+        "weaponType": "spear",
+        "skill": "accuracy",
+        "level": 15,
+        "attackStats": {
+            "crush": 7,
+            "slash": 6,
+            "stab": 10,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 3,
+            "stab": 5,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 3,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+
+    "bronzescythe": {
+        "type": "weapon",
+        "name": "Bronze Scythe",
+        "weaponType": "scythe",
+        "skill": "accuracy",
+        "level": 5,
+        "attackStats": {
+            "crush": 2,
+            "slash": 5,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 3,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "ironscythe": {
         "type": "weapon",
         "name": "Iron Scythe",
@@ -316,6 +426,60 @@
         "bonuses": {
             "accuracy": 4,
             "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "goldscythe": {
+        "type": "weapon",
+        "name": "Gold Scythe",
+        "weaponType": "scythe",
+        "skill": "accuracy",
+        "level": 20,
+        "attackStats": {
+            "crush": 8,
+            "slash": 12,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 6,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "cobaltscythe": {
+        "type": "weapon",
+        "name": "Cobalt Scythe",
+        "weaponType": "scythe",
+        "skill": "accuracy",
+        "level": 15,
+        "attackStats": {
+            "crush": 7,
+            "slash": 10,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 5,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 3,
             "archery": 0,
             "magic": 0
         }
@@ -432,6 +596,118 @@
             "strength": 3,
             "archery": 0,
             "magic": 0
+        }
+    },
+    "bronzebattleaxe": {
+        "type": "weapon",
+        "name": "Bronze Battle Axe",
+        "weaponType": "axe",
+        "price": 100,
+        "skill": "strength",
+        "level": 1,
+        "attackStats": {
+            "crush": 2,
+            "slash": 4,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 0,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "ironbattleaxe": {
+        "type": "weapon",
+        "name": "Iron Battle Axe",
+        "weaponType": "axe",
+        "price": 100,
+        "skill": "strength",
+        "level": 10,
+        "attackStats": {
+            "crush": 4,
+            "slash": 6,
+            "stab": 4,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "goldbattleaxe": {
+        "type": "weapon",
+        "name": "Gold Battle Axe",
+        "weaponType": "axe",
+        "price": 400,
+        "skill": "strength",
+        "level": 20,
+        "attackStats": {
+            "crush": 6,
+            "slash": 8,
+            "stab": 6,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 4,
+            "stab": 3,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "cobaltbattleaxe": {
+        "type": "weapon",
+        "name": "Cobalt Battle Axe",
+        "weaponType": "axe",
+        "price": 200,
+        "skill": "strength",
+        "level": 15,
+        "attackStats": {
+            "crush": 4,
+            "slash": 6,
+            "stab": 4,
+            "archery": 0,
+            "magic": 4
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 2
         }
     },
     "fishingpole": {
