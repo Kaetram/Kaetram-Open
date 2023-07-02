@@ -1056,6 +1056,85 @@
             "magic": 0
         }
     },
+    "copperchestplate": {
+        "type": "chestplate",
+        "name": "Copper Chestplate",
+        "price": 100,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "tinchestplate": {
+        "type": "chestplate",
+        "name": "Tin Chestplate",
+        "price": 100,
+        "skill": "defense",
+        "level": 5,
+        "attackStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "bronzechestplate": {
+        "type": "chestplate",
+        "name": "Bronze Chestplate",
+        "price": 100,
+        "skill": "defense",
+        "level": 5,
+        "attackStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "ironchestplate": {
         "type": "chestplate",
         "name": "Iron Chestplate",
@@ -1078,6 +1157,60 @@
         },
         "bonuses": {
             "accuracy": 1,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "goldchestplate": {
+        "type": "chestplate",
+        "name": "Gold Chestplate",
+        "price": 100,
+        "skill": "defense",
+        "level": 20,
+        "attackStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 8,
+            "stab": 6,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 3,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "cobaltchestplate": {
+        "type": "chestplate",
+        "name": "Cobalt Chestplate",
+        "price": 100,
+        "skill": "defense",
+        "level": 15,
+        "attackStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 7,
+            "stab": 5,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
             "strength": 2,
             "archery": 0,
             "magic": 0
@@ -1133,6 +1266,33 @@
             "magic": -2
         }
     },
+    "bronzelegplates": {
+        "type": "legplates",
+        "name": "Bronze Legplates",
+        "price": 100,
+        "skill": "defense",
+        "level": 5,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": -3
+        }
+    },
     "ironlegplates": {
         "type": "legplates",
         "name": "Iron Legplates",
@@ -1157,7 +1317,34 @@
             "accuracy": 1,
             "strength": 1,
             "archery": 0,
-            "magic": -3
+            "magic": -4
+        }
+    },
+    "goldlegplates": {
+        "type": "legplates",
+        "name": "Gold Legplates",
+        "price": 100,
+        "skill": "defense",
+        "level": 20,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 7,
+            "stab": 5,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 3,
+            "archery": 0,
+            "magic": -5
         }
     },
     "cobaltlegplates": {
