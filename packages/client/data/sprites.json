@@ -1,5 +1,6 @@
 [
     { "id": "player/base", "width": 32, "height": 32, "offsetX": -8 },
+
     { "id": "player/helmet/cobalthelmet", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/helmet/ironhelmet", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/helmet/copperhelmet", "width": 32, "height": 32, "offsetX": -8 },
@@ -12,16 +13,31 @@
     { "id": "player/helmet/darkmagehoodblue", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/helmet/darkmagehoodgreen", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/helmet/darkmagehoodgold", "width": 32, "height": 32, "offsetX": -8 },
+
+    { "id": "player/chestplate/copperchestplate", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/chestplate/tinchestplate", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/chestplate/bronzechestplate", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/chestplate/ironchestplate", "width": 32, "height": 32, "offsetX": -8 },
-    { "id": "player/legplates/cobaltlegplates", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/chestplate/goldchestplate", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/chestplate/cobaltchestplate", "width": 32, "height": 32, "offsetX": -8 },
+
     { "id": "player/legplates/copperlegplates", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/legplates/tinlegplates", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/legplates/bronzelegplates", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/legplates/ironlegplates", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/legplates/goldlegplates", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/legplates/cobaltlegplates", "width": 32, "height": 32, "offsetX": -8 },
+
     { "id": "player/skin/danbo", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/skin/danboblue", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/skin/danbogreen", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/skin/danbored", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/skin/taekwondo", "width": 32, "height": 32, "offsetX": -8 },
+
+    { "id": "player/weapon/bronzebattleaxe", "width": 48, "height": 48, "offsetX": -16, "offsetY": -24 },
+    { "id": "player/weapon/ironbattleaxe", "width": 48, "height": 48, "offsetX": -16, "offsetY": -24 },
+    { "id": "player/weapon/goldbattleaxe", "width": 48, "height": 48, "offsetX": -16, "offsetY": -24 },
+    { "id": "player/weapon/cobaltbattleaxe", "width": 48, "height": 48, "offsetX": -16, "offsetY": -24 },
     { "id": "player/weapon/bronzeaxe", "width": 48, "height": 48, "offsetX": -16, "offsetY": -24 },
     { "id": "player/weapon/ironaxe", "width": 48, "height": 48, "offsetX": -16, "offsetY": -24 },
     { "id": "player/weapon/goldaxe", "width": 48, "height": 48, "offsetX": -16, "offsetY": -24 },
@@ -43,8 +59,14 @@
     { "id": "player/weapon/firestaff", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
     { "id": "player/weapon/cursestaff", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
     { "id": "player/weapon/magichamberge", "width": 48, "height": 48, "offsetX": -16, "offsetY": -22 },
+    { "id": "player/weapon/bronzescythe", "width": 48, "height": 48, "offsetX": -12 },
     { "id": "player/weapon/ironscythe", "width": 48, "height": 48, "offsetX": -12 },
+    { "id": "player/weapon/goldscythe", "width": 48, "height": 48, "offsetX": -12 },
+    { "id": "player/weapon/cobaltscythe", "width": 48, "height": 48, "offsetX": -12 },
+    { "id": "player/weapon/bronzespear", "width": 48, "height": 48, "offsetX": -12 },
     { "id": "player/weapon/ironspear", "width": 48, "height": 48, "offsetX": -12 },
+    { "id": "player/weapon/goldspear", "width": 48, "height": 48, "offsetX": -12 },
+    { "id": "player/weapon/cobaltspear", "width": 48, "height": 48, "offsetX": -12 },
 
     { "id": "player/shield/lantern", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
     { "id": "player/shield/lantern2", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
@@ -6529,7 +6551,6 @@
     { "id": "items/ironscythe", "offsetX": 0, "offsetY": 0 },
     { "id": "items/ironspear", "offsetX": 0, "offsetY": 0 },
     { "id": "items/magichamberge", "offsetX": 0, "offsetY": 0 },
-
     { "id": "items/arcanahypercube", "offsetX": 0, "offsetY": 0 },
     { "id": "items/ettispinefruit", "offsetX": 0, "offsetY": 0 },
     { "id": "items/galaxylilies", "offsetX": 0, "offsetY": 0 },
@@ -6541,5 +6562,19 @@
     { "id": "items/nexuscross", "offsetX": 0, "offsetY": 0 },
     { "id": "items/orchardsbane", "offsetX": 0, "offsetY": 0 },
     { "id": "items/wartberries", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/zephyrsgaleblade", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/zephyrsgaleblade", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/bronzebattleaxe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/bronzescythe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/bronzespear", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/cobaltbattleaxe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/cobaltscythe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/cobaltspear", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/goldbattleaxe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/goldscythe", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/goldspear", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/copperchestplate", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/tinchestplate", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/cobaltchestplate", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/bronzelegplates", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/goldlegplates", "offsetX": 0, "offsetY": 0 }
 ]
