@@ -26,7 +26,7 @@ import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();
-    private crafting: Crafting = new Crafting();
+    private crafting: Crafting;
 
     private inventory: Inventory;
     private bank: Bank;
@@ -51,6 +51,7 @@ export default class MenuController {
     public menus: { [key: string]: Menu };
 
     public constructor(private game: Game) {
+        this.crafting = new Crafting(game.player);
         this.inventory = new Inventory(this.actions);
         this.bank = new Bank(this.inventory);
         this.store = new Store(this.inventory);

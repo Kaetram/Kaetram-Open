@@ -4,7 +4,8 @@ import Utils from '../utils/util';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 
-import type { CraftingRequirement } from '@kaetram/common/types/crafting';
+import type Player from '../entity/character/player/player';
+import type { CraftingItemPreview, CraftingRequirement } from '@kaetram/common/types/crafting';
 import type { CraftingPacket } from '@kaetram/common/types/messages/outgoing';
 
 type SelectCallback = (key: string) => void;
@@ -38,7 +39,7 @@ export default class Crafting extends Menu {
     private selectCallback?: SelectCallback;
     private craftCallback?: CraftCallback;
 
-    public constructor() {
+    public constructor(private player: Player) {
         super('#crafting', '#close-crafting');
 
         this.craftOne.addEventListener('click', () => this.handleAmount(1));
@@ -61,7 +62,7 @@ export default class Crafting extends Menu {
     public handle(opcode: Opcodes.Crafting, info: CraftingPacket): void {
         switch (opcode) {
             case Opcodes.Crafting.Open: {
-                return this.show(info.type!, info.keys!);
+                return this.show(info.type!, info.previews!);
             }
 
             case Opcodes.Crafting.Select: {
@@ -119,7 +120,9 @@ export default class Crafting extends Menu {
 
         // Create new requirement element and append it to the list of requirements.
         for (let requirement of requirements)
-            this.requirements.append(this.createSlot(requirement.key, requirement.count, true));
+            this.requirements.append(
+                this.createSlot(requirement.key, requirement.name!, requirement.count, 0, true)
+            );
     }
 
     /**
@@ -159,7 +162,7 @@ export default class Crafting extends Menu {
      * @param keys Contains a string array of the available keys (used for item url path).
      */
 
-    public override show(type: Modules.Skills, keys: string[]): void {
+    public override show(type: Modules.Skills, previews: CraftingItemPreview[]): void {
         super.show();
 
         // Clear all the options.
@@ -169,11 +172,12 @@ export default class Crafting extends Menu {
         this.type = type;
 
         // Create a new option for each key and append it to the list of options.
-        for (let key of keys) this.options.append(this.createSlot(key));
+        for (let preview of previews)
+            this.options.append(this.createSlot(preview.key, '', 0, preview.level));
 
         // Select the first option by default if it exists.
-        if (keys.length > 0) {
-            this.selectCallback?.(keys[0]);
+        if (previews.length > 0) {
+            this.selectCallback?.(previews[0].key);
 
             this.options.children[0].classList.add('active');
         }
@@ -219,15 +223,27 @@ export default class Crafting extends Menu {
     /**
      * Creates a option list element and appends it to the list of options.
      * @param key The key of the item to craft.
+     * @param name The formatted name of the item to craft.
+     * @param count The amount of the item to craft.
+     * @param disableClick Whether or not to disable the click event for the option.
      */
 
-    private createSlot(key: string, count?: number, disableClick = false): HTMLLIElement {
+    private createSlot(
+        key: string,
+        name?: string,
+        count?: number,
+        level = 0,
+        disableClick = false
+    ): HTMLLIElement {
         let element = document.createElement('li'),
             icon = document.createElement('div');
 
         // Apply the classes to the elements
         element.classList.add('crafting-option');
         icon.classList.add('crafting-option-icon');
+
+        // Fade and greyscale the icon if the player doesn't have the required level.
+        if (this.player.skills[this.type]?.level < level) icon.classList.add('greyscale');
 
         // Apply the image url to the icon.
         icon.style.backgroundImage = Utils.getImageURL(key);

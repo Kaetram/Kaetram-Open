@@ -8,7 +8,12 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import { Crafting as CraftingPacket } from '@kaetram/common/network/impl';
 
 import type Player from '../game/entity/character/player/player';
-import type { CraftingInfo } from '@kaetram/common/types/crafting';
+import type {
+    CraftingInfo,
+    CraftingItem,
+    CraftingItemPreview,
+    CraftingRequirement
+} from '@kaetram/common/types/crafting';
 import type { ItemData } from '@kaetram/common/types/item';
 
 /**
@@ -29,18 +34,18 @@ export default class Crafting {
 
     public open(player: Player, type: Modules.Skills): void {
         // Attempt to obtain the keys and if none are available then we cannot open the interface.
-        let keys = this.getCraftingKeys(type);
+        let previews = this.getCraftingPreviews(type);
 
-        if (!keys) return player.notify(`You cannot do that right now.`);
+        if (!previews) return player.notify(`You cannot do that right now.`);
 
         // Set the currently active crafting interface.
         player.activeCraftingInterface = type;
 
-        // Send a packet to the client to open the crafting interface and pass the keys.
+        // Send a packet to the client to open the crafting interface and pass the previews.
         player.send(
             new CraftingPacket(Opcodes.Crafting.Open, {
                 type,
-                keys
+                previews
             })
         );
     }
@@ -75,7 +80,7 @@ export default class Crafting {
                 name: (Items as RawData)[key]?.name,
                 level: craftingItem.level,
                 result: craftingItem.result.count,
-                requirements: craftingItem.requirements
+                requirements: this.getRequirements(craftingItem)
             })
         );
     }
@@ -111,7 +116,7 @@ export default class Crafting {
         // The skill that is being used to craft the item.
         let craftingItem = craftingData[key],
             skill = player.skills.get(
-                player.activeCraftingInterface === Modules.Skills.Smelting
+                player.activeCraftingInterface === (Modules.Skills.Smelting as number)
                     ? Modules.Skills.Smithing
                     : player.activeCraftingInterface
             );
@@ -173,15 +178,42 @@ export default class Crafting {
     }
 
     /**
-     * Returns a list of the keys of items available for crafting given a skill.
+     * Returns a list of the crafting item previews. These contain the key
+     * of the item and the level required to craft the item.
      * @param skill The skill to get the crafting keys for.
-     * @returns An array of item keys that the player can craft.
+     * @returns An array of item previews that contain the key and level required to craft the item.
      */
 
-    public getCraftingKeys(skill: Modules.Skills): string[] {
+    public getCraftingPreviews(skill: Modules.Skills): CraftingItemPreview[] {
         // Skill name based on the enum.
-        let skillName = Modules.Skills[skill].toLowerCase();
+        let skillName = Modules.Skills[skill].toLowerCase(),
+            data = (CraftingData as CraftingInfo)[skillName],
+            previews: CraftingItemPreview[] = [];
 
-        return Object.keys((CraftingData as CraftingInfo)[skillName]);
+        // Iterate through the crafting data and add the key and level to the previews.
+        for (let key in data) previews.push({ key, level: data[key].level });
+
+        return previews;
+    }
+
+    /**
+     * Gets all the requirements for an item and adds the name of the
+     * item that is requried. This is displayed on the client side in
+     * the list of requirements.
+     * @param craftingItem The crafting item we are trying to get the requirements for.
+     * @returns THe requirements for the item containing the name of each requirement.
+     */
+
+    public getRequirements(craftingItem: CraftingItem): CraftingRequirement[] {
+        let { requirements } = craftingItem;
+
+        // Iterate through the requirements and add the name of the item.
+        for (let requirement of requirements) {
+            let item = (Items as RawData)[requirement.key];
+
+            if (item?.name) requirement.name = item.name;
+        }
+
+        return requirements;
     }
 }
