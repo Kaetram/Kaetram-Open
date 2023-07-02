@@ -141,7 +141,7 @@ export default class Combat {
     private checkTargetPosition(): void {
         if (!this.character.isOnSameTile()) return;
 
-        this.character.target!.findAdjacentTile();
+        this.character.findAdjacentTile();
     }
 
     /**
