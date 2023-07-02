@@ -350,25 +350,18 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Superclass empty method.
-     * @param x New x position.
-     * @param y New y position.
-     */
-
-    public move(x: number, y: number): void {
-        this.setPosition(x, y);
-    }
-
-    /**
      * When a character is on the same tile as another character and they are in a combat,
      * we use this function to move them near the other character.
      */
 
     public findAdjacentTile(): void {
-        if (!this.world.map.isColliding(this.x + 1, this.y)) this.move(this.x + 1, this.y);
-        else if (!this.world.map.isColliding(this.x - 1, this.y)) this.move(this.x - 1, this.y);
-        else if (!this.world.map.isColliding(this.x, this.y + 1)) this.move(this.x, this.y + 1);
-        else if (!this.world.map.isColliding(this.x, this.y - 1)) this.move(this.x, this.y - 1);
+        if (!this.world.map.isColliding(this.x + 1, this.y)) this.setPosition(this.x + 1, this.y);
+        else if (!this.world.map.isColliding(this.x - 1, this.y))
+            this.setPosition(this.x - 1, this.y);
+        else if (!this.world.map.isColliding(this.x, this.y + 1))
+            this.setPosition(this.x, this.y + 1);
+        else if (!this.world.map.isColliding(this.x, this.y - 1))
+            this.setPosition(this.x, this.y - 1);
     }
 
     /**

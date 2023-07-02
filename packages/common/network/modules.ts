@@ -634,7 +634,7 @@ export enum APIConstants {
 
 // Defaults that apply to all types of entities
 export enum Defaults {
-    MOVEMENT_SPEED = 250, // 250 milliseconds to traverse one tile
+    MOVEMENT_SPEED = 220, // 250 milliseconds to traverse one tile
     ATTACK_RATE = 1000, // every 1 second
     POISON_CHANCE = 15 // 15 in (235 - level) chance to poison
 }

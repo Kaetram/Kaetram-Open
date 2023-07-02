@@ -530,6 +530,22 @@ export default class Player extends Character {
     }
 
     /**
+     * When a character is on the same tile as another character and they are in a combat,
+     * we use this function to move them near the other character.
+     */
+
+    public override findAdjacentTile(): void {
+        if (!this.world.map.isColliding(this.x + 1, this.y))
+            this.setPosition(this.x + 1, this.y, true);
+        else if (!this.world.map.isColliding(this.x - 1, this.y))
+            this.setPosition(this.x - 1, this.y, true);
+        else if (!this.world.map.isColliding(this.x, this.y + 1))
+            this.setPosition(this.x, this.y + 1, true);
+        else if (!this.world.map.isColliding(this.x, this.y - 1))
+            this.setPosition(this.x, this.y - 1, true);
+    }
+
+    /**
      * Updates the region that the player is currently in.
      */
 

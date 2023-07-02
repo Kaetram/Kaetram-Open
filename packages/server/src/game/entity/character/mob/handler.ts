@@ -178,7 +178,7 @@ export default class Handler {
         // Don't have mobs block a door.
         if (this.map.isDoor(newX, newY)) return;
 
-        this.mob.move(newX, newY);
+        this.mob.setPosition(newX, newY);
     }
 
     /**

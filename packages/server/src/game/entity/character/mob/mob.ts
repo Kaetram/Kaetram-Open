@@ -301,8 +301,8 @@ export default class Mob extends Character {
      * @param y The new y position of the mob.
      */
 
-    public override move(x: number, y: number): void {
-        this.setPosition(x, y);
+    public override setPosition(x: number, y: number): void {
+        super.setPosition(x, y);
 
         this.calculateOrientation();
 
@@ -497,7 +497,7 @@ export default class Mob extends Character {
     public sendToSpawn(): void {
         this.combat.stop();
 
-        this.move(this.spawnX, this.spawnY);
+        this.setPosition(this.spawnX, this.spawnY);
     }
 
     /**
