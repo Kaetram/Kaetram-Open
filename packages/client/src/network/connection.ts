@@ -385,9 +385,14 @@ export default class Connection {
 
         switch (opcode) {
             case Opcodes.Movement.Move: {
-                if (info.forced) entity.stop(true);
+                //if (info.forced) entity.stop(true);
 
-                entity.go(info.x!, info.y!, false, info.instance !== this.game.player.instance);
+                entity.go(
+                    info.x!,
+                    info.y!,
+                    info.forced,
+                    info.instance !== this.game.player.instance
+                );
                 break;
             }
 
