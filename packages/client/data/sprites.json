@@ -67,6 +67,7 @@
     { "id": "player/weapon/ironspear", "width": 48, "height": 48, "offsetX": -12 },
     { "id": "player/weapon/goldspear", "width": 48, "height": 48, "offsetX": -12 },
     { "id": "player/weapon/cobaltspear", "width": 48, "height": 48, "offsetX": -12 },
+    { "id": "player/weapon/woodenbow", "width": 48, "height": 48, "offsetX": -8, "offsetY": -32 },
 
     { "id": "player/shield/lantern", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
     { "id": "player/shield/lantern2", "width": 48, "height": 48, "offsetX": -16, "offsetY": -20 },
@@ -6254,7 +6255,7 @@
     { "id": "items/blueberry", "offsetX": 0, "offsetY": 0 },
     { "id": "items/bluelily", "offsetX": 0, "offsetY": 0 },
     { "id": "items/book", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/boostpotion", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/speedpotion", "offsetX": 0, "offsetY": 0 },
     { "id": "items/borth", "offsetX": 0, "offsetY": 0 },
     { "id": "items/bowcommon", "offsetX": 0, "offsetY": 0 },
     { "id": "items/bowlimb", "offsetX": 0, "offsetY": 0 },
@@ -6576,5 +6577,6 @@
     { "id": "items/tinchestplate", "offsetX": 0, "offsetY": 0 },
     { "id": "items/cobaltchestplate", "offsetX": 0, "offsetY": 0 },
     { "id": "items/bronzelegplates", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/goldlegplates", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/goldlegplates", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/woodenbow", "offsetX": 0, "offsetY": 0 }
 ]

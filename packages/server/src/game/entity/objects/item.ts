@@ -632,6 +632,15 @@ export default class Item extends Entity {
     }
 
     /**
+     * Checks whether the weapon type is a bow.
+     * @returns Whether or not the item is a bow.
+     */
+
+    public isBow(): boolean {
+        return this.weaponType === 'bow';
+    }
+
+    /**
      * Sets an enchantment onto an item or updates the level if it already exists.
      * @param id The id of the enchantment.
      * @param level The level of the enchantment.
