@@ -14,6 +14,7 @@ export interface EquipmentData {
     bonuses?: Bonuses;
     attackStyle?: Modules.AttackStyle;
     attackStyles?: Modules.AttackStyle[];
+    bow?: boolean;
     archer?: boolean;
     light?: Light;
 }

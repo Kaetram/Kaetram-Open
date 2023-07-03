@@ -21,6 +21,7 @@ export default class Weapon extends Equipment {
     public defaultAttackRate: number = Modules.Defaults.ATTACK_RATE;
 
     // Weapon type
+    private bow = false;
     private archer = false;
     private magic = false;
     private attackStyles: Modules.AttackStyle[] = [];
@@ -51,6 +52,7 @@ export default class Weapon extends Equipment {
         this.projectileName = item.projectileName;
         this.manaCost = item.manaCost;
 
+        this.bow = item.isBow();
         this.archer = item.isArcherWeapon();
         this.magic = item.isMagicWeapon();
 
@@ -76,6 +78,7 @@ export default class Weapon extends Equipment {
         this.lumberjacking = -1;
         this.mining = -1;
         this.fishing = -1;
+        this.bow = false;
         this.archer = false;
         this.magic = false;
 
@@ -235,6 +238,7 @@ export default class Weapon extends Equipment {
         if (clientInfo) {
             data.attackRange = this.attackRange;
             data.attackStyles = this.attackStyles;
+            data.bow = this.bow;
             data.archer = this.archer;
         }
 
