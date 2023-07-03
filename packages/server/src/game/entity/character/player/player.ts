@@ -830,6 +830,9 @@ export default class Player extends Character {
                 `[${this.username}] Invalid container swap [${fromIndex}, ${toIndex}}]`
             );
 
+        // Ignore same index swaps.
+        if (fromIndex === toIndex) return log.warning(`[${this.username}] Same index swap.`);
+
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
         container.swap(fromIndex, container, toIndex);
