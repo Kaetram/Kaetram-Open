@@ -296,13 +296,13 @@ export default class MenuController {
     private handleInventorySelect(
         opcode: Opcodes.Container,
         fromIndex: number,
-        toIndex?: number
+        value?: number
     ): void {
         this.game.socket.send(Packets.Container, {
             opcode,
             type: Modules.ContainerType.Inventory,
             fromIndex,
-            value: toIndex
+            value
         });
     }
 

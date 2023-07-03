@@ -174,6 +174,7 @@ export default {
 
     getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container | undefined {
         switch (menuAction) {
+            case Modules.MenuActions.Interact:
             case Modules.MenuActions.Equip:
             case Modules.MenuActions.Eat:
             case Modules.MenuActions.Potion: {

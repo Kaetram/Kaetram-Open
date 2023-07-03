@@ -689,7 +689,7 @@ export default class Commands {
 
                 if (!entity) return this.player.notify(`Entity not found.`);
 
-                if (entity.isMob()) entity.move(x, y);
+                if (entity.isMob()) entity.setPosition(x, y);
 
                 break;
             }
