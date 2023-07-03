@@ -10,7 +10,7 @@ import type Actions from './actions';
 import type { SlotData } from '@kaetram/common/types/slot';
 import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
-type SelectCallback = (index: number, action: Opcodes.Container, value?: number) => void;
+type SelectCallback = (opcode: Opcodes.Container, fromIndex: number, value?: number) => void;
 type BatchCallback = () => void;
 
 interface SlotElement extends HTMLElement {
@@ -312,7 +312,7 @@ export default class Inventory extends Menu {
         let fromIndex = clone?.dataset?.index,
             toIndex = target?.dataset?.index;
 
-        if (!fromIndex || !toIndex) return;
+        if (!fromIndex || !toIndex || fromIndex === toIndex) return;
 
         this.swap(parseInt(fromIndex), parseInt(toIndex));
     }
