@@ -83,18 +83,32 @@ export default class State extends Menu {
         // Synchronize equipment data
         this.helmet.style.backgroundImage =
             Util.getImageURL(this.player.getHelmet().key) ||
-            this.getDefaultEquipmentIcon(Modules.Equipment.Helmet);
-        this.pendant.style.backgroundImage = Util.getImageURL(this.player.getPendant().key);
-        this.arrows.style.backgroundImage = Util.getImageURL(this.player.getArrows().key);
-        this.chestplate.style.backgroundImage = Util.getImageURL(this.player.getChestplate().key);
-        this.weapon.style.backgroundImage = Util.getImageURL(this.player.getWeapon().key);
+            this.getPlaceholder(Modules.Equipment.Helmet);
+        this.pendant.style.backgroundImage =
+            Util.getImageURL(this.player.getPendant().key) ||
+            this.getPlaceholder(Modules.Equipment.Pendant);
+        this.arrows.style.backgroundImage =
+            Util.getImageURL(this.player.getArrows().key) ||
+            this.getPlaceholder(Modules.Equipment.Arrows);
+        this.chestplate.style.backgroundImage =
+            Util.getImageURL(this.player.getChestplate().key) ||
+            this.getPlaceholder(Modules.Equipment.Chestplate);
+        this.weapon.style.backgroundImage =
+            Util.getImageURL(this.player.getWeapon().key) ||
+            this.getPlaceholder(Modules.Equipment.Weapon);
         this.shield.style.backgroundImage = Util.getImageURL(this.player.getShield().key);
-        this.ring.style.backgroundImage = Util.getImageURL(this.player.getRing().key);
+        this.ring.style.backgroundImage =
+            Util.getImageURL(this.player.getRing().key) ||
+            this.getPlaceholder(Modules.Equipment.Ring);
         this.weaponSkin.style.backgroundImage = Util.getImageURL(this.player.getWeaponSkin().key);
         this.armourSkin.style.backgroundImage = Util.getImageURL(this.player.getArmourSkin().key);
-        this.legplates.style.backgroundImage = Util.getImageURL(this.player.getLegplate().key);
+        this.legplates.style.backgroundImage =
+            Util.getImageURL(this.player.getLegplate().key) ||
+            this.getPlaceholder(Modules.Equipment.Legplates);
         this.cape.style.backgroundImage = Util.getImageURL(this.player.getCape().key);
-        this.boots.style.backgroundImage = Util.getImageURL(this.player.getBoots().key);
+        this.boots.style.backgroundImage =
+            Util.getImageURL(this.player.getBoots().key) ||
+            this.getPlaceholder(Modules.Equipment.Boots);
 
         // Synchronize the attack styles
         this.loadAttackStyles();
@@ -197,7 +211,7 @@ export default class State extends Menu {
             }
         }
 
-        return 'Report as bug if you see this :)';
+        return 'Create a bug report if you see this :)';
     }
 
     /**
@@ -206,16 +220,10 @@ export default class State extends Menu {
      * @returns A string of the URL for the icon.
      */
 
-    private getDefaultEquipmentIcon(type: Modules.Equipment): string {
-        switch (type) {
-            case Modules.Equipment.Helmet: {
-                return 'url("img/interface/equipment/helmet.png")';
-            }
+    private getPlaceholder(type: Modules.Equipment): string {
+        let equipment = Modules.Equipment[type].toLowerCase();
 
-            default: {
-                return '';
-            }
-        }
+        return `url("img/interface/equipment/${equipment}.png")`;
     }
 
     /**
