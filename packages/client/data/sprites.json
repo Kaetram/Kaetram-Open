@@ -92,6 +92,7 @@
     { "id": "cursors/sword", "width": 14, "height": 14 },
     { "id": "cursors/loot", "width": 14, "height": 14 },
     { "id": "cursors/talk", "width": 14, "height": 14 },
+    { "id": "cursors/bow" },
     { "id": "cursors/cooking" },
     { "id": "cursors/smithing" },
     { "id": "cursors/smelting" },
