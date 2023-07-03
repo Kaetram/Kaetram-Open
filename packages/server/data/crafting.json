@@ -81,29 +81,6 @@
             "result": {
                 "count": 1
             }
-        },
-
-        "goldenbow": {
-            "level": 32,
-            "experience": 650,
-            "requirements": [
-                {
-                    "key": "goldbar",
-                    "count": 15
-                },
-                {
-                    "key": "string",
-                    "count": 10
-                },
-                {
-                    "key": "logs",
-                    "count": 2
-                }
-            ],
-
-            "result": {
-                "count": 1
-            }
         }
     },
 
