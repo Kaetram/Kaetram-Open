@@ -1085,8 +1085,6 @@
         "type": "chestplate",
         "name": "Tin Chestplate",
         "price": 100,
-        "skill": "defense",
-        "level": 5,
         "attackStats": {
             "crush": 1,
             "slash": 2,
@@ -1561,6 +1559,32 @@
             "strength": 1,
             "archery": 1,
             "magic": 2
+        }
+    },
+    "woodenbow": {
+        "type": "weaponarcher",
+        "name": "Wooden Bow",
+        "weaponType": "bow",
+        "price": 100,
+        "attackStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 1,
+            "archery": 2,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 3,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 2,
+            "magic": -1
         }
     },
     "magichamberge": {
@@ -2732,13 +2756,13 @@
         "price": 50,
         "description": "A key that allows entrance into Santa's secret chamber. Crumbles upon entering."
     },
-    "boostpotion": {
+    "speedpotion": {
         "type": "object",
-        "name": "Boost Potion",
+        "name": "Speed Potion",
         "price": 2500,
         "description": "Drinking this will probably speed up your attack rate for a short period of time. I think.",
         "edible": true,
-        "plugin": "boostpotion"
+        "plugin": "speedpotion"
     },
     "accuracypotion": {
         "type": "object",
