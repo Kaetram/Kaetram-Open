@@ -24,6 +24,7 @@ export default class Weapon extends Equipment {
     private bow = false;
     private archer = false;
     private magic = false;
+    private twoHanded = false;
     private attackStyles: Modules.AttackStyle[] = [];
 
     public constructor(key = '', count = -1, enchantments: Enchantments = {}) {
@@ -55,6 +56,7 @@ export default class Weapon extends Equipment {
         this.bow = item.isBow();
         this.archer = item.isArcherWeapon();
         this.magic = item.isMagicWeapon();
+        this.twoHanded = item.isTwoHanded();
 
         /**
          * If a parameter is provided (generally the last used attack style for the weapon type)
@@ -81,6 +83,7 @@ export default class Weapon extends Equipment {
         this.bow = false;
         this.archer = false;
         this.magic = false;
+        this.twoHanded = false;
 
         // Attack styles
         this.updateAttackStyle(Modules.AttackStyle.None);
@@ -211,6 +214,14 @@ export default class Weapon extends Equipment {
 
     public isExplosive(): boolean {
         return Modules.Enchantment.Explosive in this.enchantments;
+    }
+
+    /**
+     * @returns Whether or not the current weapon is two-handed.
+     */
+
+    public isTwoHanded(): boolean {
+        return this.twoHanded;
     }
 
     /**

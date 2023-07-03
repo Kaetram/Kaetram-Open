@@ -247,13 +247,12 @@ export default class Player extends Character {
         if (type === Modules.Equipment.Weapon) {
             this.attackRange = attackRange || 1;
             this.setAttackStyle(attackStyle!, attackStyles!);
+
+            this.equipments[type].bow = !!bow;
         }
 
         // If a light is present on the equipment just apply it.
         if (light) this.equipments[type].light = light;
-
-        // If the weapon is a bow, set the bow property to true.
-        if (bow) this.equipments[type].bow = bow;
 
         // Disable drawing for the other equipment slots if we're wearing a skin.
         if (type === Modules.Equipment.ArmourSkin) this.toggleDrawableEquipments(false);

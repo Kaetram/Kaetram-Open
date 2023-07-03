@@ -57,6 +57,7 @@ export interface ItemData {
     achievement?: string; // Achievement required to use the item.
     quest?: string; // Quest requirement for the item.
     attackRate?: number;
+    twoHanded?: boolean;
     poisonous?: boolean;
     freezing?: boolean;
     burning?: boolean;

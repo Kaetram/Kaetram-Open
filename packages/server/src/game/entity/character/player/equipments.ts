@@ -93,9 +93,11 @@ export default class Equipments {
     /**
      * Takes information about an item and equips it onto the player. It figures
      * out what equipment type it is, and updates that equipment's information.
+     * @param item The item to equip.
+     * @param fromIndex The index of the item in the inventory.
      */
 
-    public equip(item: Item): void {
+    public equip(item: Item, fromIndex: number): void {
         if (!item)
             return log.warning(
                 `[${this.player.username}] Attempted to equip something mysterious.`
@@ -106,11 +108,41 @@ export default class Equipments {
 
         if (!equipment) return;
 
+        /**
+         * If the player is equipping a two-handed weapon and they have a shield currently equipped, then we
+         * need to ensure that they have enough space in their inventory before removing the shield.
+         */
+
+        if (item.isTwoHanded() && !this.getShield().isEmpty()) {
+            if (!this.player.inventory.hasSpace())
+                return this.player.notify(`You don't have enough space in your inventory.`);
+
+            this.unequip(Modules.Equipment.Shield);
+        }
+
+        /**
+         * Similarly to handling the two-handed weapon, we must also cover the case when the player tries
+         * to equip a shield while wielding a two-handed weapon. We must ensure that they have enough space
+         * in their inventory before removing the weapon.
+         */
+
+        if (type === Modules.Equipment.Shield && this.getWeapon().isTwoHanded()) {
+            if (!this.player.inventory.hasSpace())
+                return this.player.notify(`You don't have enough space in your inventory.`);
+
+            this.unequip(Modules.Equipment.Weapon);
+        }
+
+        // Remove the item from the inventory.
+        this.player.inventory.remove(fromIndex, item.count);
+
+        // If there is already an item equipped, we unequip it.
         if (!equipment.isEmpty())
             this.player.inventory.add(
                 new Item(equipment.key, -1, -1, false, equipment.count, equipment.enchantments)
             );
 
+        // Include the last attack style when we're equipping a weapon.
         if (equipment instanceof Weapon)
             equipment.update(item, this.player.getLastAttackStyle(item.weaponType));
         else equipment.update(item);
@@ -323,6 +355,15 @@ export default class Equipments {
 
     public getArrows(): Arrows {
         return this.get(Modules.Equipment.Arrows) as Arrows;
+    }
+
+    /**
+     * Grabs the shield equipment of the player.
+     * @returns Shield equipment object.
+     */
+
+    public getShield(): Shield {
+        return this.get(Modules.Equipment.Shield) as Shield;
     }
 
     /**
