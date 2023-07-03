@@ -758,6 +758,7 @@ export default class Player extends Character {
 
                 if (!item) return;
 
+                // Have the plugin handle the action if it exists.
                 if (item.interactable && item.plugin?.onUse(this)) return;
 
                 // Checks if the player can eat and uses the item's plugin to handle the action.
@@ -771,10 +772,9 @@ export default class Player extends Character {
                         this.inventory.add(new Item('bowlmedium', -1, -1, false, 1));
                 }
 
-                if (item.isEquippable() && item.canEquip(this)) {
-                    this.inventory.remove(fromIndex, item.count);
-                    this.equipment.equip(item);
-                }
+                // The item is equippable and the player has the requirements to equip it.
+                if (item.isEquippable() && item.canEquip(this))
+                    this.equipment.equip(item, fromIndex);
 
                 break;
             }

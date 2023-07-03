@@ -48,6 +48,7 @@ export default class Item extends Entity {
 
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
+    public twoHanded = false;
     public poisonous = false;
     public freezing = false;
     public burning = false;
@@ -127,6 +128,7 @@ export default class Item extends Entity {
         this.defenseStats = this.data.defenseStats || this.defenseStats;
         this.bonuses = this.data.bonuses || this.bonuses;
         this.attackRate = this.data.attackRate || this.attackRate;
+        this.twoHanded = this.data.twoHanded || this.twoHanded;
         this.poisonous = this.data.poisonous || this.poisonous;
         this.freezing = this.data.freezing || this.freezing;
         this.burning = this.data.burning || this.burning;
@@ -638,6 +640,14 @@ export default class Item extends Entity {
 
     public isBow(): boolean {
         return this.weaponType === 'bow';
+    }
+
+    /**
+     * @returns Whether or not the equipment is two handed.
+     */
+
+    public isTwoHanded(): boolean {
+        return this.twoHanded;
     }
 
     /**

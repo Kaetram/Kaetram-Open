@@ -1565,6 +1565,7 @@
         "type": "weaponarcher",
         "name": "Wooden Bow",
         "weaponType": "bow",
+        "twoHanded": true,
         "price": 100,
         "attackStats": {
             "crush": 1,
