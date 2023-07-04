@@ -335,6 +335,12 @@ export default class Incoming {
                 // Skip players or invalid entities.
                 if (!entity || entity.isPlayer()) return;
 
+                // Do not update if it's the same value.
+                if (entity.x === requestX && entity.y === requestY) return;
+
+                // For mobs update the position without a packet.
+                if (entity.isMob()) return entity.setPosition(requestX!, requestY!, false);
+
                 return entity.setPosition(requestX!, requestY!);
             }
         }

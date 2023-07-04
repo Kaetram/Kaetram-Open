@@ -124,6 +124,8 @@ export default class Combat {
         if (this.character.isNearTarget()) {
             if (!this.canAttack()) return;
 
+            this.character.stopMovement();
+
             let hit = this.createHit();
 
             this.sendAttack(hit);
