@@ -224,8 +224,6 @@ export default class EntitiesController {
         let projectile = new Projectile(info.instance, attacker, info.hitType!);
 
         projectile.name = info.name;
-
-        projectile.setStart(attacker.x, attacker.y);
         projectile.setTarget(target);
 
         projectile.type = info.type;
