@@ -276,15 +276,16 @@ export default class Stores {
         // Find the item in the store if it exists.
         let item = player.inventory.getItem(slot),
             storeItem = store.items.find((item) => item.key === slot.key),
-            price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
+            price = storeItem?.price || item.price, // Price of the item being sold.
+            totalCoins = this.getTotalCost(count, price, storeItem?.count); // Amount of coins the player will be receiving.
 
-        // Items without prices (quest items) cannot be sold.
-        if (price < 0) return player.notify(t('store:CANNOT_SELL_ITEM'));
+        // Total amount of coins is invalid, this shouldn't technically happen.
+        if (totalCoins < 0) return player.notify(t('store:CANNOT_SELL_ITEM'));
 
         player.inventory.remove(index, count);
 
         // Very weird if this somehow happened at this point in the code, I'd be curious to see how.
-        if (player.inventory.add(this.getCurrency(store.currency, price)) < 1)
+        if (player.inventory.add(this.getCurrency(store.currency, totalCoins)) < 1)
             return player.notify(t('store:NOT_ENOUGH_CURRENCY'));
 
         // Increment the item count or add to store only if the player isn't a cheater :)
@@ -327,13 +328,14 @@ export default class Stores {
         // Create an instance of an item and try to check if that item exists in the store.
         let item = player.inventory.getItem(slot),
             storeItem = store.items.find((item) => item.key === slot.key),
-            price = Math.ceil((storeItem ? storeItem.price : item.price) / 2) * count; // Use store price or item default.
+            price = storeItem?.price || item.price, // Price of the item being sold.
+            totalCoins = this.getTotalCost(count, price, storeItem?.count); // Amount of coins the player will be receiving.
 
-        // Items without prices (quest items) cannot be sold.
-        if (price < 1) return player.notify(t('store:CANNOT_SELL_ITEM'));
+        // An invalid amount of coins was calculated, this shouldn't happen.
+        if (totalCoins < 1) return player.notify(t('store:CANNOT_SELL_ITEM'));
 
         // Invalid price, this shouldn't happen.
-        if (isNaN(price)) return log.error(`Malformed pricing for item selection.`);
+        if (isNaN(totalCoins)) return log.error(`Malformed pricing for item selection.`);
 
         log.stores(
             `Player ${player.username} sold ${count} ${item.key} for ${item.price * count} ${
@@ -349,7 +351,7 @@ export default class Stores {
                     key: item.key,
                     name: item.name,
                     count,
-                    price,
+                    price: totalCoins,
                     index
                 }
             })
@@ -437,6 +439,42 @@ export default class Stores {
 
     public getCurrency(key: string, count: number): Item {
         return new Item(key, -1, -1, false, count);
+    }
+
+    /**
+     * Uses a linear decrease in the price based on the amount of items in the store. Given
+     * the number of items that the player wants to sell, and the amount of items in the store
+     * we calculate how much currency the player will receive.
+     * @param count The amount of the item that the player is trying to sell.
+     * @param price The price of the item (either default or store price).
+     * @param storeCount The current amount of items in the store.
+     * @param limit The limit at which the stock reaches minimum price.
+     * @returns A total cost for each item.
+     */
+
+    private getTotalCost(count: number, price: number, storeCount = 0, limit = 10): number {
+        let totalCost = 0;
+
+        // If there is more than 10 items then the total cost is 20% of the price.
+        if (storeCount > limit) return 0.2 * price * count;
+
+        // Used to store value limits.
+        let remaining = count;
+
+        // Iterate through the items and calculate the cost of each item.
+        for (let i = 0; i < count; i++) {
+            // Break after the tenth item since we'll reach the limit.
+            if (i > limit) break;
+
+            totalCost += ((50 - 3 * Math.min(storeCount + i, limit)) / 100) * price;
+
+            remaining--;
+        }
+
+        // Add the remaining items at 20% of the price.
+        totalCost += 0.2 * price * remaining;
+
+        return Math.floor(totalCost);
     }
 
     /**
