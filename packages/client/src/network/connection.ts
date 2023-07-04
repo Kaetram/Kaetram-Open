@@ -385,8 +385,6 @@ export default class Connection {
 
         switch (opcode) {
             case Opcodes.Movement.Move: {
-                //if (info.forced) entity.stop(true);
-
                 entity.go(
                     info.x!,
                     info.y!,
@@ -417,8 +415,7 @@ export default class Connection {
             }
 
             case Opcodes.Movement.Stop: {
-                if (info.forced) entity.stop(true);
-                break;
+                return entity.stop(true);
             }
 
             case Opcodes.Movement.Speed: {

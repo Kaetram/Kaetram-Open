@@ -1,4 +1,5 @@
 import { Modules } from '@kaetram/common/network';
+import { Hits } from '@kaetram/common/network/modules';
 
 interface Colour {
     fill: string;
@@ -13,14 +14,14 @@ interface Colours {
 export default class Splat {
     public opacity = 1;
 
-    private text: string;
-    private prefix: string;
-    private suffix: string;
-    private lastTime: number;
-    private speed: number;
-    private updateY: number;
-    private duration: number;
-    private colour: Colour;
+    private text = '';
+    private prefix = '';
+    private suffix = '';
+    private lastTime = 0;
+    private speed = 100;
+    private updateY = 1;
+    private duration = 1000;
+    private colour: Colour = Modules.DamageColours[Hits.Normal];
 
     public fill = 'rgb(255, 50, 50)';
     public stroke = 'rgb(255, 180, 180)';
@@ -37,13 +38,9 @@ export default class Splat {
         skill = -1
     ) {
         this.text = `${value}`;
-        this.prefix = '';
-        this.suffix = '';
-        this.lastTime = 0;
-        this.speed = 100;
         this.updateY = this.isHeal() ? 2 : 1;
         this.duration = this.isHeal() ? 400 : 1000;
-        this.colour = (Modules.DamageColours as Colours)[type];
+        this.colour = (Modules.DamageColours as Colours)[type] || this.colour;
 
         if (skill > -1) this.colour = (Modules.SkillExpColours as Colours)[skill];
 

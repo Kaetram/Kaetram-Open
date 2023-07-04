@@ -412,6 +412,11 @@ export let DamageColours = {
     [Hits.Burning]: {
         fill: 'rgb(227, 170, 14)',
         stroke: 'rgb(235, 135, 52)'
+    },
+
+    [Hits.Terror]: {
+        fill: 'rgb(89, 21, 125)',
+        stroke: 'rgb(136, 29, 194)'
     }
 };
 
