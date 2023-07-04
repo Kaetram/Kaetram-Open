@@ -44,7 +44,7 @@ export default class Mob extends Character {
     public boss = false;
     public respawnable = true;
     public miniboss = false;
-    public roaming = false;
+    public roaming = true; // Roaming is true by default
     public poisonous = false;
     public freezing = false;
     public burning = false;
@@ -265,7 +265,7 @@ export default class Mob extends Character {
         this.respawn();
 
         this.setPoison();
-        this.setPosition(this.spawnX, this.spawnY);
+        this.setPosition(this.spawnX, this.spawnY, false);
     }
 
     /**
@@ -299,21 +299,23 @@ export default class Mob extends Character {
      * to all the adjacent regions.
      * @param x The new x position of the mob.
      * @param y The new y position of the mob.
+     * @param withPacket Whether or not to send the movement packet.
      */
 
-    public override setPosition(x: number, y: number): void {
+    public override setPosition(x: number, y: number, withPacket = true): void {
         super.setPosition(x, y);
 
         this.calculateOrientation();
 
-        this.world.push(Modules.PacketType.Regions, {
-            region: this.region,
-            packet: new Movement(Opcodes.Movement.Move, {
-                instance: this.instance,
-                x,
-                y
-            })
-        });
+        if (withPacket)
+            this.world.push(Modules.PacketType.Regions, {
+                region: this.region,
+                packet: new Movement(Opcodes.Movement.Move, {
+                    instance: this.instance,
+                    x,
+                    y
+                })
+            });
     }
 
     /**
