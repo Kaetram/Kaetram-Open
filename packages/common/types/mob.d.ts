@@ -1,5 +1,13 @@
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 
+export interface MobSkills {
+    accuracy: number;
+    strength: number;
+    defense: number;
+    magic: number;
+    archery: number;
+}
+
 export interface MobData {
     name: string;
     description?: string | string[];
@@ -7,12 +15,7 @@ export interface MobData {
     drops?: { [itemKey: string]: number };
     dropTables?: string[];
     level?: number;
-    health?: number;
-    accuracy?: number;
-    strength?: number;
-    defense?: number;
-    magic?: number;
-    archery?: number;
+    skills?: MobSkills;
     attackLevel?: number;
     attackStats?: Stats;
     defenseStats?: Stats;

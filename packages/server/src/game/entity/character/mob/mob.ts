@@ -21,7 +21,7 @@ import type Entity from '../../entity';
 import type Chest from '../../objects/chest';
 import type Player from '../player/player';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
-import type { RawData, MobData } from '@kaetram/common/types/mob';
+import type { RawData, MobData, MobSkills } from '@kaetram/common/types/mob';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 interface ItemDrop {
@@ -60,12 +60,14 @@ export default class Mob extends Character {
     private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
     private dropTables: string[] = [];
 
-    public health: number = Modules.MobDefaults.HEALTH_LEVEL;
-    public accuracy: number = Modules.MobDefaults.ACCURACY_LEVEL;
-    public strength: number = Modules.MobDefaults.STRENGTH_LEVEL;
-    public magic: number = Modules.MobDefaults.MAGIC_LEVEL;
-    public archery: number = Modules.MobDefaults.ARCHERY_LEVEL;
-    public defense: number = Modules.MobDefaults.DEFENSE_LEVEL;
+    private skills: MobSkills = {
+        accuracy: Modules.MobDefaults.ACCURACY_LEVEL,
+        strength: Modules.MobDefaults.STRENGTH_LEVEL,
+        defense: Modules.MobDefaults.DEFENSE_LEVEL,
+        magic: Modules.MobDefaults.MAGIC_LEVEL,
+        archery: Modules.MobDefaults.ARCHERY_LEVEL
+    };
+
     public respawnDelay: number = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
     public aggroRange: number = Modules.MobDefaults.AGGRO_RANGE;
     public roamDistance: number = Modules.MobDefaults.ROAM_DISTANCE;
@@ -95,7 +97,6 @@ export default class Mob extends Character {
         this.loadData(this.data);
         this.loadPlugin(plugin ? key : this.data.plugin!); // plugin boolean is used to load plugin based on key.
         this.loadSpawns();
-        this.loadStats();
 
         if (!this.handler) log.error(`[Mob] Mob handler for ${key} is not initialized.`);
     }
@@ -115,15 +116,10 @@ export default class Mob extends Character {
         this.drops = data.drops || this.drops;
         this.dropTables = data.dropTables || this.dropTables;
         this.level = data.level || this.level;
-        this.health = data.health || this.health;
-        this.accuracy = data.accuracy || this.accuracy;
-        this.strength = data.strength || this.strength;
-        this.magic = data.magic || this.magic;
-        this.archery = data.archery || this.magic;
+        this.skills = data.skills || this.skills;
         this.attackStats = data.attackStats || this.attackStats;
         this.defenseStats = data.defenseStats || this.defenseStats;
         this.bonuses = data.bonuses || this.bonuses;
-        this.defense = data.defense || this.defense;
         this.attackRange = data.attackRange || this.attackRange;
         this.aggroRange = data.aggroRange || this.aggroRange;
         this.aggressive = data.aggressive || this.aggressive;
@@ -194,35 +190,6 @@ export default class Mob extends Character {
 
         // Custom plugin can be specified on a per-instance bassis.
         if (data.plugin) this.loadPlugin(data.plugin);
-    }
-
-    /**
-     * Loads the attack, defense stats, and the bonuses for the mob.
-     */
-
-    private loadStats(): void {
-        this.attackStats = {
-            crush: this.attackStats.crush,
-            stab: this.attackStats.stab,
-            slash: this.attackStats.slash,
-            archery: this.attackStats.archery,
-            magic: this.attackStats.magic
-        };
-
-        this.defenseStats = {
-            crush: this.defenseStats.crush,
-            stab: this.defenseStats.stab,
-            slash: this.defenseStats.slash,
-            archery: this.defenseStats.archery,
-            magic: this.defenseStats.magic
-        };
-
-        this.bonuses = {
-            accuracy: this.bonuses.accuracy,
-            strength: this.bonuses.strength,
-            archery: this.bonuses.archery,
-            magic: this.bonuses.magic
-        };
     }
 
     /**
@@ -686,7 +653,7 @@ export default class Mob extends Character {
      */
 
     public override getAccuracyLevel(): number {
-        return this.accuracy;
+        return this.skills.accuracy;
     }
 
     /**
@@ -696,7 +663,7 @@ export default class Mob extends Character {
      */
 
     public override getStrengthLevel(): number {
-        return this.strength;
+        return this.skills.strength;
     }
 
     /**
@@ -706,7 +673,7 @@ export default class Mob extends Character {
      */
 
     public override getArcheryLevel(): number {
-        return this.archery;
+        return this.skills.archery;
     }
 
     /**
@@ -716,7 +683,7 @@ export default class Mob extends Character {
      */
 
     public override getDefenseLevel(): number {
-        return this.defense;
+        return this.skills.defense;
     }
 
     /**
