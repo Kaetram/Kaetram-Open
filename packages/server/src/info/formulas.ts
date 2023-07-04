@@ -1,8 +1,8 @@
-import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
-import type { Stats } from '@kaetram/common/types/item';
 import type Character from '../game/entity/character/character';
+import type { Stats } from '@kaetram/common/types/item';
 
 export default {
     LevelExp: [] as number[],
@@ -125,6 +125,9 @@ export default {
 
         // Decrease accuracy if the target has the defense potion effect.
         if (target.status.has(Modules.Effects.DefensePotion)) accuracy += 0.08;
+
+        // Increase accuracy if the target has the terror effect.
+        if (target.status.has(Modules.Effects.Terror)) accuracy -= 0.4;
 
         // Terror decreases overall accuracy, so we increase it by 1.
         if (attacker.status.has(Modules.Effects.Terror)) accuracy += 1;
