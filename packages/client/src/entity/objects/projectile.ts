@@ -18,6 +18,8 @@ export default class Projectile extends Entity {
 
     public constructor(instance: string, public owner: Entity, private hitType: Modules.Hits) {
         super(instance, Modules.EntityType.Projectile);
+
+        this.setGridPosition(owner.gridX, owner.gridY);
     }
 
     public override idle(): void {
@@ -26,10 +28,6 @@ export default class Projectile extends Entity {
 
     public impact(): void {
         this.impactCallback?.();
-    }
-
-    public setStart(x: number, y: number): void {
-        this.setGridPosition(Math.floor(x / Utils.tileSize), Math.floor(y / Utils.tileSize));
     }
 
     public setTarget(target: Character): void {
