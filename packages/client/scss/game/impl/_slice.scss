@@ -26,9 +26,13 @@
 }
 
 .slice-inner-container {
+    position: relative;
+
     overflow: auto;
+
     box-sizing: border-box;
     padding: 0.75em;
+
     border-image: url('/img/interface/slices/inner-container.png') 34% fill / 2em / 0 stretch;
 }
 

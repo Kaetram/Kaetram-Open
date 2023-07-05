@@ -565,7 +565,7 @@ export default class Incoming {
     private handleGuild(packet: GuildPacket): void {
         switch (packet.opcode) {
             case Opcodes.Guild.Create: {
-                return this.world.guilds.create(
+                this.world.guilds.create(
                     this.player,
                     packet.name!,
                     packet.colour!,
@@ -573,22 +573,44 @@ export default class Incoming {
                     packet.outlineColour!,
                     packet.crest!
                 );
+
+                break;
             }
 
             case Opcodes.Guild.Join: {
-                return this.world.guilds.join(this.player, packet.identifier!);
+                this.world.guilds.join(this.player, packet.identifier!);
+
+                break;
             }
 
             case Opcodes.Guild.Leave: {
-                return this.world.guilds.leave(this.player);
+                this.world.guilds.leave(this.player);
+
+                break;
             }
 
             case Opcodes.Guild.List: {
-                return this.world.guilds.get(this.player, packet.from!, packet.to!);
+                this.world.guilds.get(this.player, packet.from!, packet.to!);
+
+                break;
             }
 
             case Opcodes.Guild.Chat: {
-                return this.world.guilds.chat(this.player, packet.message!);
+                this.world.guilds.chat(this.player, packet.message!);
+
+                break;
+            }
+
+            case Opcodes.Guild.Promote: {
+                this.world.guilds.promote(this.player, packet.username!);
+
+                break;
+            }
+
+            case Opcodes.Guild.Demote: {
+                this.world.guilds.demote(this.player, packet.username!);
+
+                break;
             }
         }
     }

@@ -128,7 +128,9 @@ export enum Guild {
     Banner,
     List,
     Error,
-    Chat
+    Chat,
+    Promote,
+    Demote
 }
 
 export enum Pointer {
