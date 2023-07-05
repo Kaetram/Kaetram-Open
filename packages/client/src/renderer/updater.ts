@@ -69,7 +69,7 @@ export default class Updater {
                 entity.x += dx * amount;
                 entity.y += dy * amount;
 
-                if (tDistance < 5) entity.impact();
+                if (tDistance < 5) entity.impactCallback?.();
 
                 entity.lastUpdate = this.game.time;
 
