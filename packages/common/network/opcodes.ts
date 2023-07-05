@@ -130,7 +130,8 @@ export enum Guild {
     Error,
     Chat,
     Promote,
-    Demote
+    Demote,
+    Kick
 }
 
 export enum Pointer {

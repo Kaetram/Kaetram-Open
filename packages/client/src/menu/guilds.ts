@@ -63,9 +63,11 @@ export default class Guilds extends Menu {
     private sidebarList: HTMLUListElement = document.querySelector('#sidebar-list')!;
 
     private selectedMember?: string;
+    private memberName: HTMLElement = document.querySelector('#guild-member-selected')!;
     private memberDialog: HTMLElement = document.querySelector('#guild-member-dialog')!;
     private memberPromote: HTMLElement = document.querySelector('#guild-member-promote')!;
     private memberDemote: HTMLElement = document.querySelector('#guild-member-demote')!;
+    private memberKick: HTMLElement = document.querySelector('#guild-member-kick')!;
 
     // Indexing - default values, used for pagination.
     private from = 0;
@@ -105,6 +107,7 @@ export default class Guilds extends Menu {
 
         this.memberPromote.addEventListener('click', this.handlePromote.bind(this));
         this.memberDemote.addEventListener('click', this.handleDemote.bind(this));
+        this.memberKick.addEventListener('click', this.handleKick.bind(this));
 
         this.loadSidebar();
         this.loadDecorations();
@@ -267,6 +270,20 @@ export default class Guilds extends Menu {
 
         this.game.socket.send(Packets.Guild, {
             opcode: Opcodes.Guild.Demote,
+            username: this.selectedMember
+        });
+    }
+
+    /**
+     * Handler for when the player clicks the kick button.
+     */
+
+    private handleKick(): void {
+        this.memberListContainer.querySelector('ul')!.classList.remove('dimmed');
+        this.memberDialog.style.display = 'none';
+
+        this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.Kick,
             username: this.selectedMember
         });
     }
@@ -791,6 +808,7 @@ export default class Guilds extends Menu {
 
             element.addEventListener('click', () => {
                 this.selectedMember = element.dataset.name;
+                this.memberName.textContent = Util.formatName(this.selectedMember, 14);
 
                 this.memberListContainer.querySelector('ul')!.classList.add('dimmed');
 
