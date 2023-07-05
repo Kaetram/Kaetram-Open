@@ -366,6 +366,15 @@
     }
 }
 
+#guild-member-selected {
+    padding: 0.5em;
+    text-align: center;
+}
+
+#guild-member-demote {
+    margin-right: 1em;
+}
+
 @include sprite.sheet(
     $image: 'guilds/elements',
     $x: 242,

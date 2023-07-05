@@ -612,6 +612,12 @@ export default class Incoming {
 
                 break;
             }
+
+            case Opcodes.Guild.Kick: {
+                this.world.guilds.kick(this.player, packet.username!);
+
+                break;
+            }
         }
     }
 
