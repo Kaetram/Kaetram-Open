@@ -226,8 +226,6 @@ export default class EntitiesController {
         projectile.name = info.name;
         projectile.setTarget(target);
 
-        projectile.type = info.type;
-
         /**
          * Move this into the external overall function
          */
