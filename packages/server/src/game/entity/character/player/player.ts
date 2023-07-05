@@ -107,7 +107,6 @@ export default class Player extends Character {
     public isGuest = false;
     public canTalk = true;
     public noclip = false;
-    public jailed = false;
     public invalidateMovement = false;
     public questsLoaded = false;
     public achievementsLoaded = false;
@@ -132,9 +131,10 @@ export default class Player extends Character {
     // Warps
     public lastWarp = 0;
 
-    // Ban and mute values
+    // Moderation variables
     public ban = 0; // epoch timestamp
     public mute = 0;
+    public jail = 0;
 
     // Player miscellaneous data
     public mapVersion = -1;
@@ -234,6 +234,7 @@ export default class Player extends Character {
         this.guild = data.guild;
         this.rank = data.rank || Modules.Ranks.None;
         this.ban = data.ban;
+        this.jail = data.jail;
         this.mute = data.mute;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
@@ -465,6 +466,14 @@ export default class Player extends Character {
 
         if (activeEvent)
             this.notify(`The ${activeEvent} event is currently active!`, 'crimsonred', '', true);
+
+        if (this.isJailed())
+            this.notify(
+                `You are currently jailed for ${this.getJailDuration()}.`,
+                'crimsonred',
+                '',
+                true
+            );
     }
 
     /**
@@ -1656,6 +1665,8 @@ export default class Player extends Character {
      */
 
     public getSpawn(): Position {
+        if (this.isJailed()) return Utils.getPositionFromString(Modules.Constants.JAIL_SPAWN_POINT);
+
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
@@ -1779,6 +1790,14 @@ export default class Player extends Character {
 
     public isMuted(): boolean {
         return this.mute - Date.now() > 0;
+    }
+
+    /**
+     * @returns Whether or not the player is jailed.
+     */
+
+    public isJailed(): boolean {
+        return this.jail - Date.now() > 0;
     }
 
     /**
@@ -2433,6 +2452,19 @@ export default class Player extends Character {
             return this.equipment.getWeapon().attackRate - 200;
 
         return this.equipment.getWeapon().attackRate;
+    }
+
+    /**
+     * Gets the remaining time amount in a string format.
+     * @returns The string format of the amount of minutes or seconds remaining.
+     */
+
+    public getJailDuration(): string {
+        let duration = this.jail - Date.now();
+
+        return duration > 60_000
+            ? `${Math.ceil(duration / 60_000)} more minutes`
+            : `${Math.floor(duration / 1000)} more seconds`;
     }
 
     /**
