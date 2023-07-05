@@ -11,6 +11,27 @@
         "name": "King"
     },
 
+    "prisoner": {
+        "name": "Prisoner",
+        "text": [
+            "Oh hey there, it's been so long since I've seen a new face.",
+            "I've been trapped here for ages.",
+            "But you'll probably be fine to be honest.",
+            "I'm guessing you did something to get in here?",
+            "Let me let you in on a little secret.",
+            "This whole world is a prison.",
+            "I don't even think it's real.",
+            "I think it's just a simulation.",
+            "I think we're all just a simulation.",
+            "I think I'm just a simulation.",
+            "I think you're just a simulation.",
+            "Anyway, hang in there and when your time runs out,",
+            "You can just teleport back.",
+            "As for me, I'll stay here...",
+            "Forever..."
+        ]
+    },
+
     "villagegirl": {
         "name": "Wife",
         "text": ["Please, call me Azaria."]

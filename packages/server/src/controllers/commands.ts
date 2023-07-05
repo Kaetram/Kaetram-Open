@@ -72,7 +72,12 @@ export default class Commands {
                 return this.player.notify(`x: ${this.player.x} y: ${this.player.y}`);
             }
 
+            case 'g':
+            case 'gc':
             case 'global': {
+                if (this.player.isJailed())
+                    return this.player.notify('You cannot use global chat while jailed.');
+
                 return this.player.chat(
                     Filter.clean(blocks.join(' ')),
                     true,
@@ -239,6 +244,55 @@ export default class Commands {
                 );
 
                 break;
+            }
+
+            case 'jail': {
+                let duration = parseInt(blocks.shift()!),
+                    username = blocks.join(' ');
+
+                if (!duration || !username)
+                    return this.player.notify(
+                        'Malformed command, expected /jail [duration] [username]'
+                    );
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
+
+                // Limit the duration of the jail sentence for mods.
+                if (this.player.isMod() && duration > 12) duration = 12;
+
+                let hours = duration;
+
+                // Convert hours to milliseconds.
+                duration *= 60 * 60 * 1000;
+
+                player.jail = Date.now() + duration;
+                player.sendToSpawn();
+
+                player.notify(`You have been jailed for ${hours} hours.`, 'crimsonred');
+                this.player.notify(`${player.username} has been jailed for ${hours} hours.`);
+
+                break;
+            }
+
+            case 'unjail': {
+                let username = blocks.join(' ');
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /unjail [username]`);
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
+
+                player.jail = 0;
+                player.sendToSpawn();
+
+                player.notify(`You have been unjailed.`);
+                this.player.notify(`${player.username} has been unjailed.`);
             }
         }
     }
