@@ -5,6 +5,7 @@ import { isLargeScreen } from '../utils/detect';
 
 import { Opcodes } from '@kaetram/common/network';
 
+import type Game from '../game';
 import type Player from '../entity/character/player/player';
 
 type ConfirmCallback = (username: string, remove?: boolean) => void;
@@ -14,6 +15,8 @@ interface FriendsElement extends HTMLLIElement {
 }
 
 export default class Friends extends Menu {
+    private player: Player;
+
     private page: HTMLDivElement = document.querySelector('#friends-page')!;
 
     // List where we store all the friends.
@@ -39,8 +42,10 @@ export default class Friends extends Menu {
     private popupActive = false;
     private removeActive = false;
 
-    public constructor(private player: Player) {
+    public constructor(private game: Game) {
         super('#friends-container', undefined, '#friends-button');
+
+        this.player = game.player;
 
         this.addButton.addEventListener('click', () => this.showPopup());
         this.removeButton.addEventListener('click', () => this.showPopup(true));
@@ -128,6 +133,15 @@ export default class Friends extends Menu {
         if (!this.player.friends[username]?.online) return;
 
         this.messageCallback?.(username);
+    }
+
+    /**
+     * Shortcut function for sending a message notification to the user.
+     * @param message The message string that we want to display.
+     */
+
+    private notify(message: string): void {
+        this.game.input.chatHandler.add('WORLD', message, '#0dd9e0', true);
     }
 
     /**
@@ -253,9 +267,13 @@ export default class Friends extends Menu {
         if (online) {
             world.classList.add(this.player.serverId === serverId ? 'text-green' : 'text-yellow');
             world.innerHTML = `World ${friend.serverId}`;
+
+            this.notify(`${Util.formatName(username)} has logged in.`);
         } else {
             world.classList.remove('text-green', 'text-yellow');
             world.innerHTML = 'Offline';
+
+            this.notify(`${Util.formatName(username)} has logged out.`);
         }
     }
 
