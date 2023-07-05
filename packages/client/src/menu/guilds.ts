@@ -8,10 +8,6 @@ import type Game from '../game';
 import type { ListInfo, Member } from '@kaetram/common/types/guild';
 import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
 
-interface ListElement extends HTMLElement {
-    identifier?: string;
-}
-
 export default class Guilds extends Menu {
     // The banner is the banner of the guild that the player is currently in.
     private banner: HTMLElement = document.querySelector('#guilds .banner')!;
@@ -66,6 +62,13 @@ export default class Guilds extends Menu {
     private memberList: HTMLUListElement = this.memberListContainer.querySelector('ul')!;
     private sidebarList: HTMLUListElement = document.querySelector('#sidebar-list')!;
 
+    private selectedMember?: string;
+    private memberName: HTMLElement = document.querySelector('#guild-member-selected')!;
+    private memberDialog: HTMLElement = document.querySelector('#guild-member-dialog')!;
+    private memberPromote: HTMLElement = document.querySelector('#guild-member-promote')!;
+    private memberDemote: HTMLElement = document.querySelector('#guild-member-demote')!;
+    private memberKick: HTMLElement = document.querySelector('#guild-member-kick')!;
+
     // Indexing - default values, used for pagination.
     private from = 0;
     private to = 10;
@@ -101,6 +104,10 @@ export default class Guilds extends Menu {
         this.bannerOutlineLeft.addEventListener('click', () =>
             this.handleBannerOutlineStyle('left')
         );
+
+        this.memberPromote.addEventListener('click', this.handlePromote.bind(this));
+        this.memberDemote.addEventListener('click', this.handleDemote.bind(this));
+        this.memberKick.addEventListener('click', this.handleKick.bind(this));
 
         this.loadSidebar();
         this.loadDecorations();
@@ -236,6 +243,48 @@ export default class Guilds extends Menu {
     private handleLeave(): void {
         this.game.socket.send(Packets.Guild, {
             opcode: Opcodes.Guild.Leave
+        });
+    }
+
+    /**
+     * Handler for when the player clicks the promote button.
+     */
+
+    private handlePromote(): void {
+        this.memberListContainer.querySelector('ul')!.classList.remove('dimmed');
+        this.memberDialog.style.display = 'none';
+
+        this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.Promote,
+            username: this.selectedMember
+        });
+    }
+
+    /**
+     * Handler for when the player clicks the demote button.
+     */
+
+    private handleDemote(): void {
+        this.memberListContainer.querySelector('ul')!.classList.remove('dimmed');
+        this.memberDialog.style.display = 'none';
+
+        this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.Demote,
+            username: this.selectedMember
+        });
+    }
+
+    /**
+     * Handler for when the player clicks the kick button.
+     */
+
+    private handleKick(): void {
+        this.memberListContainer.querySelector('ul')!.classList.remove('dimmed');
+        this.memberDialog.style.display = 'none';
+
+        this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.Kick,
+            username: this.selectedMember
         });
     }
 
@@ -702,19 +751,19 @@ export default class Guilds extends Menu {
         name: string,
         count = 0
     ): void {
-        let element = document.createElement('li') as ListElement,
+        let element = document.createElement('li'),
             nameElement = document.createElement('span'),
             imageElement = document.createElement('div'),
             isGuild = type === 'guild',
             slotType = type === 'guild' ? 'guild' : Modules.GuildRank[type].toLowerCase();
 
         // Assign the name as the identifier for the element
-        element.identifier = name;
+        element.dataset.name = name;
 
         // Add the classes to the element, name element, and image element.
-        element.className = `slot-element stroke`;
-        nameElement.className = `name`;
-        imageElement.className = `slot-image`;
+        element.className = 'slot-element stroke';
+        nameElement.className = 'name';
+        imageElement.className = 'slot-image';
 
         // Set the name of the element, format it if it's a player name.
         nameElement.innerHTML = isGuild ? name : Util.formatName(name, 14);
@@ -731,7 +780,7 @@ export default class Guilds extends Menu {
                 countElement.classList.add('count');
                 countElement.innerHTML = `${count}/${Modules.Constants.MAX_GUILD_MEMBERS}`;
 
-                element.append(countElement);
+                element.append(nameElement, countElement);
             }
 
             // Event listener to handle the guild selection.
@@ -741,23 +790,30 @@ export default class Guilds extends Menu {
                     identifier: name.toLowerCase()
                 })
             );
-        }
-
-        // Case for when we are dealing with members within a guild.
-        if (!isGuild) {
+        } // Case for when we are dealing with members within a guild.
+        else {
             // Handle the image element for when we are in a guild.
             imageElement.classList.add(`slot-image-${slotType}`);
 
             element.append(nameElement);
 
             let serverElement = document.createElement('span'),
-                isPlayer = this.getUsername() === element.identifier;
+                isPlayer = this.getUsername() === element.dataset.name;
 
             serverElement.className = `server ${isPlayer ? 'text-green' : 'text-red'}`;
 
             serverElement.innerHTML = isPlayer ? `Kaetram ${this.game.player.serverId}` : 'Offline';
 
             element.append(serverElement);
+
+            element.addEventListener('click', () => {
+                this.selectedMember = element.dataset.name;
+                this.memberName.textContent = Util.formatName(this.selectedMember, 14);
+
+                this.memberListContainer.querySelector('ul')!.classList.add('dimmed');
+
+                this.memberDialog.style.display = 'block';
+            });
         }
 
         // Append the element to the list.
@@ -809,9 +865,10 @@ export default class Guilds extends Menu {
      * @returns A list element if found otherwise undefined.
      */
 
-    private getElement(list: HTMLUListElement, identifier: string): ListElement | undefined {
+    private getElement(list: HTMLUListElement, identifier: string): HTMLLIElement | undefined {
         for (let element of list.children)
-            if ((element as ListElement).identifier === identifier) return element as ListElement;
+            if ((element as HTMLLIElement).dataset.name === identifier)
+                return element as HTMLLIElement;
 
         return undefined;
     }
