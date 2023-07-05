@@ -20,6 +20,7 @@ interface StoreInfo {
     items: Item[];
     refresh: number;
     currency: string;
+    allowedItems?: string[];
     restricted?: boolean;
     lastUpdate?: number;
 }
@@ -258,6 +259,10 @@ export default class Stores {
             return log.warning(`[${player.username}] ${t('store:INVALID_ITEM_SELECTION')}`);
 
         let store = this.stores[key];
+
+        // If the store has a list of allowed items, ensure the item is allowed.
+        if (store.allowedItems && !store.allowedItems.includes(slot.key))
+            return player.notify(t('store:RESTRICTED_ITEM'));
 
         // Disable selling in restricted stores.
         if (store.restricted) return player.notify(t('store:RESTRICTED_STORE'));
