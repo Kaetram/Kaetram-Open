@@ -12,6 +12,7 @@ import minersquest2 from './minersquest2';
 import royaldrama from './royaldrama';
 import clamchowder from './clamchowder';
 import royalpet from './royalpet';
+import scientistspotion from './scientistspotion';
 
 export default {
     tutorial,
@@ -27,5 +28,6 @@ export default {
     minersquest2,
     royaldrama,
     clamchowder,
-    royalpet
+    royalpet,
+    scientistspotion
 };
