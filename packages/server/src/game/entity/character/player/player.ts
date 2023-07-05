@@ -19,6 +19,7 @@ import Formulas from '../../../../info/formulas';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
+import { t } from '@kaetram/common/i18n';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Opcodes, Modules } from '@kaetram/common/network';
 import { Team } from '@kaetram/common/api/minigame';
@@ -817,7 +818,7 @@ export default class Player extends Character {
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
         if (type === Modules.ContainerType.Inventory && this.map.isDoor(this.x, this.y))
-            return this.notify('You cannot drop items while standing in a door.');
+            return this.notify(t('misc:CANNOT_DROP_ITEM_DOOR'));
 
         container.remove(index, count, true);
     }
@@ -915,7 +916,15 @@ export default class Player extends Character {
             }
 
             case 'crafting': {
+                if (!this.canUseCrafting()) return this.notify(t('misc:NO_KNOWLEDGE_USE'));
+
                 return this.world.crafting.open(this, Modules.Skills.Crafting);
+            }
+
+            case 'alchemy': {
+                if (!this.canUseCrafting()) return this.notify(t('misc:NO_KNOWLEDGE_USE'));
+
+                return this.world.crafting.open(this, Modules.Skills.Alchemy);
             }
         }
     }
@@ -1224,8 +1233,8 @@ export default class Player extends Character {
         // Skip if pvp state is the same or it's permanent
         if (this.pvp === pvp) return;
 
-        if (this.pvp && !pvp) this.notify('You are no longer in a PvP zone!');
-        else this.notify('You have entered a PvP zone!');
+        if (this.pvp && !pvp) this.notify(t('misc:NOT_IN_PVP_ZONE'));
+        else this.notify(t('misc:IN_PVP_ZONE'));
 
         this.pvp = pvp;
 
@@ -1582,10 +1591,7 @@ export default class Player extends Character {
         if (!this.hasPet()) return;
 
         // Ensure the player has enough space in their inventory.
-        if (!this.inventory.hasSpace()) {
-            this.notify(`You do not have enough inventory space to store your pet.`);
-            return;
-        }
+        if (!this.inventory.hasSpace()) return this.notify(t('misc:NO_SPACE_PET'));
 
         // Create a pet item and add it to the player's inventory.
         this.inventory.add(new Item(`${this.pet!.key}pet`, -1, -1, false, 1));
@@ -1933,6 +1939,22 @@ export default class Player extends Character {
 
     public canCraft(): boolean {
         return Date.now() - this.lastCraft > Modules.Constants.CRAFT_COOLDOWN;
+    }
+
+    /**
+     * @returns Whether or not the player has started the necessary quest to use crafting benches.
+     */
+
+    public canUseCrafting(): boolean {
+        return this.quests.get(Modules.Constants.CRAFTING_QUEST_KEY).isStarted();
+    }
+
+    /**
+     * @returns Whether or not the player has started the necessary quest to use alchemy.
+     */
+
+    public canUseAlchemy(): boolean {
+        return this.quests.get(Modules.Constants.ALCHEMY_QUEST_KEY).isStarted();
     }
 
     /**

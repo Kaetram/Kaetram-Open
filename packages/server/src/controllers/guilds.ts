@@ -1,5 +1,6 @@
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
+import { t } from '@kaetram/common/i18n';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Guild as GuildPacket } from '@kaetram/common/network/impl';
 
@@ -32,15 +33,18 @@ export default class Guilds {
         crest: Modules.BannerCrests
     ): void {
         // Ensure the player isn't already in a guild.
-        if (player.guild) return player.notify('You are already in a guild.');
+        if (player.guild) return player.notify(t('guilds:ALREADY_IN_GUILD'));
+
+        // Ensure that guests cannot create guilds.
+        if (player.isGuest) return player.notify(t('guilds:NOT_ALLOWED_GUESTS_CREATE'));
 
         // Prevent players from creating a guild if they haven't finished the tutorial.
         if (!player.quests.isTutorialFinished())
-            return player.guildNotify('You must finish the tutorial before creating a guild.');
+            return player.guildNotify(t('guilds:MUST_FINISH_TUTORIAL_CREATE'));
 
         // Ensure the player has enough gold to create a guild.
         if (!player.inventory.hasItem('gold', 30_000))
-            return player.guildNotify('You need 30,000 gold in your inventory to create a guild.');
+            return player.guildNotify(t('guilds:NOT_ENOUGH_GOLD'));
 
         /**
          * We use the lower case of the guild name as the identifier. That way
@@ -51,7 +55,7 @@ export default class Guilds {
 
         this.database.loader.loadGuild(identifier, (guild?: GuildData) => {
             // Ensure a guild doesn't already exist with that name.
-            if (guild) return player.guildNotify('A guild with that name already exists.');
+            if (guild) return player.guildNotify(t('guilds:ALREADY_EXISTS'));
 
             // Remove the gold from the player's inventory.
             player.inventory.removeItem('gold', 30_000);
@@ -146,9 +150,9 @@ export default class Guilds {
      */
 
     public join(player: Player, identifier: string): void {
-        if (player.isGuest) return player.notify('Guests are not allowed to join a guild.');
+        if (player.isGuest) return player.notify(t('guilds:NOT_ALLOWED_GUESTS_JOIN'));
 
-        if (player.guild) return player.notify('You are already in a guild.');
+        if (player.guild) return player.notify(t('guilds:ALREADY_IN_GUILD'));
 
         // Attempt to grab the guild from the database.
         this.database.loader.loadGuild(identifier, (guild?: GuildData) => {
@@ -159,7 +163,7 @@ export default class Guilds {
 
             // Ensure the guild isn't full.
             if (guild.members.length >= Modules.Constants.MAX_GUILD_MEMBERS)
-                return player.notify('This guild is already at maximum capacity.');
+                return player.notify(t('guilds:GUILD_FULL'));
 
             // Append the player to the guild's member list.
             guild.members.push({
@@ -270,12 +274,11 @@ export default class Guilds {
                 );
 
             // Ensure the player is the owner of the guild.
-            if (player.username !== guild.owner)
-                return player.notify('You do not have permission to kick members from this guild.');
+            if (player.username !== guild.owner) return player.notify(t('guilds:NO_PERMISSION'));
 
             // Ensure the player is not kicking themselves.
             if (player.username === username)
-                return player.notify('You cannot kick yourself from the guild.');
+                return player.notify(t('guilds:CANNOT_KICK_YOURSELF'));
 
             let otherPlayer = this.world.getPlayerByName(username);
 
@@ -370,9 +373,7 @@ export default class Guilds {
 
             // Ensure the player has the correct permissions to update the rank.
             if (player.username !== guild.owner)
-                return player.notify(
-                    'You do not have permission to update the rank of this player.'
-                );
+                return player.notify(t('guilds:NO_PERMISSION_RANK'));
 
             // Iterate through the members and skip if the username doesn't match.
             for (let member of guild.members) {

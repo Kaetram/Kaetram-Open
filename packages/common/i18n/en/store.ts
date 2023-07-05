@@ -12,6 +12,7 @@ export default {
     ACTION_STORE_NOT_OPEN: 'Tried to perform an action on a store that is not open.',
     CHEATER: 'You have been flagged for cheating. You cannot purchase anything.',
     RESTRICTED_STORE: 'This store does not accept any items.',
+    RESTRICTED_ITEM: 'This item cannot be sold here.',
     INVALID_ITEM_COUNT: 'You have entered an invalid amount of items.',
     HOLLOW_ADMIN: 'As an admin you cannot interact with the economy.'
 } as const;
