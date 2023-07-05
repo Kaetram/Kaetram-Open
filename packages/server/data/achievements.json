@@ -80,7 +80,7 @@
         "description": "Defeat the ancient wizard in Mudwich!"
     },
     "crabproblem": {
-        "name": "Crab Problem",
+        "name": "Oh Crab!",
         "description": "Help Bubba by defeating 10 crabs!",
         "region": "Mudwich",
         "hidden": true,
