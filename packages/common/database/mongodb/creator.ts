@@ -184,18 +184,17 @@ export default class Creator {
     public saveGuild(guild: GuildData, callback?: () => void): void {
         let collection = this.database.collection('guilds');
 
-        collection.updateOne(
-            { identifier: guild.identifier },
-            { $set: guild },
-            { upsert: true },
-            (error, result) => {
-                if (error) log.error(`An error occurred while saving guild ${guild.name}.`);
-
+        collection
+            .updateOne({ identifier: guild.identifier }, { $set: guild }, { upsert: true })
+            .then((result) => {
                 if (!result) log.error(`Unable to save guild ${guild.name}.`);
 
                 callback?.();
-            }
-        );
+            })
+            .catch((error) => {
+                log.error(`An error occurred while saving guild ${guild.name}.`);
+                log.error(error);
+            });
     }
 
     /**
@@ -208,14 +207,18 @@ export default class Creator {
      */
 
     private updateCollection<S>(collection: Collection, username: string, data: S) {
-        collection.updateOne({ username }, { $set: data }, { upsert: true }, (error, result) => {
-            if (error)
+        collection
+            .updateOne({ username }, { $set: data }, { upsert: true })
+            .then((result) => {
+                if (!result)
+                    log.error(`Unable to save ${collection.collectionName} for ${username}.`);
+            })
+            .catch((error) => {
                 log.error(
                     `An error occurred while saving ${collection.collectionName} for ${username}.`
                 );
-
-            if (!result) log.error(`Unable to save ${collection.collectionName} for ${username}.`);
-        });
+                log.error(error);
+            });
     }
 
     /**
