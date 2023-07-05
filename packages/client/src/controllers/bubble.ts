@@ -70,8 +70,6 @@ export default class BubbleController {
 
         // Clip the bubble blob if it is outside of the screen.
         if (boundaryY < 0.1) style.top = '0';
-
-        console.log(boundaryY);
     }
 
     /**
