@@ -200,40 +200,40 @@ export default class World {
      * @param serverId The server id that the player is currently logged in to.
      */
 
-    public syncGuildMembers(
+    public async syncGuildMembers(
         identifier: string,
         username: string,
         logout = false,
         serverId = config.serverId
-    ): void {
+    ): Promise<void> {
         if (!identifier) return;
 
-        this.database.loader.loadGuild(identifier, (guild?: GuildData) => {
-            if (!guild) return;
+        let guild = await this.database.loader.loadGuild(identifier);
 
-            // Iterate through the members in the guild.
-            for (let member of guild.members) {
-                // Skip if the member is the player we are updating.
-                if (member.username === username) continue;
+        if (!guild) return;
 
-                let player = this.getPlayerByName(member.username);
+        // Iterate through the members in the guild.
+        for (let member of guild.members) {
+            // Skip if the member is the player we are updating.
+            if (member.username === username) continue;
 
-                // Skip if player doesn't exist.
-                if (!player) continue;
+            let player = this.getPlayerByName(member.username);
 
-                // If the player is online, send a packet with a new status.
-                player.send(
-                    new Guild(Opcodes.Guild.Update, {
-                        members: [
-                            {
-                                username,
-                                serverId: logout ? -1 : serverId
-                            }
-                        ]
-                    })
-                );
-            }
-        });
+            // Skip if player doesn't exist.
+            if (!player) continue;
+
+            // If the player is online, send a packet with a new status.
+            player.send(
+                new Guild(Opcodes.Guild.Update, {
+                    members: [
+                        {
+                            username,
+                            serverId: logout ? -1 : serverId
+                        }
+                    ]
+                })
+            );
+        }
     }
 
     /**

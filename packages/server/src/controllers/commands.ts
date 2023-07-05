@@ -45,7 +45,7 @@ export default class Commands {
      * @param blocks Associated string blocks after the command.
      */
 
-    private handlePlayerCommands(command: string, blocks: string[]): void {
+    private async handlePlayerCommands(command: string, blocks: string[]): Promise<void> {
         switch (command) {
             case 'players': {
                 let players = this.world.entities.getPlayerUsernames(),
@@ -134,7 +134,18 @@ export default class Commands {
                         if (parseInt(rank) === 7 || rank === 'landlord')
                             return this.player.notify('You cannot set a rank to landlord.');
 
-                        this.world.guilds.setRank(this.player, username, parseInt(rank));
+                        let guild = await this.world.guilds.getGuild(this.player.guild);
+
+                        if (!guild) return this.player.notify('You are not in a guild.');
+
+                        let member = await this.world.guilds.getMember(guild, username);
+
+                        if (!member)
+                            return this.player.notify(
+                                `Could not find a member with the name: ${username}.`
+                            );
+
+                        this.world.guilds.setRank(guild, this.player, member, parseInt(rank));
 
                         this.player.notify(`You have set ${username}'s rank to ${rank}.`);
 
