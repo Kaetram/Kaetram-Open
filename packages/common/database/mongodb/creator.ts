@@ -31,6 +31,7 @@ export interface PlayerInfo {
     mana: number;
     orientation: Modules.Orientation;
     ban: number;
+    jail: number;
     mute: number;
     lastWarp: number;
     mapVersion: number;
@@ -287,6 +288,7 @@ export default class Creator {
             orientation: player.orientation,
             ban: player.ban,
             mute: player.mute,
+            jail: player.jail,
             lastWarp: player.lastWarp,
             mapVersion: player.mapVersion,
             regionsLoaded: player.regionsLoaded,

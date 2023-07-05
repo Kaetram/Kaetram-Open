@@ -28,6 +28,12 @@ export default class Warp {
     public warp(player: Player, id: number): void {
         if (!this.warps) return;
 
+        // Prevent players from warping when they are jailed.
+        if (player.isJailed())
+            return player.notify(
+                `You cannot teleport, you are jailed for ${player.getJailDuration()}.`
+            );
+
         // Prevent warping outside the tutorial.
         if (!player.quests.isTutorialFinished())
             return player.notify(`You must finish the tutorial before warping.`);

@@ -598,6 +598,7 @@ export const Constants = {
     SPAWN_POINT: '231,796', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY: 'tutorial', // key of the tutorial quest
     TUTORIAL_SPAWN_POINT: '579,7', // 'x,y' values
+    JAIL_SPAWN_POINT: '14,819',
     RESOURCE_RESPAWN: 30_000,
     TREE_RESPAWN: 25_000,
     CHEST_RESPAWN: 50_000, // 50 seconds
