@@ -16,7 +16,6 @@ export interface MobData {
     dropTables?: string[];
     level?: number;
     skills?: MobSkills;
-    attackLevel?: number;
     attackStats?: Stats;
     defenseStats?: Stats;
     bonuses?: Bonuses;
