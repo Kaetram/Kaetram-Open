@@ -3786,7 +3786,7 @@ __metadata:
     astro-compress: "npm:^1.1.49"
     astro-compressor: "npm:^0.4.0"
     astro-critters: "npm:^1.1.39"
-    astro-i18n-aut: "npm:^0.0.20"
+    astro-i18n-aut: "npm:^0.0.21"
     astro-robots-txt: "npm:^0.5.0"
     astro-seo-schema: "npm:^2.2.0"
     astro-webmanifest: "npm:^0.6.0"
@@ -5348,15 +5348,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro-i18n-aut@npm:^0.0.20":
-  version: 0.0.20
-  resolution: "astro-i18n-aut@npm:0.0.20"
+"astro-i18n-aut@npm:^0.0.21":
+  version: 0.0.21
+  resolution: "astro-i18n-aut@npm:0.0.21"
   dependencies:
     fast-glob: "npm:^3.3.0"
   peerDependencies:
     astro: ^2.6.1
     kleur: ^4.1.4
-  checksum: d1f26aac65e92eb203f3532f1cfdf4f95c9e80cf5c64a0ac9a3c5bf530346fdd058a1f3b50e8b0de8b13b90d9f8906874cefcced8520077d614f7093f250af03
+  checksum: 4fc76bc564c8eb5d6db5c32b9e3956c85a28b1a75a6c90fff43761b37847eb5beb9efd35c21bb6fc3d881c082a050263f55d1b6d94b53fd6e58fac968e122c01
   languageName: node
   linkType: hard
 
