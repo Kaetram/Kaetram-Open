@@ -3786,7 +3786,7 @@ __metadata:
     astro-compress: "npm:^1.1.49"
     astro-compressor: "npm:^0.4.0"
     astro-critters: "npm:^1.1.39"
-    astro-i18n-aut: "npm:^0.0.21"
+    astro-i18n-aut: "npm:^0.1.2"
     astro-robots-txt: "npm:^0.5.0"
     astro-seo-schema: "npm:^2.2.0"
     astro-webmanifest: "npm:^0.6.0"
@@ -5348,15 +5348,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro-i18n-aut@npm:^0.0.21":
-  version: 0.0.21
-  resolution: "astro-i18n-aut@npm:0.0.21"
+"astro-i18n-aut@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "astro-i18n-aut@npm:0.1.2"
   dependencies:
+    dedent: "npm:^0.7.0"
     fast-glob: "npm:^3.3.0"
+    fs-extra: "npm:^11.1.1"
   peerDependencies:
-    astro: ^2.6.1
+    astro: ^2.8.0
     kleur: ^4.1.4
-  checksum: 4fc76bc564c8eb5d6db5c32b9e3956c85a28b1a75a6c90fff43761b37847eb5beb9efd35c21bb6fc3d881c082a050263f55d1b6d94b53fd6e58fac968e122c01
+  checksum: 5a0b2972b10e8245bc3ea816f967ce375f4a961fc2d06bbd2767f1677df7f1d69225670c4f34ff345e0c43db7f4c2e4c038f76f85bf4a069e42c664a22f7aed5
   languageName: node
   linkType: hard
 
@@ -6813,6 +6815,13 @@ __metadata:
   dependencies:
     mimic-response: "npm:^3.1.0"
   checksum: b4575b109e38fe4bc10a8dc1a9167490da2efc07449bdc2ac9e3444592ee892e84fa89974448639388ad1f56f3a16e95606f3ab9d0c3dbdb84f1cbe432252b9f
+  languageName: node
+  linkType: hard
+
+"dedent@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "dedent@npm:0.7.0"
+  checksum: ca3f1755ff26262fd43c339faafd3e92c1b3265b132397fc702d97643173fc03f35209af8f93583a99f878c6a355300971dbd2a27e7e0a4af4380c7b38d907ae
   languageName: node
   linkType: hard
 
@@ -8660,7 +8669,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^11.0.0":
+"fs-extra@npm:^11.0.0, fs-extra@npm:^11.1.1":
   version: 11.1.1
   resolution: "fs-extra@npm:11.1.1"
   dependencies:
