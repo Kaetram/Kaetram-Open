@@ -64,6 +64,7 @@ function getImageSize(image: string) {
     if (!imageCache.has(image)) {
         let path = fileURLToPath(new URL(`public/img/interface/${image}.png`, import.meta.url)),
             size = imageSize(path);
+
         imageCache.set(image, size);
     }
 
@@ -75,6 +76,7 @@ export default defineConfig({
     srcDir: './',
     site: 'https://kaetram.com',
     trailingSlash: 'always',
+    experimental: { redirects: true },
     integrations: [
         webmanifest({
             icon: 'public/icon.png',
