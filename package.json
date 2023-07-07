@@ -53,7 +53,7 @@
         "postcss-value-parser": "^4.2.0",
         "prettier": "^2.8.8",
         "prettier-plugin-astro": "^0.10.0",
-        "stylelint": "^15.8.0",
+        "stylelint": "^15.10.1",
         "stylelint-config-astro": "^1.0.4",
         "stylelint-config-clean-order": "^5.0.1",
         "stylelint-config-html": "^1.1.0",
