@@ -134,7 +134,20 @@
     "goblin": {
         "name": "Goblin",
         "description": "Didn't I see this same style of goblin in RuneScape?",
-        "drops": { "tinsword": 10000, "copperhelmet": 10000, "tinchestplate": 10000 },
+        "drops": [
+            {
+                "key": "tinsword",
+                "chance": 10000
+            },
+            {
+                "key": "copperhelmet",
+                "chance": 10000
+            },
+            {
+                "key": "tinchestplate",
+                "chance": 10000
+            }
+        ],
         "dropTables": ["ordinary", "arrows", "unusual", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 90,
         "level": 7,
@@ -434,7 +447,16 @@
     "adherer": {
         "name": "Dark Mage",
         "description": "I heard that these things drop roses that I can then use to hit things with.",
-        "drops": { "darkmagehood": 600, "darkmagehoodgold": 20 },
+        "drops": [
+            {
+                "key": "darkmagehood",
+                "chance": 600
+            },
+            {
+                "key": "darkmagehoodgold",
+                "chance": 20
+            }
+        ],
         "dropTables": ["ordinary", "unusual", "shards"],
         "hitPoints": 200,
         "level": 38,
@@ -2028,7 +2050,12 @@
     "icevulture": {
         "name": "Ice Vulture",
         "description": "It's like a frozen version of the vicious bird I've seen before.",
-        "drops": { "feather": 25000 },
+        "drops": [
+            {
+                "key": "feather",
+                "chance": 25000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 300,
         "level": 96,
@@ -3680,7 +3707,12 @@
 
     "vulture": {
         "name": "Vulture",
-        "drops": { "feather": 25000 },
+        "drops": [
+            {
+                "key": "feather",
+                "chance": 25000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 100,
         "level": 16,
