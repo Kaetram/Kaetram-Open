@@ -3,10 +3,11 @@ import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 import { Bubble } from '@kaetram/common/network/impl';
 
+import type Mob from './mob';
 import type Map from '../../../map/map';
 import type World from '../../../world';
 import type Character from '../character';
-import type Mob from './mob';
+import type Player from '../player/player';
 
 /**
  * The handler class file for the Mob object. We use this to better
@@ -84,7 +85,11 @@ export default class Handler {
                 [instance] = element,
                 entity = this.world.entities.get(instance);
 
-            // Ignore non-player entities.
+            /**
+             * Ensure that the entity exists and that it's a player. Drops do not occur
+             * if the entity that kills the mob is non-existent (i.e. if killed via command.)
+             */
+
             if (!entity?.isPlayer()) continue;
 
             // Kill callback is sent to the player who dealt most amount of damage.
@@ -93,7 +98,7 @@ export default class Handler {
                 entity.killCallback?.(this.mob);
 
                 // Drop the mob's loot and pass the owner's username.
-                this.mob.drop(entity.username);
+                this.mob.drop(entity as Player);
             }
         }
 

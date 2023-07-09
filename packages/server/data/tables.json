@@ -1,89 +1,286 @@
 {
     "warriorcrab": {
-        "bead": 100000
+        "drops": [
+            {
+                "key": "bead",
+                "chance": 100000
+            }
+        ]
     },
 
     "ordinary": {
-        "gold": 30000,
-        "flask": 12000,
-        "bigflask": 7200,
-        "manaflask": 7600,
-        "bigmanaflask": 5000,
-        "burger": 6800,
-        "string": 12000,
-        "feather": 10000
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 30000
+            },
+            {
+                "key": "flask",
+                "chance": 12000
+            },
+            {
+                "key": "bigflask",
+                "chance": 7200
+            },
+            {
+                "key": "manaflask",
+                "chance": 7600
+            },
+            {
+                "key": "bigmanaflask",
+                "chance": 5000
+            },
+            {
+                "key": "burger",
+                "chance": 100000
+            },
+            {
+                "key": "string",
+                "chance": 100000
+            },
+            {
+                "key": "feather",
+                "chance": 100000
+            }
+        ]
     },
 
     "arrows": {
-        "arrow": 24000,
-        "firearrow": 7500,
-        "poisonarrow": 7000,
-        "lightningarrow": 6500,
-        "icearrow": 4000,
-        "nisocarrow": 3000,
-        "cinnabararrow": 2500,
-        "pythararrow": 2500,
-        "iboarrow": 2500
+        "drops": [
+            {
+                "key": "arrow",
+                "chance": 24000
+            },
+            {
+                "key": "firearrow",
+                "chance": 7500
+            },
+            {
+                "key": "poisonarrow",
+                "chance": 7000
+            },
+            {
+                "key": "lightningarrow",
+                "chance": 6500
+            },
+            {
+                "key": "icearrow",
+                "chance": 4000
+            },
+            {
+                "key": "nisocarrow",
+                "chance": 3000
+            },
+            {
+                "key": "cinnabararrow",
+                "chance": 2500
+            },
+            {
+                "key": "pythararrow",
+                "chance": 2500
+            },
+            {
+                "key": "iboarrow",
+                "chance": 2500
+            }
+        ]
     },
 
     "unusual": {
-        "blackpotion": 3000,
-        "hotsauce": 3000,
-        "cure": 3000,
-        "logs": 2000,
-        "stick": 5000,
-        "bead": 3000,
-        "banana": 3000,
-        "watermelon": 3000,
-        "apple": 3000
+        "drops": [
+            {
+                "key": "blackpotion",
+                "chance": 3000
+            },
+            {
+                "key": "cure",
+                "chance": 3000
+            },
+            {
+                "key": "logs",
+                "chance": 4500
+            },
+            {
+                "key": "stick",
+                "chance": 5000
+            },
+            {
+                "key": "bead",
+                "chance": 2500
+            }
+        ]
     },
 
     "shards": {
-        "shardt1": 2000,
-        "shardt2": 1500,
-        "shardt3": 1000,
-        "shardt4": 500,
-        "shardt5": 200
+        "drops": [
+            {
+                "key": "shardt1",
+                "chance": 2000
+            },
+            {
+                "key": "shardt2",
+                "chance": 1500
+            },
+            {
+                "key": "shardt3",
+                "chance": 1000
+            },
+            {
+                "key": "shardt4",
+                "chance": 500
+            },
+            {
+                "key": "shardt5",
+                "chance": 200
+            }
+        ]
     },
 
     "vegetables": {
-        "onion": 5000,
-        "chilli": 5000,
-        "potato": 5000,
-        "tomato": 5000
+        "drops": [
+            {
+                "key": "onion",
+                "chance": 5000
+            },
+            {
+                "key": "chilli",
+                "chance": 5000
+            },
+            {
+                "key": "potato",
+                "chance": 5000
+            },
+            {
+                "key": "tomato",
+                "chance": 5000
+            }
+        ]
     },
 
     "fruits": {
-        "strawberry": 8000,
-        "raspberry": 8000,
-        "plum": 8000,
-        "pineapple": 8000,
-        "peach": 8000,
-        "mulberry": 8000,
-        "mango": 8000
+        "drops": [
+            {
+                "key": "strawberry",
+                "chance": 8000
+            },
+            {
+                "key": "raspberry",
+                "chance": 8000
+            },
+            {
+                "key": "plum",
+                "chance": 8000
+            },
+            {
+                "key": "pineapple",
+                "chance": 8000
+            },
+            {
+                "key": "peach",
+                "chance": 8000
+            },
+            {
+                "key": "mulberry",
+                "chance": 8000
+            },
+            {
+                "key": "mango",
+                "chance": 8000
+            },
+            {
+                "key": "banana",
+                "chance": 8000
+            },
+            {
+                "key": "watermelon",
+                "chance": 8000
+            },
+            {
+                "key": "apple",
+                "chance": 8000
+            }
+        ]
     },
 
     "mushrooms": {
-        "mushroom1": 6000,
-        "mushroom2": 6000,
-        "mushroom3": 6000,
-        "mushroom4": 6000,
-        "mushroom5": 6000,
-        "mushroom6": 6000
+        "drops": [
+            {
+                "key": "mushroom1",
+                "chance": 6000
+            },
+            {
+                "key": "mushroom2",
+                "chance": 6000
+            },
+            {
+                "key": "mushroom3",
+                "chance": 6000
+            },
+            {
+                "key": "mushroom4",
+                "chance": 6000
+            },
+            {
+                "key": "mushroom5",
+                "chance": 6000
+            },
+            {
+                "key": "mushroom6",
+                "chance": 6000
+            }
+        ]
     },
 
     "manafruits": {
-        "arcanahypercube": 5000,
-        "ettispinefruit": 5000,
-        "galaxylilies": 5000,
-        "godscroissant": 5000,
-        "stellarcluster": 5000,
-        "harmoniccrossband": 5000,
-        "livinganchorroot": 5000,
-        "manaberry": 5000,
-        "nexuscross": 5000,
-        "orchardsbane": 5000,
-        "wartberries": 5000,
-        "zephyrsgaleblade": 5000
+        "drops": [
+            {
+                "key": "arcanahypercube",
+                "chance": 5000
+            },
+            {
+                "key": "ettispinefruit",
+                "chance": 5000
+            },
+            {
+                "key": "galaxylilies",
+                "chance": 5000
+            },
+            {
+                "key": "godscroissant",
+                "chance": 5000
+            },
+            {
+                "key": "stellarcluster",
+                "chance": 5000
+            },
+            {
+                "key": "harmoniccrossband",
+                "chance": 5000
+            },
+            {
+                "key": "livinganchorroot",
+                "chance": 5000
+            },
+            {
+                "key": "manaberry",
+                "chance": 5000
+            },
+            {
+                "key": "nexuscross",
+                "chance": 5000
+            },
+            {
+                "key": "orchardsbane",
+                "chance": 5000
+            },
+            {
+                "key": "wartberries",
+                "chance": 5000
+            },
+            {
+                "key": "zephyrsgaleblade",
+                "chance": 5000
+            }
+        ]
     }
 }

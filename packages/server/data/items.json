@@ -1537,7 +1537,7 @@
     "berylgoldring": {
         "type": "ring",
         "name": "Beryl Gold Ring",
-        "price": 200,
+        "price": 2000,
         "skill": "defense",
         "level": 20,
         "attackStats": {
@@ -2693,8 +2693,8 @@
     },
     "goldnugget": {
         "type": "object",
-        "name": "Gold Ore",
-        "description": "Raw gold ore, will need to be processed before it can be turned into something nice.",
+        "name": "Gold Nugget",
+        "description": "A piece of pure gold. For some reason it still has to be processed before it can be used.",
         "price": 650
     },
     "iboore": {
