@@ -13,15 +13,15 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import { Heal, Movement } from '@kaetram/common/network/impl';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
-import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
 import type World from '../../../world';
 import type Entity from '../../entity';
 import type Chest from '../../objects/chest';
 import type Player from '../player/player';
+import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
-import type { RawData, MobData, MobSkills } from '@kaetram/common/types/mob';
+import type { RawData, MobData, MobSkills, MobDrop, MobDropTable } from '@kaetram/common/types/mob';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 interface ItemDrop {
@@ -57,7 +57,7 @@ export default class Mob extends Character {
     private defenseStats: Stats = Utils.getEmptyStats();
     private bonuses: Bonuses = Utils.getEmptyBonuses();
 
-    private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
+    private drops: MobDrop[] = [];
     private dropTables: string[] = [];
 
     private skills: MobSkills = {
@@ -248,17 +248,25 @@ export default class Mob extends Character {
 
     /**
      * Handles the dropping of items from the mob.
-     * @param owner The leading attacker in the mob's death. Only they will be able
-     * to pick up the drop for a certain period of time.
+     * @param player The leading player who dealt the most damage.
      */
 
-    public drop(owner = ''): void {
-        let drops = this.getDrops();
+    public drop(player: Player): void {
+        let drops = this.getDrops(player);
 
+        // No drops were calculated, so we stop here.
         if (drops.length === 0) return;
 
         for (let drop of drops)
-            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner);
+            this.world.entities.spawnItem(
+                drop.key,
+                this.x,
+                this.y,
+                true,
+                drop.count,
+                {},
+                player.username
+            );
     }
 
     /**
@@ -291,10 +299,11 @@ export default class Mob extends Character {
      * drop chance. We add the item to the list if the roll is successful. We continue
      * by looking through the mob's drop tables and doing the same thing. We then
      * return the list of items that the mob will drop.
+     * @param player Theplayer entity that we use to determine what drops we can use.
      * @returns A list of items that the mob will drop.
      */
 
-    public getDrops(): ItemDrop[] {
+    public getDrops(player: Player): ItemDrop[] {
         let drops: ItemDrop[] = [], // The items that the mob will drop
             randomItem = this.getRandomItem(this.drops);
 
@@ -302,25 +311,34 @@ export default class Mob extends Character {
         if (randomItem) drops.push(randomItem);
 
         // Add items from the mob's drop table.
-        drops = [...drops, ...this.getDropTableItems()];
+        drops = [...drops, ...this.getDropTableItems(player)];
 
         return drops;
     }
 
     /**
      * Looks through the drop tables of the mob and iterates through those to get items.
+     * @param player The player entity that killed the mob. Used for determining whether or
+     * not we can use the drop table.
      * @returns List of items from the drop table.
      */
 
-    private getDropTableItems(): ItemDrop[] {
+    private getDropTableItems(player: Player): ItemDrop[] {
         let drops: ItemDrop[] = [];
 
         for (let key of Object.values(this.dropTables)) {
-            let table = dropTables[key as keyof typeof dropTables]; // Pick the table from the list of drop tables.
+            let table: MobDropTable = dropTables[key as keyof typeof dropTables]; // Pick the table from the list of drop tables.
+
+            // Player doesn't have the achievement for the drop table completed.
+            if (table.achievement && !player.achievements.get(table.achievement)?.isFinished())
+                continue;
+
+            // Player doesn't have the quest completed to have access to the drop table.
+            if (table.quest && !player.quests.get(table.quest)?.isFinished()) continue;
 
             // Something went wrong.
             if (table) {
-                let randomItem = this.getRandomItem(table);
+                let randomItem = this.getRandomItem(table.drops);
 
                 // Add a random item from the table.
                 if (randomItem) drops.push(randomItem);
@@ -338,17 +356,14 @@ export default class Mob extends Character {
      * @returns Returns an `ItemDrop` object containing the key and the count.
      */
 
-    private getRandomItem(items: { [key: string]: number }): ItemDrop | undefined {
-        let keys = Object.keys(items);
-
+    private getRandomItem(items: MobDrop[]): ItemDrop | undefined {
         // No items to pick from.
-        if (keys.length === 0) return undefined;
+        if (items.length === 0) return undefined;
 
-        let key = keys[Utils.randomInt(0, keys.length - 1)],
-            drop = items[key],
-            count = 1;
+        let drop = items[Utils.randomInt(0, items.length - 1)],
+            count = drop.count || 1; // 1 if not specified.
 
-        switch (key) {
+        switch (drop.key) {
             case 'gold': {
                 count = Utils.randomInt(this.level, this.level * 10);
                 break;
@@ -384,9 +399,9 @@ export default class Mob extends Character {
         let probability = this.world.getDropProbability();
 
         // If the chance is greater than the drop probability, we adjust the drop
-        if (drop > probability) drop = probability;
+        if (drop.chance > probability) drop.chance = probability;
 
-        return Utils.randomInt(0, probability) < drop ? { key, count } : undefined;
+        return Utils.randomInt(0, probability) < drop.chance ? { key: drop.key, count } : undefined;
     }
 
     /**

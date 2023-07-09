@@ -11,12 +11,24 @@
 
     "224-359": {
         "name": "Hermit Crab Warrior",
-        "drops": {
-            "flask": 200,
-            "gold": 750,
-            "spear": 75,
-            "platearmor": 100
-        },
+        "drops": [
+            {
+                "key": "flask",
+                "chance": 2000
+            },
+            {
+                "key": "gold",
+                "chance": 7500
+            },
+            {
+                "key": "ironspear",
+                "chance": 750
+            },
+            {
+                "key": "platearmor",
+                "chance": 1000
+            }
+        ],
         "dropTables": ["ordinary", "unusual", "warriorcrab"],
         "roaming": true,
         "miniboss": true,
@@ -29,13 +41,12 @@
 
     "197-633": {
         "name": "Water Guardian",
-        "drops": {
-            "redguardarmor": 75,
-            "redguardarcherarmor": 75,
-            "ring1": 100,
-            "scimitar": 100,
-            "watermelonbow": 100
-        },
+        "drops": [
+            {
+                "key": "ring1",
+                "chance": 1000
+            }
+        ],
         "miniboss": true,
         "level": 36,
         "hitPoints": 350,
@@ -56,20 +67,63 @@
     "175-635": {
         "name": "Mimic",
         "achievement": "notwhatitseems",
-        "drops": {
-            "gold": 700,
-            "bigflask": 300,
-            "spear": 100,
-            "ring1": 100,
-            "pendant1": 100,
-            "goldring": 14
-        }
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 7000
+            },
+            {
+                "key": "bigflask",
+                "chance": 3000
+            },
+            {
+                "key": "crystalspear",
+                "chance": 1000
+            },
+            {
+                "key": "ring1",
+                "chance": 1000
+            },
+            {
+                "key": "pendant1",
+                "chance": 1000
+            },
+            {
+                "key": "goldnugget",
+                "chance": 1000
+            }
+        ]
     },
 
     "411-732": {
         "name": "Mimic",
         "achievement": "treadcarefully",
-        "drops": { "gold": 300, "bigflask": 500, "spear": 100, "ring1": 100, "pendant1": 100 }
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 7000
+            },
+            {
+                "key": "bigflask",
+                "chance": 3000
+            },
+            {
+                "key": "crystalspear",
+                "chance": 1000
+            },
+            {
+                "key": "ring1",
+                "chance": 1000
+            },
+            {
+                "key": "pendant1",
+                "chance": 1000
+            },
+            {
+                "key": "goldnugget",
+                "chance": 1000
+            }
+        ]
     },
 
     "228-156": {
@@ -78,7 +132,32 @@
         "hitPoints": 1500,
         "level": 30,
         "defenseLevel": 10,
-        "drops": { "gold": 800, "bigflask": 400, "silverring": 10, "scimitar": 75, "pendant1": 125 }
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 7000
+            },
+            {
+                "key": "bigflask",
+                "chance": 3000
+            },
+            {
+                "key": "crystalspear",
+                "chance": 1000
+            },
+            {
+                "key": "ring1",
+                "chance": 1000
+            },
+            {
+                "key": "pendant1",
+                "chance": 1000
+            },
+            {
+                "key": "goldnugget",
+                "chance": 1000
+            }
+        ]
     },
 
     "460-725": {
@@ -87,13 +166,24 @@
         "hitPoints": 2200,
         "level": 84,
         "defenseLevel": 10,
-        "drops": {
-            "gold": 800,
-            "manaflask": 100,
-            "sproutring": 10,
-            "bluescimitar": 50,
-            "shardt1": 50
-        }
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 7000
+            },
+            {
+                "key": "manaflask",
+                "chance": 3000
+            },
+            {
+                "key": "sproutring",
+                "chance": 100
+            },
+            {
+                "key": "shardt2",
+                "chance": 3000
+            }
+        ]
     },
 
     "855-611": {
@@ -102,7 +192,20 @@
         "hitPoints": 2200,
         "level": 84,
         "defenseLevel": 10,
-        "drops": { "gold": 800, "cure": 100, "shardt2": 25, "bluescimitar": 50, "greenpendant": 50 }
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 8000
+            },
+            {
+                "key": "cure",
+                "chance": 3000
+            },
+            {
+                "key": "greenpendant",
+                "chance": 500
+            }
+        ]
     },
 
     "677-671": {
@@ -111,7 +214,20 @@
         "hitPoints": 2200,
         "level": 84,
         "defenseLevel": 10,
-        "drops": { "gold": 800, "cure": 100, "shardt2": 25, "bluescimitar": 50, "greenpendant": 50 }
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 8000
+            },
+            {
+                "key": "cure",
+                "chance": 3000
+            },
+            {
+                "key": "greenpendant",
+                "chance": 500
+            }
+        ]
     },
 
     "706-555": {
@@ -120,7 +236,20 @@
         "hitPoints": 1300,
         "level": 62,
         "defenseLevel": 15,
-        "drops": { "gold": 500, "cure": 50, "shardt1": 50, "bluescimitar": 50, "greenpendant": 45 }
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 8000
+            },
+            {
+                "key": "cure",
+                "chance": 3000
+            },
+            {
+                "key": "greenpendant",
+                "chance": 500
+            }
+        ]
     },
 
     "168-31": {
@@ -164,7 +293,16 @@
         "name": "Ice Knight",
         "miniboss": true,
         "level": 62,
-        "drops": { "gold": 300, "icesword": 1000 }
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 3000
+            },
+            {
+                "key": "icesword",
+                "chance": 10000
+            }
+        ]
     },
 
     "784-676": {
