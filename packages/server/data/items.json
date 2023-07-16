@@ -894,6 +894,60 @@
             "magic": 0
         }
     },
+    "pilgrimhat": {
+        "type": "helmet",
+        "name": "Pilgrim Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 20,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": 0,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 1,
+            "stab": 1,
+            "archery": -4,
+            "magic": 10
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 3
+        }
+    },
+    "pilgrimhatblue": {
+        "type": "helmet",
+        "name": "Blue Pilgrim Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 25,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 2,
+            "archery": 0,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 1,
+            "stab": 1,
+            "archery": -2,
+            "magic": 12
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 4
+        }
+    },
     "darkmagehood": {
         "type": "helmet",
         "name": "Dark Mage Hood",
