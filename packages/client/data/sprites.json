@@ -13,6 +13,8 @@
     { "id": "player/helmet/darkmagehoodblue", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/helmet/darkmagehoodgreen", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/helmet/darkmagehoodgold", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/helmet/pilgrimhat", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/helmet/pilgrimhatblue", "width": 32, "height": 32, "offsetX": -8 },
 
     { "id": "player/chestplate/copperchestplate", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/chestplate/tinchestplate", "width": 32, "height": 32, "offsetX": -8 },
@@ -2054,8 +2056,8 @@
         "offsetY": -13
     },
     { "id": "mobs/hongcheol", "width": 32, "height": 32, "offsetX": -8, "offsetY": -15 },
-    { "id": "mobs//icegolem", "width": 32, "height": 32, "offsetX": -5, "offsetY": -12 },
-    { "id": "mobs//iceknight", "width": 42, "height": 42, "offsetX": -13, "offsetY": -17 },
+    { "id": "mobs/icegolem", "width": 32, "height": 32, "offsetX": -5, "offsetY": -12 },
+    { "id": "mobs/iceknight", "width": 42, "height": 42, "offsetX": -13, "offsetY": -17 },
     {
         "id": "mobs/icevulture",
         "width": 48,
@@ -6580,5 +6582,7 @@
     { "id": "items/cobaltchestplate", "offsetX": 0, "offsetY": 0 },
     { "id": "items/bronzelegplates", "offsetX": 0, "offsetY": 0 },
     { "id": "items/goldlegplates", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/woodenbow", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/woodenbow", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/pilgrimhat", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/pilgrimhatblue", "offsetX": 0, "offsetY": 0 }
 ]
