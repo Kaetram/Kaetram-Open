@@ -54,8 +54,10 @@ export default class Sprite {
 
         this.path = `/img/sprites/${data.id}.png`;
 
-        this.width = this.data.width ?? this.width;
-        this.height = this.data.height ?? this.height;
+        let dimensions = Utils.getDefaultEquipmentDimension(this.getSubType());
+
+        this.width = this.data.width ?? dimensions;
+        this.height = this.data.height ?? dimensions;
 
         this.offsetX = this.data.offsetX ?? -Utils.tileSize;
         this.offsetY = this.data.offsetY ?? -Utils.tileSize;
@@ -139,6 +141,22 @@ export default class Sprite {
         if (!this.key.includes('/')) return 'items';
 
         return this.key.split('/')[0];
+    }
+
+    /**
+     * The subtype is the second index after splitting the path format
+     * of the sprite. So for example, for the path player/weapon/sword, the
+     * subtype would be the weapon. If the provided sprite doesn't have a subtype
+     * we just return an empty string.
+     * @return The subtype based on the sprite's key, otherwise an empty string.
+     */
+
+    private getSubType(): string {
+        let blocks = this.key.split('/');
+
+        if (blocks.length < 3) return '';
+
+        return blocks[1];
     }
 
     /**
