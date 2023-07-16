@@ -653,20 +653,16 @@ export default class Regions {
         // Use the specified index if not undefined or calculate it.
         index ||= this.map.coordToIndex(x, y);
 
-        /**
-         * Calculate the tile data if it's not specified as a parameter and
-         * attempt to grab the cursor based on the
-         */
+        // Use the provided data parameter or obtain it from the map file if not specified.
+        data ||= this.map.data[index];
 
-        let info = data || this.map.data[index],
-            tile: RegionTileData = {
-                x,
-                y,
-                data: info
-            };
+        if (!data || (data as number[])?.length === 0) return { x, y, data: 0 };
 
-        // No need to do any further processing if the tile is empty.
-        if (info === 0 || (info as number[])?.length === 0) return tile;
+        let tile: RegionTileData = {
+            x,
+            y,
+            data
+        };
 
         /**
          * We use this function to prevent iterating through the tile array
@@ -674,7 +670,7 @@ export default class Regions {
          * the `forEachTile` function, we can just do it in a batch here.
          */
 
-        this.map.forEachTile(info as Tile, (tileId: number) => {
+        this.map.forEachTile(data as Tile, (tileId: number) => {
             // Remove the tile bitmasks to get the actual tile id.
             if (this.map.isFlippedTileId(tileId)) tileId = this.map.getFlippedTileId(tileId);
 
