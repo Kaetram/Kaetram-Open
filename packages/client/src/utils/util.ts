@@ -357,6 +357,32 @@ export default {
     },
 
     /**
+     * Gets the default width and height dimensions for player equipments. This is to
+     * lessen the amount of code needed when writing the JSON file for the sprites.
+     * @param type The type of equipment we are grabbing the width and height for.
+     * @returns The pixel dimensions (for both width and height).
+     */
+
+    getDefaultEquipmentDimension(type: string): number {
+        switch (type) {
+            case 'legplates':
+            case 'chestplate':
+            case 'helmet': {
+                return 32;
+            }
+
+            case 'shield':
+            case 'weapon': {
+                return 48;
+            }
+
+            default: {
+                return this.tileSize;
+            }
+        }
+    },
+
+    /**
      * Provides a default animation for a given type of entity. When we do not
      * specify the animations in the `sprites.json` we use this as a default
      * based on the type of entity.
