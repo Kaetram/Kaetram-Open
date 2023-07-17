@@ -365,6 +365,8 @@ export default {
 
     getDefaultEquipmentDimension(type: string): number {
         switch (type) {
+            case 'skin':
+            case 'cape':
             case 'legplates':
             case 'chestplate':
             case 'helmet': {
