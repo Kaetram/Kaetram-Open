@@ -667,7 +667,7 @@ export default class Renderer {
             entity.sprite.width,
             entity.sprite.height,
             entity.sprite.offsetX,
-            entity.sprite.offsetY,
+            entity.sprite.offsetY + entity.offsetY,
             entity.sprite.width,
             entity.sprite.height
         );
