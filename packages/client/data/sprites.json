@@ -14,7 +14,10 @@
     { "id": "player/helmet/darkmagehoodgreen", "offsetX": -8 },
     { "id": "player/helmet/darkmagehoodgold", "offsetX": -8 },
     { "id": "player/helmet/pilgrimhat", "offsetX": -8 },
-    { "id": "player/helmet/pilgrimhatblue", "offsetX": -8 },
+    { "id": "player/helmet/pilgrimhatpink", "offsetX": -8 },
+    { "id": "player/helmet/witchhat", "offsetX": -8 },
+    { "id": "player/helmet/witchhatblue", "offsetX": -8 },
+    { "id": "player/helmet/mushroomhat", "offsetX": -8 },
 
     { "id": "player/chestplate/copperchestplate", "offsetX": -8 },
     { "id": "player/chestplate/tinchestplate", "offsetX": -8 },
@@ -69,6 +72,11 @@
     { "id": "player/weapon/ironspear", "offsetX": -12 },
     { "id": "player/weapon/goldspear", "offsetX": -12 },
     { "id": "player/weapon/cobaltspear", "offsetX": -12 },
+
+    { "id": "player/weapon/balloonblue", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/weapon/balloonpink", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/weapon/balloongreen", "width": 32, "height": 32, "offsetX": -8 },
+
     { "id": "player/weapon/woodenbow", "offsetX": -8, "offsetY": -32 },
 
     { "id": "player/shield/lantern", "offsetY": -20 },
@@ -6541,5 +6549,11 @@
     { "id": "items/goldlegplates", "offsetX": 0, "offsetY": 0 },
     { "id": "items/woodenbow", "offsetX": 0, "offsetY": 0 },
     { "id": "items/pilgrimhat", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/pilgrimhatblue", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/pilgrimhatpink", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/witchhat", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/witchhatblue", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/balloongreen", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/balloonblue", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/balloonpink", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/mushroomhat", "offsetX": 0, "offsetY": 0 }
 ]
