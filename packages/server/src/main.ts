@@ -95,8 +95,9 @@ class Main {
         log.critical('Could not connect to the MongoDB server.');
         log.critical(`Error: ${error}`);
 
-        // Exit the process.
-        exit(1);
+        log.info(`Attempting to reconnect in 10 seconds...`);
+
+        setTimeout(() => this.database.createConnection(), 10_000);
     }
 
     /**
