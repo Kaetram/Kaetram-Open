@@ -38,6 +38,7 @@ export default abstract class Entity {
 
     public animation!: Animation | null;
 
+    public offsetY = 0; // Used for manually offsetting the entity itself.
     public shadowOffsetY = 0;
     public hidden = false;
 
