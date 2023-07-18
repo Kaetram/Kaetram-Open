@@ -1400,8 +1400,8 @@ export default class Renderer {
         if (!this.camera || this.stopRendering) return;
 
         context.translate(
-            -this.camera.x * this.camera.zoomFactor,
-            -this.camera.y * this.camera.zoomFactor
+            Math.round(-this.camera.x * this.camera.zoomFactor),
+            Math.round(-this.camera.y * this.camera.zoomFactor)
         );
     }
 
