@@ -894,6 +894,33 @@
             "magic": 0
         }
     },
+    "mushroomhat": {
+        "type": "helmet",
+        "name": "Mushroom Hat",
+        "price": 1000,
+        "skill": "defense",
+        "level": 35,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 2,
+            "archery": 6,
+            "magic": 2
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 1,
+            "stab": 1,
+            "archery": 10,
+            "magic": 8
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 1,
+            "archery": 4,
+            "magic": 3
+        }
+    },
     "pilgrimhat": {
         "type": "helmet",
         "name": "Pilgrim Hat",
@@ -921,9 +948,63 @@
             "magic": 3
         }
     },
-    "pilgrimhatblue": {
+    "pilgrimhatpink": {
         "type": "helmet",
-        "name": "Blue Pilgrim Hat",
+        "name": "Pink Pilgrim Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 25,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": 0,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 2,
+            "stab": 2,
+            "archery": -4,
+            "magic": 10
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 2,
+            "archery": 0,
+            "magic": 4
+        }
+    },
+    "witchhat": {
+        "type": "helmet",
+        "name": "Witch Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 15,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 2,
+            "archery": 0,
+            "magic": 4
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 1,
+            "stab": 1,
+            "archery": -2,
+            "magic": 8
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 2
+        }
+    },
+    "witchhatblue": {
+        "type": "helmet",
+        "name": "Blue Witch Hat",
         "price": 1000,
         "skill": "magic",
         "level": 25,
@@ -1907,6 +1988,21 @@
     "taekwondo": {
         "type": "skin",
         "name": "Taekwondo"
+    },
+    "balloonblue": {
+        "type": "weapon",
+        "name": "Blue Balloon",
+        "weaponType": "sword"
+    },
+    "balloongreen": {
+        "type": "weapon",
+        "name": "Green Balloon",
+        "weaponType": "sword"
+    },
+    "balloonpink": {
+        "type": "weapon",
+        "name": "Pink Balloon",
+        "weaponType": "sword"
     },
     "pendant1": {
         "type": "pendant",
