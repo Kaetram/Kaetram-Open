@@ -111,7 +111,7 @@ export default defineConfig({
         sitemap({ i18n: { locales, defaultLocale } }),
         robotsTxt({ host: true }),
         critters({ logger: 2 }),
-        compress({ logger: 1 }),
+        compress({ logger: 1, img: false }),
         compressor({ gzip: true, brotli: true })
     ],
     server: { host: true, port: 9000 },
