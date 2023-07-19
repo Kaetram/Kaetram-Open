@@ -560,6 +560,7 @@ export default class Renderer {
         );
 
         this.drawText(`zoomFactor: ${this.camera.zoomFactor}`, 10, 141, false, 'white');
+        this.drawText(`actulTileSize: ${this.actualTileSize}`, 10, 161, false, 'white');
 
         // Draw information about the entity we're hovering over.
         if (input.hovering && input.entity) {

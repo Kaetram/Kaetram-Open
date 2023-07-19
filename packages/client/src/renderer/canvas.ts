@@ -199,17 +199,17 @@ export default class Canvas extends Renderer {
         }
 
         /**
-         * Cell cache stores data about every index coordinate the player
-         * has explored. This may create overhead in terms of memory usage,
-         * but it is a necessary optimization.
+         * Cell cache is responsible for storing the position and dimensions of each individual
+         * tile. This is used to avoid recalculating the delta x and y coordinates for each rendering
+         * call. Instead we keep it here for the duration the tile is in the camera's view.
          */
 
         if (!(index in this.cells) || flips.length > 0)
             this.cells[index] = {
-                dx: this.getX(index + 1, this.map.width) * this.actualTileSize,
-                dy: Math.floor(index / this.map.width) * this.actualTileSize,
-                width: this.actualTileSize,
-                height: this.actualTileSize
+                dx: Math.ceil(this.getX(index + 1, this.map.width) * this.actualTileSize),
+                dy: Math.ceil(Math.floor(index / this.map.width) * this.actualTileSize),
+                width: Math.ceil(this.actualTileSize),
+                height: Math.ceil(this.actualTileSize)
             };
 
         this.drawImage(context, tileset, this.tiles[tileId], this.cells[index], flips);
