@@ -486,17 +486,26 @@ export default class ProcessMap {
             let tile = data[index];
 
             // Ignore non-array tiles.
-            if (!Array.isArray(data)) continue;
+            if (!Array.isArray(tile)) continue;
 
-            // Find the last tile in the array.
-            let lastTile = (tile as number[])[(tile as number[]).length - 1];
+            let obstructingIndex = -1;
 
-            // If the last tile is hidden, we remove the tile.
-            if (obstructing?.includes(lastTile)) {
-                data[index] = lastTile;
+            // Iterate from the top of the tile and find the topmost obstructing tile.
+            for (let i = tile.length - 1; i >= 0; i--)
+                if (obstructing?.includes(tile[i])) obstructingIndex = i;
 
-                clearedTiles++;
-            }
+            // No obstructing tile found, continuing to next index.
+            if (obstructingIndex === -1) continue;
+
+            // Splice the data after the obstructing index.
+            data[index] = (tile as number[]).splice(obstructingIndex);
+
+            let formattedData = data[index] as number[];
+
+            // eslint-disable-next-line prefer-destructuring
+            if ((formattedData as number[]).length === 1) data[index] = formattedData[0];
+
+            clearedTiles++;
         }
 
         log.notice(`Found ${clearedTiles} full tiles that overlap.`);
