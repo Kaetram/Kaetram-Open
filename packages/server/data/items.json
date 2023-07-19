@@ -948,6 +948,76 @@
             "magic": 1
         }
     },
+    "wizardhatblack": {
+        "type": "helmet",
+        "name": "Black Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1
+    },
+    "wizardhatcrimson": {
+        "type": "helmet",
+        "name": "Crimson Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1
+    },
+    "wizardhatdarkblue": {
+        "type": "helmet",
+        "name": "Dark Blue Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1
+    },
+    "wizardhatgreen": {
+        "type": "helmet",
+        "name": "Green Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1
+    },
+    "wizardhatpink": {
+        "type": "helmet",
+        "name": "Pink Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1
+    },
+    "wizardhatpurple": {
+        "type": "helmet",
+        "name": "Purple Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1
+    },
+    "wizardhatred": {
+        "type": "helmet",
+        "name": "Red Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1
+    },
+    "wizardhatturquoise": {
+        "type": "helmet",
+        "name": "Turquoise Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1
+    },
+    "wizardhatwhite": {
+        "type": "helmet",
+        "name": "White Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1
+    },
+    "wizardhatyellow": {
+        "type": "helmet",
+        "name": "Yellow Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1
+    },
     "pilgrimhat": {
         "type": "helmet",
         "name": "Pilgrim Hat",
@@ -2107,6 +2177,38 @@
             "strength": 0,
             "archery": 0,
             "magic": 0
+        }
+    },
+    "lanternarcan": {
+        "type": "shield",
+        "name": "Arcan Lantern",
+        "price": 1000,
+        "light": {
+            "outer": {
+                "distance": 250,
+                "colour": "rgba(204, 0, 0, 0.1)",
+                "flickerSpeed": 200,
+                "flickerIntensity": 2
+            },
+            "inner": {
+                "distance": 130,
+                "colour": "rgba(204, 0, 0, 0.2)",
+                "flickerSpeed": 400,
+                "flickerIntensity": 1
+            }
+        },
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 1
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 0,
+            "archery": 0,
+            "magic": 3
         }
     },
     "danbo": {
@@ -3665,6 +3767,13 @@
         "name": "Rat Hat Pet",
         "pet": "rathat",
         "description": "A little cute rat with a little cute hat that follows you around.",
+        "price": 1000
+    },
+    "ratballoonpet": {
+        "type": "pet",
+        "name": "Rat Balloon Pet",
+        "pet": "ratballoon",
+        "description": "A cute little rat tied to a balloon... Wait what?",
         "price": 1000
     },
     "arcanahypercube": {
