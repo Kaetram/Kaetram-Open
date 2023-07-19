@@ -19,6 +19,16 @@
     { "id": "player/helmet/witchhatblue", "offsetX": -8 },
     { "id": "player/helmet/mushroomhat", "offsetX": -8 },
     { "id": "player/helmet/wizardhatblue", "offsetX": -8 },
+    { "id": "player/helmet/wizardhatblack", "offsetX": -8 },
+    { "id": "player/helmet/wizardhatcrimson", "offsetX": -8 },
+    { "id": "player/helmet/wizardhatdarkblue", "offsetX": -8 },
+    { "id": "player/helmet/wizardhatgreen", "offsetX": -8 },
+    { "id": "player/helmet/wizardhatpink", "offsetX": -8 },
+    { "id": "player/helmet/wizardhatpurple", "offsetX": -8 },
+    { "id": "player/helmet/wizardhatred", "offsetX": -8 },
+    { "id": "player/helmet/wizardhatturquoise", "offsetX": -8 },
+    { "id": "player/helmet/wizardhatwhite", "offsetX": -8 },
+    { "id": "player/helmet/wizardhatyellow", "offsetX": -8 },
 
     { "id": "player/chestplate/copperchestplate", "offsetX": -8 },
     { "id": "player/chestplate/tinchestplate", "offsetX": -8 },
@@ -73,7 +83,7 @@
     { "id": "player/weapon/ironspear", "offsetX": -12 },
     { "id": "player/weapon/goldspear", "offsetX": -12 },
     { "id": "player/weapon/cobaltspear", "offsetX": -12 },
-    { "id": "player/weapon/gun", "width": 32, "height": 32, "offsetX": -8 },
+    { "id": "player/weapon/gun", "offsetX": -16, "offsetY": -22 },
     { "id": "player/weapon/balloonblue", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/weapon/balloonpink", "width": 32, "height": 32, "offsetX": -8 },
     { "id": "player/weapon/balloongreen", "width": 32, "height": 32, "offsetX": -8 },
@@ -99,6 +109,7 @@
     { "id": "player/shield/lantern2", "offsetY": -20 },
     { "id": "player/shield/coppershield", "offsetY": -20 },
     { "id": "player/shield/cobaltshield", "offsetY": -20 },
+    { "id": "player/shield/lanternarcan", "offsetY": -20 },
 
     { "id": "crowns/artist" },
     { "id": "crowns/tier1" },
@@ -244,10 +255,6 @@
                 "length": 4,
                 "row": 0
             },
-            "atk_right": {
-                "length": 6,
-                "row": 1
-            },
             "walk_right": {
                 "length": 3,
                 "row": 2
@@ -256,10 +263,6 @@
                 "length": 2,
                 "row": 3
             },
-            "atk_up": {
-                "length": 4,
-                "row": 4
-            },
             "walk_up": {
                 "length": 4,
                 "row": 5
@@ -267,10 +270,6 @@
             "idle_up": {
                 "length": 4,
                 "row": 6
-            },
-            "atk_down": {
-                "length": 4,
-                "row": 7
             },
             "walk_down": {
                 "length": 4,
@@ -292,10 +291,6 @@
                 "length": 4,
                 "row": 0
             },
-            "atk_right": {
-                "length": 6,
-                "row": 1
-            },
             "walk_right": {
                 "length": 3,
                 "row": 2
@@ -304,10 +299,6 @@
                 "length": 2,
                 "row": 3
             },
-            "atk_up": {
-                "length": 4,
-                "row": 4
-            },
             "walk_up": {
                 "length": 4,
                 "row": 5
@@ -315,10 +306,6 @@
             "idle_up": {
                 "length": 4,
                 "row": 6
-            },
-            "atk_down": {
-                "length": 4,
-                "row": 7
             },
             "walk_down": {
                 "length": 4,
@@ -329,6 +316,39 @@
                 "row": 9
             }
         }
+    },
+    {
+        "id": "pets/ratballoon",
+        "width": 48,
+        "height": 48,
+        "idleSpeed": 250,
+        "animations": {
+            "walk_right": {
+                "length": 4,
+                "row": 0
+            },
+            "idle_right": {
+                "length": 4,
+                "row": 1
+            },
+            "walk_up": {
+                "length": 4,
+                "row": 2
+            },
+            "idle_up": {
+                "length": 4,
+                "row": 3
+            },
+            "walk_down": {
+                "length": 4,
+                "row": 4
+            },
+            "idle_down": {
+                "length": 4,
+                "row": 5
+            }
+        },
+        "offsetY": -24
     },
     { "id": "mobs/angel", "width": 32, "height": 32, "offsetX": -8, "offsetY": -13 },
     { "id": "mobs/card", "width": 32, "height": 32, "offsetX": -8, "offsetY": -13 },
@@ -6587,5 +6607,19 @@
     { "id": "items/bowsky", "offsetX": 0, "offsetY": 0 },
     { "id": "items/bowsun", "offsetX": 0, "offsetY": 0 },
     { "id": "items/bowswineslayer", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/bowwillowtwine", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/bowwillowtwine", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ratpet", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/rathatpet", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ratballoonpet", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatblue", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatblack", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatcrimson", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatdarkblue", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatgreen", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatpink", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatpurple", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatred", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatturquoise", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatwhite", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wizardhatyellow", "offsetX": 0, "offsetY": 0 }
 ]
