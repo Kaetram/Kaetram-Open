@@ -921,6 +921,33 @@
             "magic": 3
         }
     },
+    "wizardhatblue": {
+        "type": "helmet",
+        "name": "Blue Wizard Hat",
+        "price": 1000,
+        "skill": "magic",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 1
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": -2,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 0,
+            "archery": 0,
+            "magic": 1
+        }
+    },
     "pilgrimhat": {
         "type": "helmet",
         "name": "Pilgrim Hat",
@@ -1723,6 +1750,119 @@
             "magic": -1
         }
     },
+
+    "bowbamboo": {
+        "type": "weaponarcher",
+        "name": "Bamboo Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowdeuteranom": {
+        "type": "weaponarcher",
+        "name": "Deuteranom Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "boweggplant": {
+        "type": "weaponarcher",
+        "name": "Wooden Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowfleshflinger": {
+        "type": "weaponarcher",
+        "name": "Flesh Flinger Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowiceicemaybe": {
+        "type": "weaponarcher",
+        "name": "Ice Ice Maybe",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowillmuscal": {
+        "type": "weaponarcher",
+        "name": "Ill Muscal Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowkelpysburden": {
+        "type": "weaponarcher",
+        "name": "Kelpy's Burden",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowmagiccool": {
+        "type": "weaponarcher",
+        "name": "Cool Magic Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowmagichot": {
+        "type": "weaponarcher",
+        "name": "Hot Magic Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowmoon": {
+        "type": "weaponarcher",
+        "name": "Moon Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowocean": {
+        "type": "weaponarcher",
+        "name": "Ocean Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowpine": {
+        "type": "weaponarcher",
+        "name": "Pine Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowsky": {
+        "type": "weaponarcher",
+        "name": "Sky Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowsun": {
+        "type": "weaponarcher",
+        "name": "Sun Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowswineslayer": {
+        "type": "weaponarcher",
+        "name": "Swine Slayer Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
+    "bowwillowtwine": {
+        "type": "weaponarcher",
+        "name": "Willow Twine Bow",
+        "weaponType": "bow",
+        "twoHanded": true,
+        "price": 100
+    },
     "magichamberge": {
         "type": "weaponmagic",
         "name": "Magic Hamberge",
@@ -2002,6 +2142,11 @@
     "balloonpink": {
         "type": "weapon",
         "name": "Pink Balloon",
+        "weaponType": "sword"
+    },
+    "gun": {
+        "type": "weapon",
+        "name": "Gun",
         "weaponType": "sword"
     },
     "pendant1": {
