@@ -109,7 +109,7 @@
     { "id": "player/shield/lantern2", "offsetY": -20 },
     { "id": "player/shield/coppershield", "offsetY": -20 },
     { "id": "player/shield/cobaltshield", "offsetY": -20 },
-    { "id": "player/shield/lanternarcan", "offsetY": -20 },
+    { "id": "player/shield/lanternarcan", "offsetY": -24 },
 
     { "id": "crowns/artist" },
     { "id": "crowns/tier1" },
@@ -6621,5 +6621,6 @@
     { "id": "items/wizardhatred", "offsetX": 0, "offsetY": 0 },
     { "id": "items/wizardhatturquoise", "offsetX": 0, "offsetY": 0 },
     { "id": "items/wizardhatwhite", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/wizardhatyellow", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/wizardhatyellow", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/lanternarcan", "offsetX": 0, "offsetY": 0 }
 ]
