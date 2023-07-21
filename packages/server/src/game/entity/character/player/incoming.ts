@@ -6,7 +6,6 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import Creator from '@kaetram/common/database/mongodb/creator';
-import { t } from '@kaetram/common/i18n';
 import { Spawn } from '@kaetram/common/network/impl';
 import { Opcodes, Packets } from '@kaetram/common/network';
 
@@ -411,7 +410,7 @@ export default class Incoming {
         if (text.startsWith('/') || text.startsWith(';')) return this.commands.parse(text);
 
         // Check for mute before filtering the message.
-        if (this.player.isMuted()) return this.player.notify(t('misc:MUTED'), 'crimson');
+        if (this.player.isMuted()) return this.player.notify('misc:MUTED', 'crimson');
 
         this.player.chat(Filter.clean(text));
     }
@@ -540,7 +539,7 @@ export default class Incoming {
      */
 
     private handleEnchant(packet: EnchantPacket): void {
-        if (!this.player.canAccessContainer) return this.player.notify(t('misc:CANNOT_DO_THAT'));
+        if (!this.player.canAccessContainer) return this.player.notify('misc:CANNOT_DO_THAT');
 
         // Sanitize the index and the shard index.
         if (packet.index) packet.index = Utils.sanitizeNumber(packet.index);
@@ -702,7 +701,7 @@ export default class Incoming {
 
         this.player.statistics.addMobExamine(entity.key);
 
-        if (!entity.description) return this.player.notify(t('misc:NO_IDEA'));
+        if (!entity.description) return this.player.notify('misc:NO_IDEA');
 
         this.player.notify(entity.getDescription());
     }
@@ -715,7 +714,7 @@ export default class Incoming {
     private handleCrafting(data: CraftingPacket): void {
         // Ensure the player is not maliciously trying to craft something.
         if (this.player.activeCraftingInterface === -1)
-            return this.player.notify(t('misc:CANNOT_DO_THAT'));
+            return this.player.notify('misc:CANNOT_DO_THAT');
 
         // Sanitize the packet information to prevent any funny business.
         if (data.count) data.count = Utils.sanitizeNumber(data.count, true);

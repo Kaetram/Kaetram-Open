@@ -53,5 +53,7 @@ export default {
     TRADE_REQUEST_OTHER: '{{username}} has requested to trade with you.',
     TRADE_EMPTY: `Yo why are y'all trading nothing?`,
     TRADE_COMPLETE: 'Thank you for using Kaetram trading system!',
-    BLACK_POTION: 'You drink the black potion and start feeling unwell.'
+    BLACK_POTION: 'You drink the black potion and start feeling unwell.',
+    WELCOME: 'Welcome to {{name}}!',
+    WELCOME_BACK: 'Welcome back to {{name}}!'
 } as const;

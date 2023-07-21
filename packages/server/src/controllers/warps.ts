@@ -1,7 +1,6 @@
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { t } from '@kaetram/common/i18n';
 
 import type { ProcessedArea } from '@kaetram/common/types/map';
 import type Player from '../game/entity/character/player/player';
@@ -31,20 +30,17 @@ export default class Warp {
 
         // Prevent players from warping when they are jailed.
         if (player.isJailed())
-            return player.notify(t('warps:CANNOT_WARP_JAIL', { time: player.getJailDuration() }));
+            return player.notify(`warps:CANNOT_WARP_JAIL;time=${player.getJailDuration()}`);
 
         // Prevent warping outside the tutorial.
-        if (!player.quests.isTutorialFinished())
-            return player.notify(t('warps:CANNOT_WARP_TUTORIAL'));
+        if (!player.quests.isTutorialFinished()) return player.notify('warps:CANNOT_WARP_TUTORIAL');
 
         // Prevent warping while in combat.
-        if (player.inCombat()) return player.notify(t('warps:CANNOT_WARP_COMBAT'));
+        if (player.inCombat()) return player.notify('warps:CANNOT_WARP_COMBAT');
 
         // Prevent teleporting too often.
         if (!this.isCooldown(player))
-            return player.notify(
-                t('warps:CANNOT_WARP_COOLDOWN', { time: this.getDuration(player) })
-            );
+            return player.notify(`warps:CANNOT_WARP_COOLDOWN;time=${this.getDuration(player)}`);
 
         let warp = this.getWarp(id);
 
@@ -69,7 +65,7 @@ export default class Warp {
             y = Utils.randomInt(warp.y, warp.y + warp.height - 1);
 
         player.teleport(x, y, true);
-        player.notify(t('warps:WARPED_TO', { name: Utils.formatName(warp.name) }));
+        player.notify(`warps:WARPED_TO;name=${Utils.formatName(warp.name)}`);
     }
 
     /**
@@ -104,7 +100,7 @@ export default class Warp {
     private hasRequirement(player: Player, warp: ProcessedArea): boolean {
         // Check if the warp has a level requirement.
         if (warp.level && player.level < warp.level) {
-            player.notify(t('warps:CANNOT_WARP_LEVEL', { level: `${warp.level}` }));
+            player.notify(`warps:CANNOT_WARP_LEVEL;level=${warp.level}`);
             return false;
         }
 
@@ -114,10 +110,9 @@ export default class Warp {
 
             if (!quest?.isFinished()) {
                 player.notify(
-                    t('warps:CANNOT_WARP_QUEST', {
-                        questName: quest.name,
-                        name: Utils.formatName(warp.name)
-                    })
+                    `warps:CANNOT_WARP_QUEST;questName=${quest.name};name=${Utils.formatName(
+                        warp.name
+                    )}`
                 );
                 return false;
             }
@@ -125,7 +120,7 @@ export default class Warp {
 
         // Check if the warp has an achievement requirement.
         if (warp.achievement && !player.achievements.get(warp.achievement)?.isFinished()) {
-            player.notify(t('warps:CANNOT_WARP_ACHIEVEMENT'));
+            player.notify('warps:CANNOT_WARP_ACHIEVEMENT');
             return false;
         }
 

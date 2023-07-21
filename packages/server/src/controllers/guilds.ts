@@ -1,6 +1,5 @@
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
-import { t } from '@kaetram/common/i18n';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Guild as GuildPacket } from '@kaetram/common/network/impl';
 
@@ -33,18 +32,18 @@ export default class Guilds {
         crest: Modules.BannerCrests
     ): Promise<void> {
         // Ensure the player isn't already in a guild.
-        if (player.guild) return player.notify(t('guilds:ALREADY_IN_GUILD'));
+        if (player.guild) return player.notify('guilds:ALREADY_IN_GUILD');
 
         // Ensure that guests cannot create guilds.
-        if (player.isGuest) return player.notify(t('guilds:NOT_ALLOWED_GUESTS_CREATE'));
+        if (player.isGuest) return player.notify('guilds:NOT_ALLOWED_GUESTS_CREATE');
 
         // Prevent players from creating a guild if they haven't finished the tutorial.
         if (!player.quests.isTutorialFinished())
-            return player.guildNotify(t('guilds:MUST_FINISH_TUTORIAL_CREATE'));
+            return player.guildNotify('guilds:MUST_FINISH_TUTORIAL_CREATE');
 
         // Ensure the player has enough gold to create a guild.
         if (!player.inventory.hasItem('gold', 30_000))
-            return player.guildNotify(t('guilds:NOT_ENOUGH_GOLD'));
+            return player.guildNotify('guilds:NOT_ENOUGH_GOLD');
 
         /**
          * We use the lower case of the guild name as the identifier. That way
@@ -151,7 +150,7 @@ export default class Guilds {
     public async join(player: Player, identifier: string): Promise<void> {
         if (player.isGuest) return player.notify('Guests are not allowed to join a guild.');
 
-        if (player.guild) return player.notify(t('guilds:ALREADY_IN_GUILD'));
+        if (player.guild) return player.notify('guilds:ALREADY_IN_GUILD');
 
         // Attempt to grab the guild from the database.
         let guild = await this.database.loader.loadGuild(identifier);
