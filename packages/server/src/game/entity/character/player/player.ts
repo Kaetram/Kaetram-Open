@@ -922,7 +922,7 @@ export default class Player extends Character {
             }
 
             case 'alchemy': {
-                if (!this.canUseCrafting()) return this.notify(t('misc:NO_KNOWLEDGE_USE'));
+                if (!this.canUseAlchemy()) return this.notify(t('misc:NO_KNOWLEDGE_USE'));
 
                 return this.world.crafting.open(this, Modules.Skills.Alchemy);
             }
