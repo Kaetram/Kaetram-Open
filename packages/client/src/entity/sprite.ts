@@ -90,7 +90,7 @@ export default class Sprite {
             this.loaded = true;
 
             // Ignore drawing hurt sprites for item types and very small sprites.
-            if (this.key.includes('items') && this.image.width > 96)
+            if (!this.key.includes('items') && this.image.width > 96)
                 this.hurtSprite = Utils.getHurtSprite(this);
 
             // Load the silhouette sprite for the entity if it has one.
