@@ -20,6 +20,7 @@ import Formulas from '../../../../info/formulas';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Experience, Points, Skill as SkillPacket } from '@kaetram/common/network/impl';
+import { t } from '@kaetram/common/i18n';
 
 import type Player from './player';
 import type Skill from './skill/skill';
@@ -164,8 +165,8 @@ export default class Skills {
     ): void {
         if (newLevel) {
             this.player.popup(
-                'Skill level up!',
-                `Congratulations, your ${name} has reached level ${level}!`,
+                t('misc:SKILL_LEVEL_UP'),
+                t('misc:SKILL_LEVEL_UP_DESC', { name, level: level.toString() }),
                 '#9933ff'
             );
 
