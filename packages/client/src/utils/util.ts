@@ -2,6 +2,7 @@ import { onSecondaryPress } from './press';
 
 import Sprite from '../entity/sprite';
 
+import { t } from '@kaetram/common/i18n';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { AnimationData } from '../entity/sprite';
@@ -141,6 +142,39 @@ export default {
         if (trim > 1 && name.length > trim) name = `${name.slice(0, Math.max(0, trim))}...`;
 
         return name;
+    },
+
+    /**
+     * Responsible for handling the formatting of a string when received from a server. If this
+     * string is an i18n string, then we must handle the data passed alongside with it and extract
+     * it into the necessary format.
+     * @param message The message string that we are formatting.
+     */
+
+    formatNotification(message: string): string {
+        // Raw notification text, no need to format.
+        if (!message.includes(':')) return message;
+
+        // If there is no ; character to indicate variables then we return the i18n parsed string;
+        if (!message.includes(';')) return t(message as never);
+
+        /**
+         * Split the message string into blocks, the first block is the actual i18n string to call
+         * and each subsequent block is a variable to pass to the i18n string.
+         */
+
+        let blocks = message.split(';'),
+            data: { [key: string]: string } = {};
+
+        // Iterate through the variable blocks.
+        for (let i = 1; i < blocks.length; i++) {
+            let [key, value] = blocks[i].split('=');
+
+            // Insert the key and value into the data object.
+            data[key] = value;
+        }
+
+        return t(blocks[0] as never, data as never);
     },
 
     /**

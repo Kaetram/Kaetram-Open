@@ -8,7 +8,6 @@ import Entity from '../entity';
 import Formulas from '../../../info/formulas';
 
 import Utils from '@kaetram/common/util/utils';
-import { t } from '@kaetram/common/i18n';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import {
@@ -862,7 +861,7 @@ export default abstract class Character extends Entity {
     protected canAttack(target: Character): boolean {
         // Prevent pets from being attacked.
         if (target.isPet()) {
-            if (this.isPlayer()) this.notify(t('misc:CANNOT_ATTACK_PET'));
+            if (this.isPlayer()) this.notify('misc:CANNOT_ATTACK_PET');
 
             return false;
         }
@@ -870,7 +869,7 @@ export default abstract class Character extends Entity {
         if (target.isMob()) {
             // Restrict the mobs in tutorial from being attacked by the player.
             if (this.isPlayer() && !this.quests.canAttackInTutorial()) {
-                this.notify(t('misc:CANNOT_ATTACK_MOB'));
+                this.notify('misc:CANNOT_ATTACK_MOB');
                 return false;
             }
 
@@ -882,14 +881,14 @@ export default abstract class Character extends Entity {
 
         // Prevent cheaters from being targeted by other players.
         if (target.isCheater()) {
-            this.notify(t('misc:CANNOT_ATTACK_CHEATER'));
+            this.notify('misc:CANNOT_ATTACK_CHEATER');
 
             return false;
         }
 
         // Prevent cheaters from starting a fight with other players.
         if (this.isCheater()) {
-            this.notify(t('misc:CANNOT_ATTACK_CHEATER_SELF'));
+            this.notify('misc:CANNOT_ATTACK_CHEATER_SELF');
 
             return false;
         }
@@ -897,12 +896,12 @@ export default abstract class Character extends Entity {
         // Handle logic for in-minigame combat.
         if (this.inMinigame()) {
             if (this.team === Team.Prey) {
-                this.notify(t('misc:CANNOT_ATTACK_PREY'));
+                this.notify('misc:CANNOT_ATTACK_PREY');
                 return false;
             }
 
             if (this.team === Team.Hunter && target.instance !== this.coursingTarget) {
-                this.notify(t('misc:CANNOT_ATTACK_TARGET'));
+                this.notify('misc:CANNOT_ATTACK_TARGET');
                 return false;
             }
 
@@ -915,7 +914,7 @@ export default abstract class Character extends Entity {
 
         // Prevent attacking when level difference is too great.
         if (Math.abs(this.level - target.level) > 30) {
-            this.notify(t('misc:CANNOT_ATTACK_LEVEL_DIFF'));
+            this.notify('misc:CANNOT_ATTACK_LEVEL_DIFF');
             return false;
         }
 

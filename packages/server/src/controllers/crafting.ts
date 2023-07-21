@@ -4,7 +4,6 @@ import Items from '../../data/items.json';
 
 import Utils from '@kaetram/common/util/utils';
 import CraftingEn from '@kaetram/common/text/en/crafting';
-import { t } from '@kaetram/common/i18n';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Crafting as CraftingPacket } from '@kaetram/common/network/impl';
 
@@ -37,7 +36,7 @@ export default class Crafting {
         // Attempt to obtain the keys and if none are available then we cannot open the interface.
         let previews = this.getCraftingPreviews(type);
 
-        if (!previews) return player.notify(t('misc:CANNOT_DO_THAT'));
+        if (!previews) return player.notify('misc:CANNOT_DO_THAT');
 
         // Set the currently active crafting interface.
         player.activeCraftingInterface = type;
@@ -65,13 +64,13 @@ export default class Crafting {
             craftingData = (CraftingData as CraftingInfo)[skillName];
 
         // Another layer of checking the validity of the crafting data.
-        if (!craftingData) return player.notify(t('crafting:INVALID_DATA'));
+        if (!craftingData) return player.notify('crafting:INVALID_DATA');
 
         // Get the item key from the crafting keys based on the index the player selected.
         let craftingItem = craftingData[key];
 
         // Ensure that the item exists.
-        if (!craftingItem) return player.notify(t('crafting:INVALID_ITEM'));
+        if (!craftingItem) return player.notify('crafting:INVALID_ITEM');
 
         // Send the requirements and result to the player.
         player.send(
@@ -98,7 +97,7 @@ export default class Crafting {
         if (!player.canCraft()) return;
 
         // Ensure the index is valid.
-        if (!key) return player.notify(t('crafting:SELECT_ITEM'));
+        if (!key) return player.notify('crafting:SELECT_ITEM');
 
         // Verify that the count is valid.
         if (isNaN(count) || count < 1) count = 1;
@@ -110,7 +109,7 @@ export default class Crafting {
             craftingData = (CraftingData as CraftingInfo)[skillName];
 
         // Verify the crafting data
-        if (!craftingData) return player.notify(t('crafting:INVALID_DATA'));
+        if (!craftingData) return player.notify('crafting:INVALID_DATA');
 
         // The skill that is being used to craft the item.
         let craftingItem = craftingData[key],
@@ -121,7 +120,7 @@ export default class Crafting {
             );
 
         // Verify the crafting data
-        if (!craftingItem) return player.notify(t('crafting:INVALID_ITEM'));
+        if (!craftingItem) return player.notify('crafting:INVALID_ITEM');
 
         // Ensure the player has the correct level to craft the item.
         if (skill.level < craftingItem.level)
@@ -142,7 +141,7 @@ export default class Crafting {
         for (let requirement of craftingItem.requirements) {
             // Stop the loop if the player does not have one of the requirements.
             if (!player.inventory.hasItem(requirement.key, requirement.count))
-                return player.notify(t('crafting:INVALID_ITEMS'));
+                return player.notify('crafting:INVALID_ITEMS');
 
             let itemCount = player.inventory.count(requirement.key),
                 requestedAmount = requirement.count * count;
@@ -168,7 +167,7 @@ export default class Crafting {
         // Notify the players of the amount of failures.
         if (failures > 0)
             player.notify(
-                `${t('crafting:FAILED_CRAFT')} ${failures}x ${(Items as RawData)[key].name}.`
+                `${'crafting:FAILED_CRAFT'} ${failures}x ${(Items as RawData)[key].name}.`
             );
 
         // Award experience to the player.
