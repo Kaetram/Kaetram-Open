@@ -19,7 +19,6 @@ import Formulas from '../../../../info/formulas';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
-import { t } from '@kaetram/common/i18n';
 import { PacketType } from '@kaetram/common/network/modules';
 import { Opcodes, Modules } from '@kaetram/common/network';
 import { Team } from '@kaetram/common/api/minigame';
@@ -455,31 +454,21 @@ export default class Player extends Character {
      */
 
     public welcome(): void {
-        if (this.isNew()) return this.notify(`Welcome to ${config.name}!`);
+        if (this.isNew()) return this.notify(`misc:WELCOME;name=${config.name}}`);
 
-        this.notify(`Welcome back to ${config.name}!`);
+        this.notify(`misc:WELCOME_BACK;name=${config.name}`);
 
         let population = this.world.getPopulation(),
             { activeEvent } = this.world.events;
 
         if (population > 1)
-            this.notify(
-                t('misc:PEOPLE_ONLINE', { population: population.toString() }),
-                '',
-                '',
-                true
-            );
+            this.notify(`misc:PEOPLE_ONLINE;population=${population}`, '', '', true);
 
         if (activeEvent)
             this.notify(`The ${activeEvent} event is currently active!`, 'crimsonred', '', true);
 
         if (this.isJailed())
-            this.notify(
-                t('misc:JAILED', { duration: this.getJailDuration() }),
-                'crimsonred',
-                '',
-                true
-            );
+            this.notify(`misc:JAILED;duration=${this.getJailDuration()}`, 'crimsonred', '', true);
     }
 
     /**
@@ -823,7 +812,7 @@ export default class Player extends Character {
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
         if (type === Modules.ContainerType.Inventory && this.map.isDoor(this.x, this.y))
-            return this.notify(t('misc:CANNOT_DROP_ITEM_DOOR'));
+            return this.notify('misc:CANNOT_DROP_ITEM_DOOR');
 
         container.remove(index, count, true);
     }
@@ -921,13 +910,13 @@ export default class Player extends Character {
             }
 
             case 'crafting': {
-                if (!this.canUseCrafting()) return this.notify(t('misc:NO_KNOWLEDGE_USE'));
+                if (!this.canUseCrafting()) return this.notify('misc:NO_KNOWLEDGE_USE');
 
                 return this.world.crafting.open(this, Modules.Skills.Crafting);
             }
 
             case 'alchemy': {
-                if (!this.canUseAlchemy()) return this.notify(t('misc:NO_KNOWLEDGE_USE'));
+                if (!this.canUseAlchemy()) return this.notify('misc:NO_KNOWLEDGE_USE');
 
                 return this.world.crafting.open(this, Modules.Skills.Alchemy);
             }
@@ -1202,7 +1191,7 @@ export default class Player extends Character {
             // Prevent picking up dropped items that belong to other players.
             if (!entity.isOwner(this.username))
                 return this.notify(
-                    t('misc:CANNOT_PICK_UP_ITEM', { username: Utils.formatName(entity.owner) })
+                    `misc:CANNOT_PICK_UP_ITEM;username=${Utils.formatName(entity.owner)}`
                 );
 
             // If the item's owner is existent and the player is the owner we add it to the statistics.
@@ -1238,8 +1227,8 @@ export default class Player extends Character {
         // Skip if pvp state is the same or it's permanent
         if (this.pvp === pvp) return;
 
-        if (this.pvp && !pvp) this.notify(t('misc:NOT_IN_PVP_ZONE'));
-        else this.notify(t('misc:IN_PVP_ZONE'));
+        if (this.pvp && !pvp) this.notify('misc:NOT_IN_PVP_ZONE');
+        else this.notify('misc:IN_PVP_ZONE');
 
         this.pvp = pvp;
 
@@ -1486,17 +1475,13 @@ export default class Player extends Character {
             Modules.Effects.FirePotion,
             Modules.Constants.FIRE_POTION_DURATION,
             () => {
-                this.notify(t('misc:FIRE_IMMUNITY_WORN_OFF'));
+                this.notify('misc:FIRE_IMMUNITY_WORN_OFF');
             }
         );
 
         let duration = (Modules.Constants.FIRE_POTION_DURATION / 1000).toString();
 
-        this.notify(
-            t('misc:FIRE_IMMUNITY', {
-                duration
-            })
-        );
+        this.notify(`misc:FIRE_IMMUNITY;duration=${duration}`);
     }
 
     /**
@@ -1599,7 +1584,7 @@ export default class Player extends Character {
         if (!this.hasPet()) return;
 
         // Ensure the player has enough space in their inventory.
-        if (!this.inventory.hasSpace()) return this.notify(t('misc:NO_SPACE_PET'));
+        if (!this.inventory.hasSpace()) return this.notify('misc:NO_SPACE_PET');
 
         // Create a pet item and add it to the player's inventory.
         this.inventory.add(new Item(`${this.pet!.key}pet`, -1, -1, false, 1));

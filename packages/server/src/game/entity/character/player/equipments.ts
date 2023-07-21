@@ -16,7 +16,6 @@ import Item from '../../objects/item';
 import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
-import { t } from '@kaetram/common/i18n';
 
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
@@ -115,7 +114,7 @@ export default class Equipments {
          */
 
         if (item.isTwoHanded() && !this.getShield().isEmpty()) {
-            if (!this.player.inventory.hasSpace()) return this.player.notify(t('misc:NO_SPACE'));
+            if (!this.player.inventory.hasSpace()) return this.player.notify('misc:NO_SPACE');
 
             this.unequip(Modules.Equipment.Shield);
         }
@@ -127,7 +126,7 @@ export default class Equipments {
          */
 
         if (type === Modules.Equipment.Shield && this.getWeapon().isTwoHanded()) {
-            if (!this.player.inventory.hasSpace()) return this.player.notify(t('misc:NO_SPACE'));
+            if (!this.player.inventory.hasSpace()) return this.player.notify('misc:NO_SPACE');
 
             this.unequip(Modules.Equipment.Weapon);
         }

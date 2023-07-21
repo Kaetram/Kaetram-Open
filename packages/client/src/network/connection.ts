@@ -1,3 +1,5 @@
+import Util from '../utils/util';
+
 import { inflate } from 'pako';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
@@ -798,7 +800,7 @@ export default class Connection {
             case Opcodes.Notification.Text: {
                 return this.input.chatHandler.add(
                     info.source || 'WORLD',
-                    info.message,
+                    Util.formatNotification(info.message),
                     info.colour,
                     true
                 );
