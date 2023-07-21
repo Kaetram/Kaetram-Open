@@ -1,7 +1,7 @@
 ---
 import { Schema } from 'astro-seo-schema';
 import { GoogleAnalytics } from '@astrolib/analytics';
-import { locales, defaultLocale, getFixedT, dir, type Locale } from '@kaetram/common/i18n';
+import { t, dir, lang } from '@kaetram/common/i18n';
 
 export interface Props {
     title?: string;
@@ -13,13 +13,7 @@ function site(path = '') {
     return new URL(path, Astro.site).toString();
 }
 
-let { pathname } = Astro.url,
-    lang = pathname.split('/')[1] as Locale;
-
-if (!Object.keys(locales).includes(lang)) lang = defaultLocale;
-
-let t = getFixedT(lang),
-    name = t('meta.name'),
+let name = t('meta.name'),
     description = t('meta.description');
 ---
 

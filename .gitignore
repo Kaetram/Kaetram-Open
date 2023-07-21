@@ -1,3 +1,6 @@
+packages/tools/map/data/map.png
+packages/server/cache
+
 ### Astro ###
 # Gitignore template for Astro projects
 # Ignore content collection generated files
@@ -444,7 +447,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# https://www.toptal.com/developers/gitignore/api/git,node,astro,cypressio,linux,macos,windows,visualstudiocode,webstorm,vim,emacs
-
-packages/tools/map/data/map.png
-packages/server/cache
+# https://www.toptal.com/developers/gitignore?templates=git,node,astro,cypressio,linux,macos,windows,visualstudiocode,webstorm,vim,emacs
