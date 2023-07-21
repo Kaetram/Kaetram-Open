@@ -18,6 +18,9 @@ await i18next.init({
     preload: Object.keys(locales)
 });
 
+export let lang = i18next.language as Locale;
+
 export let t = i18next.t.bind(i18next) as TFunction;
 export let getFixedT = i18next.getFixedT.bind(i18next) as GetFixedTFunction;
 export let dir = (lng: Locale) => i18next.dir(lng);
+export let changeLanguage = (lng?: Locale) => i18next.changeLanguage(lng);

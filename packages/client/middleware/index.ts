@@ -1,6 +1,14 @@
-import { sequence } from 'astro/middleware';
-import { i18nMiddleware } from 'astro-i18n-aut';
+import { defineMiddleware, sequence } from 'astro/middleware';
+import { i18nMiddleware, getLocale } from 'astro-i18n-aut';
+import { defaultLocale, changeLanguage, type Locale } from '@kaetram/common/i18n';
 
-const i18n = i18nMiddleware({ defaultLocale: 'en' });
+let routes = i18nMiddleware({ defaultLocale }),
+    language = defineMiddleware(async ({ url }, next) => {
+        let lang = getLocale(url) as Locale;
 
-export const onRequest = sequence(i18n);
+        await changeLanguage(lang || defaultLocale);
+
+        return await next();
+    });
+
+export const onRequest = sequence(routes, language);

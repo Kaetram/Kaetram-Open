@@ -35,17 +35,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@astrojs/compiler@npm:^1.0.0, @astrojs/compiler@npm:^1.0.1, @astrojs/compiler@npm:^1.4.2, @astrojs/compiler@npm:^1.5.0, @astrojs/compiler@npm:^1.5.1":
+"@astrojs/compiler@npm:1.5.7":
+  version: 1.5.7
+  resolution: "@astrojs/compiler@npm:1.5.7"
+  checksum: d29d553682655cd121a5063ceb5892ae9da73c5a266d0ab1457fe19d8882e3e89a00e5320d6f023cea589d6cfec62109aefa37dfaada79060ea2645b15ce90f6
+  languageName: node
+  linkType: hard
+
+"@astrojs/compiler@npm:^1.0.0, @astrojs/compiler@npm:^1.0.1, @astrojs/compiler@npm:^1.4.2, @astrojs/compiler@npm:^1.5.0":
   version: 1.5.1
   resolution: "@astrojs/compiler@npm:1.5.1"
   checksum: 6af1a1c73c1b8e4c3e10fd133f5d80a7e82700cfbda66e5c86363f18e4a7731f4b3f935a906c823905ba1e0295c1fa1b2c5d4f107f225b4e46799e818fa36a02
   languageName: node
   linkType: hard
 
-"@astrojs/compiler@npm:^1.5.3":
-  version: 1.5.4
-  resolution: "@astrojs/compiler@npm:1.5.4"
-  checksum: c047311c266f6191407806595760c9c460db941c220b5989fa8808a8868e828f287282819aa97ce098f317b2e6287964862a77571ec075267d38c681f7c288d5
+"@astrojs/compiler@npm:^1.6.0":
+  version: 1.6.1
+  resolution: "@astrojs/compiler@npm:1.6.1"
+  checksum: f28667a13ea7550f91a0e8d55d2434a239510e3d503a64067040f47f6f4bf5309ee4ae0d9f1109f64ad2437e50494a65fbbadebd5057ce347273da38a165acf0
   languageName: node
   linkType: hard
 
@@ -134,13 +141,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@astrojs/sitemap@npm:^1.3.3":
-  version: 1.3.3
-  resolution: "@astrojs/sitemap@npm:1.3.3"
+"@astrojs/sitemap@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@astrojs/sitemap@npm:2.0.1"
   dependencies:
     sitemap: "npm:^7.1.1"
     zod: "npm:^3.17.3"
-  checksum: 3add96b086d09472c975005fc00b656d1bb53375fa7b51591013539a163c644ed7dc2699df44c9235ae578a097dcc397e91295bed22737f76ea0ecaf8d4d6ead
+  checksum: 538b042429f70a7a8bed49852259d9a67458da148d791aa5f59a08afa0d0caf5317435abfc94880370c2702833fb7f19a7f855d7f526354425a066b547dff9d9
   languageName: node
   linkType: hard
 
@@ -160,13 +167,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@astrojs/ts-plugin@npm:^1.0.10":
-  version: 1.0.10
-  resolution: "@astrojs/ts-plugin@npm:1.0.10"
+"@astrojs/ts-plugin@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@astrojs/ts-plugin@npm:1.1.0"
   dependencies:
-    "@astrojs/compiler": "npm:^1.5.1"
-    "@jridgewell/trace-mapping": "npm:^0.3.18"
-  checksum: a0ef8aa8215f01beec5317d1ecf60f5fb2247b58680033853f48d9d184ea494ec50892851f87fa068412f3377b268e9f55d60c623d60892071a08474751620f8
+    "@astrojs/compiler": "npm:1.5.7"
+    "@jridgewell/sourcemap-codec": "npm:^1.4.15"
+    "@volar/language-core": "npm:~1.9.0"
+    "@volar/typescript": "npm:~1.9.0"
+    vscode-languageserver-textdocument: "npm:^1.0.8"
+  checksum: 935b4c9deb312be29de4a61cfe2f51df2ae9c39346b982ecbd3ad8b031a5b2c70f74d2748de88f2542bacc85e69e77154bcae3f4e6a132274800327617e47592
   languageName: node
   linkType: hard
 
@@ -3729,7 +3739,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jridgewell/sourcemap-codec@npm:^1.4.10, @jridgewell/sourcemap-codec@npm:^1.4.13, @jridgewell/sourcemap-codec@npm:^1.4.14":
+"@jridgewell/sourcemap-codec@npm:^1.4.10, @jridgewell/sourcemap-codec@npm:^1.4.13, @jridgewell/sourcemap-codec@npm:^1.4.14, @jridgewell/sourcemap-codec@npm:^1.4.15":
   version: 1.4.15
   resolution: "@jridgewell/sourcemap-codec@npm:1.4.15"
   checksum: b71b5eeb0af50fb1dbdf18e88aa5cf755baa30723f0d5fd2ac069f861d0c73b12b968321314e4db86d5a4d5d89a292211f68ba94767c620fee35247a94c05890
@@ -3746,7 +3756,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jridgewell/trace-mapping@npm:^0.3.14, @jridgewell/trace-mapping@npm:^0.3.17, @jridgewell/trace-mapping@npm:^0.3.18, @jridgewell/trace-mapping@npm:^0.3.9":
+"@jridgewell/trace-mapping@npm:^0.3.14, @jridgewell/trace-mapping@npm:^0.3.17, @jridgewell/trace-mapping@npm:^0.3.9":
   version: 0.3.18
   resolution: "@jridgewell/trace-mapping@npm:0.3.18"
   dependencies:
@@ -3762,7 +3772,7 @@ __metadata:
   dependencies:
     "@astrojs/node": "npm:^5.3.0"
     "@kaetram/common": "workspace:*"
-    astro: "npm:^2.7.4"
+    astro: "npm:^2.9.1"
     typescript: "npm:^5.1.3"
   languageName: unknown
   linkType: soft
@@ -3772,7 +3782,7 @@ __metadata:
   resolution: "@kaetram/client@workspace:packages/client"
   dependencies:
     "@astrojs/partytown": "npm:^1.2.3"
-    "@astrojs/sitemap": "npm:^1.3.3"
+    "@astrojs/sitemap": "npm:^2.0.1"
     "@astrolib/analytics": "npm:^0.3.0"
     "@kaetram/common": "workspace:*"
     "@sentry/browser": "npm:^7.45.0"
@@ -3782,11 +3792,11 @@ __metadata:
     "@types/html-minifier-terser": "npm:^7.0.0"
     "@types/pako": "npm:^2.0.0"
     "@types/workbox-build": "npm:^5.1.0"
-    astro: "npm:^2.7.4"
+    astro: "npm:^2.9.1"
     astro-compress: "npm:^1.1.49"
     astro-compressor: "npm:^0.4.0"
     astro-critters: "npm:^1.1.39"
-    astro-i18n-aut: "npm:^0.1.2"
+    astro-i18n-aut: "npm:^0.1.15"
     astro-robots-txt: "npm:^0.5.0"
     astro-seo-schema: "npm:^2.2.0"
     astro-webmanifest: "npm:^0.6.0"
@@ -3816,7 +3826,7 @@ __metadata:
     discord.js: "npm:^14.3.0"
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
-    i18next: "npm:^23.2.2"
+    i18next: "npm:^23.2.11"
     ipaddr.js: "npm:^2.0.1"
   languageName: unknown
   linkType: soft
@@ -4406,6 +4416,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dom-view-transitions@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@types/dom-view-transitions@npm:1.0.1"
+  checksum: 899fab09042ac652bf2bb2500ae0f036b12631a141d799d802c447edf220dd2913a90ce3497b673d2d5b986f611ecb93f7ff82c0e556b75cecda89f53c1fdd09
+  languageName: node
+  linkType: hard
+
 "@types/dotenv-parse-variables@npm:^2.0.1":
   version: 2.0.1
   resolution: "@types/dotenv-parse-variables@npm:2.0.1"
@@ -4915,6 +4932,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@volar/language-core@npm:1.9.1, @volar/language-core@npm:~1.9.0":
+  version: 1.9.1
+  resolution: "@volar/language-core@npm:1.9.1"
+  dependencies:
+    "@volar/source-map": "npm:1.9.1"
+  checksum: 43985c5f1d14a5253cb7619c4517bc3b110230521501c2dd4304d1923775087f9e0cc9026c6277332f72bfc957e0f09fdee237fff50c4b4a5a0b1a1687044f0f
+  languageName: node
+  linkType: hard
+
+"@volar/source-map@npm:1.9.1":
+  version: 1.9.1
+  resolution: "@volar/source-map@npm:1.9.1"
+  dependencies:
+    muggle-string: "npm:^0.3.1"
+  checksum: 5a1a7b9ea043e9f083ff6739f7abe4990bb7968a06a1a7978cde729a1a3d2fc629c0a9430fc90b49fc05edde4e3f4d6acd69c8bb017ca5670042fd0b7757d9e1
+  languageName: node
+  linkType: hard
+
+"@volar/typescript@npm:~1.9.0":
+  version: 1.9.1
+  resolution: "@volar/typescript@npm:1.9.1"
+  dependencies:
+    "@volar/language-core": "npm:1.9.1"
+  checksum: 0f6f1f915bf2f821e309369e946d32022879fe24bd25c4a39bfcbf0293cc579abb4a76826810e359d787b2d79e39cc1506651dace85a0cfb564148c32520cf5b
+  languageName: node
+  linkType: hard
+
 "@vscode/emmet-helper@npm:^2.8.4":
   version: 2.9.1
   resolution: "@vscode/emmet-helper@npm:2.9.1"
@@ -5348,17 +5392,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro-i18n-aut@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "astro-i18n-aut@npm:0.1.2"
+"astro-i18n-aut@npm:^0.1.15":
+  version: 0.1.15
+  resolution: "astro-i18n-aut@npm:0.1.15"
   dependencies:
-    dedent: "npm:^0.7.0"
+    dedent: "npm:^1.0.1"
     fast-glob: "npm:^3.3.0"
     fs-extra: "npm:^11.1.1"
+    slash: "npm:^5.1.0"
   peerDependencies:
     astro: ^2.8.0
     kleur: ^4.1.4
-  checksum: 5a0b2972b10e8245bc3ea816f967ce375f4a961fc2d06bbd2767f1677df7f1d69225670c4f34ff345e0c43db7f4c2e4c038f76f85bf4a069e42c664a22f7aed5
+  checksum: 795227ef7eb3c8cf58cd78de34cc26c1148158f895d2cf59a5710b3326eadba6d67fa710cd76f7fbf449da6611590846e29bbbdc1cba72b2ef43ec310122cb23
   languageName: node
   linkType: hard
 
@@ -5394,11 +5439,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro@npm:^2.7.4":
-  version: 2.7.4
-  resolution: "astro@npm:2.7.4"
+"astro@npm:^2.9.1":
+  version: 2.9.1
+  resolution: "astro@npm:2.9.1"
   dependencies:
-    "@astrojs/compiler": "npm:^1.5.3"
+    "@astrojs/compiler": "npm:^1.6.0"
     "@astrojs/internal-helpers": "npm:^0.1.1"
     "@astrojs/language-server": "npm:^1.0.0"
     "@astrojs/markdown-remark": "npm:^2.2.1"
@@ -5411,6 +5456,7 @@ __metadata:
     "@babel/traverse": "npm:^7.22.5"
     "@babel/types": "npm:^7.22.5"
     "@types/babel__core": "npm:^7.20.1"
+    "@types/dom-view-transitions": "npm:^1.0.1"
     "@types/yargs-parser": "npm:^21.0.0"
     acorn: "npm:^8.9.0"
     boxen: "npm:^6.2.1"
@@ -5434,6 +5480,7 @@ __metadata:
     kleur: "npm:^4.1.4"
     magic-string: "npm:^0.27.0"
     mime: "npm:^3.0.0"
+    network-information-types: "npm:^0.1.1"
     ora: "npm:^6.3.1"
     p-limit: "npm:^4.0.0"
     path-to-regexp: "npm:^6.2.1"
@@ -5451,6 +5498,7 @@ __metadata:
     vfile: "npm:^5.3.7"
     vite: "npm:^4.3.9"
     vitefu: "npm:^0.2.4"
+    which-pm: "npm:^2.0.0"
     yargs-parser: "npm:^21.1.1"
     zod: "npm:^3.20.6"
   peerDependencies:
@@ -5460,7 +5508,7 @@ __metadata:
       optional: true
   bin:
     astro: astro.js
-  checksum: 99ed99006095aef1498ad504ebc28aa7ba2c70373275385c9fa1d0920ad2fa6ecbd7bc0b0ab80865fe936ec927195f723014ccb6c9a53b7532e5afdb450f1c36
+  checksum: 0509828e048af27a4b9205f6571c40f8b7bb5f1b912684e3a79ed1fe33ffc9c09ecffa698b5885e8457226e1209dd4a2ce9d0145b68a0cc8b80d67f1caa47b32
   languageName: node
   linkType: hard
 
@@ -6818,10 +6866,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dedent@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "dedent@npm:0.7.0"
-  checksum: ca3f1755ff26262fd43c339faafd3e92c1b3265b132397fc702d97643173fc03f35209af8f93583a99f878c6a355300971dbd2a27e7e0a4af4380c7b38d907ae
+"dedent@npm:^1.0.1":
+  version: 1.2.0
+  resolution: "dedent@npm:1.2.0"
+  peerDependencies:
+    babel-plugin-macros: ^3.1.0
+  peerDependenciesMeta:
+    babel-plugin-macros:
+      optional: true
+  checksum: cbf56f0b2881a74fd484245e9392b9ba978cad716a769db94879fbf215e6d95f1621869d2dfe6dba678909033e748ce94d6458f6463d589f5963022a6c6dff0c
   languageName: node
   linkType: hard
 
@@ -9437,12 +9490,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^23.2.2":
-  version: 23.2.2
-  resolution: "i18next@npm:23.2.2"
+"i18next@npm:^23.2.11":
+  version: 23.2.11
+  resolution: "i18next@npm:23.2.11"
   dependencies:
     "@babel/runtime": "npm:^7.22.5"
-  checksum: 3fc30fdb9168a8735118fd644355b4ce60d35e484b1efc12d47b7c525bebd7d0342656049dffb093d65cff998888dd77e5baadb93cb83cd1be7ef1e8a8b8ff3e
+  checksum: aa8f6d6e822f978ff78e437989a6710a906f461d5ca207ac2916e786782e0cb455e3e4fe9a0aedb3461927f8396d45d5941dd7ebd56654efe9c2b2caddb599a9
   languageName: node
   linkType: hard
 
@@ -10306,7 +10359,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "kaetram@workspace:."
   dependencies:
-    "@astrojs/ts-plugin": "npm:^1.0.10"
+    "@astrojs/ts-plugin": "npm:^1.1.0"
     "@commitlint/cli": "npm:^17.6.5"
     "@commitlint/config-conventional": "npm:^17.6.5"
     "@types/node": "npm:^20.3.1"
@@ -11684,6 +11737,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"muggle-string@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "muggle-string@npm:0.3.1"
+  checksum: 97454eb9a4bd33d1b02c375547fe8521c7d2b1ffa690fe1894711a2d964e413f5ce6ceaed0ec1053e38c769ff9b358729f2983865f5715396d309118fd873eac
+  languageName: node
+  linkType: hard
+
 "nanoid@npm:^3.3.6":
   version: 3.3.6
   resolution: "nanoid@npm:3.3.6"
@@ -11718,6 +11778,15 @@ __metadata:
   version: 0.6.3
   resolution: "negotiator@npm:0.6.3"
   checksum: d8e3b42d99638b1f363ce114c98e6906ade395c230058e50644417bd398b01381133dbca4bc49f30f6b1c93254e4b5a2d50cc47adcdabf2a8476b6f16311ad5d
+  languageName: node
+  linkType: hard
+
+"network-information-types@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "network-information-types@npm:0.1.1"
+  peerDependencies:
+    typescript: ">= 3.0.0"
+  checksum: ae6cb8266e506a78d52fd438e5f20987b8a0ec2fd410dcac2c7a44712e18fa2e3d03f0250a7809fe25474cc919a3cb3e9c14832dd7e61ea09cdd9fe57fd1f198
   languageName: node
   linkType: hard
 
@@ -14035,6 +14104,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"slash@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "slash@npm:5.1.0"
+  checksum: b690dceaaf55b05206684fa06fc32930f387b3f4c7054df4a27b36f3e96d85bc57caecd2bf4fcfbb66834c36b6ea02e192a64351898941cdb9976da162d2d1e4
+  languageName: node
+  linkType: hard
+
 "slice-ansi@npm:^3.0.0":
   version: 3.0.0
   resolution: "slice-ansi@npm:3.0.0"
@@ -16021,7 +16097,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"which-pm@npm:2.0.0":
+"which-pm@npm:2.0.0, which-pm@npm:^2.0.0":
   version: 2.0.0
   resolution: "which-pm@npm:2.0.0"
   dependencies:
