@@ -6,7 +6,7 @@ import { locales, defaultLocale, dir, t, type Locale } from '@kaetram/common/i18
 import { defineConfig } from 'astro/config';
 import config, { exposedConfig } from '@kaetram/common/config';
 import webmanifest from 'astro-webmanifest';
-import { i18n } from 'astro-i18n-aut';
+import { defaultLocaleSitemapFilter, i18n } from 'astro-i18n-aut';
 import sitemap from '@astrojs/sitemap';
 import robotsTxt from 'astro-robots-txt';
 import partytown from '@astrojs/partytown';
@@ -74,9 +74,8 @@ function getImageSize(image: string) {
 // https://astro.build/config
 export default defineConfig({
     srcDir: './',
-    site: 'https://kaetram.com',
+    site: 'https://kaetram.com/',
     trailingSlash: 'always',
-    experimental: { redirects: true },
     integrations: [
         webmanifest({
             icon: 'public/icon.png',
@@ -108,7 +107,10 @@ export default defineConfig({
         }),
         partytown({ config: { debug: false } }),
         i18n({ locales, defaultLocale }),
-        sitemap({ i18n: { locales, defaultLocale } }),
+        sitemap({
+            i18n: { locales, defaultLocale },
+            filter: defaultLocaleSitemapFilter({ defaultLocale })
+        }),
         robotsTxt({ host: true }),
         critters({ logger: 2 }),
         compress({ logger: 1, img: false }),

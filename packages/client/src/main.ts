@@ -1,7 +1,9 @@
 import App from './app';
 import Game from './game';
 
+import './lib/i18n';
 import './lib/sentry';
+
 import '../scss/main.scss';
 
 /**
