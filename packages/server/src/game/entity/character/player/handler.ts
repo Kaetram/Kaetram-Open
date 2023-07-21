@@ -2,6 +2,7 @@ import Item from '../../objects/item';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import { t } from '@kaetram/common/i18n';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import {
     Ability as AbilityPacket,
@@ -223,8 +224,7 @@ export default class Handler {
             // If the player doesn't have enough mana to attack.
             if (!this.player.hasManaForAttack()) {
                 // Warn the player once if they don't have enough mana.
-                if (!this.player.displayedManaWarning)
-                    this.player.notify('You are low on mana, your attacks will be weaker.');
+                if (!this.player.displayedManaWarning) this.player.notify(t('misc:LOW_MANA'));
 
                 this.player.displayedManaWarning = true;
 
@@ -237,8 +237,7 @@ export default class Handler {
         }
 
         if (this.player.isArcher()) {
-            if (!this.player.hasArrows())
-                return this.player.notify('You do not have any arrows to shoot.');
+            if (!this.player.hasArrows()) return this.player.notify(t('misc:NO_ARROWS'));
 
             this.player.equipment.decrementArrows();
         }
@@ -264,8 +263,8 @@ export default class Handler {
                     ? this.player.skills.get(Utils.getSkill(door.skill)!).level
                     : this.player.level,
                 message = door.skill
-                    ? `Your ${door.skill} level needs to be at least ${door.level} to enter.`
-                    : `Your combat level must be at least ${door.level} to enter.`;
+                    ? t('misc:NO_SKILL_DOOR', { skill: door.skill, level: door.level.toString() })
+                    : t('misc:NO_COMBAT_DOOR', { level: door.level.toString() });
 
             if (level < door.level) return this.player.notify(message);
         }
@@ -286,7 +285,7 @@ export default class Handler {
 
             if (!achievement?.isFinished())
                 return this.player.notify(
-                    `You need to complete the achievement ${achievement?.name} to pass through this door.`
+                    t('misc:NO_ACHIEVEMENT_DOOR', { achievement: achievement?.name })
                 );
         }
 
@@ -295,9 +294,7 @@ export default class Handler {
             let quest = this.player.quests.get(door.reqQuest);
 
             if (!quest?.isFinished())
-                return this.player.notify(
-                    `You need to complete the quest ${quest?.name} to pass through this door.`
-                );
+                return this.player.notify(t('misc:NO_QUEST_DOOR', { quest: quest?.name }));
         }
 
         // Handle door requiring an item to proceed (and remove the item from the player's inventory).
@@ -305,13 +302,11 @@ export default class Handler {
             let count = door.reqItemCount || 1;
 
             if (!this.player.inventory.hasItem(door.reqItem, count))
-                return this.player.notify(
-                    'You do not have the required key to pass through this door.'
-                );
+                return this.player.notify(t('misc:NO_KEY_DOOR'));
 
             this.player.inventory.removeItem(door.reqItem, count);
 
-            this.player.notify(`The key crumbles to dust as you pass through the door.`);
+            this.player.notify(t('misc:DOOR_KEY_CRUMBLES'));
         }
 
         this.player.teleport(door.x, door.y);
@@ -789,8 +784,8 @@ export default class Handler {
 
     private handlePoison(type = -1, exists = false): void {
         // Notify the player when the poison status changes.
-        if (type === -1) this.player.notify('The poison has worn off.');
-        else if (exists) this.player.notify(`You have been poisoned!`);
+        if (type === -1) this.player.notify(t('misc:POISONED'));
+        else if (exists) this.player.notify(t('misc:POISON_WORN_OFF'));
 
         this.player.send(new PoisonPacket(type));
     }

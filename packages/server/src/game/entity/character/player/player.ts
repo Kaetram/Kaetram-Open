@@ -463,14 +463,19 @@ export default class Player extends Character {
             { activeEvent } = this.world.events;
 
         if (population > 1)
-            this.notify(`There are currently ${population} players online.`, '', '', true);
+            this.notify(
+                t('misc:PEOPLE_ONLINE', { population: population.toString() }),
+                '',
+                '',
+                true
+            );
 
         if (activeEvent)
             this.notify(`The ${activeEvent} event is currently active!`, 'crimsonred', '', true);
 
         if (this.isJailed())
             this.notify(
-                `You are currently jailed for ${this.getJailDuration()}.`,
+                t('misc:JAILED', { duration: this.getJailDuration() }),
                 'crimsonred',
                 '',
                 true
@@ -1197,7 +1202,7 @@ export default class Player extends Character {
             // Prevent picking up dropped items that belong to other players.
             if (!entity.isOwner(this.username))
                 return this.notify(
-                    `This item can only be picked up by ${Utils.formatName(entity.owner)}.`
+                    t('misc:CANNOT_PICK_UP_ITEM', { username: Utils.formatName(entity.owner) })
                 );
 
             // If the item's owner is existent and the player is the owner we add it to the statistics.
@@ -1481,14 +1486,16 @@ export default class Player extends Character {
             Modules.Effects.FirePotion,
             Modules.Constants.FIRE_POTION_DURATION,
             () => {
-                this.notify('Your immunity to fire effects has worn off.');
+                this.notify(t('misc:FIRE_IMMUNITY_WORN_OFF'));
             }
         );
 
+        let duration = (Modules.Constants.FIRE_POTION_DURATION / 1000).toString();
+
         this.notify(
-            `You are now immune to fire effects for ${
-                Modules.Constants.FIRE_POTION_DURATION / 1000
-            } seconds.`
+            t('misc:FIRE_IMMUNITY', {
+                duration
+            })
         );
     }
 
