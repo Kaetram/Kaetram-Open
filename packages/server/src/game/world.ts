@@ -28,7 +28,6 @@ import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
 import type Packet from '@kaetram/common/network/packet';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
-import type { GuildData } from '@kaetram/common/types/guild';
 
 export interface PacketData {
     packet: Packet;
