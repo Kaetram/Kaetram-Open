@@ -178,6 +178,33 @@ export default {
     },
 
     /**
+     * Responsible for extracting special characters responsible for colour codes
+     * from the message string and converting them into HTML span elements.
+     * @param message The message string that we are parsing.
+     */
+
+    parseMessage(message: string): string {
+        try {
+            let messageBlocks = message.split('@');
+
+            if (messageBlocks.length % 2 === 0) return messageBlocks.join(' ');
+
+            for (let index in messageBlocks)
+                if (parseInt(index) % 2 !== 0)
+                    // we hit a colour code.
+                    messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
+
+            let codeCount = messageBlocks.length / 2 - 1;
+
+            for (let i = 0; i < codeCount; i++) messageBlocks.push('</span>');
+
+            return messageBlocks.join('');
+        } catch {
+            return '';
+        }
+    },
+
+    /**
      * Converts an integer value into a compact string used
      * when wanting to display large numbers of stackable items.
      * For example, 15000 coins get displayed as 15K and

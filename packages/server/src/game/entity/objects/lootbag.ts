@@ -106,8 +106,7 @@ export default class LootBag extends Entity {
             );
 
         // Double check that the player has access to the loot bag.
-        if (!this.isOwner(player.username))
-            return player.notify(`You cannot access this loot bag right now.`);
+        if (!this.isOwner(player.username)) return player.notify(`item:CANNOT_ACCESS_LOOTBAG`);
 
         // Verify that the player is close enough to the lootbag.
         if (this.getDistance(player) > 1)
@@ -127,11 +126,10 @@ export default class LootBag extends Entity {
          */
 
         if (this.owner && this.owner !== player.username)
-            return player.notify(`You cannot access this loot bag right now.`);
+            return player.notify(`item:CANNOT_ACCESS_LOOTBAG`);
 
         // Ensure the player has enough space in their inventory.
-        if (!player.inventory.hasSpace())
-            return player.notify(`You do not have enough space in your inventory.`);
+        if (!player.inventory.hasSpace()) return player.notify(`misc:NO_SPACE`);
 
         // Removes the item from the loot bag.
         delete this.container[index];
