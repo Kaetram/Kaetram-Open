@@ -625,6 +625,9 @@ export default class Connection {
      */
 
     private handleChat(info: ChatPacket): void {
+        // Parse the message for special characters.
+        info.message = Util.parseMessage(info.message);
+
         // Messages with source are static, we add them directly to the chatbox.
         if (info.source)
             return this.input.chatHandler.add(info.source, info.message, info.colour, true);
