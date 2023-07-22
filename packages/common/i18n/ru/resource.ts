@@ -1,18 +1,18 @@
 export default {
-    MUST_EQUIP_AXE: 'You must equip an axe in order to cut trees.',
-    MUST_EQUIP_PICKAXE: 'You must be wielding a pickaxe in order to mine rocks.',
-    MUST_EQUIP_FISHING: 'You must be wielding a fishing utensil in order to fish.',
-    MUST_EQUIP_FORAGING: 'You require a special tool to forage this',
+    MUST_EQUIP_AXE: 'Чтобы рубить деревья, необходимо вооружиться топором.',
+    MUST_EQUIP_PICKAXE: 'Для добычи камней необходимо использовать кирку.',
+    MUST_EQUIP_FISHING: 'Для ловли рыбы необходимо иметь при себе удочку или что-то другое.',
+    MUST_EQUIP_FORAGING: 'Для его добычи требуется специальный инструмент',
 
-    INVALID_LEVEL_LUMBERJACKING: 'You must be level {{level}} in order to cut this tree.',
-    INVALID_LEVEL_MINING: 'You must be level {{level}} in order to mine this rock.',
-    INVALID_LEVEL_FISHING: 'You must be level {{level}} in order to fish here.',
-    INVALID_LEVEL_FORAGING: 'You must be level {{level}} to harvest this resource.',
+    INVALID_LEVEL_LUMBERJACKING: 'Вы должны быть {{level}}, чтобы срубить это дерево.',
+    INVALID_LEVEL_MINING: 'Для добычи этой породы необходимо иметь уровень {{level}}.',
+    INVALID_LEVEL_FISHING: 'Чтобы ловить здесь рыбу, вы должны иметь уровень {{level}}.',
+    INVALID_LEVEL_FORAGING: 'Чтобы добыть этот ресурс, необходимо иметь уровень {{level}}.',
 
-    UNABLE_TO_INTERACT_LUMBERJACKING: 'You are unable to cut this tree at the moment.',
-    UNABLE_TO_INTERACT_MINING: 'You do not have the necessary knowledge to mine this rock.',
-    UNABLE_TO_INTERACT_FISHING: 'You are unable to fish here at the moment.',
-    UNABLE_TO_INTERACT_FORAGING: 'You are unable to harvest this resource at the moment.',
+    UNABLE_TO_INTERACT_LUMBERJACKING: 'В настоящее время вы не можете спилить это дерево.',
+    UNABLE_TO_INTERACT_MINING: 'Вы не обладаете необходимыми знаниями для добычи этой породы.',
+    UNABLE_TO_INTERACT_FISHING: 'В настоящее время вы не можете ловить здесь рыбу.',
+    UNABLE_TO_INTERACT_FORAGING: 'В настоящее время вы не можете добывать этот ресурс.',
 
-    NO_REASON: 'There is no reason for you to cut this tree.'
+    NO_REASON: 'Нет никаких причин для того, чтобы спиливать это дерево.'
 } as const;
