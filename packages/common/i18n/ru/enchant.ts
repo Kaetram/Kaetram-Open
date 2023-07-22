@@ -1,7 +1,7 @@
 export default {
-    NO_ITEM_SELECTED: 'You have not selected an item to enchant.',
-    CANNOT_ENCHANT: 'The item you have selected cannot be enchanted.',
-    NO_SHARD: 'You must provide a shard to enchant an item.',
-    FAILED_ENCHANT: 'You tried enchanting but nothing happened.',
-    SUCCESSFUL_ENCHANT: 'You successfully enchanted your item.'
+    NO_ITEM_SELECTED: 'Вы не выбрали предмет для зачарования.',
+    CANNOT_ENCHANT: 'Выбранный вами предмет не может быть зачарован.',
+    NO_SHARD: 'Для зачарования предмета необходимо предоставить осколок.',
+    FAILED_ENCHANT: 'Вы попробовали зачаровать, но ничего не получилось.',
+    SUCCESSFUL_ENCHANT: 'Вы успешно зачаровали свой предмет.'
 } as const;
