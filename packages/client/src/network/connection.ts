@@ -798,16 +798,24 @@ export default class Connection {
     private handleNotification(opcode: Opcodes.Notification, info: NotificationPacket): void {
         switch (opcode) {
             case Opcodes.Notification.Text: {
+                let message = info.source ? info.message : Util.formatNotification(info.message);
+
                 return this.input.chatHandler.add(
                     info.source || 'WORLD',
-                    Util.formatNotification(info.message),
+                    Util.parseMessage(message),
                     info.colour,
                     true
                 );
             }
 
             case Opcodes.Notification.Popup: {
-                return this.menu.getNotification().show(info.title!, info.message, info.colour!);
+                return this.menu
+                    .getNotification()
+                    .show(
+                        Util.parseMessage(info.title!),
+                        Util.parseMessage(info.message),
+                        info.colour!
+                    );
             }
         }
     }

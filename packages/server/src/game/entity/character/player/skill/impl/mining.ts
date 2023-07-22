@@ -4,7 +4,7 @@ import Rocks from '../../../../../../../data/rocks.json';
 
 import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
-import ResourceEn from '@kaetram/common/text/en/resource';
+import ResourceText from '@kaetram/common/text/en/resource';
 
 import type Player from '../../player';
 import type Resource from '../../../../../globals/impl/resource';
@@ -39,7 +39,7 @@ export default class Mining extends ResourceSkill {
         let weapon = player.equipment.getWeapon();
 
         // Player's weapon is not a valid mining weapon.
-        if (!weapon.isMining()) return player.notify(ResourceEn.INVALID_WEAPON(this.type));
+        if (!weapon.isMining()) return player.notify(ResourceText.INVALID_WEAPON(this.type));
 
         // Pass the info onto the super class interact function.
         this.interact(player, rock, weapon.mining);

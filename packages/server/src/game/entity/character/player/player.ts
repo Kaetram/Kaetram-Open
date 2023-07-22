@@ -784,7 +784,7 @@ export default class Player extends Character {
             }
 
             case Modules.ContainerType.Bank: {
-                if (!this.canAccessContainer) return this.notify(`You cannot do that right now.`);
+                if (!this.canAccessContainer) return this.notify(`misc:CANNOT_DO_THAT`);
 
                 let from =
                         fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
@@ -807,7 +807,7 @@ export default class Player extends Character {
      */
 
     public handleContainerRemove(type: Modules.ContainerType, index: number, count: number): void {
-        if (count < 1 || isNaN(count)) return this.notify('You have entered an invalid amount.');
+        if (count < 1 || isNaN(count)) return this.notify('misc:INVALID_AMOUNT');
 
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
@@ -1451,14 +1451,14 @@ export default class Player extends Character {
             Modules.Effects.SnowPotion,
             Modules.Constants.SNOW_POTION_DURATION,
             () => {
-                this.notify('Your immunity to freezing effects has worn off.');
+                this.notify('misc:FREEZE_IMMUNITY_WORN_OFF');
             }
         );
 
         this.notify(
-            `You are now immune to freezing effects for ${
+            `misc:FREEZE_IMMUNITY_WORN_OFF;duration=${
                 Modules.Constants.SNOW_POTION_DURATION / 1000
-            } seconds.`
+            }`
         );
     }
 
@@ -1567,7 +1567,7 @@ export default class Player extends Character {
      */
 
     public setPet(key: string): void {
-        if (this.hasPet()) return this.notify(`You already have a pet!`);
+        if (this.hasPet()) return this.notify(`misc:ALREADY_HAVE_PET`);
 
         // Create a new pet instance based on the key.
         this.pet = this.entities.spawnPet(this, key);
@@ -2007,7 +2007,7 @@ export default class Player extends Character {
         }
 
         if (!this.world.isOnline(playerName))
-            return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
+            return this.notify(`misc:NOT_ONLINE;username=${playerName}`, 'crimson');
 
         this.sendMessage(playerName, message);
     }
@@ -2057,7 +2057,7 @@ export default class Player extends Character {
      */
 
     public chat(message: string, global = false, withBubble = true, colour = ''): void {
-        if (!this.canTalk) return this.notify('You cannot talk at this time.', 'crimson');
+        if (!this.canTalk) return this.notify('misc:CANNOT_TALK', 'crimson');
 
         log.debug(`[${this.username}] ${message}`);
 
@@ -2101,9 +2101,6 @@ export default class Player extends Character {
     public popup(title: string, message: string, colour = '#00000'): void {
         if (!title) return;
 
-        title = Utils.parseMessage(title);
-        message = Utils.parseMessage(message);
-
         this.send(
             new Notification(Opcodes.Notification.Popup, {
                 title,
@@ -2125,8 +2122,6 @@ export default class Player extends Character {
 
         // Prevent notify spams
         if (!bypass && Date.now() - this.lastNotify < 250) return;
-
-        message = Utils.parseMessage(message);
 
         this.send(
             new Notification(Opcodes.Notification.Text, {

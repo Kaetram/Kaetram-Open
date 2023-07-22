@@ -146,11 +146,13 @@ export default class Coursing extends Minigame {
         this.playersInLobby = this.shuffleLobby();
 
         // Not enough players to start.
-        if (this.playersInLobby.length < Modules.MinigameConstants.COURSING_MIN_PLAYERS) {
+        if (
+            this.playersInLobby.length < (Modules.MinigameConstants.COURSING_MIN_PLAYERS as number)
+        ) {
             // Notify the players that we need more players.
             for (let player of this.playersInLobby)
                 player.notify(
-                    `There must be at least ${Modules.MinigameConstants.COURSING_MIN_PLAYERS} players to start.`
+                    `misc:MINIMUM_PLAYERS_MINIGAME;minimum=${Modules.MinigameConstants.COURSING_MIN_PLAYERS}`
                 );
 
             return;

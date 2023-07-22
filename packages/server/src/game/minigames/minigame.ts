@@ -130,7 +130,7 @@ export default class Minigame {
         });
 
         // Notify the player of the minigame.
-        player.notify(`You have entered the lobby for ${this.name}.`);
+        player.notify(`misc:ENTERED_LOBBY;name=${this.name}`);
     }
 
     /**
@@ -146,7 +146,7 @@ export default class Minigame {
         });
 
         // Notify the player of the minigame.
-        player.notify(`You have left the lobby for ${this.name}.`);
+        player.notify(`misc:EXITED_LOBBY;name=${this.name}`);
     }
 
     /**

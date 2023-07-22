@@ -91,7 +91,7 @@ export default class Incoming {
         if (data.notFound) {
             let player = this.world.getPlayerByName(data.source!);
 
-            return player?.notify(`Player @aquamarine@${data.target}@white@ is not online.`);
+            return player?.notify(`misc:NOT_ONLINE;username=${data.target}`);
         }
 
         // Success is an event sent from the hub when the message was successfully delivered.

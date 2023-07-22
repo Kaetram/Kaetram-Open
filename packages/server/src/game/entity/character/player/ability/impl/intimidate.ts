@@ -15,7 +15,7 @@ export default class Intimidate extends Ability {
 
     public override activate(player: Player): boolean {
         if (!player.hasTarget()) {
-            player.notify(`You must be in combat to use this ability.`);
+            player.notify(`misc:NEED_COMBAT`);
             return false;
         }
 
