@@ -1,7 +1,7 @@
 export default {
-    INVALID_DATA: 'Invalid crafting data, please submit a bug report.',
-    INVALID_ITEM: 'Invalid item selected.',
-    INVALID_ITEMS: 'You do not have the required items to craft that.',
-    SELECT_ITEM: 'Please select an item to craft.',
-    FAILED_CRAFT: 'You have failed to craft the '
+    INVALID_DATA: 'Неверные данные о крафте, пожалуйста, отправьте сообщение об ошибке.',
+    INVALID_ITEM: 'Выбран неверный элемент.',
+    INVALID_ITEMS: 'У вас нет необходимых предметов для его создания.',
+    SELECT_ITEM: 'Пожалуйста, выберите предмет для изготовления.',
+    FAILED_CRAFT: 'Вам не удалось создать.'
 } as const;

@@ -2,6 +2,6 @@ export default {
     meta: {
         name: 'Kaetram',
         description:
-            "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up."
+            'Kaetram - это игровой движок с открытым исходным кодом, созданный для помощи тем, кто хочет начать заниматься разработкой игр. За основу была взята демонстрационная игра компании Little Workshop - BrowserQuest. Активы остались прежними, но сам код был полностью вычищен и переделан с нуля.'
     }
 } as const;
