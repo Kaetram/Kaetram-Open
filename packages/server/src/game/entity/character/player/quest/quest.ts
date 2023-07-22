@@ -168,7 +168,7 @@ export default abstract class Quest {
     protected handleDoor(door: ProcessedDoor, player: Player): void {
         log.debug(`[${this.name}] Door: ${door.x}-${door.y} - stage: ${this.stage}.`);
 
-        if (this.stage < door.stage) return player.notify('You cannot pass through this door.');
+        if (this.stage < door.stage) return player.notify('misc:CANNOT_PASS_DOOR');
 
         player.teleport(door.x, door.y);
 
@@ -245,7 +245,7 @@ export default abstract class Quest {
 
         // Skip if the player does not have enough space in the inventory for the item rewards.
         if (itemRewards && !player.inventory.hasSpace(itemRewards.length))
-            return player.notify('You do not have enough space in your inventory.');
+            return player.notify('misc:NO_SPACE');
 
         // Iterate through the items and remove them from the player's inventory.
         for (let item of itemRequirements!) player.inventory.removeItem(item.key, item.count);
@@ -306,7 +306,7 @@ export default abstract class Quest {
     ): void {
         // We play it extra safe by ensuring there are at least as many empty spaces as there are reward items.
         if (!player.inventory.hasSpace(itemRewards.length))
-            return player.notify(`Please make some room in your inventory to accept this reward.`);
+            return player.notify(`misc:PLEASE_MAKE_ROOM_REWARD`);
 
         // Check if the player has enough inventory space for the item rewards.
         for (let item of itemRewards)

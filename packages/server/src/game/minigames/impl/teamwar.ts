@@ -116,11 +116,11 @@ export default class TeamWar extends Minigame {
         let redTeam = this.shuffleLobby();
 
         // Not enough players, we're not starting the game.
-        if (redTeam.length < Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS) {
+        if (redTeam.length < (Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS as number)) {
             // Notify all players there aren't enough players in the lobby.
             for (let player of redTeam)
                 player.notify(
-                    `There must be at least ${Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS} players to start the game.`
+                    `misc:MINIMUM_PLAYERS_MINIGAME;minimum=${Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS}`
                 );
 
             return;

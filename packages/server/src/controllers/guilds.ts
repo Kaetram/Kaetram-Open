@@ -148,7 +148,7 @@ export default class Guilds {
      */
 
     public async join(player: Player, identifier: string): Promise<void> {
-        if (player.isGuest) return player.notify('Guests are not allowed to join a guild.');
+        if (player.isGuest) return player.notify('guilds:NOT_ALLOWED_GUESTS_JOIN');
 
         if (player.guild) return player.notify('guilds:ALREADY_IN_GUILD');
 
@@ -162,7 +162,7 @@ export default class Guilds {
 
         // Ensure the guild isn't full.
         if (guild.members.length >= Modules.Constants.MAX_GUILD_MEMBERS)
-            return player.notify('This guild is already at maximum capacity.');
+            return player.notify('guilds:GUILD_FULL');
 
         // Append the player to the guild's member list.
         guild.members.push({
@@ -273,12 +273,10 @@ export default class Guilds {
             );
 
         // Ensure the player is the owner of the guild.
-        if (player.username !== guild.owner)
-            return player.notify('You do not have permission to kick members from this guild.');
+        if (player.username !== guild.owner) return player.notify('guilds:NO_PERMISSION_KICK');
 
         // Ensure the player is not kicking themselves.
-        if (player.username === username)
-            return player.notify('You cannot kick yourself from the guild.');
+        if (player.username === username) return player.notify('guilds:CANNOT_KICK_YOURSELF');
 
         let otherPlayer = this.world.getPlayerByName(username);
 
@@ -438,8 +436,7 @@ export default class Guilds {
             );
 
         // Ensure the player has the correct permissions to update the rank.
-        if (playerMember.rank - rank < 1)
-            return player.notify('You do not have permission to update the rank of this player.');
+        if (playerMember.rank - rank < 1) return player.notify('guilds:NO_PERMISSION_RANK');
 
         member.rank = rank;
 

@@ -260,7 +260,7 @@ export default class Item extends Entity {
                 if (skill.level < requirement) {
                     // If the player's skill level is less than the requirement.
                     player.notify(
-                        `Your ${skill.name} level must be at least ${requirement} to equip this item.`
+                        `item:SKILL_LEVEL_REQUIREMENT_EQUIP;skill=${skill.name};level=${requirement}`
                     );
                     return false;
                 } else return true; // If the player's skill fulfills the requirement.
@@ -268,13 +268,13 @@ export default class Item extends Entity {
 
         // Default to using the total level for the requirement.
         if (player.level < requirement) {
-            player.notify(`Your total level must be at least ${requirement} to equip this item.`);
+            player.notify(`item:TOTAL_LEVEL_REQUIREMENT;level=${requirement}`);
             return false;
         }
 
         // Check if the item has an achievement requirement and if it is completed.
         if (this.achievement && !player.achievements.get(this.achievement)?.isFinished()) {
-            player.notify(`This item requires a secret achievement to wield.`);
+            player.notify(`item:REQUIRES_ACHIEVEMENT`);
             return false;
         }
 
@@ -290,7 +290,7 @@ export default class Item extends Entity {
 
             // Check if the quest is finished.
             if (!quest.isFinished()) {
-                player.notify(`You must complete ${quest.name} to wield this item.`);
+                player.notify(`item:REQUIRES_QUEST;quest=${quest.name}`);
                 return false;
             }
         }

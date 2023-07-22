@@ -3,7 +3,7 @@ import Item from '../../../../objects/item';
 import Trees from '../../../../../../../data/trees.json';
 
 import Utils from '@kaetram/common/util/utils';
-import ResourceEn from '@kaetram/common/text/en/resource';
+import ResourceText from '@kaetram/common/text/en/resource';
 import { Modules } from '@kaetram/common/network';
 
 import type Player from '../../player';
@@ -39,9 +39,9 @@ export default class Lumberjacking extends ResourceSkill {
         let weapon = player.equipment.getWeapon();
 
         // Player's weapon is not a valid lumberjacking weapon.
-        if (!weapon.isLumberjacking()) return player.notify(ResourceEn.INVALID_WEAPON(this.type));
+        if (!weapon.isLumberjacking()) return player.notify(ResourceText.INVALID_WEAPON(this.type));
 
-        if (!player.quests.canCutTreesInTutorial()) return player.notify(ResourceEn.NO_REASON);
+        if (!player.quests.canCutTreesInTutorial()) return player.notify('resource:NO_REASON');
 
         this.interact(player, tree, weapon.lumberjacking);
     }

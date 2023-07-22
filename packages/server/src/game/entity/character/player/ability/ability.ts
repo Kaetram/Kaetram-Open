@@ -45,17 +45,15 @@ export default class Ability {
 
         // Player doesn't have enough mana.
         if (player.mana.getMana() < mana) {
-            player.notify('You do not have enough mana to use this ability.');
+            player.notify('misc:NOT_ENOUGH_MANA');
             return false;
         }
 
+        let formattedDuration = Math.floor((cooldown - (Date.now() - this.lastActivated)) / 1000);
+
         // Ensure the ability is not on cooldown.
         if (this.isCooldown(cooldown)) {
-            player.notify(
-                `You need to wait ${Math.floor(
-                    (cooldown - (Date.now() - this.lastActivated)) / 1000
-                )} seconds before using this ability again.`
-            );
+            player.notify(`misc:NEED_WAIT_ABILITY;duration=${formattedDuration}`);
             return false;
         }
 

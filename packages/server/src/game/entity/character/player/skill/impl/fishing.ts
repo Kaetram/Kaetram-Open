@@ -1,9 +1,8 @@
-import Item from '../../../../objects/item';
 import ResourceSkill from '../resourceskill';
 import FishingSpots from '../../../../../../../data/fishing.json';
 
 import Utils from '@kaetram/common/util/utils';
-import ResourceEn from '@kaetram/common/text/en/resource';
+import ResourceText from '@kaetram/common/text/en/resource';
 import { Modules } from '@kaetram/common/network';
 
 import type Player from '../../player';
@@ -48,7 +47,7 @@ export default class Fishing extends ResourceSkill {
     public catch(player: Player, spot: Resource): void {
         let weapon = player.equipment.getWeapon();
 
-        if (!weapon.isFishing()) return player.notify(ResourceEn.INVALID_WEAPON(this.type));
+        if (!weapon.isFishing()) return player.notify(ResourceText.INVALID_WEAPON(this.type));
 
         this.interact(player, spot, weapon.fishing);
     }

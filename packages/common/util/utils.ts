@@ -110,37 +110,6 @@ export default {
     },
 
     /**
-     * This function is responsible for parsing a message and looking for special
-     * characters (primarily used for colour codes). This function will be expanded
-     * if necessary in the nearby future.
-     */
-
-    parseMessage(message: string): string {
-        try {
-            let messageBlocks = message.split('@');
-
-            if (messageBlocks.length % 2 === 0) {
-                log.warning('Improper message block format!');
-                log.warning('Ensure format follows @COLOUR@ format.');
-                return messageBlocks.join(' ');
-            }
-
-            for (let index in messageBlocks)
-                if (parseInt(index) % 2 !== 0)
-                    // we hit a colour code.
-                    messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
-
-            let codeCount = messageBlocks.length / 2 - 1;
-
-            for (let i = 0; i < codeCount; i++) messageBlocks.push('</span>');
-
-            return messageBlocks.join('');
-        } catch {
-            return '';
-        }
-    },
-
-    /**
      * This function is primarily used for comparing checksum data
      * of maps in order to determine if an update is necessary.
      * @param data Any form of data, string, numbers, etc.

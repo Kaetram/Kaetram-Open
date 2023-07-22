@@ -3,10 +3,10 @@ import Skill from './skill';
 import Item from '../../../objects/item';
 
 import log from '@kaetram/common/util/log';
-import ResourceEn from '@kaetram/common/text/en/resource';
 import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
 import { Animation } from '@kaetram/common/network/impl';
+import ResourceText from '@kaetram/common/text/en/resource';
 
 import type Player from '../player';
 import type Resource from '../../../../globals/impl/resource';
@@ -56,7 +56,7 @@ export default class ResourceSkill extends Skill {
         // Level required for this resource is too high for the yplayer.
         if (resourceInfo.levelRequirement > this.level)
             return player.notify(
-                ResourceEn.INVALID_LEVEL(this.type, resourceInfo.levelRequirement)
+                ResourceText.INVALID_LEVEL(this.type, resourceInfo.levelRequirement)
             );
 
         // Unable to interact with the resource if the player hasn't completed the required achievement.
@@ -64,13 +64,13 @@ export default class ResourceSkill extends Skill {
             resourceInfo.reqAchievement &&
             !player.achievements.get(resourceInfo.reqAchievement)?.isFinished()
         )
-            return player.notify(ResourceEn.UNABLE_TO_INTERACT(this.type));
+            return player.notify(ResourceText.UNABLE_TO_INTERACT(this.type));
 
         // Unable to interact with the resource if the player hasn't completed the required quest.
         if (resourceInfo.reqQuest && !player.quests.get(resourceInfo.reqQuest)?.isFinished())
-            return player.notify(ResourceEn.UNABLE_TO_INTERACT(this.type));
+            return player.notify(ResourceText.UNABLE_TO_INTERACT(this.type));
 
-        if (!this.canHold(player)) return player.notify(ResourceEn.INVENTORY_FULL);
+        if (!this.canHold(player)) return player.notify('misc:NO_SPACE');
 
         /**
          * Stops the existing loop if the player is attempting to interact with the resource

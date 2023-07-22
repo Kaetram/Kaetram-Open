@@ -4,6 +4,7 @@ import Item from '../game/entity/objects/item';
 import log from '@kaetram/common/util/log';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Store as StorePacket } from '@kaetram/common/network/impl';
+import { t } from '@kaetram/common/i18n';
 
 import type {
     RawStore,
@@ -67,7 +68,7 @@ export default class Stores {
 
             // Skip if an item already exists with the same key.
             if (items.some(({ key: itemKey }) => itemKey === key)) {
-                log.warning(`${'store:WARNING_DUPLICATE'}'${key}'.`);
+                log.warning(`${t('store:WARNING_DUPLICATE')}'${key}'.`);
 
                 continue;
             }
@@ -153,7 +154,7 @@ export default class Stores {
     public open(player: Player, npc: NPC): void {
         let store = this.getStore(npc);
 
-        if (!store) return log.debug(`[${player.username}] ${'store:INVALID_STORE'}.`);
+        if (!store) return log.debug(`[${player.username}] ${t('store:INVALID_STORE')}.`);
 
         player.send(new StorePacket(Opcodes.Store.Open, this.serialize(npc.store)));
 
@@ -188,7 +189,7 @@ export default class Stores {
 
         // Check if item exists
         if (!item)
-            return log.error(`${player.username} ${'store:PURCHASE_INVALID_STORE'}${storeKey}.`);
+            return log.error(`${player.username} ${t('store:PURCHASE_INVALID_STORE')}${storeKey}.`);
 
         if (item.count !== -1) {
             if (item.count < 1) return player.notify('store:ITEM_OUT_OF_STOCK');
@@ -255,7 +256,7 @@ export default class Stores {
 
         // Ensure the item in the slot exists.
         if (slot.isEmpty())
-            return log.warning(`[${player.username}] ${'store:INVALID_ITEM_SELECTION'}`);
+            return log.warning(`[${player.username}] ${t('store:INVALID_ITEM_SELECTION')}`);
 
         let store = this.stores[key];
 
@@ -319,7 +320,7 @@ export default class Stores {
 
         // This shouldn't get called unless there is a bug or client was messed with.
         if (slot.isEmpty())
-            return log.warning(`[${player.username}] ${'store:INVALID_ITEM_SELECTION'}`);
+            return log.warning(`[${player.username}] ${t('store:INVALID_ITEM_SELECTION')}`);
 
         let store = this.stores[key];
 
@@ -385,7 +386,7 @@ export default class Stores {
 
     private verifyStore(player: Player, storeKey: string): boolean {
         if (player.storeOpen !== storeKey) {
-            log.warning(`[${player.username}] ${'store:ACTION_STORE_NOT_OPEN'}`);
+            log.warning(`[${player.username}] ${t('store:ACTION_STORE_NOT_OPEN')}`);
             return false;
         }
 

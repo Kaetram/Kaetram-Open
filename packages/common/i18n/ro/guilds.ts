@@ -6,6 +6,7 @@ export default {
     MUST_FINISH_TUTORIAL_CREATE: 'You must finish the tutorial before creating a guild.',
     NO_PERMISSION: 'You do not have permission to do that.',
     NO_PERMISSION_RANK: 'You do not have permission to update the rank of that member.',
+    NO_PERMISSION_KICK: 'You do not have permission to kick members from this guild.',
     NOT_ENOUGH_GOLD: 'You need 30,000 gold in your inventory to create a guild.',
     NOT_ALLOWED_GUESTS_JOIN: 'Guests are not allowed to join guilds.',
     NOT_ALLOWED_GUESTS_CREATE: 'Guests are not allowed to create guilds.'
