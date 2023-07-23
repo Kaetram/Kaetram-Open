@@ -2246,6 +2246,21 @@
         "name": "Pink Balloon",
         "weaponType": "sword"
     },
+    "balloonyellow": {
+        "type": "weapon",
+        "name": "Yellow Balloon",
+        "weaponType": "sword"
+    },
+    "balloonturquoise": {
+        "type": "weapon",
+        "name": "Turquoise Balloon",
+        "weaponType": "sword"
+    },
+    "balloonpinwhite": {
+        "type": "weapon",
+        "name": "White Balloon",
+        "weaponType": "sword"
+    },
     "gun": {
         "type": "weapon",
         "name": "Gun",
