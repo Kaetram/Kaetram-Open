@@ -29,6 +29,8 @@
     { "id": "player/helmet/wizardhatturquoise", "offsetX": -8 },
     { "id": "player/helmet/wizardhatwhite", "offsetX": -8 },
     { "id": "player/helmet/wizardhatyellow", "offsetX": -8 },
+    { "id": "player/helmet/nighthelm", "offsetX": -8 },
+    { "id": "player/helmet/wolfhelmet", "offsetX": -8 },
 
     { "id": "player/chestplate/copperchestplate", "offsetX": -8 },
     { "id": "player/chestplate/tinchestplate", "offsetX": -8 },
@@ -69,6 +71,7 @@
     { "id": "player/weapon/pytharsword", "offsetY": -24 },
     { "id": "player/weapon/ibosword", "offsetY": -24 },
     { "id": "player/weapon/goldsword", "offsetY": -24 },
+    { "id": "player/weapon/nightsword", "offsetY": -24 },
     { "id": "player/weapon/aquastaff", "offsetY": -20 },
     { "id": "player/weapon/lightningstaff", "offsetY": -20 },
     { "id": "player/weapon/naturestaff", "offsetY": -20 },
@@ -6628,5 +6631,8 @@
     { "id": "items/wizardhatturquoise", "offsetX": 0, "offsetY": 0 },
     { "id": "items/wizardhatwhite", "offsetX": 0, "offsetY": 0 },
     { "id": "items/wizardhatyellow", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/lanternarcan", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/lanternarcan", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/nighthelm", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/nightsword", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/wolfhelmet", "offsetX": 0, "offsetY": 0 }
 ]
