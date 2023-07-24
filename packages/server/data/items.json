@@ -265,6 +265,34 @@
             "magic": 0
         }
     },
+
+    "nightsword": {
+        "type": "weapon",
+        "name": "Night Sword",
+        "weaponType": "sword",
+        "skill": "accuracy",
+        "level": 25,
+        "attackStats": {
+            "crush": 6,
+            "slash": 14,
+            "stab": 10,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 5,
+            "stab": 3,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 7,
+            "strength": 5,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "bronzespear": {
         "type": "weapon",
         "name": "Bronze Spear",
@@ -890,6 +918,60 @@
         "bonuses": {
             "accuracy": 3,
             "strength": 4,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "nighthelm": {
+        "type": "helmet",
+        "name": "Night Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 25,
+        "attackStats": {
+            "crush": 3,
+            "slash": 4,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 9,
+            "stab": 7,
+            "archery": 3,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 6,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "wolfhelmet": {
+        "type": "helmet",
+        "name": "Wolf Helmet",
+        "price": 200,
+        "skill": "defense",
+        "level": 29,
+        "attackStats": {
+            "crush": 5,
+            "slash": 7,
+            "stab": 4,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 10,
+            "stab": 7,
+            "archery": 7,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 6,
             "archery": 0,
             "magic": 0
         }
