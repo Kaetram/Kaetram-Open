@@ -111,6 +111,9 @@ export default class Guilds extends Menu {
 
         this.loadSidebar();
         this.loadDecorations();
+
+        // Request a list update every 10 seconds.
+        setInterval(() => this.requestList(), 12_000);
     }
 
     /**
@@ -454,8 +457,10 @@ export default class Guilds extends Menu {
             direction === 'right' ? this.bannerOutline + 1 : this.bannerOutline - 1;
 
         // Make sure the style selection is within the bounds of the array.
-        if (this.bannerOutline < 0) this.bannerOutline = this.bannerOutlineStyles.length - 1;
-        else if (this.bannerOutline >= this.bannerOutlineStyles.length) this.bannerOutline = 0;
+        if ((this.bannerOutline as number) < 0)
+            this.bannerOutline = this.bannerOutlineStyles.length - 1;
+        else if ((this.bannerOutline as number) >= this.bannerOutlineStyles.length)
+            this.bannerOutline = 0;
 
         // Update the banner outline selection button thingy.
         this.bannerOutlineButton.className = `colour-select-button outline-button-${
@@ -489,7 +494,9 @@ export default class Guilds extends Menu {
      */
 
     private requestList(): void {
-        if (this.game.player.guild) return;
+        console.log('hi?');
+
+        if (this.game.player.guild || !this.isVisible()) return;
 
         return this.game.socket.send(Packets.Guild, {
             opcode: Opcodes.Guild.List,
@@ -523,16 +530,14 @@ export default class Guilds extends Menu {
      */
 
     private loadList(guilds: ListInfo[] = [], total = 0): void {
-        // Nothing to do if there are no guilds.
-        if (total === 0) return;
-
         // Clear the list of guilds.
         this.guildList.innerHTML = '';
 
         // Remove the description for no guilds available.
         let description = this.listContainer.querySelector('#guilds-info')!;
 
-        description.innerHTML = '';
+        // Description is empty if there are any guilds.
+        description.innerHTML = total === 0 ? 'There are no guilds available...' : '';
 
         // Iterate through the guilds and create a list element for each one.
         for (let guild of guilds)
