@@ -280,7 +280,7 @@ export default class Guilds {
             );
 
         // Ensure the player is the owner of the guild.
-        if (player.username !== guild.owner) return player.notify('guilds:NO_PERMISSION_KICK');
+        if (player.username !== guild.owner) return player.notify('guilds:NO_PERMISSION');
 
         // Ensure the player is not kicking themselves.
         if (player.username === username) return player.notify('guilds:CANNOT_KICK_YOURSELF');
@@ -429,6 +429,9 @@ export default class Guilds {
 
         let { username } = member;
 
+        if (player.username === username)
+            return log.warning(`${player.username} tried to set their own rank.`);
+
         if (member?.rank === undefined)
             return log.warning(`Player ${username} is not in the guild.`);
 
@@ -455,13 +458,26 @@ export default class Guilds {
         });
     }
 
-    public async getGuild(instance: string): Promise<GuildData | undefined> {
-        let guild = await this.database.loader.loadGuild(instance);
+    /**
+     * Attempts to grab a guild from the database based on the identifier.
+     * @param identifier The isntance identifier of the guild.
+     * @returns A guild object or undefined if it doesn't exist.
+     */
 
-        if (!guild) log.warning(`Guild ${instance} does not exist.`);
+    public async getGuild(identifier: string): Promise<GuildData | undefined> {
+        let guild = await this.database.loader.loadGuild(identifier);
+
+        if (!guild) log.warning(`Guild ${identifier} does not exist.`);
 
         return guild;
     }
+
+    /**
+     * Grabs a member based on the guild and username.
+     * @param guild The guild data from the database.
+     * @param username The username of the member that we are grabbing.
+     * @returns A promise that resolves to the member or undefined if they are not in the guild.
+     */
 
     public async getMember(guild: GuildData, username: string): Promise<Member | undefined> {
         let member = guild.members.find((member) => member.username === username);
