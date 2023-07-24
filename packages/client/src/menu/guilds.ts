@@ -133,8 +133,13 @@ export default class Guilds extends Menu {
             }
 
             case Opcodes.Guild.Leave: {
-                if (info?.username && info.username !== this.getUsername())
+                if (info?.username && info.username !== this.getUsername()) {
+                    this.game.player.removeGuildMember(info.username!);
+
                     return this.handleMemberLeave(info.username);
+                }
+
+                this.game.player.setGuild();
 
                 return this.handleBackButton();
             }
@@ -494,8 +499,6 @@ export default class Guilds extends Menu {
      */
 
     private requestList(): void {
-        console.log('hi?');
-
         if (this.game.player.guild || !this.isVisible()) return;
 
         return this.game.socket.send(Packets.Guild, {
@@ -803,7 +806,10 @@ export default class Guilds extends Menu {
             element.append(nameElement);
 
             let serverElement = document.createElement('span'),
-                isPlayer = this.getUsername() === element.dataset.name;
+                isPlayer = this.getUsername() === element.dataset.name,
+                playerMember = this.game.player.getGuildMember(this.getUsername()),
+                otherMember = this.game.player.getGuildMember(name),
+                lowerRank = (otherMember?.rank || 0) > (playerMember?.rank || 0);
 
             serverElement.className = `server ${isPlayer ? 'text-green' : 'text-red'}`;
 
@@ -811,14 +817,15 @@ export default class Guilds extends Menu {
 
             element.append(serverElement);
 
-            element.addEventListener('click', () => {
-                this.selectedMember = element.dataset.name;
-                this.memberName.textContent = Util.formatName(this.selectedMember, 14);
+            if (!isPlayer && !lowerRank)
+                element.addEventListener('click', () => {
+                    this.selectedMember = element.dataset.name;
+                    this.memberName.textContent = Util.formatName(this.selectedMember, 14);
 
-                this.memberListContainer.querySelector('ul')!.classList.add('dimmed');
+                    this.memberListContainer.querySelector('ul')!.classList.add('dimmed');
 
-                this.memberDialog.style.display = 'block';
-            });
+                    this.memberDialog.style.display = 'block';
+                });
         }
 
         // Append the element to the list.

@@ -18,7 +18,7 @@ import type { SkillData } from '@kaetram/common/types/skills';
 import type { QuestData } from '@kaetram/common/types/quest';
 import type { AbilityData } from '@kaetram/common/types/ability';
 import type { Friend as FriendType } from '@kaetram/common/types/friends';
-import type { GuildData } from '@kaetram/common/types/guild';
+import type { GuildData, Member } from '@kaetram/common/types/guild';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -274,6 +274,22 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles adding a guild member to the guild list.
+     * @param username The username of the guild member.
+     * @param serverId The server id of the guild member.
+     */
+
+    public addGuildMember(username: string, serverId: number): void {
+        if (!this.hasMember(username)) return;
+
+        // Add the member to the guild list.
+        this.guild!.members!.push({
+            username,
+            serverId
+        });
+    }
+
+    /**
      * Calls an empty update() function onto the equipment slot
      * and resets it.
      * @param type Which equipment slot we are resetting.
@@ -287,6 +303,19 @@ export default class Player extends Character {
 
         // Make the normal equipments drawable again.
         if (type === Modules.Equipment.ArmourSkin) this.toggleDrawableEquipments(true);
+    }
+
+    /**
+     * Removes a guild member given their username.
+     * @param username The username of the guild member we are removing.
+     */
+
+    public removeGuildMember(username: string): void {
+        if (!this.hasMember(username)) return;
+
+        let index = this.guild!.members!.findIndex((member) => member.username === username);
+
+        this.guild!.members!.splice(index, 1);
     }
 
     /**
@@ -616,6 +645,18 @@ export default class Player extends Character {
     }
 
     /**
+     * Attempts to find a guild member based on their username.
+     * @param username The username of the guild member we are looking for.
+     * @returns The guild member object if found, otherwise undefined.
+     */
+
+    public getGuildMember(username: string): Member | undefined {
+        if (!this.guild) return;
+
+        return this.guild.members?.find((member) => member.username === username);
+    }
+
+    /**
      * Updates the mana of the player.
      * @param mana The current amount of mana.
      * @param maxMana Optional parameter for the max mana.
@@ -791,6 +832,26 @@ export default class Player extends Character {
     }
 
     /**
+     * Attempts to update the values of a guild member based on their username.
+     * @param username The username of the guild member we are updating.
+     * @param rank The rank we want to update, defaults to the lowest
+     */
+
+    public setGuildMember(
+        username: string,
+        rank: Modules.GuildRank = Modules.GuildRank.Fledgling
+    ): void {
+        if (!this.guild) return;
+
+        // Attempt to find the guild member.
+        let member = this.guild.members?.find((member) => member.username === username);
+
+        if (!member) return;
+
+        member.rank = rank;
+    }
+
+    /**
      * Updates the active status of an ability.
      * @param key The key of the ability we are updating.
      */
@@ -878,6 +939,29 @@ export default class Player extends Character {
         let light = this.getLight();
 
         return !!(light?.outer || light?.inner);
+    }
+
+    /**
+     * Whether or not the guild has a member with the given username.
+     * @param username The username of the guild member we are checking.
+     * @returns Whether or not the guild has a member with the given username.
+     */
+
+    public hasMember(username: string): boolean {
+        if (!this.guild) return false;
+
+        let exists = false;
+
+        for (let i in this.guild.members) {
+            let member = this.guild.members[i as never] as Member;
+
+            if (member.username === username) {
+                exists = true;
+                break;
+            }
+        }
+
+        return exists;
     }
 
     /**
