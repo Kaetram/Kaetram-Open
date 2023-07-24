@@ -155,10 +155,14 @@ export default class Guilds {
         // Attempt to grab the guild from the database.
         let guild = await this.database.loader.loadGuild(identifier);
 
-        if (!guild)
+        if (!guild) {
+            // Attempt to send the player the updated guild list.
+            this.get(player, 0, 10);
+
             return log.general(
                 `Player ${player.username} tried to join a guild that doesn't exist.`
             );
+        }
 
         // Ensure the guild isn't full.
         if (guild.members.length >= Modules.Constants.MAX_GUILD_MEMBERS)
@@ -222,6 +226,9 @@ export default class Guilds {
         // Disband the guild if the player is the owner.
         if (player.username === guild.owner) {
             // Send the leave packet to all the members in the guild.
+            for (let member of guild.members)
+                if (member.username !== player.username) await this.kick(player, member.username);
+
             this.synchronize(guild.members, Opcodes.Guild.Leave);
 
             // Disband the guild
@@ -536,7 +543,7 @@ export default class Guilds {
      * @param to The index at which we stop grabbing guilds.
      */
 
-    public get(player: Player, from: number, to: number): void {
+    public get(player: Player, from = 0, to = 50): void {
         this.database.loader.loadGuilds(from, to, (info: GuildData[], total: number) => {
             // Filter guild data that are full and/or invite only.
             info = info.filter(
