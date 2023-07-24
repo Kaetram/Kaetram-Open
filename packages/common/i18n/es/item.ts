@@ -1,7 +1,7 @@
 export default {
-    CANNOT_ACCESS_LOOTBAG: 'You cannot access this lootbag right now.',
-    REQUIRES_ACHIEVEMENT: 'This item requires a secret achievement to equip.',
-    REQUIRES_QUEST: 'You must complete {{quest}} to equip this item.',
-    SKILL_LEVEL_REQUIREMENT_EQUIP: 'Your {{skill}} must be at least level {{level}} to equip this.',
-    TOTAL_LEVEL_REQUIREMENT: 'Your total level must be at least {{level}} to equip this item.'
+    CANNOT_ACCESS_LOOTBAG: 'No puedes acceder a este botín en este momento.',
+    REQUIRES_ACHIEVEMENT: 'Este artículo requiere de un logro secreto para equiparlo.',
+    REQUIRES_QUEST: 'Debes completar {{quest}} para equipar este artículo.',
+    SKILL_LEVEL_REQUIREMENT_EQUIP: 'Tu {{skill}} debe tener al menos el nivel {{level}} para equipar esto.',
+    TOTAL_LEVEL_REQUIREMENT: 'Tu nivel total debe ser al menos {{level}} para equipar este artículo.'
 } as const;
