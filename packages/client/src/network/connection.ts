@@ -815,8 +815,8 @@ export default class Connection {
                 return this.menu
                     .getNotification()
                     .show(
-                        Util.parseMessage(info.title!),
-                        Util.parseMessage(info.message),
+                        Util.parseMessage(Util.formatNotification(info.title!)),
+                        Util.parseMessage(Util.formatNotification(info.message)),
                         info.colour!
                     );
             }
