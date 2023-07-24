@@ -1,7 +1,7 @@
 export default {
-    NO_ITEM_SELECTED: 'You have not selected an item to enchant.',
-    CANNOT_ENCHANT: 'The item you have selected cannot be enchanted.',
-    NO_SHARD: 'You must provide a shard to enchant an item.',
-    FAILED_ENCHANT: 'You tried enchanting but nothing happened.',
-    SUCCESSFUL_ENCHANT: 'You successfully enchanted your item.'
+    NO_ITEM_SELECTED: 'No has seleccionado un elemento para encantar.',
+    CANNOT_ENCHANT: 'El elemento que has seleccionado no se puede encantar.',
+    NO_SHARD: 'Debes proporcionar un fragmento para encantar un objeto.',
+    FAILED_ENCHANT: 'Intentaste encantar pero no pasó nada.',
+    SUCCESSFUL_ENCHANT: 'Encantaste con éxito tu objeto.'
 } as const;
