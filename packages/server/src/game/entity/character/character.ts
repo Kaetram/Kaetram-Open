@@ -8,6 +8,7 @@ import Entity from '../entity';
 import Formulas from '../../../info/formulas';
 
 import Utils from '@kaetram/common/util/utils';
+import { Team } from '@kaetram/common/api/minigame';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import {
@@ -18,7 +19,6 @@ import {
     Points,
     Teleport
 } from '@kaetram/common/network/impl';
-import { Team } from '@kaetram/common/api/minigame';
 
 import type World from '../../world';
 import type Packet from '@kaetram/common/network/packet';

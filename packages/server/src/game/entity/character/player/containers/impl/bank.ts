@@ -1,7 +1,7 @@
 import Container from '../container';
 
-import { Modules } from '@kaetram/common/network';
 import BankEn from '@kaetram/common/text/en/bank';
+import { Modules } from '@kaetram/common/network';
 
 import type Item from '../../../../objects/item';
 

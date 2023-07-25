@@ -15,14 +15,14 @@ import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
 import { Blink, Despawn } from '@kaetram/common/network/impl';
 
-import type { Enchantments } from '@kaetram/common/types/item';
-import type Hit from '../game/entity/character/combat/hit';
-import type Player from '../game/entity/character/player/player';
-import type Entity from '../game/entity/entity';
 import type Map from '../game/map/map';
 import type World from '../game/world';
-import type Regions from '../game/map/regions';
 import type Grids from '../game/map/grids';
+import type Regions from '../game/map/regions';
+import type Entity from '../game/entity/entity';
+import type Hit from '../game/entity/character/combat/hit';
+import type Player from '../game/entity/character/player/player';
+import type { Enchantments } from '@kaetram/common/types/item';
 
 export default class Entities {
     private map: Map;

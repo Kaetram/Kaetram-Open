@@ -1,11 +1,11 @@
 import Entity from '../entity';
 
-import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
-import type { EntityData } from '@kaetram/common/types/entity';
-import type Character from '../character/character';
 import type Hit from '../character/combat/hit';
+import type Character from '../character/character';
+import type { EntityData } from '@kaetram/common/types/entity';
 
 export default class Projectile extends Entity {
     private impactCallback?: () => void;
