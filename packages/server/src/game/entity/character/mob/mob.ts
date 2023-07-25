@@ -21,8 +21,8 @@ import type Chest from '../../objects/chest';
 import type Player from '../player/player';
 import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
-import type { RawData, MobData, MobSkills, MobDrop, MobDropTable } from '@kaetram/common/types/mob';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type { RawData, MobData, MobSkills, MobDrop, MobDropTable } from '@kaetram/common/types/mob';
 
 interface ItemDrop {
     key: string;

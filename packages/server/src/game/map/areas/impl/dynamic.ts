@@ -2,9 +2,9 @@ import Areas from '../areas';
 
 import log from '@kaetram/common/util/log';
 
-import type { ProcessedArea } from '@kaetram/common/types/map';
 import type World from '../../../world';
 import type Area from '../area';
+import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Dynamic extends Areas {
     public constructor(data: ProcessedArea[], world: World) {

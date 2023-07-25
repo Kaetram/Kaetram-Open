@@ -1,7 +1,7 @@
 import Index from './impl/index';
 
-import { Opcodes } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
+import { Opcodes } from '@kaetram/common/network';
 
 import type Area from '../map/areas/area';
 import type Areas from '../map/areas/areas';

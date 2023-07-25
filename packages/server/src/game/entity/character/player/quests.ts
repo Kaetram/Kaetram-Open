@@ -5,13 +5,13 @@ import quests from '../../../../../data/quests.json';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Quest as QuestPacket } from '@kaetram/common/network/impl';
 
-import type { PointerData } from '@kaetram/common/types/pointer';
-import type { PopupData } from '@kaetram/common/types/popup';
-import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
 import type Player from './player';
 import type Quest from './quest/quest';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
+import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PopupData } from '@kaetram/common/types/popup';
+import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
 
 /**
  * Initialize all the quests on a player instance basis. The previous

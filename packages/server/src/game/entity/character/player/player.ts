@@ -56,11 +56,11 @@ import type Minigame from '../../../minigames/minigame';
 import type Entities from '../../../../controllers/entities';
 import type Packet from '@kaetram/common/network/packet';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 import type { PlayerData } from '@kaetram/common/types/player';
 import type { PointerData } from '@kaetram/common/types/pointer';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { PlayerInfo } from '@kaetram/common/database/mongodb/creator';
 
 type KillCallback = (character: Character) => void;
