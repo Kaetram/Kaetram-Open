@@ -7,9 +7,9 @@ import { NPC as NPCPacket } from '@kaetram/common/network/impl';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type { NPCData } from '@kaetram/common/types/npc';
 import type Player from '../character/player/player';
+import type { NPCData } from '@kaetram/common/types/npc';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 interface RawData {
     [key: string]: NPCData;
