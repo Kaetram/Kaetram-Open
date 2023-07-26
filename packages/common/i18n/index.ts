@@ -4,7 +4,14 @@ import i18next from 'i18next';
 
 import type { GetFixedTFunction, TFunction } from './ns';
 
-export let locales = { en: 'en-US', ro: 'ro-RO' } as const;
+export let locales = {
+    de: 'de-DE',
+    en: 'en-US',
+    es: 'es-ES',
+    fr: 'fr-FR',
+    ro: 'ro-RO',
+    ru: 'ru-RU'
+} as const;
 export let defaultLocale = 'en' as const;
 
 export type Locale = keyof typeof locales;
