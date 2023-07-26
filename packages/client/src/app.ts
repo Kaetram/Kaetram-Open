@@ -6,7 +6,7 @@ import { onSecondaryPress } from './utils/press';
 
 import Updates from '@kaetram/common/text/en/updates.json';
 
-import type { SerializedServer } from '@kaetram/common/types/api';
+import type { SerializedServer } from '@kaetram/common/types/network';
 
 type EmptyCallback = () => void;
 type KeyDownCallback = (e: KeyboardEvent) => void;

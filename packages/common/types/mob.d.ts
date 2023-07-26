@@ -58,6 +58,6 @@ export interface MobData {
     healRate?: number;
 }
 
-export interface RawData {
+export interface RawMobData {
     [key: string]: MobData;
 }

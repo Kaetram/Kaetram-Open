@@ -13,7 +13,7 @@ import Effect from '../game/entity/objects/effect';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
-import { Blink, Despawn } from '@kaetram/common/network/impl';
+import { BlinkPacket, DespawnPacket } from '@kaetram/common/network/impl';
 
 import type { Enchantments } from '@kaetram/common/types/item';
 import type Hit from '../game/entity/character/combat/hit';
@@ -320,7 +320,7 @@ export default class Entities {
             // Blinking timeout before the item despawns.
             item.onBlink(() =>
                 this.world.push(Modules.PacketType.Broadcast, {
-                    packet: new Blink(item.instance)
+                    packet: new BlinkPacket(item.instance)
                 })
             );
         } else item.onRespawn(() => this.addItem(item));
@@ -414,7 +414,7 @@ export default class Entities {
         // Signal to nearby regions that the entity has been removed.
         this.world.push(Modules.PacketType.Regions, {
             region: entity.region,
-            packet: new Despawn({
+            packet: new DespawnPacket({
                 instance: entity.instance
             })
         });

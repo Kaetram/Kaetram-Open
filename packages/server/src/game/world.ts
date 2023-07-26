@@ -17,7 +17,7 @@ import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Discord from '@kaetram/common/api/discord';
-import { Chat, Guild } from '@kaetram/common/network/impl';
+import { ChatPacket, GuildPacket } from '@kaetram/common/network/impl';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 
@@ -148,7 +148,7 @@ export default class World {
 
     public globalMessage(source: string, message: string, colour = '', noPrefix = false): void {
         this.push(Modules.PacketType.Broadcast, {
-            packet: new Chat({
+            packet: new ChatPacket({
                 source: noPrefix ? source : `[Global]: ${source}`,
                 message,
                 colour
@@ -223,7 +223,7 @@ export default class World {
 
             // If the player is online, send a packet with a new status.
             player.send(
-                new Guild(Opcodes.Guild.Update, {
+                new GuildPacket(Opcodes.Guild.Update, {
                     members: [
                         {
                             username,

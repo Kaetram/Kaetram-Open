@@ -4,7 +4,7 @@ import log from '@kaetram/common/util/log';
 
 import type Player from '../../player';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
-import type { RawQuest } from '@kaetram/common/types/quest';
+import type { RawQuest } from '@kaetram/common/network/impl/quest';
 
 export default class EvilSanta extends Quest {
     public constructor(key: string, rawData: RawQuest) {

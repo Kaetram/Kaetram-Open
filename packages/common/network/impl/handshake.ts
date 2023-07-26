@@ -25,10 +25,11 @@ export interface AdminHandshakePacket {
     accessToken: string;
 }
 
-export type HandshakePacket = ClientHandshakePacket | HubHandshakePacket | AdminHandshakePacket;
+export type HandshakePacketData = ClientHandshakePacket | HubHandshakePacket | AdminHandshakePacket;
+export type HandshakePacketCallback = (data: ClientHandshakePacket) => void;
 
-export default class Handshake extends Packet {
-    public constructor(data: HandshakePacket) {
+export default class HandshakePacket extends Packet {
+    public constructor(data: HandshakePacketData) {
         super(Packets.Handshake, undefined, data);
     }
 }

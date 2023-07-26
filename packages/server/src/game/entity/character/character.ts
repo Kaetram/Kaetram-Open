@@ -11,12 +11,12 @@ import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import {
-    Combat as CombatPacket,
-    Countdown,
-    Effect,
-    Movement,
-    Points,
-    Teleport
+    CombatPacket as CombatPacket,
+    CountdownPacket,
+    EffectPacket,
+    MovementPacket,
+    PointsPacket,
+    TeleportPacket
 } from '@kaetram/common/network/impl';
 import { Team } from '@kaetram/common/api/minigame';
 
@@ -110,7 +110,7 @@ export default abstract class Character extends Entity {
     private handleHitPoints(): void {
         // Sync the change in hitpoints to nearby entities.
         this.sendToRegions(
-            new Points({
+            new PointsPacket({
                 instance: this.instance,
                 hitPoints: this.hitPoints.getHitPoints(),
                 maxHitPoints: this.hitPoints.getMaxHitPoints()
@@ -128,7 +128,9 @@ export default abstract class Character extends Entity {
         // Synchronize the movement speed of the player when freezing applies.
         if (this.isPlayer() && effect === Modules.Effects.Freezing) this.sync();
 
-        this.sendToRegions(new Effect(Opcodes.Effect.Add, { instance: this.instance, effect }));
+        this.sendToRegions(
+            new EffectPacket(Opcodes.Effect.Add, { instance: this.instance, effect })
+        );
     }
 
     /**
@@ -147,7 +149,9 @@ export default abstract class Character extends Entity {
             if (this.inFreezingArea()) return this.status.add(Modules.Effects.Freezing);
         }
 
-        this.sendToRegions(new Effect(Opcodes.Effect.Remove, { instance: this.instance, effect }));
+        this.sendToRegions(
+            new EffectPacket(Opcodes.Effect.Remove, { instance: this.instance, effect })
+        );
     }
 
     /**
@@ -433,7 +437,7 @@ export default abstract class Character extends Entity {
         if (!target && !this.hasTarget()) return;
 
         this.sendToRegions(
-            new Movement(Opcodes.Movement.Follow, {
+            new MovementPacket(Opcodes.Movement.Follow, {
                 instance: this.instance,
                 target: target?.instance || this.target!.instance
             })
@@ -451,7 +455,7 @@ export default abstract class Character extends Entity {
         this.setPosition(x, y, true);
 
         this.sendToRegions(
-            new Teleport({
+            new TeleportPacket({
                 instance: this.instance,
                 x,
                 y,
@@ -470,7 +474,7 @@ export default abstract class Character extends Entity {
 
     public countdown(time: number): void {
         this.sendToRegions(
-            new Countdown({
+            new CountdownPacket({
                 instance: this.instance,
                 time
             })
@@ -483,7 +487,7 @@ export default abstract class Character extends Entity {
 
     public stopMovement(): void {
         this.sendToRegions(
-            new Movement(Opcodes.Movement.Stop, {
+            new MovementPacket(Opcodes.Movement.Stop, {
                 instance: this.instance
             })
         );

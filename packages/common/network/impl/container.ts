@@ -2,11 +2,22 @@ import Packet from '../packet';
 
 import { Packets } from '@kaetram/common/network';
 
-import type { Opcodes } from '@kaetram/common/network';
-import type { ContainerPacket } from '@kaetram/common/types/messages/outgoing';
+import type { Modules, Opcodes } from '@kaetram/common/network';
+import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
 
-export default class Container extends Packet {
-    public constructor(opcode: Opcodes.Container, data: ContainerPacket) {
+export interface ContainerPacketData {
+    type: Modules.ContainerType;
+    data?: SerializedContainer; // Batch data
+    slot?: SlotData; // Used for adding or removing an item to the container.
+}
+
+export type ContainerPacketCallback = (
+    opcode: Opcodes.Container,
+    info: ContainerPacketData
+) => void;
+
+export default class ContainerPacket extends Packet {
+    public constructor(opcode: Opcodes.Container, data: ContainerPacketData) {
         super(Packets.Container, opcode, data);
     }
 }

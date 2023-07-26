@@ -19,7 +19,7 @@ import type Item from '../entity/objects/item';
 import type Player from '../entity/character/player/player';
 import type { LampData } from '@kaetram/common/types/item';
 import type { ClientTile } from '@kaetram/common/types/map';
-import type { SerializedLight } from '@kaetram/common/types/light';
+import type { SerializedLight } from '@kaetram/common/network/impl/overlay';
 
 interface Light extends Lamp {
     originalX: number;

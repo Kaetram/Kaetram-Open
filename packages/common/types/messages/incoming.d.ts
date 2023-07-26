@@ -6,6 +6,8 @@ import type { Modules, Opcodes } from '../../network';
 
 export type { HubHandshakePacket as HandshakePacket } from '../../network/impl/handshake';
 
+export { TradePacket } from '../../network/impl/trade';
+
 export interface LoginPacket {
     opcode: Opcodes.Login;
     username?: string;
@@ -58,13 +60,6 @@ export interface AbilityPacket {
     opcode: Opcodes.Ability;
     key: string;
     index?: number;
-}
-
-export interface TradePacket {
-    opcode: Opcodes.Trade;
-    instance?: string;
-    index?: number;
-    count?: number;
 }
 
 export interface EnchantPacket {

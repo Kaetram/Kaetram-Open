@@ -8,7 +8,7 @@ import type Player from '../player';
 import type Mob from '../../mob/mob';
 import type NPC from '../../../npc/npc';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
-import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PointerData } from '@kaetram/common/network/impl/pointer';
 import type { PopupData } from '@kaetram/common/types/popup';
 import type {
     QuestData,
@@ -17,7 +17,7 @@ import type {
     StageData,
     HideNPC,
     QuestItem
-} from '@kaetram/common/types/quest';
+} from '@kaetram/common/network/impl/quest';
 
 type ProgressCallback = (key: string, stage: number, subStage: number) => void;
 type PointerCallback = (pointer: PointerData) => void;

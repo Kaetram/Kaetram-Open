@@ -2,7 +2,7 @@ import Server from '../model/server';
 import Admin from '../model/admin';
 
 import log from '@kaetram/common/util/log';
-import { Chat } from '@kaetram/common/network/impl';
+import { ChatPacket } from '@kaetram/common/network/impl';
 import Utils from '@kaetram/common/util/utils';
 import { Packets } from '@kaetram/common/network';
 import config from '@kaetram/common/config';
@@ -11,7 +11,7 @@ import Packet from '@kaetram/common/network/packet';
 import type Model from '../model';
 import type Connection from '../network/connection';
 import type { SerializedServer } from '@kaetram/common/types/network';
-import type { HandshakePacket } from '@kaetram/common/network/impl/handshake';
+import type { HandshakePacketData } from '@kaetram/common/network/impl/handshake';
 
 type PlayerCallback = (
     username: string,
@@ -59,7 +59,7 @@ export default class Models {
         });
     }
 
-    private handleHandshake(data: HandshakePacket, instance: string, connection: Connection) {
+    private handleHandshake(data: HandshakePacketData, instance: string, connection: Connection) {
         switch (data.type) {
             case 'hub': {
                 if (config.gver !== data.gVer) {
@@ -225,7 +225,7 @@ export default class Models {
      */
 
     public global(source: string, message: string, colour: string): void {
-        this.broadcastServers(new Chat({ source, message, colour }));
+        this.broadcastServers(new ChatPacket({ source, message, colour }));
     }
 
     /**

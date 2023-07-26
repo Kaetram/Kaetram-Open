@@ -1,7 +1,7 @@
 import Formulas from '../info/formulas';
 
 import Utils from '@kaetram/common/util/utils';
-import { Enchant } from '@kaetram/common/network/impl';
+import { EnchantPacket } from '@kaetram/common/network/impl';
 import { Opcodes } from '@kaetram/common/network';
 
 import type Item from '../game/entity/objects/item';
@@ -27,7 +27,7 @@ export default class Enchanter {
 
         // Send a select packet to the client if the item is a shard.
         if (slot.key.startsWith('shardt'))
-            return player.send(new Enchant(Opcodes.Enchant.Select, { index, isShard: true }));
+            return player.send(new EnchantPacket(Opcodes.Enchant.Select, { index, isShard: true }));
 
         // Check that the item is enchantable.
         if (slot.count > 1 || !slot.equippable || slot.maxStackSize > 1)
@@ -38,7 +38,7 @@ export default class Enchanter {
             return player.notify('enchant:CANNOT_ENCHANT');
 
         // Send a select packet to the client.
-        player.send(new Enchant(Opcodes.Enchant.Select, { index }));
+        player.send(new EnchantPacket(Opcodes.Enchant.Select, { index }));
     }
 
     /**

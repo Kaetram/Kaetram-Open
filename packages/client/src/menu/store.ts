@@ -8,8 +8,8 @@ import { onSecondaryPress } from '../utils/press';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Inventory from './inventory';
-import type { StorePacket } from '@kaetram/common/types/messages/outgoing';
-import type { SerializedStoreItem } from '@kaetram/common/types/stores';
+import type { StorePacketData } from '@kaetram/common/types/messages/outgoing';
+import type { SerializedStoreItem } from '@kaetram/common/network/impl/store';
 
 type SelectCallback = (opcode: Opcodes.Store, key: string, index: number, count?: number) => void;
 
@@ -83,7 +83,7 @@ export default class Store extends Menu {
      * @param info Contains the store's key, currency, and items (or specific item if selecting).
      */
 
-    public update(info: StorePacket): void {
+    public update(info: StorePacketData): void {
         this.clear();
 
         this.key = info.key!;
@@ -183,7 +183,7 @@ export default class Store extends Menu {
      * @param info Store packet data containing information about the store.
      */
 
-    public override show(info: StorePacket): void {
+    public override show(info: StorePacketData): void {
         super.show();
 
         this.update(info);
@@ -225,7 +225,7 @@ export default class Store extends Menu {
      * @param info Contains store packet data such as the index, key, price, etc.
      */
 
-    public move(info: StorePacket): void {
+    public move(info: StorePacketData): void {
         if (info.key !== this.key) return log.error(`Invalid store key provided for the select.`);
 
         //Refreshes the inventory container prior to moving.s

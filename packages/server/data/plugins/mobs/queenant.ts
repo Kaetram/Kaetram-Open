@@ -7,7 +7,7 @@ import { Modules } from '@kaetram/common/network';
 
 import type Character from '@kaetram/server/src/game/entity/character/character';
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
-import type { RawData } from '@kaetram/common/types/mob';
+import type { RawMobData } from '@kaetram/common/types/mob';
 
 export default class QueenAnt extends Default {
     private positions: Position[];
@@ -65,7 +65,7 @@ export default class QueenAnt extends Default {
             minion.onDeathImpl(() => {
                 if (Object.keys(this.minions).length > 0) return;
 
-                this.mob.attackRate = (Mobs as RawData)[this.mob.key].attackRate!;
+                this.mob.attackRate = (Mobs as RawMobData)[this.mob.key].attackRate!;
             });
         }
 
@@ -86,7 +86,7 @@ export default class QueenAnt extends Default {
         for (let minion of Object.values(this.minions)) minion.deathCallback?.();
 
         this.minionsSpawned = false;
-        this.mob.attackRate = (Mobs as RawData)[this.mob.key].attackRate!;
+        this.mob.attackRate = (Mobs as RawMobData)[this.mob.key].attackRate!;
     }
 
     /**

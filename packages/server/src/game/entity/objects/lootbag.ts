@@ -3,7 +3,7 @@ import Entity from '../entity';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { LootBag as LootBagPacket } from '@kaetram/common/network/impl';
+import { LootBagPacket as LootBagPacket } from '@kaetram/common/network/impl';
 
 import type Item from './item';
 import type Player from '../character/player/player';
