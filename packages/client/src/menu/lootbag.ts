@@ -6,7 +6,7 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Inventory from './inventory';
 import type { SlotData } from '@kaetram/common/types/slot';
-import type { LootBagPacket } from '@kaetram/common/types/messages/outgoing';
+import type { LootBagPacketData } from '@kaetram/common/types/messages/outgoing';
 
 type SelectCallback = (index: number) => void;
 
@@ -34,7 +34,7 @@ export default class LootBag extends Menu {
      * @param info Contains the items that are in the loot bag.
      */
 
-    public handle(opcode: Opcodes.LootBag, info: LootBagPacket): void {
+    public handle(opcode: Opcodes.LootBag, info: LootBagPacketData): void {
         switch (opcode) {
             case Opcodes.LootBag.Open: {
                 this.loadItems(info.items!);

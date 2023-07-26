@@ -2,9 +2,11 @@ import Packet from '../packet';
 
 import { Packets } from '@kaetram/common/network';
 
-import type { PlayerData } from '@kaetram/common/types/player';
+import type { PlayerData } from './player';
 
-export default class Sync extends Packet {
+export type SyncPacketCallback = (data: PlayerData) => void;
+
+export default class SyncPacket extends Packet {
     public constructor(data: PlayerData) {
         super(Packets.Sync, undefined, data);
     }

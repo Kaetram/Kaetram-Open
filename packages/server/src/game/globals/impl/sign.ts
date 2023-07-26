@@ -1,5 +1,5 @@
 import { Opcodes } from '@kaetram/common/network';
-import { Bubble } from '@kaetram/common/network/impl';
+import { BubblePacket } from '@kaetram/common/network/impl';
 
 import type Player from '../../entity/character/player/player';
 
@@ -36,7 +36,7 @@ export default class Sign {
 
         // Send bubble packet to the player.
         player.send(
-            new Bubble(
+            new BubblePacket(
                 {
                     x: this.x,
                     y: this.y,

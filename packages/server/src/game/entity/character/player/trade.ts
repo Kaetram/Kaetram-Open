@@ -1,7 +1,7 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Opcodes } from '@kaetram/common/network';
-import { Trade as TradePacket } from '@kaetram/common/network/impl';
+import { TradePacketPacket as TradePacketPacket } from '@kaetram/common/network/impl';
 
 import type Player from './player';
 import type Item from '../../objects/item';
@@ -282,10 +282,10 @@ export default class Trade {
         );
 
         // Close the trade for the player.
-        this.player.send(new TradePacket(Opcodes.Trade.Close, {}));
+        this.player.send(new TradePacketPacket(Opcodes.Trade.Close, {}));
 
         // Close the trade for the other party if they are still trading.
-        this.activeTrade?.send(new TradePacket(Opcodes.Trade.Close, {}));
+        this.activeTrade?.send(new TradePacketPacket(Opcodes.Trade.Close, {}));
 
         // Clear the active trade for both players.
         this.getActiveTrade()?.clear(); // Clear first so it's not undefined.

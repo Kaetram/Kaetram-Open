@@ -2,7 +2,7 @@ import Quest from '../quest';
 
 import config from '@kaetram/common/config';
 
-import type { RawQuest } from '@kaetram/common/types/quest';
+import type { RawQuest } from '@kaetram/common/network/impl/quest';
 
 export default class Tutorial extends Quest {
     public constructor(key: string, rawData: RawQuest) {

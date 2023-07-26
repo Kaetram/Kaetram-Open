@@ -2,7 +2,9 @@ import Packet from '../packet';
 
 import { Packets } from '@kaetram/common/network';
 
-export default class Music extends Packet {
+export type MusicPacketCallback = (newSong?: string) => void;
+
+export default class MusicPacket extends Packet {
     public constructor(newSong?: string) {
         super(Packets.Music, undefined, newSong);
     }

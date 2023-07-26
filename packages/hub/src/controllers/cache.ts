@@ -6,7 +6,7 @@ import mobs from '@kaetram/server/data/mobs.json';
 import Database from '@kaetram/common/database/database';
 
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
-import type { RawData } from '@kaetram/common/types/mob';
+import type { RawMobData } from '@kaetram/common/types/mob';
 import type { Modules } from '@kaetram/common/network';
 import type {
     MobAggregate,
@@ -41,7 +41,7 @@ export default class Cache {
         this.database.onFail(this.handleFail.bind(this));
 
         // Initialize the available mobs.
-        for (let key in mobs) this.availableMobs[key] = (mobs as RawData)[key].name;
+        for (let key in mobs) this.availableMobs[key] = (mobs as RawMobData)[key].name;
     }
 
     /**

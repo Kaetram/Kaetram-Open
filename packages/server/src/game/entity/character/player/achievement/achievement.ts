@@ -2,7 +2,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import type { Modules } from '@kaetram/common/network';
-import type { AchievementData, RawAchievement } from '@kaetram/common/types/achievement';
+import type { AchievementData, RawAchievement } from '@kaetram/common/network/impl/achievement';
 import type { PopupData } from '@kaetram/common/types/popup';
 import type NPC from '../../../npc/npc';
 import type Mob from '../../mob/mob';

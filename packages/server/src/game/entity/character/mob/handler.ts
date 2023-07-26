@@ -1,7 +1,7 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
-import { Bubble } from '@kaetram/common/network/impl';
+import { BubblePacket } from '@kaetram/common/network/impl';
 
 import type Mob from './mob';
 import type Map from '../../../map/map';
@@ -193,7 +193,7 @@ export default class Handler {
 
     protected handleTalk(text: string): void {
         this.mob.sendToRegions(
-            new Bubble({
+            new BubblePacket({
                 instance: this.mob.instance,
                 text
             })

@@ -2,7 +2,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import config from '@kaetram/common/config';
 
-import type { GuildData } from '@kaetram/common/types/guild';
+import type { GuildData } from '@kaetram/common/network/impl/guild';
 import type { Modules } from '@kaetram/common/network';
 import type { Collection, Db } from 'mongodb';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';

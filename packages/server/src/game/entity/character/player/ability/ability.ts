@@ -3,7 +3,7 @@ import Data from '../../../../../../data/abilities.json';
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import type { AbilityData, RawAbility, RawAbilityData } from '@kaetram/common/types/ability';
+import type { AbilityData, RawAbility, RawAbilityData } from '@kaetram/common/network/impl/ability';
 import type Player from '../player';
 
 type DeactivateCallback = (player: Player) => void;

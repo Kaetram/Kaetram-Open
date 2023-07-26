@@ -7,7 +7,7 @@
 import { Opcodes } from '@kaetram/common/network';
 
 import type { Status } from '@kaetram/common/api/minigame';
-import type { MinigamePacket } from '@kaetram/common/types/messages/outgoing';
+import type { MinigamePacketData } from '@kaetram/common/types/messages/outgoing';
 
 export default class Minigame {
     // Coursing score variables.
@@ -52,7 +52,7 @@ export default class Minigame {
      * @param blueTeam New blue team score.
      */
 
-    public setScore(info: MinigamePacket): void {
+    public setScore(info: MinigamePacketData): void {
         switch (this.type) {
             case Opcodes.Minigame.TeamWar: {
                 this.redTeamScore = info.redTeamKills || -1;

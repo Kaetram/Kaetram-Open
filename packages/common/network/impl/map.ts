@@ -3,7 +3,9 @@ import Packet from '../packet';
 import { Packets } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
 
-export default class Map extends Packet {
+export type MapPacketCallback = (data: string) => void;
+
+export default class MapPacket extends Packet {
     public constructor(data: unknown) {
         super(
             Packets.Map,
