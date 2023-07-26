@@ -2,8 +2,8 @@ import Area from './area';
 
 import log from '@kaetram/common/util/log';
 
-import type { ProcessedArea } from '@kaetram/common/types/map';
 import type World from '../../world';
+import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default abstract class Areas {
     public areas: Area[] = [];

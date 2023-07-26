@@ -6,12 +6,12 @@ import Item from '../../objects/item';
 import { Opcodes } from '@kaetram/common/network';
 import { Achievement as AchievementPacket } from '@kaetram/common/network/impl';
 
-import type { Modules } from '@kaetram/common/network';
-import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
-import type { PopupData } from '@kaetram/common/types/popup';
 import type NPC from '../../npc/npc';
 import type Mob from '../mob/mob';
 import type Player from './player';
+import type { Modules } from '@kaetram/common/network';
+import type { PopupData } from '@kaetram/common/types/popup';
+import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
 
 export default class Achievements {
     private achievements: { [key: string]: Achievement } = {};

@@ -8,13 +8,13 @@ import Filter from '@kaetram/common/util/filter';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { Command, NPC, Store } from '@kaetram/common/network/impl';
 
+import type Region from '../game/map/region';
+import type Entity from '../game/entity/entity';
 import type Mob from '../game/entity/character/mob/mob';
-import type Achievement from '../game/entity/character/player/achievement/achievement';
 import type Player from '../game/entity/character/player/player';
 import type Quest from '../game/entity/character/player/quest/quest';
 import type Skill from '../game/entity/character/player/skill/skill';
-import type Entity from '../game/entity/entity';
-import type Region from '../game/map/region';
+import type Achievement from '../game/entity/character/player/achievement/achievement';
 
 export default class Commands {
     private world;
