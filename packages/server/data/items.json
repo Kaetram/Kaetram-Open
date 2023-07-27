@@ -243,29 +243,55 @@
         "name": "Ice Sword",
         "weaponType": "sword",
         "skill": "accuracy",
-        "level": 7,
+        "level": 17,
         "attackStats": {
-            "crush": 2,
-            "slash": 4,
-            "stab": 2,
+            "crush": 6,
+            "slash": 14,
+            "stab": 7,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 1,
-            "slash": 3,
-            "stab": 1,
+            "crush": 4,
+            "slash": 8,
+            "stab": 3,
             "archery": 0,
             "magic": 0
         },
         "bonuses": {
-            "accuracy": 2,
-            "strength": 2,
+            "accuracy": 5,
+            "strength": 4,
             "archery": 0,
             "magic": 0
         }
     },
-
+    "firesword": {
+        "type": "weapon",
+        "name": "Fire Sword",
+        "weaponType": "sword",
+        "skill": "accuracy",
+        "level": 24,
+        "attackStats": {
+            "crush": 7,
+            "slash": 16,
+            "stab": 9,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 5,
+            "slash": 7,
+            "stab": 4,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 7,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "nightsword": {
         "type": "weapon",
         "name": "Night Sword",
@@ -289,6 +315,33 @@
         "bonuses": {
             "accuracy": 7,
             "strength": 5,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "hellhoundfang": {
+        "type": "weapon",
+        "name": "Hellhound Fang",
+        "weaponType": "sword",
+        "skill": "strength",
+        "level": 40,
+        "attackStats": {
+            "crush": 13,
+            "slash": 26,
+            "stab": 15,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 8,
+            "stab": 5,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 7,
+            "strength": 15,
             "archery": 0,
             "magic": 0
         }
