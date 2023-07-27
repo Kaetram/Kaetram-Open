@@ -69,6 +69,8 @@
     { "id": "player/weapon/nisocsword", "offsetY": -24 },
     { "id": "player/weapon/cinnabarsword", "offsetY": -24 },
     { "id": "player/weapon/pytharsword", "offsetY": -24 },
+    { "id": "player/weapon/hellhoundfang", "offsetY": -24 },
+    { "id": "player/weapon/firesword", "offsetY": -24 },
     { "id": "player/weapon/ibosword", "offsetY": -24 },
     { "id": "player/weapon/goldsword", "offsetY": -24 },
     { "id": "player/weapon/nightsword", "offsetY": -24 },
@@ -6634,5 +6636,7 @@
     { "id": "items/lanternarcan", "offsetX": 0, "offsetY": 0 },
     { "id": "items/nighthelm", "offsetX": 0, "offsetY": 0 },
     { "id": "items/nightsword", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/wolfhelmet", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/wolfhelmet", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/hellhoundfang", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/firesword", "offsetX": 0, "offsetY": 0 }
 ]
