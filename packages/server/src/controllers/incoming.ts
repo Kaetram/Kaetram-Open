@@ -9,7 +9,7 @@ import type { GuildPacketData, PlayerPacketData } from '@kaetram/common/types/me
 import type {
     ChatPacketData,
     FriendsPacketData,
-    RelayPacket
+    RelayPacketData
 } from '@kaetram/common/types/messages/hub';
 
 /**
@@ -48,7 +48,7 @@ export default class Incoming {
             }
 
             case Packets.Relay: {
-                return this.handleRelay(opcode as RelayPacket);
+                return this.handleRelay(opcode as RelayPacketData);
             }
         }
     }
@@ -165,7 +165,7 @@ export default class Incoming {
      * @param data Contains the player's username and the packet we want to send to them.
      */
 
-    private handleRelay(data: RelayPacket): void {
+    private handleRelay(data: RelayPacketData): void {
         let [username, info] = data,
             player = this.world.getPlayerByName(username);
 

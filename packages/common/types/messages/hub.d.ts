@@ -23,4 +23,4 @@ export interface FriendsPacketData {
     inactiveFriends?: string[];
 }
 
-export type RelayPacket = [string, [Packets, number, { [key: string]: unknown }]];
+export type RelayPacketData = [string, [Packets, number, { [key: string]: unknown }]];

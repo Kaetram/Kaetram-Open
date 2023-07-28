@@ -4,7 +4,7 @@ import Formulas from '../../../../info/formulas';
 
 import log from '@kaetram/common/util/log';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { CombatPacket as CombatPacket, SpawnPacket } from '@kaetram/common/network/impl';
+import { CombatPacket, SpawnPacket } from '@kaetram/common/network/impl';
 
 import type Character from '../character';
 

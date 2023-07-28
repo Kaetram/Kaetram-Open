@@ -1,7 +1,4 @@
-export type {
-    ClientHandshakePacket as HandshakePacketData,
-    HandshakePacketCallback
-} from '../../network/impl/handshake';
+export type { HandshakePacketData, HandshakePacketCallback } from '../../network/impl/handshake';
 export type { WelcomePacketCallback } from '../../network/impl/welcome';
 export type { MapPacketCallback } from '../../network/impl/map';
 export type { SpawnPacketCallback } from '../../network/impl/spawn';

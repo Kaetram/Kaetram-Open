@@ -1,6 +1,6 @@
 import config from '@kaetram/common/config';
 import { Opcodes } from '@kaetram/common/network';
-import { FriendsPacket as FriendsPacket } from '@kaetram/common/network/impl';
+import { FriendsPacket } from '@kaetram/common/network/impl';
 
 import type Player from './player';
 import type { Friend } from '@kaetram/common/network/impl/friends';

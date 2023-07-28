@@ -19,11 +19,7 @@ import Alchemy from './skill/impl/alchemy';
 import Formulas from '../../../../info/formulas';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
-import {
-    ExperiencePacket,
-    PointsPacket,
-    SkillPacket as SkillPacket
-} from '@kaetram/common/network/impl';
+import { ExperiencePacket, PointsPacket, SkillPacket } from '@kaetram/common/network/impl';
 
 import type Player from './player';
 import type Skill from './skill/skill';

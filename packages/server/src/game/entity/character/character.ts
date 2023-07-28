@@ -12,7 +12,7 @@ import { Team } from '@kaetram/common/api/minigame';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 import {
-    CombatPacket as CombatPacket,
+    CombatPacket,
     CountdownPacket,
     EffectPacket,
     MovementPacket,

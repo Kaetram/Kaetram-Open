@@ -1,13 +1,13 @@
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { GuildPacket as GuildPacket } from '@kaetram/common/network/impl';
+import { GuildPacket } from '@kaetram/common/network/impl';
 
 import type World from '../game/world';
 import type Player from '../game/entity/character/player/player';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type { GuildData, ListInfo, Member } from '@kaetram/common/network/impl/guild';
-import type { GuildPacketData as OutgoingGuildPacket } from '@kaetram/common/types/messages/outgoing';
+import type { GuildPacketData } from '@kaetram/common/types/messages/outgoing';
 
 export default class Guilds {
     private database: MongoDB;
@@ -499,11 +499,7 @@ export default class Guilds {
      * @param data The data that we are sending to the client.
      */
 
-    private synchronize(
-        members: Member[],
-        opcode: Opcodes.Guild,
-        data?: OutgoingGuildPacket
-    ): void {
+    private synchronize(members: Member[], opcode: Opcodes.Guild, data?: GuildPacketData): void {
         for (let member of members) {
             let player = this.world.getPlayerByName(member.username),
                 packet = new GuildPacket(opcode, data);

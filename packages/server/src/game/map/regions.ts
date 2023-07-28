@@ -7,12 +7,7 @@ import Character from '../entity/character/character';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import {
-    ListPacket,
-    MapPacket as MapPacket,
-    SpawnPacket,
-    UpdatePacket
-} from '@kaetram/common/network/impl';
+import { ListPacket, MapPacket, SpawnPacket, UpdatePacket } from '@kaetram/common/network/impl';
 
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
