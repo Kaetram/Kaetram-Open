@@ -1,12 +1,12 @@
 import { fileURLToPath } from 'node:url';
 
-import { description, name } from '../../package.json';
+import { name, description } from '../../package.json';
 
 import { locales, defaultLocale, dir, t, type Locale } from '@kaetram/common/i18n';
 import { defineConfig } from 'astro/config';
 import config, { exposedConfig } from '@kaetram/common/config';
 import webmanifest from 'astro-webmanifest';
-import { defaultLocaleSitemapFilter, i18n } from 'astro-i18n-aut';
+import { i18n, defaultLocaleSitemapFilter } from 'astro-i18n-aut';
 import sitemap from '@astrojs/sitemap';
 import robotsTxt from 'astro-robots-txt';
 import partytown from '@astrojs/partytown';
@@ -95,8 +95,8 @@ export default defineConfig({
                     {
                         lang,
                         dir: dir(locale as Locale),
-                        name: t('meta.name', { lng: locale }),
-                        description: t('meta.description', { lng: locale })
+                        name: t('game:NAME', { lng: locale }),
+                        description: t('game:DESCRIPTION', { lng: locale })
                     }
                 ])
             ),
