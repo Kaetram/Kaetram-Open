@@ -37,6 +37,11 @@ export default class LootBag extends Entity {
         this.timer();
     }
 
+    /**
+     * Removes all the timeouts and creates a callback to
+     * remove the entity from the world.
+     */
+
     private destroy(): void {
         // Clear the timeouts.
         clearTimeout(this.blinkTimeout!);

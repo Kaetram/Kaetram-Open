@@ -3,8 +3,8 @@ import Item from '../../../../objects/item';
 import Rocks from '../../../../../../../data/rocks.json';
 
 import Utils from '@kaetram/common/util/utils';
-import { Modules } from '@kaetram/common/network';
 import ResourceText from '@kaetram/common/text/en/resource';
+import { Modules } from '@kaetram/common/network';
 
 import type Player from '../../player';
 import type Resource from '../../../../../globals/impl/resource';

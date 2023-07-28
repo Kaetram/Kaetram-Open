@@ -20,17 +20,17 @@ import {
     TradePacketPacket
 } from '@kaetram/common/network/impl';
 
-import type Light from '../../../globals/impl/light';
+import type Player from './player';
+import type NPC from '../../npc/npc';
+import type Entity from '../../entity';
 import type Map from '../../../map/map';
 import type World from '../../../world';
-import type Entity from '../../entity';
 import type Character from '../character';
-import type Ability from './ability/ability';
 import type Slot from './containers/slot';
+import type Ability from './ability/ability';
 import type Equipment from './equipment/equipment';
 import type Areas from '../../../map/areas/areas';
-import type NPC from '../../npc/npc';
-import type Player from './player';
+import type Light from '../../../globals/impl/light';
 import type { Enchantments } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 

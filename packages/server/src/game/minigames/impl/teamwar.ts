@@ -5,10 +5,12 @@ import Utils from '@kaetram/common/util/utils';
 import { Team } from '@kaetram/common/api/minigame';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
-import type Player from '../../entity/character/player/player';
 import type World from '../../world';
+import type Player from '../../entity/character/player/player';
 
 export default class TeamWar extends Minigame {
+    public override name = 'TeamWar';
+
     protected override countdown: number = Modules.MinigameConstants.TEAM_WAR_COUNTDOWN;
 
     // Areas for the minigame.

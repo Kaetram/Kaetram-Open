@@ -824,8 +824,8 @@ export default class Connection {
                 return this.menu
                     .getNotification()
                     .show(
-                        Util.parseMessage(info.title!),
-                        Util.parseMessage(info.message),
+                        Util.parseMessage(Util.formatNotification(info.title!)),
+                        Util.parseMessage(Util.formatNotification(info.message)),
                         info.colour!
                     );
             }
@@ -1099,8 +1099,13 @@ export default class Connection {
                 break;
             }
 
-            case Opcodes.Guild.Leave: {
-                this.game.player.setGuild();
+            case Opcodes.Guild.Join: {
+                this.game.player.addGuildMember(info.username!, info.serverId!);
+                break;
+            }
+
+            case Opcodes.Guild.Rank: {
+                this.game.player.setGuildMember(info.username!, info.rank!);
                 break;
             }
         }
