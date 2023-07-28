@@ -3,8 +3,8 @@ import Entity from '../entity';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Modules } from '@kaetram/common/network';
 import PluginIndex from '@kaetram/server/data/plugins/items';
+import { Modules } from '@kaetram/common/network';
 
 import type Player from '../character/player/player';
 import type { EntityData } from '@kaetram/common/types/entity';

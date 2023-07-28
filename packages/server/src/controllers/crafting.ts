@@ -8,13 +8,13 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import { CraftingPacket as CraftingPacket } from '@kaetram/common/network/impl';
 
 import type Player from '../game/entity/character/player/player';
+import type { ItemData } from '@kaetram/common/types/item';
 import type {
     CraftingInfo,
     CraftingItem,
     CraftingItemPreview,
     CraftingRequirement
 } from '@kaetram/common/network/impl/crafting';
-import type { ItemData } from '@kaetram/common/types/item';
 
 /**
  * The crafting mechanism is shared by multiple skills and works largely the same way. We use
