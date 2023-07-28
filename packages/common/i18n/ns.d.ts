@@ -43,40 +43,42 @@ export type NsInter = {
 };
 
 type NsSeparator = TypeOptions['nsSeparator'];
+type DefaultNs = TypeOptions['defaultNS'];
+
 export type TFunction = <
-    const K extends O extends { ns: infer NS extends keyof NsInter }
-        ? keyof NsInter[NS]
+    const K extends O extends { ns: infer Ns extends keyof NsInter }
+        ? keyof NsInter[Ns]
         : MaybeArray<
-              | keyof NsInter[NS]
+              | keyof NsInter[Ns]
               | {
-                    [NS in keyof NsInter]: `${NS & string}${NsSeparator}${keyof NsInter[NS] &
+                    [Ns in keyof NsInter]: `${Ns & string}${NsSeparator}${keyof NsInter[Ns] &
                         string}`;
                 }[keyof NsInter]
           >,
-    const O extends { ns?: NS },
-    const KK = K extends readonly (infer KK)[] ? KK : K,
-    const NS extends keyof NsInter = KK extends `${infer NS extends keyof NsInter}${NsSeparator}${string}`
-        ? NS
-        : O extends { ns: infer NS extends keyof NsInter }
-        ? NS
-        : TypeOptions['defaultNS']
+    const O extends { ns?: Ns },
+    const KUnion = K extends readonly (infer KUnion)[] ? KUnion : K,
+    const Ns extends keyof NsInter = KUnion extends `${infer Ns extends keyof NsInter}${NsSeparator}${string}`
+        ? Ns
+        : O extends { ns: infer Ns extends keyof NsInter }
+        ? Ns
+        : DefaultNs
 >(
     key: K,
     options?: TOptions<
         O &
-            NsInter[NS][(KK extends `${string}${NsSeparator}${infer N}` ? N : KK) &
-                keyof NsInter[NS]]
+            NsInter[Ns][(KUnion extends `${string}${NsSeparator}${infer N}` ? N : KUnion) &
+                keyof NsInter[Ns]]
     >
 ) => string;
 
 export type GetFixedTFunction = <
     const L extends Locale,
     const N extends keyof NsInter,
-    const K extends keyof NsInter[NN],
-    const NN extends [keyof NsInter[N]] extends [never] ? TypeOptions['defaultNS'] : N,
-    const KK extends [keyof NsInter[NN][K]] extends [never] ? NsInter[NN] : NsInter[NN][K]
+    const K extends keyof NsInter[Ns],
+    const Ns extends [keyof NsInter[N]] extends [never] ? DefaultNs : N,
+    const KObject extends [keyof NsInter[Ns][K]] extends [never] ? NsInter[Ns] : NsInter[Ns][K]
 >(
-    lng?: L,
+    lng: L | undefined,
     ns?: N,
     keyPrefix?: K
-) => (key: keyof KK, options?: TOptions) => string;
+) => (key: keyof KObject, options?: TOptions) => string;

@@ -1,12 +1,3 @@
-import CraftingDe from './de/crafting';
-import EnchantDe from './de/enchant';
-import GuildsDe from './de/guilds';
-import ItemDe from './de/item';
-import MiscDe from './de/misc';
-import ResourceDe from './de/resource';
-import StoreDe from './de/store';
-import TranslationDe from './de/translation';
-import WarpsDe from './de/warps';
 import CraftingEn from './en/crafting';
 import EnchantEn from './en/enchant';
 import GuildsEn from './en/guilds';
@@ -14,8 +5,17 @@ import ItemEn from './en/item';
 import MiscEn from './en/misc';
 import ResourceEn from './en/resource';
 import StoreEn from './en/store';
-import TranslationEn from './en/translation';
+import GameEn from './en/game';
 import WarpsEn from './en/warps';
+import CraftingDe from './de/crafting';
+import EnchantDe from './de/enchant';
+import GuildsDe from './de/guilds';
+import ItemDe from './de/item';
+import MiscDe from './de/misc';
+import ResourceDe from './de/resource';
+import StoreDe from './de/store';
+import GameDe from './de/game';
+import WarpsDe from './de/warps';
 import CraftingEs from './es/crafting';
 import EnchantEs from './es/enchant';
 import GuildsEs from './es/guilds';
@@ -23,7 +23,7 @@ import ItemEs from './es/item';
 import MiscEs from './es/misc';
 import ResourceEs from './es/resource';
 import StoreEs from './es/store';
-import TranslationEs from './es/translation';
+import GameEs from './es/game';
 import WarpsEs from './es/warps';
 import CraftingFr from './fr/crafting';
 import EnchantFr from './fr/enchant';
@@ -32,7 +32,7 @@ import ItemFr from './fr/item';
 import MiscFr from './fr/misc';
 import ResourceFr from './fr/resource';
 import StoreFr from './fr/store';
-import TranslationFr from './fr/translation';
+import GameFr from './fr/game';
 import WarpsFr from './fr/warps';
 import CraftingRo from './ro/crafting';
 import EnchantRo from './ro/enchant';
@@ -41,7 +41,7 @@ import ItemRo from './ro/item';
 import MiscRo from './ro/misc';
 import ResourceRo from './ro/resource';
 import StoreRo from './ro/store';
-import TranslationRo from './ro/translation';
+import GameRo from './ro/game';
 import WarpsRo from './ro/warps';
 import CraftingRu from './ru/crafting';
 import EnchantRu from './ru/enchant';
@@ -50,21 +50,10 @@ import ItemRu from './ru/item';
 import MiscRu from './ru/misc';
 import ResourceRu from './ru/resource';
 import StoreRu from './ru/store';
-import TranslationRu from './ru/translation';
+import GameRu from './ru/game';
 import WarpsRu from './ru/warps';
 
 export let resources = {
-    de: {
-        crafting: CraftingDe,
-        enchant: EnchantDe,
-        guilds: GuildsDe,
-        item: ItemDe,
-        misc: MiscDe,
-        resource: ResourceDe,
-        store: StoreDe,
-        translation: TranslationDe,
-        warps: WarpsDe
-    },
     en: {
         crafting: CraftingEn,
         enchant: EnchantEn,
@@ -73,8 +62,19 @@ export let resources = {
         misc: MiscEn,
         resource: ResourceEn,
         store: StoreEn,
-        translation: TranslationEn,
+        game: GameEn,
         warps: WarpsEn
+    },
+    de: {
+        crafting: CraftingDe,
+        enchant: EnchantDe,
+        guilds: GuildsDe,
+        item: ItemDe,
+        misc: MiscDe,
+        resource: ResourceDe,
+        store: StoreDe,
+        game: GameDe,
+        warps: WarpsDe
     },
     es: {
         crafting: CraftingEs,
@@ -84,7 +84,7 @@ export let resources = {
         misc: MiscEs,
         resource: ResourceEs,
         store: StoreEs,
-        translation: TranslationEs,
+        game: GameEs,
         warps: WarpsEs
     },
     fr: {
@@ -95,7 +95,7 @@ export let resources = {
         misc: MiscFr,
         resource: ResourceFr,
         store: StoreFr,
-        translation: TranslationFr,
+        game: GameFr,
         warps: WarpsFr
     },
     ro: {
@@ -106,7 +106,7 @@ export let resources = {
         misc: MiscRo,
         resource: ResourceRo,
         store: StoreRo,
-        translation: TranslationRo,
+        game: GameRo,
         warps: WarpsRo
     },
     ru: {
@@ -117,20 +117,32 @@ export let resources = {
         misc: MiscRu,
         resource: ResourceRu,
         store: StoreRu,
-        translation: TranslationRu,
+        game: GameRu,
         warps: WarpsRu
     }
 } as const;
 
-export let ns = Object.keys(resources.en);
-export let defaultNS = 'translation' as const;
+export type Locale = keyof typeof resources;
 
-export type Namespaces = typeof resources.en;
+export let locales: { [K in Locale]: string } = {
+    en: 'en-US',
+    de: 'de-DE',
+    es: 'es-ES',
+    fr: 'fr-FR',
+    ro: 'ro-RO',
+    ru: 'ru-RU'
+} as const;
+
+export let defaultLocale = 'en' as const;
+export let defaultResource = resources[defaultLocale];
+
+export let ns = Object.keys(defaultResource);
+export type Namespaces = typeof defaultResource;
 
 declare module 'i18next' {
     interface CustomTypeOptions {
-        defaultNS: typeof defaultNS;
         returnNull: false;
         returnObjects: false;
+        resources: typeof defaultResource;
     }
 }
