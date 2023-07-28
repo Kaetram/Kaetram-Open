@@ -52,7 +52,7 @@ import type {
 } from '@kaetram/common/types/messages/outgoing';
 
 export default class Messages {
-    private messages: (((...data: never[]) => void) | undefined)[] = [];
+    private messages: (() => ((...data: never[]) => void) | undefined)[] = [];
 
     private handshakeCallback?: HandshakePacketCallback;
     private welcomeCallback?: WelcomePacketCallback;
@@ -113,53 +113,53 @@ export default class Messages {
      * accordingly.
      */
     public constructor(private app: App) {
-        this.messages[Packets.Handshake] = this.handshakeCallback;
-        this.messages[Packets.Welcome] = this.welcomeCallback;
-        this.messages[Packets.Spawn] = this.spawnCallback;
-        this.messages[Packets.Equipment] = this.equipmentCallback;
-        this.messages[Packets.List] = this.entityListCallback;
-        this.messages[Packets.Sync] = this.syncCallback;
-        this.messages[Packets.Movement] = this.movementCallback;
-        this.messages[Packets.Teleport] = this.teleportCallback;
-        this.messages[Packets.Despawn] = this.despawnCallback;
-        this.messages[Packets.Combat] = this.combatCallback;
-        this.messages[Packets.Animation] = this.animationCallback;
-        this.messages[Packets.Points] = this.pointsCallback;
-        this.messages[Packets.Network] = this.networkCallback;
-        this.messages[Packets.Chat] = this.chatCallback;
-        this.messages[Packets.Command] = this.commandCallback;
-        this.messages[Packets.Container] = this.containerCallback;
-        this.messages[Packets.Ability] = this.abilityCallback;
-        this.messages[Packets.Quest] = this.questCallback;
-        this.messages[Packets.Achievement] = this.achievementCallback;
-        this.messages[Packets.Notification] = this.notificationCallback;
-        this.messages[Packets.Blink] = this.blinkCallback;
-        this.messages[Packets.Heal] = this.healCallback;
-        this.messages[Packets.Experience] = this.experienceCallback;
-        this.messages[Packets.Death] = this.deathCallback;
-        this.messages[Packets.Music] = this.musicCallback;
-        this.messages[Packets.NPC] = this.npcCallback;
-        this.messages[Packets.Respawn] = this.respawnCallback;
-        this.messages[Packets.Trade] = this.tradeCallback;
-        this.messages[Packets.Enchant] = this.enchantCallback;
-        this.messages[Packets.Guild] = this.guildCallback;
-        this.messages[Packets.Pointer] = this.pointerCallback;
-        this.messages[Packets.PVP] = this.pvpCallback;
-        this.messages[Packets.Poison] = this.poisonCallback;
-        this.messages[Packets.Store] = this.storeCallback;
-        this.messages[Packets.Map] = this.mapCallback;
-        this.messages[Packets.Overlay] = this.overlayCallback;
-        this.messages[Packets.Camera] = this.cameraCallback;
-        this.messages[Packets.Bubble] = this.bubbleCallback;
-        this.messages[Packets.Skill] = this.skillCallback;
-        this.messages[Packets.Update] = this.updateCallback;
-        this.messages[Packets.Minigame] = this.minigameCallback;
-        this.messages[Packets.Effect] = this.effectCallback;
-        this.messages[Packets.Friends] = this.friendsCallback;
-        this.messages[Packets.Rank] = this.rankCallback;
-        this.messages[Packets.Crafting] = this.craftingCallback;
-        this.messages[Packets.LootBag] = this.lootBagCallback;
-        this.messages[Packets.Countdown] = this.countdownCallback;
+        this.messages[Packets.Handshake] = () => this.handshakeCallback;
+        this.messages[Packets.Welcome] = () => this.welcomeCallback;
+        this.messages[Packets.Spawn] = () => this.spawnCallback;
+        this.messages[Packets.Equipment] = () => this.equipmentCallback;
+        this.messages[Packets.List] = () => this.entityListCallback;
+        this.messages[Packets.Sync] = () => this.syncCallback;
+        this.messages[Packets.Movement] = () => this.movementCallback;
+        this.messages[Packets.Teleport] = () => this.teleportCallback;
+        this.messages[Packets.Despawn] = () => this.despawnCallback;
+        this.messages[Packets.Combat] = () => this.combatCallback;
+        this.messages[Packets.Animation] = () => this.animationCallback;
+        this.messages[Packets.Points] = () => this.pointsCallback;
+        this.messages[Packets.Network] = () => this.networkCallback;
+        this.messages[Packets.Chat] = () => this.chatCallback;
+        this.messages[Packets.Command] = () => this.commandCallback;
+        this.messages[Packets.Container] = () => this.containerCallback;
+        this.messages[Packets.Ability] = () => this.abilityCallback;
+        this.messages[Packets.Quest] = () => this.questCallback;
+        this.messages[Packets.Achievement] = () => this.achievementCallback;
+        this.messages[Packets.Notification] = () => this.notificationCallback;
+        this.messages[Packets.Blink] = () => this.blinkCallback;
+        this.messages[Packets.Heal] = () => this.healCallback;
+        this.messages[Packets.Experience] = () => this.experienceCallback;
+        this.messages[Packets.Death] = () => this.deathCallback;
+        this.messages[Packets.Music] = () => this.musicCallback;
+        this.messages[Packets.NPC] = () => this.npcCallback;
+        this.messages[Packets.Respawn] = () => this.respawnCallback;
+        this.messages[Packets.Trade] = () => this.tradeCallback;
+        this.messages[Packets.Enchant] = () => this.enchantCallback;
+        this.messages[Packets.Guild] = () => this.guildCallback;
+        this.messages[Packets.Pointer] = () => this.pointerCallback;
+        this.messages[Packets.PVP] = () => this.pvpCallback;
+        this.messages[Packets.Poison] = () => this.poisonCallback;
+        this.messages[Packets.Store] = () => this.storeCallback;
+        this.messages[Packets.Map] = () => this.mapCallback;
+        this.messages[Packets.Overlay] = () => this.overlayCallback;
+        this.messages[Packets.Camera] = () => this.cameraCallback;
+        this.messages[Packets.Bubble] = () => this.bubbleCallback;
+        this.messages[Packets.Skill] = () => this.skillCallback;
+        this.messages[Packets.Update] = () => this.updateCallback;
+        this.messages[Packets.Minigame] = () => this.minigameCallback;
+        this.messages[Packets.Effect] = () => this.effectCallback;
+        this.messages[Packets.Friends] = () => this.friendsCallback;
+        this.messages[Packets.Rank] = () => this.rankCallback;
+        this.messages[Packets.Crafting] = () => this.craftingCallback;
+        this.messages[Packets.LootBag] = () => this.lootBagCallback;
+        this.messages[Packets.Countdown] = () => this.countdownCallback;
     }
 
     /**
@@ -169,7 +169,7 @@ export default class Messages {
 
     public handleData(data: [Packets, ...never[]]): void {
         let packet = data.shift()!,
-            message = this.messages[packet];
+            message = this.messages[packet]();
 
         if (message && typeof message === 'function')
             message.call(this, ...(data as unknown[] as never[]));

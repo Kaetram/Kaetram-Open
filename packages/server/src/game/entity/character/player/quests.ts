@@ -3,7 +3,7 @@ import QuestIndex from './quest/impl';
 import quests from '../../../../../data/quests.json';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { QuestPacket as QuestPacket } from '@kaetram/common/network/impl';
+import { QuestPacket } from '@kaetram/common/network/impl';
 
 import type { PointerData } from '@kaetram/common/network/impl/pointer';
 import type { PopupData } from '@kaetram/common/types/popup';

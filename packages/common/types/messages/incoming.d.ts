@@ -4,7 +4,7 @@ import type { Modules, Opcodes } from '../../network';
  * Packet interfaces of data being sent from the client to the server.
  */
 
-export type { HubHandshakePacket as HandshakePacket } from '../../network/impl/handshake';
+export type { HandshakePacket } from '../../network/impl/handshake';
 
 export { TradePacket } from '../../network/impl/trade';
 

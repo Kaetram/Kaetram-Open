@@ -4,17 +4,17 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import {
-    AbilityPacket as AbilityPacket,
+    AbilityPacket,
     AchievementPacket,
     ContainerPacket,
     DeathPacket,
     DespawnPacket,
-    EquipmentPacket as EquipmentPacket,
+    EquipmentPacket,
     FriendsPacket,
-    NPCPacket as NPCPacket,
+    NPCPacket,
     OverlayPacket,
     PointsPacket,
-    PoisonPacket as PoisonPacket,
+    PoisonPacket,
     QuestPacket,
     SkillPacket,
     TradePacketPacket

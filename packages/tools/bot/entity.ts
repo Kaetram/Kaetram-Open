@@ -73,6 +73,12 @@ export default class Entity {
      */
 
     private handleHandshake(info: HandshakePacketData): void {
+        if (info.type !== 'client') {
+            log.error(`Handshake failed: ${info.type} is not a client.`);
+
+            return;
+        }
+
         this.instance = info.instance!;
         this.serverId = info.serverId!;
 

@@ -32,7 +32,7 @@ import {
     NetworkPacket,
     NotificationPacket,
     OverlayPacket,
-    PlayerPacket as PlayerPacket,
+    PlayerPacket,
     PointerPacket,
     PVPPacket,
     RankPacket,

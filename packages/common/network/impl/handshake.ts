@@ -2,13 +2,13 @@ import Packet from '../packet';
 
 import { Packets } from '@kaetram/common/network';
 
-export interface ClientHandshakePacket {
+export interface ClientHandshakePacketData {
     type: 'client';
     instance?: string; // Player's instance.
     serverId?: number;
 }
 
-export interface HubHandshakePacket {
+export interface HubHandshakePacketData {
     type: 'hub';
     gVer: string; // Game version.
     name: string;
@@ -20,13 +20,16 @@ export interface HubHandshakePacket {
     maxPlayers: number;
 }
 
-export interface AdminHandshakePacket {
+export interface AdminHandshakePacketData {
     type: 'admin';
     accessToken: string;
 }
 
-export type HandshakePacketData = ClientHandshakePacket | HubHandshakePacket | AdminHandshakePacket;
-export type HandshakePacketCallback = (data: ClientHandshakePacket) => void;
+export type HandshakePacketData =
+    | ClientHandshakePacketData
+    | HubHandshakePacketData
+    | AdminHandshakePacketData;
+export type HandshakePacketCallback = (data: HandshakePacketData) => void;
 
 export default class HandshakePacket extends Packet {
     public constructor(data: HandshakePacketData) {

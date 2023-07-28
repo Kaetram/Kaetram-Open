@@ -172,6 +172,12 @@ export default class Connection {
      */
 
     private handleHandshake(data: HandshakePacketData): void {
+        if (data.type !== 'client') {
+            this.app.updateLoader('Invalid client');
+
+            return;
+        }
+
         this.app.updateLoader('Connecting to server');
 
         // Set the server id and instance
