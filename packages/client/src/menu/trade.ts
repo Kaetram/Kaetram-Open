@@ -163,7 +163,7 @@ export default class Trade extends Menu {
      * @param key The key of the item being added (if we are adding item of other player).
      */
 
-    public override add(index: number, count: number, key: string, otherPlayer = false): void {
+    public override add(index: number, count: number, key?: string, otherPlayer = false): void {
         let slot = otherPlayer
                 ? this.otherPlayerSlots.children[index]
                 : this.playerSlots.children[index],

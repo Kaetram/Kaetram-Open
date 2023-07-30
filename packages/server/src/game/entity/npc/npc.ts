@@ -3,15 +3,15 @@ import Entity from '../entity';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { NPC as NPCPacket } from '@kaetram/common/network/impl';
+import { NPCPacket } from '@kaetram/common/network/impl';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
 import type Player from '../character/player/player';
-import type { NPCData } from '@kaetram/common/types/npc';
+import type { NPCData } from '@kaetram/common/network/impl/npc';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
-interface RawData {
+interface RawNPCData {
     [key: string]: NPCData;
 }
 
@@ -28,7 +28,7 @@ export default class NPC extends Entity {
     public constructor(key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.NPC), key, x, y);
 
-        this.data = (rawData as RawData)[key];
+        this.data = (rawData as RawNPCData)[key];
 
         if (!this.data) {
             log.error(`[NPC] Could not find data for ${key}.`);

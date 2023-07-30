@@ -4,8 +4,11 @@ import config from '@kaetram/common/config';
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
 import type Bot from './bot';
-import type { PlayerData } from '@kaetram/common/types/player';
-import type { HandshakePacket, TeleportPacket } from '@kaetram/common/types/messages/outgoing';
+import type { PlayerData } from '@kaetram/common/network/impl/player';
+import type {
+    HandshakePacketData,
+    TeleportPacketData
+} from '@kaetram/common/types/messages/outgoing';
 import type { connection as Connection, Message } from 'websocket';
 
 export default class Entity {
@@ -51,7 +54,7 @@ export default class Entity {
     private handlePacket([packet, opcode, data]: [number, unknown, unknown]): void {
         switch (packet) {
             case Packets.Handshake: {
-                return this.handleHandshake(opcode as HandshakePacket);
+                return this.handleHandshake(opcode as HandshakePacketData);
             }
 
             case Packets.Welcome: {
@@ -59,7 +62,7 @@ export default class Entity {
             }
 
             case Packets.Teleport: {
-                return this.handleTeleport(opcode as TeleportPacket);
+                return this.handleTeleport(opcode as TeleportPacketData);
             }
         }
     }
@@ -69,7 +72,13 @@ export default class Entity {
      * in with a specified set of credentials. We then await the ready packet.
      */
 
-    private handleHandshake(info: HandshakePacket): void {
+    private handleHandshake(info: HandshakePacketData): void {
+        if (info.type !== 'client') {
+            log.error(`Handshake failed: ${info.type} is not a client.`);
+
+            return;
+        }
+
         this.instance = info.instance!;
         this.serverId = info.serverId!;
 
@@ -117,7 +126,7 @@ export default class Entity {
      * @param info Contains information about the teleport.
      */
 
-    private handleTeleport(info: TeleportPacket): void {
+    private handleTeleport(info: TeleportPacketData): void {
         this.x = info.x;
         this.y = info.y;
     }

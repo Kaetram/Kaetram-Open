@@ -4,7 +4,7 @@ import Formulas from '../../../../info/formulas';
 
 import log from '@kaetram/common/util/log';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Combat as CombatPacket, Spawn } from '@kaetram/common/network/impl';
+import { CombatPacket, SpawnPacket } from '@kaetram/common/network/impl';
 
 import type Character from '../character';
 
@@ -188,7 +188,7 @@ export default class Combat {
         );
 
         // Spawn the projectile in the game client.
-        this.character.sendToRegions(new Spawn(projectile));
+        this.character.sendToRegions(new SpawnPacket(projectile));
     }
 
     /**

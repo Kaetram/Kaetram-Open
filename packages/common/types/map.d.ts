@@ -173,14 +173,3 @@ export interface ProcessedMap {
     fishSpots: ProcessedResource[];
     foraging: ProcessedResource[];
 }
-
-export interface ProcessedClientMap {
-    width: number;
-    height: number;
-    tileSize: number;
-    version: number;
-    high: number[];
-    tilesets: { [name: string]: number };
-    animations: { [tileId: number]: ProcessedAnimation[] };
-    grid?: number[][];
-}

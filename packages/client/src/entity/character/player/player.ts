@@ -10,15 +10,15 @@ import { Modules } from '@kaetram/common/network';
 
 import type Game from '../../../game';
 import type { Light } from '@kaetram/common/types/item';
-import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
-import type { AchievementData } from '@kaetram/common/types/achievement';
-import type { EquipmentData } from '@kaetram/common/types/equipment';
-import type { PlayerData } from '@kaetram/common/types/player';
-import type { SkillData } from '@kaetram/common/types/skills';
-import type { QuestData } from '@kaetram/common/types/quest';
-import type { AbilityData } from '@kaetram/common/types/ability';
-import type { Friend as FriendType } from '@kaetram/common/types/friends';
-import type { GuildData, Member } from '@kaetram/common/types/guild';
+import type { GuildPacketData } from '@kaetram/common/types/messages/outgoing';
+import type { AchievementData } from '@kaetram/common/network/impl/achievement';
+import type { PlayerData } from '@kaetram/common/network/impl/player';
+import type { SkillData } from '@kaetram/common/network/impl/skill';
+import type { QuestData } from '@kaetram/common/network/impl/quest';
+import type { AbilityData } from '@kaetram/common/network/impl/ability';
+import type { Friend as FriendType } from '@kaetram/common/network/impl/friends';
+import type { GuildData, Member } from '@kaetram/common/network/impl/guild';
+import type { EquipmentData } from '@kaetram/common/network/impl/equipment';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
@@ -797,7 +797,7 @@ export default class Player extends Character {
      * @param packet Contains information about the guild we are updating.
      */
 
-    public setGuild(packet?: GuildPacket): void {
+    public setGuild(packet?: GuildPacketData): void {
         if (!packet) {
             this.guild = undefined;
             return;

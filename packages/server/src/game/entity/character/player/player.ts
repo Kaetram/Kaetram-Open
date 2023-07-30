@@ -23,24 +23,24 @@ import { PacketType } from '@kaetram/common/network/modules';
 import { Opcodes, Modules } from '@kaetram/common/network';
 import { Team } from '@kaetram/common/api/minigame';
 import {
-    Camera,
-    Chat,
-    Guild,
-    Heal,
-    Movement,
-    Music,
-    Network,
-    Notification,
-    Overlay,
-    Player as PlayerPacket,
-    Pointer,
-    PVP,
-    Rank,
-    Respawn,
-    Spawn,
-    Sync,
-    Teleport,
-    Welcome
+    CameraPacket,
+    ChatPacket,
+    GuildPacket,
+    HealPacket,
+    MovementPacket,
+    MusicPacket,
+    NetworkPacket,
+    NotificationPacket,
+    OverlayPacket,
+    PlayerPacket,
+    PointerPacket,
+    PVPPacket,
+    RankPacket,
+    RespawnPacket,
+    SpawnPacket,
+    SyncPacket,
+    TeleportPacket,
+    WelcomePacket
 } from '@kaetram/common/network/impl';
 
 import type Pet from '../pet/pet';
@@ -56,11 +56,11 @@ import type Minigame from '../../../minigames/minigame';
 import type Entities from '../../../../controllers/entities';
 import type Packet from '@kaetram/common/network/packet';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
-import type { ProcessedDoor } from '@kaetram/common/types/map';
-import type { PlayerData } from '@kaetram/common/types/player';
-import type { PointerData } from '@kaetram/common/types/pointer';
-import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type { ProcessedDoor } from '@kaetram/common/types/map';
+import type { PlayerData } from '@kaetram/common/network/impl/player';
+import type { PointerData } from '@kaetram/common/network/impl/pointer';
 import type { PlayerInfo } from '@kaetram/common/database/mongodb/creator';
 
 type KillCallback = (character: Character) => void;
@@ -419,7 +419,7 @@ export default class Player extends Character {
 
         this.entities.addPlayer(this);
 
-        this.send(new Welcome(this.serialize(false, true, true)));
+        this.send(new WelcomePacket(this.serialize(false, true, true)));
     }
 
     /**
@@ -437,9 +437,9 @@ export default class Player extends Character {
         this.teleport(spawn.x, spawn.y);
 
         // Signal to other players that the player is spawning.
-        this.sendToRegions(new Spawn(this), true);
+        this.sendToRegions(new SpawnPacket(this), true);
 
-        this.send(new Respawn(this));
+        this.send(new RespawnPacket(this));
 
         this.hitPoints.reset();
         this.mana.reset();
@@ -503,7 +503,7 @@ export default class Player extends Character {
                 else if (type === 'mana') this.mana.increment(amount);
 
                 this.sendToRegions(
-                    new Heal({
+                    new HealPacket({
                         instance: this.instance,
                         type,
                         amount
@@ -615,7 +615,7 @@ export default class Player extends Character {
 
     private sendTeleportPacket(x: number, y: number, withAnimation = false): void {
         this.sendToRegions(
-            new Teleport({
+            new TeleportPacket({
                 instance: this.instance,
                 x,
                 y,
@@ -1233,7 +1233,7 @@ export default class Player extends Character {
         this.pvp = pvp;
 
         this.send(
-            new PVP({
+            new PVPPacket({
                 state: this.pvp
             })
         );
@@ -1260,7 +1260,7 @@ export default class Player extends Character {
         if (!overlay) {
             tempOverlay?.removePlayer(this);
 
-            return this.send(new Overlay(Opcodes.Overlay.Remove));
+            return this.send(new OverlayPacket(Opcodes.Overlay.Remove));
         }
 
         // New overlay is being loaded, remove lights.
@@ -1272,7 +1272,7 @@ export default class Player extends Character {
                 : `rgba(0, 0, 0, ${overlay.darkness})`;
 
         this.send(
-            new Overlay(Opcodes.Overlay.Set, {
+            new OverlayPacket(Opcodes.Overlay.Set, {
                 image: overlay.fog || 'blank',
                 colour
             })
@@ -1294,21 +1294,21 @@ export default class Player extends Character {
         if (camera)
             switch (camera.type) {
                 case 'lockX': {
-                    this.send(new Camera(Opcodes.Camera.LockX));
+                    this.send(new CameraPacket(Opcodes.Camera.LockX));
                     break;
                 }
 
                 case 'lockY': {
-                    this.send(new Camera(Opcodes.Camera.LockY));
+                    this.send(new CameraPacket(Opcodes.Camera.LockY));
                     break;
                 }
 
                 case 'player': {
-                    this.send(new Camera(Opcodes.Camera.Player));
+                    this.send(new CameraPacket(Opcodes.Camera.Player));
                     break;
                 }
             }
-        else this.send(new Camera(Opcodes.Camera.FreeFlow));
+        else this.send(new CameraPacket(Opcodes.Camera.FreeFlow));
     }
 
     /**
@@ -1323,7 +1323,7 @@ export default class Player extends Character {
 
         this.currentSong = song;
 
-        this.send(new Music(song));
+        this.send(new MusicPacket(song));
     }
 
     /**
@@ -1392,7 +1392,7 @@ export default class Player extends Character {
 
         // Sync to other players in the region.
         this.sendToRegions(
-            new Movement(Opcodes.Movement.Speed, {
+            new MovementPacket(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed
             })
@@ -1417,7 +1417,7 @@ export default class Player extends Character {
         else this.status.remove(Modules.Effects.HotSauce);
 
         this.sendToRegions(
-            new Movement(Opcodes.Movement.Speed, {
+            new MovementPacket(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed: this.getMovementSpeed()
             })
@@ -1492,7 +1492,7 @@ export default class Player extends Character {
     public setRank(rank: Modules.Ranks = Modules.Ranks.None): void {
         this.rank = rank;
 
-        this.send(new Rank(rank));
+        this.send(new RankPacket(rank));
     }
 
     /**
@@ -1518,7 +1518,7 @@ export default class Player extends Character {
 
         // Relay a packet to the nearby regions without including the player.
         this.sendToRegions(
-            new Movement(Opcodes.Movement.Move, {
+            new MovementPacket(Opcodes.Movement.Move, {
                 instance: this.instance,
                 x,
                 y,
@@ -1746,7 +1746,7 @@ export default class Player extends Character {
     public ping(): void {
         this.pingTime = Date.now();
 
-        this.send(new Network(Opcodes.Network.Ping));
+        this.send(new NetworkPacket(Opcodes.Network.Ping));
     }
 
     /**
@@ -2001,7 +2001,7 @@ export default class Player extends Character {
     public sendPrivateMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
             this.world.client.send(
-                new Chat({ source: this.username, message, target: playerName })
+                new ChatPacket({ source: this.username, message, target: playerName })
             );
             return;
         }
@@ -2044,7 +2044,7 @@ export default class Player extends Character {
         this.skills.sync();
 
         // Sync the player information to the surrounding regions.
-        this.sendToRegions(new Sync(this.serialize(true)), true);
+        this.sendToRegions(new SyncPacket(this.serialize(true)), true);
     }
 
     /**
@@ -2074,11 +2074,11 @@ export default class Player extends Character {
         this.world.discord.sendMessage(source, message, undefined, true);
 
         // Relay the hub so that it can handle the discord relay.
-        this.world.client.send(new Chat({ source, message }));
+        this.world.client.send(new ChatPacket({ source, message }));
 
         if (global) return this.world.globalMessage(name, message, colour);
 
-        let packet = new Chat({
+        let packet = new ChatPacket({
             instance: this.instance,
             message,
             withBubble,
@@ -2102,7 +2102,7 @@ export default class Player extends Character {
         if (!title) return;
 
         this.send(
-            new Notification(Opcodes.Notification.Popup, {
+            new NotificationPacket(Opcodes.Notification.Popup, {
                 title,
                 message,
                 colour
@@ -2124,7 +2124,7 @@ export default class Player extends Character {
         if (!bypass && Date.now() - this.lastNotify < 250) return;
 
         this.send(
-            new Notification(Opcodes.Notification.Text, {
+            new NotificationPacket(Opcodes.Notification.Text, {
                 message,
                 colour,
                 source
@@ -2140,7 +2140,7 @@ export default class Player extends Character {
      */
 
     public guildNotify(message: string): void {
-        this.send(new Guild(Opcodes.Guild.Error, { message }));
+        this.send(new GuildPacket(Opcodes.Guild.Error, { message }));
     }
 
     /**
@@ -2153,12 +2153,12 @@ export default class Player extends Character {
 
     public pointer(info: PointerData, remove = true): void {
         // Remove all existing pointers first.
-        if (remove) this.send(new Pointer(Opcodes.Pointer.Remove));
+        if (remove) this.send(new PointerPacket(Opcodes.Pointer.Remove));
 
         // Invalid pointer data received.
         if (!(info.type in Opcodes.Pointer)) return;
 
-        this.send(new Pointer(info.type, info));
+        this.send(new PointerPacket(info.type, info));
     }
 
     /**

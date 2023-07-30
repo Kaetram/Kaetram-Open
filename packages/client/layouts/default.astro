@@ -1,7 +1,7 @@
 ---
 import { Schema } from 'astro-seo-schema';
 import { GoogleAnalytics } from '@astrolib/analytics';
-import { t, dir, lang } from '@kaetram/common/i18n';
+import { t, dir, language } from '@kaetram/common/i18n';
 
 export interface Props {
     title?: string;
@@ -13,11 +13,11 @@ function site(path = '') {
     return new URL(path, Astro.site).toString();
 }
 
-let name = t('meta.name'),
-    description = t('meta.description');
+let name = t('game:NAME'),
+    description = t('game:DESCRIPTION');
 ---
 
-<html dir={dir(lang)} lang={lang}>
+<html dir={dir(language)} lang={language}>
     <head>
         <meta charset="utf-8" />
         <meta

@@ -4,7 +4,7 @@ import { Modules } from '@kaetram/common/network';
 
 import type Item from '../../../../objects/item';
 import type { Enchantments } from '@kaetram/common/types/item';
-import type { EquipmentData } from '@kaetram/common/types/equipment';
+import type { EquipmentData } from '@kaetram/common/network/impl/equipment';
 
 export default class Shield extends Equipment {
     public constructor(key = '', count = -1, enchantments: Enchantments = {}) {

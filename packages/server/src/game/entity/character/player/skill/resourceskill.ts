@@ -4,9 +4,9 @@ import Item from '../../../objects/item';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import ResourceText from '@kaetram/common/text/en/resource';
 import { Modules } from '@kaetram/common/network';
-import { Animation } from '@kaetram/common/network/impl';
+import { AnimationPacket } from '@kaetram/common/network/impl';
+import ResourceText from '@kaetram/common/text/en/resource';
 
 import type Player from '../player';
 import type Resource from '../../../../globals/impl/resource';
@@ -85,7 +85,7 @@ export default class ResourceSkill extends Skill {
 
             // Send the animation packet to the region player is in.
             player.sendToRegion(
-                new Animation({ instance: player.instance, action: Modules.Actions.Attack })
+                new AnimationPacket({ instance: player.instance, action: Modules.Actions.Attack })
             );
 
             // Use probability to check if we can exhaust the resource.

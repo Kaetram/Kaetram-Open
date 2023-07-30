@@ -23,48 +23,49 @@ import type SpritesController from '../controllers/sprites';
 import type Player from '../entity/character/player/player';
 import type PointerController from '../controllers/pointer';
 import type EntitiesController from '../controllers/entities';
-import type { PlayerData } from '@kaetram/common/types/player';
+import type { PlayerData } from '@kaetram/common/network/impl/player';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
-import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import type { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
+import type { SerializedSkills, SkillData } from '@kaetram/common/network/impl/skill';
+import type { SerializedAbility, AbilityData } from '@kaetram/common/network/impl/ability';
 import type {
-    AbilityPacket,
-    AchievementPacket,
-    AnimationPacket,
-    BubblePacket,
-    ChatPacket,
-    CombatPacket,
-    CommandPacket,
-    ContainerPacket,
-    DespawnPacket,
-    EnchantPacket,
-    EquipmentPacket,
-    ExperiencePacket,
-    HealPacket,
-    MovementPacket,
-    NotificationPacket,
-    NPCPacket,
-    OverlayPacket,
-    PointerPacket,
-    PointsPacket,
-    PVPPacket,
-    QuestPacket,
-    RespawnPacket,
-    StorePacket,
-    TeleportPacket,
-    SkillPacket,
-    MinigamePacket,
-    EffectPacket,
-    FriendsPacket,
-    ListPacket,
-    TradePacket,
-    HandshakePacket,
-    GuildPacket,
-    CraftingPacket,
-    LootBagPacket,
-    CountdownPacket
+    AbilityPacketData,
+    AchievementPacketData,
+    AnimationPacketData,
+    BubblePacketData,
+    ChatPacketData,
+    CombatPacketData,
+    CommandPacketData,
+    ContainerPacketData,
+    DespawnPacketData,
+    EnchantPacketData,
+    EquipmentPacketData,
+    ExperiencePacketData,
+    HealPacketData,
+    MovementPacketData,
+    NotificationPacketData,
+    NPCPacketData,
+    OverlayPacketData,
+    PointerPacketData,
+    PointsPacketData,
+    PVPPacketData,
+    QuestPacketData,
+    RespawnPacketData,
+    StorePacketData,
+    TeleportPacketData,
+    SkillPacketData,
+    MinigamePacketData,
+    EffectPacketData,
+    FriendsPacketData,
+    EntityListPacketData,
+    TradePacketData,
+    HandshakePacketData,
+    GuildPacketData,
+    CraftingPacketData,
+    LootBagPacketData,
+    CountdownPacketData
 } from '@kaetram/common/types/messages/outgoing';
+import type { TradePacketValues } from '@kaetram/common/network/impl/trade';
+import type { EquipmentPacketValues } from '@kaetram/common/network/impl/equipment';
 
 export default class Connection {
     /**
@@ -170,7 +171,13 @@ export default class Connection {
      * must send the login packet (guest, registering, or login).
      */
 
-    private handleHandshake(data: HandshakePacket): void {
+    private handleHandshake(data: HandshakePacketData): void {
+        if (data.type !== 'client') {
+            this.app.updateLoader('Invalid client');
+
+            return;
+        }
+
         this.app.updateLoader('Connecting to server');
 
         // Set the server id and instance
@@ -255,28 +262,36 @@ export default class Connection {
      * @param info Data containing equipment(s) information.
      */
 
-    private handleEquipment(opcode: Opcodes.Equipment, info: EquipmentPacket): void {
+    private handleEquipment(opcode: Opcodes.Equipment, info: EquipmentPacketValues): void {
         switch (opcode) {
             case Opcodes.Equipment.Batch: {
-                for (let equipment of (info.data as SerializedEquipment).equipments)
-                    this.game.player.equip(equipment);
+                let { data } = info as EquipmentPacketData[typeof opcode];
+
+                for (let equipment of data.equipments) this.game.player.equip(equipment);
 
                 break;
             }
 
             case Opcodes.Equipment.Equip: {
-                this.game.player.equip(info.data as EquipmentData);
+                let { data } = info as EquipmentPacketData[typeof opcode];
+
+                this.game.player.equip(data);
                 break;
             }
 
             case Opcodes.Equipment.Unequip: {
-                this.game.player.unequip(info.type!, info.count);
+                let { type, count } = info as EquipmentPacketData[typeof opcode];
+
+                this.game.player.unequip(type, count);
                 break;
             }
 
             case Opcodes.Equipment.Style: {
-                this.game.player.setAttackStyle(info.attackStyle!);
-                this.game.player.attackRange = info.attackRange!;
+                let { attackRange, attackStyle } = info as EquipmentPacketData[typeof opcode];
+
+                this.game.player.setAttackStyle(attackStyle);
+                this.game.player.attackRange = attackRange;
+
                 break;
             }
         }
@@ -294,7 +309,7 @@ export default class Connection {
      * @param entities A list of strings that contains the instances of the entities in the region.
      */
 
-    private handleEntityList(opcode: Opcodes.List, info: ListPacket): void {
+    private handleEntityList(opcode: Opcodes.List, info: EntityListPacketData): void {
         switch (opcode) {
             case Opcodes.List.Spawns: {
                 let ids = new Set(
@@ -366,7 +381,7 @@ export default class Connection {
      * @param info Information such as instance and coordinates of the entity that is moving.
      */
 
-    private handleMovement(opcode: Opcodes.Movement, info: MovementPacket): void {
+    private handleMovement(opcode: Opcodes.Movement, info: MovementPacketData): void {
         let entity = this.entities.get<Character>(info.instance) as Character,
             target: Character;
 
@@ -433,7 +448,7 @@ export default class Connection {
      * @param info Instance of the entity, x and y coordinates, and whether to animate.
      */
 
-    private handleTeleport(info: TeleportPacket): void {
+    private handleTeleport(info: TeleportPacketData): void {
         let entity = this.entities.get<Character>(info.instance);
 
         if (!entity?.isMob() && !entity?.isPlayer()) return;
@@ -484,7 +499,7 @@ export default class Connection {
      * @param info Contains despawn packet information such as instance and list of regions to ignore.
      */
 
-    private handleDespawn(info: DespawnPacket): void {
+    private handleDespawn(info: DespawnPacketData): void {
         let entity = this.entities.get<Character>(info.instance);
 
         // Could not find the entity.
@@ -528,7 +543,7 @@ export default class Connection {
      * @param info Contains attacker, target, and damage information.
      */
 
-    private handleCombat(opcode: Opcodes.Combat, info: CombatPacket): void {
+    private handleCombat(opcode: Opcodes.Combat, info: CombatPacketData): void {
         let attacker = this.entities.get<Character>(info.instance),
             target = this.entities.get<Character>(info.target);
 
@@ -578,7 +593,7 @@ export default class Connection {
      * @param info Contains instance and what animation to perform.
      */
 
-    private handleAnimation(info: AnimationPacket): void {
+    private handleAnimation(info: AnimationPacketData): void {
         let character = this.entities.get<Character>(info.instance);
 
         if (!character) return;
@@ -592,7 +607,7 @@ export default class Connection {
      * @param info Contains the player instance, hit points, and mana.
      */
 
-    private handlePoints(info: PointsPacket): void {
+    private handlePoints(info: PointsPacketData): void {
         let character = this.entities.get<Player>(info.instance);
 
         if (!character || character.dead) return;
@@ -624,7 +639,7 @@ export default class Connection {
      * when a player sends a chat.
      */
 
-    private handleChat(info: ChatPacket): void {
+    private handleChat(info: ChatPacketData): void {
         // Parse the message for special characters.
         info.message = Util.parseMessage(info.message);
 
@@ -659,7 +674,7 @@ export default class Connection {
      * @param info Packet contains the command string.
      */
 
-    private handleCommand(info: CommandPacket): void {
+    private handleCommand(info: CommandPacketData): void {
         if (info.command.includes('toggle') && this.game.player.hasActiveEffect())
             return this.game.player.removeAllEffects();
 
@@ -677,7 +692,7 @@ export default class Connection {
      * @param info Contains array of serialized slots, a single slot, and type of container.
      */
 
-    private handleContainer(opcode: Opcodes.Container, info: ContainerPacket): void {
+    private handleContainer(opcode: Opcodes.Container, info: ContainerPacketData): void {
         let container =
             info.type === Modules.ContainerType.Inventory
                 ? this.menu.getInventory()
@@ -711,7 +726,7 @@ export default class Connection {
      * @param info Contains information in batch about abilities or a single ability serialized information.
      */
 
-    private handleAbility(opcode: Opcodes.Ability, info: AbilityPacket): void {
+    private handleAbility(opcode: Opcodes.Ability, info: AbilityPacketData): void {
         switch (opcode) {
             case Opcodes.Ability.Batch: {
                 this.game.player.loadAbilities((info as SerializedAbility).abilities);
@@ -745,7 +760,7 @@ export default class Connection {
      * @param info Contains quest batch data or individual quest data.
      */
 
-    private handleQuest(opcode: Opcodes.Quest, info: QuestPacket): void {
+    private handleQuest(opcode: Opcodes.Quest, info: QuestPacketData): void {
         switch (opcode) {
             case Opcodes.Quest.Batch: {
                 this.game.player.loadQuests(info.quests!);
@@ -770,7 +785,7 @@ export default class Connection {
      * @param info Contains individual achievement data or batch data.
      */
 
-    private handleAchievement(opcode: Opcodes.Achievement, info: AchievementPacket): void {
+    private handleAchievement(opcode: Opcodes.Achievement, info: AchievementPacketData): void {
         switch (opcode) {
             case Opcodes.Achievement.Batch: {
                 this.game.player.loadAchievements(info.achievements!);
@@ -798,7 +813,7 @@ export default class Connection {
      * @param info Contains message, title, and colour information.
      */
 
-    private handleNotification(opcode: Opcodes.Notification, info: NotificationPacket): void {
+    private handleNotification(opcode: Opcodes.Notification, info: NotificationPacketData): void {
         switch (opcode) {
             case Opcodes.Notification.Text: {
                 let message = info.source ? info.message : Util.formatNotification(info.message);
@@ -842,7 +857,7 @@ export default class Connection {
      * @param info Contains the instance, type of healing (mana or health), and amount.
      */
 
-    private handleHeal(info: HealPacket): void {
+    private handleHeal(info: HealPacketData): void {
         let character = this.entities.get<Character>(info.instance);
 
         if (!character) return;
@@ -874,7 +889,7 @@ export default class Connection {
      * much experience they will require and calculate percentages.
      */
 
-    private handleExperience(opcode: Opcodes.Experience, info: ExperiencePacket): void {
+    private handleExperience(opcode: Opcodes.Experience, info: ExperiencePacketData): void {
         let player = this.entities.get<Player>(info.instance);
 
         if (!player) return;
@@ -962,7 +977,7 @@ export default class Connection {
      * @param info Contains information about the NPC interaction.
      */
 
-    private handleNPC(opcode: Opcodes.NPC, info: NPCPacket): void {
+    private handleNPC(opcode: Opcodes.NPC, info: NPCPacketData): void {
         let npc, soundEffect;
 
         switch (opcode) {
@@ -1006,7 +1021,7 @@ export default class Connection {
      * the player to following the respawn.
      */
 
-    private handleRespawn(info: RespawnPacket): void {
+    private handleRespawn(info: RespawnPacketData): void {
         this.game.player.setGridPosition(info.x, info.y);
 
         this.camera.centreOn(this.game.player);
@@ -1028,10 +1043,11 @@ export default class Connection {
      * @param info Information about the trade.
      */
 
-    private handleTrade(opcode: Opcodes.Trade, info: TradePacket): void {
+    private handleTrade(opcode: Opcodes.Trade, info: TradePacketValues): void {
         switch (opcode) {
             case Opcodes.Trade.Open: {
-                let otherPlayer = this.entities.get<Player>(info.instance!);
+                let { instance } = info as TradePacketData[typeof opcode],
+                    otherPlayer = this.entities.get<Player>(instance);
 
                 if (!otherPlayer) return;
 
@@ -1043,24 +1059,23 @@ export default class Connection {
             }
 
             case Opcodes.Trade.Add: {
+                let { index, count, key, instance } = info as TradePacketData[typeof opcode];
+
                 return this.menu
                     .getTrade()
-                    .add(
-                        info.index!,
-                        info.count!,
-                        info.key!,
-                        info.instance !== this.game.player.instance
-                    );
+                    .add(index, count || 0, key, instance !== this.game.player.instance);
             }
 
             case Opcodes.Trade.Remove: {
-                return this.menu
-                    .getTrade()
-                    .remove(info.index!, info.instance !== this.game.player.instance);
+                let { index, instance } = info as TradePacketData[typeof opcode];
+
+                return this.menu.getTrade().remove(index, instance !== this.game.player.instance);
             }
 
             case Opcodes.Trade.Accept: {
-                return this.menu.getTrade().accept(info.message);
+                let { message } = info as TradePacketData[typeof opcode];
+
+                return this.menu.getTrade().accept(message);
             }
         }
     }
@@ -1071,7 +1086,7 @@ export default class Connection {
      * @param info Contains index and type of item.
      */
 
-    private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacket): void {
+    private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacketData): void {
         switch (opcode) {
             case Opcodes.Enchant.Select: {
                 return this.menu.getEnchant().move(info.index, info.isShard);
@@ -1083,7 +1098,7 @@ export default class Connection {
      * Unimplemented guild packet.
      */
 
-    private handleGuild(opcode: Opcodes.Guild, info: GuildPacket): void {
+    private handleGuild(opcode: Opcodes.Guild, info: GuildPacketData): void {
         switch (opcode) {
             case Opcodes.Guild.Login: {
                 this.game.player.setGuild(info);
@@ -1111,7 +1126,7 @@ export default class Connection {
      * @param info Information such as location and instance of the pointer.
      */
 
-    private handlePointer(opcode: Opcodes.Pointer, info: PointerPacket): void {
+    private handlePointer(opcode: Opcodes.Pointer, info: PointerPacketData): void {
         let entity;
 
         switch (opcode) {
@@ -1149,7 +1164,7 @@ export default class Connection {
      * @param info Contains the instance and pvp status of an entity.
      */
 
-    private handlePVP(info: PVPPacket): void {
+    private handlePVP(info: PVPPacketData): void {
         this.game.pvp = info.state;
     }
 
@@ -1170,7 +1185,7 @@ export default class Connection {
      * @param info Contains information such as store key and items to update.
      */
 
-    private handleStore(opcode: Opcodes.Store, info: StorePacket): void {
+    private handleStore(opcode: Opcodes.Store, info: StorePacketData): void {
         switch (opcode) {
             case Opcodes.Store.Open: {
                 return this.menu.getStore().show(info);
@@ -1194,7 +1209,7 @@ export default class Connection {
      * @param info Information about the overlay such as the image and colour (or lighting).
      */
 
-    private handleOverlay(opcode: Opcodes.Overlay, info: OverlayPacket): void {
+    private handleOverlay(opcode: Opcodes.Overlay, info: OverlayPacketData): void {
         switch (opcode) {
             case Opcodes.Overlay.Set: {
                 this.overlays.update(info.image);
@@ -1236,7 +1251,7 @@ export default class Connection {
      * @param info Contains information such as the text and position of the bubble.
      */
 
-    private handleBubble(opcode: Opcodes.Bubble, info: BubblePacket): void {
+    private handleBubble(opcode: Opcodes.Bubble, info: BubblePacketData): void {
         if (!info.text) return this.bubble.clear(info.instance);
 
         let entity = this.entities.get(info.instance);
@@ -1270,7 +1285,7 @@ export default class Connection {
      * @param info Contains the skill batch data or a specific skill data.
      */
 
-    private handleSkill(opcode: Opcodes.Skill, info: SkillPacket): void {
+    private handleSkill(opcode: Opcodes.Skill, info: SkillPacketData): void {
         switch (opcode) {
             case Opcodes.Skill.Batch: {
                 this.game.player.loadSkills((info as SerializedSkills).skills);
@@ -1314,7 +1329,7 @@ export default class Connection {
      * @param info Contains information about the minigame status.
      */
 
-    private handleMinigame(opcode: Opcodes.Minigame, info: MinigamePacket): void {
+    private handleMinigame(opcode: Opcodes.Minigame, info: MinigamePacketData): void {
         let { minigame, player } = this.game;
 
         minigame.type = opcode;
@@ -1354,7 +1369,7 @@ export default class Connection {
      * @param info Information about the entity we are applying the effect to.
      */
 
-    private handleEffect(opcode: Opcodes.Effect, info: EffectPacket): void {
+    private handleEffect(opcode: Opcodes.Effect, info: EffectPacketData): void {
         let entity =
             info.instance === this.game.player.instance
                 ? this.game.player
@@ -1380,7 +1395,7 @@ export default class Connection {
      * @param info Contains information about the packet we are handling.
      */
 
-    private handleFriends(opcode: Opcodes.Friends, info: FriendsPacket): void {
+    private handleFriends(opcode: Opcodes.Friends, info: FriendsPacketData): void {
         switch (opcode) {
             case Opcodes.Friends.List: {
                 this.game.player.loadFriends(info.list!);
@@ -1417,7 +1432,7 @@ export default class Connection {
      * @param info Contains the information about the crafting action.
      */
 
-    private handleCrafting(opcode: Opcodes.Crafting, info: CraftingPacket): void {
+    private handleCrafting(opcode: Opcodes.Crafting, info: CraftingPacketData): void {
         this.menu.getCrafting().handle(opcode, info);
     }
 
@@ -1427,7 +1442,7 @@ export default class Connection {
      * @param slots
      */
 
-    private handleLootBag(opcode: Opcodes.LootBag, info: LootBagPacket): void {
+    private handleLootBag(opcode: Opcodes.LootBag, info: LootBagPacketData): void {
         this.menu.getLootBag().handle(opcode, info);
     }
 
@@ -1436,7 +1451,7 @@ export default class Connection {
      * @param info Contains the instance and the counter information.
      */
 
-    private handleCountdown(info: CountdownPacket): void {
+    private handleCountdown(info: CountdownPacketData): void {
         let entity = this.entities.get(info.instance);
 
         if (!entity) return;

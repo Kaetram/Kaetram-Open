@@ -3,8 +3,8 @@ import Equipment from '../equipment';
 import { Modules } from '@kaetram/common/network';
 
 import type Item from '../../../../objects/item';
-import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { Enchantments } from '@kaetram/common/types/item';
+import type { EquipmentData } from '@kaetram/common/network/impl/equipment';
 
 export default class Weapon extends Equipment {
     public attackRate: number = Modules.Defaults.ATTACK_RATE;

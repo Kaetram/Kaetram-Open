@@ -4,11 +4,11 @@ import Area from '../map/areas/area';
 
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Minigame as Packet } from '@kaetram/common/network/impl';
+import { MinigamePacket as Packet } from '@kaetram/common/network/impl';
 
 import type World from '../world';
 import type Player from '../entity/character/player/player';
-import type { MinigamePacket } from '@kaetram/common/types/messages/outgoing';
+import type { MinigamePacketData } from '@kaetram/common/types/messages/outgoing';
 
 export default class Minigame {
     // The name for the minigame (used for scoreboard, entering, etc.)
@@ -157,7 +157,7 @@ export default class Minigame {
      * @param info The packet information we are sending.
      */
 
-    protected sendPacket(players: Player[], info: MinigamePacket): void {
+    protected sendPacket(players: Player[], info: MinigamePacketData): void {
         this.world.push(Modules.PacketType.Players, {
             players,
             packet: new Packet(this.type, info)

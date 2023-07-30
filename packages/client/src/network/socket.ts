@@ -5,7 +5,12 @@ import log from '../lib/log';
 import { Packets } from '@kaetram/common/network';
 
 import type Game from '../game';
-import type { SerializedServer } from '@kaetram/common/types/api';
+import type { SerializedServer } from '@kaetram/common/types/network';
+import type { TradePacketOutgoing } from '@kaetram/common/network/impl/trade';
+
+interface OutgoingPackets {
+    [Packets.Trade]: TradePacketOutgoing;
+}
 
 export default class Socket {
     public messages;
@@ -96,7 +101,7 @@ export default class Socket {
      * @param data Packet data in an array format.
      */
 
-    public send(packet: number, data?: unknown): void {
+    public send<const P extends Packets>(packet: P, data?: OutgoingPackets[P & number]): void {
         // Ensure the connection is open before sending.
         if (this.connection?.readyState !== WebSocket.OPEN) return;
 

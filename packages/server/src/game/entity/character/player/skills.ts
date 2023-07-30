@@ -19,11 +19,11 @@ import Alchemy from './skill/impl/alchemy';
 import Formulas from '../../../../info/formulas';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Experience, Points, Skill as SkillPacket } from '@kaetram/common/network/impl';
+import { ExperiencePacket, PointsPacket, SkillPacket } from '@kaetram/common/network/impl';
 
 import type Player from './player';
 import type Skill from './skill/skill';
-import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
+import type { SerializedSkills, SkillData } from '@kaetram/common/network/impl/skill';
 
 export default class Skills {
     private loaded = false;
@@ -116,7 +116,7 @@ export default class Skills {
 
         // Synchronize the player's level packet.
         this.player.send(
-            new Experience(Opcodes.Experience.Sync, {
+            new ExperiencePacket(Opcodes.Experience.Sync, {
                 instance: this.player.instance,
                 level: this.player.level
             })
@@ -124,7 +124,7 @@ export default class Skills {
 
         // Synchronize mana and hit points.
         this.player.send(
-            new Points({
+            new PointsPacket({
                 instance: this.player.instance,
                 hitPoints: this.player.hitPoints.getHitPoints(),
                 maxHitPoints: this.player.hitPoints.getMaxHitPoints(),
@@ -179,7 +179,7 @@ export default class Skills {
 
         if (withInfo)
             this.player.send(
-                new Experience(Opcodes.Experience.Skill, {
+                new ExperiencePacket(Opcodes.Experience.Skill, {
                     instance: this.player.instance,
                     amount: experience,
                     skill: type

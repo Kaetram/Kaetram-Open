@@ -6,7 +6,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import Creator from '@kaetram/common/database/mongodb/creator';
-import { Spawn } from '@kaetram/common/network/impl';
+import { SpawnPacket } from '@kaetram/common/network/impl';
 import { Opcodes, Packets } from '@kaetram/common/network';
 
 import type Player from './player';
@@ -252,7 +252,10 @@ export default class Incoming {
 
             /* We handle player-specific entity statuses here. */
             this.player.send(
-                new Spawn(entity, entity.hasDisplayInfo(this.player) ? this.player : undefined)
+                new SpawnPacket(
+                    entity,
+                    entity.hasDisplayInfo(this.player) ? this.player : undefined
+                )
             );
         }
     }
@@ -502,12 +505,9 @@ export default class Incoming {
     }
 
     private handleTrade(packet: TradePacket): void {
-        // Sanitize the incoming packet information.
-        if (packet.count) packet.count = Utils.sanitizeNumber(packet.count, true);
-
         switch (packet.opcode) {
             case Opcodes.Trade.Request: {
-                let oPlayer = this.entities.get(packet.instance!);
+                let oPlayer = this.entities.get(packet.instance);
 
                 if (!oPlayer?.isPlayer()) return;
 
@@ -523,11 +523,14 @@ export default class Incoming {
             }
 
             case Opcodes.Trade.Add: {
-                return this.player.trade.add(packet.index!, packet.count);
+                return this.player.trade.add(
+                    packet.index,
+                    Utils.sanitizeNumber(packet.count, true)
+                );
             }
 
             case Opcodes.Trade.Remove: {
-                return this.player.trade.remove(packet.index!);
+                return this.player.trade.remove(packet.index);
             }
         }
     }

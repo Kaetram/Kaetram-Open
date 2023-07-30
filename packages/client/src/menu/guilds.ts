@@ -5,8 +5,8 @@ import Util from '../utils/util';
 import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Game from '../game';
-import type { ListInfo, Member } from '@kaetram/common/types/guild';
-import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
+import type { ListInfo, Member } from '@kaetram/common/network/impl/guild';
+import type { GuildPacketData } from '@kaetram/common/types/messages/outgoing';
 
 export default class Guilds extends Menu {
     // The banner is the banner of the guild that the player is currently in.
@@ -122,7 +122,7 @@ export default class Guilds extends Menu {
      * @param info Information about the opcode we received.
      */
 
-    public handle(opcode: Opcodes.Guild, info: GuildPacket): void {
+    public handle(opcode: Opcodes.Guild, info: GuildPacketData): void {
         switch (opcode) {
             case Opcodes.Guild.Join: {
                 return this.handleMemberJoin(info.username!, info.serverId!);
@@ -303,7 +303,7 @@ export default class Guilds extends Menu {
      * @param info Contains information about the guild, such as decorations.
      */
 
-    private handleConnect(info: GuildPacket): void {
+    private handleConnect(info: GuildPacketData): void {
         // Clear the error message.
         this.setError();
 
@@ -419,7 +419,7 @@ export default class Guilds extends Menu {
      * @param packet Contains information about the message.
      */
 
-    private handleChat(packet: GuildPacket): void {
+    private handleChat(packet: GuildPacketData): void {
         // Ignore invalid packets (shouldn't happen).
         if (!packet.username || !packet.serverId) return;
 
