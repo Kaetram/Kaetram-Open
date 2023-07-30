@@ -1,4 +1,4 @@
-import type { SerializedLight } from '@kaetram/common/types/light';
+import type { SerializedLight } from '@kaetram/common/network/impl/overlay';
 
 export default class Light {
     /**

@@ -1,16 +1,17 @@
 import Model from '.';
 
 import Packet from '@kaetram/common/network/packet';
-import { Chat, Friends, Guild } from '@kaetram/common/network/impl';
 import { Opcodes, Packets } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
+import { GuildPacket, FriendsPacket, ChatPacket } from '@kaetram/common/network/impl';
 
-import type { HandshakePacket } from '@kaetram/common/network/impl/handshake';
-import type { Member } from '@kaetram/common/types/guild';
-import type { Friend } from '@kaetram/common/types/friends';
-import type { ChatPacket, FriendsPacket, PlayerPacket } from '@kaetram/common/types/messages/hub';
+import type { PlayerPacketData } from '@kaetram/common/network/impl/player';
+import type { HandshakePacketData } from '@kaetram/common/network/impl/handshake';
+import type { Member } from '@kaetram/common/network/impl/guild';
+import type { Friend } from '@kaetram/common/network/impl/friends';
+import type { ChatPacketData, FriendsPacketData } from '@kaetram/common/types/messages/hub';
 import type { SerializedServer } from '@kaetram/common/types/network';
-import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
+import type { GuildPacketData } from '@kaetram/common/types/messages/outgoing';
 
 export default class Server extends Model {
     public id = -1;
@@ -27,7 +28,7 @@ export default class Server extends Model {
      * @param data Contains preliminary information about the server.
      */
 
-    public load(data: HandshakePacket): void {
+    public load(data: HandshakePacketData): void {
         if (data.type === 'hub') {
             this.name = data.name;
             this.id = data.serverId;
@@ -68,7 +69,7 @@ export default class Server extends Model {
      * @param info Contains the username of the player that is logging in or out.
      */
 
-    private handlePlayer(opcode: Opcodes.Player, info: PlayerPacket): void {
+    private handlePlayer(opcode: Opcodes.Player, info: PlayerPacketData): void {
         switch (opcode) {
             case Opcodes.Player.Login: {
                 return this.add(info.username!, info.guild!);
@@ -86,7 +87,7 @@ export default class Server extends Model {
      * @param info Contains information about the message, such as source, content, and optionally, a target.
      */
 
-    private handleChat(info: ChatPacket): void {
+    private handleChat(info: ChatPacketData): void {
         return this.message(info.source, info.message!, info.target!);
     }
 
@@ -98,7 +99,7 @@ export default class Server extends Model {
      * @param info unknown (for now).
      */
 
-    public handleGuild(opcode: Opcodes.Guild, info: GuildPacket): void {
+    public handleGuild(opcode: Opcodes.Guild, info: GuildPacketData): void {
         switch (opcode) {
             case Opcodes.Guild.Update: {
                 let { username, usernames: inactiveMembers } = info,
@@ -112,7 +113,9 @@ export default class Server extends Model {
                 }
 
                 // Send the list of active members back to the source server's player.
-                this.send(new Guild(Opcodes.Guild.Update, { username, members: activeMembers }));
+                this.send(
+                    new GuildPacket(Opcodes.Guild.Update, { username, members: activeMembers })
+                );
             }
         }
     }
@@ -123,7 +126,7 @@ export default class Server extends Model {
      * @param info Contains the username and the list of inactive friends.
      */
 
-    private handleFriends(info: FriendsPacket): void {
+    private handleFriends(info: FriendsPacketData): void {
         let { username, inactiveFriends } = info,
             activeFriends: Friend = {};
 
@@ -136,7 +139,7 @@ export default class Server extends Model {
         }
 
         // Send the active friends back to the server.
-        this.send(new Friends(Opcodes.Friends.Sync, { username, activeFriends }));
+        this.send(new FriendsPacket(Opcodes.Friends.Sync, { username, activeFriends }));
     }
 
     /**
@@ -236,13 +239,13 @@ export default class Server extends Model {
         let targetServer = this.controller.findPlayer(target);
 
         // No player could be found, so we tell the source server that the player is not online.
-        if (!targetServer) return this.send(new Chat({ source, target, notFound: true }));
+        if (!targetServer) return this.send(new ChatPacket({ source, target, notFound: true }));
 
         // Send the private message to the target player's server.
-        targetServer.send(new Chat({ source, message, target }));
+        targetServer.send(new ChatPacket({ source, message, target }));
 
         // Send a confirmation to the source server that the message was sent.
-        this.send(new Chat({ source, message, target, success: true }));
+        this.send(new ChatPacket({ source, message, target, success: true }));
     }
 
     /**

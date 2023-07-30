@@ -11,4 +11,4 @@ let routes = i18nMiddleware({ defaultLocale }),
         return await next();
     });
 
-export const onRequest = sequence(routes, language);
+export let onRequest = sequence(routes, language);

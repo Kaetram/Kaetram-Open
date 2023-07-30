@@ -102,7 +102,7 @@ export enum NPC {
     Countdown
 }
 
-export enum Trade {
+export const enum Trade {
     Request,
     Add,
     Remove,

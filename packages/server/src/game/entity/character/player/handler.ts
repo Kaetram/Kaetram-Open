@@ -4,20 +4,20 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import {
-    Ability as AbilityPacket,
-    Achievement,
-    Container,
-    Death,
-    Despawn,
-    Equipment as EquipmentPacket,
-    Friends,
-    NPC as NPCPacket,
-    Overlay,
-    Points,
-    Poison as PoisonPacket,
-    Quest,
-    Skill,
-    Trade
+    AbilityPacket,
+    AchievementPacket,
+    ContainerPacket,
+    DeathPacket,
+    DespawnPacket,
+    EquipmentPacket,
+    FriendsPacket,
+    NPCPacket,
+    OverlayPacket,
+    PointsPacket,
+    PoisonPacket,
+    QuestPacket,
+    SkillPacket,
+    TradePacketPacket
 } from '@kaetram/common/network/impl';
 
 import type Player from './player';
@@ -157,7 +157,7 @@ export default class Handler {
 
         // Send despawn packet to all the nearby entities except the player.
         this.player.sendToRegions(
-            new Despawn({
+            new DespawnPacket({
                 instance: this.player.instance
             }),
             true
@@ -179,7 +179,7 @@ export default class Handler {
         this.player.save();
 
         // Send death packet only to the player.
-        this.player.send(new Death(this.player.instance));
+        this.player.send(new DeathPacket(this.player.instance));
     }
 
     /**
@@ -373,7 +373,7 @@ export default class Handler {
         //log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
 
         this.player.sendToRecentRegions(
-            new Despawn({
+            new DespawnPacket({
                 instance: this.player.instance,
                 regions
             })
@@ -459,7 +459,7 @@ export default class Handler {
      */
 
     private handleTradeOpen(instance: string): void {
-        this.player.send(new Trade(Opcodes.Trade.Open, { instance }));
+        this.player.send(new TradePacketPacket(Opcodes.Trade.Open, { instance }));
     }
 
     /**
@@ -470,7 +470,7 @@ export default class Handler {
      */
 
     private handleTradeAdd(instance: string, index: number, count: number, key: string): void {
-        this.player.send(new Trade(Opcodes.Trade.Add, { instance, index, count, key }));
+        this.player.send(new TradePacketPacket(Opcodes.Trade.Add, { instance, index, count, key }));
     }
 
     /**
@@ -480,7 +480,7 @@ export default class Handler {
      */
 
     private handleTradeRemove(instance: string, index: number): void {
-        this.player.send(new Trade(Opcodes.Trade.Remove, { instance, index }));
+        this.player.send(new TradePacketPacket(Opcodes.Trade.Remove, { instance, index }));
     }
 
     /**
@@ -489,7 +489,7 @@ export default class Handler {
      */
 
     private handleTradeAccept(message?: string): void {
-        this.player.send(new Trade(Opcodes.Trade.Accept, { message }));
+        this.player.send(new TradePacketPacket(Opcodes.Trade.Accept, { message }));
     }
 
     /**
@@ -499,7 +499,7 @@ export default class Handler {
     private handleInventory(): void {
         // Send Batch packet to the client.
         this.player.send(
-            new Container(Opcodes.Container.Batch, {
+            new ContainerPacket(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
                 data: this.player.inventory.serialize(true)
             })
@@ -513,7 +513,7 @@ export default class Handler {
     private handleBank(): void {
         // Send Batch packet to the client.
         this.player.send(
-            new Container(Opcodes.Container.Batch, {
+            new ContainerPacket(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Bank,
                 data: this.player.bank.serialize(true)
             })
@@ -528,7 +528,7 @@ export default class Handler {
 
     private handleInventoryAdd(slot: Slot): void {
         this.player.send(
-            new Container(Opcodes.Container.Add, {
+            new ContainerPacket(Opcodes.Container.Add, {
                 type: Modules.ContainerType.Inventory,
                 slot
             })
@@ -563,7 +563,7 @@ export default class Handler {
         }
 
         this.player.send(
-            new Container(Opcodes.Container.Remove, {
+            new ContainerPacket(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Inventory,
                 slot: slot.serialize(true)
             })
@@ -575,7 +575,7 @@ export default class Handler {
      */
 
     private handleQuests(): void {
-        this.player.send(new Quest(Opcodes.Quest.Batch, this.player.quests?.serialize(true)));
+        this.player.send(new QuestPacket(Opcodes.Quest.Batch, this.player.quests?.serialize(true)));
     }
 
     /**
@@ -584,7 +584,10 @@ export default class Handler {
 
     private handleAchievements(): void {
         this.player.send(
-            new Achievement(Opcodes.Achievement.Batch, this.player.achievements?.serialize(true))
+            new AchievementPacket(
+                Opcodes.Achievement.Batch,
+                this.player.achievements?.serialize(true)
+            )
         );
     }
 
@@ -594,7 +597,7 @@ export default class Handler {
      */
 
     private handleSkills(): void {
-        this.player.send(new Skill(Opcodes.Skill.Batch, this.player.skills?.serialize(true)));
+        this.player.send(new SkillPacket(Opcodes.Skill.Batch, this.player.skills?.serialize(true)));
     }
 
     /**
@@ -615,7 +618,7 @@ export default class Handler {
 
     private handleBankAdd(slot: Slot): void {
         this.player.send(
-            new Container(Opcodes.Container.Add, {
+            new ContainerPacket(Opcodes.Container.Add, {
                 type: Modules.ContainerType.Bank,
                 slot
             })
@@ -629,7 +632,7 @@ export default class Handler {
 
     private handleBankRemove(slot: Slot): void {
         this.player.send(
-            new Container(Opcodes.Container.Remove, {
+            new ContainerPacket(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Bank,
                 slot: slot.serialize(true)
             })
@@ -642,7 +645,7 @@ export default class Handler {
 
     private handleFriends(): void {
         this.player.send(
-            new Friends(Opcodes.Friends.List, {
+            new FriendsPacket(Opcodes.Friends.List, {
                 list: this.player.friends?.getFriendsList()
             })
         );
@@ -657,7 +660,7 @@ export default class Handler {
 
     private handleFriendsAdd(username: string, status: boolean, serverId: number): void {
         this.player.send(
-            new Friends(Opcodes.Friends.Add, {
+            new FriendsPacket(Opcodes.Friends.Add, {
                 username,
                 status,
                 serverId
@@ -671,7 +674,7 @@ export default class Handler {
 
     private handleFriendsRemove(username: string): void {
         this.player.send(
-            new Friends(Opcodes.Friends.Remove, {
+            new FriendsPacket(Opcodes.Friends.Remove, {
                 username
             })
         );
@@ -686,7 +689,7 @@ export default class Handler {
 
     private handleFriendsStatus(username: string, status: boolean, serverId: number): void {
         this.player.send(
-            new Friends(Opcodes.Friends.Status, {
+            new FriendsPacket(Opcodes.Friends.Status, {
                 username,
                 status,
                 serverId
@@ -814,7 +817,7 @@ export default class Handler {
 
     private handleMana(): void {
         this.player.send(
-            new Points({
+            new PointsPacket({
                 instance: this.player.instance,
                 mana: this.player.mana.getMana(),
                 maxMana: this.player.mana.getMaxMana()
@@ -837,7 +840,7 @@ export default class Handler {
                 if (this.player.hasLoadedLight(light.id)) return;
 
                 this.player.send(
-                    new Overlay(Opcodes.Overlay.Lamp, {
+                    new OverlayPacket(Opcodes.Overlay.Lamp, {
                         light: light.serialize()
                     })
                 );

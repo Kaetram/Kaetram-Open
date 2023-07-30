@@ -1,5 +1,5 @@
-import type { Modules } from '@kaetram/common/network';
 import type { HitData } from '@kaetram/common/types/info';
+import type { Modules } from '@kaetram/common/network';
 
 export default class Hit {
     public constructor(

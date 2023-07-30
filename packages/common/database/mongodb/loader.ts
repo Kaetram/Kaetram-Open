@@ -3,14 +3,17 @@ import log from '@kaetram/common/util/log';
 
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
 import type { Db } from 'mongodb';
-import type { SerializedAbility } from '@kaetram/common/types/ability';
-import type { GuildData } from '@kaetram/common/types/guild';
+import type { SerializedAbility } from '@kaetram/common/network/impl/ability';
+import type { GuildData } from '@kaetram/common/network/impl/guild';
 import type { StatisticsData } from '@kaetram/common/types/statistics';
-import type { AchievementData, SerializedAchievement } from '@kaetram/common/types/achievement';
-import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
-import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
+import type {
+    AchievementData,
+    SerializedAchievement
+} from '@kaetram/common/network/impl/achievement';
+import type { QuestData, SerializedQuest } from '@kaetram/common/network/impl/quest';
+import type { SerializedSkills, SkillData } from '@kaetram/common/network/impl/skill';
 import type { SerializedContainer, SlotData } from '@kaetram/common/types/slot';
+import type { EquipmentData, SerializedEquipment } from '@kaetram/common/network/impl/equipment';
 
 export default class Loader {
     public constructor(private database?: Db) {}

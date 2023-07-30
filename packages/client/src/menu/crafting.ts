@@ -5,8 +5,11 @@ import Utils from '../utils/util';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Player from '../entity/character/player/player';
-import type { CraftingItemPreview, CraftingRequirement } from '@kaetram/common/types/crafting';
-import type { CraftingPacket } from '@kaetram/common/types/messages/outgoing';
+import type {
+    CraftingItemPreview,
+    CraftingRequirement
+} from '@kaetram/common/network/impl/crafting';
+import type { CraftingPacketData } from '@kaetram/common/types/messages/outgoing';
 
 type SelectCallback = (key: string) => void;
 type CraftCallback = (key: string, amount: number) => void;
@@ -59,7 +62,7 @@ export default class Crafting extends Menu {
      * @param info Contains the information about the crafting action.
      */
 
-    public handle(opcode: Opcodes.Crafting, info: CraftingPacket): void {
+    public handle(opcode: Opcodes.Crafting, info: CraftingPacketData): void {
         switch (opcode) {
             case Opcodes.Crafting.Open: {
                 return this.show(info.type!, info.previews!);

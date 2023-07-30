@@ -16,7 +16,7 @@ import type Entity from '../entity/entity';
 import type SpritesController from './sprites';
 import type Character from '../entity/character/character';
 import type { EntityData } from '@kaetram/common/types/entity';
-import type { PlayerData } from '@kaetram/common/types/player';
+import type { PlayerData } from '@kaetram/common/network/impl/player';
 import type { PetData } from '@kaetram/common/types/pet';
 
 interface EntitiesCollection {

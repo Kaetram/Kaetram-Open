@@ -7,7 +7,7 @@ import Character from '../entity/character/character';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { List, Map as MapPacket, Spawn, Update } from '@kaetram/common/network/impl';
+import { ListPacket, MapPacket, SpawnPacket, UpdatePacket } from '@kaetram/common/network/impl';
 
 import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
@@ -340,7 +340,7 @@ export default class Regions {
 
         let entities: string[] = this.regions[player.region].getEntities(player, player as Entity);
 
-        player.send(new List(Opcodes.List.Spawns, { entities }));
+        player.send(new ListPacket(Opcodes.List.Spawns, { entities }));
     }
 
     /**
@@ -372,7 +372,7 @@ export default class Regions {
         });
 
         // Send the positions to the client.
-        player.send(new List(Opcodes.List.Positions, { positions }));
+        player.send(new ListPacket(Opcodes.List.Positions, { positions }));
     }
 
     /**
@@ -386,7 +386,7 @@ export default class Regions {
             this.world.push(Modules.PacketType.Regions, {
                 region,
                 ignore: entity.isPlayer() ? entity.instance : '',
-                packet: new Spawn(entity)
+                packet: new SpawnPacket(entity)
             });
         });
 
@@ -432,7 +432,7 @@ export default class Regions {
         // Don't send empty data.
         if (displayInfos.length === 0) return;
 
-        player.send(new Update(displayInfos));
+        player.send(new UpdatePacket(displayInfos));
     }
 
     /**

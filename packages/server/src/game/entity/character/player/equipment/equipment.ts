@@ -8,8 +8,8 @@ import Utils from '@kaetram/common/util/utils';
 
 import type Item from '../../../objects/item';
 import type { Modules } from '@kaetram/common/network';
-import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { Bonuses, Enchantments, Light, Stats } from '@kaetram/common/types/item';
+import type { EquipmentData } from '@kaetram/common/network/impl/equipment';
 
 export default class Equipment {
     // Properties

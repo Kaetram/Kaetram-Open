@@ -6,7 +6,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Command, NPC, Store } from '@kaetram/common/network/impl';
+import { CommandPacket, NPCPacket, StorePacket } from '@kaetram/common/network/impl';
 
 import type Region from '../game/map/region';
 import type Entity from '../game/entity/entity';
@@ -582,7 +582,7 @@ export default class Commands {
             }
 
             case 'debug': {
-                this.player.send(new Command({ command: 'debug' }));
+                this.player.send(new CommandPacket({ command: 'debug' }));
 
                 return;
             }
@@ -1006,7 +1006,9 @@ export default class Commands {
 
                 if (!key) return this.player.notify(`Malformed command, expected /store key`);
 
-                this.player.send(new Store(Opcodes.Store.Open, this.world.stores.serialize(key)));
+                this.player.send(
+                    new StorePacket(Opcodes.Store.Open, this.world.stores.serialize(key))
+                );
 
                 this.player.storeOpen = key;
 
@@ -1019,7 +1021,7 @@ export default class Commands {
             }
 
             case 'bank': {
-                this.player.send(new NPC(Opcodes.NPC.Bank, this.player.bank.serialize()));
+                this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize()));
                 break;
             }
 
@@ -1033,7 +1035,7 @@ export default class Commands {
 
                 if (!player) return this.player.notify(`Could not find player: ${username}`);
 
-                this.player.send(new NPC(Opcodes.NPC.Bank, player.bank.serialize()));
+                this.player.send(new NPCPacket(Opcodes.NPC.Bank, player.bank.serialize()));
 
                 break;
             }

@@ -2,10 +2,14 @@ import Packet from '../packet';
 
 import { Packets } from '@kaetram/common/network';
 
-import type { PVPPacket } from '@kaetram/common/types/messages/outgoing';
+export interface PVPPacketData {
+    state: boolean;
+}
 
-export default class PVP extends Packet {
-    public constructor(data: PVPPacket) {
+export type PVPPacketCallback = (info: PVPPacketData) => void;
+
+export default class PVPPacket extends Packet {
+    public constructor(data: PVPPacketData) {
         super(Packets.PVP, undefined, data);
     }
 }

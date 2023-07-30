@@ -3,15 +3,10 @@
  * We separate them from the rest of packets for brevity.
  */
 
+import type { Packets } from '@kaetram/common/network';
 import type { Friend } from '../friends';
 
-export interface PlayerPacket {
-    username: string;
-    serverId?: number;
-    guild?: string;
-}
-
-export interface ChatPacket {
+export interface ChatPacketData {
     source: string;
     message?: string;
 
@@ -22,10 +17,10 @@ export interface ChatPacket {
     notFound?: boolean;
 }
 
-export interface FriendsPacket {
+export interface FriendsPacketData {
     username: string;
     activeFriends?: Friend;
     inactiveFriends?: string[];
 }
 
-export type RelayPacket = [string, [number, never, never]];
+export type RelayPacketData = [string, [Packets, number, { [key: string]: unknown }]];

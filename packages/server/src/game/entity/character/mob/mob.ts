@@ -10,7 +10,7 @@ import Character from '../character';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Heal, Movement } from '@kaetram/common/network/impl';
+import { HealPacket, MovementPacket } from '@kaetram/common/network/impl';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
 import type Area from '../../../map/areas/area';
@@ -21,8 +21,14 @@ import type Chest from '../../objects/chest';
 import type Player from '../player/player';
 import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type {
+    RawMobData,
+    MobData,
+    MobSkills,
+    MobDrop,
+    MobDropTable
+} from '@kaetram/common/types/mob';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type { RawData, MobData, MobSkills, MobDrop, MobDropTable } from '@kaetram/common/types/mob';
 
 interface ItemDrop {
     key: string;
@@ -87,7 +93,7 @@ export default class Mob extends Character {
         this.spawnX = this.x;
         this.spawnY = this.y;
 
-        this.data = (rawData as RawData)[key];
+        this.data = (rawData as RawMobData)[key];
 
         if (!this.data) {
             log.error(`[Mob] Could not find data for ${key}.`);
@@ -207,7 +213,7 @@ export default class Mob extends Character {
 
             // Send the heal packet to the nearby regions.
             this.sendToRegions(
-                new Heal({
+                new HealPacket({
                     instance: this.instance,
                     type,
                     amount
@@ -285,7 +291,7 @@ export default class Mob extends Character {
         if (withPacket)
             this.world.push(Modules.PacketType.Regions, {
                 region: this.region,
-                packet: new Movement(Opcodes.Movement.Move, {
+                packet: new MovementPacket(Opcodes.Movement.Move, {
                     instance: this.instance,
                     x,
                     y
