@@ -110,12 +110,14 @@ export default {
      */
 
     getImageURL(itemKey = ''): string {
+        if (!itemKey) return '';
+
         let blocks = itemKey.split('/');
 
         // Use the last block as the key if we are extracting a key path.
         if (blocks.length > 1) itemKey = blocks.at(-1)!;
 
-        return `url("/img/sprites/items/${itemKey}.png"), url("/img/sprites/items/undefined.png")`;
+        return `url("/img/sprites/items/${itemKey}.png")`;
     },
 
     /**
