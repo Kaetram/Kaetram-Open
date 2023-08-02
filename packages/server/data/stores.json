@@ -182,6 +182,11 @@
     "cosmetics": {
         "items": [
             {
+                "key": "lolipop",
+                "count": 5,
+                "price": 15
+            },
+            {
                 "key": "taekwondo",
                 "count": 5,
                 "price": 15

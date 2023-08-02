@@ -655,7 +655,7 @@
 
     "adamantitesworth": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Adamantite's Worth",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -683,7 +683,7 @@
     },
     "adeptsrapier": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Adept's Rapier",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -711,7 +711,7 @@
     },
     "alchemistalimony": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Alchemist's Alimony",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -739,7 +739,7 @@
     },
     "ancientshovel": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Ancient Shovel",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -767,7 +767,7 @@
     },
     "ancientstaff": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Ancient Staff",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -795,7 +795,7 @@
     },
     "angelicblade": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Angelic Blade",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -823,7 +823,7 @@
     },
     "berserkerssanity": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Berserker's Sanity",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -851,7 +851,7 @@
     },
     "bident": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Bident",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -879,7 +879,7 @@
     },
     "bladeofdarkness": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Blade of Darkness",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -907,7 +907,7 @@
     },
     "bloodmoonstaff": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Bloodmoon Staff",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -935,7 +935,7 @@
     },
     "bluelightsaber": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Blue Lightsaber",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -963,7 +963,7 @@
     },
     "bluemoonstaff": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Bluemoon Staff",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -991,7 +991,7 @@
     },
     "bonebonker": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Bone Bonker",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1019,7 +1019,7 @@
     },
     "brutishblade": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Brutish Blade",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1047,7 +1047,7 @@
     },
     "cellobello": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Cello Bello",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1075,7 +1075,7 @@
     },
     "club": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Club",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1103,7 +1103,7 @@
     },
     "demonicstaff": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Demonic Staff",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1131,7 +1131,7 @@
     },
     "dragonscale": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Dragon Scale",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1159,7 +1159,7 @@
     },
     "etherialblade": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Etherial Blade",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1187,7 +1187,7 @@
     },
     "executionershammer": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Executioner's Squeaky Hammer",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1215,7 +1215,7 @@
     },
     "eyesword": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Eye Sword",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1243,7 +1243,7 @@
     },
     "firesword": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Firesword",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1271,7 +1271,7 @@
     },
     "golemsmace": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Golem's Mace",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1299,7 +1299,7 @@
     },
     "greenlightsaber": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Green Lightsaber",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1327,7 +1327,7 @@
     },
     "hellsword": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Hell Sword",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1354,36 +1354,13 @@
         }
     },
     "lolipop": {
-        "type": "weapon",
-        "name": "Placeholder Name",
-        "weaponType": "sword",
-        "price": 5000,
-        "skill": "strength",
-        "level": 25,
-        "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
-            "archery": 0,
-            "magic": 0
-        }
+        "type": "weaponskin",
+        "name": "Lolipop",
+        "price": 5000
     },
     "moongreataxe": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Moon Greataxe",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1411,7 +1388,7 @@
     },
     "oldonesblade": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Old One's Blade",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1439,7 +1416,7 @@
     },
     "peddlepounder": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Peddle Pounder",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1467,7 +1444,7 @@
     },
     "pinklightsaber": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Pink Lightsaber",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1495,7 +1472,7 @@
     },
     "redlightsaber": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Red Lightsaber",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1523,7 +1500,7 @@
     },
     "royalrapier": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Royal Rapier",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1551,7 +1528,7 @@
     },
     "scimitar": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Scimitar",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1579,7 +1556,7 @@
     },
     "smithshammer": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Smith's Hammer",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1607,7 +1584,7 @@
     },
     "spoon": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Spoon",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1635,7 +1612,7 @@
     },
     "sunrisegreataxe": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Sunrise Greataxe",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1663,7 +1640,7 @@
     },
     "sunshinestaff": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Sunshine Staff",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1691,7 +1668,7 @@
     },
     "swashbuckler": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Swash Buckler",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1719,7 +1696,7 @@
     },
     "swordofliberty": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Sword of Liberty",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1747,7 +1724,7 @@
     },
     "sycophant": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Sycophant",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1775,7 +1752,7 @@
     },
     "timelessglaive": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Timeless Glaive",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1803,7 +1780,7 @@
     },
     "twilightgreataxe": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Twilight Greataxe",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1831,7 +1808,7 @@
     },
     "witchesfocus": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Witch's Focus",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1859,7 +1836,7 @@
     },
     "zweipiercer": {
         "type": "weapon",
-        "name": "Placeholder Name",
+        "name": "Zwei Piercer",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
