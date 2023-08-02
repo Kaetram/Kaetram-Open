@@ -106,21 +106,16 @@ export default {
     /**
      * Converts an item's key into an image URL for the client.
      * @param itemKey The item's key, defaults to empty string.
-     * @param defaultSprite The default sprite to use if the item key is empty.
      * @returns The CSS image URL format for the item's key.
      */
 
-    getImageURL(itemKey = '', defaultSprite = ''): string {
-        if (itemKey) {
-            let blocks = itemKey.split('/');
+    getImageURL(itemKey = ''): string {
+        let blocks = itemKey.split('/');
 
-            // Use the last block as the key if we are extracting a key path.
-            if (blocks.length > 1) itemKey = blocks.at(-1)!;
+        // Use the last block as the key if we are extracting a key path.
+        if (blocks.length > 1) itemKey = blocks.at(-1)!;
 
-            return `url("/img/sprites/items/${itemKey}.png")`;
-        } else if (defaultSprite) return `url("/img/sprites/${defaultSprite}.png")`;
-
-        return '';
+        return `url("/img/sprites/items/${itemKey}.png"), url("/img/sprites/items/undefined.png")`;
     },
 
     /**
