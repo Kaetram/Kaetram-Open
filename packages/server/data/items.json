@@ -265,33 +265,6 @@
             "magic": 0
         }
     },
-    "firesword": {
-        "type": "weapon",
-        "name": "Fire Sword",
-        "weaponType": "sword",
-        "skill": "accuracy",
-        "level": 24,
-        "attackStats": {
-            "crush": 7,
-            "slash": 16,
-            "stab": 9,
-            "archery": 0,
-            "magic": 0
-        },
-        "defenseStats": {
-            "crush": 5,
-            "slash": 7,
-            "stab": 4,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 4,
-            "strength": 7,
-            "archery": 0,
-            "magic": 0
-        }
-    },
     "nightsword": {
         "type": "weapon",
         "name": "Night Sword",
@@ -679,6 +652,1240 @@
             "magic": 0
         }
     },
+
+    "adamantitesworth": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "adeptsrapier": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "alchemistalimony": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "ancientshovel": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "ancientstaff": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "angelicblade": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "berserkerssanity": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "bident": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "bladeofdarkness": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "bloodmoonstaff": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "bluelightsaber": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "bluemoonstaff": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "bonebonker": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "brutishblade": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "cellobello": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "club": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "demonicstaff": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "dragonscale": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "etherialblade": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "executionershammer": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "eyesword": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "firesword": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "golemsmace": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "greenlightsaber": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "hellsword": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "lolipop": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "moongreataxe": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "oldonesblade": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "peddlepounder": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "pinklightsaber": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "redlightsaber": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "royalrapier": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "scimitar": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "smithshammer": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "spoon": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "sunrisegreataxe": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "sunshinestaff": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "swashbuckler": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "swordofliberty": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "sycophant": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "timelessglaive": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "twilightgreataxe": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "witchesfocus": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "zweipiercer": {
+        "type": "weapon",
+        "name": "Placeholder Name",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+
     "bronzebattleaxe": {
         "type": "weapon",
         "name": "Bronze Battle Axe",

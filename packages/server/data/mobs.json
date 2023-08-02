@@ -4309,6 +4309,12 @@
     "hellhound": {
         "name": "Hellhound",
         "description": "I better keep a distance before this thing turns me into a stew!",
+        "drops": [
+            {
+                "key": "hellhoundfang",
+                "chance": 100
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 4550,
         "level": 344,
