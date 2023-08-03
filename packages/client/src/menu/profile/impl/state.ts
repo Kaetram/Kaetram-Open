@@ -17,19 +17,45 @@ export default class State extends Menu {
     // Attack style element
     private attackStyleList: HTMLUListElement = document.querySelector('#attack-style-list')!;
 
+    private equipmentSlots: HTMLElement = document.querySelector('#profile-equipment-slots')!;
+
     // Equipment information
-    private helmet: HTMLElement = document.querySelector('#helmet-slot > div')!;
-    private pendant: HTMLElement = document.querySelector('#pendant-slot > div')!;
-    private arrows: HTMLElement = document.querySelector('#arrows-slot > div')!;
-    private chestplate: HTMLElement = document.querySelector('#chestplate-slot > div')!;
-    private weapon: HTMLElement = document.querySelector('#weapon-slot > div')!;
-    private shield: HTMLElement = document.querySelector('#shield-slot > div')!;
-    private ring: HTMLElement = document.querySelector('#ring-slot > div')!;
-    private weaponSkin: HTMLElement = document.querySelector('#weapon-skin-slot > div')!;
-    private armourSkin: HTMLElement = document.querySelector('#armour-skin-slot > div')!;
-    private legplates: HTMLElement = document.querySelector('#legplates-slot > div')!;
-    private cape: HTMLElement = document.querySelector('#cape-slot > div')!;
-    private boots: HTMLElement = document.querySelector('#boots-slot > div')!;
+    private helmet: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-helmet > .equipment-slot-image'
+    )!;
+    private pendant: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-pendant > .equipment-slot-image'
+    )!;
+    private arrows: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-arrows > .equipment-slot-image'
+    )!;
+    private chestplate: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-chestplate > .equipment-slot-image'
+    )!;
+    private weapon: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-weapon > .equipment-slot-image'
+    )!;
+    private shield: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-shield > .equipment-slot-image'
+    )!;
+    private ring: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-ring > .equipment-slot-image'
+    )!;
+    private weaponSkin: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-weapon-skin > .equipment-slot-image'
+    )!;
+    private armourSkin: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-armour-skin > .equipment-slot-image'
+    )!;
+    private legplates: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-legplates > .equipment-slot-image'
+    )!;
+    private cape: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-cape > .equipment-slot-image'
+    )!;
+    private boots: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-boots > .equipment-slot-image'
+    )!;
 
     private unequipCallback?: UnequipCallback;
     private styleCallback?: StyleCallback;

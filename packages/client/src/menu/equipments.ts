@@ -12,25 +12,47 @@ type UnequipCallback = (type: Modules.Equipment) => void;
 
 export default class Equipments extends Menu {
     // Player image elements
-    private playerArmour: HTMLElement = document.querySelector('#player-image-armour')!;
-    private playerWeapon: HTMLElement = document.querySelector('#player-image-weapon')!;
+    private playerArmour: HTMLElement = document.querySelector('#equipments-player-image-armour')!;
+    private playerWeapon: HTMLElement = document.querySelector('#equipments-player-image-weapon')!;
+
+    private equipmentSlots: HTMLElement = document.querySelector('#equipment-slots')!;
 
     // Equipment slots elements
-    private weapon: HTMLElement = document.querySelector('.equip-weapon-slot')!;
-    private weaponSkin: HTMLElement = document.querySelector('.equip-weapon-skin-slot')!;
-    private armour: HTMLElement = document.querySelector('.equip-armour-slot')!;
-    private armourSkin: HTMLElement = document.querySelector('.equip-armour-skin-slot')!;
-    private pendant: HTMLElement = document.querySelector('.equip-pendant-slot')!;
-    private ring: HTMLElement = document.querySelector('.equip-ring-slot')!;
-    private boots: HTMLElement = document.querySelector('.equip-boots-slot')!;
-    private arrow: HTMLElement = document.querySelector('.equip-arrows-slot')!;
+    private weapon: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-weapon > .equipment-slot-image'
+    )!;
+    private weaponSkin: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-weapon-skin > .equipment-slot-image'
+    )!;
+    private chestplate: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-chestplate > .equipment-slot-image'
+    )!;
+    private armourSkin: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-armour-skin > .equipment-slot-image'
+    )!;
+    private pendant: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-pendant > .equipment-slot-image'
+    )!;
+    private ring: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-ring > .equipment-slot-image'
+    )!;
+    private boots: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-boots > .equipment-slot-image'
+    )!;
+    private arrow: HTMLElement = this.equipmentSlots.querySelector(
+        '.equipment-slot-arrows > .equipment-slot-image'
+    )!;
 
     // Counts
-    private arrowsCount: HTMLElement = document.querySelector('#arrows-count')!;
+    private arrowsCount: HTMLElement = document.querySelector('.equipment-slot-arrows-count')!;
 
     // Navigation elements
-    private previous: HTMLElement = document.querySelector('#player-image-navigator > .previous')!;
-    private next: HTMLElement = document.querySelector('#player-image-navigator > .next')!;
+    private previous: HTMLElement = document.querySelector(
+        '#equipments-player-image-navigator > .previous'
+    )!;
+    private next: HTMLElement = document.querySelector(
+        '#equipments-player-image-navigator > .next'
+    )!;
 
     // Stats elements
     private attackStats: HTMLElement = document.querySelector('#attack-stats')!;
@@ -56,7 +78,7 @@ export default class Equipments extends Menu {
         this.weaponSkin.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.WeaponSkin)
         );
-        this.armour.addEventListener('click', () =>
+        this.chestplate.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Helmet)
         );
         this.armourSkin.addEventListener('click', () =>
@@ -84,7 +106,7 @@ export default class Equipments extends Menu {
         this.weapon.style.backgroundImage = Util.getImageURL(this.player.getWeapon().key);
         this.weaponSkin.style.backgroundImage = Util.getImageURL(this.player.getWeaponSkin().key);
         // Cloth armour shouldn't be displayed in the UI.
-        this.armour.style.backgroundImage = Util.getImageURL(this.player.getHelmet().key);
+        this.chestplate.style.backgroundImage = Util.getImageURL(this.player.getHelmet().key);
         this.armourSkin.style.backgroundImage = Util.getImageURL(this.player.getArmourSkin().key);
         this.pendant.style.backgroundImage = Util.getImageURL(this.player.getPendant().key);
         this.ring.style.backgroundImage = Util.getImageURL(this.player.getRing().key);
