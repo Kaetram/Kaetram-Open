@@ -14,9 +14,10 @@
 }
 
 #background,
-#text-canvas,
+#entities,
 #foreground,
 #cursor,
+#text-canvas,
 #overlay {
     position: absolute;
     transform: translateZ(0);
