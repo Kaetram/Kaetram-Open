@@ -1,7 +1,7 @@
 @use '../../abstracts/media';
 @use '../../abstracts/sprite';
 
-.page-slice {
+.slice-page {
     user-select: none;
 
     position: absolute;
@@ -10,8 +10,8 @@
     display: none;
 
     box-sizing: border-box;
-    width: 12em;
-    height: 20em;
+    width: 24em;
+    height: 15em;
     padding: 1em 0.675em 0.675em;
 
     color: #eee;
