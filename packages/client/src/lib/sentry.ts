@@ -1,8 +1,7 @@
-import * as Sentry from '@sentry/browser';
-import { BrowserTracing } from '@sentry/tracing';
+import { init, BrowserTracing } from '@sentry/browser';
 
 if (import.meta.env.PROD && globalConfig.sentryDsn)
-    Sentry.init({
+    init({
         dsn: globalConfig.sentryDsn,
         integrations: [new BrowserTracing()],
         tracesSampleRate: 1
