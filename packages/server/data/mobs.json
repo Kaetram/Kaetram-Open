@@ -3,7 +3,7 @@
         "name": "Rat",
         "description": "Ah yes, this rat is made out of rat.",
         "dropTables": ["ordinary"],
-        "hitPoints": 34,
+        "hitPoints": 27,
         "level": 1,
         "aggroRange": 1,
         "attackRate": 1400,
@@ -4561,6 +4561,12 @@
     "forestdragon": {
         "name": "Forest Dragon",
         "description": "Keros' favourite pet!",
+        "drops": [
+            {
+                "key": "dragonscale",
+                "chance": 1500
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 6942,
         "level": 258,

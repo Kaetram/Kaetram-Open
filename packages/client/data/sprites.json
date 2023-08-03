@@ -116,7 +116,12 @@
     { "id": "player/weapon/sycophant", "offsetY": -24 },
     { "id": "player/weapon/timelessglaive", "offsetY": -24 },
     { "id": "player/weapon/twilightgreataxe", "offsetY": -24 },
-    { "id": "player/weapon/witchesfocus", "offsetY": -24 },
+    { "id": "player/weapon/witchsstaffancient", "offsetY": -24 },
+    { "id": "player/weapon/witchsstaffblood", "offsetY": -24 },
+    { "id": "player/weapon/witchsstaffdemonic", "offsetY": -24 },
+    { "id": "player/weapon/witchsstaffmoon", "offsetY": -24 },
+    { "id": "player/weapon/witchsstaffsunshine", "offsetY": -24 },
+
     { "id": "player/weapon/zweipiercer", "offsetY": -24 },
 
     { "id": "player/weapon/aquastaff", "offsetY": -20 },
@@ -6726,6 +6731,10 @@
     { "id": "items/sycophant", "offsetX": 0, "offsetY": 0 },
     { "id": "items/timelessglaive", "offsetX": 0, "offsetY": 0 },
     { "id": "items/twilightgreataxe", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/witchesfocus", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/witchsstaffancient", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/witchsstaffblood", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/witchsstaffdemonic", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/witchsstaffmoon", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/witchsstaffsunshine", "offsetX": 0, "offsetY": 0 },
     { "id": "items/zweipiercer", "offsetX": 0, "offsetY": 0 }
 ]

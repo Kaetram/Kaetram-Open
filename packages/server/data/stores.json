@@ -187,6 +187,16 @@
                 "price": 15
             },
             {
+                "key": "spoon",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "cellobello",
+                "count": 5,
+                "price": 15
+            },
+            {
                 "key": "taekwondo",
                 "count": 5,
                 "price": 15
