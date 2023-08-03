@@ -39,7 +39,7 @@ export default class SpritesController {
      */
 
     public preloadSprites(): void {
-        this.get('death').load();
+        this.get('death')?.load();
     }
 
     /**
