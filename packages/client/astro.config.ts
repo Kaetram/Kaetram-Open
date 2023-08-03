@@ -71,12 +71,10 @@ function getImageSize(image: string) {
     return imageCache.get(image)!;
 }
 
-// https://astro.build/config
-export default defineConfig({
-    srcDir: './',
-    site: 'https://kaetram.com/',
-    trailingSlash: 'always',
-    integrations: [
+let integrations = [i18n({ locales, defaultLocale })];
+
+if (import.meta.env.PROD)
+    integrations.push(
         webmanifest({
             icon: 'public/icon.png',
             name: config.name,
@@ -105,17 +103,23 @@ export default defineConfig({
                 iconPurpose: ['any', 'maskable']
             }
         }),
-        partytown({ config: { debug: false } }),
-        i18n({ locales, defaultLocale }),
         sitemap({
             i18n: { locales, defaultLocale },
             filter: defaultLocaleSitemapFilter({ defaultLocale })
         }),
+        partytown({ config: { debug: false } }),
         robotsTxt({ host: true }),
         critters({ logger: 2 }),
         compress({ logger: 1, img: false }),
         compressor({ gzip: true, brotli: true })
-    ],
+    );
+
+// https://astro.build/config
+export default defineConfig({
+    srcDir: './',
+    site: 'https://kaetram.com/',
+    trailingSlash: 'always',
+    integrations,
     server: { host: true, port: 9000 },
     vite: {
         plugins,
