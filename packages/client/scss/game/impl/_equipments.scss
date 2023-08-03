@@ -1,13 +1,9 @@
 @use '../../abstracts/media';
 
-#equipments {
+#equipment-content {
     display: flex;
     gap: 1em;
     justify-content: space-between;
-
-    &[hidden] {
-        display: none;
-    }
 }
 
 #equipments-player-visual {
@@ -42,38 +38,6 @@
     font-size: 0.75em;
 }
 
-#profile-container {
-    right: 4em;
-}
-
-#state-page {
-    .profile-info {
-        text-align: center;
-    }
-}
-
-#attack-style-list {
-    display: flex;
-    justify-content: space-evenly;
-
-    height: 3em;
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-}
-
-#state-page,
-#skills-page,
-#abilities-page {
-    position: absolute;
-    inset: 0;
-
-    display: none;
-
-    box-sizing: border-box;
-    height: 17em;
-    padding: 1.5em 1em 0.5em;
-}
-
 #equipment-slots {
     position: relative;
     width: 14em;
@@ -104,7 +68,7 @@
 
     .equipment-slot-arrows {
         top: 1.25em;
-        left: 12.75em;
+        left: 11.75em;
     }
 
     .equipment-slot-arrows-count {
@@ -129,7 +93,7 @@
 
     .equipment-slot-shield {
         top: 6em;
-        left: 12em;
+        left: 11em;
     }
 
     .equipment-slot-armour-skin {
@@ -144,7 +108,7 @@
 
     .equipment-slot-ring {
         top: 6em;
-        left: 0;
+        left: 1em;
     }
 
     .equipment-slot-legplates {
