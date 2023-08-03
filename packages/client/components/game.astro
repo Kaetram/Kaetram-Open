@@ -88,43 +88,56 @@
                     </li>
                 </ul>
 
-                <div id="helmet-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
-                <div id="pendant-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
-                <div id="arrows-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                    <div id="arrows-count" class="stroke"></div>
-                </div>
-                <div id="chestplate-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
-                <div id="weapon-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
-                <div id="shield-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
-                <div id="ring-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
-                <div id="armour-skin-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
-                <div id="weapon-skin-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
-                <div id="legplates-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
-                <div id="cape-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
-                <div id="boots-slot" class="profile-item slice-list-item">
-                    <div class="profile-item-image"></div>
-                </div>
+                <ul id="profile-equipment-slots">
+                    <li class="equipment-slot equipment-slot-helmet slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-pendant slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-arrows slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                        <div class="equipment-slot-arrows-count stroke"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-chestplate slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-weapon slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-shield slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-ring slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-armour-skin slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-weapon-skin slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-legplates slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-cape slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-boots slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+                </ul>
 
                 <div id="equipment-button"></div>
 
@@ -518,52 +531,97 @@
         <div id="equipments" class="slice-container">
             <div id="close-equipments" class="close-container"></div>
 
-            <div id="equipment-slots" class="page state-page">
-                <div id="equipment-container">
-                    <div class="profile-slot equip-weapon-slot"></div>
-                    <div class="profile-slot equip-weapon-skin-slot"></div>
-                    <div class="profile-slot equip-armour-slot"></div>
-                    <div class="profile-slot equip-armour-skin-slot"></div>
-                    <div class="profile-slot equip-pendant-slot"></div>
-                    <div class="profile-slot equip-ring-slot"></div>
-                    <div class="profile-slot equip-boots-slot"></div>
-                    <div class="profile-slot equip-arrows-slot"></div>
+            <div id="equipments-player-visual">
+                <div id="equipments-player-image">
+                    <canvas id="equipments-player-image-canvas"></canvas>
+
+                    <div id="equipments-player-image-navigator">
+                        <div class="previous"></div>
+                        <div class="next"></div>
+                    </div>
                 </div>
+
+                <ul id="equipment-slots">
+                    <li class="equipment-slot equipment-slot-helmet slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-pendant slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-arrows slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                        <div class="equipment-slot-arrows-count stroke"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-chestplate slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-weapon slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-shield slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-ring slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-armour-skin slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-weapon-skin slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-legplates slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-cape slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-boots slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+                </ul>
             </div>
 
-            <div id="player-image-armour" class="player-image"></div>
-            <div id="player-image-weapon" class="player-image"></div>
+            <div id="equipments-player-stats">
+                <div id="attack-stats">
+                    <p class="title">Attack Stats</p>
+                    <br />
+                    <p class="crush">Crush:</p>
+                    <p class="slash">Slash:</p>
+                    <p class="stab">Stab:</p>
+                    <p class="archery">Archery:</p>
+                    <p class="magic">Magic:</p>
+                </div>
 
-            <div id="player-image-navigator">
-                <div class="previous"></div>
-                <div class="next"></div>
-            </div>
+                <div id="defense-stats">
+                    <p class="title">Defense Stats</p>
+                    <br />
+                    <p class="crush">Crush:</p>
+                    <p class="slash">Slash:</p>
+                    <p class="stab">Stab:</p>
+                    <p class="archery">Archery:</p>
+                    <p class="magic">Magic:</p>
+                </div>
 
-            <div id="attack-stats">
-                <p class="title">Attack Stats</p>
-                <br />
-                <p class="crush">Crush:</p>
-                <p class="slash">Slash:</p>
-                <p class="stab">Stab:</p>
-                <p class="archery">Archery:</p>
-                <p class="magic">Magic:</p>
-            </div>
-            <div id="defense-stats">
-                <p class="title">Defense Stats</p>
-                <br />
-                <p class="crush">Crush:</p>
-                <p class="slash">Slash:</p>
-                <p class="stab">Stab:</p>
-                <p class="archery">Archery:</p>
-                <p class="magic">Magic:</p>
-            </div>
-            <div id="bonuses">
-                <p class="title">Bonuses</p>
-                <br />
-                <p class="accuracy">Accuracy:</p>
-                <p class="strength">Strength:</p>
-                <p class="archery">Archery:</p>
-                <p class="magic">Magic:</p>
+                <div id="bonuses">
+                    <p class="title">Bonuses</p>
+                    <br />
+                    <p class="accuracy">Accuracy:</p>
+                    <p class="strength">Strength:</p>
+                    <p class="archery">Archery:</p>
+                    <p class="magic">Magic:</p>
+                </div>
             </div>
         </div>
 
