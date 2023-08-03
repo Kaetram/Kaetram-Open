@@ -765,60 +765,32 @@
             "magic": 0
         }
     },
-    "ancientstaff": {
-        "type": "weapon",
-        "name": "Ancient Staff",
-        "weaponType": "sword",
-        "price": 5000,
-        "skill": "strength",
-        "level": 25,
-        "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
-            "archery": 0,
-            "magic": 0
-        }
-    },
     "angelicblade": {
         "type": "weapon",
         "name": "Angelic Blade",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
-        "level": 25,
+        "level": 60,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 38,
+            "slash": 40,
+            "stab": 21,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 30,
+            "slash": 21,
+            "stab": 12,
             "archery": 0,
-            "magic": 0
+            "magic": -20
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 18,
+            "strength": 24,
             "archery": 0,
-            "magic": 0
+            "magic": -8
         }
     },
     "berserkerssanity": {
@@ -826,25 +798,25 @@
         "name": "Berserker's Sanity",
         "weaponType": "sword",
         "price": 5000,
-        "skill": "strength",
-        "level": 25,
+        "skill": "accuracy",
+        "level": 30,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 4,
+            "slash": 22,
+            "stab": 14,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 8,
+            "slash": 9,
+            "stab": 6,
             "archery": 0,
             "magic": 0
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 12,
+            "strength": 6,
             "archery": 0,
             "magic": 0
         }
@@ -854,25 +826,25 @@
         "name": "Bident",
         "weaponType": "sword",
         "price": 5000,
-        "skill": "strength",
-        "level": 25,
+        "skill": "accuracy",
+        "level": 30,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 12,
+            "slash": 8,
+            "stab": 19,
             "archery": 0,
-            "magic": 0
+            "magic": 6
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 4,
+            "slash": 8,
+            "stab": 3,
             "archery": 0,
-            "magic": 0
+            "magic": 6
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 12,
+            "strength": 4,
             "archery": 0,
             "magic": 0
         }
@@ -882,88 +854,32 @@
         "name": "Blade of Darkness",
         "weaponType": "sword",
         "price": 5000,
-        "skill": "strength",
-        "level": 25,
+        "skill": "accuracy",
+        "level": 55,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 4,
+            "slash": 38,
+            "stab": 24,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 4,
+            "slash": 12,
+            "stab": 10,
             "archery": 0,
-            "magic": 0
+            "magic": -12
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 22,
+            "strength": 6,
             "archery": 0,
-            "magic": 0
-        }
-    },
-    "bloodmoonstaff": {
-        "type": "weapon",
-        "name": "Bloodmoon Staff",
-        "weaponType": "sword",
-        "price": 5000,
-        "skill": "strength",
-        "level": 25,
-        "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
-            "archery": 0,
-            "magic": 0
+            "magic": -8
         }
     },
     "bluelightsaber": {
         "type": "weapon",
         "name": "Blue Lightsaber",
-        "weaponType": "sword",
-        "price": 5000,
-        "skill": "strength",
-        "level": 25,
-        "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
-            "archery": 0,
-            "magic": 0
-        }
-    },
-    "bluemoonstaff": {
-        "type": "weapon",
-        "name": "Bluemoon Staff",
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
@@ -1045,34 +961,6 @@
             "magic": 0
         }
     },
-    "cellobello": {
-        "type": "weapon",
-        "name": "Cello Bello",
-        "weaponType": "sword",
-        "price": 5000,
-        "skill": "strength",
-        "level": 25,
-        "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
-            "archery": 0,
-            "magic": 0
-        }
-    },
     "club": {
         "type": "weapon",
         "name": "Club",
@@ -1101,58 +989,30 @@
             "magic": 0
         }
     },
-    "demonicstaff": {
-        "type": "weapon",
-        "name": "Demonic Staff",
-        "weaponType": "sword",
-        "price": 5000,
-        "skill": "strength",
-        "level": 25,
-        "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
-            "archery": 0,
-            "magic": 0
-        }
-    },
     "dragonscale": {
         "type": "weapon",
         "name": "Dragon Scale",
-        "weaponType": "sword",
+        "weaponType": "bigsword",
         "price": 5000,
         "skill": "strength",
-        "level": 25,
+        "level": 55,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 19,
+            "slash": 42,
+            "stab": 21,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 12,
+            "slash": 14,
+            "stab": 9,
             "archery": 0,
             "magic": 0
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 13,
+            "strength": 21,
             "archery": 0,
             "magic": 0
         }
@@ -1163,26 +1023,26 @@
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
-        "level": 25,
+        "level": 60,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 38,
+            "slash": 40,
+            "stab": 21,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 30,
+            "slash": 21,
+            "stab": 12,
             "archery": 0,
-            "magic": 0
+            "magic": -20
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 18,
+            "strength": 24,
             "archery": 0,
-            "magic": 0
+            "magic": -8
         }
     },
     "executionershammer": {
@@ -1353,35 +1213,30 @@
             "magic": 0
         }
     },
-    "lolipop": {
-        "type": "weaponskin",
-        "name": "Lolipop",
-        "price": 5000
-    },
     "moongreataxe": {
         "type": "weapon",
         "name": "Moon Greataxe",
-        "weaponType": "sword",
+        "weaponType": "axe",
         "price": 5000,
         "skill": "strength",
-        "level": 25,
+        "level": 50,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 24,
+            "slash": 36,
+            "stab": 8,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 14,
+            "slash": 10,
+            "stab": 9,
             "archery": 0,
             "magic": 0
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 14,
+            "strength": 19,
             "archery": 0,
             "magic": 0
         }
@@ -1392,26 +1247,26 @@
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
-        "level": 25,
+        "level": 55,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 34,
+            "slash": 38,
+            "stab": 19,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 24,
+            "slash": 18,
+            "stab": 13,
             "archery": 0,
-            "magic": 0
+            "magic": -20
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 18,
+            "strength": 24,
             "archery": 0,
-            "magic": 0
+            "magic": -8
         }
     },
     "peddlepounder": {
@@ -1420,24 +1275,24 @@
         "weaponType": "sword",
         "price": 5000,
         "skill": "strength",
-        "level": 25,
+        "level": 20,
         "attackStats": {
-            "crush": 0,
+            "crush": 24,
             "slash": 0,
             "stab": 0,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 8,
+            "slash": 14,
+            "stab": 3,
             "archery": 0,
             "magic": 0
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 3,
+            "strength": 8,
             "archery": 0,
             "magic": 0
         }
@@ -1582,86 +1437,30 @@
             "magic": 0
         }
     },
-    "spoon": {
-        "type": "weapon",
-        "name": "Spoon",
-        "weaponType": "sword",
-        "price": 5000,
-        "skill": "strength",
-        "level": 25,
-        "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
-            "archery": 0,
-            "magic": 0
-        }
-    },
     "sunrisegreataxe": {
         "type": "weapon",
         "name": "Sunrise Greataxe",
-        "weaponType": "sword",
+        "weaponType": "axe",
         "price": 5000,
         "skill": "strength",
-        "level": 25,
+        "level": 50,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 24,
+            "slash": 36,
+            "stab": 8,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 14,
+            "slash": 10,
+            "stab": 9,
             "archery": 0,
             "magic": 0
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
-            "archery": 0,
-            "magic": 0
-        }
-    },
-    "sunshinestaff": {
-        "type": "weapon",
-        "name": "Sunshine Staff",
-        "weaponType": "sword",
-        "price": 5000,
-        "skill": "strength",
-        "level": 25,
-        "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 14,
+            "strength": 19,
             "archery": 0,
             "magic": 0
         }
@@ -1781,55 +1580,27 @@
     "twilightgreataxe": {
         "type": "weapon",
         "name": "Twilight Greataxe",
-        "weaponType": "sword",
+        "weaponType": "axe",
         "price": 5000,
         "skill": "strength",
-        "level": 25,
+        "level": 50,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 24,
+            "slash": 36,
+            "stab": 8,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 14,
+            "slash": 10,
+            "stab": 9,
             "archery": 0,
             "magic": 0
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
-            "archery": 0,
-            "magic": 0
-        }
-    },
-    "witchesfocus": {
-        "type": "weapon",
-        "name": "Witch's Focus",
-        "weaponType": "sword",
-        "price": 5000,
-        "skill": "strength",
-        "level": 25,
-        "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 14,
+            "strength": 19,
             "archery": 0,
             "magic": 0
         }
@@ -3398,6 +3169,296 @@
         "attackRange": 9,
         "projectileName": "terror"
     },
+    "bluemoonstaff": {
+        "type": "weapon",
+        "name": "Bluemoon Staff",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "demonicstaff": {
+        "type": "weapon",
+        "name": "Demonic Staff",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "sunshinestaff": {
+        "type": "weapon",
+        "name": "Sunshine Staff",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "witchsstaffancient": {
+        "type": "weapon",
+        "name": "Ancient Witch's Staff",
+        "weaponType": "staff",
+        "price": 5000,
+        "skill": "magic",
+        "level": 45,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "attackRange": 9,
+        "projectileName": "purplebolt"
+    },
+    "witchsstaffblood": {
+        "type": "weapon",
+        "name": "Witch's Staff of Blood",
+        "weaponType": "staff",
+        "price": 5000,
+        "skill": "magic",
+        "level": 45,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "attackRange": 9,
+        "projectileName": "purplebolt"
+    },
+    "witchsstaffdemonic": {
+        "type": "weapon",
+        "name": "Demonic Witch's Staff",
+        "weaponType": "staff",
+        "price": 5000,
+        "skill": "magic",
+        "level": 45,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "attackRange": 9,
+        "projectileName": "purplebolt"
+    },
+    "witchsstaffmoon": {
+        "type": "weapon",
+        "name": "Witch's Staff of the Moon",
+        "weaponType": "staff",
+        "price": 5000,
+        "skill": "magic",
+        "level": 45,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "attackRange": 9,
+        "projectileName": "purplebolt"
+    },
+    "witchsstaffsunshine": {
+        "type": "weapon",
+        "name": "Witch's Staff of Sunshine",
+        "weaponType": "staff",
+        "price": 5000,
+        "skill": "magic",
+        "level": 45,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "attackRange": 9,
+        "projectileName": "purplebolt"
+    },
+    "bloodmoonstaff": {
+        "type": "weapon",
+        "name": "Bloodmoon Staff",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "ancientstaff": {
+        "type": "weapon",
+        "name": "Ancient Staff",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 25,
+        "attackStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 0,
+            "stab": 0,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "coppershield": {
         "type": "shield",
         "name": "Copper Shield",
@@ -3529,6 +3590,19 @@
             "archery": 0,
             "magic": 3
         }
+    },
+    "cellobello": {
+        "type": "weaponskin",
+        "name": "Cello Bello"
+    },
+    "lolipop": {
+        "type": "weaponskin",
+        "name": "Lolipop",
+        "price": 5000
+    },
+    "spoon": {
+        "type": "weaponskin",
+        "name": "Spoon"
     },
     "danbo": {
         "type": "skin",
