@@ -122,16 +122,24 @@ export default class State extends Menu {
         this.weapon.style.backgroundImage =
             Util.getImageURL(this.player.getWeapon().key) ||
             this.getPlaceholder(Modules.Equipment.Weapon);
-        this.shield.style.backgroundImage = Util.getImageURL(this.player.getShield().key);
+        this.shield.style.backgroundImage =
+            Util.getImageURL(this.player.getShield().key) ||
+            this.getPlaceholder(Modules.Equipment.Shield);
         this.ring.style.backgroundImage =
             Util.getImageURL(this.player.getRing().key) ||
             this.getPlaceholder(Modules.Equipment.Ring);
-        this.weaponSkin.style.backgroundImage = Util.getImageURL(this.player.getWeaponSkin().key);
-        this.armourSkin.style.backgroundImage = Util.getImageURL(this.player.getArmourSkin().key);
+        this.weaponSkin.style.backgroundImage =
+            Util.getImageURL(this.player.getWeaponSkin().key) ||
+            this.getPlaceholder(Modules.Equipment.WeaponSkin);
+        this.armourSkin.style.backgroundImage =
+            Util.getImageURL(this.player.getArmourSkin().key) ||
+            this.getPlaceholder(Modules.Equipment.ArmourSkin);
         this.legplates.style.backgroundImage =
             Util.getImageURL(this.player.getLegplate().key) ||
             this.getPlaceholder(Modules.Equipment.Legplates);
-        this.cape.style.backgroundImage = Util.getImageURL(this.player.getCape().key);
+        this.cape.style.backgroundImage =
+            Util.getImageURL(this.player.getCape().key) ||
+            this.getPlaceholder(Modules.Equipment.Cape);
         this.boots.style.backgroundImage =
             Util.getImageURL(this.player.getBoots().key) ||
             this.getPlaceholder(Modules.Equipment.Boots);

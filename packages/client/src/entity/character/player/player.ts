@@ -231,7 +231,8 @@ export default class Player extends Character {
 
         if (!key) return this.unequip(type);
 
-        let prefix = this.getType(type);
+        // Weapon skin uses the weapon folder instead of a separate one.
+        let prefix = type === Modules.Equipment.WeaponSkin ? 'weapon' : this.getType(type);
 
         this.equipments[type].update(
             prefix ? `player/${prefix}/${key}` : `items/${key}`,
@@ -254,8 +255,7 @@ export default class Player extends Character {
         // If a light is present on the equipment just apply it.
         if (light) this.equipments[type].light = light;
 
-        // Disable drawing for the other equipment slots if we're wearing a skin.
-        if (type === Modules.Equipment.ArmourSkin) this.toggleDrawableEquipments(false);
+        this.updateEquipmentAppearance();
     }
 
     /**
@@ -301,8 +301,7 @@ export default class Player extends Character {
         if (count > 0) this.equipments[type].count = count;
         else this.equipments[type].update();
 
-        // Make the normal equipments drawable again.
-        if (type === Modules.Equipment.ArmourSkin) this.toggleDrawableEquipments(true);
+        this.updateEquipmentAppearance();
     }
 
     /**
@@ -325,6 +324,27 @@ export default class Player extends Character {
 
     public sync(): void {
         this.syncCallback?.();
+    }
+
+    /**
+     * Synchronizes the player's appearance with its weapon/armour skin and depending on
+     * in-game properties like a PVP flag. This is called when the player equips or unequips
+     * an equipment or when the player's PVP flag is toggled.
+     */
+
+    public updateEquipmentAppearance(): void {
+        // Skins are not drawable in PVP.
+        this.getArmourSkin().drawable = !this.game.pvp;
+        this.getWeaponSkin().drawable = !this.game.pvp;
+
+        let weaponHidden = !!this.getWeaponSkin().key && this.getWeaponSkin().drawable,
+            armourHidden = !!this.getArmourSkin().key && this.getArmourSkin().drawable;
+
+        // Check if we have a weapon skin equipped and update the weapon appearance.
+        this.getWeapon().drawable = !weaponHidden;
+
+        // Check if we have an armour skin equipped and update the armour appearance.
+        this.toggleDrawableEquipments(!armourHidden);
     }
 
     /**
@@ -352,18 +372,6 @@ export default class Player extends Character {
             return this.equipments[Modules.Equipment.ArmourSkin].key;
 
         return 'player/base';
-    }
-
-    /**
-     * @returns The key of the currently equipped weapon.
-     */
-
-    public getWeaponSpriteName(): string {
-        // Use the weapon skin if it exists.
-        if (this.equipments[Modules.Equipment.WeaponSkin].key)
-            return this.equipments[Modules.Equipment.WeaponSkin].key;
-
-        return this.equipments[Modules.Equipment.Weapon].key;
     }
 
     //// Shortcut functions for getting equipment objects. ////

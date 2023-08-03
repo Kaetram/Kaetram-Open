@@ -382,6 +382,12 @@
             "Must have really poor depth perception when you think about it.",
             "Eye really can't seem to figure out how that thing works."
         ],
+        "drops": [
+            {
+                "key": "eyesword",
+                "chance": 1000
+            }
+        ],
         "dropTables": ["ordinary", "unusual", "shards"],
         "hitPoints": 160,
         "level": 33,
@@ -1764,6 +1770,12 @@
 
     "golem": {
         "name": "Golem",
+        "drops": [
+            {
+                "key": "golemsmace",
+                "chance": 250
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 350,
         "level": 38,
@@ -4309,6 +4321,12 @@
     "hellhound": {
         "name": "Hellhound",
         "description": "I better keep a distance before this thing turns me into a stew!",
+        "drops": [
+            {
+                "key": "hellhoundfang",
+                "chance": 100
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 4550,
         "level": 344,

@@ -1166,6 +1166,9 @@ export default class Connection {
 
     private handlePVP(info: PVPPacketData): void {
         this.game.pvp = info.state;
+
+        // Update the viewing for the player's skin and weapon skin.
+        this.game.player.updateEquipmentAppearance();
     }
 
     /**
