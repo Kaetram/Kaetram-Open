@@ -109,40 +109,40 @@ export default class State extends Menu {
         // Synchronize equipment data
         this.helmet.style.backgroundImage =
             Util.getImageURL(this.player.getHelmet().key) ||
-            this.getPlaceholder(Modules.Equipment.Helmet);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.Helmet);
         this.pendant.style.backgroundImage =
             Util.getImageURL(this.player.getPendant().key) ||
-            this.getPlaceholder(Modules.Equipment.Pendant);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.Pendant);
         this.arrows.style.backgroundImage =
             Util.getImageURL(this.player.getArrows().key) ||
-            this.getPlaceholder(Modules.Equipment.Arrows);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.Arrows);
         this.chestplate.style.backgroundImage =
             Util.getImageURL(this.player.getChestplate().key) ||
-            this.getPlaceholder(Modules.Equipment.Chestplate);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.Chestplate);
         this.weapon.style.backgroundImage =
             Util.getImageURL(this.player.getWeapon().key) ||
-            this.getPlaceholder(Modules.Equipment.Weapon);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.Weapon);
         this.shield.style.backgroundImage =
             Util.getImageURL(this.player.getShield().key) ||
-            this.getPlaceholder(Modules.Equipment.Shield);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.Shield);
         this.ring.style.backgroundImage =
             Util.getImageURL(this.player.getRing().key) ||
-            this.getPlaceholder(Modules.Equipment.Ring);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.Ring);
         this.weaponSkin.style.backgroundImage =
             Util.getImageURL(this.player.getWeaponSkin().key) ||
-            this.getPlaceholder(Modules.Equipment.WeaponSkin);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.WeaponSkin);
         this.armourSkin.style.backgroundImage =
             Util.getImageURL(this.player.getArmourSkin().key) ||
-            this.getPlaceholder(Modules.Equipment.ArmourSkin);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.ArmourSkin);
         this.legplates.style.backgroundImage =
             Util.getImageURL(this.player.getLegplate().key) ||
-            this.getPlaceholder(Modules.Equipment.Legplates);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.Legplates);
         this.cape.style.backgroundImage =
             Util.getImageURL(this.player.getCape().key) ||
-            this.getPlaceholder(Modules.Equipment.Cape);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.Cape);
         this.boots.style.backgroundImage =
             Util.getImageURL(this.player.getBoots().key) ||
-            this.getPlaceholder(Modules.Equipment.Boots);
+            Util.getEquipmentPlaceholderURL(Modules.Equipment.Boots);
 
         // Synchronize the attack styles
         this.loadAttackStyles();
@@ -246,18 +246,6 @@ export default class State extends Menu {
         }
 
         return 'Create a bug report if you see this :)';
-    }
-
-    /**
-     * Grabs the placeholder icon for when the equipment slow is unequipped.
-     * @param type The type of equipment we are getting the icon for.
-     * @returns A string of the URL for the icon.
-     */
-
-    private getPlaceholder(type: Modules.Equipment): string {
-        let equipment = Modules.Equipment[type].toLowerCase();
-
-        return `url("img/interface/equipment/${equipment}.png")`;
     }
 
     /**

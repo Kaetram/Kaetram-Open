@@ -84,6 +84,7 @@
         "unicorn/no-array-reduce": "off",
         "unicorn/prefer-number-properties": "off",
         "unicorn/prevent-abbreviations": "off",
+        "unicorn/prefer-math-trunc": "off",
 
         // TODO: Enable on ES2022
         "unicorn/prefer-string-replace-all": "off",

@@ -975,18 +975,21 @@ export default class Player extends Character {
     /**
      * Iterates through the renderable equipments and executes the callback. This function
      * is used by the rendering system to draw the paperdoll equipments.
-     * @param callback Contains the equipment currently being iterated.
+     * @param callback Contains the equipment currently being iterated and its type.
      * @param ignoreEmpty Whether or not we want to iterate through all equipment or just the ones that exist.
      */
 
-    public forEachEquipment(callback: (equipment: Equipment) => void, ignoreEmpty = false): void {
+    public forEachEquipment(
+        callback: (equipment: Equipment, type?: number) => void,
+        ignoreEmpty = false
+    ): void {
         for (let type of Modules.EquipmentRenderOrder) {
             let equipment = this.equipments[type as never] as Equipment;
 
             if (!equipment.drawable) continue;
             if (ignoreEmpty && !equipment.exists()) continue;
 
-            callback(equipment);
+            callback(equipment, ~~type);
         }
     }
 

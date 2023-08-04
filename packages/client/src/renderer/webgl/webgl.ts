@@ -156,7 +156,7 @@ export default class WebGL extends Renderer {
         if (!Array.isArray(data)) return this.addTile(index, data);
 
         // If we find an array tile then we need to iterate through the array and pass the data to the layers.
-        for (let tileIndex in data) this.addTile(index, data[tileIndex], parseInt(tileIndex));
+        for (let tileIndex in data) this.addTile(index, data[tileIndex], ~~tileIndex);
     }
 
     /**
