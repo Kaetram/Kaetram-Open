@@ -206,9 +206,6 @@ export default class Equipments extends Menu {
 
         this.imageOrientation = orientations[index];
 
-        console.log(direction);
-        console.log(Modules.Orientation[this.imageOrientation].toString().toLowerCase());
-
         this.updatePlayerImage(
             Modules.Orientation[this.imageOrientation].toString().toLowerCase() as ImageOrientation
         );
@@ -311,6 +308,10 @@ export default class Equipments extends Menu {
             context.scale(-1, 1);
         }
 
+        // Translate the sprite to the middle.
+        context.save();
+        context.translate(canvasWidth / 2, canvasHeight / 2);
+
         // Draw the base sprite and then the equipment on top of it.
         context.drawImage(
             sprite.image,
@@ -318,8 +319,8 @@ export default class Equipments extends Menu {
             frameY,
             sprite.width,
             sprite.height,
-            canvasWidth / 2,
-            canvasHeight / 2,
+            0,
+            0,
             canvasWidth,
             canvasHeight
         );
@@ -342,16 +343,24 @@ export default class Equipments extends Menu {
             }
 
             let scalingWidth = 1,
-                scalingHeight = 1;
+                scalingHeight = 1,
+                mismatchSize =
+                    equipmentSprite.width !== sprite.width ||
+                    equipmentSprite.height !== sprite.height;
 
-            if (
-                equipmentSprite.width !== sprite.width ||
-                equipmentSprite.height !== sprite.height
-            ) {
-                // scalingWidth = equipmentSprite.width / sprite.width;
-                // scalingHeight = equipmentSprite.height / sprite.height;
-                // context.save();
-                // context.translate(equipmentSprite.offsetX * scalingWidth, equipmentSprite.offsetY);
+            if (mismatchSize) {
+                frameY = idleFrame.row * equipmentSprite.height;
+                scalingWidth = equipmentSprite.width / sprite.width;
+                scalingHeight = equipmentSprite.height / sprite.height;
+
+                let dx = equipmentSprite.offsetX * 2,
+                    dy = equipmentSprite.offsetY - equipmentSprite.offsetY / 2;
+
+                if (equipmentSprite.width === 64) dx -= 24;
+                if (equipmentSprite.height === 64) dy -= 20;
+
+                context.save();
+                context.translate(dx, dy);
             }
 
             // Draw using the same frames as the base sprite.
@@ -361,19 +370,13 @@ export default class Equipments extends Menu {
                 frameY,
                 equipmentSprite.width,
                 equipmentSprite.height,
-                canvasWidth / 2,
-                canvasHeight / 2,
+                0,
+                0,
                 canvasWidth * scalingWidth,
                 canvasHeight * scalingHeight
             );
 
-            // Flip the canvas if we are facing left.
-            if (flip) {
-                context.translate(canvasWidth * 2, 0);
-                context.scale(-1, 1);
-            }
-
-            context.restore();
+            if (mismatchSize) context.restore();
         }, true);
 
         context.restore();
