@@ -61,7 +61,7 @@ export default class MenuController {
         this.notification = new Notification();
         this.settings = new Settings(game);
         this.header = new Header(game.player);
-        this.equipments = new Equipments(game.player, game.sprites);
+        this.equipments = new Equipments(game);
         this.achievements = new Achievements(game.player);
         this.quests = new Quests(game.player);
         this.friends = new Friends(game);

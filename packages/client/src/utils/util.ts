@@ -121,6 +121,18 @@ export default {
     },
 
     /**
+     * Grabs the placeholder icon for when the equipment slow is unequipped.
+     * @param type The type of equipment we are getting the icon for.
+     * @returns A string of the URL for the icon.
+     */
+
+    getEquipmentPlaceholderURL(type: Modules.Equipment): string {
+        let equipment = Modules.Equipment[type].toLowerCase();
+
+        return `url("img/interface/equipment/${equipment}.png")`;
+    },
+
+    /**
      * Takes any name (or string as a matter of fact) and capitalizes
      * every first letter after a space.
      * Example: 'tHiS Is a usErName' -> 'This Is A Username'
