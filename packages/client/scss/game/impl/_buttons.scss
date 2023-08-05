@@ -36,8 +36,21 @@
         #settings-button,
         #profile-button,
         #quests-button,
-        #guilds-button,
+        #guildss-button,
         #friends-button,
         #achievements-button
+    )
+);
+
+@include sprite.sheet(
+    $image: 'frame_buttons',
+    $width: 19,
+    $height: 19,
+    $hover: 1,
+    $active: 2,
+    $selectors: (
+        #guilds-button,
+        #leaderboards-button,
+        #equipment-button
     )
 );

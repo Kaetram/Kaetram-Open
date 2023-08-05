@@ -46,7 +46,7 @@
     justify-content: space-between;
 
     .button-row {
-        width: 8em;
+        width: 10em;
     }
 }
 
@@ -137,36 +137,6 @@
         left: 4em;
     }
 }
-
-@include sprite.sheet(
-    $image: 'main',
-    $y: 74,
-    $width: 14,
-    $height: 15,
-    $hover: 1,
-    $active: 2,
-    $selectors: #equipment-button
-);
-
-@include sprite.sheet(
-    $image: 'main',
-    $y: 104,
-    $width: 14,
-    $height: 15,
-    $hover: 1,
-    $active: 2,
-    $selectors: #guilds-button
-);
-
-@include sprite.sheet(
-    $image: 'main',
-    $y: 89,
-    $width: 14,
-    $height: 15,
-    $hover: 1,
-    $active: 2,
-    $selectors: #leaderboards-button
-);
 
 #profile-navigator {
     position: absolute;
