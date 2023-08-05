@@ -28,6 +28,11 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     flex: 1;
+
+    .title {
+        padding-bottom: 0.7em;
+        text-decoration: underline;
+    }
 }
 
 #equipments-player-image-canvas {
