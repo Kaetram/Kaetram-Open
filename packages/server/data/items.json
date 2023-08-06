@@ -1948,13 +1948,94 @@
             "slash": 9,
             "stab": 7,
             "archery": 3,
+            "magic": -2
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 5,
+            "archery": 0,
             "magic": 0
+        }
+    },
+    "moonhelm": {
+        "type": "helmet",
+        "name": "Moon Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 27,
+        "attackStats": {
+            "crush": 5,
+            "slash": 5,
+            "stab": 4,
+            "archery": -3,
+            "magic": -4
+        },
+        "defenseStats": {
+            "crush": 7,
+            "slash": 10,
+            "stab": 8,
+            "archery": 4,
+            "magic": -3
         },
         "bonuses": {
             "accuracy": 4,
             "strength": 6,
-            "archery": 0,
-            "magic": 0
+            "archery": -3,
+            "magic": -4
+        }
+    },
+    "redmoonhelm": {
+        "type": "helmet",
+        "name": "Red Moon Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 29,
+        "attackStats": {
+            "crush": 6,
+            "slash": 5,
+            "stab": 5,
+            "archery": -3,
+            "magic": -4
+        },
+        "defenseStats": {
+            "crush": 8,
+            "slash": 10,
+            "stab": 9,
+            "archery": 4,
+            "magic": -4
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 7,
+            "archery": -3,
+            "magic": -4
+        }
+    },
+    "demonichelm": {
+        "type": "helmet",
+        "name": "Demonic Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 29,
+        "attackStats": {
+            "crush": 6,
+            "slash": 5,
+            "stab": 5,
+            "archery": -3,
+            "magic": -4
+        },
+        "defenseStats": {
+            "crush": 8,
+            "slash": 10,
+            "stab": 9,
+            "archery": 4,
+            "magic": -4
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 7,
+            "archery": -3,
+            "magic": -4
         }
     },
     "wolfhelmet": {
@@ -1982,6 +2063,115 @@
             "strength": 6,
             "archery": 0,
             "magic": 0
+        }
+    },
+    "helmofliberty": {
+        "type": "helmet",
+        "name": "Helm of Liberty",
+        "price": 200,
+        "skill": "defense",
+        "level": 55,
+        "attackStats": {
+            "crush": 8,
+            "slash": 12,
+            "stab": 7,
+            "archery": 4,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 9,
+            "slash": 14,
+            "stab": 11,
+            "archery": 9,
+            "magic": 5
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 7,
+            "archery": 3,
+            "magic": 4
+        }
+    },
+    "helmofhaste": {
+        "type": "helmet",
+        "name": "Helm of Haste",
+        "price": 200,
+        "skill": "defense",
+        "level": 30,
+        "movementModifier": 0.95,
+        "attackStats": {
+            "crush": 5,
+            "slash": 6,
+            "stab": 7,
+            "archery": 4,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 9,
+            "slash": 14,
+            "stab": 8,
+            "archery": 5,
+            "magic": 6
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 4,
+            "archery": 3,
+            "magic": 2
+        }
+    },
+    "magmahelm": {
+        "type": "helmet",
+        "name": "Magma Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 43,
+        "attackStats": {
+            "crush": 12,
+            "slash": 13,
+            "stab": 11,
+            "archery": -5,
+            "magic": -12
+        },
+        "defenseStats": {
+            "crush": 12,
+            "slash": 18,
+            "stab": 17,
+            "archery": -12,
+            "magic": -10
+        },
+        "bonuses": {
+            "accuracy": 10,
+            "strength": 12,
+            "archery": -8,
+            "magic": -12
+        }
+    },
+    "hellkeeperhelm": {
+        "type": "helmet",
+        "name": "Hellkeeper Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 49,
+        "attackStats": {
+            "crush": 8,
+            "slash": 6,
+            "stab": 6,
+            "archery": -4,
+            "magic": -6
+        },
+        "defenseStats": {
+            "crush": 22,
+            "slash": 19,
+            "stab": 16,
+            "archery": -18,
+            "magic": -16
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 13,
+            "archery": -6,
+            "magic": -9
         }
     },
     "mushroomhat": {
@@ -2351,6 +2541,87 @@
             "magic": 6
         }
     },
+    "demoniccrystalhood": {
+        "type": "helmet",
+        "name": "Demonic Crystal Hood",
+        "price": 1000,
+        "skill": "magic",
+        "level": 32,
+        "attackStats": {
+            "crush": 2,
+            "slash": 4,
+            "stab": 2,
+            "archery": 0,
+            "magic": 16
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 1,
+            "stab": 1,
+            "archery": -4,
+            "magic": 11
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 7
+        }
+    },
+    "naturecrystalhood": {
+        "type": "helmet",
+        "name": "Nature Crystal Hood",
+        "price": 1000,
+        "skill": "magic",
+        "level": 32,
+        "attackStats": {
+            "crush": 2,
+            "slash": 4,
+            "stab": 2,
+            "archery": 0,
+            "magic": 16
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 1,
+            "stab": 1,
+            "archery": -4,
+            "magic": 11
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 7
+        }
+    },
+    "sunshinecrystalhood": {
+        "type": "helmet",
+        "name": "Sunshine Crystal Hood",
+        "price": 1000,
+        "skill": "magic",
+        "level": 32,
+        "attackStats": {
+            "crush": 2,
+            "slash": 4,
+            "stab": 2,
+            "archery": 0,
+            "magic": 16
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 1,
+            "stab": 1,
+            "archery": -4,
+            "magic": 11
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 7
+        }
+    },
     "fishbowl": {
         "type": "helmet",
         "name": "Fishbowl",
@@ -2536,6 +2807,33 @@
             "magic": 0
         }
     },
+    "hellkeeperchestplate": {
+        "type": "chestplate",
+        "name": "Hellkeeper Chestplate",
+        "price": 100,
+        "skill": "defense",
+        "level": 49,
+        "attackStats": {
+            "crush": 8,
+            "slash": 6,
+            "stab": 6,
+            "archery": -4,
+            "magic": -6
+        },
+        "defenseStats": {
+            "crush": 26,
+            "slash": 30,
+            "stab": 17,
+            "archery": -27,
+            "magic": -24
+        },
+        "bonuses": {
+            "accuracy": 14,
+            "strength": 26,
+            "archery": -12,
+            "magic": -16
+        }
+    },
     "copperlegplates": {
         "type": "legplates",
         "name": "Copper Legplates",
@@ -2694,6 +2992,33 @@
             "magic": -2
         }
     },
+    "hellkeeperlegplates": {
+        "type": "legplates",
+        "name": "Hellkeeper Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 49,
+        "attackStats": {
+            "crush": 5,
+            "slash": 7,
+            "stab": 8,
+            "archery": -5,
+            "magic": -5
+        },
+        "defenseStats": {
+            "crush": 18,
+            "slash": 25,
+            "stab": 15,
+            "archery": 0,
+            "magic": 4
+        },
+        "bonuses": {
+            "accuracy": 10,
+            "strength": 14,
+            "archery": -10,
+            "magic": -12
+        }
+    },
     "bronzeboots": {
         "type": "boots",
         "name": "Bronze Boots",
@@ -2773,6 +3098,190 @@
             "strength": 2,
             "archery": -2,
             "magic": -4
+        }
+    },
+    "leatherboots": {
+        "type": "boots",
+        "name": "Leather Boots",
+        "price": 150,
+        "attackStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 1,
+            "archery": 0,
+            "magic": -4
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 1,
+            "archery": 0,
+            "magic": -4
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "steelboots": {
+        "type": "boots",
+        "name": "Steel Boots",
+        "price": 3500,
+        "attackStats": {
+            "crush": 6,
+            "slash": 7,
+            "stab": 4,
+            "archery": 0,
+            "magic": -6
+        },
+        "defenseStats": {
+            "crush": 7,
+            "slash": 12,
+            "stab": 6,
+            "archery": 0,
+            "magic": -5
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 5,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "swiftboots": {
+        "type": "boots",
+        "name": "Swift Boots",
+        "price": 7500,
+        "movementModifier": 0.95,
+        "attackStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 1,
+            "archery": 0,
+            "magic": 4
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 1,
+            "archery": 0,
+            "magic": 4
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 1,
+            "magic": 1
+        }
+    },
+    "lavaboots": {
+        "type": "boots",
+        "name": "Lava Boots",
+        "price": 2250,
+        "skill": "defense",
+        "level": 28,
+        "attackStats": {
+            "crush": 9,
+            "slash": 12,
+            "stab": 10,
+            "archery": 0,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 12,
+            "slash": 12,
+            "stab": 12,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 4,
+            "archery": 8,
+            "magic": 0
+        }
+    },
+    "magmaboots": {
+        "type": "boots",
+        "name": "Magma Boots",
+        "price": 2350,
+        "skill": "defense",
+        "level": 35,
+        "attackStats": {
+            "crush": 13,
+            "slash": 17,
+            "stab": 12,
+            "archery": 5,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 15,
+            "slash": 12,
+            "stab": 14,
+            "archery": 4,
+            "magic": -5
+        },
+        "bonuses": {
+            "accuracy": 10,
+            "strength": 6,
+            "archery": 8,
+            "magic": 0
+        }
+    },
+    "nightboots": {
+        "type": "boots",
+        "name": "Lava Boots",
+        "price": 1850,
+        "skill": "defense",
+        "level": 25,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 7,
+            "stab": 8,
+            "archery": 4,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "hellkeeperboots": {
+        "type": "boots",
+        "name": "Hellkeeper Boots",
+        "price": 1850,
+        "skill": "defense",
+        "level": 45,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": -2,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 9,
+            "slash": 12,
+            "stab": 8,
+            "archery": -12,
+            "magic": -10
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 8,
+            "archery": -8,
+            "magic": -10
         }
     },
     "bronzering": {
@@ -3477,10 +3986,88 @@
             "magic": 0
         }
     },
+    "tinshield": {
+        "type": "shield",
+        "name": "Tin Shield",
+        "price": 100,
+        "defenseStats": {
+            "crush": 5,
+            "slash": 5,
+            "stab": 4,
+            "archery": 2,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 0,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "woodenshield": {
+        "type": "shield",
+        "name": "Wooden Shield",
+        "price": 420,
+        "defenseStats": {
+            "crush": 6,
+            "slash": 4,
+            "stab": 7,
+            "archery": 2,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "ironshield": {
+        "type": "shield",
+        "name": "Iron Shield",
+        "price": 420,
+        "skill": "defense",
+        "level": 10,
+        "defenseStats": {
+            "crush": 7,
+            "slash": 5,
+            "stab": 5,
+            "archery": 4,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "ironroundshield": {
+        "type": "shield",
+        "name": "Iron Round Shield",
+        "price": 420,
+        "skill": "defense",
+        "level": 13,
+        "defenseStats": {
+            "crush": 7,
+            "slash": 4,
+            "stab": 5,
+            "archery": 3,
+            "magic": 1
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 3,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "cobaltshield": {
         "type": "shield",
         "name": "Cobalt Shield",
         "price": 420,
+        "skill": "defense",
+        "level": 15,
         "defenseStats": {
             "crush": 5,
             "slash": 4,
@@ -3495,6 +4082,47 @@
             "magic": 0
         }
     },
+    "goldshield": {
+        "type": "shield",
+        "name": "Gold Shield",
+        "price": 420,
+        "skill": "defense",
+        "level": 20,
+        "defenseStats": {
+            "crush": 7,
+            "slash": 6,
+            "stab": 8,
+            "archery": 5,
+            "magic": -2
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 3,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "shieldofliberty": {
+        "type": "shield",
+        "name": "Shield of Liberty",
+        "price": 420,
+        "skill": "defense",
+        "level": 55,
+        "defenseStats": {
+            "crush": 17,
+            "slash": 16,
+            "stab": 18,
+            "archery": 9,
+            "magic": 12
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 4,
+            "archery": 3,
+            "magic": 4
+        }
+    },
+
     "lantern": {
         "type": "shield",
         "name": "Lantern",
@@ -3649,7 +4277,7 @@
         "name": "Turquoise Balloon",
         "weaponType": "sword"
     },
-    "balloonpinwhite": {
+    "balloonwhite": {
         "type": "weapon",
         "name": "White Balloon",
         "weaponType": "sword"
@@ -4255,17 +4883,6 @@
         "edible": true,
         "plugin": "firepotion"
     },
-    "book": {
-        "type": "object",
-        "name": "Book",
-        "undroppable": true
-    },
-    "cd": {
-        "type": "object",
-        "name": "CD [Quest]",
-        "description": "A CD received by some dying soldier. Contains his last mixtape. I should probably get this to his wife or something.",
-        "undroppable": true
-    },
     "smallemptyvial": {
         "type": "object",
         "name": "Small Empty Vial",
@@ -4303,6 +4920,17 @@
         "description": "This potion is not at all suspicious. Drink up, it's really yummy!",
         "plugin": "blackpotion",
         "edible": true
+    },
+    "book": {
+        "type": "object",
+        "name": "Book",
+        "undroppable": true
+    },
+    "cd": {
+        "type": "object",
+        "name": "CD [Quest]",
+        "description": "A CD received by some dying soldier. Contains his last mixtape. I should probably get this to his wife or something.",
+        "undroppable": true
     },
     "gold": {
         "type": "object",
@@ -4750,12 +5378,6 @@
         "description": "A berry that grows on bushes. It's pretty tasty when cooked.",
         "price": 100
     },
-    "coal": {
-        "type": "object",
-        "name": "Coal",
-        "description": "A piece of coal. You can use it smelt ores.",
-        "price": 75
-    },
     "rawchicken": {
         "type": "object",
         "name": "Raw Chicken",
@@ -4810,18 +5432,6 @@
         "healAmount": 650,
         "price": 100
     },
-    "copperbar": {
-        "type": "object",
-        "name": "Copper Bar",
-        "description": "A bar of copper. It's pretty heavy.",
-        "price": 100
-    },
-    "copperore": {
-        "type": "object",
-        "name": "Copper Ore",
-        "description": "A piece of copper ore. It's pretty heavy.",
-        "price": 100
-    },
     "corn": {
         "type": "object",
         "name": "Corn",
@@ -4832,12 +5442,6 @@
         "type": "object",
         "name": "Egg",
         "description": "A wonderful sorta round egg, it came from a chicken, I think.",
-        "price": 100
-    },
-    "goldore": {
-        "type": "object",
-        "name": "Gold Ore",
-        "description": "A piece of gold ore. It's pretty heavy.",
         "price": 100
     },
     "gooseberry": {
@@ -4945,22 +5549,16 @@
         "description": "A berry that grows on bushes.",
         "price": 100
     },
+    "copperbar": {
+        "type": "object",
+        "name": "Copper Bar",
+        "description": "A bar of copper. It's pretty heavy.",
+        "price": 100
+    },
     "tinbar": {
         "type": "object",
         "name": "Tin Bar",
         "description": "A bar of tin. It's pretty heavy.",
-        "price": 100
-    },
-    "tinore": {
-        "type": "object",
-        "name": "Tin Ore",
-        "description": "A piece of tin ore.",
-        "price": 100
-    },
-    "ironore": {
-        "type": "object",
-        "name": "Iron Ore",
-        "description": "A piece of iron ore.",
         "price": 100
     },
     "goldbar": {
@@ -5028,6 +5626,36 @@
         "name": "Medium Bowl",
         "description": "A medium bowl. Can be used to cook stuff in it.",
         "price": 100
+    },
+    "copperore": {
+        "type": "object",
+        "name": "Copper Ore",
+        "description": "A piece of copper ore. It's pretty heavy.",
+        "price": 100
+    },
+    "tinore": {
+        "type": "object",
+        "name": "Tin Ore",
+        "description": "A piece of tin ore.",
+        "price": 100
+    },
+    "ironore": {
+        "type": "object",
+        "name": "Iron Ore",
+        "description": "A piece of iron ore.",
+        "price": 100
+    },
+    "goldore": {
+        "type": "object",
+        "name": "Gold Ore",
+        "description": "A piece of gold ore. It's pretty heavy.",
+        "price": 100
+    },
+    "coal": {
+        "type": "object",
+        "name": "Coal",
+        "description": "A piece of coal. You can use it smelt ores.",
+        "price": 75
     },
     "topaz": {
         "type": "object",
@@ -5255,107 +5883,6 @@
         "name": "Zephyr's Gale Blade",
         "description": "Much like its name sake, you can never quite control its form, but it's lovely to be in the presence of.",
         "price": 1000
-    },
-    "leatherboots": {
-        "type": "boots",
-        "name": "Leather Boots",
-        "price": 150,
-        "attackStats": {
-            "crush": 1,
-            "slash": 2,
-            "stab": 1,
-            "archery": 0,
-            "magic": -4
-        },
-        "defenseStats": {
-            "crush": 2,
-            "slash": 3,
-            "stab": 1,
-            "archery": 0,
-            "magic": -4
-        },
-        "bonuses": {
-            "accuracy": 1,
-            "strength": 1,
-            "archery": 0,
-            "magic": 0
-        }
-    },
-    "steelboots": {
-        "type": "boots",
-        "name": "Steel Boots",
-        "price": 3500,
-        "attackStats": {
-            "crush": 6,
-            "slash": 7,
-            "stab": 4,
-            "archery": 0,
-            "magic": -6
-        },
-        "defenseStats": {
-            "crush": 7,
-            "slash": 12,
-            "stab": 6,
-            "archery": 0,
-            "magic": -5
-        },
-        "bonuses": {
-            "accuracy": 3,
-            "strength": 5,
-            "archery": 0,
-            "magic": 0
-        }
-    },
-    "swiftboots": {
-        "type": "boots",
-        "name": "Swift Boots",
-        "price": 7500,
-        "movementModifier": 0.95,
-        "attackStats": {
-            "crush": 1,
-            "slash": 2,
-            "stab": 1,
-            "archery": 0,
-            "magic": 4
-        },
-        "defenseStats": {
-            "crush": 2,
-            "slash": 3,
-            "stab": 1,
-            "archery": 0,
-            "magic": 4
-        },
-        "bonuses": {
-            "accuracy": 1,
-            "strength": 1,
-            "archery": 1,
-            "magic": 1
-        }
-    },
-    "lavaboots": {
-        "type": "boots",
-        "name": "Lava Boots",
-        "price": 21500,
-        "attackStats": {
-            "crush": 9,
-            "slash": 12,
-            "stab": 10,
-            "archery": 0,
-            "magic": 3
-        },
-        "defenseStats": {
-            "crush": 12,
-            "slash": 12,
-            "stab": 12,
-            "archery": 0,
-            "magic": 0
-        },
-        "bonuses": {
-            "accuracy": 8,
-            "strength": 4,
-            "archery": 8,
-            "magic": 0
-        }
     },
     "arrow": {
         "type": "arrow",
