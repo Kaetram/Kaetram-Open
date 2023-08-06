@@ -721,6 +721,16 @@ export default class Mob extends Character {
     }
 
     /**
+     * Checks whether the mob has a magic attack in its attack stats and whether
+     * it is using projectile based attacks.
+     * @return Whether or not the mob is a magic projectile based entity.
+     */
+
+    public override isMagic(): boolean {
+        return this.isRanged() && this.attackStats.magic > 0;
+    }
+
+    /**
      * Callback for when the mob respawns.
      */
 
