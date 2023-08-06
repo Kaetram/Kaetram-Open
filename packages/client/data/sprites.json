@@ -6771,6 +6771,7 @@
     { "id": "items/woodenshield", "offsetX": 0, "offsetY": 0 },
     { "id": "items/ironshield", "offsetX": 0, "offsetY": 0 },
     { "id": "items/shieldofliberty", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/hellkeeperboots", "offsetX": 0, "offsetY": 0 },
     { "id": "items/hellkeeperchestplate", "offsetX": 0, "offsetY": 0 },
     { "id": "items/hellkeeperlegplates", "offsetX": 0, "offsetY": 0 }
 ]
