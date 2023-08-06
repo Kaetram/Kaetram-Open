@@ -326,7 +326,7 @@ export default class Equipments extends Menu {
         );
 
         // Draw the equipment on top of the base sprite.
-        this.player.forEachEquipment((equipment: Equipment, type?: number) => {
+        this.player.forEachEquipment((equipment: Equipment) => {
             // Grab the sprite based on the equipment key.
             let equipmentSprite = this.game.sprites.get(equipment.key);
 
@@ -353,11 +353,11 @@ export default class Equipments extends Menu {
                 scalingWidth = equipmentSprite.width / sprite.width;
                 scalingHeight = equipmentSprite.height / sprite.height;
 
-                let dx = equipmentSprite.offsetX * 2,
-                    dy = equipmentSprite.offsetY - equipmentSprite.offsetY / 2;
+                let dx = equipmentSprite.offsetX * 2 - 6,
+                    dy = equipmentSprite.offsetY - equipmentSprite.offsetY / 2 - 6;
 
-                if (equipmentSprite.width === 64) dx -= 24;
-                if (equipmentSprite.height === 64) dy -= 20;
+                if (equipmentSprite.width === 64) dx -= 18;
+                if (equipmentSprite.height === 64) dy -= 14;
 
                 context.save();
                 context.translate(dx, dy);

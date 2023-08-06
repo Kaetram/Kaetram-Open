@@ -3849,12 +3849,17 @@
             "magic": 0
         }
     },
-
     "wolf": {
         "name": "Wolf",
+        "drops": [
+            {
+                "key": "wolfhelmet",
+                "chance": 5000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 350,
-        "level": 55,
+        "level": 45,
         "aggroRange": 1,
         "aggressive": true,
         "attackRate": 1100,
@@ -4325,6 +4330,10 @@
             {
                 "key": "hellhoundfang",
                 "chance": 100
+            },
+            {
+                "key": "hellkeeperhelm",
+                "chance": 500
             }
         ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
