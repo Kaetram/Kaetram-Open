@@ -288,8 +288,8 @@ export default class Equipments extends Menu {
         if (!idleFrame) return log.error(`Could not find idle frame for ${frame}.`);
 
         let frameY = idleFrame.row * sprite.height, // Grab the row of the frame specified.
-            canvasWidth = this.playerCanvas.width / 2,
-            canvasHeight = this.playerCanvas.height / 2;
+            canvasWidth = this.playerCanvas.width,
+            canvasHeight = this.playerCanvas.height;
 
         // Remove image smoothing to make the image look pixelated.
         context.imageSmoothingQuality = 'low';
@@ -304,13 +304,17 @@ export default class Equipments extends Menu {
 
         // Flip the canvas if we are facing left.
         if (flip) {
-            context.translate(canvasWidth * 2, 0);
+            context.translate(canvasWidth, 0);
             context.scale(-1, 1);
         }
 
-        // Translate the sprite to the middle.
+        // Scale proportionally to the ratio between canvas width and its height.
+        let ratio = canvasHeight / canvasWidth;
+
+        // // Translate the sprite to the middle.
         context.save();
-        context.translate(canvasWidth / 2, canvasHeight / 2);
+        context.scale(ratio, 1);
+        context.translate(canvasWidth / 2, 0);
 
         // Draw the base sprite and then the equipment on top of it.
         context.drawImage(
@@ -353,11 +357,11 @@ export default class Equipments extends Menu {
                 scalingWidth = equipmentSprite.width / sprite.width;
                 scalingHeight = equipmentSprite.height / sprite.height;
 
-                let dx = equipmentSprite.offsetX * 2 - 6,
-                    dy = equipmentSprite.offsetY - equipmentSprite.offsetY / 2 - 6;
+                let dx = equipmentSprite.offsetX * 4 - 8,
+                    dy = equipmentSprite.offsetY - 8;
 
-                if (equipmentSprite.width === 64) dx -= 18;
-                if (equipmentSprite.height === 64) dy -= 14;
+                if (equipmentSprite.width === 64) dx -= 48;
+                if (equipmentSprite.height === 64) dy -= 28;
 
                 context.save();
                 context.translate(dx, dy);
