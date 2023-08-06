@@ -788,6 +788,17 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * A default function for checking if the character is using bow attacks. Since mobs
+     * don't have such specification, we default to whether they're using ranged but not
+     * magic.
+     * @returns Whether or not the character is using a bow.
+     */
+
+    public isArcher(): boolean {
+        return this.isRanged() && !this.isMagic();
+    }
+
+    /**
      * @returns Default implementation for characters.
      */
 

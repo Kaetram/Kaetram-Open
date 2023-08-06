@@ -218,6 +218,10 @@ export default {
             totalWeight =
                 weights.crush + weights.slash + weights.stab + weights.magic + weights.archery;
 
+        // Respective classes use their own weights.
+        if (attacker.isArcher()) totalWeight = weights.archery;
+        if (attacker.isMagic()) totalWeight = weights.magic;
+
         // Negative values add no weight to the accuracy modifier.
         if (weights.crush < 0) totalWeight -= weights.crush;
         if (weights.slash < 0) totalWeight -= weights.slash;

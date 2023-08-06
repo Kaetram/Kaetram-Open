@@ -1,6 +1,7 @@
-import Character from '../game/entity/character/character';
-import Item from '../game/entity/objects/item';
 import Formulas from '../info/formulas';
+import Item from '../game/entity/objects/item';
+import Character from '../game/entity/character/character';
+import Items from '../../data/items.json';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
@@ -1113,6 +1114,15 @@ export default class Commands {
                 if (!time) return this.player.notify(`Malformed command, expected /countdown time`);
 
                 this.player.countdown(time);
+
+                break;
+            }
+
+            case 'testitems': {
+                this.player.bank.empty();
+
+                // Add 100 of each item into the bank.
+                for (let key in Items) this.player.bank.add(new Item(key, -1, -1, false, 100));
 
                 break;
             }

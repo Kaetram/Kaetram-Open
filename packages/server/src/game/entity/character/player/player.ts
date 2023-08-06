@@ -1871,7 +1871,7 @@ export default class Player extends Character {
      * @returns Whether or not the player is using archery-based weapons.
      */
 
-    public isArcher(): boolean {
+    public override isArcher(): boolean {
         return this.equipment.getWeapon().isArcher();
     }
 
