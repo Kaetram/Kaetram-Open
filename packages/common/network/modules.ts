@@ -120,9 +120,9 @@ export let EquipmentRenderOrder = [
     Equipment.Helmet,
     Equipment.Legplates,
     Equipment.Chestplate,
+    Equipment.ArmourSkin,
     Equipment.Shield,
     Equipment.Cape,
-    Equipment.ArmourSkin,
     Equipment.Weapon,
     Equipment.WeaponSkin
 ];
