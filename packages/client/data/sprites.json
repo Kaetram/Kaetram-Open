@@ -41,6 +41,7 @@
     { "id": "player/helmet/sunshinecrystalhood", "offsetX": -8 },
     { "id": "player/helmet/redmoonhelm", "offsetX": -8 },
     { "id": "player/helmet/hellkeeperhelm", "offsetX": -8 },
+    { "id": "player/helmet/sentinelhelm", "offsetX": -8 },
 
     { "id": "player/chestplate/copperchestplate", "offsetX": -8 },
     { "id": "player/chestplate/tinchestplate", "offsetX": -8 },
@@ -49,6 +50,8 @@
     { "id": "player/chestplate/goldchestplate", "offsetX": -8 },
     { "id": "player/chestplate/cobaltchestplate", "offsetX": -8 },
     { "id": "player/chestplate/hellkeeperchestplate", "offsetX": -8 },
+    { "id": "player/chestplate/sentinelchestplate", "offsetX": -8 },
+    { "id": "player/chestplate/nightchestplate", "offsetX": -8 },
 
     { "id": "player/legplates/copperlegplates", "offsetX": -8 },
     { "id": "player/legplates/tinlegplates", "offsetX": -8 },
@@ -57,6 +60,8 @@
     { "id": "player/legplates/goldlegplates", "offsetX": -8 },
     { "id": "player/legplates/cobaltlegplates", "offsetX": -8 },
     { "id": "player/legplates/hellkeeperlegplates", "offsetX": -8 },
+    { "id": "player/legplates/sentinellegplates", "offsetX": -8 },
+    { "id": "player/legplates/nightlegplates", "offsetX": -8 },
 
     { "id": "player/skin/danbo", "offsetX": -8 },
     { "id": "player/skin/danboblue", "offsetX": -8 },
@@ -84,7 +89,7 @@
     { "id": "player/weapon/ibosword", "offsetY": -24 },
     { "id": "player/weapon/goldsword", "offsetY": -24 },
     { "id": "player/weapon/nightsword", "offsetY": -24 },
-
+    { "id": "player/weapon/sentinelsword", "offsetY": -24 },
     { "id": "player/weapon/adamantitesworth", "offsetY": -24 },
     { "id": "player/weapon/adeptsrapier", "offsetY": -24 },
     { "id": "player/weapon/alchemistalimony", "width": 64, "height": 64, "offsetX": -24, "offsetY": -32 },
@@ -133,9 +138,7 @@
     { "id": "player/weapon/witchsstaffdemonic", "offsetY": -24 },
     { "id": "player/weapon/witchsstaffmoon", "offsetY": -24 },
     { "id": "player/weapon/witchsstaffsunshine", "offsetY": -24 },
-
     { "id": "player/weapon/zweipiercer", "offsetY": -24 },
-
     { "id": "player/weapon/aquastaff", "offsetY": -20 },
     { "id": "player/weapon/lightningstaff", "offsetY": -20 },
     { "id": "player/weapon/naturestaff", "offsetY": -20 },
@@ -186,6 +189,7 @@
     { "id": "player/shield/woodenshield", "offsetY": -24 },
     { "id": "player/shield/ironshield", "offsetY": -24 },
     { "id": "player/shield/shieldofliberty", "offsetY": -24 },
+    { "id": "player/shield/shieldofglory", "width": 32, "height": 32, "offsetX": -8 },
 
     { "id": "crowns/artist" },
     { "id": "crowns/tier1" },
@@ -6771,7 +6775,13 @@
     { "id": "items/woodenshield", "offsetX": 0, "offsetY": 0 },
     { "id": "items/ironshield", "offsetX": 0, "offsetY": 0 },
     { "id": "items/shieldofliberty", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/shieldofglory", "offsetX": 0, "offsetY": 0 },
     { "id": "items/hellkeeperboots", "offsetX": 0, "offsetY": 0 },
     { "id": "items/hellkeeperchestplate", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/hellkeeperlegplates", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/hellkeeperlegplates", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/sentinelhelm", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/sentinellegplates", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/sentinelchestplate", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/sentinelboots", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/sentinelsword", "offsetX": 0, "offsetY": 0 }
 ]
