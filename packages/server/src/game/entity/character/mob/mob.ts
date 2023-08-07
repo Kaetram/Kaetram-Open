@@ -143,7 +143,7 @@ export default class Mob extends Character {
         this.projectileName = data.projectileName || this.projectileName;
         this.roamDistance = data.roamDistance || this.roamDistance;
         this.healRate = data.healRate || this.healRate;
-        this.roaming = data.roaming || this.roaming;
+        this.roaming = data.roaming === undefined ? this.roaming : data.roaming;
 
         this.plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
 
