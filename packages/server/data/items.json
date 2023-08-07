@@ -2147,6 +2147,114 @@
             "magic": 2
         }
     },
+    "sapphirehelm": {
+        "type": "helmet",
+        "name": "Sapphire Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 33,
+        "attackStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 1,
+            "archery": 5,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 1,
+            "archery": 8,
+            "magic": 5
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 4,
+            "magic": 3
+        }
+    },
+    "amethysthelm": {
+        "type": "helmet",
+        "name": "Amethyst Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 35,
+        "attackStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 6,
+            "magic": 4
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 4,
+            "stab": 2,
+            "archery": 10,
+            "magic": 7
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 5,
+            "magic": 4
+        }
+    },
+    "midnightamethysthelm": {
+        "type": "helmet",
+        "name": "Midnight Amethyst Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 37,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 7,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 5,
+            "stab": 3,
+            "archery": 12,
+            "magic": 8
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 6,
+            "magic": 5
+        }
+    },
+    "rubyhelm": {
+        "type": "helmet",
+        "name": "Ruby Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 39,
+        "attackStats": {
+            "crush": 4,
+            "slash": 4,
+            "stab": 4,
+            "archery": 8,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 5,
+            "slash": 6,
+            "stab": 4,
+            "archery": 14,
+            "magic": 9
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 4,
+            "archery": 7,
+            "magic": 6
+        }
+    },
     "magmahelm": {
         "type": "helmet",
         "name": "Magma Helm",
@@ -2888,6 +2996,114 @@
             "magic": -4
         }
     },
+    "sapphirechestplate": {
+        "type": "chestplate",
+        "name": "Sapphire Chestplate",
+        "price": 200,
+        "skill": "defense",
+        "level": 33,
+        "attackStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 3,
+            "archery": 6,
+            "magic": 4
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 2,
+            "archery": 8,
+            "magic": 7
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 6,
+            "magic": 4
+        }
+    },
+    "amethystchestplate": {
+        "type": "chestplate",
+        "name": "Amethyst Chestplate",
+        "price": 200,
+        "skill": "defense",
+        "level": 35,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 7,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 4,
+            "stab": 3,
+            "archery": 10,
+            "magic": 8
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 7,
+            "magic": 5
+        }
+    },
+    "midnightamethystchestplate": {
+        "type": "chestplate",
+        "name": "Midnight Amethyst Chestplate",
+        "price": 200,
+        "skill": "defense",
+        "level": 37,
+        "attackStats": {
+            "crush": 4,
+            "slash": 4,
+            "stab": 4,
+            "archery": 8,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 5,
+            "slash": 5,
+            "stab": 4,
+            "archery": 12,
+            "magic": 9
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 8,
+            "magic": 6
+        }
+    },
+    "rubychestplate": {
+        "type": "chestplate",
+        "name": "Ruby Chestplate",
+        "price": 200,
+        "skill": "defense",
+        "level": 39,
+        "attackStats": {
+            "crush": 5,
+            "slash": 5,
+            "stab": 5,
+            "archery": 9,
+            "magic": 7
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 6,
+            "stab": 5,
+            "archery": 14,
+            "magic": 10
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 4,
+            "archery": 9,
+            "magic": 7
+        }
+    },
     "hellkeeperchestplate": {
         "type": "chestplate",
         "name": "Hellkeeper Chestplate",
@@ -3125,6 +3341,114 @@
             "strength": 3,
             "archery": 0,
             "magic": -3
+        }
+    },
+    "sapphirelegplates": {
+        "type": "legplates",
+        "name": "Sapphire Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 33,
+        "attackStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 5,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 2,
+            "archery": 7,
+            "magic": 6
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 5,
+            "magic": 3
+        }
+    },
+    "amethystlegplates": {
+        "type": "legplates",
+        "name": "Amethyst Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 35,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 6,
+            "magic": 4
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 4,
+            "stab": 3,
+            "archery": 9,
+            "magic": 7
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 6,
+            "magic": 4
+        }
+    },
+    "midnightamethystlegplates": {
+        "type": "legplates",
+        "name": "Midnight Amethyst Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 37,
+        "attackStats": {
+            "crush": 4,
+            "slash": 4,
+            "stab": 4,
+            "archery": 7,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 5,
+            "slash": 5,
+            "stab": 4,
+            "archery": 11,
+            "magic": 8
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 7,
+            "magic": 5
+        }
+    },
+    "rubylegplates": {
+        "type": "legplates",
+        "name": "Ruby Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 39,
+        "attackStats": {
+            "crush": 5,
+            "slash": 5,
+            "stab": 5,
+            "archery": 8,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 6,
+            "stab": 5,
+            "archery": 13,
+            "magic": 9
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 4,
+            "archery": 8,
+            "magic": 6
         }
     },
     "hellkeeperlegplates": {
@@ -3394,7 +3718,7 @@
     },
     "nightboots": {
         "type": "boots",
-        "name": "Lava Boots",
+        "name": "Night Boots",
         "price": 1850,
         "skill": "defense",
         "level": 25,
@@ -3417,6 +3741,114 @@
             "strength": 2,
             "archery": 0,
             "magic": 0
+        }
+    },
+    "sapphireboots": {
+        "type": "boots",
+        "name": "Sapphire Boots",
+        "price": 1850,
+        "skill": "defense",
+        "level": 33,
+        "attackStats": {
+            "crush": 1,
+            "slash": 0,
+            "stab": 1,
+            "archery": 4,
+            "magic": 2
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 0,
+            "stab": 1,
+            "archery": 6,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 2,
+            "magic": 1
+        }
+    },
+    "amethystboots": {
+        "type": "boots",
+        "name": "Amethyst Boots",
+        "price": 1850,
+        "skill": "defense",
+        "level": 35,
+        "attackStats": {
+            "crush": 2,
+            "slash": 1,
+            "stab": 2,
+            "archery": 5,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 1,
+            "stab": 2,
+            "archery": 8,
+            "magic": 4
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 3,
+            "magic": 2
+        }
+    },
+    "midnightamethystboots": {
+        "type": "boots",
+        "name": "Midnight Amethyst Boots",
+        "price": 1850,
+        "skill": "defense",
+        "level": 37,
+        "attackStats": {
+            "crush": 3,
+            "slash": 2,
+            "stab": 3,
+            "archery": 6,
+            "magic": 4
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 2,
+            "stab": 3,
+            "archery": 10,
+            "magic": 5
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 4,
+            "magic": 3
+        }
+    },
+    "rubyboots": {
+        "type": "boots",
+        "name": "Ruby Boots",
+        "price": 1850,
+        "skill": "defense",
+        "level": 39,
+        "attackStats": {
+            "crush": 4,
+            "slash": 3,
+            "stab": 4,
+            "archery": 7,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 3,
+            "stab": 4,
+            "archery": 12,
+            "magic": 6
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 5,
+            "magic": 4
         }
     },
     "hellkeeperboots": {
