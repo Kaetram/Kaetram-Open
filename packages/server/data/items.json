@@ -292,6 +292,33 @@
             "magic": 0
         }
     },
+    "sentinelsword": {
+        "type": "weapon",
+        "name": "Sentinel Sword",
+        "weaponType": "sword",
+        "skill": "accuracy",
+        "level": 36,
+        "attackStats": {
+            "crush": 17,
+            "slash": 13,
+            "stab": 11,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 5,
+            "stab": 4,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 9,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "hellhoundfang": {
         "type": "weapon",
         "name": "Hellhound Fang",
@@ -2174,6 +2201,33 @@
             "magic": -9
         }
     },
+    "sentinelhelm": {
+        "type": "helmet",
+        "name": "Sentinel Helm",
+        "price": 200,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 6,
+            "slash": 4,
+            "stab": 5,
+            "archery": -2,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 16,
+            "slash": 11,
+            "stab": 11,
+            "archery": 6,
+            "magic": -9
+        },
+        "bonuses": {
+            "accuracy": 7,
+            "strength": 11,
+            "archery": -3,
+            "magic": -7
+        }
+    },
     "mushroomhat": {
         "type": "helmet",
         "name": "Mushroom Hat",
@@ -2807,6 +2861,33 @@
             "magic": 0
         }
     },
+    "nightchestplate": {
+        "type": "chestplate",
+        "name": "Night Chestplate",
+        "price": 200,
+        "skill": "defense",
+        "level": 25,
+        "attackStats": {
+            "crush": 4,
+            "slash": 6,
+            "stab": 4,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 9,
+            "slash": 13,
+            "stab": 7,
+            "archery": 5,
+            "magic": -6
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 3,
+            "archery": 0,
+            "magic": -4
+        }
+    },
     "hellkeeperchestplate": {
         "type": "chestplate",
         "name": "Hellkeeper Chestplate",
@@ -2832,6 +2913,33 @@
             "strength": 26,
             "archery": -12,
             "magic": -16
+        }
+    },
+    "sentinelchestplate": {
+        "type": "chestplate",
+        "name": "Sentinel Chestplate",
+        "price": 200,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 7,
+            "slash": 5,
+            "stab": 6,
+            "archery": -3,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 18,
+            "slash": 14,
+            "stab": 15,
+            "archery": 9,
+            "magic": -12
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 10,
+            "archery": -4,
+            "magic": -7
         }
     },
     "copperlegplates": {
@@ -2992,6 +3100,33 @@
             "magic": -2
         }
     },
+    "nightlegplates": {
+        "type": "legplates",
+        "name": "Night Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 25,
+        "attackStats": {
+            "crush": 3,
+            "slash": 6,
+            "stab": 3,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 8,
+            "slash": 11,
+            "stab": 6,
+            "archery": 4,
+            "magic": -4
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 0,
+            "magic": -3
+        }
+    },
     "hellkeeperlegplates": {
         "type": "legplates",
         "name": "Hellkeeper Legplates",
@@ -3017,6 +3152,33 @@
             "strength": 14,
             "archery": -10,
             "magic": -12
+        }
+    },
+    "sentinellegplates": {
+        "type": "legplates",
+        "name": "Sentinel Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 7,
+            "slash": 4,
+            "stab": 6,
+            "archery": -3,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 17,
+            "slash": 13,
+            "stab": 12,
+            "archery": 7,
+            "magic": -10
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 12,
+            "archery": -4,
+            "magic": -6
         }
     },
     "bronzeboots": {
@@ -3282,6 +3444,33 @@
             "strength": 8,
             "archery": -8,
             "magic": -10
+        }
+    },
+    "sentinelboots": {
+        "type": "boots",
+        "name": "Sentinel Boots",
+        "price": 1850,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": -2,
+            "magic": -2
+        },
+        "defenseStats": {
+            "crush": 12,
+            "slash": 9,
+            "stab": 5,
+            "archery": 4,
+            "magic": -4
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 7,
+            "archery": -5,
+            "magic": -8
         }
     },
     "bronzering": {
@@ -4122,7 +4311,26 @@
             "magic": 4
         }
     },
-
+    "shieldofglory": {
+        "type": "shield",
+        "name": "Shield of Glory",
+        "price": 420,
+        "skill": "defense",
+        "level": 36,
+        "defenseStats": {
+            "crush": 14,
+            "slash": 10,
+            "stab": 8,
+            "archery": 9,
+            "magic": -8
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 4,
+            "archery": -3,
+            "magic": -5
+        }
+    },
     "lantern": {
         "type": "shield",
         "name": "Lantern",
