@@ -55,6 +55,7 @@ enum Packets {
     Crafting,
     LootBag,
     Countdown,
+    Pet,
 
     // Hub <-> Admin
     AdminSync

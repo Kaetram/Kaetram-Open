@@ -98,6 +98,7 @@ export default class MenuController {
 
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
         this.profile.onAttackStyle(this.handleProfileAttackStyle.bind(this));
+        this.profile.onPickup(this.handleProfilePickup.bind(this));
 
         this.enchant.onSelect(this.handleEnchantSelect.bind(this));
         this.enchant.onConfirm(this.handleEnchantConfirm.bind(this));
@@ -370,6 +371,16 @@ export default class MenuController {
         this.game.socket.send(Packets.Equipment, {
             opcode: Opcodes.Equipment.Style,
             style
+        });
+    }
+
+    /**
+     * Sends a packet to the server to indicate wanting to pickup a pet.
+     */
+
+    private handleProfilePickup(): void {
+        this.game.socket.send(Packets.Pet, {
+            opcode: Opcodes.Pet.Pickup
         });
     }
 

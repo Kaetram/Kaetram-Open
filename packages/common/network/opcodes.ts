@@ -227,3 +227,7 @@ export enum LootBag {
     Take,
     Close
 }
+
+export enum Pet {
+    Pickup
+}

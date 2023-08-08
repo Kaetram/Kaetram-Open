@@ -111,6 +111,7 @@ export default class Player extends Character {
     public questsLoaded = false;
     public achievementsLoaded = false;
     public displayedManaWarning = false;
+    public pickingUpPet = false; // Used to doubly ensure the player is not spamming the pickup button.
     public overrideMovementSpeed = -1;
 
     // Player info
@@ -1580,11 +1581,14 @@ export default class Player extends Character {
      * Removes the player's pet and adds it to their inventory if they have space.
      */
 
-    public removePet(): void {
-        if (!this.hasPet()) return;
+    public removePet(): boolean {
+        if (!this.hasPet()) return false;
 
         // Ensure the player has enough space in their inventory.
-        if (!this.inventory.hasSpace()) return this.notify('misc:NO_SPACE_PET');
+        if (!this.inventory.hasSpace()) {
+            this.notify('misc:NO_SPACE_PET');
+            return false;
+        }
 
         // Create a pet item and add it to the player's inventory.
         this.inventory.add(new Item(`${this.pet!.key}pet`, -1, -1, false, 1));
@@ -1594,6 +1598,8 @@ export default class Player extends Character {
 
         // Remove the pet from the player.
         this.pet = undefined;
+
+        return true;
     }
 
     /**

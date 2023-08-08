@@ -38,6 +38,7 @@ export default class Player extends Character {
     public poison = false;
     public disableAction = false;
     public joystickMovement = false;
+    public hasPet = false;
 
     public rank: Modules.Ranks = Modules.Ranks.None;
     public crown: Modules.Crowns = Modules.Crowns.None;

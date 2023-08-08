@@ -14,6 +14,9 @@ export default class State extends Menu {
     private level: HTMLElement = document.querySelector('#profile-level')!;
     private experience: HTMLElement = document.querySelector('#profile-experience')!;
 
+    // Pet pickup button
+    private petPickupButton: HTMLElement = document.querySelector('#pickup-pet-button')!;
+
     // Attack style element
     private attackStyleList: HTMLUListElement = document.querySelector('#attack-style-list')!;
 
@@ -59,9 +62,12 @@ export default class State extends Menu {
 
     private unequipCallback?: UnequipCallback;
     private styleCallback?: StyleCallback;
+    private pickupCallback?: () => void;
 
     public constructor(private player: Player) {
         super('#state-page');
+
+        this.petPickupButton.addEventListener('click', () => this.pickupCallback?.());
 
         this.helmet.addEventListener('click', () =>
             this.unequipCallback?.(Modules.Equipment.Helmet)
@@ -102,6 +108,8 @@ export default class State extends Menu {
      */
 
     public override synchronize(): void {
+        this.petPickupButton.hidden = !this.player.hasPet;
+
         // Synchronize the player's general information
         this.level.textContent = `Level ${this.player.level}`;
         this.experience.textContent = `${this.player.getTotalExperience()}`;
@@ -264,5 +272,13 @@ export default class State extends Menu {
 
     public onStyle(callback: StyleCallback): void {
         this.styleCallback = callback;
+    }
+
+    /**
+     * Callback for when the player presses the pickup button.
+     */
+
+    public onPickup(callback: () => void): void {
+        this.pickupCallback = callback;
     }
 }

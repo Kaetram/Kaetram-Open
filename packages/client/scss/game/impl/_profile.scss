@@ -46,7 +46,10 @@
     justify-content: space-between;
 
     .button-row {
-        width: 10em;
+        display: flex;
+        gap: 0.55em;
+        justify-content: space-evenly;
+        width: 12em;
     }
 }
 
