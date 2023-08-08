@@ -2945,7 +2945,7 @@
     },
 
     "greencockroach": {
-        "name": "Blue Cockroach",
+        "name": "Green Cockroach",
         "description": "Ew, a cockroach.",
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "mushrooms", "fruits", "vegetables"],
         "hitPoints": 785,
