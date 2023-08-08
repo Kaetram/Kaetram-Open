@@ -35,6 +35,7 @@ export default class Character extends Entity {
     public target: Entity | null = null;
 
     public lastTarget = '';
+    public lastFollow = 0;
 
     // List of active status effects currently applied on the player.
     public statusEffects: Modules.Effects[] = [];
@@ -249,7 +250,13 @@ export default class Character extends Entity {
      */
 
     public follow(entity: Entity, forced = false): void {
+        // Prevents follow spam which will cause entities to visually vibrate.
+        if (Date.now() - this.lastFollow < 200) return;
+
+        // Prevent following when entity is stunned or dead.
         if (this.dead || this.isStunned()) return;
+
+        this.lastFollow = Date.now();
 
         this.following = true;
 
