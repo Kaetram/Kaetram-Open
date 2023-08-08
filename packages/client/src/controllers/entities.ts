@@ -125,10 +125,10 @@ export default class EntitiesController {
         // Something went wrong creating the entity.
         if (!entity) return log.error(`Failed to create entity ${info.instance}`);
 
-        let sprite = this.game.sprites.get(`${prefix}/${info.key}`);
+        let sprite = entity.sprite || this.game.sprites.get(`${prefix}/${info.key}`);
 
         // Don't add entities that don't have a sprite.
-        if (!sprite) return log.error(`Failed to create sprite for entity ${info.key}.`);
+        if (!sprite) return console.trace(`Failed to create sprite for entity ${info.key}.`);
 
         // The name the player sees for an entity.
         entity.name = info.name;
