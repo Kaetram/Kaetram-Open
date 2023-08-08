@@ -295,8 +295,13 @@ export default class EntitiesController {
 
         // Add the pet as the owner's follower.
         if (owner) {
+            owner.hasPet = true;
+
             owner.addFollower(pet);
             pet.setTarget(owner);
+
+            // Synchronizes the interfaces with the pet's addition.
+            if (owner.instance === this.game.player.instance) this.game.player.sync();
         }
 
         return pet;
@@ -361,7 +366,13 @@ export default class EntitiesController {
             let owner = this.get<Player>(entity.owner) as Player;
 
             // Remove the pet from the owner's list of followers.
-            if (owner) owner.removeFollower(entity);
+            if (owner) {
+                owner.hasPet = false;
+                owner.removeFollower(entity);
+
+                // Synchronizes the player's menu interfaces to represent the pet's removal.
+                if (owner.instance === this.game.player.instance) this.game.player.sync();
+            }
         }
 
         this.unregisterPosition(entity);

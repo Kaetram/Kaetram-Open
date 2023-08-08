@@ -103,3 +103,7 @@ export interface CraftingPacket {
     key?: string;
     count?: number;
 }
+
+export interface PetPacket {
+    opcode: Opcodes.Pet;
+}

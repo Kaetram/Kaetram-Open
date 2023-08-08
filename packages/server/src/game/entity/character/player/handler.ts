@@ -556,8 +556,11 @@ export default class Handler {
             let item = new Item(key, this.player.x, this.player.y, true, count, enchantments);
 
             // Pets spawn an entity, and items spawn in the world.
-            if (item.isPetItem()) this.player.setPet(item.pet);
-            else this.world.entities.addItem(item);
+            if (item.isPetItem()) {
+                if (this.player.hasPet()) return this.player.notify('misc:ALREADY_HAVE_PET');
+
+                this.player.setPet(item.pet);
+            } else this.world.entities.addItem(item);
 
             log.drop(`Player ${this.player.username} dropped ${count} ${key}.`);
         }

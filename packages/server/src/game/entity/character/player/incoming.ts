@@ -32,7 +32,8 @@ import type {
     HandshakePacket,
     EnchantPacket,
     GuildPacket,
-    CraftingPacket
+    CraftingPacket,
+    PetPacket
 } from '@kaetram/common/types/messages/incoming';
 
 export default class Incoming {
@@ -130,6 +131,9 @@ export default class Incoming {
                     }
                     case Packets.Crafting: {
                         return this.handleCrafting(message);
+                    }
+                    case Packets.Pet: {
+                        return this.handlePet(message);
                     }
                 }
             } catch (error) {
@@ -729,6 +733,25 @@ export default class Incoming {
 
             case Opcodes.Crafting.Craft: {
                 return this.world.crafting.craft(this.player, data.key!, data.count!);
+            }
+        }
+    }
+
+    /**
+     * Handles the pet packet actions received from the client. This can include picking up the
+     * pet. Further actions will be added in the future as needed.
+     * @param data Contains the opcode for the action.
+     */
+
+    private handlePet(data: PetPacket): void {
+        switch (data.opcode) {
+            case Opcodes.Pet.Pickup: {
+                if (this.player.pickingUpPet || !this.player.hasPet()) return;
+
+                this.player.pickingUpPet = true;
+                this.player.pickingUpPet = !this.player.removePet();
+
+                return;
             }
         }
     }

@@ -26,6 +26,7 @@ export default class Profile extends Menu {
 
     private unequipCallback?: UnequipCallback;
     private attackStyleCallback?: AttackStyleCallback;
+    private pickupCallback?: () => void;
 
     public constructor(private player: Player) {
         super('#profile-container', undefined, '#profile-button');
@@ -49,6 +50,7 @@ export default class Profile extends Menu {
         // Initialize callbacks for pages.
         this.state.onUnequip((type: Modules.Equipment) => this.unequipCallback?.(type));
         this.state.onStyle((style: Modules.AttackStyle) => this.attackStyleCallback?.(style));
+        this.state.onPickup(() => this.pickupCallback?.());
     }
 
     /**
@@ -167,5 +169,13 @@ export default class Profile extends Menu {
 
     public onAttackStyle(callback: AttackStyleCallback): void {
         this.attackStyleCallback = callback;
+    }
+
+    /**
+     * Callback for when the player clicks on the pet pickup button.
+     */
+
+    public onPickup(callback: () => void): void {
+        this.pickupCallback = callback;
     }
 }
