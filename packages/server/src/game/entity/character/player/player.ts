@@ -146,6 +146,7 @@ export default class Player extends Character {
     private lastNotify = 0;
     private lastEdible = 0;
     public lastCraft = 0;
+    public lastGlobalChat = 0;
 
     private currentSong: string | undefined;
 
@@ -241,6 +242,7 @@ export default class Player extends Character {
         this.mapVersion = data.mapVersion;
         this.userAgent = data.userAgent;
         this.regionsLoaded = data.regionsLoaded || [];
+        this.lastGlobalChat = data.lastGlobalChat || 0;
 
         this.setPoison(data.poison.type, Date.now() - data.poison.remaining);
         this.setLastWarp(data.lastWarp);
@@ -410,6 +412,10 @@ export default class Player extends Character {
 
         // Reset mana if it is unitialized.
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
+
+        // Update the player's timeout based on their rank.
+        if (this.rank !== Modules.Ranks.None)
+            this.connection.updateTimeout(this.getTimeoutByRank());
 
         // Timeout the player if the ready packet is not received within 10 seconds.
         this.readyTimeout = setTimeout(() => {
@@ -1702,6 +1708,108 @@ export default class Player extends Character {
     }
 
     /**
+     * This is the timeout duration in milliseconds for the player's connection
+     * depending on their rank. Patrons and administrators have a longer timeout
+     * duration than regular players.
+     */
+
+    public getTimeoutByRank(): number {
+        switch (this.rank) {
+            case Modules.Ranks.TierOne: {
+                return 15 * 60_000; // 15 minutes
+            }
+
+            case Modules.Ranks.TierTwo: {
+                return 20 * 60_000; // 20 minutes
+            }
+
+            case Modules.Ranks.TierThree: {
+                return 25 * 60_000; // 25 minutes
+            }
+
+            case Modules.Ranks.TierFour: {
+                return 30 * 60_000; // 30 minutes
+            }
+
+            case Modules.Ranks.TierFive: {
+                return 35 * 60_000; // 35 minutes
+            }
+
+            case Modules.Ranks.HollowAdmin:
+            case Modules.Ranks.Moderator:
+            case Modules.Ranks.TierSix: {
+                return 40 * 60_000; // 40 minutes
+            }
+
+            case Modules.Ranks.Admin:
+            case Modules.Ranks.TierSeven: {
+                return 45 * 60_000; // 45 minutes
+            }
+
+            default: {
+                return 10 * 60_000; // 10 minutes
+            }
+        }
+    }
+
+    /**
+     * Calculates the global chat cooldown based on the player's rank.
+     */
+
+    public getGlobalChatCooldown(): number {
+        switch (this.rank) {
+            case Modules.Ranks.TierOne: {
+                return 55 * 60_000;
+            }
+
+            case Modules.Ranks.TierTwo: {
+                return 50 * 60_000;
+            }
+
+            case Modules.Ranks.TierThree: {
+                return 45 * 60_000;
+            }
+
+            case Modules.Ranks.TierFour: {
+                return 40 * 60_000;
+            }
+
+            case Modules.Ranks.TierFive: {
+                return 35 * 60_000;
+            }
+
+            case Modules.Ranks.TierSix: {
+                return 30 * 60_000;
+            }
+
+            case Modules.Ranks.TierSeven: {
+                return 20 * 60_000;
+            }
+
+            case Modules.Ranks.Moderator:
+            case Modules.Ranks.HollowAdmin:
+            case Modules.Ranks.Admin: {
+                return 5000;
+            }
+
+            default: {
+                return 60 * 60_000;
+            }
+        }
+    }
+
+    /**
+     * Converts the global chat cooldown duration into minutes.
+     * @returns An integer representing the minutes left.
+     */
+
+    public getGlobalChatDuration(): number {
+        let difference = this.getGlobalChatCooldown() - (Date.now() - this.lastGlobalChat);
+
+        return Math.ceil(difference / 60_000);
+    }
+
+    /**
      * Adds a region id to the list of loaded regions.
      * @param region The region id we are adding.
      */
@@ -1941,6 +2049,14 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player can use the global chat given his last global chat time.
+     */
+
+    public canGlobalChat(): boolean {
+        return Date.now() - this.lastGlobalChat > this.getGlobalChatCooldown();
+    }
+
+    /**
      * @returns Whether or not the player has started the necessary quest to use crafting benches.
      */
 
@@ -2064,6 +2180,24 @@ export default class Player extends Character {
 
     public chat(message: string, global = false, withBubble = true, colour = ''): void {
         if (!this.canTalk) return this.notify('misc:CANNOT_TALK', 'crimson');
+
+        // Handle global chat
+        if (global) {
+            if (!this.quests.isTutorialFinished())
+                return this.notify('misc:CANNOT_GLOBAL_CHAT_TUTORIAL', 'crimson');
+
+            // Jailed players cannot global chat.
+            if (this.isJailed()) return this.notify('misc:CANNOT_GLOBAL_CHAT_JAIL', 'crimson');
+
+            // Limit the global chat to the cooldown based on ranks.
+            if (!this.canGlobalChat())
+                return this.notify(
+                    `misc:CANNOT_GLOBAL_CHAT_MINUTES;duration=${this.getGlobalChatDuration()}`,
+                    'crimson'
+                );
+
+            this.lastGlobalChat = Date.now();
+        }
 
         log.debug(`[${this.username}] ${message}`);
 

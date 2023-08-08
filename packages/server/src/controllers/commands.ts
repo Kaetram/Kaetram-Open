@@ -65,10 +65,6 @@ export default class Commands {
                 return;
             }
 
-            case 'pickup': {
-                return this.player.removePet();
-            }
-
             case 'coords': {
                 return this.player.notify(`x: ${this.player.x} y: ${this.player.y}`);
             }
@@ -76,9 +72,6 @@ export default class Commands {
             case 'g':
             case 'gc':
             case 'global': {
-                if (this.player.isJailed())
-                    return this.player.notify('You cannot use global chat while jailed.');
-
                 return this.player.chat(
                     Filter.clean(blocks.join(' ')),
                     true,

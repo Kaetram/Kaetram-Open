@@ -11,10 +11,17 @@ export default {
     CANNOT_ATTACK_PET: '¿Estás loco? ¿Por qué atacarías a una mascota?',
     CANNOT_ATTACK_PREY: 'No puedes atacar mientras eres la presa.',
     CANNOT_ATTACK_TARGET: 'No puedes atacar a alguien que no es tu objetivo.',
-    CANNOT_ATTACK_LEVEL_DIFF: 'No puedes atacar a alguien con 30 niveles por encima o por debajo de ti.',
+    CANNOT_ATTACK_LEVEL_DIFF:
+        'No puedes atacar a alguien con 30 niveles por encima o por debajo de ti.',
     CANNOT_DO_THAT: 'No puedes hacer eso ahora mismo.',
-    CANNOT_DROP_ITEM_DOOR: 'No puedes dejar caer este artículo mientras estás parado en una puerta.',
+    CANNOT_DROP_ITEM_DOOR:
+        'No puedes dejar caer este artículo mientras estás parado en una puerta.',
     CANNOT_PASS_DOOR: 'No puedes pasar por esta puerta.',
+    CANNOT_GLOBAL_CHAT_SECONDS:
+        'Debes esperar otros {{duration}} segundos antes de usar el chat global.',
+    CANNOT_GLOBAL_CHAT_MINUTES:
+        'Debes esperar otros {{duration}} minutos antes de usar el chat global.',
+    CANNOT_GLOBAL_CHAT_JAIL: 'No puedes usar el chat global mientras estás encarcelado.',
     CANNOT_PICK_UP_ITEM: 'Este artículo solo puede ser recogido por {{username}}.',
     CANNOT_TALK: 'No puedes hablar ahora.',
     CANNOT_TRADE_ITEM: 'No puedes intercambiar este artículo.',
@@ -28,13 +35,13 @@ export default {
     IN_PVP_ZONE: '¡Has entrado en una zona PvP!',
     INVALID_AMOUNT: 'Has introducido una cantidad no válida.',
     DOOR_KEY_CRUMBLES: 'La llave se convierte en polvo al pasar por la puerta.',
-    MINIMUM_PLAYERS_MINIGAME: 'Debe haber al menos {{minimum}} jugadores para comenzar este minijuego.',
+    MINIMUM_PLAYERS_MINIGAME:
+        'Debe haber al menos {{minimum}} jugadores para comenzar este minijuego.',
     NEED_COMBAT: 'Debes estar en combate para usar esta habilidad.',
     NEED_WAIT_ABILIY: 'Debes esperar {{duration}} segundos antes de volver a usar esta habilidad.',
     NO_IDEA: 'No tengo idea de qué es eso.',
     NO_ARROWS: 'No tienes flechas para disparar.',
-    NO_ACHIEVEMENT_DOOR:
-        'Debes completar el logro {{achievement}} para pasar por esta puerta.',
+    NO_ACHIEVEMENT_DOOR: 'Debes completar el logro {{achievement}} para pasar por esta puerta.',
     NO_COMBAT_DOOR: 'Tu nivel de combate debe ser al menos {{level}} para participar.',
     NO_QUEST_DOOR: 'Debes completar la misión {{quest}} para atravesar esta puerta.',
     NO_KEY_DOOR: 'No tienes la llave requerida para pasar por esta puerta.',
@@ -50,12 +57,14 @@ export default {
     POISONED: '¡Has sido envenenado!',
     POISON_WORN_OFF: 'El veneno ha desaparecido.',
     PLEASE_REPORT_BUG: 'Se ha producido un error, repórtalo como un bug.',
-    FREEZE_IMMUNITY: 'Ahora eres inmune a los efectos de congelación durante {{duration}} segundos.',
+    FREEZE_IMMUNITY:
+        'Ahora eres inmune a los efectos de congelación durante {{duration}} segundos.',
     FREEZE_IMMUNITY_WORN_OFF: 'Tu inmunidad a los efectos de congelación ha desaparecido.',
     FIRE_IMMUNITY: 'Ahora eres inmune a los efectos de fuego durante {{duration}} segundos.',
     FIRE_IMMUNITY_WORN_OFF: 'Tu inmunidad a los efectos del fuego ha desaparecido.',
     FRIENDS_USERNAME_TOO_LONG: 'Ese nombre de usuario es demasiado largo.',
-    FRIENDS_ADD_SELF: 'Escucha, lo entiendo, te sientes solo. Pero no puedes agregarte a ti mismo a la lista de amigos.',
+    FRIENDS_ADD_SELF:
+        'Escucha, lo entiendo, te sientes solo. Pero no puedes agregarte a ti mismo a la lista de amigos.',
     FRIENDS_ALREADY_ADDED: 'Ese jugador ya está en tu lista de amigos.',
     FRIENDS_USER_DOES_NOT_EXIST: 'No existe ningún jugador con ese nombre de usuario.',
     FRIENDS_NOT_IN_LIST: 'Ese jugador no está en tu lista de amigos.',

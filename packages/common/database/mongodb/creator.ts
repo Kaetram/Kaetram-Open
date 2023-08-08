@@ -39,6 +39,7 @@ export interface PlayerInfo {
     friends: string[];
     lastServerId: number;
     lastAddress: string;
+    lastGlobalChat: number;
     guild: string;
     pet: string;
     resetToken?: ResetToken;
@@ -295,6 +296,7 @@ export default class Creator {
             friends: player.friends.serialize(),
             lastServerId: config.serverId,
             lastAddress: player.connection.address,
+            lastGlobalChat: player.lastGlobalChat,
             guild: player.guild,
             pet: player.pet ? player.pet.key : '',
             resetToken: undefined // Save token as undefined to prevent it from being saved.

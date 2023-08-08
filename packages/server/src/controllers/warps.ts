@@ -10,7 +10,7 @@ export default class Warp {
     private warps: ProcessedArea[] = [];
 
     public lastWarp = 0; // The last time we warped to.
-    private warpTimeout = 300_000; // 30 seconds between using the warps.
+    private warpTimeout = 300_000; // 300 seconds between using the warps.
 
     public constructor(private world: World) {
         this.warps = this.world.map.warps;
