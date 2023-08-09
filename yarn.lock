@@ -3793,9 +3793,9 @@ __metadata:
     "@types/pako": "npm:^2.0.0"
     "@types/workbox-build": "npm:^5.1.0"
     astro: "npm:^2.9.1"
-    astro-compress: "npm:^1.1.49"
+    astro-compress: "npm:^2.0.2"
     astro-compressor: "npm:^0.4.0"
-    astro-critters: "npm:^1.1.39"
+    astro-critters: "npm:^2.0.2"
     astro-i18n-aut: "npm:^0.1.15"
     astro-robots-txt: "npm:^0.5.0"
     astro-seo-schema: "npm:^2.2.0"
@@ -5343,19 +5343,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro-compress@npm:^1.1.49":
-  version: 1.1.49
-  resolution: "astro-compress@npm:1.1.49"
+"astro-compress@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "astro-compress@npm:2.0.2"
   dependencies:
     "@types/csso": "npm:5.0.0"
     "@types/html-minifier-terser": "npm:7.0.0"
     csso: "npm:5.0.5"
-    files-pipe: "npm:0.0.7"
+    files-pipe: "npm:2.0.5"
     html-minifier-terser: "npm:7.2.0"
-    sharp: "npm:0.32.1"
+    sharp: "npm:0.32.4"
     svgo: "npm:3.0.2"
-    terser: "npm:5.18.2"
-  checksum: 9620d8919e7cb04f86f902875ac2d2a5cab0b1d38914e79939962e55c85cda03504f261012002d7a9c7c3614e2d4ade97f9738b6b7868b886050846839b509d1
+    terser: "npm:5.19.2"
+  checksum: a20765d65ccfb0760ebd9bb2bc8630e89345723e2f03dafff1d3e6a5b188d7d8b6e966dc2a34003606df31b886bdc2cf1617e013e40caa6896ac3e93ec3f0bab
   languageName: node
   linkType: hard
 
@@ -5366,13 +5366,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro-critters@npm:^1.1.39":
-  version: 1.1.39
-  resolution: "astro-critters@npm:1.1.39"
+"astro-critters@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "astro-critters@npm:2.0.2"
   dependencies:
-    critters: "npm:0.0.19"
-    files-pipe: "npm:0.0.7"
-  checksum: 107bccd2c4fa94dc9035e67689c09a931fd2f15d85aec316b6517576c49d037d7dc35ee76fae98120afb7c65ae44118c57ed19b02d2b29740d91295a201e5025
+    critters: "npm:0.0.20"
+    files-pipe: "npm:2.0.5"
+  checksum: a9590d5ff5c1e3b2597053663fabc56be240d28a179f6de0d4f1aa641862e41d1bd47fc76943f647650c5f834b83b2099d3e0e39c031a7fc14695c99d90ca78e
   languageName: node
   linkType: hard
 
@@ -6571,9 +6571,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"critters@npm:0.0.19":
-  version: 0.0.19
-  resolution: "critters@npm:0.0.19"
+"critters@npm:0.0.20":
+  version: 0.0.20
+  resolution: "critters@npm:0.0.20"
   dependencies:
     chalk: "npm:^4.1.0"
     css-select: "npm:^5.1.0"
@@ -6582,7 +6582,7 @@ __metadata:
     htmlparser2: "npm:^8.0.2"
     postcss: "npm:^8.4.23"
     pretty-bytes: "npm:^5.3.0"
-  checksum: 2fea0f6a82d9b85a9a2404f6225bf2e114bf5215ec7b9969d62d6bf8c2d7e32c56884eb8aa949a6bfdfcc0f40df2553d1ec2db82cd3cde2e574c20cc90b1c7c1
+  checksum: 207a7e8f710b889f2efe9f4b0b264421be8c99459b15d600268f72217657784259e6e3b00d7eb9b32a7f28b521e0f2b6a821e788bc5c0ba64881117afa8aa25e
   languageName: node
   linkType: hard
 
@@ -8427,7 +8427,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:3.2.12, fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.9":
+"fast-glob@npm:3.3.1":
+  version: 3.3.1
+  resolution: "fast-glob@npm:3.3.1"
+  dependencies:
+    "@nodelib/fs.stat": "npm:^2.0.2"
+    "@nodelib/fs.walk": "npm:^1.2.3"
+    glob-parent: "npm:^5.1.2"
+    merge2: "npm:^1.3.0"
+    micromatch: "npm:^4.0.4"
+  checksum: e26659062337c60300761c4e46eeabba295ae4140dee6332e69977d920d7d96cb502f8b8a2358e131f088f9d30a98789c9920398896b317f028ba73dee710b01
+  languageName: node
+  linkType: hard
+
+"fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.9":
   version: 3.2.12
   resolution: "fast-glob@npm:3.2.12"
   dependencies:
@@ -8548,13 +8561,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"files-pipe@npm:0.0.7":
-  version: 0.0.7
-  resolution: "files-pipe@npm:0.0.7"
+"files-pipe@npm:2.0.5":
+  version: 2.0.5
+  resolution: "files-pipe@npm:2.0.5"
   dependencies:
     deepmerge-ts: "npm:5.1.0"
-    fast-glob: "npm:3.2.12"
-  checksum: a7188edcba9287a7938e272be848d05f9fb78ea2515df710d60c81a9759bedc0d4bfde0cdda87bbd86b927b8ad96fae40b52b7868bae81c7ec6d7a183f2516be
+    fast-glob: "npm:3.3.1"
+  checksum: 4cd45434a324a86b15584605db19ebd8f1d8a77717eb9d1189e26b3462dfb7e6ac32025440c97f5d2667cb83f2f40f01d19541251aa04b1ef90db308fe7f8536
   languageName: node
   linkType: hard
 
@@ -14936,9 +14949,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser@npm:5.18.2":
-  version: 5.18.2
-  resolution: "terser@npm:5.18.2"
+"terser@npm:5.19.2":
+  version: 5.19.2
+  resolution: "terser@npm:5.19.2"
   dependencies:
     "@jridgewell/source-map": "npm:^0.3.3"
     acorn: "npm:^8.8.2"
@@ -14946,7 +14959,7 @@ __metadata:
     source-map-support: "npm:~0.5.20"
   bin:
     terser: bin/terser
-  checksum: 2baeb6590aafbf4190dc7ae9aa965726c5b648e5e089843e1d1abf14cc2edabaf85fbed6a585e9a6e4803548748b7e07d36efaa44857bccb612ad464a2e6fbeb
+  checksum: 4f7cb605e74a8f600ef9971ae4afd61eeb222872f5ea04a8b349b068bfbee8138a369a6c1f8d7fc114dabc0bd533f5723ecfa0c1fa822efb15cb493e4f6a8084
   languageName: node
   linkType: hard
 
