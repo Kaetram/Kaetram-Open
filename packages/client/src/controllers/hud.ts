@@ -76,7 +76,7 @@ export default class HUDController {
     private setHealth(hitPoints: number): void {
         if (!this.hasHealth()) return;
 
-        this.health.style.display = 'block';
+        this.health.style.display = 'flex';
 
         let { maxHitPoints } = this.hovering as Character;
 
@@ -131,7 +131,7 @@ export default class HUDController {
      */
 
     private isVisible(): boolean {
-        return this.attackInfo.style.display === 'block';
+        return this.attackInfo.style.display === 'flex';
     }
 
     /**

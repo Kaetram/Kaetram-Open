@@ -588,7 +588,7 @@ export default {
 
     fadeIn(element: HTMLElement, speed = 0.1): void {
         element.style.opacity ||= '0';
-        element.style.display = 'block';
+        element.style.display = 'flex';
 
         let fade = () => {
             let opacity = parseFloat(element.style.opacity) + speed;
