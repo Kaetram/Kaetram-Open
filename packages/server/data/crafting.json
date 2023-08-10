@@ -1468,6 +1468,24 @@
             }
         }
     },
+
+    "chiseling": {
+        "rubygem": {
+            "level": 1,
+            "experience": 10,
+            "requirements": [
+                {
+                    "key": "ruby",
+                    "count": 1
+                }
+            ],
+
+            "result": {
+                "count": 1
+            }
+        }
+    },
+
     "alchemy": {
         "hotsauce": {
             "level": 1,

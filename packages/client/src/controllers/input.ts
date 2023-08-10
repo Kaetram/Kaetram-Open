@@ -134,6 +134,7 @@ export default class InputController {
         this.cursors.fishing = this.game.sprites.get('cursors/fishing');
         this.cursors.smithing = this.game.sprites.get('cursors/smithing');
         this.cursors.smelting = this.game.sprites.get('cursors/smelting');
+        this.cursors.chiseling = this.game.sprites.get('cursors/chiseling');
         this.cursors.crafting = this.game.sprites.get('cursors/crafting');
         this.cursors.foraging = this.game.sprites.get('cursors/foraging');
 
