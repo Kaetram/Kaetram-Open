@@ -182,7 +182,7 @@ export default class Guilds extends Menu {
         this.infoContainer.style.display = 'none';
 
         // Display the create guild form.
-        this.create.style.display = 'block';
+        this.create.style.display = 'flex';
     }
 
     /**
@@ -214,7 +214,7 @@ export default class Guilds extends Menu {
         this.infoContainer.style.display = 'none';
 
         // Display the default information.
-        this.listContainer.style.display = 'block';
+        this.listContainer.style.display = 'flex';
 
         // Request the guilds list from the server.
         this.requestList();
@@ -314,7 +314,7 @@ export default class Guilds extends Menu {
         this.create.style.display = 'none';
 
         // Display the guild information container.
-        this.infoContainer.style.display = 'block';
+        this.infoContainer.style.display = 'flex';
 
         // Load the guild decorations.
         this.bannerColour = info.decoration?.banner || Modules.BannerColour.Grey;
@@ -389,7 +389,7 @@ export default class Guilds extends Menu {
 
         switch (menu) {
             case 'sidebar-members': {
-                this.memberListContainer.style.display = 'block';
+                this.memberListContainer.style.display = 'flex';
 
                 // Hide the chat.
                 this.chat.style.display = 'none';
@@ -402,7 +402,7 @@ export default class Guilds extends Menu {
                 this.memberListContainer.style.display = 'none';
 
                 // Show the chat input.
-                this.chat.style.display = 'block';
+                this.chat.style.display = 'flex';
 
                 break;
             }
@@ -824,7 +824,7 @@ export default class Guilds extends Menu {
 
                     this.memberListContainer.querySelector('ul')!.classList.add('dimmed');
 
-                    this.memberDialog.style.display = 'block';
+                    this.memberDialog.style.display = 'flex';
                 });
         }
 

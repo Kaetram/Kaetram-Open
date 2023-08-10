@@ -135,8 +135,7 @@ export default abstract class Menu {
 
     public isVisible(): boolean {
         return (
-            this.container.style.display === 'block' ||
-            this.container.style.display.includes('flex')
+            this.container.style.display === 'flex' || this.container.style.display.includes('flex')
         );
     }
 

@@ -1,5 +1,6 @@
 #enchant {
     display: none;
+    flex-direction: column;
     width: 16em;
     height: 16em;
 
@@ -11,6 +12,8 @@
     }
 
     &-inventory {
+        flex: 1;
+
         &-slots {
             overflow: auto;
             display: grid;
@@ -25,7 +28,6 @@
 
     &-item {
         display: flex;
-        flex: 1;
         gap: 1em;
         align-items: center;
         justify-content: center;
