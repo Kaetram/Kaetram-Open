@@ -1164,22 +1164,50 @@
         "skill": "strength",
         "level": 25,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 18,
+            "slash": 4,
+            "stab": 9,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 6,
+            "slash": 3,
+            "stab": 6,
             "archery": 0,
             "magic": 0
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 7,
+            "strength": 13,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "goldgolemsmace": {
+        "type": "weapon",
+        "name": "Gold Golem's Mace",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "strength",
+        "level": 40,
+        "attackStats": {
+            "crush": 23,
+            "slash": 8,
+            "stab": 14,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 9,
+            "slash": 7,
+            "stab": 8,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 10,
+            "strength": 18,
             "archery": 0,
             "magic": 0
         }
@@ -1246,24 +1274,24 @@
         "weaponType": "axe",
         "price": 5000,
         "skill": "strength",
-        "level": 50,
+        "level": 75,
         "attackStats": {
-            "crush": 24,
-            "slash": 36,
-            "stab": 8,
+            "crush": 44,
+            "slash": 66,
+            "stab": 28,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 14,
-            "slash": 10,
-            "stab": 9,
-            "archery": 0,
-            "magic": 0
+            "crush": 19,
+            "slash": 16,
+            "stab": 14,
+            "archery": 9,
+            "magic": -20
         },
         "bonuses": {
-            "accuracy": 14,
-            "strength": 19,
+            "accuracy": 28,
+            "strength": 44,
             "archery": 0,
             "magic": 0
         }
@@ -1556,22 +1584,22 @@
         "skill": "strength",
         "level": 25,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 6,
+            "slash": 18,
+            "stab": 16,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
+            "crush": 4,
+            "slash": 6,
             "stab": 0,
             "archery": 0,
             "magic": 0
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 12,
+            "strength": 4,
             "archery": 0,
             "magic": 0
         }
@@ -2807,6 +2835,60 @@
         "bonuses": {
             "accuracy": 1,
             "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "froghelm": {
+        "type": "helmet",
+        "name": "Frog Helm",
+        "price": 100,
+        "skill": "defense",
+        "level": 5,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "bearhelm": {
+        "type": "helmet",
+        "name": "Bear Helm",
+        "price": 100,
+        "skill": "defense",
+        "level": 5,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
             "archery": 0,
             "magic": 0
         }
@@ -5667,6 +5749,14 @@
         "interactable": true,
         "plugin": "knife"
     },
+    "chisel": {
+        "type": "object",
+        "name": "Chisel",
+        "description": "A chisel used for crafting gems and stuff like that.",
+        "price": 50,
+        "interactable": true,
+        "plugin": "chisel"
+    },
     "string": {
         "type": "object",
         "name": "String",
@@ -6331,6 +6421,12 @@
         "type": "object",
         "name": "Ruby",
         "description": "A very nice gemstone that can be used to made rings or pendants.",
+        "price": 1300
+    },
+    "rubygem": {
+        "type": "object",
+        "name": "Ruby Gem",
+        "description": "A nicely chiseled piece of rock that can actually be used to make fancy things with..",
         "price": 1300
     },
     "peridot": {

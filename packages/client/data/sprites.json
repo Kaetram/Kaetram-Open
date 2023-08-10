@@ -46,6 +46,8 @@
     { "id": "player/helmet/amethysthelm", "offsetX": -8 },
     { "id": "player/helmet/midnightamethysthelm", "offsetX": -8 },
     { "id": "player/helmet/rubyhelm", "offsetX": -8 },
+    { "id": "player/helmet/froghelm", "offsetX": -8 },
+    { "id": "player/helmet/bearhelm", "offsetX": -8 },
 
     { "id": "player/chestplate/copperchestplate", "offsetX": -8 },
     { "id": "player/chestplate/tinchestplate", "offsetX": -8 },
@@ -125,6 +127,7 @@
     { "id": "player/weapon/eyesword", "offsetY": -24 },
     { "id": "player/weapon/firesword", "offsetY": -24 },
     { "id": "player/weapon/golemsmace", "offsetY": -24 },
+    { "id": "player/weapon/goldgolemsmace", "offsetY": -24 },
     { "id": "player/weapon/greenlightsaber", "offsetY": -24 },
     { "id": "player/weapon/hellhoundfang", "offsetY": -24 },
     { "id": "player/weapon/hellsword", "offsetY": -24 },
@@ -6745,6 +6748,7 @@
     { "id": "items/executionershammer", "offsetX": 0, "offsetY": 0 },
     { "id": "items/eyesword", "offsetX": 0, "offsetY": 0 },
     { "id": "items/golemsmace", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/goldgolemsmace", "offsetX": 0, "offsetY": 0 },
     { "id": "items/greenlightsaber", "offsetX": 0, "offsetY": 0 },
     { "id": "items/hellsword", "offsetX": 0, "offsetY": 0 },
     { "id": "items/lolipop", "offsetX": 0, "offsetY": 0 },
@@ -6811,5 +6815,13 @@
     { "id": "items/rubyboots", "offsetX": 0, "offsetY": 0 },
     { "id": "items/rubychestplate", "offsetX": 0, "offsetY": 0 },
     { "id": "items/rubyhelm", "offsetX": 0, "offsetY": 0 },
-    { "id": "items/rubylegplates", "offsetX": 0, "offsetY": 0 }
+    { "id": "items/rubylegplates", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/worm", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/blueworm", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/greenworm", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/ashworm", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/chisel", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/bearhelm", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/froghelm", "offsetX": 0, "offsetY": 0 },
+    { "id": "items/rubygem", "offsetX": 0, "offsetY": 0 }
 ]
