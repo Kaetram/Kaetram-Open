@@ -117,9 +117,9 @@ export enum Equipment {
 }
 
 export let EquipmentRenderOrder = [
-    Equipment.Helmet,
     Equipment.Legplates,
     Equipment.Chestplate,
+    Equipment.Helmet,
     Equipment.ArmourSkin,
     Equipment.Shield,
     Equipment.Cape,
@@ -193,6 +193,7 @@ export enum Skills {
     Cooking,
     Smithing,
     Crafting,
+    Chiseling, // Not a skill, but used to differntiate chiseling from crafting in the crafting.
     Fletching,
     Smelting, // Not a skill, but used to differntiate smithing from smelting in the crafting.
     Foraging,
@@ -487,6 +488,11 @@ export let SkillExpColours = {
     },
 
     [Skills.Smelting]: {
+        fill: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
+    },
+
+    [Skills.Chiseling]: {
         fill: 'rgb(255, 255, 0)',
         stroke: 'rgb(255, 255, 0)'
     },

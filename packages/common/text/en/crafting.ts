@@ -7,6 +7,7 @@ export default {
                 return `You must be level ${level} in order to fletch this.`;
             }
 
+            case Modules.Skills.Chiseling:
             case Modules.Skills.Crafting: {
                 return `You must be level ${level} in order to craft this.`;
             }

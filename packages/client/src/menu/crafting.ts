@@ -194,6 +194,7 @@ export default class Crafting extends Menu {
                 break;
             }
 
+            case Modules.Skills.Chiseling:
             case Modules.Skills.Crafting: {
                 text = 'Craft';
                 break;

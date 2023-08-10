@@ -99,6 +99,52 @@
     "wizard": {
         "name": "Wizard",
         "description": "Why does every MMORPG have one of these things?",
+        "drops": [
+            {
+                "key": "wizardhatblack",
+                "chance": 10000
+            },
+            {
+                "key": "wizardhatblue",
+                "chance": 10000
+            },
+            {
+                "key": "wizardhatcrimson",
+                "chance": 10000
+            },
+            {
+                "key": "wizardhatdarkblue",
+                "chance": 10000
+            },
+            {
+                "key": "wizardhatgreen",
+                "chance": 10000
+            },
+            {
+                "key": "wizardhatpink",
+                "chance": 10000
+            },
+            {
+                "key": "wizardhatpurple",
+                "chance": 10000
+            },
+            {
+                "key": "wizardhatred",
+                "chance": 10000
+            },
+            {
+                "key": "wizardhatturquoise",
+                "chance": 10000
+            },
+            {
+                "key": "wizardhatwhite",
+                "chance": 10000
+            },
+            {
+                "key": "wizardhatyellow",
+                "chance": 10000
+            }
+        ],
         "dropTables": ["ordinary", "unusual"],
         "hitPoints": 130,
         "level": 11,
@@ -180,6 +226,16 @@
     "skeleton": {
         "name": "Spooky Skeleton",
         "description": "I wonder if this skeleton is made out of bones.",
+        "drops": [
+            {
+                "key": "bronzespear",
+                "chance": 10000
+            },
+            {
+                "key": "bronzesword",
+                "chance": 10000
+            }
+        ],
         "dropTables": ["ordinary", "arrows"],
         "hitPoints": 140,
         "level": 14,
@@ -213,6 +269,20 @@
     "ogre": {
         "name": "Ogre",
         "description": "I really feel like the developers had to include generic fantasy creatures.",
+        "drops": [
+            {
+                "key": "ironspear",
+                "chance": 10000
+            },
+            {
+                "key": "ironsword",
+                "chance": 10000
+            },
+            {
+                "key": "ironscythe",
+                "chance": 10000
+            }
+        ],
         "dropTables": ["ordinary", "unusual", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 150,
         "level": 18,
@@ -246,6 +316,20 @@
     "skeleton2": {
         "name": "Scary Skeleton",
         "description": "Ah yes, it's not spooky, this one is scary.",
+        "drops": [
+            {
+                "key": "bronzespear",
+                "chance": 10000
+            },
+            {
+                "key": "bronzesword",
+                "chance": 10000
+            },
+            {
+                "key": "bronzescythe",
+                "chance": 10000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "arrows", "unusual"],
         "hitPoints": 375,
         "level": 30,
@@ -313,6 +397,16 @@
     "spectre": {
         "name": "Spectre",
         "description": "Has a scythe and looks like it's floating.",
+        "drops": [
+            {
+                "key": "ironscythe",
+                "chance": 10000
+            },
+            {
+                "key": "sycophant",
+                "chance": 100
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 270,
         "level": 32,
@@ -727,8 +821,14 @@
     "rooster": {
         "name": "Angry Rooster",
         "description": "It's a sleeping rooster that attacks you...",
+        "drops": [
+            {
+                "key": "pytharring",
+                "chance": 3000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "fruits", "mushrooms", "vegetables"],
-        "hitPoints": 800,
+        "hitPoints": 320,
         "level": 54,
         "aggroRange": 1,
         "aggressive": true,
@@ -759,6 +859,12 @@
 
     "pirateskeleton": {
         "name": "Pirate Skeleton",
+        "drops": [
+            {
+                "key": "scimitar",
+                "chance": 2500
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 460,
         "level": 54,
@@ -959,6 +1065,12 @@
     "icewizard": {
         "name": "Ice Wizard",
         "description": "It's like similar to some other type of wizard I've encountered before.",
+        "drops": [
+            {
+                "key": "bluemoonstaff",
+                "chance": 5000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual"],
         "hitPoints": 470,
         "level": 92,
@@ -1674,6 +1786,12 @@
 
     "frog": {
         "name": "Frog",
+        "drops": [
+            {
+                "key": "froghelm",
+                "chance": 5000
+            }
+        ],
         "description": "Just look at it hop around and things and stuff.",
         "dropTables": ["ordinary", "shards", "unusual", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 788,
@@ -4238,6 +4356,16 @@
     "skeletonking": {
         "name": "Skeleton King",
         "description": "Here he is, the chad of r/neverbrokeabone.",
+        "drops": [
+            {
+                "key": "goldshield",
+                "chance": 2000
+            },
+            {
+                "key": "royalrapier",
+                "chance": 2000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 1850,
         "level": 32,
@@ -4282,6 +4410,12 @@
     "ogrelord": {
         "name": "Ogre Lord",
         "description": "I better keep a distance before this thing turns me into a stew!",
+        "drops": [
+            {
+                "key": "firesword",
+                "chance": 1000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 2850,
         "level": 44,
@@ -4329,11 +4463,23 @@
         "drops": [
             {
                 "key": "hellhoundfang",
-                "chance": 100
+                "chance": 250
             },
             {
                 "key": "hellkeeperhelm",
-                "chance": 500
+                "chance": 400
+            },
+            {
+                "key": "hellkeeperchestplate",
+                "chance": 400
+            },
+            {
+                "key": "hellkeeperlegs",
+                "chance": 400
+            },
+            {
+                "key": "hellkeeperboots",
+                "chance": 400
             }
         ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
@@ -4460,6 +4606,12 @@
 
     "darkregion": {
         "name": "Tenebris",
+        "drops": [
+            {
+                "key": "bladeofdarkness",
+                "chance": 2000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 4000,
         "level": 79,
@@ -4718,6 +4870,12 @@
 
     "queenant": {
         "name": "Queen Ant",
+        "drops": [
+            {
+                "key": "helmofliberty",
+                "chance": 2000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 4200,
         "level": 94,
@@ -4802,6 +4960,12 @@
 
     "squid": {
         "name": "Great Squid",
+        "drops": [
+            {
+                "key": "twilightgreataxe",
+                "chance": 2500
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 3800,
         "level": 171,
@@ -4843,6 +5007,17 @@
 
     "snowlady": {
         "name": "Queen of Snow",
+        "drops": [
+            {
+                "key": "swashbuckler",
+                "chance": 1000
+            },
+
+            {
+                "key": "bident",
+                "chance": 1500
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 2800,
         "level": 180,
@@ -4877,6 +5052,16 @@
 
     "frostqueen": {
         "name": "Frost Queen",
+        "drops": [
+            {
+                "key": "timelessglaive",
+                "chance": 2000
+            },
+            {
+                "key": "moongreataxe",
+                "chance": 40
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 2800,
         "level": 180,
@@ -4911,6 +5096,12 @@
 
     "eliminator": {
         "name": "Eliminator",
+        "drops": [
+            {
+                "key": "executionershammer",
+                "chance": 1000
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows", "vegetables", "fruits", "mushrooms"],
         "hitPoints": 2000,
         "level": 65,

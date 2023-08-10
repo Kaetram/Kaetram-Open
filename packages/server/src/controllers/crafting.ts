@@ -113,11 +113,7 @@ export default class Crafting {
 
         // The skill that is being used to craft the item.
         let craftingItem = craftingData[key],
-            skill = player.skills.get(
-                player.activeCraftingInterface === (Modules.Skills.Smelting as number)
-                    ? Modules.Skills.Smithing
-                    : player.activeCraftingInterface
-            );
+            skill = player.skills.get(this.getSkillByInterface(player.activeCraftingInterface));
 
         // Verify the crafting data
         if (!craftingItem) return player.notify('crafting:INVALID_ITEM');
@@ -215,5 +211,30 @@ export default class Crafting {
         }
 
         return requirements;
+    }
+
+    /**
+     * Certain skills are only used to differently identify crafting interfaces. So in this case they reward
+     * the same experience as their normal skill. One example is smelting and smithing, smelting does not exist
+     * as a separate skill, but is referred in-game as something separate from smithing, but they both reward
+     * experience in the same skill.
+     * @param activeCraftingInterface The currently active interface that the player is using.
+     * @returns The skills identifier.
+     */
+
+    private getSkillByInterface(activeCraftingInterface: number): Modules.Skills {
+        switch (activeCraftingInterface) {
+            case Modules.Skills.Smelting: {
+                return Modules.Skills.Smithing;
+            }
+
+            case Modules.Skills.Chiseling: {
+                return Modules.Skills.Crafting;
+            }
+
+            default: {
+                return activeCraftingInterface;
+            }
+        }
     }
 }
