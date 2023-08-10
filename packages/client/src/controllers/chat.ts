@@ -115,7 +115,7 @@ export default class ChatController {
     private display(): void {
         this.button.classList.add('active');
 
-        if (this.inputVisible()) this.input.style.display = 'block';
+        if (this.inputVisible()) this.input.style.display = 'flex';
         else Util.fadeIn(this.input);
 
         this.displayChatBox();
@@ -176,7 +176,7 @@ export default class ChatController {
      */
 
     public inputVisible(): boolean {
-        return this.input.style.display === 'block';
+        return this.input.style.display === 'flex';
     }
 
     /**

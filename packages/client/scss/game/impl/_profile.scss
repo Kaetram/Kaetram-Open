@@ -28,20 +28,18 @@
     inset: 0;
 
     display: none;
+    align-items: center;
 
     box-sizing: border-box;
     height: 12em;
     padding: 1.5em 1em 0.5em;
 }
 
-#state-page-content {
-    display: flex;
-}
-
 #profile-stats {
     display: flex;
     flex: 1;
     flex-direction: column;
+    gap: 0.5em;
     align-items: center;
     justify-content: space-between;
 

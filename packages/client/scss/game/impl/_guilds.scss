@@ -6,13 +6,13 @@
     padding-left: 8.5em;
 }
 
-#guilds-content {
-    display: flex;
-    height: 100%;
+#guilds-info-container {
+    display: none;
+    flex: 1;
+    flex-direction: column;
 }
 
-#guilds-create,
-#guilds-info-container {
+#guilds-create {
     display: none;
     flex: 1;
 }
@@ -24,30 +24,20 @@
 }
 
 #guilds-list-container {
-    width: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.5em;
+
     text-align: center;
 }
 
-#guilds-list-content,
-#guilds-info-content {
-    display: flex;
-    flex-flow: column;
-    gap: 0.5em;
-    height: 100%;
-}
-
 #guilds-list {
-    height: 100%;
+    flex: 1;
 
     ul {
         padding-right: 0.25em;
     }
-}
-
-#guilds-create-content {
-    display: flex;
-    justify-content: space-evenly;
-    height: 100%;
 }
 
 #banner-select {
@@ -358,8 +348,6 @@
         flex-flow: column;
         gap: 0.5em;
 
-        height: 100%;
-
         li {
             flex-shrink: 0;
         }
@@ -391,22 +379,12 @@
 #guilds-chat {
     display: none;
     flex: 1;
-}
-
-#guilds-chat-content {
-    display: flex;
-    flex-flow: column;
-    gap: 0.5em;
-    height: 100%;
+    flex-direction: column;
 }
 
 #guilds-chat-log {
     overflow: auto;
     flex: 1;
-}
-
-#guilds-chat-input {
-    width: 100%;
 }
 
 @include sprite.sheet(

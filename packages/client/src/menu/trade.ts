@@ -322,7 +322,7 @@ export default class Trade extends Menu {
      */
 
     public isInputDialogueVisible(): boolean {
-        return this.tradeDialog.style.display === 'block';
+        return this.tradeDialog.style.display === 'flex';
     }
 
     /**

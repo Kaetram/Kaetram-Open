@@ -227,6 +227,6 @@ export default class Skills extends Menu {
      */
 
     public isInfoVisible(): boolean {
-        return this.info.style.display === 'block';
+        return this.info.style.display === 'flex';
     }
 }

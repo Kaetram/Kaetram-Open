@@ -366,7 +366,7 @@ export default class Inventory extends Menu {
      */
 
     public isDropDialogVisible(): boolean {
-        return this.actions.dropDialog.style.display === 'block';
+        return this.actions.dropDialog.style.display === 'flex';
     }
 
     /**
