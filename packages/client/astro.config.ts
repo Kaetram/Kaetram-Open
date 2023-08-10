@@ -6,12 +6,10 @@ import { locales, defaultLocale, dir, t, type Locale } from '@kaetram/common/i18
 import { defineConfig } from 'astro/config';
 import config, { exposedConfig } from '@kaetram/common/config';
 import webmanifest from 'astro-webmanifest';
-import { i18n, defaultLocaleSitemapFilter } from 'astro-i18n-aut';
+import { i18n, defaultLocaleSitemapFilter } from 'astro-i18n-aut/integration';
 import sitemap from '@astrojs/sitemap';
 import robotsTxt from 'astro-robots-txt';
 import partytown from '@astrojs/partytown';
-import critters from 'astro-critters';
-import compress from 'astro-compress';
 import compressor from 'astro-compressor';
 import glsl from 'vite-plugin-glsl';
 import { VitePWA as pwa } from 'vite-plugin-pwa';
@@ -109,8 +107,6 @@ if (import.meta.env.PROD)
         }),
         partytown({ config: { debug: false } }),
         robotsTxt({ host: true }),
-        critters({ logger: 2 }),
-        compress({ logger: 1, img: false }),
         compressor({ gzip: true, brotli: true })
     );
 
