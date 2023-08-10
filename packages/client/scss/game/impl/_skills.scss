@@ -2,10 +2,10 @@
 
 #skill-info {
     position: absolute;
-    right: 12em;
-    bottom: 5em;
+    right: 100%;
 
     display: none;
+    flex-direction: column;
 
     width: 8em;
     height: 8em;
