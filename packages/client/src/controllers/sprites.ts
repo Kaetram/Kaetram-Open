@@ -22,11 +22,7 @@ export default class SpritesController {
 
     public load(): void {
         // TS doesn't like this for some reason.
-        for (let data of spriteData as SpriteData[]) {
-            let sprite = new Sprite(data);
-
-            this.sprites[data.id] = sprite;
-        }
+        for (let data of spriteData as SpriteData[]) this.sprites[data.id] = new Sprite(data);
 
         log.debug('Finished loading sprite data...');
 

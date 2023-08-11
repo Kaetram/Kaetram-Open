@@ -38,6 +38,7 @@ export default class Sign {
         player.send(
             new BubblePacket(
                 {
+                    instance: `${this.x}-${this.y}`,
                     x: this.x,
                     y: this.y,
                     text: message
