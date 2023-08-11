@@ -1258,6 +1258,7 @@ export default class Connection {
         if (!info.text) return this.bubble.clear(info.instance);
 
         let entity = this.entities.get(info.instance);
+
         // Check validity of the entity only when the bubble is attached to an entity.
         if (opcode === Opcodes.Bubble.Entity && !entity) return;
 
