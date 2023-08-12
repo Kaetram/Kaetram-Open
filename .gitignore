@@ -1,6 +1,8 @@
 packages/tools/map/data/map.png
 packages/server/cache
 
+map.json.backup*
+
 ### Astro ###
 # Gitignore template for Astro projects
 # Ignore content collection generated files
