@@ -21,7 +21,8 @@
         "lint": "yarn lint:script && yarn lint:style",
         "test:run": "yarn packages test:run",
         "test:open": "yarn packages test:open",
-        "map": "yarn packages map"
+        "map": "yarn packages map",
+        "replacer": "yarn packages replacer"
     },
     "lint-staged": {
         "*.{ts,astro}": "eslint --cache --fix",
