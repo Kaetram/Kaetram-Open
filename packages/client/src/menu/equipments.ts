@@ -128,6 +128,17 @@ export default class Equipments extends Menu {
     }
 
     /**
+     * Override for the menu `show()` function to synchronize
+     * the equipment screen with the player's equipment data.
+     */
+
+    public override show(): void {
+        super.show();
+
+        this.synchronize();
+    }
+
+    /**
      * Synchronizes the equipment screen with the player's equipment data.
      */
 
@@ -384,29 +395,6 @@ export default class Equipments extends Menu {
         }, true);
 
         context.restore();
-    }
-
-    /**
-     * Orientation grabs the y frame index of the sprite in its sprite sheet. The left and right
-     * orientations are the same since we just flip the sprite.
-     * @returns A number representing the y frame index of the sprite in its sprite sheet.
-     */
-
-    private getOrientationIndex(): number {
-        switch (this.imageOrientation) {
-            case Modules.Orientation.Left:
-            case Modules.Orientation.Right: {
-                return 1;
-            }
-
-            case Modules.Orientation.Up: {
-                return 4;
-            }
-
-            case Modules.Orientation.Down: {
-                return 7;
-            }
-        }
     }
 
     /**

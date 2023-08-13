@@ -17,9 +17,9 @@ import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
 
-import type { Bonuses, Stats } from '@kaetram/common/types/item';
-import type Equipment from './equipment/equipment';
 import type Player from './player';
+import type Equipment from './equipment/equipment';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type { EquipmentData, SerializedEquipment } from '@kaetram/common/network/impl/equipment';
 
 export default class Equipments {
