@@ -3,8 +3,8 @@
 
 #health,
 #mana,
-#health-mask,
 #mana-mask,
+.health-mask-base,
 .health-text,
 .mana-text {
     position: absolute;
@@ -20,19 +20,19 @@
     left: 0.5em;
 }
 
-#health-mask,
-.health-text,
 #mana-mask,
+.health-mask-base,
+.health-text,
 .mana-text {
     inset: 0;
     width: 100%;
     height: 100%;
 }
 
-#health-mask,
+#mana-mask,
+.health-mask-base,
 .health-mask-poison,
-.health-mask-white,
-#mana-mask {
+.health-mask-white {
     transition: 0.5s width ease;
 }
 
@@ -60,7 +60,7 @@
     $selectors: (
         #health,
         #mana,
-        #health-mask,
+        '.health-mask-base',
         #mana-mask,
         '.health-mask-poison',
         '.health-mask-white'
