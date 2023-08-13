@@ -427,6 +427,28 @@ export default {
     },
 
     /**
+     * Obtains the default x and y offset for a given type of entity. This is to
+     * lessen the amount of code needed when writing the JSON file for the sprites.
+     * @param type The typo of entity we are grabbing the offset for.
+     */
+
+    getDefaultOffset(type: string): { x: number; y: number } {
+        switch (type) {
+            case 'items': {
+                return { x: 0, y: 0 };
+            }
+
+            case 'npcs': {
+                return { x: -8, y: -14 };
+            }
+
+            default: {
+                return { x: -this.tileSize, y: -this.tileSize };
+            }
+        }
+    },
+
+    /**
      * Gets the default width and height dimensions for player equipments. This is to
      * lessen the amount of code needed when writing the JSON file for the sprites.
      * @param type The type of equipment we are grabbing the width and height for.
@@ -435,6 +457,7 @@ export default {
 
     getDefaultEquipmentDimension(type: string): number {
         switch (type) {
+            case 'effects':
             case 'skin':
             case 'cape':
             case 'legplates':

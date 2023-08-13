@@ -54,13 +54,14 @@ export default class Sprite {
 
         this.path = `/img/sprites/${data.id}.png`;
 
-        let dimensions = Utils.getDefaultEquipmentDimension(this.getSubType());
+        let dimensions = Utils.getDefaultEquipmentDimension(this.getSubType()),
+            offset = Utils.getDefaultOffset(this.getType());
 
         this.width = this.data.width ?? dimensions;
         this.height = this.data.height ?? dimensions;
 
-        this.offsetX = this.data.offsetX ?? -Utils.tileSize;
-        this.offsetY = this.data.offsetY ?? -Utils.tileSize;
+        this.offsetX = this.data.offsetX ?? offset.x;
+        this.offsetY = this.data.offsetY ?? offset.y;
 
         this.idleSpeed = this.data.idleSpeed || this.idleSpeed;
 

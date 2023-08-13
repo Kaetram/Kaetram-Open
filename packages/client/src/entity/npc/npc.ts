@@ -14,4 +14,13 @@ export default class NPC extends Entity {
     public override idle(): void {
         this.setAnimation('idle_down', this.sprite.idleSpeed);
     }
+
+    /**
+     * Overrides the `hasShadow` function to return true.
+     * @returns Whether or not the NPC has a shadow.
+     */
+
+    public override hasShadow(): boolean {
+        return true;
+    }
 }
