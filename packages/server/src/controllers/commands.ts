@@ -1015,6 +1015,8 @@ export default class Commands {
             }
 
             case 'bank': {
+                this.player.canAccessContainer = true;
+
                 this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize()));
                 break;
             }

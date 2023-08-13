@@ -107,8 +107,8 @@ export default class Player extends Character {
     public isGuest = false;
     public canTalk = true;
     public noclip = false;
-    public invalidateMovement = false;
     public questsLoaded = false;
+    public invalidateMovement = false;
     public achievementsLoaded = false;
     public displayedManaWarning = false;
     public pickingUpPet = false; // Used to doubly ensure the player is not spamming the pickup button.
@@ -143,10 +143,10 @@ export default class Player extends Character {
     public movementStart = 0;
     public pingTime = 0;
 
-    private lastNotify = 0;
-    private lastEdible = 0;
     public lastCraft = 0;
     public lastGlobalChat = 0;
+    private lastNotify = 0;
+    private lastEdible = 0;
 
     private currentSong: string | undefined;
 
@@ -166,7 +166,7 @@ export default class Player extends Character {
 
     // Anti-cheat container
     public canAccessContainer = false;
-    public activeCraftingInterface = -1; // The skill ID\
+    public activeCraftingInterface = -1; // The skill ID
     public activeLootBag = ''; // The instance of the loot bag currently open
 
     // Minigame status of the player.
