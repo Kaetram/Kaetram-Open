@@ -461,7 +461,11 @@ export default class Player extends Character {
      */
 
     public welcome(): void {
-        if (this.isNew()) return this.notify(`misc:WELCOME;name=${config.name}`);
+        if (this.isNew()) {
+            this.save();
+
+            return this.notify(`misc:WELCOME;name=${config.name}`);
+        }
 
         this.notify(`misc:WELCOME_BACK;name=${config.name}`);
 
