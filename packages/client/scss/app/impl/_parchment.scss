@@ -30,7 +30,7 @@
 
     overflow: auto;
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
     gap: 0.5em;
 
     box-sizing: border-box;
@@ -50,7 +50,7 @@
 
         display: flex;
         flex: 1;
-        flex-flow: column;
+        flex-direction: column;
         gap: 0.25em;
         justify-content: space-between;
 
@@ -101,8 +101,11 @@
 
     #respawn {
         cursor: pointer;
+
         display: flex;
+        flex-direction: row;
         justify-content: center;
+
         margin-top: 2em;
     }
 }

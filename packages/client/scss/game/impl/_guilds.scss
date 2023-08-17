@@ -26,9 +26,7 @@
 #guilds-list-container {
     display: flex;
     flex: 1;
-    flex-direction: column;
     gap: 0.5em;
-
     text-align: center;
 }
 
@@ -42,7 +40,7 @@
 
 #banner-select {
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
     justify-content: space-evenly;
     margin: 0 1.5em;
 }
@@ -50,7 +48,7 @@
 #banner-options {
     display: flex;
     flex: 1;
-    flex-flow: column;
+    flex-direction: column;
     gap: 0.25em;
 }
 
@@ -89,6 +87,7 @@
 
 #guilds-info-header {
     display: flex;
+    flex-direction: row;
     gap: 1.5em;
     align-items: center;
 }
@@ -106,7 +105,7 @@
     }
 
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
     align-items: center;
 }
 
@@ -345,7 +344,7 @@
     ul {
         overflow: hidden auto;
         display: flex;
-        flex-flow: column;
+        flex-direction: column;
         gap: 0.5em;
 
         li {
@@ -401,6 +400,7 @@
     $selectors: '.slot-element'
 ) {
     display: flex;
+    flex-direction: row;
     gap: 1.5em;
     align-items: center;
 
@@ -415,6 +415,7 @@
 
 .slot-image {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
 
@@ -459,7 +460,9 @@
     $selectors: '.sidebar-element'
 ) {
     display: flex;
+    flex-direction: row;
     align-items: center;
+
     box-sizing: border-box;
     padding-left: 1em;
 

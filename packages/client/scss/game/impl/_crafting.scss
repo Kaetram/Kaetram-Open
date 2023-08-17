@@ -24,6 +24,7 @@
     position: absolute;
 
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
 
@@ -35,6 +36,7 @@
 #crafting-requirements {
     position: absolute;
     display: flex;
+    flex-direction: row;
 }
 
 #crafting-result,
@@ -60,6 +62,7 @@
 .crafting-buttons {
     position: absolute;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
 }
 

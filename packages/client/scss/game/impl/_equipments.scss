@@ -2,6 +2,7 @@
 
 #equipment-content {
     display: flex;
+    flex-direction: row;
     gap: 1em;
     justify-content: space-between;
 }
@@ -18,7 +19,6 @@
 #equipment-slots {
     display: flex;
     grid-area: 1 / 1;
-    flex-direction: column;
     place-items: center;
     align-items: center;
     justify-content: center;
@@ -42,6 +42,7 @@
 
 #equipments-player-image-navigator {
     display: flex;
+    flex-direction: row;
     font-size: 0.75em;
 }
 

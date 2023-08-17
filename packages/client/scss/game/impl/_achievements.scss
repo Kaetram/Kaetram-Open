@@ -9,6 +9,7 @@
         left: calc(50% - 5.5em);
 
         display: flex;
+        flex-direction: row;
         align-items: center;
         justify-content: center;
 
@@ -53,7 +54,7 @@
         ul {
             overflow: hidden auto;
             display: flex;
-            flex-flow: column;
+            flex-direction: column;
             gap: 0.5em;
 
             height: 100%;
@@ -61,6 +62,7 @@
 
             li {
                 display: flex;
+                flex-direction: row;
                 flex-shrink: 0;
                 gap: 0.5em;
                 align-items: center;

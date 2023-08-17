@@ -5,10 +5,8 @@
 
     label {
         display: flex;
-        flex-flow: row;
         gap: 0.25em;
         align-items: center;
-
         padding: 0.25em 0;
 
         span,
@@ -28,7 +26,7 @@
 }
 
 #settings-container {
-    display: flex;
+    flex-direction: row;
     gap: 0.5em;
     height: 100%;
 }
@@ -36,6 +34,7 @@
 #input-settings,
 #action-settings {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
 }
 
@@ -62,7 +61,7 @@
 #game-info {
     display: flex;
     flex: 1;
-    flex-flow: column;
+    flex-direction: column;
     gap: 0.5em;
 
     width: 100%;

@@ -6,7 +6,6 @@
 
     &-content {
         display: flex;
-        flex-direction: column;
         gap: 1em;
         height: 100%;
     }
@@ -28,6 +27,7 @@
 
     &-item {
         display: flex;
+        flex-direction: row;
         gap: 1em;
         align-items: center;
         justify-content: center;

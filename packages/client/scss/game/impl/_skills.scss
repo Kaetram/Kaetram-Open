@@ -15,14 +15,16 @@
 
     .skill-info-header {
         display: flex;
+        flex-direction: row;
         gap: 0.5em;
         align-items: center;
+
         font-size: 0.75em;
     }
 
     .skill-info-details {
         display: flex;
-        flex-flow: column;
+        flex-direction: column;
 
         span {
             padding: 0.25em;
@@ -37,7 +39,7 @@
     ul {
         overflow: hidden auto;
         display: flex;
-        flex-flow: column;
+        flex-direction: column;
         gap: 0.25em;
 
         height: 100%;
@@ -50,7 +52,7 @@
             .skill-content {
                 display: flex;
                 flex: 1;
-                flex-flow: column;
+                flex-direction: column;
                 justify-content: space-evenly;
 
                 text-align: center;

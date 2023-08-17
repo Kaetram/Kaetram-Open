@@ -8,13 +8,15 @@
 
 #trade-content {
     display: flex;
+    flex-direction: row;
     gap: 0.5em;
     justify-content: space-between;
+
     height: 100%;
 
     .player-trade {
         display: flex;
-        flex-flow: column;
+        flex-direction: column;
         gap: 0.5em;
         align-items: center;
         justify-content: space-between;
@@ -43,7 +45,7 @@
 
 #trade-inventory {
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
     gap: 0.5em;
     justify-content: center;
 
@@ -52,13 +54,14 @@
 
 #trade-player {
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
     gap: 0.5em;
     align-items: center;
 }
 
 #trade-player-content {
     display: flex;
+    flex-direction: row;
     gap: 0.5em;
     height: 100%;
 }

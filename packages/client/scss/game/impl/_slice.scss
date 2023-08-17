@@ -15,6 +15,7 @@
     inset: 0;
 
     display: none;
+    flex-direction: row;
     gap: 0.5em;
 
     box-sizing: border-box;
@@ -53,6 +54,7 @@
 
 .slice-list-item {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
 
     box-sizing: border-box;
@@ -68,6 +70,7 @@
 .slice-item-slot {
     overflow: auto;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
 
     box-sizing: border-box;
@@ -112,6 +115,7 @@
 .slice-input {
     overflow: auto;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
 
     box-sizing: border-box;
@@ -135,6 +139,7 @@
 
 .slice-tab {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
 
