@@ -244,14 +244,14 @@
     { "id": "npcs/redstoremannpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/purplestoremannpc", "width": 32, "height": 32 },
     { "id": "npcs/greenstoremannpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/redbikinigirlnpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/priest", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/pirategirlnpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/momangelnpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
+    { "id": "npcs/redbikinigirlnpc", "width": 32, "height": 32 },
+    { "id": "npcs/priest", "width": 32, "height": 32 },
+    { "id": "npcs/pirategirlnpc", "width": 32, "height": 32 },
+    { "id": "npcs/momangelnpc", "width": 32, "height": 32 },
     { "id": "npcs/nyan", "width": 49, "height": 24, "offsetX": -22, "offsetY": -6 },
     { "id": "npcs/octocat", "width": 32, "height": 32, "offsetX": -8, "offsetY": -12 },
     { "id": "npcs/octopus", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/oddeyecat", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
+    { "id": "npcs/oddeyecat", "width": 32, "height": 32 },
     { "id": "npcs/mojojojonpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/mermaidnpc", "width": 32, "height": 32 },
     { "id": "npcs/forestnpc", "width": 32, "height": 32 },
@@ -297,12 +297,13 @@
     { "id": "npcs/villager", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/villager2", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/villager3", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/villager4", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/prisoner", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
+    { "id": "npcs/villager4", "width": 32, "height": 32 },
+    { "id": "npcs/prisoner", "width": 32, "height": 32 },
     { "id": "npcs/miner", "width": 32, "height": 32 },
     { "id": "npcs/miner2", "width": 32, "height": 32 },
     { "id": "npcs/zombiegf", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/angelnpc", "width": 32, "height": 32 },
+    { "id": "npcs/rick", "width": 32, "height": 32 },
     {
         "id": "npcs/sorcerer",
         "width": 26,
@@ -315,19 +316,6 @@
         },
         "offsetX": -5,
         "offsetY": -9
-    },
-    {
-        "id": "npcs/rick",
-        "width": 32,
-        "height": 32,
-        "animations": {
-            "idle_down": {
-                "length": 4,
-                "row": 0
-            }
-        },
-        "offsetX": -8,
-        "offsetY": -12
     },
     {
         "id": "npcs/ratnpc",
