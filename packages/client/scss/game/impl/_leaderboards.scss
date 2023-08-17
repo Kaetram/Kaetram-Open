@@ -6,7 +6,7 @@
 #leaderboards-results {
     display: flex;
     flex: 1;
-    flex-flow: column;
+    flex-direction: column;
     gap: 0.5em;
 
     height: 100%;
@@ -15,7 +15,7 @@
         overflow: hidden auto;
         display: flex;
         flex: 1;
-        flex-flow: column;
+        flex-direction: column;
         gap: 0.25em;
 
         height: 100%;

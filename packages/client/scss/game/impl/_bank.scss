@@ -5,6 +5,7 @@
     inset: 0;
 
     display: none;
+    flex-direction: row;
 
     width: 37.5em;
     height: 21em;
@@ -25,7 +26,7 @@
 #bank-inventory-slots {
     overflow: auto;
     display: flex;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
     gap: 0.25em;
     justify-content: space-evenly;
 

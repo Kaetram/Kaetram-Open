@@ -5,15 +5,10 @@
     right: 0.5em;
 }
 
-#state-page {
-    .profile-info {
-        text-align: center;
-    }
-}
-
 #attack-style-list {
     display: flex;
-    gap: 1em;
+    flex-direction: row;
+    gap: 0.75em;
     justify-content: space-evenly;
 
     height: 3em;
@@ -28,6 +23,8 @@
     inset: 0;
 
     display: none;
+    flex-direction: row;
+    gap: 0.5em;
     align-items: center;
 
     box-sizing: border-box;
@@ -38,15 +35,16 @@
 #profile-stats {
     display: flex;
     flex: 1;
-    flex-direction: column;
     gap: 0.5em;
     align-items: center;
     justify-content: space-between;
 
     .button-row {
         display: flex;
+        flex-direction: row;
         gap: 0.55em;
         justify-content: space-evenly;
+
         width: 12em;
     }
 }
@@ -145,6 +143,7 @@
     left: 0;
 
     display: flex;
+    flex-direction: row;
     justify-content: center;
 
     width: 100%;
@@ -163,6 +162,7 @@
     $selectors: '.attack-style-box'
 ) {
     display: flex;
+    flex-direction: row;
     justify-content: center;
     padding-top: 0.875em;
 }

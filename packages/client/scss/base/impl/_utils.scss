@@ -14,12 +14,6 @@
         0 -0.0625em 0 #373737, 0 0.0625em 0 #373737, -0.0625em 0 0 #373737;
 }
 
-.dimmed {
-    pointer-events: none;
-    user-select: none;
-    filter: brightness(25%);
-}
-
 .text-red {
     color: #e00a0a;
 }
@@ -30,4 +24,10 @@
 
 .text-yellow {
     color: #e0e000;
+}
+
+.dimmed {
+    pointer-events: none;
+    user-select: none;
+    filter: brightness(25%);
 }

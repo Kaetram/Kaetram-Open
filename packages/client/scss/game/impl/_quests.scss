@@ -6,6 +6,7 @@
 
 #quests-container {
     display: flex;
+    flex-direction: row;
     gap: 0.5em;
     height: 100%;
 }
@@ -16,7 +17,7 @@
     ul {
         overflow: hidden auto;
         display: flex;
-        flex-flow: column;
+        flex-direction: column;
         gap: 0.25em;
 
         height: 100%;
@@ -35,13 +36,4 @@
 #quests-logs-container {
     overflow: auto;
     height: 100%;
-
-    h1 {
-        font-size: 1em;
-    }
-
-    p {
-        margin: 0.25em;
-        font-size: 0.75em;
-    }
 }
