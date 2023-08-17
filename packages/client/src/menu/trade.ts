@@ -290,7 +290,7 @@ export default class Trade extends Menu {
     private select(type: Modules.ContainerType, index: number, count?: number): void {
         this.inventoryIndex = index;
 
-        this.selectCallback?.(type, index, count);
+        this.selectCallback?.(type, index, count || 1);
     }
 
     /**
