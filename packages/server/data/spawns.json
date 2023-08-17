@@ -1,5 +1,5 @@
 {
-    "163-339": {
+    "259-435": {
         "name": "Ancient Wizard",
         "roaming": true,
         "miniboss": true,
@@ -9,7 +9,7 @@
         "achievement": "ancientwizard"
     },
 
-    "224-359": {
+    "320-455": {
         "name": "Hermit Crab Warrior",
         "drops": [
             {
@@ -39,7 +39,7 @@
         "achievement": "warriorcrab"
     },
 
-    "197-633": {
+    "293-729": {
         "name": "Water Guardian",
         "drops": [
             {
@@ -53,7 +53,7 @@
         "achievement": "waterguardian"
     },
 
-    "291-644": {
+    "387-740": {
         "name": "Ogre Guardian",
         "miniboss": true,
         "level": 32,
@@ -64,7 +64,7 @@
         "achievement": "ogreguardian"
     },
 
-    "175-635": {
+    "271-731": {
         "name": "Mimic",
         "achievement": "notwhatitseems",
         "drops": [
@@ -95,7 +95,7 @@
         ]
     },
 
-    "411-732": {
+    "507-828": {
         "name": "Mimic",
         "achievement": "treadcarefully",
         "drops": [
@@ -126,7 +126,7 @@
         ]
     },
 
-    "228-156": {
+    "324-252": {
         "name": "Mimic",
         "achievement": "notwhatitseems",
         "hitPoints": 1500,
@@ -160,7 +160,7 @@
         ]
     },
 
-    "460-725": {
+    "556-821": {
         "name": "Mimic",
         "achievement": "notwhatitseems",
         "hitPoints": 2200,
@@ -186,7 +186,7 @@
         ]
     },
 
-    "855-611": {
+    "951-707": {
         "name": "Mimic",
         "achievement": "notwhatitseems",
         "hitPoints": 2200,
@@ -208,7 +208,7 @@
         ]
     },
 
-    "677-671": {
+    "773-767": {
         "name": "Mimic",
         "achievement": "notwhatitseems",
         "hitPoints": 2200,
@@ -230,7 +230,7 @@
         ]
     },
 
-    "706-555": {
+    "802-651": {
         "name": "Mimic",
         "achievement": "notwhatitseems",
         "hitPoints": 1300,
@@ -252,44 +252,44 @@
         ]
     },
 
-    "168-31": {
+    "264-127": {
         "name": "Old Ogre",
         "miniboss": true
     },
 
-    "259-151": {
+    "355-247": {
         "name": "Ice Guardian",
         "miniboss": true,
         "defenseLevel": 15,
         "level": 35
     },
 
-    "260-156": {
+    "356-252": {
         "name": "Ice Guardian",
         "miniboss": true,
         "defenseLevel": 15,
         "level": 35
     },
 
-    "202-39": {
+    "398-135": {
         "name": "Vulture",
         "achievement": "vulture"
     },
 
-    "238-48": {
+    "334-144": {
         "name": "Iron Ogre",
         "miniboss": true,
         "level": 25,
         "achievement": "pathofdeath"
     },
 
-    "53-306": {
+    "149-402": {
         "name": "Baby Sea Dragon",
         "miniboss": true,
         "achievement": "babyseadragon"
     },
 
-    "712-717": {
+    "808-813": {
         "name": "Ice Knight",
         "miniboss": true,
         "level": 62,
@@ -305,20 +305,20 @@
         ]
     },
 
-    "784-676": {
+    "880-772": {
         "name": "Golden Golem",
         "miniboss": true,
         "achievement": "goldengolem"
     },
 
-    "769-657": {
+    "865-753": {
         "name": "Big Baby Spooder",
         "miniboss": true,
         "achievement": "webdeveloper",
         "level": 45
     },
 
-    "580-755": {
+    "676-851": {
         "name": "Mermaid",
         "miniboss": true,
         "achievement": "mermaidguard",
@@ -326,7 +326,7 @@
         "level": 55
     },
 
-    "1016-682": {
+    "1112-778": {
         "name": "Dark Wolf",
         "miniboss": true,
         "achievement": "roadtohell",

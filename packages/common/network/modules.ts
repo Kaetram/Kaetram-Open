@@ -601,12 +601,12 @@ export const Constants = {
     EFFECT_RATE: 10_000, // effects every 10 seconds
     STORE_UPDATE_FREQUENCY: 20_000, // update store every 20 seconds
     MAP_DIVISION_SIZE: 48, // The size of a region the map is split into.
-    SPAWN_POINT: '231,796', // Default starting point outside the tutorial
+    SPAWN_POINT: '328,892', // Default starting point outside the tutorial
     TUTORIAL_QUEST_KEY: 'tutorial', // key of the tutorial quest.
     ALCHEMY_QUEST_KEY: 'scientistspotion', // key of the alchemy quest.
     CRAFTING_QUEST_KEY: 'artsandcrafts', // key of the crafting quest.
-    TUTORIAL_SPAWN_POINT: '579,7', // 'x,y' values
-    JAIL_SPAWN_POINT: '14,819',
+    TUTORIAL_SPAWN_POINT: '675,103', // 'x,y' values
+    JAIL_SPAWN_POINT: '110,915',
     RESOURCE_RESPAWN: 30_000,
     TREE_RESPAWN: 25_000,
     CHEST_RESPAWN: 50_000, // 50 seconds
