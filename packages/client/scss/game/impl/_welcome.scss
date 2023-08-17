@@ -1,0 +1,47 @@
+@use '../../abstracts/sprite';
+
+#welcome {
+    flex-direction: row;
+
+    &-info {
+        flex: 1;
+        gap: 0.75em;
+    }
+
+    &-stats {
+        gap: 0.25em;
+    }
+
+    &-play {
+        flex: 1;
+        gap: 0.5em;
+    }
+
+    &-instructions-keyboard {
+        gap: 0.375em;
+    }
+
+    .welcome-controls {
+        flex-direction: row;
+        gap: 0.25em;
+        justify-content: space-evenly;
+    }
+
+    &-daily-rewards {
+        flex: 1;
+
+        &-items {
+            flex-direction: row;
+            justify-content: space-evenly;
+
+            .slice-item-slot {
+                width: 2.5em;
+                height: 2.5em;
+            }
+        }
+    }
+}
+
+@include sprite.sheet('controls/wasd', $selectors: #controls-wasd);
+@include sprite.sheet('controls/arrows', $selectors: #controls-arrows);
+@include sprite.sheet('controls/click', $selectors: #controls-click);

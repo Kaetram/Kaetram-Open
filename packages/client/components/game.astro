@@ -9,6 +9,54 @@
             <canvas id="text-canvas"></canvas>
         </div>
 
+        <div id="welcome" class="slice-container">
+            <div id="close-welcome" class="close-container"></div>
+
+            <div id="welcome-info">
+                <h1>Welcome to Kaetram!</h1>
+
+                <div id="welcome-stats">
+                    <strong>Last login:</strong>
+                    <strong>Time played:</strong>
+                </div>
+
+                <div id="welcome-changelog" class="slice-inner-container">
+                    <h3>Changelog</h3>
+
+                    lmfao
+                </div>
+            </div>
+
+            <div id="welcome-play" class="slice-inner-container">
+                <div id="welcome-instructions">
+                    <h2>How to Play</h2>
+
+                    <div id="welcome-instructions-keyboard">
+                        <span>
+                            Use <strong>WASD</strong>, the <strong>Arrow Keys</strong>, or <strong
+                                >Click</strong
+                            > to move around.
+                        </span>
+
+                        <div class="welcome-controls">
+                            <div id="controls-wasd"></div>
+                            <div id="controls-arrows"></div>
+                            <div id="controls-click"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="welcome-daily-rewards">
+                    <h2>Daily Rewards</h2>
+
+                    <div id="welcome-daily-rewards-items">
+                        <div class="slice-item-slot"></div>
+                        <div class="slice-item-slot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="player-info">
             <div id="health">
                 <div id="health-mask" class="health-mask-base"></div>
@@ -63,14 +111,14 @@
         <div id="profile-container" class="slice-page">
             <div id="state-page">
                 <div id="profile-stats">
-                    <div class="profile-info">
+                    <span>
                         <strong>Lvl:</strong>
                         <span id="profile-level"></span>
-                    </div>
-                    <div class="profile-info">
+                    </span>
+                    <span>
                         <strong>Total Exp:</strong>
                         <span id="profile-experience"></span>
-                    </div>
+                    </span>
 
                     <ul id="attack-style-list">
                         <li class="attack-style-box">
@@ -647,13 +695,13 @@
                         <h1 id="quests-logs-title" class="stroke">Quest Title</h1>
                         <p id="quests-logs-shortdesc"></p>
 
-                        <h1 class="stroke">Description</h1>
+                        <h3 class="stroke">Description</h3>
                         <p id="quests-logs-description"></p>
 
-                        <h1 class="stroke">Reward</h1>
+                        <h3 class="stroke">Reward</h3>
                         <p id="quests-logs-rewards"></p>
 
-                        <h1 class="stroke">Requirements</h1>
+                        <h3 class="stroke">Requirements</h3>
                         <p id="quests-logs-requirements">None</p>
                     </div>
                 </div>
