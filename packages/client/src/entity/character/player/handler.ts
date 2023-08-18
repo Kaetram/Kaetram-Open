@@ -158,9 +158,6 @@ export default class Handler extends CharacterHandler {
         // Save the player's orientation.
         this.game.storage.setOrientation(this.character.orientation);
 
-        // Reset the animated tiles when we stop moving.
-        this.game.renderer.resetAnimatedTiles();
-
         // Reset movement and trading variables
         this.character.moving = false;
         this.character.trading = false;
@@ -204,15 +201,6 @@ export default class Handler extends CharacterHandler {
 
         // Check if we can initiate combat.
         if (this.character.canAttackTarget() && !this.character.trading) this.character.stop(true);
-    }
-
-    /**
-     * Updates the animated tiles every second step to get them all
-     * synchronized with one another.
-     */
-
-    protected override handleSecondStep(): void {
-        this.game.renderer.updateAnimatedTiles();
     }
 
     /**

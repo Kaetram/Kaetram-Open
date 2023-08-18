@@ -28,7 +28,7 @@ interface RendererCell {
 }
 
 export default class Canvas extends Renderer {
-    public animatedTiles: { [index: number]: Tile } = {};
+    public animatedTiles: { [tileId: number | string]: Tile } = {};
 
     // Used for storing and caching tile information.
     private tiles: { [id: string]: RendererTile } = {};
@@ -56,9 +56,6 @@ export default class Canvas extends Renderer {
 
         // Clear all the cells so they're redrawn.
         this.cells = {};
-
-        // Re-calculate visible animated tiles.
-        this.updateAnimatedTiles();
     }
 
     /**
@@ -104,6 +101,7 @@ export default class Canvas extends Renderer {
 
             // Determine the layer of the tile depending on if it is a high tile or not.
             let isHighTile = this.map.isHighTile(tile as number),
+                animated = this.map.isAnimatedTile(tile as number),
                 context = (
                     isHighTile ? this.foreContext : this.backContext
                 ) as CanvasRenderingContext2D;
@@ -115,12 +113,9 @@ export default class Canvas extends Renderer {
                 context = isLightTile ? (this.overlayContext as CanvasRenderingContext2D) : context;
             }
 
-            // Draw the animated tile at the index.
-            this.drawAnimatedTile(index, flips);
-
-            // Skip animated tiles unless we disable animations, then just draw the tile once.
-            if (!this.map.isAnimatedTile(tile as number) || !this.animateTiles)
-                this.drawTile(context, tile as number, index, flips);
+            // Draw animated tiles if the tile is animated and we're animating tiles.
+            if (this.animateTiles && animated) this.drawAnimatedTile(tile as number, index, flips);
+            else this.drawTile(context, tile as number, index, flips);
         });
 
         this.saveFrame();
@@ -130,18 +125,35 @@ export default class Canvas extends Renderer {
     /**
      * Given the index of the specified animated tile, we draw the tile contained at
      * that index. We first have to check whether the tile is a foreground tile or not.
+     * @param tile The tileId of the tile we are drawing, used to access the animated tile.
      * @param index The index of the tile on the map.
      * @param flips An array containing transformations the tile will undergo.
      */
 
-    private drawAnimatedTile(index: number, flips: number[] = []): void {
+    private drawAnimatedTile(tile: number, index: number, flips: number[] = []): void {
         // No drawing if we aren't animating tiles.
         if (!this.animateTiles) return;
 
-        let animatedTile = this.animatedTiles[index];
+        /**
+         * There are special animated tiles that have their own unique tileId given the fact
+         * that they animate once. For these we want to separate them into their own object
+         * and animate separately. Example of these are the tiles that function as doors.
+         */
+
+        let isDynamicallyAnimated = this.map.dynamicAnimatedTiles[index],
+            identifier = isDynamicallyAnimated ? `${tile}-${index}` : tile;
+
+        // Add the tile to the list of animated tiles if it is animated.
+        if (!(identifier in this.animatedTiles))
+            this.addAnimatedTile(tile as number, isDynamicallyAnimated ? index : -1);
+
+        let animatedTile = this.animatedTiles[identifier];
 
         // The tile does not exist at the specified index.
         if (!animatedTile) return;
+
+        // Update the last accessed time.
+        animatedTile.lastAccessed = this.game.time;
 
         // Prevent double draws when drawing flipped animated tiles.
         if (flips.length === 0 && animatedTile.isFlipped) return;
@@ -150,7 +162,7 @@ export default class Canvas extends Renderer {
         let context = animatedTile.isHighTile ? this.foreContext : this.backContext;
 
         // Draw the tile given its context (determined when we initialize the tile).
-        this.drawTile(context, animatedTile.id + 1, animatedTile.index, flips);
+        this.drawTile(context, animatedTile.id + 1, index, flips);
     }
 
     // ---------- Primitive Drawing Functions ----------
@@ -348,52 +360,22 @@ export default class Canvas extends Renderer {
     }
 
     /**
-     * Iterates through all the currently visible tiles and appends tiles
-     * that are animated to our list of animated tiles. This function ensures
-     * that animated tiles are initialzied only once and stored for the
-     * duration of the client's session.
+     * Creates a new animated tile object and adds the tile id to the list of animated tiles.
+     * This ID is used by all tiles that share the same id but are at different positions.
+     * @param tileId The tileId of the tile we are adding, this is not the tile index.
      */
 
-    public override updateAnimatedTiles(): void {
-        if (!this.animateTiles) return;
+    private addAnimatedTile(tileId: number, index = -1): void {
+        let identifier = index === -1 ? tileId : `${tileId}-${index}`;
 
-        this.forEachVisibleTile((tile: ClientTile, index: number) => {
-            let isFlipped = this.map.isFlipped(tile);
-
-            if (isFlipped) tile = (tile as TransformedTile).tileId;
-
-            /**
-             * We don't want to reinitialize animated tiles that already exist
-             * and are within the visible camera proportions. This way we can parse
-             * it every time the tile moves slightly.
-             */
-
-            if (!this.map.isAnimatedTile(tile as number)) return;
-
-            /**
-             * Push the pre-existing tiles.
-             */
-
-            if (!(index in this.animatedTiles))
-                this.animatedTiles[index] = new Tile(
-                    tile as number,
-                    index,
-                    this.map.getTileAnimation(tile as number),
-                    isFlipped,
-                    this.map.isHighTile(tile as number),
-                    this.map.dynamicAnimatedTiles[index]
-                );
-        }, 2);
-    }
-
-    /**
-     * Used for synchronization of all animated tiles when the player
-     * stops moving or every couple of steps.
-     */
-
-    public override resetAnimatedTiles(): void {
-        // Reset the animation frame index for each animated tile.
-        for (let tile in this.animatedTiles) this.animatedTiles[tile].animationIndex = 0;
+        // Create the tile and add it to the list of animated tiles.
+        this.animatedTiles[identifier] = new Tile(
+            tileId,
+            index,
+            this.map.getTileAnimation(tileId),
+            false,
+            this.map.isHighTile(tileId)
+        );
     }
 
     // ---------- Getters and Checkers ----------

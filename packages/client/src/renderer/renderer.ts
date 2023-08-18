@@ -1566,24 +1566,6 @@ export default class Renderer {
     // -------------- Update functions --------------
 
     /**
-     * Superclass implementation for updating animated tiles. These are
-     * implemented by the Canvas2D rendering engine to update the
-     * animated tiles currently within the player's field of vision.
-     */
-
-    public updateAnimatedTiles(): void {
-        //
-    }
-
-    /**
-     * Superclass implementation for resetting the animated tiles.
-     */
-
-    public resetAnimatedTiles(): void {
-        //
-    }
-
-    /**
      * Superclass implementation for updating the tile at a specified
      * index. This is implemented by the WebGL renderer to update the
      * tile in the buffer.
