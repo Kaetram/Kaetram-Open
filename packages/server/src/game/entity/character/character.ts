@@ -832,14 +832,6 @@ export default abstract class Character extends Entity {
                 this.plateauLevel >= this.target!.plateauLevel
             );
 
-        if (this.isPlayer()) {
-            console.log('-----------------------------');
-            console.log(`isAdjacent: ${this.isAdjacent(this.target!)}`);
-            console.log(
-                `cx: ${this.x}, cy: ${this.y} tx: ${this.target!.x}, ty: ${this.target!.y}`
-            );
-        }
-
         return this.isAdjacent(this.target!);
     }
 

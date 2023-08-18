@@ -163,7 +163,7 @@ abstract class Entity {
      */
 
     public isAdjacent(entity: Entity): boolean {
-        return this.getDistance(entity) < 2;
+        return this.getDistance(entity) < 3;
     }
 
     /**
@@ -213,7 +213,7 @@ abstract class Entity {
      */
 
     public isMob(): this is Mob {
-        return this.type === Modules.EntityType.Mob;
+        return this.type === (Modules.EntityType.Mob as number);
     }
 
     /**
@@ -222,7 +222,7 @@ abstract class Entity {
      */
 
     public isNPC(): this is NPC {
-        return this.type === Modules.EntityType.NPC;
+        return this.type === (Modules.EntityType.NPC as number);
     }
 
     /**
@@ -231,7 +231,7 @@ abstract class Entity {
      */
 
     public isItem(): this is Item {
-        return this.type === Modules.EntityType.Item;
+        return this.type === (Modules.EntityType.Item as number);
     }
 
     /**
@@ -240,7 +240,7 @@ abstract class Entity {
      */
 
     public isChest(): this is Item {
-        return this.type === Modules.EntityType.Chest;
+        return this.type === (Modules.EntityType.Chest as number);
     }
 
     /**
@@ -249,7 +249,7 @@ abstract class Entity {
      */
 
     public isPlayer(): this is Player {
-        return this.type === Modules.EntityType.Player;
+        return this.type === (Modules.EntityType.Player as number);
     }
 
     /**
@@ -258,7 +258,7 @@ abstract class Entity {
      */
 
     public isProjectile(): this is Projectile {
-        return this.type === Modules.EntityType.Projectile;
+        return this.type === (Modules.EntityType.Projectile as number);
     }
 
     /**
@@ -267,7 +267,7 @@ abstract class Entity {
      */
 
     public isPet(): this is Pet {
-        return this.type === Modules.EntityType.Pet;
+        return this.type === (Modules.EntityType.Pet as number);
     }
 
     /**
@@ -276,7 +276,7 @@ abstract class Entity {
      */
 
     public isEffect(): this is Effect {
-        return this.type === Modules.EntityType.Effect;
+        return this.type === (Modules.EntityType.Effect as number);
     }
 
     /**
