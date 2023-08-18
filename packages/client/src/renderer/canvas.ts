@@ -360,6 +360,17 @@ export default class Canvas extends Renderer {
     }
 
     /**
+     * Used to synchronize all animated tiles under certain conditions. Generally whenever
+     * we add a new tile we want to sync them in case there are animations that require
+     * multiple tiles.
+     */
+
+    private resetAnimatedTiles(): void {
+        // Reset the animation frame index for each animated tile.
+        for (let tile in this.animatedTiles) this.animatedTiles[tile].animationIndex = 0;
+    }
+
+    /**
      * Creates a new animated tile object and adds the tile id to the list of animated tiles.
      * This ID is used by all tiles that share the same id but are at different positions.
      * @param tileId The tileId of the tile we are adding, this is not the tile index.
@@ -376,6 +387,9 @@ export default class Canvas extends Renderer {
             false,
             this.map.isHighTile(tileId)
         );
+
+        // Synchronize all the existing tiles after we add a new one.
+        this.resetAnimatedTiles();
     }
 
     // ---------- Getters and Checkers ----------
