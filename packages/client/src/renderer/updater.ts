@@ -230,9 +230,10 @@ export default class Updater {
     }
 
     /**
-     * In the case of using Canvas2D renderer, we iterate through all the animated
-     * tiles currently visible and animate their frames to the game tick. We also
-     * handle removal and updating of expired tiles.
+     * Responsible for iterating through the tile ids of all animated tiles
+     * and updating their animation. Whenever a tile has not been drawn for
+     * a certain amount of time it is marked as unused and removed from the
+     * renderer.
      */
 
     private updateAnimatedTiles(): void {
@@ -248,10 +249,11 @@ export default class Updater {
         for (let index in (this.renderer as Canvas).animatedTiles) {
             let tile = (this.renderer as Canvas).animatedTiles[index];
 
-            // Once the tile expires we update the map data and remove it from the renderer.
-            if (tile.expired) {
-                this.game.map.data[tile.index] = tile.postAnimationData!;
+            // Update the tile's frame to the postAnimationData if it is expired.
+            if (tile.expired) this.game.map.data[tile.index] = tile.postAnimationData!;
 
+            // Delete the tile and continue if it's unused or expired.
+            if (tile.unused || tile.expired) {
                 delete (this.renderer as Canvas).animatedTiles[index];
 
                 continue;

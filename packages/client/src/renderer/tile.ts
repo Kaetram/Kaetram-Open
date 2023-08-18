@@ -6,10 +6,16 @@ export default class Tile {
     // Denotes whether or not to delete the tile after the animation is complete.
     public expired = false;
 
+    // Used to indicate the tile is no longer used in the rendering process.
+    public unused = false;
+
     // WebGL rendering functions.
     public uploaded = true;
 
     private lastTime = 0;
+
+    // Used to keep track of whether or not the tile is still being used.
+    public lastAccessed = Date.now();
 
     public constructor(
         public id: number, // The tileId
@@ -29,6 +35,10 @@ export default class Tile {
      */
 
     public animate(time: number): void {
+        // Expire the tile if it hasn't been accessed in 5 seconds.
+        if (time - this.lastAccessed > 5000) this.unused = true;
+
+        // The animation loop occurs once the time elapsed since the last update is greater than the duration of the animation.
         if (time - this.lastTime > this.animationInfo[this.animationIndex].duration) {
             this.id = this.animationInfo[this.animationIndex].tileId;
 

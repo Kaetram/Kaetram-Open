@@ -187,8 +187,6 @@ export default class Game {
 
         this.player.handler = new Handler(this.player);
 
-        this.renderer.updateAnimatedTiles();
-
         this.socket.send(Packets.Ready, {
             regionsLoaded: this.map.regionsLoaded,
             userAgent: agent
@@ -266,9 +264,6 @@ export default class Game {
 
         // Synchronize the camera and reset the zoning directions.
         this.camera.zone(this.zoning.getDirection());
-
-        // Update the animated tiles.
-        this.renderer.updateAnimatedTiles();
 
         // Reset the zoning directions.
         this.zoning.reset();
@@ -391,7 +386,6 @@ export default class Game {
             this.player.moving = false;
             this.player.disableAction = false;
             this.camera.centreOn(this.player);
-            this.renderer.updateAnimatedTiles();
         }
     }
 
