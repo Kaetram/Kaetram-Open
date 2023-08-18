@@ -493,16 +493,14 @@ export default class Mob extends Character {
     /**
      * Checks if the distance between the mob's current position and the spawn
      * point is greater than the roam distance.
-     * @param entity Optional parameter to check against the entity.
+     * @param x Optional parameter to specify custom x coordinate. We use this if provided.
+     * @param y Optional parameter to specify custom y coordinate.
      * @param distance Optional parameter to specify custom distance (used for combat).
      * @returns Whether or not the mob should return to the spawn.
      */
 
-    public outsideRoaming(entity?: Entity, distance = this.roamDistance): boolean {
-        return (
-            Utils.getDistance(entity?.x || this.x, entity?.y || this.y, this.spawnX, this.spawnY) >
-            distance
-        );
+    public outsideRoaming(x?: number, y?: number, distance = this.roamDistance): boolean {
+        return Utils.getDistance(x || this.x, y || this.y, this.spawnX, this.spawnY) > distance;
     }
 
     /**

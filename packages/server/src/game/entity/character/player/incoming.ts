@@ -309,6 +309,10 @@ export default class Incoming {
         if (playerX) playerX = Utils.sanitizeNumber(playerX);
         if (playerY) playerY = Utils.sanitizeNumber(playerY);
 
+        // Prevent any crazy packet tampering.
+        if (this.world.map.isOutOfBounds(requestX!, requestY!)) return;
+        if (this.world.map.isOutOfBounds(playerX!, playerY!)) return;
+
         switch (opcode) {
             case Opcodes.Movement.Request: {
                 return this.player.handleMovementRequest(playerX!, playerY!, targetInstance!);
@@ -340,15 +344,16 @@ export default class Incoming {
                 entity = this.entities.get(targetInstance!) as Character;
 
                 // Skip players or invalid entities.
-                if (!entity || entity.isPlayer()) return;
+                if (!entity?.isMob() || entity.isStunned() || entity.isDead()) return;
 
                 // Do not update if it's the same value.
                 if (entity.x === requestX && entity.y === requestY) return;
 
-                // For mobs update the position without a packet.
-                if (entity.isMob()) return entity.setPosition(requestX!, requestY!, false);
+                // Prevent crazy position updates, add some leeway to the roaming distance.
+                if (entity.outsideRoaming(requestX!, requestY!, entity.roamDistance * 2)) return;
 
-                return entity.setPosition(requestX!, requestY!);
+                // For mobs update the position without a packet.
+                return entity.setPosition(requestX!, requestY!, false);
             }
         }
     }

@@ -17,13 +17,13 @@ export default class Handler extends CharacterHandler {
     protected override game: Game;
     protected override entities: EntitiesController;
 
-    public constructor(player: Player) {
-        super(player);
+    public constructor(protected override character: Player) {
+        super(character);
 
-        this.map = player.game.map;
+        this.map = character.game.map;
 
-        this.game = player.game;
-        this.entities = player.game.entities;
+        this.game = character.game;
+        this.entities = character.game.entities;
     }
 
     /**
@@ -187,6 +187,14 @@ export default class Handler extends CharacterHandler {
         // Handle followers
         this.handleFollowers();
 
+        if (this.character.hasTarget() || this.character.hasAttackers())
+            this.game.socket.send(Packets.Movement, {
+                opcode: Opcodes.Movement.Entity,
+                targetInstance: this.character.target?.instance,
+                requestX: this.character.target?.gridX,
+                requestY: this.character.target?.gridY
+            });
+
         // Send the packet to the server to inform it that the player has moved.
         this.game.socket.send(Packets.Movement, {
             opcode: Opcodes.Movement.Step,
@@ -200,7 +208,8 @@ export default class Handler extends CharacterHandler {
         this.lastStepY = this.character.gridY;
 
         // Check if we can initiate combat.
-        if (this.character.canAttackTarget() && !this.character.trading) this.character.stop(true);
+        if (this.character.canAttackTarget() && !this.character.trading)
+            this.character.stop(this.character.isRanged());
     }
 
     /**

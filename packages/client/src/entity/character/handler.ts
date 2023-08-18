@@ -1,5 +1,3 @@
-import { Opcodes, Packets } from '@kaetram/common/network';
-
 import type Character from './character';
 import type Game from '../../game';
 import type EntitiesController from '../../controllers/entities';
@@ -78,19 +76,6 @@ export default class Handler {
 
         // Essentially the same as the above, but for followers.
         this.handleFollowers();
-
-        /**
-         * We temporarily rely on a consensus between multiple clients to establish
-         * the position of a character (the server is only involved in telling the mob where to go).
-         */
-
-        if (this.character.hasTarget() || this.character.hasAttackers())
-            this.game.socket.send(Packets.Movement, {
-                opcode: Opcodes.Movement.Entity,
-                targetInstance: this.character.instance,
-                requestX: this.character.gridX,
-                requestY: this.character.gridY
-            });
 
         /**
          * This handles attacking using ranged projectiles. If the character has a target
