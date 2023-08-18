@@ -236,10 +236,10 @@
     { "id": "npcs/agent", "width": 32, "height": 32 },
     { "id": "npcs/superiorangelnpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/sponge", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/snowshepherdboy", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/secondsonangelnpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/shepherdboy", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/scientist", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
+    { "id": "npcs/snowshepherdboy", "width": 32, "height": 32 },
+    { "id": "npcs/secondsonangelnpc", "width": 32, "height": 32 },
+    { "id": "npcs/shepherdboy", "width": 32, "height": 32 },
+    { "id": "npcs/scientist", "width": 32, "height": 32 },
     { "id": "npcs/madscientist", "width": 32, "height": 32 },
     { "id": "npcs/redstoremannpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/purplestoremannpc", "width": 32, "height": 32 },
@@ -280,11 +280,11 @@
     { "id": "npcs/iceelfnpc", "width": 32, "height": 32 },
     { "id": "npcs/guildnpc", "width": 32, "height": 32 },
     { "id": "npcs/picklenpc", "height": 24, "offsetX": -2, "offsetY": -8 },
-    { "id": "npcs/santaelfnpc", "height": 24, "offsetX": 0, "offsetY": -10 },
+    { "id": "npcs/santaelfnpc", "width": 32, "height": 32 },
     { "id": "npcs/king", "width": 32, "height": 32 },
     { "id": "npcs/king2", "width": 32, "height": 32 },
     { "id": "npcs/lavanpc", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
-    { "id": "npcs/soldier", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
+    { "id": "npcs/soldier", "width": 32, "height": 32 },
     { "id": "npcs/vampire", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/vendingmachine", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/villagegirl", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
@@ -304,19 +304,7 @@
     { "id": "npcs/zombiegf", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/angelnpc", "width": 32, "height": 32 },
     { "id": "npcs/rick", "width": 32, "height": 32 },
-    {
-        "id": "npcs/sorcerer",
-        "width": 26,
-        "height": 26,
-        "animations": {
-            "idle_down": {
-                "length": 6,
-                "row": 0
-            }
-        },
-        "offsetX": -5,
-        "offsetY": -9
-    },
+    { "id": "npcs/sorcerer", "width": 32, "height": 32 },
     {
         "id": "npcs/ratnpc",
         "width": 32,
