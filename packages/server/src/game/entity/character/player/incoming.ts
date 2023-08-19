@@ -343,6 +343,10 @@ export default class Incoming {
             case Opcodes.Movement.Entity: {
                 entity = this.entities.get(targetInstance!) as Character;
 
+                // Pet movement is only handled by the owner.
+                if (entity.isPet() && entity.owner?.instance === this.player.instance)
+                    return entity.setPosition(requestX!, requestY!);
+
                 // Skip players or invalid entities.
                 if (!entity?.isMob() || entity.isStunned() || entity.isDead()) return;
 
