@@ -429,7 +429,7 @@ export default class Connection {
             }
 
             case Opcodes.Movement.Stop: {
-                return entity.stop(true);
+                return entity.stop();
             }
 
             case Opcodes.Movement.Speed: {
@@ -583,6 +583,9 @@ export default class Connection {
         // Show the health bar for both entities.
         attacker.triggerHealthBar();
         target.triggerHealthBar();
+
+        // Add the attacker to the target's list of attackers.
+        target.addAttacker(attacker);
     }
 
     /**

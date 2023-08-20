@@ -163,7 +163,7 @@ abstract class Entity {
      */
 
     public isAdjacent(entity: Entity): boolean {
-        return this.getDistance(entity) < 3;
+        return this.getDistance(entity) < 2;
     }
 
     /**

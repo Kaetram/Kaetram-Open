@@ -187,7 +187,7 @@ export default class Handler extends CharacterHandler {
         // Handle followers
         this.handleFollowers();
 
-        if (this.character.hasTarget() || this.character.hasAttackers())
+        if (this.character.hasTarget())
             this.game.socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Entity,
                 targetInstance: this.character.target?.instance,
@@ -208,8 +208,8 @@ export default class Handler extends CharacterHandler {
         this.lastStepY = this.character.gridY;
 
         // Check if we can initiate combat.
-        if (this.character.canAttackTarget() && !this.character.trading)
-            this.character.stop(this.character.isRanged());
+        if (this.character.moving && this.character.canAttackTarget() && !this.character.trading)
+            this.character.stop();
     }
 
     /**
