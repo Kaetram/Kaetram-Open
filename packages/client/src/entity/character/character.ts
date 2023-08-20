@@ -578,9 +578,13 @@ export default class Character extends Entity {
         // Set the new position onto the grid.
         this.updateGridPosition();
 
-        if (!this.interrupted && this.path) {
-            if (this.hasNextStep()) [this.nextGridX, this.nextGridY] = this.path[this.step + 1];
+        // Pathing has been interrupted, stop.
+        if (this.interrupted) stop = true;
 
+        // Append the next step if it exists.
+        if (this.hasNextStep()) [this.nextGridX, this.nextGridY] = this.path![this.step + 1];
+
+        if (!stop) {
             this.stepCallback?.();
 
             if (this.changedPath()) {
@@ -601,20 +605,30 @@ export default class Character extends Entity {
                 this.step++;
                 this.updateMovement();
             } else stop = true;
-        } else {
-            stop = true;
-            this.interrupted = false;
         }
 
-        if (stop) {
-            this.path = null;
-            this.idle();
+        if (stop) this.resetMovement();
+    }
 
-            if (this.stopPathingCallback)
-                this.stopPathingCallback(this.gridX, this.gridY, this.forced);
+    /**
+     * Used for when pathing has come to an end. We reset all the pathing
+     * variables and stop the character from moving.
+     */
 
-            this.forced = false;
-        }
+    private resetMovement(): void {
+        this.path = null;
+        this.destination = null;
+        this.newDestination = null;
+        this.movement = new Transition();
+        this.idle();
+
+        this.nextGridX = this.gridX;
+        this.nextGridY = this.gridY;
+
+        this.forced = false;
+        this.interrupted = false;
+
+        this.stopPathingCallback?.(this.gridX, this.gridY, this.forced);
     }
 
     /**
@@ -748,7 +762,7 @@ export default class Character extends Entity {
     }
 
     public hasNextStep(): boolean | null {
-        return this.path && this.path.length - 1 > this.step;
+        return this.path!.length - 1 > this.step;
     }
 
     public changedPath(): boolean {

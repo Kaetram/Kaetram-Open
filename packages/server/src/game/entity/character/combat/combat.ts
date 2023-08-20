@@ -116,7 +116,12 @@ export default class Combat {
         if (!this.character.hasTarget() || this.character.target?.isDead()) return this.stop();
 
         // Prevent combat loop from persisting during PVP flag changes.
-        if (this.character.isPlayer() && !this.character.target!.pvp) return this.stop();
+        if (
+            this.character.isPlayer() &&
+            this.character.target?.isPlayer() &&
+            !this.character.target!.pvp
+        )
+            return this.stop();
 
         // Do not attack while teleporting.
         if (this.character.teleporting) return;
@@ -232,6 +237,20 @@ export default class Combat {
 
     public expired(): boolean {
         return Date.now() - this.lastAttack > 10_000;
+    }
+
+    /**
+     * Checks whether or not both the player and the target are players and if the
+     * target is in a valid PVP zone in order to be attacked.
+     * @returns Whether or not the target is in a PVP zone.
+     */
+
+    public isPvp(): boolean {
+        return (
+            this.character.isPlayer() &&
+            !!this.character.target?.isPlayer() &&
+            this.character.target?.pvp
+        );
     }
 
     /**

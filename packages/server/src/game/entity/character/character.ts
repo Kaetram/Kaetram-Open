@@ -852,7 +852,7 @@ export default abstract class Character extends Entity {
      */
 
     public isOnSameTile(): boolean {
-        return this.getDistance(this.target!) === 0;
+        return this.x === this.target?.x && this.y === this.target?.y;
     }
 
     /**
