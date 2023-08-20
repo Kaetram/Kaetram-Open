@@ -314,7 +314,7 @@ export default class WebGL extends Renderer {
              * obstruct certain foreground elements (tree shadows).
              */
 
-            context.uniform1f(shader.uniforms.uAlpha, isBackground ? 1 : 2);
+            context.uniform1f(shader.uniforms.uAlpha, isBackground ? 1 : 1.5);
             context.uniform1i(shader.uniforms.uRepeatTiles, 1);
             context.uniform2fv(shader.uniforms.uInverseLayerTileCount, this.inverseTileCount);
 
