@@ -4,8 +4,8 @@ import type Character from '../entity/character/character';
 
 export const MAXIMUM_ZOOM = 6,
     DEFAULT_ZOOM = 3,
-    MAX_GRID_WIDTH = 52,
-    MAX_GRID_HEIGHT = 28;
+    MAX_GRID_WIDTH = 64,
+    MAX_GRID_HEIGHT = 32;
 
 export default class Camera {
     // Border is used to determine the screen size of the website (not browser).
