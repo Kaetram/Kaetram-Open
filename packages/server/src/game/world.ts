@@ -15,7 +15,6 @@ import Events from '../controllers/events';
 
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
 import Discord from '@kaetram/common/api/discord';
 import { ChatPacket, GuildPacket } from '@kaetram/common/network/impl';
 import { Modules, Opcodes } from '@kaetram/common/network';
