@@ -687,16 +687,11 @@ export default class Character extends Entity {
      */
 
     public stop(force = false): void {
-        if (!force) this.interrupted = true;
-        else if (this.hasPath()) {
-            this.path = null;
-            this.destination = null;
-            this.newDestination = null;
-            this.movement = new Transition();
-            this.performAction(this.orientation, Modules.Actions.Idle);
-            this.nextGridX = this.gridX;
-            this.nextGridY = this.gridY;
-        }
+        if (!this.hasPath()) return;
+
+        if (force) return this.resetMovement();
+
+        this.interrupted = true;
     }
 
     /**
