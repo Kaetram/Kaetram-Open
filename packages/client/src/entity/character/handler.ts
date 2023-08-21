@@ -80,7 +80,10 @@ export default class Handler {
         this.handleFollowers();
 
         // Update position of the character to the server if they have a target or attackers.
-        if (this.character.isMob() && (this.character.hasTarget() || this.character.hasAttackers()))
+        if (
+            (this.character.isMob() || this.character.isPet()) &&
+            (this.character.hasTarget() || this.character.hasAttackers())
+        )
             this.game.socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Entity,
                 targetInstance: this.character.instance,
