@@ -37,3 +37,22 @@
     overflow: auto;
     height: 100%;
 }
+
+@media (--portrait) {
+    #quests {
+        width: 22em;
+        height: 28em;
+    }
+
+    #quests-container {
+        flex-direction: column;
+
+        #quests-list {
+            flex: 3;
+        }
+
+        #quests-logs {
+            flex: 4;
+        }
+    }
+}

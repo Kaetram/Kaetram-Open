@@ -75,3 +75,14 @@
 #joystick-enabled-checkbox[hidden] {
     display: none;
 }
+
+@media (--portrait) {
+    #settings-page {
+        width: 22em;
+        height: 27em;
+    }
+
+    #settings-container {
+        flex-direction: column;
+    }
+}

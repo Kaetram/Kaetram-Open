@@ -137,3 +137,11 @@
         left: 6em;
     }
 }
+
+@media (--portrait) {
+    #equipments {
+        flex-direction: column;
+        width: 16em;
+        height: 30em;
+    }
+}

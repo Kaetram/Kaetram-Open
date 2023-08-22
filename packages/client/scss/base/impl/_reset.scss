@@ -188,3 +188,10 @@ html [type='button'],
         background-color: #aaa;
     }
 }
+
+@media (--portrait) {
+    ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+}

@@ -470,3 +470,9 @@
         padding-left: 2em;
     }
 }
+
+@media (--portrait) {
+    #guilds {
+        font-size: 0.6em;
+    }
+}

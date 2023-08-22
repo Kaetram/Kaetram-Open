@@ -40,5 +40,18 @@
     }
 }
 
+@media (--portrait) {
+    #bank {
+        flex-direction: column-reverse;
+        justify-content: center;
+
+        width: 21em;
+        height: 37.5em;
+
+        font-size: 0.9em;
+        vertical-align: top;
+    }
+}
+
 @include sprite.sheet('bank', $x: 132, $width: 168, $height: 166, $selectors: #bank-container);
 @include sprite.sheet('bank', $width: 128, $height: 126, $selectors: #bank-inventory-container);

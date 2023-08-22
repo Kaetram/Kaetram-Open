@@ -149,6 +149,12 @@
     width: 100%;
 }
 
+@media (--portrait) {
+    #profile-container {
+        font-size: 0.95em;
+    }
+}
+
 @include sprite.sheet(
     $image: 'characterdialogsheet',
     $x: 384,

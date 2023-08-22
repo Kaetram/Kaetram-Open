@@ -75,3 +75,9 @@
     top: 7.5em;
     left: 8.4375em;
 }
+
+@media (--portrait) {
+    #map-frame {
+        font-size: 0.85em;
+    }
+}
