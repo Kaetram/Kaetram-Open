@@ -44,8 +44,6 @@
     box-sizing: border-box;
     width: 22em;
     height: 1.25em;
-
-    //margin-top: 0.7em;
     margin-left: 1em;
 
     font-size: 1em;
@@ -58,6 +56,13 @@
 #chat-input {
     z-index: 4;
     color: white;
+}
+
+@media (--portrait) {
+    #chat {
+        bottom: 6em;
+        font-size: 0.9em;
+    }
 }
 
 @include sprite.sheet($image: 'chatbox', $scale: 1.5, $selectors: #chat-frame);

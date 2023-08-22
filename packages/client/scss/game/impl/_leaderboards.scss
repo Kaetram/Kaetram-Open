@@ -26,3 +26,11 @@
         }
     }
 }
+
+@media (--portrait) {
+    #leaderboards {
+        flex-direction: column;
+        width: 22em;
+        height: 28em;
+    }
+}

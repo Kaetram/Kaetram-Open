@@ -2,7 +2,7 @@
 
 #parchment {
     width: 36em;
-    height: 18em;
+    height: 19em;
     opacity: 0;
 
     select {
@@ -35,7 +35,7 @@
 
     box-sizing: border-box;
     width: 24em;
-    height: 15.5em;
+    height: 17em;
     margin: auto;
     padding: 0 0.5em;
 
@@ -123,4 +123,36 @@
     pointer-events: auto;
     opacity: 1;
     transition: 0.5s opacity linear;
+}
+
+@media (--portrait) {
+    #parchment {
+        width: 20em;
+        height: 26em;
+    }
+
+    #loading,
+    #load-character,
+    #create-character,
+    #reset-password,
+    #world-select,
+    #credits,
+    #about,
+    #git,
+    #death,
+    #news,
+    #error {
+        flex-flow: column;
+        flex-wrap: nowrap;
+        width: 16em;
+        height: 23em;
+
+        .button-row {
+            display: grid !important;
+        }
+
+        .slice-button {
+            width: 15em;
+        }
+    }
 }

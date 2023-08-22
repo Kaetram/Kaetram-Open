@@ -104,3 +104,24 @@
         }
     }
 }
+
+@media (--portrait) {
+    #store {
+        width: 16em;
+        height: 28em;
+    }
+
+    #store-content {
+        flex-direction: column;
+    }
+
+    #store-inventory {
+        gap: 0.1em;
+        height: 13em;
+    }
+
+    #store-slots {
+        gap: 0.2em;
+        height: 12em;
+    }
+}
