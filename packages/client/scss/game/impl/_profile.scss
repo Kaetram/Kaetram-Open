@@ -3,6 +3,10 @@
 
 #profile-container {
     right: 0.5em;
+
+    @media (--portrait) {
+        font-size: 0.875em;
+    }
 }
 
 #attack-style-list {
@@ -147,12 +151,6 @@
     justify-content: center;
 
     width: 100%;
-}
-
-@media (--portrait) {
-    #profile-container {
-        font-size: 0.95em;
-    }
 }
 
 @include sprite.sheet(

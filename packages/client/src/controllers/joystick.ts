@@ -87,8 +87,10 @@ export default class JoystickController {
             // Calculate the player's position on the grid.
             x = player.x + this.position.x * map.tileSize,
             y = player.y + this.position.y * map.tileSize,
-            gridX = player.gridX + this.position.x,
-            gridY = player.gridY + this.position.y;
+            gridX = Math.round(player.x / map.tileSize + this.position.x),
+            gridY = Math.round(player.y / map.tileSize + this.position.y);
+
+        input.player.disableAction = false;
 
         input.move({ x, y, gridX, gridY });
 

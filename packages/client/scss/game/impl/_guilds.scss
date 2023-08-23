@@ -13,8 +13,17 @@
 }
 
 #guilds-create {
+    overflow: hidden;
     display: none;
     flex: 1;
+    flex-direction: row;
+    gap: 0.5em;
+    align-items: center;
+
+    @media (--portrait) {
+        flex-direction: column;
+        justify-content: center;
+    }
 }
 
 #create-guild {
@@ -50,6 +59,7 @@
     flex: 1;
     flex-direction: column;
     gap: 0.25em;
+    justify-content: center;
 }
 
 #banner-colours {
@@ -468,11 +478,5 @@
 
     &:hover:not(:active, .active) {
         padding-left: 2em;
-    }
-}
-
-@media (--portrait) {
-    #guilds {
-        font-size: 0.6em;
     }
 }
