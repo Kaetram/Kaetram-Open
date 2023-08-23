@@ -80,13 +80,6 @@
     }
 }
 
-@media (--portrait) {
-    #achievements {
-        width: 22em;
-        height: 23em;
-    }
-}
-
 @include sprite.sheet($image: 'achievements', $width: 20, $height: 20, $selectors: '.coin-slot') {
     box-sizing: border-box;
     padding: 0.25em;

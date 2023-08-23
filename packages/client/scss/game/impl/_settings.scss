@@ -29,6 +29,10 @@
     flex-direction: row;
     gap: 0.5em;
     height: 100%;
+
+    @media (--portrait) {
+        flex-direction: column;
+    }
 }
 
 #input-settings,
@@ -74,15 +78,4 @@
 
 #joystick-enabled-checkbox[hidden] {
     display: none;
-}
-
-@media (--portrait) {
-    #settings-page {
-        width: 22em;
-        height: 27em;
-    }
-
-    #settings-container {
-        flex-direction: column;
-    }
 }

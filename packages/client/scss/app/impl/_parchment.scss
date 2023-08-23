@@ -143,12 +143,12 @@
     #news,
     #error {
         flex-flow: column;
-        flex-wrap: nowrap;
+        justify-content: center;
         width: 16em;
         height: 23em;
 
         .button-row {
-            display: grid !important;
+            flex-flow: column;
         }
 
         .slice-button {

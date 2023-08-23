@@ -170,6 +170,11 @@ html [type='button'],
 ::-webkit-scrollbar {
     width: 0.5em;
     height: 0.5em;
+
+    @media (--portrait) {
+        width: 0;
+        height: 0;
+    }
 }
 
 ::-webkit-scrollbar-track,
@@ -186,12 +191,5 @@ html [type='button'],
 
     &:active {
         background-color: #aaa;
-    }
-}
-
-@media (--portrait) {
-    ::-webkit-scrollbar {
-        width: 0;
-        height: 0;
     }
 }
