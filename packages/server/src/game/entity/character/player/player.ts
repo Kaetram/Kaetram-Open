@@ -1169,8 +1169,8 @@ export default class Player extends Character {
     public handleMovementStep(
         x: number,
         y: number,
-        nextX: number,
-        nextY: number,
+        nextX?: number,
+        nextY?: number,
         timestamp = Date.now()
     ): void {
         // Increment cheat score if the player is moving while stunned.
@@ -1186,6 +1186,9 @@ export default class Player extends Character {
         this.setPosition(x, y);
 
         this.lastStep = Date.now();
+
+        // Unprovided for this step, skip any additional verifications.
+        if (!nextX || !nextY) return;
 
         // Handle doors when the player stops on one.
         if (this.map.isDoor(nextX, nextY)) {
