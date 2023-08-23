@@ -7,6 +7,7 @@ import type Player from './player';
 import type Game from '../../../game';
 import type EntitiesController from '../../../controllers/entities';
 import type { TileIgnore } from '../../../utils/pathfinder';
+import type { MovementPacket } from '@kaetram/common/types/messages/incoming';
 
 export default class Handler extends CharacterHandler {
     private map: Map;
@@ -196,14 +197,7 @@ export default class Handler extends CharacterHandler {
             });
 
         // Send the packet to the server to inform it that the player has moved.
-        this.game.socket.send(Packets.Movement, {
-            opcode: Opcodes.Movement.Step,
-            playerX: this.character.gridX,
-            playerY: this.character.gridY,
-            nextGridX: this.character.nextGridX,
-            nextGridY: this.character.nextGridY,
-            timestamp: Date.now()
-        });
+        this.game.socket.send(Packets.Movement, this.getStepData());
 
         // Update the last step coordinates.
         this.lastStepX = this.character.gridX;
@@ -246,5 +240,36 @@ export default class Handler extends CharacterHandler {
             return Opcodes.Target.Attack;
 
         return Opcodes.Target.None;
+    }
+
+    /**
+     * Creates the step data packet that is to be sent to the player each time the player takes a step.
+     * Depending on whether the next step is the last step in the path, we add the next grid x and y
+     * to the packet.
+     * @returns A movement packet containing the step data.
+     */
+
+    private getStepData(): MovementPacket {
+        let lastPath = this.character.path!.at(-1)!,
+            data: MovementPacket = {
+                opcode: Opcodes.Movement.Step,
+                playerX: this.character.gridX,
+                playerY: this.character.gridY,
+                timestamp: Date.now()
+            };
+
+        // The next step is not the last path in the array so we create a normal packet.
+        if (
+            !lastPath ||
+            lastPath[0] !== this.character.nextGridX ||
+            lastPath[1] !== this.character.nextGridY
+        )
+            return data;
+
+        // Add the next grid x onto the packet.
+        data.nextGridX = this.character.nextGridX;
+        data.nextGridY = this.character.nextGridY;
+
+        return data;
     }
 }
