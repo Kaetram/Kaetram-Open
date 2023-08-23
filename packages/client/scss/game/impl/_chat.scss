@@ -13,6 +13,11 @@
     flex-direction: column;
 
     width: 24em;
+
+    @media (--portrait) {
+        bottom: 6em;
+        font-size: 0.875em;
+    }
 }
 
 #chat-frame {
@@ -56,13 +61,6 @@
 #chat-input {
     z-index: 4;
     color: white;
-}
-
-@media (--portrait) {
-    #chat {
-        bottom: 6em;
-        font-size: 0.9em;
-    }
 }
 
 @include sprite.sheet($image: 'chatbox', $scale: 1.5, $selectors: #chat-frame);
