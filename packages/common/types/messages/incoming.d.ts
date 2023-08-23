@@ -32,6 +32,8 @@ export interface MovementPacket {
     requestY?: number;
     playerX?: number;
     playerY?: number;
+    nextGridX?: number;
+    nextGridY?: number;
     movementSpeed?: number;
     targetInstance?: string;
     following?: boolean;
