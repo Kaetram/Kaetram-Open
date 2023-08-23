@@ -1,5 +1,9 @@
 @use '../../abstracts/media';
 
+#equipments {
+    align-items: center;
+}
+
 #equipment-content {
     display: flex;
     flex-direction: row;
@@ -28,6 +32,8 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     flex: 1;
+    gap: 1em;
+
     font-size: 0.85em;
 
     .title {
@@ -135,13 +141,5 @@
     .equipment-slot-boots {
         top: 12em;
         left: 6em;
-    }
-}
-
-@media (--portrait) {
-    #equipments {
-        flex-direction: column;
-        width: 16em;
-        height: 30em;
     }
 }

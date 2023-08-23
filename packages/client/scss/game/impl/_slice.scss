@@ -27,6 +27,12 @@
     color: #eee;
 
     border-image: url('/img/interface/slices/container.png') 42% fill/ 1em / 0 stretch;
+
+    @media (--portrait) {
+        flex-direction: column;
+        width: 22em;
+        height: 30em;
+    }
 }
 
 .slice-inner-container {

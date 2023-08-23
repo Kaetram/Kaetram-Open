@@ -4,6 +4,10 @@
 #friends-container {
     right: 1em;
     display: none;
+
+    @media (--portrait) {
+        width: 20em;
+    }
 }
 
 #friends-page {
@@ -16,12 +20,6 @@
 #friends-list {
     overflow: auto;
     flex: 1;
-}
-
-@media (--portrait) {
-    #friends-container {
-        width: 20em;
-    }
 }
 
 @include sprite.sheet(

@@ -7,9 +7,19 @@
     display: none;
     flex-direction: row;
 
-    width: 37.5em;
+    width: 37em;
     height: 21em;
     margin: auto;
+
+    @media (--portrait) {
+        flex-direction: column-reverse;
+        justify-content: center;
+
+        width: 21em;
+        height: 37em;
+
+        font-size: 0.875em;
+    }
 }
 
 #bank-container {
@@ -37,19 +47,6 @@
 
     li {
         float: left;
-    }
-}
-
-@media (--portrait) {
-    #bank {
-        flex-direction: column-reverse;
-        justify-content: center;
-
-        width: 21em;
-        height: 37.5em;
-
-        font-size: 0.9em;
-        vertical-align: top;
     }
 }
 
