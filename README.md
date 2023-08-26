@@ -115,6 +115,8 @@ yarn
 
 ### Running
 
+**You must accept the MPL2.0 and OPL licensing agreement by toggling `ACCEPT_LICENSE` in the enviroment variable file. The server and client are disabled until you have done so.**
+
 To run live development builds, use
 
 ```console
@@ -263,18 +265,18 @@ Open Collective &ndash; <https://opencollective.com/kaetram>
 For all inquiries about purchasing a different license or commission work, please contact **@kaetram**
 on [Discord][discord].
 
-This project is distributed under the
-**[Mozilla Public License Version 2.0](https://choosealicense.com/licenses/mpl-2.0/)**. See
-[`LICENSE`][license] for more information. Additionally, there are extra clauses specific to Kaetram:
+This project is distributed under the **[Mozilla Public License Version 2.0](https://choosealicense.com/licenses/mpl-2.0/)**. See [`LICENSE`][license] for more information.
+
+Additionally, Kaetram is shipped with a secondary license, Omnia Public License (OPL):
 
 - You MUST provide a direct link to Kaetram in the credits section.
 - You MUST keep the code open-source and continue to do so.
-- You may NOT use this project for anything related to artifical intelligence, cryptocurrencies, or NFTs without direct permission from the creators.
-- You may NOT remove the credits section. It MUST remain visible on the front page of the website. It MUST be easily accessible to any user who accesses the project.
-- You may NOT remove any credits to the artists, musicians, and original creators of this project.
-- You may NOT use this project to sell online courses, you may however use this for YouTube and generate revenue.
-- You may NOT use this project for any illegal activity.
-- You may NOT use this project to spread hate, racism, or any form of discriminatory behaviour.
+- You may NOT use this project or any parts therein for anything related to artifical intelligence, cryptocurrencies, or NFTs without direct permission from the creators.
+- You may NOT remove the credits section. It MUST remain visible on the front page of the website. It MUST be easily accessible to any user who accesses the project as per [W3 Accessibility Standards](https://www.w3.org/WAI/standards-guidelines/).
+- You may NOT remove any credits to the artists, musicians, or any other original creators of this project.
+- You may NOT use this project or any parts therein to sell online courses, you may however use this for general streaming platforms, including view-based revenue.
+- You may NOT use this project or any parts therein for any illicit activity.
+- You may NOT use this project or any parts therein to spread hate, racism, or any form of discriminatory behaviour.
 
 If you have any questions, contact @kaetram on [Discord][discord].
 

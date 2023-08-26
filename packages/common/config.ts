@@ -75,6 +75,8 @@ export interface Config {
     discordChannelId: string;
     discordBotToken: string;
 
+    acceptLicense: boolean;
+
     debugging: boolean;
     debugLevel: 'all';
     fsDebugging: boolean;

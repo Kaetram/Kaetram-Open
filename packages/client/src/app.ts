@@ -94,6 +94,14 @@ export default class App {
      */
 
     private load(): void {
+        if (!this.config.acceptLicense) {
+            this.sendError(
+                'You must read and accept both MPL2.0 and OPL licensing agreements. Once you have done so, toggle ACCEPT_LICENSE in your environment variables.'
+            );
+
+            return;
+        }
+
         this.loginForm.addEventListener('submit', this.login.bind(this));
         this.registerForm.addEventListener('submit', this.login.bind(this));
 
@@ -191,6 +199,8 @@ export default class App {
      */
 
     public ready(): void {
+        if (!this.config.acceptLicense) return;
+
         this.sendStatus();
 
         this.loginButton.disabled = false;
