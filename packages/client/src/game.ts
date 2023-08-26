@@ -91,8 +91,6 @@ export default class Game {
         this.pointer = new Pointer(this.renderer, this.entities);
         this.connection = new Connection(this);
 
-        app.sendStatus('Loading game');
-
         this.map.onReady(() => {
             app.ready();
 
