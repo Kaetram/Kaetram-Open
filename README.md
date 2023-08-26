@@ -260,12 +260,23 @@ Open Collective &ndash; <https://opencollective.com/kaetram>
 
 ## License & Commission
 
-For all inquiries about purchasing a different license or commission work, please contact **@Keros**
+For all inquiries about purchasing a different license or commission work, please contact **@kaetram**
 on [Discord][discord].
 
 This project is distributed under the
 **[Mozilla Public License Version 2.0](https://choosealicense.com/licenses/mpl-2.0/)**. See
-[`LICENSE`][license] for more information.
+[`LICENSE`][license] for more information. Additionally, there are extra clauses specific to Kaetram:
+
+- You MUST provide a direct link to Kaetram in the credits section.
+- You MUST keep the code open-source and continue to do so.
+- You may NOT use this project for anything related to artifical intelligence, cryptocurrencies, or NFTs without direct permission from the creators.
+- You may NOT remove the credits section. It MUST remain visible on the front page of the website. It MUST be easily accessible to any user who accesses the project.
+- You may NOT remove any credits to the artists, musicians, and original creators of this project.
+- You may NOT use this project to sell online courses, you may however use this for YouTube and generate revenue.
+- You may NOT use this project for any illegal activity.
+- You may NOT use this project to spread hate, racism, or any form of discriminatory behaviour.
+
+If you have any questions, contact @kaetram on [Discord][discord].
 
 [license]: LICENSE 'Project License'
 [issues]: https://github.com/Kaetram/Kaetram-Open/issues 'Open Issues'
