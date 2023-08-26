@@ -272,7 +272,7 @@ Additionally, Kaetram is shipped with a secondary license, Omnia Public License 
 - You MUST provide a direct link to Kaetram in the credits section.
 - You MUST keep the code open-source and continue to do so.
 - You may NOT use this project or any parts therein for anything related to artifical intelligence, cryptocurrencies, or NFTs without direct permission from the creators.
-- You may NOT remove the credits section. It MUST remain visible on the front page of the website. It MUST be easily accessible to any user who accesses the project as per [W3 Accessibility Standards](https://www.w3.org/WAI/standards-guidelines/).
+- You may NOT remove the credits section. It MUST remain visible on the front page of the website. It MUST be easily accessible to any user who accesses the project as per [W3C Accessibility Standards](https://www.w3.org/WAI/standards-guidelines/).
 - You may NOT remove any credits to the artists, musicians, or any other original creators of this project.
 - You may NOT use this project or any parts therein to sell online courses, you may however use this for general streaming platforms, including view-based revenue.
 - You may NOT use this project or any parts therein for any illicit activity.
