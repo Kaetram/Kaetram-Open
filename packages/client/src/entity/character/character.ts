@@ -617,10 +617,12 @@ export default class Character extends Entity {
 
     private resetMovement(): void {
         this.path = null;
+
+        this.idle();
+
         this.destination = null;
         this.newDestination = null;
         this.movement = new Transition();
-        this.idle();
 
         this.nextGridX = this.gridX;
         this.nextGridY = this.gridY;
@@ -704,7 +706,7 @@ export default class Character extends Entity {
 
         if (!this.target!.isMob() && !this.target!.isPlayer()) return false;
 
-        if (this.getDistance(this.target!) > this.attackRange - 1) return false;
+        if (this.getDistance(this.target!) > this.attackRange) return false;
 
         return true;
     }
