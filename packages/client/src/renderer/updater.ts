@@ -1,4 +1,3 @@
-import Utils from '../utils/util';
 import Character from '../entity/character/character';
 import Projectile from '../entity/objects/projectile';
 

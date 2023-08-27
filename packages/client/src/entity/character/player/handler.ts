@@ -1,6 +1,6 @@
 import CharacterHandler from '../handler';
 
-import { Packets, Opcodes } from '@kaetram/common/network';
+import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
 import type Map from '../../../map/map';
 import type Player from './player';
@@ -204,8 +204,13 @@ export default class Handler extends CharacterHandler {
         this.lastStepY = this.character.gridY;
 
         // Check if we can initiate combat.
-        if (this.character.moving && this.character.canAttackTarget() && !this.character.trading)
+        if (this.character.canAttackTarget()) {
             this.character.stop();
+
+            // Gives that snappy effect when the player attacks a mob.
+            this.character.lookAt(this.character.target!);
+            this.character.performAction(this.character.orientation, Modules.Actions.Idle);
+        }
     }
 
     /**
