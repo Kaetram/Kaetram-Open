@@ -492,7 +492,10 @@ export default class ProcessMap {
 
             // Iterate from the top of the tile and find the topmost obstructing tile.
             for (let i = tile.length - 1; i >= 0; i--)
-                if (obstructing?.includes(tile[i])) obstructingIndex = i;
+                if (obstructing!.includes(tile[i])) {
+                    obstructingIndex = i;
+                    break;
+                }
 
             // No obstructing tile found, continuing to next index.
             if (obstructingIndex === -1) continue;
