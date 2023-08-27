@@ -20,6 +20,8 @@ class Main {
     private ready = false;
 
     public constructor() {
+        if (!this.handleLicensing()) return;
+
         log.info(`Initializing ${config.name} game engine...`);
 
         this.socketHandler.onConnection(this.handleConnection.bind(this));
@@ -117,6 +119,23 @@ class Main {
 
         // Actually exit the process.
         setTimeout(() => exit(0), 2000);
+    }
+
+    /**
+     * Ensures that the license agreements have been accepted before
+     * starting the server.
+     */
+
+    private handleLicensing(): boolean {
+        if (!config.acceptLicense) {
+            log.critical(
+                `You must read and accept both MPL2.0 and OPL licensing agreements. Once you've done so, toggle ACCEPT_LICENSE in your environment variables.`
+            );
+
+            return false;
+        }
+
+        return true;
     }
 }
 

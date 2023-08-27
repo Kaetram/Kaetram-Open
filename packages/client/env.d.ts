@@ -10,6 +10,7 @@ declare global {
         port: number;
         hub: string | false;
         sentryDsn: string;
+        acceptLicense: boolean;
     };
 
     declare module '*.vert' {

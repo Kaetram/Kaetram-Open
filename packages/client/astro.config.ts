@@ -18,7 +18,7 @@ import { internalIpV4 } from 'internal-ip';
 import { imageSize } from 'image-size';
 import * as sass from 'sass';
 
-export let env = exposedConfig('name', 'host', 'ssl', 'serverId', 'sentryDsn');
+export let env = exposedConfig('name', 'host', 'ssl', 'serverId', 'sentryDsn', 'acceptLicense');
 
 let clientHost = config.clientRemoteHost || (config.hubEnabled ? config.hubHost : config.host),
     clientPort = config.clientRemotePort || (config.hubEnabled ? config.hubPort : config.port),
