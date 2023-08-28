@@ -1,0 +1,22 @@
+{
+    "name": "Scientist's Potion",
+    "description": "The local scientist needs your help with creating his special potion.|A lonely scientist is in dire need of your assistance in creating his magica- I mean, scientific concotions. No seriously, this quest is pretty essential if you wish to create potions that'll help you in fighting bigger and badder monsters in the future. Just trust me, this quest prompt. I'm not making any of this up. Just go help the dude out, he's located somewhere in Mudwich, possibly in one of the houses. It's more mysterious if I give cryptic hints.",
+    "rewards": ["Access to the Potion store", "2000 Alchemy experience"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "scientist",
+            "text": [
+                "Hey there kid, do you wanna help me with something?",
+                "Listen, I need a bunch of ingredients in order to create a potion",
+                "this is the perfect potion. It'll make you stronger, faster, and smarter",
+                "all at the same time.",
+                "Listen, if you help me out I'll let you in on a little secret",
+                "I'll teach you how to make potions all by yourself.",
+                "Heck, I'll even give you access to all my cauldr- I mean,",
+                "my scientific equipment throughout the world.",
+                "Okay so what I need is you to make me one of my special potions."
+            ]
+        }
+    }
+}

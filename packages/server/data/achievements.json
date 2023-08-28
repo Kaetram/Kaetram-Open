@@ -393,5 +393,102 @@
         "name": "Kaetram's Dungeon",
         "description": "Discovered the secret ladder to enter Kaetram's dungeon!",
         "secret": true
+    },
+
+    "masterofcrafts": {
+        "name": "Master of Crafts",
+        "description": "Craft 100 items.",
+        "secret": true
+    },
+    "gildedhands": {
+        "name": "Gilded Hands",
+        "description": "Craft 500 gold items.",
+        "secret": true
+    },
+    "traveller15": {
+        "name": "Globe Trotter",
+        "description": "Travel to 15 different locations.",
+        "secret": true
+    },
+    "traveller50": {
+        "name": "Seasoned Explorer",
+        "description": "Travel to 50 different locations.",
+        "secret": true
+    },
+    "treasurehunter": {
+        "name": "Treasure Hunter",
+        "description": "Find 50 hidden treasures.",
+        "secret": true
+    },
+    "cultbuster": {
+        "name": "Cult Buster",
+        "description": "Disband 5 dark cults.",
+        "region": "Hellgate Marsh"
+    },
+    "darkruins": {
+        "name": "Ruins Explorer",
+        "description": "Discover the ancient ruins of Zanrik.",
+        "region": "Zanrik Plains"
+    },
+    "arenamaster": {
+        "name": "Arena Master",
+        "description": "Win 20 arena battles.",
+        "secret": true
+    },
+    "potionmaster": {
+        "name": "Potion Master",
+        "description": "Craft 1000 potions.",
+        "secret": true
+    },
+    "bookworm": {
+        "name": "Bookworm",
+        "description": "Read 100 books in the world.",
+        "secret": true
+    },
+    "ancientsecrets": {
+        "name": "Ancient Secrets",
+        "description": "Decipher 5 ancient scrolls.",
+        "region": "Valus Temples",
+        "hidden": true
+    },
+    "darkhorse": {
+        "name": "Dark Horse",
+        "description": "Tame the elusive Shadowmare.",
+        "region": "Mystic Woods"
+    },
+    "merchantprince": {
+        "name": "Merchant Prince",
+        "description": "Trade goods worth 100,000 gold coins.",
+        "secret": true
+    },
+    "merchantlord": {
+        "name": "Merchant Lord",
+        "description": "Trade goods worth 1,000,000 gold coins.",
+        "secret": true
+    },
+    "craigslist": {
+        "name": "Craigslist",
+        "description": "Trade with 10 different players.",
+        "secret": true
+    },
+    "socialite": {
+        "name": "Socialite",
+        "description": "Interact with 500 different players.",
+        "secret": true
+    },
+    "errandboy": {
+        "name": "Errand Boy",
+        "description": "Complete 10 quests.",
+        "secret": true
+    },
+    "questmaster": {
+        "name": "Quest Master",
+        "description": "Complete all quests in Kaetram.",
+        "secret": true
+    },
+    "dungeoncrawler": {
+        "name": "Dungeon Crawler",
+        "description": "Complete 50 different dungeons.",
+        "secret": true
     }
 }

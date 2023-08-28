@@ -26,16 +26,9 @@ export default class Quests {
     private loadCallback?: () => void;
 
     public constructor(private player: Player) {
-        // Iterates through the raw quests in the JSON and creates an instance of them
-        for (let key in quests) {
-            // Checks if the JSON quest exists in our implementation.
-            if (!(key in QuestIndex)) continue;
-
-            // Create an instance and pass the quest data along.
-            let quest = new QuestIndex[key as keyof typeof QuestIndex](
-                key,
-                quests[key as keyof typeof quests]
-            );
+        // Iterates through the quest indices and initializes them.
+        for (let key in QuestIndex) {
+            let quest = new QuestIndex[key as keyof typeof QuestIndex](key);
 
             this.quests[key] = quest;
 
