@@ -1,9 +1,8 @@
 import Quest from '../quest';
-
-import type { RawQuest } from '@kaetram/common/network/impl/quest';
+import Data from '../../../../../../../data/quests/royalpet.json';
 
 export default class RoyalPet extends Quest {
-    public constructor(key: string, rawData: RawQuest) {
-        super(key, rawData);
+    public constructor(key: string) {
+        super(key, Data);
     }
 }

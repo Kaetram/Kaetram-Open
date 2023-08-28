@@ -1,0 +1,191 @@
+{
+    "name": "Welcome to Kaetram",
+    "description": "Teaching you the very basics of Kaetram.|This tutorial will teach you how to move around, attack, interact with objects and use ranged weapons. Follow the arrows and talk to the NPCs if you are stuck.",
+    "rewards": ["Knowledge of the game :)"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "coder",
+            "text": [
+                "Hello there bud, I am the programmer of this world.",
+                "Like most MMORPGs, this is a tutorial. You must complete it unfortunately.",
+                "Do not worry, I coded it to be pretty short.",
+                "Go through those doors over there to proceed."
+            ],
+            "completedText": ["Why don't you just walk through that door over there eh?"],
+            "pointer": {
+                "type": 0,
+                "x": 680,
+                "y": 105
+            }
+        },
+        "1": {
+            "task": "door",
+            "pointer": {
+                "type": 0,
+                "x": 677,
+                "y": 107
+            }
+        },
+        "2": {
+            "task": "talk",
+            "npc": "guard",
+            "text": [
+                "I see... a new adventurer.",
+                "Let me tell you a bit about these lands.",
+                "You'll be killing stuff...",
+                "A lot of stuff actually...",
+                "And when you're not killing stuff...",
+                "You'll still be killing stuff!",
+                "But regardless, I won't ask you to kill stuff just yet.",
+                "Take this axe and cut down 2 trees for me."
+            ],
+            "completedText": ["What are you waiting for?", "Go cut me some trees."],
+            "itemRewards": [
+                {
+                    "key": "bronzeaxe",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Item acquired!",
+                "text": "You've just received an axe! Equip it using your inventory!",
+                "colour": "#33cc33"
+            },
+            "pointer": {
+                "type": 0,
+                "x": 666,
+                "y": 139
+            }
+        },
+        "3": {
+            "task": "tree",
+            "tree": "tutorialsnowoak",
+            "treeCount": 2
+        },
+        "4": {
+            "task": "talk",
+            "npc": "guard",
+            "text": ["Thank you soldier, meet me in the cave below!"],
+            "completedText": ["I'm not sure what you're waiting for...", "head on over to the cave below!"],
+            "pointer": {
+                "type": 0,
+                "x": 666,
+                "y": 139
+            }
+        },
+        "5": {
+            "task": "door",
+            "pointer": {
+                "type": 0,
+                "x": 670,
+                "y": 149
+            }
+        },
+        "6": {
+            "task": "talk",
+            "npc": "guard",
+            "text": [
+                "Soldier! We have a crab infestation!",
+                "How did crabs make their way into a",
+                "volcanic cave under a snowy field?",
+                "You're not here to ask questions soldier!",
+                "Use the axe I just gave you to cut down 5 crabs!"
+            ],
+            "completedText": ["No more chit chatter, go slice me some crabs!"],
+            "pointer": {
+                "type": 0,
+                "x": 640,
+                "y": 111
+            }
+        },
+        "7": {
+            "task": "kill",
+            "mob": ["crab"],
+            "mobCountRequirement": 5
+        },
+        "8": {
+            "task": "talk",
+            "npc": "guard",
+            "text": [
+                "Phew, that was a close one. Those crabs can sure do some damage.",
+                "Head on over through that portal for the next part of your training!"
+            ],
+            "completedText": ["Well don't just sit there, go through the portal!"],
+            "pointer": {
+                "type": 0,
+                "x": 640,
+                "y": 111
+            }
+        },
+        "9": {
+            "task": "door",
+            "pointer": {
+                "type": 0,
+                "x": 638,
+                "y": 109
+            }
+        },
+        "10": {
+            "task": "talk",
+            "npc": "sorcerer",
+            "text": [
+                "Sup there young one, how's it hangin'?",
+                "Welcome to my little pocket dimensions I call home!",
+                "Over there is my small rat farm!",
+                "I'm actually going to need you to uhm...",
+                "filter out the population.",
+                "Take this bow and shoot 5 of them for me!",
+                "Don't worry, in this magical land, you don't need arrows!"
+            ],
+            "completedText": [
+                "Don't be afraid young one, they'll grow back very quickly!",
+                "Kill 5 rats for me please!"
+            ],
+            "itemRewards": [
+                {
+                    "key": "woodenbow",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Item acquired!",
+                "text": "You've just received a bow! Equip it using your inventory!",
+                "colour": "#33cc33"
+            },
+            "pointer": {
+                "type": 0,
+                "x": 616,
+                "y": 133
+            }
+        },
+        "11": {
+            "task": "kill",
+            "mob": ["rat"],
+            "mobCountRequirement": 5
+        },
+        "12": {
+            "task": "npc",
+            "npc": "sorcerer",
+            "text": [
+                "Thank you so much young one!",
+                "Rat population tends to get out of control quickly if left unchecked.",
+                "Regardless, you are now free to exit through the portal over there!"
+            ],
+            "completedText": ["Thank you again adventurer! You're free to exit anytime!"],
+            "pointer": {
+                "type": 0,
+                "x": 616,
+                "y": 133
+            }
+        },
+        "13": {
+            "task": "door",
+            "pointer": {
+                "type": 0,
+                "x": 609,
+                "y": 133
+            }
+        }
+    }
+}

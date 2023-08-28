@@ -1,0 +1,75 @@
+{
+    "name": "Evil Santa",
+    "description": "The young sherpa on the mountain needs your help!|Okay so here's what's happening. You know how Santa is supposed to be nice and bring you presents? Well this one throws them in your face, so he must be stopped before he goes on one of his yearly rampages again!",
+    "rewards": ["Access to the ice world!"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "snowshepherdboy",
+            "text": [
+                "Oh dear adventurer, I'm so glad you're here!",
+                "I have discovered something sinister.",
+                "You see, I came up here looking for Santa.",
+                "But while I was looking through his factory",
+                "I've stumbled upon his evil plan to take over the world!",
+                "Please, you must help me defeat him.",
+                "In exchange I will show you how to get to the hidden ice world."
+            ],
+            "completedText": [
+                "Please start by exploring the factory on the northern side of the mountain.",
+                "Come back to me when you have found any information."
+            ]
+        },
+        "1": {
+            "task": "door",
+            "npc": "santaelfnpc",
+            "text": [
+                "Welcome to Santa's sweatshop, how may I help you?",
+                "Oh, an adventurer! Please, you must try to help me!",
+                "The other 50 of you died trying to take on Santa!",
+                "It's not worth it man, oh geez, just please, help me!",
+                "No, please, don't try to fight Santa, he's too strong!",
+                "But if you really insist you must first obtain a key..."
+            ],
+            "completedText": [
+                "If you really feel you can take him on, the only way",
+                "is by obtaining the magical key that lets you in his chamber."
+            ]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "snowshepherdboy",
+            "text": [
+                "You have some information don't you?",
+                "I see, you need a magical key to get into Santa's room.",
+                "I know the elves hold the key, but it's a hit or miss",
+                "if you'll be able to get one out of them. I guess you can try.",
+                "However I think there is a less dangerous way to get the key.",
+                "Perhaps it's worth checking out the underground factory?"
+            ],
+            "completedText": [
+                "Try finding a key in the underground factory.",
+                "If you manage, defeat the evil Santa and save the world!"
+            ]
+        },
+        "3": {
+            "task": "kill",
+            "mob": ["santa"],
+            "mobCountRequirement": 1
+        },
+        "4": {
+            "task": "talk",
+            "npc": "snowshepherdboy",
+            "text": [
+                "Congratulations, you did it!",
+                "I will make sure to tell everyone about your heroic deeds.",
+                "I will open up a path for you to the ice world."
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Evil Santa@green@ quest. You can now access the @crimson@Ice World@green@",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

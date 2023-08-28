@@ -1,0 +1,69 @@
+{
+    "name": "Scavenger",
+    "description": "The local village girl needs your help to get out of her responsibilities.|Quick, there is a village girl who does not want to fulfill her duties towards her grandmother and you must go help her immediately. I think this quest involves scavenging for ingredients and stuff but I'm not particularly sure.",
+    "rewards": ["Nothing in particular, but it'll be fun!"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "villagegirl2",
+            "text": [
+                "Hey you, you look like someone particularly du-",
+                "I mean, you look like someone who can help me.",
+                "You see, my grandmother asked me to bring her some flowers",
+                "and blueberries, and some mushrooms, and some coal, and some logs",
+                "and some tomatoes, and some potatoes, and some string, and some strawberries",
+                "anyway, I won't have you bring all that.",
+                "Can you go check on my grandma first, she's probably in one of those houses",
+                "I'm not sure, try looking around."
+            ],
+            "completedText": ["Look through the houses for my grandma and see what she needs."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "oldlady",
+            "text": [
+                "Oh hello, please don't mind the random tent in my house.",
+                "I've been waiting for my granddaughter to bring me some ingredients",
+                "but that was months ago. Do you think you can help me out?",
+                "I only ask that you bring me 2 tomatoes, 2 strawberries, and a piece of string.",
+                "I will grant you a reward if you do.",
+                "You can find those ingredients throughout the world, just look around."
+            ],
+            "completedText": ["Please bring me 2 tomatoes, 2 strawberries, and a piece of string."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "oldlady",
+            "hasItemText": [
+                "Thank you so much young one. You're so helpful.",
+                "Unlike that granddaughter of mine.",
+                "Here, take this gold as a reward for your troubles."
+            ],
+            "itemRequirements": [
+                {
+                    "key": "tomato",
+                    "count": 2
+                },
+                {
+                    "key": "strawberry",
+                    "count": 2
+                },
+                {
+                    "key": "string",
+                    "count": 1
+                }
+            ],
+            "itemRewards": [
+                {
+                    "key": "gold",
+                    "count": 7500
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Scavenger@green@. You've been awarded @crimson@7500@green@ gold coins!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

@@ -1,15 +1,22 @@
 import Quest from '../quest';
+import Data from '../../../../../../../data/quests/evilsanta.json';
 
 import log from '@kaetram/common/util/log';
 
 import type Player from '../../player';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
-import type { RawQuest } from '@kaetram/common/network/impl/quest';
 
 export default class EvilSanta extends Quest {
-    public constructor(key: string, rawData: RawQuest) {
-        super(key, rawData);
+    public constructor(key: string) {
+        super(key, Data);
     }
+
+    /**
+     * Override for the quest to prevent players from going through a door prior
+     * to completing a certain stage.
+     * @param door The door that the player is trying to enter through.
+     * @param player The player that is trying to enter through the door.
+     */
 
     protected override handleDoor(door: ProcessedDoor, player: Player): void {
         log.debug(`[${this.name}] Door: ${door.x}-${door.y} - stage: ${this.stage}.`);
