@@ -1,5 +1,8 @@
 packages/tools/map/data/map.png
 packages/tools/map/data/map.json
+packages/tools/map/data/rules*
+packages/tools/map/data/tilesets
+
 packages/server/cache
 
 map.json.backup*
