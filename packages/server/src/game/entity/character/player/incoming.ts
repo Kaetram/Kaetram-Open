@@ -249,6 +249,8 @@ export default class Incoming {
      */
 
     private handleWho(message: string[]): void {
+        console.log(message);
+
         for (let instance of message) {
             let entity = this.entities.get(instance);
 
@@ -294,8 +296,6 @@ export default class Incoming {
                 requestY,
                 playerX,
                 playerY,
-                nextGridX,
-                nextGridY,
                 movementSpeed,
                 targetInstance,
                 orientation,
@@ -310,13 +310,10 @@ export default class Incoming {
         if (requestY) requestY = Utils.sanitizeNumber(requestY);
         if (playerX) playerX = Utils.sanitizeNumber(playerX);
         if (playerY) playerY = Utils.sanitizeNumber(playerY);
-        if (nextGridX) nextGridX = Utils.sanitizeNumber(nextGridX);
-        if (nextGridY) nextGridY = Utils.sanitizeNumber(nextGridY);
 
         // Prevent any crazy packet tampering.
         if (this.world.map.isOutOfBounds(requestX!, requestY!)) return;
         if (this.world.map.isOutOfBounds(playerX!, playerY!)) return;
-        if (this.world.map.isOutOfBounds(nextGridX!, nextGridY!)) return;
 
         switch (opcode) {
             case Opcodes.Movement.Request: {
@@ -333,13 +330,7 @@ export default class Incoming {
             }
 
             case Opcodes.Movement.Step: {
-                return this.player.handleMovementStep(
-                    playerX!,
-                    playerY!,
-                    nextGridX!,
-                    nextGridY!,
-                    timestamp
-                );
+                return this.player.handleMovementStep(playerX!, playerY!, timestamp);
             }
 
             case Opcodes.Movement.Stop: {
