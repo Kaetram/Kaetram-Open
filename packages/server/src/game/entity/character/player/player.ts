@@ -1161,18 +1161,10 @@ export default class Player extends Character {
      * A movement step occurs every time a player traverses to the next tile.
      * @param x The current x coordinate of the player as reported by the client.
      * @param y The current y coordinate of the player as reported by the client.
-     * @param nextX The next x coordinate of the player as reported by the client.
-     * @param nextY The next y coordinate of the player as reported by the client.
      * @param timestamp The time when the packet was sent (UNIX timestamp).
      */
 
-    public handleMovementStep(
-        x: number,
-        y: number,
-        nextX?: number,
-        nextY?: number,
-        timestamp = Date.now()
-    ): void {
+    public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
         // Increment cheat score if the player is moving while stunned.
         if (this.isStunned()) {
             this.incrementCheatScore(`[${this.username}] Movement while stunned.`);
@@ -1186,16 +1178,6 @@ export default class Player extends Character {
         this.setPosition(x, y);
 
         this.lastStep = Date.now();
-
-        // Unprovided for this step, skip any additional verifications.
-        if (!nextX || !nextY) return;
-
-        // Handle doors when the player stops on one.
-        if (this.map.isDoor(nextX, nextY)) {
-            let door = this.map.getDoor(nextX, nextY);
-
-            this.doorCallback?.(door);
-        }
     }
 
     /**
@@ -1227,6 +1209,13 @@ export default class Player extends Character {
             if (entity.owner === this.username) this.statistics.addDrop(entity.key, entity.count);
 
             this.inventory.add(entity);
+        }
+
+        // Handle doors when the player stops on one.
+        if (this.map.isDoor(x, y)) {
+            let door = this.map.getDoor(x, y);
+
+            this.doorCallback?.(door);
         }
 
         // Update the player's position.
