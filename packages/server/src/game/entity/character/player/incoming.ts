@@ -249,8 +249,6 @@ export default class Incoming {
      */
 
     private handleWho(message: string[]): void {
-        console.log(message);
-
         for (let instance of message) {
             let entity = this.entities.get(instance);
 
