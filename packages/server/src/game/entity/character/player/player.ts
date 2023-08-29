@@ -1102,6 +1102,7 @@ export default class Player extends Character {
 
         // If the player clicked anywhere outside the bank then the bank is no longer opened.
         this.canAccessContainer = false;
+        this.activeLootBag = '';
         this.activeCraftingInterface = -1;
 
         if (this.map.isDoor(x, y) || this.inCombat()) return;
@@ -1197,6 +1198,15 @@ export default class Player extends Character {
 
         // Update orientation
         this.setOrientation(orientation);
+
+        // Player has stopped on top of a loot bag.
+        if (entity?.isLootBag()) {
+            // Prevent access to the loot bag by other players.
+            if (!entity.isOwner(this.username))
+                return this.notify(`This lootbag belongs to ${Utils.formatName(entity.owner)}.`);
+
+            entity.open(this);
+        }
 
         // Player has stopped on top of an item.
         if (entity?.isItem()) {

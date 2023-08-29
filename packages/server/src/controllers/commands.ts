@@ -1082,6 +1082,22 @@ export default class Commands {
                 return this.world.crafting.open(this.player, Modules.Skills.Alchemy);
             }
 
+            case 'lootbag': {
+                let items: Item[] = [
+                    new Item('oldonesblade', -1, -1, false, 1),
+                    new Item('froghelm', -1, -1, false, 1),
+                    new Item('gold', -1, -1, false, 1500)
+                ];
+
+                this.world.entities.spawnLootBag(
+                    this.player.x,
+                    this.player.y,
+                    this.player.username,
+                    items
+                );
+                break;
+            }
+
             case 'ipban': {
                 let username = blocks.join(' ').toLowerCase();
 

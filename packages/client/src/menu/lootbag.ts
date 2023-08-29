@@ -60,9 +60,7 @@ export default class LootBag extends Menu {
         if (!this.isVisible()) return;
 
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
-            let image: HTMLElement = this.getInventoryElement(index).querySelector(
-                    '.container-item-slot-icon'
-                )!,
+            let image: HTMLElement = this.getInventoryElement(index).querySelector('.item-image')!,
                 slotImage = slot.querySelector<HTMLElement>('.item-image')!;
 
             if (!slotImage) return;
@@ -83,24 +81,12 @@ export default class LootBag extends Menu {
     }
 
     /**
-     * Handles clicking on an item in the loot bag.
-     * @param index The index of the item that was clicked.
-     */
-
-    private select(index: number): void {
-        this.selectCallback?.(index);
-    }
-
-    /**
      * Removes an item from the loot bag at a specified index.
      * @param index The index of the item to remove.
      */
 
     private take(index: number): void {
         let element = this.getLootElement(index);
-
-        console.log(index);
-        console.log(element);
 
         if (!element) return;
 
@@ -121,12 +107,10 @@ export default class LootBag extends Menu {
 
         // Iterate through the items and create a new inventory slot for each one.
         for (let item of items) {
-            let element = Utils.createSlot(
-                    Modules.ContainerType.LootBag,
-                    item.index,
-                    this.select.bind(this)
+            let element = Utils.createSlot(Modules.ContainerType.LootBag, item.index, () =>
+                    this.selectCallback?.(item.index)
                 ) as LootElement,
-                image: HTMLElement = element.querySelector('.container-item-slot-icon')!;
+                image: HTMLElement = element.querySelector('.item-image')!;
 
             if (image) image.style.backgroundImage = Utils.getImageURL(item.key);
 

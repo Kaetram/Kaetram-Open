@@ -106,6 +106,11 @@ export interface CraftingPacket {
     count?: number;
 }
 
+export interface LootBagPacket {
+    opcode: Opcodes.LootBag;
+    index?: number;
+}
+
 export interface PetPacket {
     opcode: Opcodes.Pet;
 }

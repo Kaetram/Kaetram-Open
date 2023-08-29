@@ -11,13 +11,7 @@
     height: 100%;
 }
 
-#lootbag-items {
-    flex: 1;
-    flex-flow: row;
-    gap: 2em;
-    padding: 1em;
-}
-
+#lootbag-items,
 #lootbag-inventory {
     flex: 1;
 

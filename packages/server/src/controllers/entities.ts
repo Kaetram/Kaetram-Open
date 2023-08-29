@@ -133,7 +133,7 @@ export default class Entities {
         // Do not spawn a loot bag if it is empty.
         if (items.length === 0) return;
 
-        this.addLootBag(new LootBag(x, y, owner, items));
+        this.addLootBag(new LootBag(this.world, x, y, owner, items));
     }
 
     /**

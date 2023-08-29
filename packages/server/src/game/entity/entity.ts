@@ -11,6 +11,7 @@ import type Effect from './objects/effect';
 import type Projectile from './objects/projectile';
 import type Player from './character/player/player';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type LootBag from './objects/lootbag';
 
 type MovementCallback = (x: number, y: number) => void;
 
@@ -232,6 +233,15 @@ abstract class Entity {
 
     public isItem(): this is Item {
         return this.type === (Modules.EntityType.Item as number);
+    }
+
+    /**
+     * Checks whether the entity's type is a loot bag.
+     * @returns Whether the type is equal to the EntityType loot bag.
+     */
+
+    public isLootBag(): this is LootBag {
+        return this.type === (Modules.EntityType.LootBag as number);
     }
 
     /**

@@ -79,6 +79,7 @@ export default class EntitiesController {
                 break;
             }
 
+            case Modules.EntityType.LootBag:
             case Modules.EntityType.Item: {
                 entity = this.createItem(info);
 
