@@ -605,7 +605,7 @@ export default class Player extends Character {
 
         if (before) this.sendTeleportPacket(x, y, withAnimation);
 
-        this.setPosition(x, y, false);
+        this.setPosition(x, y, true);
         this.world.cleanCombat(this);
 
         // Stop combat and skill activity when teleporting
@@ -1189,10 +1189,11 @@ export default class Player extends Character {
      */
 
     public handleMovementStop(x: number, y: number, target: string, orientation: number): void {
-        let entity = this.entities.get(target);
+        // Ignore movements that don't follow the packet order.
+        if (!this.moving)
+            return this.incrementCheatScore('Did not receive movement started packet.');
 
-        // No start movement received.
-        if (!this.moving) this.incrementCheatScore('Did not receive movement started packet.');
+        let entity = this.entities.get(target);
 
         // Update orientation
         this.setOrientation(orientation);
@@ -1211,16 +1212,15 @@ export default class Player extends Character {
             this.inventory.add(entity);
         }
 
+        // Update the player's position.
+        this.setPosition(x, y);
+
         // Handle doors when the player stops on one.
         if (this.map.isDoor(x, y)) {
             let door = this.map.getDoor(x, y);
 
             this.doorCallback?.(door);
         }
-
-        // Update the player's position.
-        this.setPosition(x, y);
-
         // Movement has come to an end.
         this.moving = false;
         this.lastMovement = Date.now();
