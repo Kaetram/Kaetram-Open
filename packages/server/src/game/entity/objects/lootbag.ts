@@ -8,6 +8,7 @@ import { LootBagPacket } from '@kaetram/common/network/impl';
 import type Item from './item';
 import type Player from '../character/player/player';
 import type { SlotData } from '@kaetram/common/types/slot';
+import type World from '../../world';
 
 /**
  * The loot bag functions similarly to an item, it drops on the ground and floats.
@@ -27,7 +28,13 @@ export default class LootBag extends Entity {
     private blinkTimeout?: NodeJS.Timeout | undefined;
     private destroyTimeout?: NodeJS.Timeout | undefined;
 
-    public constructor(x: number, y: number, public owner: string, items: Item[]) {
+    public constructor(
+        private world: World,
+        x: number,
+        y: number,
+        public owner: string,
+        items: Item[]
+    ) {
         super(Utils.createInstance(Modules.EntityType.LootBag), 'lootbag', x, y);
 
         // Iterate through the items and add them to the loot bag.
@@ -43,6 +50,8 @@ export default class LootBag extends Entity {
      */
 
     private destroy(): void {
+        this.close();
+
         // Clear the timeouts.
         clearTimeout(this.blinkTimeout!);
         clearTimeout(this.destroyTimeout!);
@@ -143,10 +152,34 @@ export default class LootBag extends Entity {
         player.inventory.add(item);
 
         // Destroy the loot bag if it is empty.
-        if (this.isEmpty()) {
-            player.sendToRegions(new LootBagPacket(Opcodes.LootBag.Close, {}));
-            this.destroy();
-        } else player.sendToRegions(new LootBagPacket(Opcodes.LootBag.Take, { index }));
+        if (this.isEmpty()) this.destroy();
+        else this.sendTakePacket(index);
+    }
+
+    /**
+     * Sends a packet to all the players nearby (who may have the loot bag open)
+     * to close the loot bag interface.
+     * @param player The player about which we are sending the packet.
+     */
+
+    public close(): void {
+        this.world.network.sendToSurroundingRegions(
+            this.region,
+            new LootBagPacket(Opcodes.LootBag.Close, {})
+        );
+    }
+
+    /**
+     * Sends a packet to the nearby regions of the loot bag regarding
+     * which item in the lootbag was taken.
+     * @param index The index of the lootbag item that was taken.
+     */
+
+    public sendTakePacket(index: number): void {
+        this.world.network.sendToSurroundingRegions(
+            this.region,
+            new LootBagPacket(Opcodes.LootBag.Take, { index })
+        );
     }
 
     /**

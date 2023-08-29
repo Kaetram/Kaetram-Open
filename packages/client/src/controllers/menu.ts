@@ -114,6 +114,8 @@ export default class MenuController {
         this.crafting.onSelect(this.handleCraftingSelect.bind(this));
         this.crafting.onCraft(this.handleCraftingConfirm.bind(this));
 
+        this.lootBag.onSelect(this.handleLootBagSelect.bind(this));
+
         this.load();
     }
 
@@ -530,6 +532,18 @@ export default class MenuController {
             opcode: Opcodes.Crafting.Craft,
             key,
             count
+        });
+    }
+
+    /**
+     * Handles selecting an item in a loot bag.
+     * @param index The index of the item we are selecting.
+     */
+
+    private handleLootBagSelect(index: number): void {
+        this.game.socket.send(Packets.LootBag, {
+            opcode: Opcodes.LootBag.Take,
+            index
         });
     }
 

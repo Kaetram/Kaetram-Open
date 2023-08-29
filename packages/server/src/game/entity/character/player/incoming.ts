@@ -33,8 +33,10 @@ import type {
     EnchantPacket,
     GuildPacket,
     CraftingPacket,
-    PetPacket
+    PetPacket,
+    LootBagPacket
 } from '@kaetram/common/types/messages/incoming';
+import type LootBag from '../../objects/lootbag';
 
 export default class Incoming {
     private world: World;
@@ -131,6 +133,9 @@ export default class Incoming {
                     }
                     case Packets.Crafting: {
                         return this.handleCrafting(message);
+                    }
+                    case Packets.LootBag: {
+                        return this.handleLootBag(message);
                     }
                     case Packets.Pet: {
                         return this.handlePet(message);
@@ -744,6 +749,24 @@ export default class Incoming {
 
             case Opcodes.Crafting.Craft: {
                 return this.world.crafting.craft(this.player, data.key!, data.count!);
+            }
+        }
+    }
+
+    /**
+     * Handles an incoming loot bag packet. This is generally for when a player
+     * attempts to take an item from the loot bag or when they close the interface.
+     * @param data Contains the opcode and optionally, the index of the item.
+     */
+
+    private handleLootBag(data: LootBagPacket): void {
+        switch (data.opcode) {
+            case Opcodes.LootBag.Take: {
+                let lootBag = this.world.entities.get(this.player.activeLootBag!) as LootBag;
+
+                if (!lootBag) return;
+
+                return lootBag.take(this.player, data.index!);
             }
         }
     }
