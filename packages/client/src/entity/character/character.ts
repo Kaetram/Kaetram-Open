@@ -613,9 +613,10 @@ export default class Character extends Entity {
     /**
      * Used for when pathing has come to an end. We reset all the pathing
      * variables and stop the character from moving.
+     * @param withCallback Whether or not to call the stop pathing callback.
      */
 
-    private resetMovement(): void {
+    private resetMovement(withCallback = true): void {
         this.path = null;
 
         this.idle();
@@ -630,7 +631,7 @@ export default class Character extends Entity {
         this.forced = false;
         this.interrupted = false;
 
-        this.stopPathingCallback?.(this.gridX, this.gridY, this.forced);
+        if (withCallback) this.stopPathingCallback?.(this.gridX, this.gridY, this.forced);
     }
 
     /**
@@ -691,7 +692,7 @@ export default class Character extends Entity {
     public stop(force = false): void {
         if (!this.hasPath()) return;
 
-        if (force) return this.resetMovement();
+        if (force) return this.resetMovement(false);
 
         this.interrupted = true;
     }
