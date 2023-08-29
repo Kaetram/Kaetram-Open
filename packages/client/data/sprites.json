@@ -6790,5 +6790,6 @@
     { "id": "items/chisel" },
     { "id": "items/bearhelm" },
     { "id": "items/froghelm" },
-    { "id": "items/rubygem" }
+    { "id": "items/rubygem" },
+    { "id": "items/lootbag" }
 ]
