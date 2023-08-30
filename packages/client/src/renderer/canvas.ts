@@ -141,16 +141,12 @@ export default class Canvas extends Renderer {
          */
 
         let isDynamicallyAnimated = this.map.dynamicAnimatedTiles[index],
-            identifier = isDynamicallyAnimated ? `${tile}-${index}` : tile;
+            identifier = isDynamicallyAnimated ? `${tile}-${index}` : tile,
+            animatedTile = this.animatedTiles[identifier];
 
-        // Add the tile to the list of animated tiles if it is animated.
-        if (!(identifier in this.animatedTiles))
-            this.addAnimatedTile(tile as number, isDynamicallyAnimated ? index : -1);
-
-        let animatedTile = this.animatedTiles[identifier];
-
-        // The tile does not exist at the specified index.
-        if (!animatedTile) return;
+        // The tile does not exist at the specified index, so we add it.
+        if (!animatedTile)
+            return this.addAnimatedTile(tile as number, isDynamicallyAnimated ? index : -1);
 
         // Update the last accessed time.
         animatedTile.lastAccessed = this.game.time;
@@ -365,9 +361,12 @@ export default class Canvas extends Renderer {
      * multiple tiles.
      */
 
-    private resetAnimatedTiles(): void {
+    public resetAnimatedTiles(): void {
         // Reset the animation frame index for each animated tile.
-        for (let tile in this.animatedTiles) this.animatedTiles[tile].animationIndex = 0;
+        for (let tile in this.animatedTiles) {
+            this.animatedTiles[tile].lastTime = Date.now();
+            this.animatedTiles[tile].animationIndex = 0;
+        }
     }
 
     /**
