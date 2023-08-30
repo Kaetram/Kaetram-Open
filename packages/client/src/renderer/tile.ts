@@ -12,7 +12,7 @@ export default class Tile {
     // WebGL rendering functions.
     public uploaded = true;
 
-    private lastTime = 0;
+    public lastTime = 0;
 
     // Used to keep track of whether or not the tile is still being used.
     public lastAccessed = Date.now();
