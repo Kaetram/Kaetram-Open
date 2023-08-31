@@ -31,7 +31,7 @@
     overflow: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
+    gap: 0.1em;
 
     box-sizing: border-box;
     width: 24em;
@@ -51,13 +51,17 @@
         display: flex;
         flex: 1;
         flex-direction: column;
-        gap: 0.25em;
+        gap: 0.1em;
         justify-content: space-between;
 
         height: 100%;
 
         button {
             width: 8em;
+        }
+
+        input {
+            font-size: 0.8em;
         }
     }
 }
