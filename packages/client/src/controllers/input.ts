@@ -152,6 +152,7 @@ export default class InputController {
 
         this.keyMovement = false;
         this.player.disableAction = false;
+        this.player.joystickMovement = false;
 
         // Admin command for teleporting to a location.
         if (this.isCtrlKey())
@@ -404,6 +405,7 @@ export default class InputController {
         if (this.player.hasPath()) return;
 
         this.keyMovement = true;
+        this.player.joystickMovement = false;
 
         this.move(position);
     }
