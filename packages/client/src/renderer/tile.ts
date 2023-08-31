@@ -39,7 +39,7 @@ export default class Tile {
         if (time - this.lastAccessed > 5000) this.unused = true;
 
         // The animation loop occurs once the time elapsed since the last update is greater than the duration of the animation.
-        if (time - this.lastTime > this.animationInfo[this.animationIndex].duration) {
+        if (time - this.lastTime > this.getDuration()) {
             this.id = this.animationInfo[this.animationIndex].tileId;
 
             this.lastTime = time;
@@ -52,5 +52,14 @@ export default class Tile {
                 this.animationIndex = 0;
             } else this.animationIndex++;
         }
+    }
+
+    /**
+     * Obtains the duration of the current animation.
+     * @returns The duration of the current animation.
+     */
+
+    public getDuration(): number {
+        return this.animationInfo[this.animationIndex].duration;
     }
 }

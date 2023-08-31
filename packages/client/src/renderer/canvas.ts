@@ -363,9 +363,11 @@ export default class Canvas extends Renderer {
 
     public resetAnimatedTiles(): void {
         // Reset the animation frame index for each animated tile.
-        for (let tile in this.animatedTiles) {
-            this.animatedTiles[tile].lastTime = Date.now();
-            this.animatedTiles[tile].animationIndex = 0;
+        for (let tileId in this.animatedTiles) {
+            let tile = this.animatedTiles[tileId];
+
+            tile.lastTime = Date.now() - tile.getDuration() + 24;
+            tile.animationIndex = 0;
         }
     }
 
