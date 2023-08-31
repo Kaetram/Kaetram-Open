@@ -359,7 +359,6 @@ export default class Player extends Character {
         // Check for moving instead of path if keyboard movement is enabled.
         if ((this.hasKeyboardMovement() || this.hasAttackers() || this.hasTarget()) && this.moving)
             return;
-        if (this.joystickMovement && this.moving) return;
 
         super.idle(o, force);
     }
