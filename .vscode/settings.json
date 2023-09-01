@@ -14,5 +14,8 @@
     "stylelint.packageManager": "yarn",
     "stylelint.validate": ["css", "postcss", "sass", "scss", "html", "astro"],
     "rust-analyzer.linkedProjects": ["./packages/app/Cargo.toml"],
-    "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "githubPullRequests.ignoredPullRequestBranches": ["beta"]
 }
