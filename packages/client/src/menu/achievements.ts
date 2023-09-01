@@ -214,6 +214,8 @@ export default class Achievements extends Menu {
         title.innerHTML = task.name;
         description.innerHTML = task.description;
 
+        console.log(task);
+
         if (task.isFinished()) {
             // Title is displayed as gold if the achievement is completed.
             title.style.color = '#fcda1d';
@@ -222,13 +224,10 @@ export default class Achievements extends Menu {
             progress?.remove();
 
             // Styling for the coin element.
-            let coin = document.createElement('div');
+            let slot = element.querySelector('.coin-slot > div')!;
 
-            coin.classList.add('coin');
-            coin.classList.add('coin-default');
-
-            // Add the coin element to the beginning of the children list.
-            element.prepend(coin);
+            slot.classList.add('coin');
+            slot.classList.add('coin-default');
         } else {
             // Title is displayed as white if the achievement is not completed.
             title.style.color = '#fff';
