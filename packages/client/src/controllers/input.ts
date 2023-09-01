@@ -449,22 +449,27 @@ export default class InputController {
         // Handle NPC interaction.
         this.entity = this.getEntity(position, useSearch);
 
-        if (this.entity && this.entity.instance !== this.player.instance) {
-            if (this.entity.isMob()) this.setAttackTarget();
+        // Check that the entity exists and we're not targeting ourselves.
+        if (this.entity && this.entity?.instance !== this.player.instance) {
+            // Attack target if we're interacting with a mob or a player in a PVP area.
+            if (this.entity.isMob() || (this.entity.isPlayer() && !this.entity.pvp))
+                this.setAttackTarget();
             else this.setInteractionTarget();
 
             // Set target and follow a targetable entity.
             if (this.isTargetable(this.entity)) {
                 this.player.follow(this.entity);
 
-                if (this.isAttackable(this.entity))
+                // This is to initiate the attack if we're within the range of the target.
+                if (this.isAttackable(this.entity)) {
                     (this.entity as Character).addAttacker(this.player);
 
-                if (this.player.isRanged())
-                    this.game.socket.send(Packets.Target, [
-                        Opcodes.Target.Attack,
-                        this.entity.instance
-                    ]);
+                    if (this.player.canAttackTarget())
+                        this.game.socket.send(Packets.Target, [
+                            Opcodes.Target.Attack,
+                            this.entity.instance
+                        ]);
+                }
                 return;
             }
         }
