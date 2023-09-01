@@ -7,7 +7,7 @@
 
     color: #eee;
 
-    border-image: url('/img/interface/slices/menu.png') 42% fill/ 1em / 0 stretch;
+    border-image: url('/img/interface/slices/menu.png') 44% fill/ 1em / 0 stretch;
 }
 
 .slice-container {
@@ -26,7 +26,7 @@
 
     color: #eee;
 
-    border-image: url('/img/interface/slices/container.png') 42% fill/ 1em / 0 stretch;
+    border-image: url('/img/interface/slices/container.png') 44% fill/ 1em / 0 stretch;
 
     @media (--portrait) {
         flex-direction: column;
@@ -51,7 +51,7 @@
     overflow: auto;
     box-sizing: border-box;
     padding: 0.5em;
-    border-image: url('/img/interface/slices/list.png') 48% fill / 1em / 0 stretch;
+    border-image: url('/img/interface/slices/list.png') 44% fill / 1em / 0 stretch;
 
     // &:hover {
     //     border-image-source: url('/img/interface/slices/list-hover.png');
@@ -66,7 +66,7 @@
     box-sizing: border-box;
     padding: 0.5em;
 
-    border-image: url('/img/interface/slices/list-item.png') 48% fill / 0.5em / 0 stretch;
+    border-image: url('/img/interface/slices/list-item.png') 44% fill / 0.5em / 0 stretch;
 
     &:hover {
         border-image-source: url('/img/interface/slices/list-item-hover.png');
@@ -82,7 +82,7 @@
     box-sizing: border-box;
     padding: 0.25em;
 
-    border-image: url('/img/interface/slices/item-slot.png') 48% fill / 0.5em / 0 stretch;
+    border-image: url('/img/interface/slices/item-slot.png') 44% fill / 0.5em / 0 stretch;
 }
 
 .slice-button {
@@ -153,7 +153,7 @@
     padding: 0.5em 0.5em 0;
 
     background-color: transparent;
-    border-image: url('/img/interface/slices/tab.png') 49% fill/ 1em / 0 stretch;
+    border-image: url('/img/interface/slices/tab.png') 44% fill/ 1em / 0 stretch;
 
     &:focus {
         border-image-source: url('/img/interface/slices/tab-active.png');
