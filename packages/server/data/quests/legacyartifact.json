@@ -1,0 +1,92 @@
+{
+    "name": "The Legacy Artifact",
+    "description": "In an ancient legend, an artifact of immense power was torn apart and scattered. The pieces, when brought together and reforged, promise unimaginable might. Take on this challenging quest, drawing upon a multitude of skills, to bring the artifact back to life.",
+    "rewards": ["Magic Lamp"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "elderMage",
+            "text": [
+                "Greetings, adventurer. Legends speak of a powerful artifact,",
+                "one that requires mastery of various skills to restore.",
+                "The first part is the Elemental Ore, a mineral buried deep within",
+                "the earth. Mine it so we can begin our journey."
+            ],
+            "completedText": ["Have you found the Elemental Ore yet?"]
+        },
+        "1": {
+            "task": "mine",
+            "itemRequirements": [
+                {
+                    "key": "elementalore",
+                    "count": 1
+                }
+            ],
+            "nextStage": "Using the elemental ore, you must now combine it with your knowledge of smithing to forge the Elemental Blade Base.",
+            "popup": {
+                "title": "Stage completed!",
+                "text": "@green@You have mined the @crimson@Elemental Ore@green@. Proceed to the next step to smith the blade base.",
+                "colour": "#33cc33"
+            }
+        },
+        "2": {
+            "task": "smith",
+            "itemRequirements": [
+                {
+                    "key": "elementalbladebase",
+                    "count": 1
+                }
+            ],
+            "nextStage": "With the Elemental Blade Base crafted, it's time to move onto fletching. Craft an Elemental Bowstring using ancient woods.",
+            "popup": {
+                "title": "Stage completed!",
+                "text": "@green@You have smithed the @crimson@Elemental Blade Base@green@. Proceed to the next step to craft the bowstring.",
+                "colour": "#33cc33"
+            }
+        },
+        "3": {
+            "task": "fletch",
+            "itemRequirements": [
+                {
+                    "key": "elementalbowstring",
+                    "count": 1
+                }
+            ],
+            "nextStage": "Now that you have the Elemental Bowstring, combine it with the Blade Base to create the Elemental Bow Frame using crafting.",
+            "popup": {
+                "title": "Stage completed!",
+                "text": "@green@You have fletched the @crimson@Elemental Bowstring@green@. Proceed to the next step to craft the bow frame.",
+                "colour": "#33cc33"
+            }
+        },
+        "4": {
+            "task": "craft",
+            "itemRequirements": [
+                {
+                    "key": "elementalbowframe",
+                    "count": 1
+                }
+            ],
+            "nextStage": "With the Elemental Bow Frame in hand, the final step is to infuse it with magic using alchemy to unlock its true potential.",
+            "popup": {
+                "title": "Stage completed!",
+                "text": "@green@You have crafted the @crimson@Elemental Bow Frame@green@. Proceed to the final step to infuse it with magic.",
+                "colour": "#33cc33"
+            }
+        },
+        "5": {
+            "task": "alchemy",
+            "itemRequirements": [
+                {
+                    "key": "legacyartifact",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@Congratulations! You have successfully combined all the components and crafted the @crimson@Legacy Artifact@green@. As a reward, you've been given a @crimson@Magic Lamp@green@!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

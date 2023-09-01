@@ -1,0 +1,89 @@
+{
+    "name": "The Elemental Gastronomy",
+    "description": "Master Chef Elandrial seeks the ultimate ingredients.|Chef Elandrial believes that combining elements through cooking can create dishes with magical properties. To prove his theory, he seeks the assistance of a versatile adventurer to gather and craft the needed ingredients.",
+    "rewards": ["Elemental Dish", "Experience in Cooking, Fletching, and Magic"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "elandrial",
+            "text": [
+                "Ah, adventurer! I've heard tales of your versatility.",
+                "I have a theory that fusing elemental properties in food can create something extraordinary.",
+                "First, I need you to explore the Frozen Caves to find the Icecap Mushroom.",
+                "But be wary, the caves are known to be treacherous!"
+            ],
+            "completedText": ["The Frozen Caves await.", "Seek out the Icecap Mushroom."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "elandrial",
+            "hasItemText": [
+                "Perfect! Now, for the next ingredient.",
+                "We need an arrow with fiery properties. But not just any arrow, an arrow crafted with the Feather of a Phoenix.",
+                "You'll need to use your fletching skills to craft this arrow."
+            ],
+            "completedText": ["Combine the Phoenix Feather with an arrow shaft.", "Craft the Fiery Phoenix Arrow."],
+            "itemRequirements": [
+                {
+                    "key": "icecapmushroom",
+                    "count": 1
+                }
+            ]
+        },
+        "2": {
+            "task": "fletching",
+            "item": "fieryphoenixarrow",
+            "npc": "elandrial",
+            "completedText": ["Once you've crafted the Fiery Phoenix Arrow,", "return to me."]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "elandrial",
+            "hasItemText": [
+                "Magnificent! Now, for the final touch, we will imbue this arrow with an enchantment.",
+                "Use your magic to cast a spell of levitation on this arrow.",
+                "It will become the Levitating Fiery Phoenix Arrow!"
+            ],
+            "completedText": ["Utilize your magic.", "Craft the Levitating Fiery Phoenix Arrow."],
+            "itemRequirements": [
+                {
+                    "key": "fieryphoenixarrow",
+                    "count": 1
+                }
+            ]
+        },
+        "4": {
+            "task": "magic",
+            "spell": "levitation",
+            "item": "levitatingfieryphoenixarrow",
+            "npc": "elandrial",
+            "completedText": ["Once enchanted, return to me with the arrow.", "We're close to completing the dish!"]
+        },
+        "5": {
+            "task": "talk",
+            "npc": "elandrial",
+            "hasItemText": [
+                "This is it, adventurer! The final step.",
+                "Now, using your cooking skills, combine the Icecap Mushroom and the Levitating Fiery Phoenix Arrow.",
+                "The result will be a dish never seen before!"
+            ],
+            "completedText": ["Unite the elements through cooking.", "Create the Elemental Dish."],
+            "itemRequirements": [
+                {
+                    "key": "levitatingfieryphoenixarrow",
+                    "count": 1
+                }
+            ]
+        },
+        "6": {
+            "task": "cooking",
+            "recipe": "elementaldish",
+            "npc": "elandrial",
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@The Elemental Gastronomy@green@. You've been awarded an @crimson@Elemental Dish@green@ and experience in Cooking, Fletching, and Magic!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}
