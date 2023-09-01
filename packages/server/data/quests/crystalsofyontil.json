@@ -1,0 +1,33 @@
+{
+    "name": "Crystals of Eldoria",
+    "description": "Mystic ores have been discovered deep within the Eldoria Mines. Excavate and learn their secrets.",
+    "rewards": ["Mystic Ore Knowledge", "3500 Mining experience"],
+    "skillRequirements": {
+        "mining": 40
+    },
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "oldminer",
+            "text": ["Adventurer! The Eldoria Mines hold mystic ores.", "I'll guide you if you can fetch them for me."],
+            "completedText": ["Descend into Eldoria Mines."]
+        },
+        "1": {
+            "task": "collect",
+            "itemRequirements": [{ "key": "mysticore", "count": 5 }],
+            "completedText": ["Bring the Mystic Ores to the old miner."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "oldminer",
+            "hasItemText": ["You've done it! This ore is precious. Here's how you can best utilize it."],
+            "skill": "mining",
+            "experience": 3500,
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You've gained @crimson@Mystic Ore Knowledge@green@ and @crimson@3500 Mining experience@green@.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}
