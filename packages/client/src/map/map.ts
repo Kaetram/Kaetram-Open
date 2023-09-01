@@ -1,5 +1,5 @@
-import mapData from '../../data/maps/map.json';
 import log from '../lib/log';
+import mapData from '../../data/maps/map.json';
 import Utils, { isInt } from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
@@ -230,7 +230,7 @@ export default class Map {
         tilesetInfo.addEventListener('load', () => {
             // Prevent uneven tilemaps from loading.
             if (tilesetInfo.width % this.tileSize > 0)
-                throw new Error(`The tile size is malformed in the tile set: ${tileset.path}`);
+                log.error(`The tile size is malformed in the tile set: ${tileset.path}`);
 
             // Mark tileset as loaded.
             tilesetInfo.loaded = true;
@@ -239,7 +239,7 @@ export default class Map {
         });
 
         tilesetInfo.addEventListener('error', () => {
-            throw new Error(`Could not find tile set: ${tileset.path}`);
+            log.error(`Could not find tile set: ${tileset.path}`);
         });
 
         /**
