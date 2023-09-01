@@ -12,6 +12,7 @@ export default class Combat {
     public started = false;
 
     public lastAttack = 0;
+    public lastFollow = 0;
 
     // The combat loop
     private loop?: NodeJS.Timeout | undefined;
@@ -41,7 +42,7 @@ export default class Combat {
 
         if (this.loop) return;
 
-        this.loop = setInterval(this.handleLoop.bind(this), this.character.getAttackRate() / 2);
+        this.loop = setInterval(() => this.handleLoop(), this.character.getAttackRate() / 4);
     }
 
     /**
@@ -74,7 +75,7 @@ export default class Combat {
 
         clearInterval(this.loop);
 
-        this.loop = setInterval(this.handleLoop.bind(this), this.character.getAttackRate() / 2);
+        this.loop = setInterval(() => this.handleLoop(), this.character.getAttackRate() / 4);
     }
 
     /**
@@ -142,7 +143,13 @@ export default class Combat {
             this.lastAttack = Date.now();
 
             this.attackCallback?.();
-        } else this.character.follow();
+        } else {
+            // Prevent follow spamming
+            if (Date.now() - this.lastFollow < 500) return;
+
+            this.character.follow();
+            this.lastFollow = Date.now();
+        }
     }
 
     /**

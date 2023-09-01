@@ -72,7 +72,7 @@
         "level": 1,
         "aggroRange": 1,
         "attackRate": 1200,
-        "movementSpeed": 420,
+        "movementSpeed": 500,
         "respawnDelay": 20000,
         "attackStats": {
             "crush": 0,

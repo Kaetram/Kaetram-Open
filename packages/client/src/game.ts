@@ -329,7 +329,7 @@ export default class Game {
                 radius
             ),
             closest: Entity | undefined,
-            boundary = this.map.tileSize * 1.5;
+            boundary = this.map.tileSize - 2;
 
         /**
          * The `position` parameter contains the absolute x and y coordinates
