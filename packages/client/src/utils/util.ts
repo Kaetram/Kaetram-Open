@@ -322,7 +322,7 @@ export default {
 
     getHurtSprite(sprite: Sprite): Sprite {
         let canvas = document.createElement('canvas'),
-            context = canvas.getContext('2d')!,
+            context = canvas.getContext('2d', { willReadFrequently: true })!,
             hurtSprite = new Sprite(sprite.data); // Create a clone to avoid issues.
 
         canvas.width = sprite.image.width;
@@ -369,7 +369,7 @@ export default {
 
     getSilhouetteSprite(sprite: Sprite): Sprite {
         let canvas = document.createElement('canvas'),
-            context = canvas.getContext('2d')!,
+            context = canvas.getContext('2d', { willReadFrequently: true })!,
             silhouetteSprite = new Sprite(sprite.data); // Create a clone to avoid issues.
 
         canvas.width = sprite.image.width;
