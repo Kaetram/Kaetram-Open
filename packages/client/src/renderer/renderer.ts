@@ -662,7 +662,7 @@ export default class Renderer {
         }
 
         this.entitiesContext.drawImage(
-            entity.sprite.image,
+            entity.getSprite().image,
             frame!.x,
             frame!.y,
             entity.sprite.width,

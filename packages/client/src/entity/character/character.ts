@@ -191,29 +191,23 @@ export default class Character extends Entity {
     }
 
     /**
-     * Takes in consideration the death animations that may be playing and
-     * ignores updating the silhouette if so.
-     * @param active Whether or not we should update the silhouette.
-     */
-
-    public override updateSilhouette(active?: boolean): void {
-        // Default the effect to the normal sprite if the character's death animation is playing.
-        if (this.hasDeathAnimation()) active = false;
-
-        super.updateSilhouette(active);
-    }
-
-    /**
      * Briefly changes the character's sprite with that of the
      * hurt sprite (a white and red sprite when a character is hurt).
      */
 
     public toggleHurt(): void {
-        if (this.dead || this.teleporting || !this.hurtSprite) return;
+        // Prevent any hurt sprite rendering while the death animation or the character is teleporting.
+        if (this.dead || this.teleporting) {
+            this.hurt = false;
+            return;
+        }
 
-        this.sprite = this.hurtSprite;
+        // Attempt to load the hurt sprite if it doesn't exist.
+        if (this.sprite.hasHurtSprite() && !this.sprite.hurtSprite) this.sprite.loadHurtSprite();
 
-        window.setTimeout(() => (this.sprite = this.normalSprite), 100);
+        this.hurt = true;
+
+        window.setTimeout(() => (this.hurt = false), 100);
     }
 
     /**
