@@ -350,6 +350,10 @@ export default class Item extends Entity {
             case 'shield': {
                 return Modules.Equipment.Shield;
             }
+
+            case 'cape': {
+                return Modules.Equipment.Cape;
+            }
         }
     }
 
@@ -577,7 +581,8 @@ export default class Item extends Entity {
             'boots',
             'ring',
             'arrow',
-            'shield'
+            'shield',
+            'cape'
         ];
 
         return types.includes(this.itemType);

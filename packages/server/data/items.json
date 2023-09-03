@@ -2893,6 +2893,524 @@
             "magic": 0
         }
     },
+    "skeletonhelm": {
+        "type": "helmet",
+        "name": "Dark Skeleton Helm",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "darkskeletonhelm": {
+        "type": "helmet",
+        "name": "Dark Skeleton Helm",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "flamehelmet": {
+        "type": "helmet",
+        "name": "Flame Helmet",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "flameblackhelmet": {
+        "type": "helmet",
+        "name": "Black Flame Helmet",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "flamebluehelmet": {
+        "type": "helmet",
+        "name": "Blue Flame Helmet",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "flamecursehelmet": {
+        "type": "helmet",
+        "name": "Cursed Flame Helmet",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "jesterhat": {
+        "type": "helmet",
+        "name": "Jester Hat",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "oldmanmask": {
+        "type": "helmet",
+        "name": "Old Man's Face",
+        "price": 100
+    },
+    "refinedsapphirehelmet": {
+        "type": "helmet",
+        "name": "Refined Sapphire Helmet",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "scholarshat": {
+        "type": "helmet",
+        "name": "Sholar's Hat",
+        "price": 100,
+        "skill": "magic",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "scholarshatblack": {
+        "type": "helmet",
+        "name": "Black Sholar's Hat",
+        "price": 100,
+        "skill": "magic",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "scholarshatgreen": {
+        "type": "helmet",
+        "name": "Green Sholar's Hat",
+        "price": 100,
+        "skill": "magic",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "scholarshatred": {
+        "type": "helmet",
+        "name": "Red Sholar's Hat",
+        "price": 100,
+        "skill": "magic",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "scholarshatyellow": {
+        "type": "helmet",
+        "name": "Yellow Sholar's Hat",
+        "price": 100,
+        "skill": "magic",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "slimehelmet": {
+        "type": "helmet",
+        "name": "Slime Helmet",
+        "price": 100,
+        "skill": "archery",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "slimekinghelmet": {
+        "type": "helmet",
+        "name": "Slime King Helmet",
+        "price": 100,
+        "skill": "archery",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "slimekingrarehelmet": {
+        "type": "helmet",
+        "name": "Rare Slime King Helmet",
+        "price": 100,
+        "skill": "archery",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "slimepurplehelmet": {
+        "type": "helmet",
+        "name": "Purple Slime Helmet",
+        "price": 100,
+        "skill": "archery",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "slimeredhelmet": {
+        "type": "helmet",
+        "name": "Red Slime Helmet",
+        "price": 100,
+        "skill": "archery",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "slimetealhelmet": {
+        "type": "helmet",
+        "name": "Teal Slime Helmet",
+        "price": 100,
+        "skill": "archery",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "copperchestplate": {
         "type": "chestplate",
         "name": "Copper Chestplate",
@@ -3103,6 +3621,34 @@
             "strength": 1,
             "archery": 6,
             "magic": 4
+        }
+    },
+
+    "refinedsapphirechestplate": {
+        "type": "chestplate",
+        "name": "Refined Sapphire Chestplate",
+        "price": 200,
+        "skill": "defense",
+        "level": 43,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 5,
+            "archery": 8,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 7,
+            "stab": 4,
+            "archery": 10,
+            "magic": 7
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 1,
+            "archery": 8,
+            "magic": 5
         }
     },
     "amethystchestplate": {
@@ -3585,6 +4131,60 @@
             "strength": 12,
             "archery": -4,
             "magic": -6
+        }
+    },
+    "wings": {
+        "type": "cape",
+        "name": "Wings",
+        "price": 200,
+        "skill": "defense",
+        "level": 15,
+        "attackStats": {
+            "crush": 3,
+            "slash": 2,
+            "stab": 4,
+            "archery": 2,
+            "magic": -8
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 4,
+            "stab": 5,
+            "archery": 7,
+            "magic": -10
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 1,
+            "archery": 5,
+            "magic": -4
+        }
+    },
+    "wingsdark": {
+        "type": "cape",
+        "name": "Dark Wings",
+        "price": 200,
+        "skill": "defense",
+        "level": 45,
+        "attackStats": {
+            "crush": 9,
+            "slash": 12,
+            "stab": 14,
+            "archery": 22,
+            "magic": -18
+        },
+        "defenseStats": {
+            "crush": 16,
+            "slash": 14,
+            "stab": 15,
+            "archery": 24,
+            "magic": -30
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 4,
+            "archery": 10,
+            "magic": -10
         }
     },
     "bronzeboots": {
@@ -4974,6 +5574,18 @@
         "type": "skin",
         "name": "Taekwondo"
     },
+    "skeletonskin": {
+        "type": "skin",
+        "name": "SkellyMcNelly"
+    },
+    "darkskeletonskin": {
+        "type": "skin",
+        "name": "SkellyMcSpooky"
+    },
+    "oldmanskin": {
+        "type": "skin",
+        "name": "Old Man's Skin"
+    },
     "balloonblue": {
         "type": "weapon",
         "name": "Blue Balloon",
@@ -6018,6 +6630,12 @@
         "price": 100,
         "description": "Kelp is a type of seaweed that grows in water. It's pretty tasty when combined with other stuff."
     },
+    "seed": {
+        "type": "object",
+        "name": "Seed",
+        "price": 100,
+        "description": "A seed that is used to plant things."
+    },
     "rawbeef": {
         "type": "object",
         "name": "Raw Beef",
@@ -6093,6 +6711,12 @@
     "cheese": {
         "type": "object",
         "name": "Cheese",
+        "description": "A piece of cheese. I think it came from milk.",
+        "price": 100
+    },
+    "leaf": {
+        "type": "object",
+        "name": "Leaf",
         "description": "A piece of cheese. I think it came from milk.",
         "price": 100
     },
@@ -6241,6 +6865,21 @@
         "edible": true,
         "plugin": "healingitem",
         "healAmount": 150,
+        "price": 100
+    },
+    "kiwi": {
+        "type": "object",
+        "name": "Kiwi",
+        "description": "A fruit that grows on or around bushes..",
+        "edible": true,
+        "plugin": "healingitem",
+        "healAmount": 150,
+        "price": 100
+    },
+    "rock": {
+        "type": "object",
+        "name": "Rock",
+        "description": "A rock, it's a rock. What more do you want me to say.",
         "price": 100
     },
     "rice": {

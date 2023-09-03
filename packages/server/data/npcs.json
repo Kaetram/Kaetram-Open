@@ -406,5 +406,20 @@
     "ratnpc": {
         "name": "Rat",
         "text": ["Squeak!"]
+    },
+
+    "blacksmith": {
+        "name": "Blacksmith",
+        "text": ["Hi!"]
+    },
+
+    "blacksmith2": {
+        "name": "Blacksmith",
+        "text": ["Hi!"]
+    },
+
+    "herbalist": {
+        "name": "Herby Mc. Herb",
+        "text": ["Hi!"]
     }
 }
