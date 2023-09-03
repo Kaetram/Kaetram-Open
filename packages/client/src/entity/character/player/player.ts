@@ -45,6 +45,8 @@ export default class Player extends Character {
 
     public guild!: Partial<GuildData> | undefined;
 
+    private equipmentOrder = Modules.EquipmentRenderOrder;
+
     public override hitPoints = 0;
     public override maxHitPoints = 0;
 
@@ -91,6 +93,7 @@ export default class Player extends Character {
 
         this.equipments[Modules.Equipment.Weapon].drawable = true;
         this.equipments[Modules.Equipment.Shield].drawable = true;
+        this.equipments[Modules.Equipment.Cape].drawable = true;
     }
 
     /**
@@ -861,6 +864,35 @@ export default class Player extends Character {
     }
 
     /**
+     * Override for the `setOrientation` function to also update the positioning
+     * of the cape and weapon relative to the player.
+     * @param orientation The new orientation that we are setting.
+     */
+
+    public override setOrientation(orientation: Modules.Orientation): void {
+        super.setOrientation(orientation);
+
+        // Reset the equipment order to the default.
+        this.equipmentOrder = Modules.EquipmentRenderOrder;
+
+        switch (orientation) {
+            case Modules.Orientation.Up: {
+                this.equipmentOrder = [
+                    Modules.Equipment.Legplates,
+                    Modules.Equipment.Chestplate,
+                    Modules.Equipment.Helmet,
+                    Modules.Equipment.ArmourSkin,
+                    Modules.Equipment.Shield,
+                    Modules.Equipment.Weapon,
+                    Modules.Equipment.WeaponSkin,
+                    Modules.Equipment.Cape
+                ];
+                break;
+            }
+        }
+    }
+
+    /**
      * Updates the active status of an ability.
      * @param key The key of the ability we are updating.
      */
@@ -984,7 +1016,7 @@ export default class Player extends Character {
         callback: (equipment: Equipment, type?: number) => void,
         ignoreEmpty = false
     ): void {
-        for (let type of Modules.EquipmentRenderOrder) {
+        for (let type of this.equipmentOrder) {
             let equipment = this.equipments[type as never] as Equipment;
 
             if (!equipment.drawable) continue;

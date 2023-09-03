@@ -117,12 +117,12 @@ export enum Equipment {
 }
 
 export let EquipmentRenderOrder = [
+    Equipment.Cape,
     Equipment.Legplates,
     Equipment.Chestplate,
     Equipment.Helmet,
     Equipment.ArmourSkin,
     Equipment.Shield,
-    Equipment.Cape,
     Equipment.Weapon,
     Equipment.WeaponSkin
 ];
