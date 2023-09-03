@@ -1,6 +1,7 @@
 import Animation from './animation';
 
 import Utils from '../utils/util';
+import { isMobile } from '../utils/detect';
 
 export interface AnimationData {
     [name: string]: {
@@ -37,7 +38,6 @@ export default class Sprite {
     public idleSpeed = 250;
 
     public loaded = false;
-    public loading = false;
     public hasDeathAnimation = false;
 
     public animations: Animations = {};
@@ -77,9 +77,7 @@ export default class Sprite {
      */
 
     public load(): void {
-        if (this.loading || this.loaded) return;
-
-        this.loading = true;
+        if (this.loaded) return;
 
         this.image = new Image();
 
@@ -90,18 +88,32 @@ export default class Sprite {
         this.image.addEventListener('load', () => {
             this.loaded = true;
 
-            // Ignore drawing hurt sprites for item types and very small sprites.
-            if (!this.key.includes('items') && this.image.width > 96)
-                this.hurtSprite = Utils.getHurtSprite(this);
-
-            // Load the silhouette sprite for the entity if it has one.
-            if (this.hasSilhouette()) this.silhouetteSprite = Utils.getSilhouetteSprite(this);
-
-            // Loading only done after the hurt sprite.
-            this.loading = false;
-
             this.loadCallback?.();
         });
+    }
+
+    /**
+     * Loads the hurt sprite for the current sprite. This is used for mobs and players
+     * when they are engaged in combat and receive any damage.
+     */
+
+    public loadHurtSprite(): void {
+        // Hurt sprite already exists or there's not hurt effect, no need to load.
+        if (this.hurtSprite || !this.hasHurtSprite()) return;
+
+        this.hurtSprite = Utils.getHurtSprite(this);
+    }
+
+    /**
+     * Loads the silhouette sprite for the current sprite. This is used upon hovering over
+     * an entity to display an outline around them.
+     */
+
+    public loadSilhouetteSprite(): void {
+        // Silhouette sprite already exists or there's no silhouette, no need to load.
+        if (this.silhouetteSprite || !this.hasSilhouette() || isMobile()) return;
+
+        this.silhouetteSprite = Utils.getSilhouetteSprite(this);
     }
 
     /**
@@ -161,13 +173,24 @@ export default class Sprite {
     }
 
     /**
+     * Load the hurt sprite only for mobs and players.
+     * @returns Whether or not the current sprite supports a hurt sprite.
+     */
+
+    public hasHurtSprite(): boolean {
+        let type = this.getType();
+
+        return type === 'mobs' || type === 'player';
+    }
+
+    /**
      * Checks whether or not to draw a silhouette based on the sprite type.
      * We do not need to have a silhouette for everything, only for mobs,
      * players, and npcs.
      * @returns Whether or not the sprite has a silhouette.
      */
 
-    private hasSilhouette(): boolean {
+    public hasSilhouette(): boolean {
         let type = this.getType();
 
         return type === 'mobs' || type === 'player' || type === 'npcs';

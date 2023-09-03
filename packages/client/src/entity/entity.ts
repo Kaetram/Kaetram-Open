@@ -45,6 +45,8 @@ export default abstract class Entity {
     private visible = true;
 
     public fading = false;
+    public hurt = false;
+    public silhouette = false;
 
     public angle = 0;
 
@@ -57,10 +59,6 @@ export default abstract class Entity {
 
     public fadingTime!: number;
     private blinking!: number;
-
-    public normalSprite!: Sprite;
-    public hurtSprite!: Sprite;
-    public silhouetteSprite!: Sprite;
 
     public ready = false;
 
@@ -130,14 +128,38 @@ export default abstract class Entity {
     }
 
     /**
-     * Updates the entity's silhouette sprite.
-     * @param active Whether or not to show the silhouette.
+     * Updates the current state of the silhouette sprite. If the silhouette sprite doesn't exist
+     * we attempt to load it.
+     * @param state The new state to set the silhouette sprite to, defaults to false.
      */
 
-    public updateSilhouette(active = false): void {
-        if (!this.silhouetteSprite) return;
+    public updateSilhouette(state = false): void {
+        if (this.dead || this.teleporting) {
+            this.silhouette = false;
+            return;
+        }
 
-        this.sprite = active ? this.silhouetteSprite : this.normalSprite;
+        // Attempt to load the silhouette if it doesn't exist.
+        if (state && this.sprite.hasSilhouette() && !this.sprite.silhouetteSprite)
+            this.sprite.loadSilhouetteSprite();
+
+        this.silhouette = state;
+    }
+
+    /**
+     * Grabs the currently active sprite based on the effects. This is used
+     * for when we want to display a silhouette or a hurt sprite.
+     * @returns The currently active
+     */
+
+    public getSprite(): Sprite {
+        // Display the hurt sprite if the entity has one.
+        if (this.hurt && this.sprite.hurtSprite) return this.sprite.hurtSprite;
+
+        // Display the silhouette sprite if the entity has one.
+        if (this.silhouette && this.sprite.silhouetteSprite) return this.sprite.silhouetteSprite;
+
+        return this.sprite;
     }
 
     /**
@@ -155,30 +177,8 @@ export default abstract class Entity {
         }
 
         this.sprite = sprite;
-        this.normalSprite = sprite;
-
-        /**
-         * Attempt to reload the sprite if it's still loading, we do this
-         * because we want all elements of the sprite (hurt sprite, silhouette)
-         * to be fully loaded and then apply them to the entity.
-         */
-
-        if (sprite.loading) {
-            setTimeout(() => this.setSprite(sprite), 100);
-            return;
-        }
-
-        // Load the hurt and silhouette sprites if they exist.
-        if (sprite.hurtSprite) this.hurtSprite = sprite.hurtSprite;
-        if (sprite.silhouetteSprite) this.silhouetteSprite = sprite.silhouetteSprite;
 
         sprite.onLoad(() => {
-            this.normalSprite = sprite;
-
-            // Load the hurt and silhouette sprites if they exist.
-            if (sprite.hurtSprite) this.hurtSprite = sprite.hurtSprite;
-            if (sprite.silhouetteSprite) this.silhouetteSprite = sprite.silhouetteSprite;
-
             // Custom scales can be applied to certain entities.
             if (!this.customScale) return;
 

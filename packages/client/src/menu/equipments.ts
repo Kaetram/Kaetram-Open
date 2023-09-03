@@ -350,13 +350,6 @@ export default class Equipments extends Menu {
 
             if (!equipmentSprite.loaded) equipmentSprite.load();
 
-            if (equipmentSprite.loading) {
-                // Attempt to reload the image after 200ms if the image is still loading.
-                setTimeout(() => this.updatePlayerImage(frame), 200);
-
-                return;
-            }
-
             let scalingWidth = 1,
                 scalingHeight = 1,
                 mismatchSize =

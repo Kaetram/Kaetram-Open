@@ -574,7 +574,7 @@ export default class InputController {
 
         // Remove the silhouette from the previous entity.
         if (this.entity && (!entity || entity.instance !== this.entity.instance))
-            this.entity.updateSilhouette(false);
+            this.entity.updateSilhouette();
 
         return entity;
     }

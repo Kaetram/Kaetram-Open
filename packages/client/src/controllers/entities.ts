@@ -250,6 +250,7 @@ export default class EntitiesController {
             );
 
             target.triggerHealthBar();
+            target.toggleHurt();
 
             this.unregisterPosition(projectile);
             delete this.entities[projectile.instance];
