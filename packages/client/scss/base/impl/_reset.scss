@@ -86,6 +86,8 @@ body {
 
 canvas {
     image-rendering: pixelated;
+
+    -webkit-font-smoothing: none;
 }
 
 body {
