@@ -1,6 +1,6 @@
 let holdTimeout: number | undefined;
 
-// A touch is considered a hold if it lasts longer than 200ms.
+// A touch is considered a hold if it lasts longer than 300ms.
 const HOLD_TIME = 200;
 
 /**
@@ -139,7 +139,7 @@ export function onDragDrop(
     // When the user stops holding the item, drop the item.
     function endHold(x: number, y: number) {
         // If the user is not holding the item, cancel the hold.
-        if (!isHolding) return;
+        if (!isHolding) return cancelHold();
 
         // Save the clone element in a variable.
         let clone = dragClone;
@@ -166,6 +166,6 @@ export function onDragDrop(
         dragClone = undefined;
 
         // Remove the focused class from the item element.
-        element.classList.remove('item-slot-focused');
+        element.classList.remove('active');
     }
 }
