@@ -408,7 +408,8 @@ export default {
             ];
 
             // If any of the adjacent pixels are non-empty, we set the current pixel to yellow.
-            if (adjacentPixels.some((pixel) => pixel !== 0)) {
+            if (adjacentPixels.some((pixel) => pixel > 24)) {
+                // 24 to ignore semi-transparent pixels.
                 spriteData.data[i] = spriteData.data[i + 1] = 255;
                 spriteData.data[i + 2] = spriteData.data[i + 3] = 150;
             }
