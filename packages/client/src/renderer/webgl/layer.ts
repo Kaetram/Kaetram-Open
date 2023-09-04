@@ -1,4 +1,4 @@
-import Tile from '../tile';
+import Tile from '../../map/tile';
 
 import type WebGL from './webgl';
 import type Map from '../../map/map';
