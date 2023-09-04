@@ -159,6 +159,9 @@ export default class Combat {
     private checkTargetPosition(): void {
         if (!this.character.isOnSameTile()) return;
 
+        // Only move the character if it's a mob.
+        if (!this.character.isMob()) return;
+
         this.character.findAdjacentTile();
     }
 
