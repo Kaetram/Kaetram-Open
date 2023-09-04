@@ -55,7 +55,21 @@ export default class Map {
     private readyCallback?(): void;
 
     public constructor(private game: Game) {
-        this.load();
+        log.debug('Parsing map with Web Workers...');
+
+        // Store tile size globally into the utils.
+        Utils.tileSize = this.tileSize;
+        Utils.sideLength = this.width / Modules.Constants.MAP_DIVISION_SIZE;
+        Utils.thirdTile = this.tileSize / 3;
+        Utils.tileAndAQuarter = this.tileSize * 1.25;
+
+        // Load the empty grid data without webworkers if we're on iOS.
+        this.loadGrid();
+
+        this.loadTilesets();
+        this.loadRegionData();
+
+        this.ready();
     }
 
     /**
@@ -69,38 +83,27 @@ export default class Map {
     }
 
     /**
-     * Uses webworkers to create an empty data and collision
-     * grid based on the map's dimensions. This can be quite
-     * time consuming so we relay it to an external worker
-     * to speed up the task.
+     * Initializes the collision and map data grid. The data grid is used
+     * for rendering tiles, and the collision grid for determining which
+     * tile is a collision.
      */
 
-    private load(): void {
-        log.debug('Parsing map with Web Workers...');
+    private loadGrid(): void {
+        let time = Date.now();
 
-        // Store tile size globally into the utils.
-        Utils.tileSize = this.tileSize;
-        Utils.sideLength = this.width / Modules.Constants.MAP_DIVISION_SIZE;
-        Utils.thirdTile = this.tileSize / 3;
-        Utils.tileAndAQuarter = this.tileSize * 1.25;
+        for (let y = 0; y < this.height; y++) {
+            this.grid[y] = [];
 
-        let worker = new Worker(new URL('mapworker.ts', import.meta.url), { type: 'classic' });
+            // Initialize collision grid.
+            for (let x = 0; x < this.width; x++) {
+                this.data.push(0);
+                this.grid[y][x] = 1;
+            }
+        }
 
-        // Send the map's width and height to the webworker.
-        worker.postMessage([this.width, this.height]);
+        log.debug(`Loaded empty grid in ${Date.now() - time}ms.`);
 
-        worker.addEventListener('message', (event) => {
-            if (event.data.data) this.data = event.data.data;
-            if (event.data.grid) this.grid = event.data.grid;
-
-            this.loadRegionData();
-
-            this.mapLoaded = true;
-        });
-
-        this.loadTilesets();
-
-        this.ready();
+        this.mapLoaded = true;
     }
 
     /**

@@ -1,5 +1,6 @@
 import Renderer from './renderer';
-import Tile from './tile';
+
+import Tile from '../map/tile';
 
 import type Game from '../game';
 import type { ContextCallback } from './renderer';
