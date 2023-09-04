@@ -4,10 +4,7 @@
 #friends-container {
     right: 1em;
     display: none;
-
-    @media (--portrait) {
-        width: 20em;
-    }
+    width: 20em;
 }
 
 #friends-page {
