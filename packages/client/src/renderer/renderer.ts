@@ -903,7 +903,7 @@ export default class Renderer {
             y = entity.y - 10,
             colour = 'white',
             stroke = 'rgba(0, 0, 0, 1)',
-            fontSize = 11;
+            fontSize = 14;
 
         // Handle the counter if an entity has one.
         if (entity.hasCounter())
@@ -1140,11 +1140,11 @@ export default class Renderer {
         if (setViews) this.setCameraView(this.textContext);
 
         // Decrease font size relative to zoom out.
-        fontSize += this.camera.zoomFactor * 2;
+        fontSize += Math.floor(this.camera.zoomFactor * 2);
 
-        this.textContext.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
+        //this.textContext.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
         this.textContext.lineWidth = strokeSize;
-        this.textContext.font = `${fontSize}px AdvoCut`;
+        this.textContext.font = `${fontSize}px KerrieFont`;
         this.textContext.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
         this.textContext.fillStyle = colour || 'white';
         this.textContext.fillText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
