@@ -234,6 +234,22 @@ export default class Game {
     }
 
     /**
+     * Finds the closest non-colliding tile around the character entity.
+     * @param character The character we are finding the closest tile for.
+     */
+
+    public findAdjacentTile(character: Character): void {
+        if (!this.map.isColliding(character.gridX + 1, character.gridY))
+            character.go(character.gridX + 1, character.gridY);
+        else if (!this.map.isColliding(character.gridX - 1, character.gridY))
+            character.go(character.gridX - 1, character.gridY);
+        else if (!this.map.isColliding(character.gridX, character.gridY + 1))
+            character.go(character.gridX, character.gridY + 1);
+        else if (!this.map.isColliding(character.gridX, character.gridY - 1))
+            character.go(character.gridX, character.gridY - 1);
+    }
+
+    /**
      * Used for when the player has selected low power mode and we do not
      * actively centre the camera on the character. We check the boundaries
      * of the camera and if the character approaches them we move the camera
