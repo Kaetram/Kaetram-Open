@@ -896,8 +896,8 @@ export default class Renderer {
         )
             return;
 
-        let drawNames = this.drawNames && entity.drawNames(),
-            drawLevels = this.drawLevels && !entity.isNPC(),
+        let drawNames = this.drawNames && entity.drawNames() && !entity.isItem(),
+            drawLevels = this.drawLevels && !entity.isNPC() && !entity.isItem(),
             nameY = this.drawLevels ? y - 7 : y - 4,
             levelY = this.drawLevels ? y : y - 7,
             levelText = `Level ${entity.level}`;

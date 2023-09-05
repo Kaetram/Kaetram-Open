@@ -196,6 +196,8 @@ export default class Game {
         }
 
         if (this.map.hasCachedDate()) this.app.fadeMenu();
+
+        this.menu.getWelcome().show();
     }
 
     /**
