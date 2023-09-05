@@ -6364,7 +6364,7 @@
         "offsetX": -4,
         "offsetY": -4
     },
-    { "id": "shadow16", "preload": true },
+    { "id": "shadow", "preload": true },
     { "id": "sparks", "preload": true, "offsetX": 0, "offsetY": 0 },
     {
         "id": "exclamation",
