@@ -52,6 +52,15 @@ import ResourceRu from './ru/resource';
 import StoreRu from './ru/store';
 import GameRu from './ru/game';
 import WarpsRu from './ru/warps';
+import CraftingPt from './pt/crafting';
+import EnchantPt from './pt/enchant';
+import GuildsPt from './pt/guilds';
+import ItemPt from './pt/item';
+import MiscPt from './pt/misc';
+import ResourcePt from './pt/resource';
+import StorePt from './pt/store';
+import GamePt from './pt/game';
+import WarpsPt from './pt/warps';
 
 export let resources = {
     en: {
@@ -97,6 +106,17 @@ export let resources = {
         store: StoreFr,
         game: GameFr,
         warps: WarpsFr
+    },
+    pt: {
+        crafting: CraftingPt,
+        enchant: EnchantPt,
+        guilds: GuildsPt,
+        item: ItemPt,
+        misc: MiscPt,
+        resource: ResourcePt,
+        store: StorePt,
+        game: GamePt,
+        warps: WarpsPt
     },
     ro: {
         crafting: CraftingRo,
