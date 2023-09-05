@@ -66,6 +66,13 @@
     animation: 2.5s animate-instructions-click infinite steps(2);
 }
 
+@media (--portrait) {
+    #welcome {
+        flex-direction: column;
+        width: 18em;
+    }
+}
+
 @include sprite.sheet('controls/wasd', $selectors: #controls-wasd);
 @include sprite.sheet('controls/arrows', $selectors: #controls-arrows);
 @include sprite.sheet('controls/click', $selectors: #controls-click);
