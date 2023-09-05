@@ -1321,14 +1321,13 @@ export default class Connection {
         for (let update of info) {
             let entity = this.entities.get(update.instance);
 
-            if (!entity) continue;
+            // If the entity doesn't exist, we add it to the update queue.
+            if (!entity) {
+                this.entities.entityUpdateQueue[update.instance] = update;
+                continue;
+            }
 
-            if (update.colour) entity.nameColour = update.colour;
-            if (update.scale) entity.customScale = update.scale;
-
-            // Display the exclamations if they're set onto the entity.
-            if (update.exclamation === 'achievement') entity.exclamation = true;
-            else if (update.exclamation === 'blue') entity.blueExclamation = true;
+            entity.updateDisplayInfo(update);
         }
     }
 

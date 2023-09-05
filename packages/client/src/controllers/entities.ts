@@ -15,12 +15,16 @@ import type Game from '../game';
 import type Entity from '../entity/entity';
 import type SpritesController from './sprites';
 import type Character from '../entity/character/character';
-import type { EntityData } from '@kaetram/common/types/entity';
-import type { PlayerData } from '@kaetram/common/network/impl/player';
 import type { PetData } from '@kaetram/common/types/pet';
+import type { PlayerData } from '@kaetram/common/network/impl/player';
+import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
+}
+
+interface EntityUpdateQueue {
+    [instance: string]: EntityDisplayInfo;
 }
 
 export interface Movable {
@@ -36,6 +40,8 @@ export default class EntitiesController {
     public sprites: SpritesController;
 
     public entities: EntitiesCollection = {};
+    public entityUpdateQueue: EntityUpdateQueue = {};
+
     public decrepit: Entity[] = [];
 
     public constructor(private game: Game) {
@@ -144,6 +150,12 @@ export default class EntitiesController {
         entity.idle();
 
         this.addEntity(entity);
+
+        // If the instance exists in the update queue, add the display info and remove it from the queue.
+        if (info.instance in this.entityUpdateQueue) {
+            entity.updateDisplayInfo(this.entityUpdateQueue[info.instance]);
+            delete this.entityUpdateQueue[info.instance];
+        }
     }
 
     /**
