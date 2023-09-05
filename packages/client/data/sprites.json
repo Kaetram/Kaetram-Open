@@ -6365,7 +6365,18 @@
         "offsetY": -4
     },
     { "id": "shadow", "preload": true },
-    { "id": "sparks", "preload": true, "offsetX": 0, "offsetY": 0 },
+    {
+        "id": "sparks",
+        "preload": true,
+        "animations": {
+            "idle_down": {
+                "length": 6,
+                "row": 0
+            }
+        },
+        "offsetX": 0,
+        "offsetY": 0
+    },
     {
         "id": "exclamation",
         "idleSpeed": 360,
