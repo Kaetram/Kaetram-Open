@@ -8,6 +8,7 @@ import type Player from './character/player/player';
 import type Item from './objects/item';
 import type Sprite from './sprite';
 import type Pet from './character/pet/pet';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 export default abstract class Entity {
     public x = 0;
@@ -148,6 +149,22 @@ export default abstract class Entity {
             this.sprite.loadSilhouetteSprite();
 
         this.silhouette = state;
+    }
+
+    /**
+     * Updates the display info for the entity. This essentially adds minor
+     * decorations to the entity's name colour, scaling, and whether or not
+     * they have additional markings above their head.
+     * @param displayInfo Contains the display info data to update.
+     */
+
+    public updateDisplayInfo(displayInfo: EntityDisplayInfo): void {
+        if (displayInfo.colour) this.nameColour = displayInfo.colour;
+        if (displayInfo.scale) this.customScale = displayInfo.scale;
+
+        // Display the exclamations if they're set onto the entity.
+        if (displayInfo.exclamation === 'achievement') this.exclamation = true;
+        else if (displayInfo.exclamation === 'blue') this.blueExclamation = true;
     }
 
     /**
