@@ -1,3 +1,5 @@
+import Grids from './grids';
+
 import log from '../lib/log';
 import mapData from '../../data/maps/map.json';
 import Utils, { isInt } from '../utils/util';
@@ -48,6 +50,8 @@ export default class Map {
     private animatedTiles: { [tileId: number]: ProcessedAnimation[] } = mapData.animations;
     public dynamicAnimatedTiles: { [index: number]: ClientTile } = {};
 
+    public grids: Grids;
+
     public mapLoaded = false;
     public regionsLoaded = 0;
     private tilesetsLoaded = false;
@@ -55,13 +59,7 @@ export default class Map {
     private readyCallback?(): void;
 
     public constructor(private game: Game) {
-        log.debug('Parsing map with Web Workers...');
-
-        // Store tile size globally into the utils.
-        Utils.tileSize = this.tileSize;
-        Utils.sideLength = this.width / Modules.Constants.MAP_DIVISION_SIZE;
-        Utils.thirdTile = this.tileSize / 3;
-        Utils.tileAndAQuarter = this.tileSize * 1.25;
+        this.grids = new Grids(this);
 
         // Load the empty grid data without webworkers if we're on iOS.
         this.loadGrid();
@@ -70,6 +68,12 @@ export default class Map {
         this.loadRegionData();
 
         this.ready();
+
+        // Store tile size globally into the utils.
+        Utils.tileSize = this.tileSize;
+        Utils.sideLength = this.width / Modules.Constants.MAP_DIVISION_SIZE;
+        Utils.thirdTile = this.tileSize / 3;
+        Utils.tileAndAQuarter = this.tileSize * 1.25;
     }
 
     /**
@@ -83,7 +87,7 @@ export default class Map {
     }
 
     /**
-     * Initializes the collision and map data grid. The data grid is used
+     * Initializes the collision, map data, and rendering grid. The data grid is used
      * for rendering tiles, and the collision grid for determining which
      * tile is a collision.
      */
@@ -93,11 +97,13 @@ export default class Map {
 
         for (let y = 0; y < this.height; y++) {
             this.grid[y] = [];
+            this.grids.renderingGrid[y] = [];
 
             // Initialize collision grid.
             for (let x = 0; x < this.width; x++) {
                 this.data.push(0);
                 this.grid[y][x] = 1;
+                this.grids.renderingGrid[y][x] = {};
             }
         }
 
