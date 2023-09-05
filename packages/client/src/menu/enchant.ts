@@ -9,6 +9,8 @@ import type Inventory from './inventory';
 type SelectCallback = (index: number) => void;
 type ConfirmCallback = (index: number, shardIndex: number) => void;
 export default class Enchant extends Menu {
+    public override identifier: number = Modules.Interfaces.Enchant;
+
     private list: HTMLUListElement = document.querySelector('#enchant-inventory-slots')!;
 
     // Selected items for the enchanting process.

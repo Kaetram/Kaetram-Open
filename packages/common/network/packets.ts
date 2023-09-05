@@ -53,6 +53,7 @@ enum Packets {
     Player,
     Relay,
     Crafting,
+    Interface,
     LootBag,
     Countdown,
     Pet,

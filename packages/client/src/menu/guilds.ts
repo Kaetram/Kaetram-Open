@@ -9,6 +9,8 @@ import type { ListInfo, Member } from '@kaetram/common/network/impl/guild';
 import type { GuildPacketData } from '@kaetram/common/types/messages/outgoing';
 
 export default class Guilds extends Menu {
+    public override identifier: number = Modules.Interfaces.Guilds;
+
     // The banner is the banner of the guild that the player is currently in.
     private banner: HTMLElement = document.querySelector('#guilds .banner')!;
 

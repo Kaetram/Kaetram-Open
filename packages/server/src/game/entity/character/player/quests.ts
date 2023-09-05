@@ -1,7 +1,5 @@
 import QuestIndex from './quest/impl';
 
-import quests from '../../../../../data/quests.json';
-
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { QuestPacket } from '@kaetram/common/network/impl';
 

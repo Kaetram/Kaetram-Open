@@ -18,6 +18,7 @@ import Leaderboards from '../menu/leaderboards';
 import Guilds from '../menu/guilds';
 import Crafting from '../menu/crafting';
 import LootBag from '../menu/lootbag';
+import Welcome from '../menu/welcome';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -26,6 +27,7 @@ import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();
+    private welcome: Welcome = new Welcome();
     private crafting: Crafting;
 
     private inventory: Inventory;
@@ -88,7 +90,8 @@ export default class MenuController {
             interact: this.interact,
             leaderboards: this.leaderboards,
             guilds: this.guilds,
-            crafting: this.crafting
+            crafting: this.crafting,
+            welcome: this.welcome
         };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
@@ -159,6 +162,19 @@ export default class MenuController {
         this.header.resize(); // Non Menu UI (for now?)
 
         this.forEachMenu((menu: Menu) => menu.resize());
+    }
+
+    /**
+     * Attempts to find an interface based on a specified identifiers.
+     * @param identifier The identifier of the interface we are looking for.
+     * @returns A menu object if found, otherwise undefined.
+     */
+
+    public get(identifier: Modules.Interfaces): Menu | undefined {
+        for (let key in this.menus)
+            if (this.menus[key].identifier === (identifier as number)) return this.menus[key];
+
+        return undefined;
     }
 
     /**

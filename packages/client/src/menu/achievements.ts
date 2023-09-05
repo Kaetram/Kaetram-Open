@@ -1,11 +1,13 @@
 import Menu from './menu';
 
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Player from '../entity/character/player/player';
 import type Task from '../entity/character/player/task';
 
 export default class Achievements extends Menu {
+    public override identifier: number = Modules.Interfaces.Achievements;
+
     private tabArrowLeft: HTMLDivElement = document.querySelector('#achievements-tab-arrow-left')!;
     private tabArrowRight: HTMLDivElement = document.querySelector(
         '#achievements-tab-arrow-right'

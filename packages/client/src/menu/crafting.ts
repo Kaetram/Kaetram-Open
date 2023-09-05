@@ -14,6 +14,8 @@ import type { CraftingPacketData } from '@kaetram/common/types/messages/outgoing
 type SelectCallback = (key: string) => void;
 type CraftCallback = (key: string, amount: number) => void;
 export default class Crafting extends Menu {
+    public override identifier: number = Modules.Interfaces.Crafting;
+
     // Where we store the available options for crafting.
     private options: HTMLUListElement = document.querySelector('#crafting-options')!;
     private requirements: HTMLUListElement = document.querySelector('#crafting-requirements')!;

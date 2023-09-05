@@ -2,8 +2,11 @@
 import log from '../lib/log';
 import Util from '../utils/util';
 
+import type { Modules } from '@kaetram/common/network';
+
 export default abstract class Menu {
     public hideOnShow = true;
+    public identifier: Modules.Interfaces | number = -1;
 
     protected container: HTMLElement;
     protected close: HTMLElement;

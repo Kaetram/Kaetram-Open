@@ -14,6 +14,8 @@ import type { SerializedStoreItem } from '@kaetram/common/network/impl/store';
 type SelectCallback = (opcode: Opcodes.Store, key: string, index: number, count?: number) => void;
 
 export default class Store extends Menu {
+    public override identifier: number = Modules.Interfaces.Store;
+
     private key = ''; // Key of the current store
     private currency = 'gold'; // Key of the currency used, defaults to gold.
 

@@ -28,6 +28,8 @@ interface SlotElement extends HTMLElement {
 }
 
 export default class Inventory extends Menu {
+    public override identifier: number = Modules.Interfaces.Inventory;
+
     private list: HTMLUListElement = document.querySelector('#inventory-container > ul')!;
 
     // Used for when we open the action menu interface.

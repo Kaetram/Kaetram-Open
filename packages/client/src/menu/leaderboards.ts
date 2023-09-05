@@ -20,6 +20,8 @@ interface ResultInfo {
 }
 
 export default class Leaderboards extends Menu {
+    public override identifier: number = Modules.Interfaces.Leaderboards;
+
     // Where we show all the possible leaderboards
     private searchList: HTMLUListElement = document.querySelector('#leaderboards-search > ul')!;
 
