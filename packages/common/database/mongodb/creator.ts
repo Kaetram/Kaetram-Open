@@ -2,10 +2,11 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import config from '@kaetram/common/config';
 
-import type { GuildData } from '@kaetram/common/network/impl/guild';
-import type { Modules } from '@kaetram/common/network';
-import type { Collection, Db } from 'mongodb';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
+import type { Collection, Db } from 'mongodb';
+import type { Modules } from '@kaetram/common/network';
+import type { GuildData } from '@kaetram/common/network/impl/guild';
+import type { SerializedEffects } from '@kaetram/common/types/status';
 
 // Used for password reset
 export interface ResetToken {
@@ -27,6 +28,7 @@ export interface PlayerInfo {
     userAgent: string;
     rank: Modules.Ranks;
     poison: PoisonInfo;
+    effects: SerializedEffects;
     hitPoints: number;
     mana: number;
     orientation: Modules.Orientation;
@@ -284,6 +286,7 @@ export default class Creator {
                 type: player.poison ? player.poison.type : -1,
                 remaining: player.poison ? player.poison.getRemainingTime() : -1
             },
+            effects: player.status.serialize(),
             hitPoints: player.hitPoints.getHitPoints(),
             mana: player.mana.getMana(),
             orientation: player.orientation,

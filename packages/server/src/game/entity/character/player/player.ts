@@ -275,6 +275,9 @@ export default class Player extends Character {
 
         // Spawn the pet if the player has one.
         if (data.pet) this.setPet(data.pet);
+
+        // Apply the status effects from the database.
+        this.status.load(data.effects);
     }
 
     /**
@@ -1475,9 +1478,7 @@ export default class Player extends Character {
         );
 
         this.notify(
-            `misc:FREEZE_IMMUNITY_WORN_OFF;duration=${
-                Modules.Constants.SNOW_POTION_DURATION / 1000
-            }`
+            `misc:FREEZE_IMMUNITY;duration=${Modules.Constants.SNOW_POTION_DURATION / 1000}`
         );
     }
 
