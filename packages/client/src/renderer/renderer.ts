@@ -886,12 +886,22 @@ export default class Renderer {
         if (entity.isItem() && entity.count > 1)
             return this.drawText(`${entity.count}`, x, y, true, colour, stroke, fontSize, true);
 
-        if (entity.hidden || entity.healthBarVisible || !(entity instanceof Character)) return;
+        if (
+            entity.hidden ||
+            entity.healthBarVisible ||
+            entity.exclamation ||
+            entity.blueExclamation
+        )
+            return;
 
         let drawNames = this.drawNames && entity.drawNames(),
+            drawLevels = this.drawLevels && !entity.isNPC(),
             nameY = this.drawLevels ? y - 7 : y - 4,
             levelY = this.drawLevels ? y : y - 7,
             levelText = `Level ${entity.level}`;
+
+        // NPCs will have their name displayed closer to their sprite.
+        if (entity.isNPC()) nameY = y - 2;
 
         // Handle additional player rank and crown logic.
         if (entity.isPlayer()) {
@@ -914,7 +924,7 @@ export default class Renderer {
         if (drawNames) this.drawText(entity.name, x, nameY, true, colour, stroke, fontSize, true);
 
         // Draw the level if we're drawing levels.
-        if (this.drawLevels && entity.level)
+        if (drawLevels && entity.level)
             this.drawText(levelText, x, levelY, true, colour, stroke, fontSize, true);
     }
 

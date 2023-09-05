@@ -618,7 +618,8 @@ export default class Regions {
      */
 
     private getDisplayInfo(player: Player): EntityDisplayInfo[] {
-        let entityData: EntityDisplayInfo[] = [];
+        let entityData: EntityDisplayInfo[] = [],
+            instances: string[] = []; // Used for preventing duplicates.
 
         this.forEachSurroundingRegion(player.region, (surroundingRegion: number) => {
             let region = this.get(surroundingRegion);
@@ -631,7 +632,12 @@ export default class Regions {
             region.forEachEntity((entity: Entity) => {
                 if (!entity.hasDisplayInfo(player)) return;
 
+                // Prevents duplicate entity data.
+                if (instances.includes(entity.instance)) return;
+
                 entityData.push(entity.getDisplayInfo(player));
+
+                instances.push(entity.instance);
             });
         });
 

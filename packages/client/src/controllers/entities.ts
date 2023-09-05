@@ -469,6 +469,8 @@ export default class EntitiesController {
         for (let entity of Object.values(this.entities)) {
             entity.nameColour = '';
             entity.customScale = 0;
+            entity.exclamation = false;
+            entity.blueExclamation = false;
         }
     }
 

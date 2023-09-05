@@ -1329,10 +1329,6 @@ export default class Connection {
             // Display the exclamations if they're set onto the entity.
             if (update.exclamation === 'achievement') entity.exclamation = true;
             else if (update.exclamation === 'blue') entity.blueExclamation = true;
-            else {
-                entity.exclamation = false;
-                entity.blueExclamation = false;
-            }
         }
     }
 
