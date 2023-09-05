@@ -306,6 +306,14 @@ export default class MenuController {
     }
 
     /**
+     * @returns The welcome menu object.
+     */
+
+    public getWelcome(): Welcome {
+        return this.welcome;
+    }
+
+    /**
      * Callback handler for when an item in the inventory is selected.
      * @param fromIndex Index of the item selected.
      * @param opcode Opcode identifying the type of action performed on the item.

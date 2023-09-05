@@ -75,3 +75,23 @@
         color: transparent;
     }
 }
+
+@keyframes animate-instructions {
+    0% {
+        background-position-x: 0;
+    }
+
+    100% {
+        background-position-x: -12em;
+    }
+}
+
+@keyframes animate-instructions-click {
+    0% {
+        background-position-x: 0;
+    }
+
+    100% {
+        background-position-x: -6em;
+    }
+}

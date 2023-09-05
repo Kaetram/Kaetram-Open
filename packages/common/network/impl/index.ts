@@ -45,5 +45,6 @@ export { default as RankPacket } from './rank';
 export { default as PlayerPacket } from './player';
 export { default as RelayPacket } from './relay';
 export { default as CraftingPacket } from './crafting';
-export { default as CountdownPacket } from './countdown';
+export { default as InterfacePacket } from './interface';
 export { default as LootBagPacket } from './lootbag';
+export { default as CountdownPacket } from './countdown';
