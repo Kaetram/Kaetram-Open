@@ -25,6 +25,7 @@ import type {
     GuildPacketCallback,
     HandshakePacketCallback,
     HealPacketCallback,
+    InterfacePacketCallback,
     LootBagPacketCallback,
     MapPacketCallback,
     MinigamePacketCallback,
@@ -99,6 +100,7 @@ export default class Messages {
     private friendsCallback?: FriendsPacketCallback;
     private rankCallback?: RankPacketCallback;
     private craftingCallback?: CraftingPacketCallback;
+    private interfaceCallback?: InterfacePacketCallback;
     private lootBagCallback?: LootBagPacketCallback;
     private countdownCallback?: CountdownPacketCallback;
 
@@ -158,6 +160,7 @@ export default class Messages {
         this.messages[Packets.Friends] = () => this.friendsCallback;
         this.messages[Packets.Rank] = () => this.rankCallback;
         this.messages[Packets.Crafting] = () => this.craftingCallback;
+        this.messages[Packets.Interface] = () => this.interfaceCallback;
         this.messages[Packets.LootBag] = () => this.lootBagCallback;
         this.messages[Packets.Countdown] = () => this.countdownCallback;
     }
@@ -481,6 +484,10 @@ export default class Messages {
 
     public onCrafting(callback: CraftingPacketCallback): void {
         this.craftingCallback = callback;
+    }
+
+    public onInterface(callback: InterfacePacketCallback): void {
+        this.interfaceCallback = callback;
     }
 
     public onLootBag(callback: LootBagPacketCallback): void {
