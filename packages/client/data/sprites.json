@@ -233,17 +233,17 @@
     { "id": "player/shield/shieldofliberty", "offsetY": -24 },
     { "id": "player/shield/shieldofglory", "width": 32, "height": 32, "offsetX": -8 },
 
-    { "id": "crowns/artist" },
-    { "id": "crowns/tier1" },
-    { "id": "crowns/tier2" },
-    { "id": "crowns/tier3" },
-    { "id": "crowns/tier4" },
-    { "id": "crowns/tier5" },
-    { "id": "crowns/tier6" },
-    { "id": "crowns/tier7", "width": 17 },
-    { "id": "crowns/bronzemedal", "width": 12, "height": 12 },
-    { "id": "crowns/goldmedal", "width": 12, "height": 12 },
-    { "id": "crowns/silvermedal", "width": 12, "height": 12 },
+    { "id": "crowns/artist", "preload": true },
+    { "id": "crowns/tier1", "preload": true },
+    { "id": "crowns/tier2", "preload": true },
+    { "id": "crowns/tier3", "preload": true },
+    { "id": "crowns/tier4", "preload": true },
+    { "id": "crowns/tier5", "preload": true },
+    { "id": "crowns/tier6", "preload": true },
+    { "id": "crowns/tier7", "preload": true, "width": 17 },
+    { "id": "crowns/bronzemedal", "preload": true, "width": 12, "height": 12 },
+    { "id": "crowns/goldmedal", "preload": true, "width": 12, "height": 12 },
+    { "id": "crowns/silvermedal", "preload": true, "width": 12, "height": 12 },
 
     { "id": "cursors/hand", "width": 14, "height": 14 },
     { "id": "cursors/axe", "width": 14, "height": 14 },
@@ -1582,19 +1582,6 @@
             }
         },
         "offsetY": -22
-    },
-    {
-        "id": "death",
-        "width": 24,
-        "height": 24,
-        "animations": {
-            "death": {
-                "length": 6,
-                "row": 0
-            }
-        },
-        "offsetX": -4,
-        "offsetY": -4
     },
     { "id": "mobs/deathknight", "width": 42, "height": 42, "offsetX": -13, "offsetY": -17 },
     {
@@ -4467,7 +4454,6 @@
         "offsetX": -24,
         "offsetY": -39
     },
-    { "id": "shadow16" },
     { "id": "mobs/shadowregion", "width": 42, "height": 42, "offsetX": -14, "offsetY": -21 },
     {
         "id": "effects/shieldbenef",
@@ -5148,7 +5134,6 @@
         },
         "offsetY": -30
     },
-    { "id": "sparks", "offsetX": 0, "offsetY": 0 },
     {
         "id": "mobs/spectre",
         "width": 34,
@@ -6363,6 +6348,37 @@
         },
         "offsetX": -7,
         "offsetY": -13
+    },
+
+    {
+        "id": "death",
+        "width": 24,
+        "height": 24,
+        "preload": true,
+        "animations": {
+            "death": {
+                "length": 6,
+                "row": 0
+            }
+        },
+        "offsetX": -4,
+        "offsetY": -4
+    },
+    { "id": "shadow16", "preload": true },
+    { "id": "sparks", "preload": true, "offsetX": 0, "offsetY": 0 },
+    {
+        "id": "exclamation",
+        "idleSpeed": 360,
+        "animations": { "idle_down": { "length": 2, "row": 0 } },
+        "preload": true,
+        "offsetY": -24
+    },
+    {
+        "id": "exclamationblue",
+        "idleSpeed": 360,
+        "animations": { "idle_down": { "length": 2, "row": 0 } },
+        "preload": true,
+        "offsetY": -24
     },
 
     { "id": "items/accuracypotion" },

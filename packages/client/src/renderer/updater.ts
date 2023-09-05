@@ -194,11 +194,9 @@ export default class Updater {
 
         if (target && this.game.input.selectedCellVisible) target.update(this.game.time);
 
-        if (!this.sprites) return;
-
-        let sparks = this.sprites.sparksAnimation;
-
-        sparks?.update(this.game.time);
+        // Iterate through the preloaded animation sprites and update them.
+        for (let animation of this.sprites?.preloadedAnimations || [])
+            animation.update(this.game.time);
     }
 
     /**
