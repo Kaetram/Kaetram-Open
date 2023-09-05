@@ -44,6 +44,10 @@ export default abstract class Entity {
 
     private visible = true;
 
+    // Exclamation points display above.
+    public exclamation = false;
+    public blueExclamation = false;
+
     public fading = false;
     public hurt = false;
     public silhouette = false;

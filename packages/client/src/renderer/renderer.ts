@@ -131,20 +131,6 @@ export default class Renderer {
     protected fps = 0;
     protected frameCount = 0;
 
-    // Static sprites
-    protected shadowSprite!: Sprite;
-    protected sparksSprite!: Sprite;
-    protected silverMedal!: Sprite;
-    protected goldMedal!: Sprite;
-    protected crownArtist!: Sprite;
-    protected crownTier1!: Sprite;
-    protected crownTier2!: Sprite;
-    protected crownTier3!: Sprite;
-    protected crownTier4!: Sprite;
-    protected crownTier5!: Sprite;
-    protected crownTier6!: Sprite;
-    protected crownTier7!: Sprite;
-
     public constructor(protected game: Game, public type = 'canvas') {
         this.map = game.map;
         this.camera = game.camera;
@@ -154,9 +140,6 @@ export default class Renderer {
 
         // Load the sizes of the canvases
         this.loadSizes();
-
-        // Load the static sprites
-        this.loadStaticSprites();
 
         // Event listeners for zooming in and out
         this.zoomIn.addEventListener('click', () => this.game.zoom(0.2));
@@ -199,62 +182,6 @@ export default class Renderer {
 
         // Remove the player's light source and re-add it.
         this.resizeLights();
-    }
-
-    /**
-     * Loads statically used sprites that are only necessary
-     * in the renderer. The shadow gets displayed under each
-     * entity, and the sparks are displayed around items.
-     */
-
-    public loadStaticSprites(): void {
-        this.shadowSprite = this.game.sprites.get('shadow16')!;
-
-        if (!this.shadowSprite.loaded) this.shadowSprite.load();
-
-        this.sparksSprite = this.game.sprites.get('sparks')!;
-
-        if (!this.sparksSprite.loaded) this.sparksSprite.load();
-
-        this.silverMedal = this.game.sprites.get('crowns/silvermedal')!;
-
-        if (!this.silverMedal.loaded) this.silverMedal.load();
-
-        this.goldMedal = this.game.sprites.get('crowns/goldmedal')!;
-
-        if (!this.goldMedal.loaded) this.goldMedal.load();
-
-        this.crownArtist = this.game.sprites.get('crowns/artist')!;
-
-        if (!this.crownArtist.loaded) this.crownArtist.load();
-
-        this.crownTier1 = this.game.sprites.get('crowns/tier1')!;
-
-        if (!this.crownTier1.loaded) this.crownTier1.load();
-
-        this.crownTier2 = this.game.sprites.get('crowns/tier2')!;
-
-        if (!this.crownTier2.loaded) this.crownTier2.load();
-
-        this.crownTier3 = this.game.sprites.get('crowns/tier3')!;
-
-        if (!this.crownTier3.loaded) this.crownTier3.load();
-
-        this.crownTier4 = this.game.sprites.get('crowns/tier4')!;
-
-        if (!this.crownTier4.loaded) this.crownTier4.load();
-
-        this.crownTier5 = this.game.sprites.get('crowns/tier5')!;
-
-        if (!this.crownTier5.loaded) this.crownTier5.load();
-
-        this.crownTier6 = this.game.sprites.get('crowns/tier6')!;
-
-        if (!this.crownTier6.loaded) this.crownTier6.load();
-
-        this.crownTier7 = this.game.sprites.get('crowns/tier7')!;
-
-        if (!this.crownTier7.loaded) this.crownTier7.load();
     }
 
     /**
@@ -646,18 +573,18 @@ export default class Renderer {
 
         // Draw the entity shadowf
         if (entity.hasShadow()) {
-            this.entitiesContext.globalCompositeOperation = 'source-over';
+            let shadowSprite = this.game.sprites.get('shadow')!;
 
             this.entitiesContext.drawImage(
-                this.shadowSprite.image,
+                shadowSprite.image,
                 0,
                 0,
-                this.shadowSprite.width,
-                this.shadowSprite.height,
+                shadowSprite.width,
+                shadowSprite.height,
                 0,
                 entity.shadowOffsetY,
-                this.shadowSprite.width,
-                this.shadowSprite.height
+                shadowSprite.width,
+                shadowSprite.height
             );
         }
 
@@ -691,6 +618,10 @@ export default class Renderer {
 
     private drawEntityFore(entity: Entity): void {
         if (entity.isItem()) return this.drawSparks();
+
+        // Draw the exclamations if the entity has them.
+        if (entity.exclamation) this.drawExclamation();
+        if (entity.blueExclamation) this.drawBlueExclamation();
 
         if (!(entity instanceof Character)) return;
 
@@ -809,24 +740,66 @@ export default class Renderer {
     }
 
     /**
-     * Draws the sprites sparks on top of items
-     * to give them the sparkle effect.
+     * Draws the static sparks sprite that are displayed on top of an
+     * item entity.
      */
 
     private drawSparks(): void {
-        let { sparksAnimation } = this.game.entities.sprites,
-            sparksFrame = sparksAnimation.frame;
+        let sparksSprite = this.game.sprites.get('sparks')!,
+            animation = sparksSprite.animations.idle_down;
 
         this.entitiesContext.drawImage(
-            this.sparksSprite.image,
-            this.sparksSprite.width * sparksFrame.index,
-            this.sparksSprite.height * sparksAnimation.row,
-            this.sparksSprite.width,
-            this.sparksSprite.height,
+            sparksSprite.image,
+            sparksSprite.width * animation.frame.index,
+            sparksSprite.height * animation.row,
+            sparksSprite.width,
+            sparksSprite.height,
             0,
             0,
-            this.sparksSprite.width,
-            this.sparksSprite.height
+            sparksSprite.width,
+            sparksSprite.height
+        );
+    }
+
+    /**
+     * Draws the exclamation animation that is drawn above NPCs.
+     */
+
+    private drawExclamation(): void {
+        let sprite = this.game.sprites.get('exclamation')!,
+            animation = sprite.animations.idle_down;
+
+        this.entitiesContext.drawImage(
+            sprite.image,
+            sprite.width * animation.frame.index,
+            sprite.height * animation.row,
+            sprite.width,
+            sprite.height,
+            0,
+            sprite.offsetY,
+            sprite.width,
+            sprite.height
+        );
+    }
+
+    /**
+     * Draws the blue exclamation animation that is drawn above NPCs.
+     */
+
+    private drawBlueExclamation(): void {
+        let sprite = this.game.sprites.get('exclamationblue')!,
+            animation = sprite.animations.idle_down;
+
+        this.entitiesContext.drawImage(
+            sprite.image,
+            sprite.width * animation.frame.index,
+            sprite.height * animation.row,
+            sprite.width,
+            sprite.height,
+            0,
+            sprite.offsetY,
+            sprite.width,
+            sprite.height
         );
     }
 
@@ -1522,43 +1495,43 @@ export default class Renderer {
     protected getCrown(key: string): Sprite | undefined {
         switch (key) {
             case 'goldmedal': {
-                return this.goldMedal;
+                return this.game.sprites.get('crowns/goldmedal');
             }
 
             case 'silvermedal': {
-                return this.silverMedal;
+                return this.game.sprites.get('crowns/silvermedal');
             }
 
             case 'crown-artist': {
-                return this.crownArtist;
+                return this.game.sprites.get('crowns/artist');
             }
 
             case 'crown-tier1': {
-                return this.crownTier1;
+                return this.game.sprites.get('crowns/tier1');
             }
 
             case 'crown-tier2': {
-                return this.crownTier2;
+                return this.game.sprites.get('crowns/tier2');
             }
 
             case 'crown-tier3': {
-                return this.crownTier3;
+                return this.game.sprites.get('crowns/tier3');
             }
 
             case 'crown-tier4': {
-                return this.crownTier4;
+                return this.game.sprites.get('crowns/tier4');
             }
 
             case 'crown-tier5': {
-                return this.crownTier5;
+                return this.game.sprites.get('crowns/tier5');
             }
 
             case 'crown-tier6': {
-                return this.crownTier6;
+                return this.game.sprites.get('crowns/tier6');
             }
 
             case 'crown-tier7': {
-                return this.crownTier7;
+                return this.game.sprites.get('crowns/tier7');
             }
         }
     }

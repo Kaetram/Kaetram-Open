@@ -14,6 +14,7 @@ export interface SpriteData {
     id: string;
     width?: number;
     height?: number;
+    preload?: boolean;
     idleSpeed?: number;
     animations?: AnimationData;
     offsetX?: number;
@@ -38,6 +39,7 @@ export default class Sprite {
     public idleSpeed = 250;
 
     public loaded = false;
+    public preload = false;
     public hasDeathAnimation = false;
 
     public animations: Animations = {};
@@ -59,6 +61,8 @@ export default class Sprite {
 
         this.width = this.data.width ?? dimensions;
         this.height = this.data.height ?? dimensions;
+
+        this.preload = this.data.preload ?? false;
 
         this.offsetX = this.data.offsetX ?? offset.x;
         this.offsetY = this.data.offsetY ?? offset.y;

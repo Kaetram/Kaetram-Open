@@ -104,6 +104,21 @@ export default class NPC extends Entity {
     }
 
     /**
+     * Gets the exclamation sign that should be displayed above the NPC.
+     * @param player The player for which we are checking the NPC's status.
+     * @returns The string of the exclamation sign.
+     */
+
+    private getExclamation(player?: Player): string {
+        if (player) {
+            if (player.quests.getQuestFromNPC(this)) return 'blue';
+            if (player?.achievements.getAchievementFromEntity(this)) return 'achievement';
+        }
+
+        return '';
+    }
+
+    /**
      * Grabs the display info for the NPC.
      * @param player Optional paramater to grab the display based on the player.
      * @returns An object containing display info data.
@@ -112,7 +127,8 @@ export default class NPC extends Entity {
     public override getDisplayInfo(player?: Player): EntityDisplayInfo {
         return {
             instance: this.instance,
-            colour: this.getNameColour(player)
+            colour: this.getNameColour(player),
+            exclamation: this.getExclamation(player)
         };
     }
 

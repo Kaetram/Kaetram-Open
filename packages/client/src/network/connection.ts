@@ -1325,6 +1325,14 @@ export default class Connection {
 
             if (update.colour) entity.nameColour = update.colour;
             if (update.scale) entity.customScale = update.scale;
+
+            // Display the exclamations if they're set onto the entity.
+            if (update.exclamation === 'achievement') entity.exclamation = true;
+            else if (update.exclamation === 'blue') entity.blueExclamation = true;
+            else {
+                entity.exclamation = false;
+                entity.blueExclamation = false;
+            }
         }
     }
 

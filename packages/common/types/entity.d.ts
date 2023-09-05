@@ -11,6 +11,7 @@ export interface EntityDisplayInfo {
     instance: string;
     colour?: string;
     scale?: number;
+    exclamation?: string;
 }
 
 /**
