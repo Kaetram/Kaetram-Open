@@ -15,6 +15,7 @@ type SelectCallback = (type: Modules.ContainerType, index: number, count?: numbe
 
 export default class Trade extends Menu {
     public override hideOnShow = false;
+    public override identifier: number = Modules.Interfaces.Trade;
 
     private inventoryList: HTMLUListElement = document.querySelector(
         '#trade-inventory-slots > ul'

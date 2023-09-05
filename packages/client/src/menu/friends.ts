@@ -3,7 +3,7 @@ import Menu from './menu';
 import Util from '../utils/util';
 import { isLargeScreen } from '../utils/detect';
 
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Game from '../game';
 import type Player from '../entity/character/player/player';
@@ -15,6 +15,8 @@ interface FriendsElement extends HTMLLIElement {
 }
 
 export default class Friends extends Menu {
+    public override identifier: number = Modules.Interfaces.Friends;
+
     private player: Player;
 
     private page: HTMLDivElement = document.querySelector('#friends-page')!;

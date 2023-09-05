@@ -15,6 +15,8 @@ interface LootElement extends HTMLLIElement {
 }
 
 export default class LootBag extends Menu {
+    public override identifier: number = Modules.Interfaces.Lootbag;
+
     private itemList: HTMLUListElement = document.querySelector('#lootbag-items > ul')!;
     private inventoryList: HTMLUListElement = document.querySelector('#lootbag-inventory > ul')!;
 

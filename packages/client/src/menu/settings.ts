@@ -2,9 +2,13 @@ import Menu from './menu';
 
 import { isMobile, isMacintoshFirefox } from '../utils/detect';
 
+import { Modules } from '@kaetram/common/network';
+
 import type Game from '../game';
 
 export default class Settings extends Menu {
+    public override identifier: number = Modules.Interfaces.Settings;
+
     private musicSlider: HTMLInputElement = document.querySelector('#music')!;
     private soundSlider: HTMLInputElement = document.querySelector('#sound')!;
     private brightnessSlider: HTMLInputElement = document.querySelector('#brightness')!;

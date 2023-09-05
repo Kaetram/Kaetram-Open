@@ -15,6 +15,8 @@ type UnequipCallback = (type: Modules.Equipment) => void;
 type ImageOrientation = 'down' | 'right' | 'up' | 'left';
 
 export default class Equipments extends Menu {
+    public override identifier: number = Modules.Interfaces.Equipments;
+
     private player: Player;
     private sprites: SpritesController;
 
