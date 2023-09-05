@@ -1,6 +1,5 @@
 import log from '../lib/log';
 import NPC from '../entity/npc/npc';
-import Grids from '../renderer/grids';
 import Item from '../entity/objects/item';
 import Chest from '../entity/objects/chest';
 import Mob from '../entity/character/mob/mob';
@@ -11,6 +10,7 @@ import Effect from '../entity/objects/effect';
 
 import { Modules } from '@kaetram/common/network';
 
+import type Grids from '../map/grids';
 import type Game from '../game';
 import type Entity from '../entity/entity';
 import type SpritesController from './sprites';
@@ -39,8 +39,8 @@ export default class EntitiesController {
     public decrepit: Entity[] = [];
 
     public constructor(private game: Game) {
-        this.grids = new Grids(game.map);
         this.sprites = game.sprites;
+        this.grids = game.map.grids;
 
         game.input.loadCursors();
     }
