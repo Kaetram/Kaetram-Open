@@ -4,8 +4,6 @@ import Storage from './utils/storage';
 import Util from './utils/util';
 import { onSecondaryPress } from './utils/press';
 
-import Updates from '@kaetram/common/text/en/updates.json';
-
 import type { SerializedServer } from '@kaetram/common/types/network';
 
 type EmptyCallback = () => void;
@@ -281,8 +279,6 @@ export default class App {
 
         this.updateLoader();
         this.saveLogin();
-
-        setTimeout(() => this.displayNews(), 1000);
     }
 
     /**
@@ -405,37 +401,6 @@ export default class App {
 
     public updateLoader(message = ''): void {
         this.loading.innerHTML = message ? message + this.getLoaderDots() : '';
-    }
-
-    /**
-     * When a new player or an update to the game has occurred we send a scroll
-     * notification. In the case of a new player we welcome them to the game,
-     * in the case of an update, we show the update changelog using the JSON in `common`.
-     */
-
-    public displayNews(): void {
-        let title = document.querySelector('#news-title')!,
-            content = document.querySelector('#news-content')!;
-
-        if (!title || !content) return;
-
-        // Show the default welcome screen when there is a new player.
-        if (this.storage.isNew()) return this.body.classList.add('news');
-
-        // Display new version changelogs.
-        if (this.storage.newVersion) {
-            title.textContent = `Kaetram ${this.config.version} Changelog`;
-
-            let changes = Updates[this.config.version as keyof typeof Updates];
-
-            if (!changes) return;
-
-            content.textContent = '';
-
-            for (let cc of changes.content) content.innerHTML += `${cc}<br>`;
-
-            this.body.classList.add('news');
-        }
     }
 
     /**

@@ -27,7 +27,6 @@ import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();
-    private welcome: Welcome = new Welcome();
     private crafting: Crafting;
 
     private inventory: Inventory;
@@ -47,6 +46,7 @@ export default class MenuController {
     private leaderboards: Leaderboards;
     private guilds: Guilds;
     private lootBag: LootBag;
+    private welcome: Welcome;
 
     public header: Header;
 
@@ -72,6 +72,7 @@ export default class MenuController {
         this.leaderboards = new Leaderboards(game.app);
         this.guilds = new Guilds(game);
         this.lootBag = new LootBag(this.inventory);
+        this.welcome = new Welcome(game);
 
         this.menus = {
             inventory: this.inventory,
