@@ -1,11 +1,12 @@
 import MobHandler from './handler';
 
+import Character from '../character';
+import Item from '../../objects/item';
+import Formulas from '../../../../info/formulas';
 import rawData from '../../../../../data/mobs.json';
+import Spawns from '../../../../../data/spawns.json';
 import dropTables from '../../../../../data/tables.json';
 import PluginIndex from '../../../../../data/plugins/mobs';
-import Spawns from '../../../../../data/spawns.json';
-import Formulas from '../../../../info/formulas';
-import Character from '../character';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
@@ -16,7 +17,6 @@ import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
 import type World from '../../../world';
-import type Entity from '../../entity';
 import type Chest from '../../objects/chest';
 import type Player from '../player/player';
 import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
@@ -263,16 +263,33 @@ export default class Mob extends Character {
         // No drops were calculated, so we stop here.
         if (drops.length === 0) return;
 
-        for (let drop of drops)
+        // If it's a single drop, drop only the item.
+        if (drops.length === 1) {
             this.world.entities.spawnItem(
-                drop.key,
+                drops[0].key,
                 this.x,
                 this.y,
                 true,
-                drop.count,
+                drops[0].count,
                 {},
                 player.username
             );
+            return;
+        }
+
+        /**
+         * If we have more than two items in our drops list, then we must
+         * create a lootbag. First we turn all the ItemDrop types into actual
+         * item objects, we add those items to the lootbag alongside with spawning it.
+         */
+
+        let items: Item[] = [];
+
+        // Create the item objects from the ItemDrop types.
+        for (let drop of drops) items.push(new Item(drop.key, -1, -1, false, drop.count));
+
+        // Spawn the loot bag.
+        this.world.entities.spawnLootBag(this.x, this.y, player.username, items);
     }
 
     /**
