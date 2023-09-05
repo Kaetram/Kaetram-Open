@@ -1,4 +1,5 @@
 import Util from '../utils/util';
+import { isMobile } from '../utils/detect';
 
 import { Packets } from '@kaetram/common/network';
 
@@ -18,6 +19,8 @@ export default class ChatController {
         this.button.addEventListener('click', () => this.toggle());
 
         this.input.addEventListener('blur', () => this.hide());
+
+        if (isMobile()) this.input.addEventListener('click', () => this.input.focus());
     }
 
     /**
@@ -126,7 +129,7 @@ export default class ChatController {
             else Util.fadeIn(this.input);
 
             // Fade input in, clear the input field, and focus it.
-            this.input.focus();
+            if (!isMobile()) this.input.focus();
             this.input.value = '';
         } else this.hideChatFrame();
 
