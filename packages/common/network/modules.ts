@@ -42,6 +42,29 @@ export enum EntityType {
     Effect
 }
 
+export enum Interfaces {
+    Inventory,
+    Crafting,
+    Spells,
+    Bank,
+    Store,
+    Quests,
+    Achievements,
+    Skills,
+    Trade,
+    Settings,
+    Warp,
+    Leaderboards,
+    Guilds,
+    Friends,
+    Enchant,
+    Customization,
+    Book,
+    Lootbag,
+    Equipments,
+    Welcome
+}
+
 export enum AbilityType {
     Active,
     Passive

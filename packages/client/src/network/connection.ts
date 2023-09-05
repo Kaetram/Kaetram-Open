@@ -62,7 +62,8 @@ import type {
     GuildPacketData,
     CraftingPacketData,
     LootBagPacketData,
-    CountdownPacketData
+    CountdownPacketData,
+    InterfacePacketData
 } from '@kaetram/common/types/messages/outgoing';
 import type { TradePacketValues } from '@kaetram/common/network/impl/trade';
 import type { EquipmentPacketValues } from '@kaetram/common/network/impl/equipment';
@@ -161,6 +162,7 @@ export default class Connection {
         this.messages.onFriends(this.handleFriends.bind(this));
         this.messages.onRank(this.handleRank.bind(this));
         this.messages.onCrafting(this.handleCrafting.bind(this));
+        this.messages.onInterface(this.handleInterface.bind(this));
         this.messages.onLootBag(this.handleLootBag.bind(this));
         this.messages.onCountdown(this.handleCountdown.bind(this));
     }
@@ -1445,6 +1447,29 @@ export default class Connection {
 
     private handleCrafting(opcode: Opcodes.Crafting, info: CraftingPacketData): void {
         this.menu.getCrafting().handle(opcode, info);
+    }
+
+    /**
+     * Generic packet for receiving interface information. These can be used for a wide
+     * variety of interfaces that we want to display to the player (with dynamic information).
+     * @param opcode What type of action to perform (open or close the interface).
+     * @param info Contains what interface we are acting upon and information about it.
+     */
+
+    private handleInterface(opcode: Opcodes.Interface, info: InterfacePacketData): void {
+        let menu = this.menu.get(info.identifier);
+
+        // If the interface doesn't exist, we create it.
+        if (!menu) return;
+
+        switch (opcode) {
+            case Opcodes.Interface.Open: {
+                return menu.show(info);
+            }
+            case Opcodes.Interface.Close: {
+                return menu.hide();
+            }
+        }
     }
 
     /**

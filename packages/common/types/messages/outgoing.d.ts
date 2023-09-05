@@ -51,4 +51,5 @@ export type { RankPacketCallback } from '../../network/impl/rank';
 export type { PlayerPacketData } from '../../network/impl/player';
 export type { CraftingPacketData, CraftingPacketCallback } from '../../network/impl/crafting';
 export type { CountdownPacketData, CountdownPacketCallback } from '../../network/impl/countdown';
+export type { InterfacePacketData, InterfacePacketCallback } from '../../network/impl/interface';
 export type { LootBagPacketData, LootBagPacketCallback } from '../../network/impl/lootbag';

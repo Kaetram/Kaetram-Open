@@ -17,6 +17,8 @@ type SelectCallback = (
 ) => void;
 
 export default class Bank extends Menu {
+    public override identifier: number = Modules.Interfaces.Bank;
+
     private bankList: HTMLUListElement = document.querySelector('#bank-slots')!;
     private inventoryList: HTMLUListElement = document.querySelector('#bank-inventory-slots')!;
 

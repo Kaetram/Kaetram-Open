@@ -74,7 +74,8 @@ export enum Ability {
 export enum Quest {
     Batch,
     Progress,
-    Finish
+    Finish,
+    Interface
 }
 
 export enum Achievement {
@@ -230,4 +231,9 @@ export enum LootBag {
 
 export enum Pet {
     Pickup
+}
+
+export enum Interface {
+    Open,
+    Close
 }
