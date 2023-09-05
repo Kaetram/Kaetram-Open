@@ -1180,10 +1180,10 @@ export default class Commands {
                     }
 
                     case 'terror': {
-                        if (this.player.status.has(Modules.Effects.Terror))
-                            return this.player.status.remove(Modules.Effects.Terror);
+                        if (this.player.status.has(Modules.Effects.TerrorStatus))
+                            return this.player.status.remove(Modules.Effects.TerrorStatus);
 
-                        effect = Modules.Effects.Terror;
+                        effect = Modules.Effects.TerrorStatus;
                         break;
                     }
 
@@ -1200,7 +1200,7 @@ export default class Commands {
                     }
                 }
 
-                return this.player.status.add(effect);
+                return this.player.status.addWithTimeout(effect, 60_000);
             }
         }
     }
