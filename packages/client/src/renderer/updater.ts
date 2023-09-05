@@ -240,18 +240,18 @@ export default class Updater {
          * Canvas2D rendering. We also disable animated tiles if the renderer
          * says so.
          */
-        if (this.renderer.isWebGl() || !this.renderer.animateTiles) return;
+        if (!this.renderer.isCanvas() || !this.renderer.animateTiles) return;
 
         // Update the animated tiles.
-        for (let index in (this.renderer as Canvas).animatedTiles) {
-            let tile = (this.renderer as Canvas).animatedTiles[index];
+        for (let identifier in this.renderer.animatedTiles) {
+            let tile = this.renderer.animatedTiles[identifier];
 
             // Update the tile's frame to the postAnimationData if it is expired.
             if (tile.expired) this.game.map.data[tile.index] = tile.postAnimationData!;
 
             // Delete the tile and continue if it's unused or expired.
             if (tile.unused || tile.expired) {
-                delete (this.renderer as Canvas).animatedTiles[index];
+                delete this.renderer.animatedTiles[identifier];
 
                 continue;
             }

@@ -35,6 +35,9 @@ export default class Canvas extends Renderer {
     private tiles: { [id: string]: RendererTile } = {};
     private cells: { [id: number]: RendererCell } = {};
 
+    // Used to keep track of already animated dynamic animated tiles.
+    private animatedDynamicTiles: string[] = [];
+
     // Override for the context types
     private backContext: CanvasRenderingContext2D = this.background.getContext('2d')!;
     private foreContext: CanvasRenderingContext2D = this.foreground.getContext('2d')!;
@@ -376,10 +379,16 @@ export default class Canvas extends Renderer {
      * Creates a new animated tile object and adds the tile id to the list of animated tiles.
      * This ID is used by all tiles that share the same id but are at different positions.
      * @param tileId The tileId of the tile we are adding, this is not the tile index.
+     * @param index Specified when dealing with dynamically animated tiles (tiles that animate once).
      */
 
     private addAnimatedTile(tileId: number, index = -1): void {
-        let identifier = index === -1 ? tileId : `${tileId}-${index}`;
+        let isDynamicallyAnimated = index !== -1,
+            identifier = isDynamicallyAnimated ? `${tileId}-${index}` : tileId;
+
+        // Ignore dynamically animated tiles if they have already been animated.
+        if (isDynamicallyAnimated && this.animatedDynamicTiles.includes(identifier as string))
+            return;
 
         // Create the tile and add it to the list of animated tiles.
         this.animatedTiles[identifier] = new Tile(
@@ -387,8 +396,12 @@ export default class Canvas extends Renderer {
             index,
             this.map.getTileAnimation(tileId),
             false,
-            this.map.isHighTile(tileId)
+            this.map.isHighTile(tileId),
+            isDynamicallyAnimated ? this.map.dynamicAnimatedTiles[index] : undefined
         );
+
+        // If the tile is dynamically animated then we keep track of it and not reset the tiles.
+        if (isDynamicallyAnimated) this.animatedDynamicTiles.push(identifier as string);
 
         // Synchronize all the existing tiles after we add a new one.
         this.resetAnimatedTiles();

@@ -11,6 +11,7 @@ import type Minigame from './minigame';
 import type Equipment from '../entity/character/player/equipment';
 import type Game from '../game';
 import type Map from '../map/map';
+import type Canvas from './canvas';
 import type Camera from './camera';
 import type Splat from './infos/splat';
 import type Entity from '../entity/entity';
@@ -20,6 +21,7 @@ import type Player from '../entity/character/player/player';
 import type { LampData } from '@kaetram/common/types/item';
 import type { ClientTile } from '@kaetram/common/types/map';
 import type { SerializedLight } from '@kaetram/common/network/impl/overlay';
+import type WebGL from './webgl/webgl';
 
 interface Light extends Lamp {
     originalX: number;
@@ -1492,8 +1494,16 @@ export default class Renderer {
      * @returns Whether the current rendering engine is WebGL.
      */
 
-    public isWebGl(): boolean {
+    public isWebGl(): this is WebGL {
         return this.type === 'webgl';
+    }
+
+    /**
+     * @returns Whether or not the current rendering engine is Canvas.
+     */
+
+    public isCanvas(): this is Canvas {
+        return this.type === 'canvas';
     }
 
     /**

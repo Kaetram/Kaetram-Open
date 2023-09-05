@@ -153,8 +153,7 @@ export default class Map {
          * If we're in low power mode just store the tile data as is. Otherwise we store
          * the animated data if specified and default to the data if not.
          */
-
-        this.data[index] = useAnimationData ? tileData : animationData || tileData;
+        this.data[index] = useAnimationData ? animationData || tileData : tileData;
 
         // If the tile contains an animation flag, we store it in the dynamic animated tiles dictionary.
         if (animationData) this.dynamicAnimatedTiles[index] = tileData;
