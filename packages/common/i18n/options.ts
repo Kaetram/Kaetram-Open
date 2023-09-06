@@ -149,6 +149,7 @@ export let locales: { [K in Locale]: string } = {
     de: 'de-DE',
     es: 'es-ES',
     fr: 'fr-FR',
+    pt: 'pt-PT',
     ro: 'ro-RO',
     ru: 'ru-RU'
 } as const;

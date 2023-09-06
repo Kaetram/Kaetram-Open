@@ -49,6 +49,7 @@ export enum Interfaces {
     Bank,
     Store,
     Quests,
+    Quest,
     Achievements,
     Skills,
     Trade,

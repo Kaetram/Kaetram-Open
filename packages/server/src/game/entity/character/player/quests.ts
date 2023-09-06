@@ -33,6 +33,7 @@ export default class Quests {
             quest.onProgress(this.handleProgress.bind(this));
             quest.onPointer(this.handlePointer.bind(this));
             quest.onPopup(this.handlePopup.bind(this));
+            quest.onStart((key: string) => this.handleInterface(key));
         }
     }
 
@@ -104,6 +105,17 @@ export default class Quests {
 
     private handlePopup(popup: PopupData): void {
         this.player.popup(popup.title, popup.text, popup.colour);
+    }
+
+    /**
+     * Handles displaying an interface with the quest start. This is an interface
+     * that the player must manually accept before starting the quest.
+     * @param key The key for which we want to display the interface for (used to extract the quest information
+     * on the client side (i.e. name, description, rewards, etc.))
+     */
+
+    private handleInterface(key: string): void {
+        this.player.send(new QuestPacket(Opcodes.Quest.Start, { key }));
     }
 
     /**

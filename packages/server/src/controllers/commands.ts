@@ -713,7 +713,9 @@ export default class Commands {
             }
 
             case 'resetquests': {
-                this.player.quests.forEachQuest((quest: Quest) => quest.setStage(0));
+                this.player.quests.forEachQuest((quest: Quest) => {
+                    quest.setStage(0, undefined, true, true);
+                });
                 break;
             }
 
@@ -722,7 +724,9 @@ export default class Commands {
 
                 if (!key) return this.player.notify('No quest specified.');
 
-                this.player.quests.get(key)?.setStage(0);
+                let quest = this.player.quests.get(key);
+
+                quest.setStage(0, undefined, true, true);
                 break;
             }
 

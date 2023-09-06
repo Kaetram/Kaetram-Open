@@ -19,6 +19,7 @@ import Guilds from '../menu/guilds';
 import Crafting from '../menu/crafting';
 import LootBag from '../menu/lootbag';
 import Welcome from '../menu/welcome';
+import Quest from '../menu/quest';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -47,6 +48,7 @@ export default class MenuController {
     private guilds: Guilds;
     private lootBag: LootBag;
     private welcome: Welcome;
+    private quest: Quest;
 
     public header: Header;
 
@@ -73,6 +75,7 @@ export default class MenuController {
         this.guilds = new Guilds(game);
         this.lootBag = new LootBag(this.inventory);
         this.welcome = new Welcome(game);
+        this.quest = new Quest(game.player);
 
         this.menus = {
             inventory: this.inventory,
@@ -92,7 +95,9 @@ export default class MenuController {
             leaderboards: this.leaderboards,
             guilds: this.guilds,
             crafting: this.crafting,
-            welcome: this.welcome
+            lootBag: this.lootBag,
+            welcome: this.welcome,
+            quest: this.quest
         };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
@@ -119,6 +124,8 @@ export default class MenuController {
         this.crafting.onCraft(this.handleCraftingConfirm.bind(this));
 
         this.lootBag.onSelect(this.handleLootBagSelect.bind(this));
+
+        this.quest.onAccept(this.handleQuestAccept.bind(this));
 
         this.load();
     }
@@ -312,6 +319,14 @@ export default class MenuController {
 
     public getWelcome(): Welcome {
         return this.welcome;
+    }
+
+    /**
+     * @returns The quest menu object.
+     */
+
+    public getQuest(): Quest {
+        return this.quest;
     }
 
     /**
@@ -569,6 +584,17 @@ export default class MenuController {
         this.game.socket.send(Packets.LootBag, {
             opcode: Opcodes.LootBag.Take,
             index
+        });
+    }
+
+    /**
+     * Handles accepting a quest from the quest interface.
+     * @param key The key of the quest we are accepting.
+     */
+
+    private handleQuestAccept(key: string): void {
+        this.game.socket.send(Packets.Quest, {
+            key
         });
     }
 

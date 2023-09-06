@@ -4,6 +4,8 @@ import Data from '../../../../../../../data/quests/tutorial.json';
 import config from '@kaetram/common/config';
 
 export default class Tutorial extends Quest {
+    protected override noPrompts = true;
+
     public constructor(key: string) {
         super(key, Data);
 

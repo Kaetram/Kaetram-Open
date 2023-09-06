@@ -108,6 +108,7 @@ export interface QuestPacketData {
     stage?: number;
     subStage?: number;
     quests?: QuestData[]; // Batch of quests
+    interface?: Opcodes.Quest.Start; // Interface actions
 }
 
 export type QuestPacketCallback = (opcode: Opcodes.Quest, info: QuestPacketData) => void;
