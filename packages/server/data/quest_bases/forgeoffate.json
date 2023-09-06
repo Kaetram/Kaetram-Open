@@ -1,0 +1,112 @@
+{
+    "name": "Forge of Fate",
+    "description": "Thrain, the legendary blacksmith, requires unique materials.|Thrain's ambition is to forge the mightiest weapon ever seen. But to do that, he requires rare materials scattered across the land. Embark on a journey to gather these for him.",
+    "rewards": ["3500 gold", "weaponoflegends"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "thrain",
+            "text": [
+                "Ah, adventurer! You've arrived at the right time.",
+                "I aim to craft a weapon of legends, but I need special materials.",
+                "Will you assist me in this noble endeavor?"
+            ],
+            "completedText": ["The first material is called Luminite Ore, found in the Luminescent Caves."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "caveguardian",
+            "text": [
+                "You seek the Luminite Ore? Not many come here for it.",
+                "Prove your worth by defeating the Luminescent Golems, and I shall grant you access."
+            ],
+            "completedText": ["Face the Luminescent Golems!"]
+        },
+        "2": {
+            "task": "kill",
+            "mob": ["luminescentgolems"],
+            "mobCountRequirement": 4
+        },
+        "3": {
+            "task": "talk",
+            "npc": "caveguardian",
+            "text": ["You've proven yourself. Here, take the Luminite Ore."],
+            "itemRewards": [
+                {
+                    "key": "luminiteore",
+                    "count": 3
+                }
+            ],
+            "completedText": ["Return to Thrain with the Luminite Ore."]
+        },
+        "4": {
+            "task": "talk",
+            "npc": "thrain",
+            "text": [
+                "Excellent work! The next material is the Heart of the Forest.",
+                "It's a magical gem located deep within the Enchanted Woods."
+            ],
+            "completedText": ["Venture into the Enchanted Woods and retrieve the Heart of the Forest."]
+        },
+        "5": {
+            "task": "talk",
+            "npc": "treantelder",
+            "text": [
+                "Why do you seek the Heart? Oh, for Thrain's quest?",
+                "Solve the riddles of the woods and the Heart shall be yours."
+            ],
+            "completedText": ["Solve the riddles and navigate the Enchanted Woods."]
+        },
+        "6": {
+            "task": "talk",
+            "npc": "woodsspirit",
+            "text": ["You've solved the riddles. Here is the Heart of the Forest."],
+            "itemRewards": [
+                {
+                    "key": "heartoftheforest",
+                    "count": 1
+                }
+            ],
+            "completedText": ["Return to Thrain with the Heart of the Forest."]
+        },
+        "7": {
+            "task": "talk",
+            "npc": "thrain",
+            "text": [
+                "You've done splendidly. The last item I require is the Ember of Eternity.",
+                "It's said to be in the grasp of the Phoenix atop the Tower of Flames."
+            ],
+            "completedText": ["Climb the Tower of Flames and retrieve the Ember of Eternity."]
+        },
+        "8": {
+            "task": "kill",
+            "mob": ["flamephoenix"],
+            "mobCountRequirement": 1
+        },
+        "9": {
+            "task": "talk",
+            "npc": "thrain",
+            "itemRequirements": [
+                {
+                    "key": "emberofeternity",
+                    "count": 1
+                }
+            ],
+            "itemRewards": [
+                {
+                    "key": "gold",
+                    "count": 3500
+                },
+                {
+                    "key": "weaponoflegends",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Forge of Fate@green@. You have gained 3500 gold and the Weapon of Legends!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

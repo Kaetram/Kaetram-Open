@@ -1,0 +1,95 @@
+{
+    "name": "Mystic Timber",
+    "description": "A legendary tree of magic awaits.|In the heart of the Enchanted Forest lies a tree said to hold boundless magical properties. Only those with pure intent can locate and harness its might.",
+    "rewards": ["magicwood"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "oldlumberjack",
+            "text": [
+                "Adventurer, have you heard tales of the Mystic Tree?",
+                "Its wood is said to possess incredible magical power.",
+                "If you wish to find it, you must first seek the Forest Guardian."
+            ],
+            "completedText": ["Find the Forest Guardian."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "forestguardian",
+            "text": [
+                "Seeker of the Mystic Tree, why do you desire its wood?",
+                "Only those with pure intent can find it.",
+                "To prove your worth, help me with a few tasks."
+            ],
+            "completedText": ["What can you help with?"]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "forestguardian",
+            "text": [
+                "Firstly, the animals of this forest are restless.",
+                "Calm them by collecting the Tranquil Berries nearby.",
+                "Bring me 5 of them, and I'll share the next step."
+            ],
+            "completedText": ["Collect 5 Tranquil Berries."]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "forestguardian",
+            "itemRequirements": [
+                {
+                    "key": "tranquilberries",
+                    "count": 5
+                }
+            ],
+            "text": [
+                "Well done! Now, there's a dark spirit that lurks in the forest.",
+                "Defeat it, and you'll prove your commitment to the balance of nature."
+            ],
+            "completedText": ["Defeat the dark spirit."]
+        },
+        "4": {
+            "task": "kill",
+            "mob": ["darkspirit"],
+            "mobCountRequirement": 1
+        },
+        "5": {
+            "task": "talk",
+            "npc": "forestguardian",
+            "text": [
+                "Impressive! Your intent seems pure.",
+                "To find the Mystic Tree, follow the path of glowing mushrooms.",
+                "But remember, respect the tree and only take what it willingly gives."
+            ],
+            "completedText": ["Follow the path of glowing mushrooms."]
+        },
+        "6": {
+            "task": "talk",
+            "npc": "mystictree",
+            "text": [
+                "You stand before me, adventurer. I sense your pure intent.",
+                "Cut a small piece of my wood, but promise to use its magic for good."
+            ],
+            "completedText": ["Cut the Mystic Tree."]
+        },
+        "7": {
+            "task": "talk",
+            "npc": "oldlumberjack",
+            "itemRequirements": [
+                {
+                    "key": "magicwood",
+                    "count": 1
+                }
+            ],
+            "text": [
+                "You've done it! The power of the Mystic Tree is now yours to wield.",
+                "Use it wisely, and always respect the balance of nature."
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Mystic Timber@green@. The power of the Mystic Tree is now in your hands!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

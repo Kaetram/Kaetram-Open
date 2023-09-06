@@ -1,0 +1,65 @@
+{
+    "name": "Whale's Lament",
+    "description": "A lonely whale calls for assistance.|Wally, a giant whale, has been separated from his family due to a mysterious underwater current. Navigate the treacherous waters and reunite him with his lost pod.",
+    "rewards": ["2000 gold", "whalecompanion"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "wally",
+            "text": [
+                "Oh, dear adventurer! I've lost my way in these waters.",
+                "A strong current separated me from my family.",
+                "Can you help me find them?"
+            ],
+            "completedText": ["Please find clues about my family's whereabouts."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "merfolkelder",
+            "text": [
+                "Ah, Wally's family? I believe they were pulled towards the Abyssal Trench.",
+                "It's a dangerous place, young one. Beware of the creatures that lurk there!"
+            ],
+            "completedText": ["Venture into the Abyssal Trench with caution."]
+        },
+        "2": {
+            "task": "kill",
+            "mob": ["abyssalhunters"],
+            "mobCountRequirement": 5
+        },
+        "3": {
+            "task": "talk",
+            "npc": "lostwhale",
+            "text": [
+                "Who are you? Oh, you're here to help?",
+                "I got stuck in a cave after being chased by those abyssal hunters.",
+                "Thank you for defeating them."
+            ],
+            "completedText": ["Guide me back to Wally, please!"]
+        },
+        "4": {
+            "task": "talk",
+            "npc": "wally",
+            "text": [
+                "My family! You found them!",
+                "I cannot express my gratitude enough.",
+                "As a token of my appreciation, please accept this gift."
+            ],
+            "itemRewards": [
+                {
+                    "key": "gold",
+                    "count": 2000
+                },
+                {
+                    "key": "whalecompanion",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Whale's Lament@green@. You have gained 2000 gold and a Whale Companion!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

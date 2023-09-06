@@ -1,0 +1,58 @@
+{
+    "name": "Keros' Chicken Conundrum",
+    "description": "The fix had some... side effects.|After resolving Keros' hat-based hiccup, it seems not everything reverted correctly. Now, there's a realm where chickens rule. Dive into the Feathery Realm to restore balance.",
+    "rewards": ["chicken slayer title", "feathered cape"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "keros",
+            "text": [
+                "So, remember that tiny mistake with the chickens?",
+                "It looks like when we fixed it, a new realm formed where chickens rule the land.",
+                "And they aren't happy about losing their status in our realm!",
+                "Can you venture in and negotiate peace with the Chicken King?"
+            ],
+            "completedText": ["Enter the Feathery Realm portal to the east."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "chickenking",
+            "text": [
+                "Bawk! Bawk! Who dares enter the realm of the mighty Chicken King?",
+                "Ah, you're from Keros' realm. We won't forget his... adjustments.",
+                "To prove you come in peace, I challenge you to a game of... Feathered Fetch!"
+            ],
+            "completedText": ["Play Feathered Fetch with the Chicken King."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "keros",
+            "text": ["You've played the game? That's great news!", "Did you manage to win the Chicken King's trust?"],
+            "completedText": ["Share your experience with Keros."]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "chickenking",
+            "text": [
+                "You've shown me that not all from Keros' realm are bad.",
+                "In recognition of your efforts, I grant you the title of Chicken Slayer.",
+                "Use it well, and may our realms coexist in peace!"
+            ],
+            "itemRewards": [
+                {
+                    "key": "chicken slayer title",
+                    "count": 1
+                },
+                {
+                    "key": "feathered cape",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You've bridged the gap between realms and earned the respect of the Chicken King. Wear your @crimson@feathered cape@green@ as a symbol of unity.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}
