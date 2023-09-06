@@ -1,0 +1,51 @@
+{
+    "name": "Llama Drama",
+    "description": "Spit happens.|Larry's llama ran away after a silly argument about the best grass flavor. Help him find his spitting buddy.",
+    "rewards": ["llama-wool", "spit-proof cloak"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "larry",
+            "text": [
+                "I just can't believe it! Lulu and I had such a petty squabble!",
+                "Please, find her for me. I think she headed towards the clover fields."
+            ],
+            "completedText": ["Locate Lulu in the clover fields."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "lulu",
+            "text": [
+                "*spits* You're here to bring me back, aren't you?",
+                "Tell Larry mint-flavored grass is superior, and I might consider it!"
+            ],
+            "completedText": ["Inform Larry of Lulu's demands."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "larry",
+            "text": ["Mint, really? I guess I can give it a try...", "Bring her back and I'll reward you!"],
+            "completedText": ["Lead Lulu back to Larry."]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "lulu",
+            "text": ["Well, alright, if he's trying mint...", "Let's go back, and thanks!"],
+            "itemRewards": [
+                {
+                    "key": "llama-wool",
+                    "count": 5
+                },
+                {
+                    "key": "spit-proof cloak",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@Lulu and Larry are reunited, and it feels so good! Enjoy your @crimson@llama-wool@green@ and stay dry with the spit-proof cloak.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

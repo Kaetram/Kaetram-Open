@@ -1,0 +1,72 @@
+{
+    "name": "Guardian of the Oasis",
+    "description": "Desert secrets await your discovery.|Legends speak of a hidden oasis, guarded by a majestic creature. Villagers are running out of water, and only the oasis can save them now.",
+    "rewards": ["elixiroflife"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "villageelder",
+            "text": [
+                "Brave traveler, our village is in peril.",
+                "We've heard of an oasis hidden within the desert's heart.",
+                "But it's guarded by a creature. Will you help?"
+            ],
+            "completedText": ["Venture into the desert."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "deserthermit",
+            "text": [
+                "Ah, seeking the oasis? It's real, but not easy to find.",
+                "Follow the path where cacti bloom at midnight."
+            ],
+            "completedText": ["Seek the blooming cacti."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "bloomingcacti",
+            "text": [
+                "The cacti glow mysteriously, leading a path deeper into the desert.",
+                "You feel a presence watching you."
+            ],
+            "completedText": ["Continue on the path."]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "oasisguardian",
+            "text": [
+                "You've found the oasis, and its guardian stands before you.",
+                "Why have you come? Only those with pure intentions may access this sacred water."
+            ],
+            "completedText": ["Speak your intentions."]
+        },
+        "4": {
+            "task": "talk",
+            "npc": "oasisguardian",
+            "text": [
+                "Very well. I sense truth in your words.",
+                "Collect the water, but remember: take only what you need."
+            ],
+            "completedText": ["Collect the oasis water."]
+        },
+        "5": {
+            "task": "talk",
+            "npc": "villageelder",
+            "itemRequirements": [
+                {
+                    "key": "oasiswater",
+                    "count": 1
+                }
+            ],
+            "text": [
+                "You've returned! And with the oasis water!",
+                "Our village is saved. As a token of our gratitude, take this Elixir of Life."
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have completed @crimson@Guardian of the Oasis@green@. The villagers have gifted you the Elixir of Life!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

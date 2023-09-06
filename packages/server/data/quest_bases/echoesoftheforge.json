@@ -1,0 +1,122 @@
+{
+    "name": "Echoes of the Forge",
+    "description": "The Weapon of Legends has awoken ancient evils.|The forging of the mighty weapon has inadvertently unleashed old and powerful forces. They threaten the land, and only the combined effort of Thrain and the player can quell them.",
+    "rewards": ["5000 gold", "legendaryarmorset"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "thrain",
+            "text": [
+                "It seems the forging of the weapon has disturbed ancient powers.",
+                "Dark creatures have emerged, drawn to the weapon's energy.",
+                "We must find a way to contain this power before it's too late."
+            ],
+            "completedText": ["Seek the wisdom of the Oracle to find a solution."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "oracle",
+            "text": [
+                "The weapon you forged is both a blessing and a curse.",
+                "To contain its power, you must seek the Seals of Balance.",
+                "They are scattered in the three Temples of Equilibrium."
+            ],
+            "completedText": ["Retrieve the first Seal from the Temple of Earth."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "earthpriest",
+            "text": ["You wish to claim the Seal? Prove your connection to the earth by defeating the Stone Golems."],
+            "completedText": ["Defeat the Stone Golems to claim the Seal."]
+        },
+        "3": {
+            "task": "kill",
+            "mob": ["stonegolems"],
+            "mobCountRequirement": 5
+        },
+        "4": {
+            "task": "talk",
+            "npc": "earthpriest",
+            "text": ["You've proven your worth. Here is the Seal of Earth."],
+            "itemRewards": [
+                {
+                    "key": "sealofearth",
+                    "count": 1
+                }
+            ],
+            "completedText": ["Now head to the Temple of Water."]
+        },
+        "5": {
+            "task": "talk",
+            "npc": "waterpriestess",
+            "text": ["To earn the Seal of Water, navigate the water maze and face the trials within."],
+            "completedText": ["Navigate the maze and retrieve the Seal of Water."]
+        },
+        "6": {
+            "task": "talk",
+            "npc": "waterguardian",
+            "text": ["Impressive. You've made it this far. Here's the Seal of Water."],
+            "itemRewards": [
+                {
+                    "key": "sealofwater",
+                    "count": 1
+                }
+            ],
+            "completedText": ["Finally, proceed to the Temple of Wind."]
+        },
+        "7": {
+            "task": "talk",
+            "npc": "windshaman",
+            "text": [
+                "Prove your mastery of the winds by flying through the Sky Rings.",
+                "Once completed, the Seal of Wind is yours."
+            ],
+            "completedText": ["Fly through the Sky Rings."]
+        },
+        "8": {
+            "task": "talk",
+            "npc": "windshaman",
+            "text": ["You have the heart of an eagle. The Seal of Wind is now yours."],
+            "itemRewards": [
+                {
+                    "key": "sealofwind",
+                    "count": 1
+                }
+            ],
+            "completedText": ["Return to Thrain with all the Seals."]
+        },
+        "9": {
+            "task": "talk",
+            "npc": "thrain",
+            "itemRequirements": [
+                {
+                    "key": "sealofearth",
+                    "count": 1
+                },
+                {
+                    "key": "sealofwater",
+                    "count": 1
+                },
+                {
+                    "key": "sealofwind",
+                    "count": 1
+                }
+            ],
+            "itemRewards": [
+                {
+                    "key": "gold",
+                    "count": 5000
+                },
+                {
+                    "key": "legendaryarmorset",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Echoes of the Forge@green@. You have gained 5000 gold and the Legendary Armor Set!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

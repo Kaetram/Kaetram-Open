@@ -1,7 +1,7 @@
 {
-    "name": "Crystals of Eldoria",
-    "description": "Mystic ores have been discovered deep within the Eldoria Mines. Excavate and learn their secrets.",
-    "rewards": ["Mystic Ore Knowledge", "3500 Mining experience"],
+    "name": "Crystals of Yontil",
+    "description": "Mystic ores have been discovered deep within the Yontil Mines. Excavate and learn their secrets.",
+    "rewards": ["Access to Mystic Ore", "3500 Mining experience"],
     "skillRequirements": {
         "mining": 40
     },
@@ -9,8 +9,8 @@
         "0": {
             "task": "talk",
             "npc": "oldminer",
-            "text": ["Adventurer! The Eldoria Mines hold mystic ores.", "I'll guide you if you can fetch them for me."],
-            "completedText": ["Descend into Eldoria Mines."]
+            "text": ["Adventurer! The Yontil Mines hold mystic ores.", "I'll guide you if you can fetch them for me."],
+            "completedText": ["Descend into Yontil Mines."]
         },
         "1": {
             "task": "collect",
