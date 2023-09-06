@@ -19,6 +19,7 @@ import type {
     QuestItem
 } from '@kaetram/common/network/impl/quest';
 
+type InterfaceCallback = (key: string) => void;
 type ProgressCallback = (key: string, stage: number, subStage: number) => void;
 type PointerCallback = (pointer: PointerData) => void;
 type PopupCallback = (popup: PopupData) => void;
@@ -47,6 +48,9 @@ export default abstract class Quest {
     protected stageCount = 0; // How long the quest is.
     private timer = 0; // Used by timer to indicate duration amount of stage.
     private expiration = 0; // Used by timer to indicate expiration date.
+    private pendingStart = false; // Whether or not the quest is pending start.
+
+    protected noPrompts = false; // Used to skip the interface prompts for the quest.
 
     private stageData: StageData; // Current stage data, constantly updated when progression occurs.
     private stages: { [id: number]: RawStage } = {}; // All the stages from the JSON data.
@@ -56,9 +60,11 @@ export default abstract class Quest {
 
     private timerTimeout?: NodeJS.Timeout | undefined;
 
+    private startCallback?: InterfaceCallback;
     private progressCallback?: ProgressCallback;
     private pointerCallback?: PointerCallback;
     private popupCallback?: PopupCallback;
+    private completeCallback?: InterfaceCallback;
 
     public talkCallback?: TalkCallback;
     public doorCallback?: DoorCallback;
@@ -275,6 +281,17 @@ export default abstract class Quest {
     }
 
     /**
+     * Used for verifying and progressing the quest via prompts for starting.
+     */
+
+    public handlePrompt(): void {
+        if (!this.pendingStart || this.isStarted()) return;
+
+        // Progress the stage by skipping prompts.
+        this.setStage(this.stage + 1, 0, true, true);
+    }
+
+    /**
      * Advances the quest to the next stage.
      */
 
@@ -449,11 +466,12 @@ export default abstract class Quest {
 
     /**
      * Checks if a quest is finished given the current progress and stage count.
+     * @param nextStage Whether or not to check the next stage.
      * @returns If the progress is greater or equal to stage count.
      */
 
-    public isFinished(): boolean {
-        return this.stage >= this.stageCount;
+    public isFinished(nextStage = false): boolean {
+        return (nextStage ? this.stage + 1 : this.stage) >= this.stageCount;
     }
 
     /**
@@ -602,9 +620,15 @@ export default abstract class Quest {
      * @param stage The new stage we are setting the quest to.
      * @param subStage Optionally set the stage to a subStage index.
      * @param progressCallback Conditional on whether we want to make a callback or not.
+     * @param skipPrompts Whether to skip the starting/completing prompts
      */
 
-    public setStage(stage: number, subStage = 0, progressCallback = true): void {
+    public setStage(
+        stage: number,
+        subStage = 0,
+        progressCallback = true,
+        skipPrompts = false
+    ): void {
         let isProgress = this.stage !== stage;
 
         // Send popup before setting the new stage.
@@ -615,6 +639,15 @@ export default abstract class Quest {
 
         // Clear the timer timeout.
         this.clearTimer();
+
+        // Certain quests can skip the prompts (like the tutorial for example).
+        if (!this.noPrompts && !skipPrompts && progressCallback && !this.isStarted()) {
+            this.pendingStart = true;
+            return this.startCallback?.(this.key);
+        }
+
+        // Reset the pending flags.
+        this.pendingStart = false;
 
         this.stage = stage;
         this.subStage = subStage;
@@ -690,6 +723,17 @@ export default abstract class Quest {
     }
 
     /**
+     * Callback for when we want to prompt the player to start
+     * the quest. The quest will not progress until the player
+     * manually accepts the quest.
+     * @param callback Contains the key for the quest that we are starting.
+     */
+
+    public onStart(callback: InterfaceCallback): void {
+        this.startCallback = callback;
+    }
+
+    /**
      * A callback whenever we progress the quest.
      * @param callback The quest's key and progress count;
      */
@@ -714,6 +758,17 @@ export default abstract class Quest {
 
     public onPopup(callback: PopupCallback): void {
         this.popupCallback = callback;
+    }
+
+    /**
+     * Callback for when the player reaches the end of the quest and must
+     * accept the rewards/quest completion. The player has to manually click
+     * the "finish quest" button in order to complete the quest.
+     * @param callback Contains the key for the quest that we are completing.
+     */
+
+    public onComplete(callback: InterfaceCallback): void {
+        this.completeCallback = callback;
     }
 
     /**

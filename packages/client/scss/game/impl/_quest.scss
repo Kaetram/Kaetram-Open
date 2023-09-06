@@ -1,0 +1,25 @@
+#quest {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 22em;
+    height: 20em;
+
+    &-button {
+        bottom: 1em;
+        display: flex;
+        width: 12em;
+    }
+
+    &-rewards {
+        display: flex;
+        flex-direction: row;
+        gap: 0.25em;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+    }
+}

@@ -15,6 +15,7 @@ import type Entity from '../../entity';
 import type World from '../../../world';
 import type Character from '../character';
 import type Chest from '../../objects/chest';
+import type LootBag from '../../objects/lootbag';
 import type Entities from '../../../../controllers/entities';
 import type Connection from '../../../../network/connection';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
@@ -36,7 +37,7 @@ import type {
     PetPacket,
     LootBagPacket
 } from '@kaetram/common/types/messages/incoming';
-import type LootBag from '../../objects/lootbag';
+import type { QuestPacketData } from '@kaetram/common/network/impl/quest';
 
 export default class Incoming {
     private world: World;
@@ -100,6 +101,9 @@ export default class Incoming {
                     }
                     case Packets.Container: {
                         return this.handleContainer(message);
+                    }
+                    case Packets.Quest: {
+                        return this.handleQuest(message);
                     }
                     case Packets.Ability: {
                         return this.handleAbility(message);
@@ -501,6 +505,19 @@ export default class Incoming {
                 );
             }
         }
+    }
+
+    /**
+     * Used for progressing the quest when the player accepts the start quest interface.
+     * @param packet Contains the key of the quest we are progressing.
+     */
+
+    private handleQuest(packet: QuestPacketData): void {
+        let quest = this.player.quests.get(packet.key!);
+
+        if (!quest) return log.warning(`Quest ${packet.key} does not exist.`);
+
+        quest.handlePrompt();
     }
 
     /**

@@ -777,6 +777,10 @@ export default class Connection {
                 this.game.player.setQuest(info.key!, info.stage!, info.subStage!);
                 break;
             }
+
+            case Opcodes.Quest.Start: {
+                return this.menu.getQuest().handle(info);
+            }
         }
 
         this.menu.getQuests().handle(opcode, info.key);
