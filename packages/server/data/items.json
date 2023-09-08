@@ -4776,7 +4776,7 @@
             "magic": 4
         }
     },
-     "ringsilverberyl": {
+    "ringsilverberyl": {
         "type": "ring",
         "name": "Beryl Silver Ring",
         "price": 2500,
@@ -5451,8 +5451,8 @@
             "magic": 12
         }
     },
-     "braceletbronzeberyl": {
-        "type": "bracelet",
+    "braceletbronzeberyl": {
+        "type": "ring",
         "name": "Beryl Bronze Bracelet",
         "price": 1000,
         "skill": "accuracy",
@@ -5479,7 +5479,7 @@
         }
     },
     "braceletbronzeemerald": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Emerald Bronze Bracelet",
         "price": 1000,
         "skill": "archery",
@@ -5506,7 +5506,7 @@
         }
     },
     "braceletbronzepythar": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Pythar Bronze Bracelet",
         "price": 1000,
         "skill": "defense",
@@ -5533,7 +5533,7 @@
         }
     },
     "braceletbronzeruby": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Ruby Bronze Bracelet",
         "price": 1000,
         "skill": "strength",
@@ -5560,7 +5560,7 @@
         }
     },
     "braceletbronzesapphire": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Sapphire Bronze Bracelet",
         "price": 1000,
         "skill": "magic",
@@ -5586,8 +5586,8 @@
             "magic": 4
         }
     },
-     "braceletsilverberyl": {
-        "type": "bracelet",
+    "braceletsilverberyl": {
+        "type": "ring",
         "name": "Beryl Silver Bracelet",
         "price": 2500,
         "skill": "accuracy",
@@ -5614,7 +5614,7 @@
         }
     },
     "braceletsilveremerald": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Emerald Silver Bracelet",
         "price": 2500,
         "skill": "archery",
@@ -5641,7 +5641,7 @@
         }
     },
     "braceletsilverpythar": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Pythar Silver Bracelet",
         "price": 2500,
         "skill": "defense",
@@ -5668,7 +5668,7 @@
         }
     },
     "braceletsilverruby": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Ruby Silver Bracelet",
         "price": 2500,
         "skill": "strength",
@@ -5695,7 +5695,7 @@
         }
     },
     "braceletsilversapphire": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Sapphire Silver Bracelet",
         "price": 2500,
         "skill": "defense",
@@ -5721,8 +5721,8 @@
             "magic": 6
         }
     },
-     "braceletgoldberyl": {
-        "type": "bracelet",
+    "braceletgoldberyl": {
+        "type": "ring",
         "name": "Beryl Gold Bracelet",
         "price": 2500,
         "skill": "accuracy",
@@ -5749,7 +5749,7 @@
         }
     },
     "braceletgoldemerald": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Emerald Gold Bracelet",
         "price": 3650,
         "skill": "archery",
@@ -5776,7 +5776,7 @@
         }
     },
     "braceletgoldpythar": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Pythar Gold Bracelet",
         "price": 3650,
         "skill": "defense",
@@ -5803,7 +5803,7 @@
         }
     },
     "braceletgoldruby": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Ruby Gold Bracelet",
         "price": 3650,
         "skill": "strength",
@@ -5830,7 +5830,7 @@
         }
     },
     "braceletgoldsapphire": {
-        "type": "bracelet",
+        "type": "ring",
         "name": "Sapphire Gold Bracelet",
         "price": 3650,
         "skill": "magic",
