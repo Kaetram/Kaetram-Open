@@ -142,7 +142,7 @@ export default class Sprite {
                 info.length,
                 info.row,
                 this.width,
-                this.height
+                this.height,
             );
         }
     }

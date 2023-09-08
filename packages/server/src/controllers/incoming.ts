@@ -9,7 +9,7 @@ import type { GuildPacketData, PlayerPacketData } from '@kaetram/common/types/me
 import type {
     ChatPacketData,
     FriendsPacketData,
-    RelayPacketData
+    RelayPacketData,
 } from '@kaetram/common/types/messages/hub';
 
 /**
@@ -68,14 +68,14 @@ export default class Incoming {
                 data.guild,
                 data.username,
                 opcode === Opcodes.Player.Logout,
-                data.serverId
+                data.serverId,
             );
 
         // Synchronize the player's login or logout to the friends list.
         return this.world.syncFriendsList(
             data.username,
             opcode === Opcodes.Player.Logout,
-            data.serverId
+            data.serverId,
         );
     }
 
@@ -101,7 +101,7 @@ export default class Incoming {
                 data.message!,
                 'aquamarine',
                 `[To ${Utils.formatName(data.target!)}]`,
-                true
+                true,
             );
         }
 
@@ -111,7 +111,7 @@ export default class Incoming {
                 data.source!,
                 data.message!,
                 data.colour || 'tomato',
-                true
+                true,
             );
 
         // Find who the message is targeted towards and attempt to send them a message.

@@ -45,8 +45,8 @@ export default class Abilities {
             new AbilityPacket(Opcodes.Ability.Update, {
                 key,
                 level,
-                quickSlot
-            })
+                quickSlot,
+            }),
         );
     }
 
@@ -78,7 +78,7 @@ export default class Abilities {
         // Create ability based on the key from index of ability classes.
         let ability = new AbilitiesIndex[key as keyof typeof AbilitiesIndex](
             level,
-            quickSlot
+            quickSlot,
         ) as Ability;
 
         // Ensure the ability has valid data.
@@ -159,7 +159,7 @@ export default class Abilities {
             abilities.push(ability.serialize(includeType));
 
         return {
-            abilities
+            abilities,
         };
     }
 

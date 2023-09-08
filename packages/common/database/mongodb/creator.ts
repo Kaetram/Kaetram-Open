@@ -219,7 +219,7 @@ export default class Creator {
             })
             .catch((error) => {
                 log.error(
-                    `An error occurred while saving ${collection.collectionName} for ${username}.`
+                    `An error occurred while saving ${collection.collectionName} for ${username}.`,
                 );
                 log.error(error);
             });
@@ -284,7 +284,7 @@ export default class Creator {
             rank: player.rank,
             poison: {
                 type: player.poison ? player.poison.type : -1,
-                remaining: player.poison ? player.poison.getRemainingTime() : -1
+                remaining: player.poison ? player.poison.getRemainingTime() : -1,
             },
             effects: player.status.serialize(),
             hitPoints: player.hitPoints.getHitPoints(),
@@ -302,7 +302,7 @@ export default class Creator {
             lastGlobalChat: player.lastGlobalChat,
             guild: player.guild,
             pet: player.pet ? player.pet.key : '',
-            resetToken: undefined // Save token as undefined to prevent it from being saved.
+            resetToken: undefined, // Save token as undefined to prevent it from being saved.
         };
     }
 }

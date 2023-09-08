@@ -32,5 +32,5 @@ export default {
                 return 'INVALID_LEVEL() NOT IMPLEMENTED';
             }
         }
-    }
+    },
 };

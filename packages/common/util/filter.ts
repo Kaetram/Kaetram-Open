@@ -31,12 +31,12 @@ export default {
             encodeURIComponent(message.normalize())
                 .replace(/(%CC|%E0%B9)(%[\dA-Z]{2})+%20/g, ' ')
                 .replace(/(%CC|%E0%B9)(%[\dA-Z]{2})+(\w)/g, '$2')
-                .replace(/(%CC|%E0%B9)(%[\dA-Z]{2})+$/g, '')
+                .replace(/(%CC|%E0%B9)(%[\dA-Z]{2})+$/g, ''),
         );
 
         for (let profanity of Profanities)
             message = message.replace(new RegExp(profanity, 'gi'), '*'.repeat(profanity.length));
 
         return message;
-    }
+    },
 };

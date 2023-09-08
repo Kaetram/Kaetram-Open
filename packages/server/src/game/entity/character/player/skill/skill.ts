@@ -10,7 +10,7 @@ type ExperienceCallback = (
     withInfo: boolean,
     experience: number,
     level: number,
-    newLevel?: boolean
+    newLevel?: boolean,
 ) => void;
 
 export default abstract class Skill {
@@ -70,7 +70,7 @@ export default abstract class Skill {
             withInfo,
             experience,
             this.level,
-            this.level !== previousLevel
+            this.level !== previousLevel,
         );
     }
 
@@ -94,7 +94,7 @@ export default abstract class Skill {
     public serialize(includeLevel = false): SkillData {
         let data: SkillData = {
             type: this.type,
-            experience: this.experience
+            experience: this.experience,
         };
 
         if (includeLevel) {

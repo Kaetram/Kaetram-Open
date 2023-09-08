@@ -69,5 +69,5 @@ export default {
                 return 'UNABLE_TO_INTERACT() NOT IMPLEMENTED';
             }
         }
-    }
+    },
 };

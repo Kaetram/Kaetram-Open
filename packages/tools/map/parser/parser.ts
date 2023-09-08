@@ -7,7 +7,7 @@ import type {
     ProcessedAnimation,
     ProcessedMap,
     ProcessedResource,
-    ProcessedTileset
+    ProcessedTileset,
 } from '@kaetram/common/types/map';
 import type { Animation, Layer, LayerObject, MapData, Property, Tileset } from './mapdata';
 
@@ -35,7 +35,7 @@ export default class ProcessMap {
 
         if (width % divisionSize !== 0 || height % divisionSize !== 0)
             log.warning(
-                'The map size specified cannot be evenly divided, server may not be able to load the map.'
+                'The map size specified cannot be evenly divided, server may not be able to load the map.',
             );
 
         this.map = {
@@ -63,7 +63,7 @@ export default class ProcessMap {
             trees: [],
             rocks: [],
             fishSpots: [],
-            foraging: []
+            foraging: [],
         };
 
         this.parseTilesets();
@@ -100,7 +100,7 @@ export default class ProcessMap {
                     firstGid: tileset.firstgid - 1,
                     lastGid: tileset.firstgid - 1 + tileset.tilecount - 1,
                     path: tileset.image,
-                    relativePath: this.getRelativePath(tileset.image)
+                    relativePath: this.getRelativePath(tileset.image),
                 });
 
             this.parseTileset(tileset);
@@ -110,10 +110,10 @@ export default class ProcessMap {
         this.parseResources(this.trees, (tree: ProcessedResource) => this.map.trees.push(tree));
         this.parseResources(this.rocks, (rock: ProcessedResource) => this.map.rocks.push(rock));
         this.parseResources(this.fishSpots, (fishSpot: ProcessedResource) =>
-            this.map.fishSpots.push(fishSpot)
+            this.map.fishSpots.push(fishSpot),
         );
         this.parseResources(this.foraging, (forage: ProcessedResource) =>
-            this.map.foraging.push(forage)
+            this.map.foraging.push(forage),
         );
     }
 
@@ -177,7 +177,7 @@ export default class ProcessMap {
         for (let animation of animations)
             data.push({
                 duration: animation.duration,
-                tileId: this.getId(firstgid, animation.tileid, -1)
+                tileId: this.getId(firstgid, animation.tileid, -1),
             });
 
         this.map.animations![tileId] = data;
@@ -395,7 +395,7 @@ export default class ProcessMap {
             y: Math.round(y / this.map.tileSize),
             width: width / this.map.tileSize,
             height: height / this.map.tileSize,
-            polygon: this.extractPolygon(object)
+            polygon: this.extractPolygon(object),
         });
 
         // Some objects may not have properties.
@@ -423,7 +423,7 @@ export default class ProcessMap {
         resourceType: Resources,
         name: string,
         tileId: number,
-        value: never
+        value: never,
     ): void {
         // Create a new resource type if it does not exist.
         if (!(value in resourceType))
@@ -431,7 +431,7 @@ export default class ProcessMap {
                 data: [],
                 base: [],
                 depleted: [],
-                type: value
+                type: value,
             };
 
         // Organize resource data into their respective arrays.
@@ -461,7 +461,7 @@ export default class ProcessMap {
 
     private parseResources(
         resources: Resources,
-        callback: (resource: ProcessedResource) => void
+        callback: (resource: ProcessedResource) => void,
     ): void {
         for (let resource of Object.values(resources)) {
             // Determine whether the normal and exhausted resource match lengths, otherwise skip.
@@ -531,7 +531,7 @@ export default class ProcessMap {
         for (let point of info.polygon)
             polygon.push({
                 x: (info.x + point.x) / tileSize,
-                y: (info.y + point.y) / tileSize
+                y: (info.y + point.y) / tileSize,
             });
 
         return polygon;
@@ -674,7 +674,7 @@ export default class ProcessMap {
             trees,
             rocks,
             fishSpots,
-            foraging
+            foraging,
         } = this.map;
 
         return JSON.stringify({
@@ -693,7 +693,7 @@ export default class ProcessMap {
             trees,
             rocks,
             fishSpots,
-            foraging
+            foraging,
         });
     }
 
@@ -712,7 +712,7 @@ export default class ProcessMap {
             version,
             high,
             tilesets,
-            animations
+            animations,
         });
     }
 

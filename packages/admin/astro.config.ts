@@ -10,6 +10,6 @@ export default defineConfig({
     server: { host: config.adminHost, port: config.adminPort },
     vite: {
         server: { strictPort: true },
-        define: { globalConfig: config }
-    }
+        define: { globalConfig: config },
+    },
 });

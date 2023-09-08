@@ -24,7 +24,7 @@ export default class Transition {
         endValue: number,
         duration: number,
         updateCallback: (value: number) => void,
-        stopCallback: () => void
+        stopCallback: () => void,
     ): void {
         this.startTime = currentTime;
         this.startValue = startValue;

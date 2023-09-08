@@ -9,14 +9,14 @@ export default class OgreLord extends Default {
     private dialogues: string[] = [
         'The great ogre lord will trample over you!',
         'No, do not touch my onions!',
-        'Me smash you!'
+        'Me smash you!',
     ];
 
     private positions: Position[] = [
         { x: 240, y: 65 },
         { x: 248, y: 65 },
         { x: 240, y: 70 },
-        { x: 248, y: 70 }
+        { x: 248, y: 70 },
     ];
 
     // Waves of minions the boss spawns.

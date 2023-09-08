@@ -65,7 +65,7 @@ export default class Renderer {
         this.overlay,
         this.textCanvas,
         this.entities,
-        this.cursor
+        this.cursor,
     ];
 
     // Create the contexts based on the canvases.
@@ -78,7 +78,7 @@ export default class Renderer {
         this.entitiesContext,
         this.overlayContext,
         this.textContext,
-        this.cursorContext
+        this.cursorContext,
     ];
 
     // We split contexts into two arrays, one for tilemap rendering and one for the rest.
@@ -111,7 +111,7 @@ export default class Renderer {
     protected lightings: { [instance: string]: RendererLighting } = {};
     protected darkMask: DarkMask = new DarkMask({
         lights: [],
-        color: 'rgba(0, 0, 0, 0.84)'
+        color: 'rgba(0, 0, 0, 0.84)',
     });
 
     // Toggles for rendering
@@ -128,12 +128,15 @@ export default class Renderer {
     public mobile = isMobile();
     public tablet = isTablet();
 
-    // FPS variables
+    // FPS variables`
     protected time = Date.now();
     protected fps = 0;
     protected frameCount = 0;
 
-    public constructor(protected game: Game, public type = 'canvas') {
+    public constructor(
+        protected game: Game,
+        public type = 'canvas',
+    ) {
         this.map = game.map;
         this.camera = game.camera;
 
@@ -315,7 +318,7 @@ export default class Renderer {
         this.drawCellHighlight(
             location.gridX,
             location.gridY,
-            canCollide ? 'rgba(230, 0, 0, 0.7)' : input.targetColour
+            canCollide ? 'rgba(230, 0, 0, 0.7)' : input.targetColour,
         );
     }
 
@@ -345,7 +348,7 @@ export default class Renderer {
                 targetData.dx,
                 targetData.dy,
                 targetData.dw,
-                targetData.dh
+                targetData.dh,
             );
 
             this.entitiesContext.restore();
@@ -392,7 +395,7 @@ export default class Renderer {
                 info.fill,
                 info.stroke,
                 26,
-                true
+                true,
             );
             this.textContext.restore();
         });
@@ -425,7 +428,7 @@ export default class Renderer {
                 mouse.x,
                 mouse.y,
                 this.actualTileSize,
-                this.actualTileSize
+                this.actualTileSize,
             );
         // Load the mouse if it doesn't exist.
         else cursor.load();
@@ -480,12 +483,12 @@ export default class Renderer {
         this.drawText(
             `x: ${player.gridX} y: ${player.gridY} tileIndex: ${this.map.coordToIndex(
                 player.gridX,
-                player.gridY
+                player.gridY,
             )} movementSpeed: ${player.movementSpeed}`,
             10,
             81,
             false,
-            'white'
+            'white',
         );
 
         this.drawText(`zoomFactor: ${this.camera.zoomFactor}`, 10, 141, false, 'white');
@@ -499,7 +502,7 @@ export default class Renderer {
                 10,
                 101,
                 false,
-                'white'
+                'white',
             );
 
             // Draw the entity's attack range.
@@ -586,7 +589,7 @@ export default class Renderer {
                 0,
                 entity.shadowOffsetY,
                 shadowSprite.width,
-                shadowSprite.height
+                shadowSprite.height,
             );
         }
 
@@ -599,7 +602,7 @@ export default class Renderer {
             entity.sprite.offsetX,
             entity.sprite.offsetY + entity.offsetY,
             entity.sprite.width,
-            entity.sprite.height
+            entity.sprite.height,
         );
 
         this.drawEntityFore(entity);
@@ -631,7 +634,7 @@ export default class Renderer {
         if (entity.isPlayer())
             (entity as Player).forEachEquipment(
                 (equipment: Equipment) => this.drawEquipment(entity as Player, equipment),
-                true
+                true,
             );
 
         if (entity.hasActiveEffect()) this.drawEffects(entity);
@@ -693,7 +696,7 @@ export default class Renderer {
             sprite.offsetX,
             sprite.offsetY,
             spriteWidth,
-            spriteHeight
+            spriteHeight,
         );
     }
 
@@ -734,7 +737,7 @@ export default class Renderer {
                 sprite.offsetX,
                 sprite.offsetY,
                 sprite.width,
-                sprite.height
+                sprite.height,
             );
 
             animation.update(this.game.time);
@@ -759,7 +762,7 @@ export default class Renderer {
             0,
             0,
             sparksSprite.width,
-            sparksSprite.height
+            sparksSprite.height,
         );
     }
 
@@ -780,7 +783,7 @@ export default class Renderer {
             0,
             sprite.offsetY,
             sprite.width,
-            sprite.height
+            sprite.height,
         );
     }
 
@@ -801,7 +804,7 @@ export default class Renderer {
             0,
             sprite.offsetY,
             sprite.width,
-            sprite.height
+            sprite.height,
         );
     }
 
@@ -828,7 +831,7 @@ export default class Renderer {
             x * this.camera.zoomFactor - crown.width,
             y * this.camera.zoomFactor - crown.height * 3,
             crown.width * 2,
-            crown.height * 2
+            crown.height * 2,
         );
 
         this.textContext.restore();
@@ -846,7 +849,7 @@ export default class Renderer {
             healthX = entity.x * this.camera.zoomFactor - barLength / 2 + 8,
             healthY = (entity.y - entity.sprite.height / 4) * this.camera.zoomFactor,
             healthWidth = Math.round(
-                (entity.hitPoints / entity.maxHitPoints) * barLength * this.camera.zoomFactor
+                (entity.hitPoints / entity.maxHitPoints) * barLength * this.camera.zoomFactor,
             ),
             healthHeight = 2 * this.camera.zoomFactor;
 
@@ -858,7 +861,7 @@ export default class Renderer {
             healthX,
             healthY,
             barLength * this.camera.zoomFactor,
-            healthHeight
+            healthHeight,
         );
         this.textContext.fillStyle = 'rgba(253, 0, 0, 1)';
         this.textContext.fillRect(healthX, healthY, healthWidth, healthHeight);
@@ -969,7 +972,7 @@ export default class Renderer {
                     scoreX,
                     30,
                     true,
-                    'white'
+                    'white',
                 );
                 return;
             }
@@ -1002,7 +1005,7 @@ export default class Renderer {
                     scoreX,
                     30,
                     true,
-                    'white'
+                    'white',
                 );
                 return;
             }
@@ -1115,7 +1118,7 @@ export default class Renderer {
         colour: string,
         strokeColour?: string,
         fontSize: number = this.fontSize,
-        setViews = false
+        setViews = false,
     ): void {
         let strokeSize = 3;
 
@@ -1164,8 +1167,8 @@ export default class Renderer {
         // Create the new lighting object and lamp with the provided data.
         let lighting = new Lighting({
             light: new Lamp(
-                this.getLightData(info.x, info.y, info.distance, info.diffuse, info.colour)
-            )
+                this.getLightData(info.x, info.y, info.distance, info.diffuse, info.colour),
+            ),
         }) as RendererLighting;
 
         // Store the grid position of the light (used for camera calculations).
@@ -1387,7 +1390,7 @@ export default class Renderer {
 
         context.translate(
             Math.round(-this.camera.x * this.camera.zoomFactor),
-            Math.round(-this.camera.y * this.camera.zoomFactor)
+            Math.round(-this.camera.y * this.camera.zoomFactor),
         );
     }
 
@@ -1410,7 +1413,7 @@ export default class Renderer {
     private getLightPosition(x: number, y: number): Vec2 {
         return new Vec2(
             (x - this.camera.x) * this.camera.zoomFactor + this.actualTileSize / 2,
-            (y - this.camera.y) * this.camera.zoomFactor
+            (y - this.camera.y) * this.camera.zoomFactor,
         );
     }
 
@@ -1429,12 +1432,12 @@ export default class Renderer {
         y: number,
         distance: number,
         diffuse: number,
-        color: string
+        color: string,
     ): Partial<Lamp> {
         return {
             position: new Vec2(
                 x * this.tileSize + this.tileSize / 2,
-                y * this.tileSize + this.tileSize / 2
+                y * this.tileSize + this.tileSize / 2,
             ),
             distance,
             diffuse,
@@ -1442,7 +1445,7 @@ export default class Renderer {
             radius: 0,
             samples: 2,
             roughness: 0,
-            angle: 0
+            angle: 0,
         };
     }
 
@@ -1461,7 +1464,7 @@ export default class Renderer {
         instance: string,
         x: number,
         y: number,
-        lamp: LampData
+        lamp: LampData,
     ): SerializedLight {
         return {
             instance,
@@ -1472,7 +1475,7 @@ export default class Renderer {
             colour: lamp.colour,
             entity: instance.includes('inner') ? instance.split('inner')[0] : instance,
             flickerSpeed: lamp.flickerSpeed,
-            flickerIntensity: lamp.flickerIntensity
+            flickerIntensity: lamp.flickerIntensity,
         };
     }
 
@@ -1604,7 +1607,7 @@ export default class Renderer {
 
     protected forEachVisibleTile(
         callback: (data: ClientTile, index: number) => void,
-        offset?: number
+        offset?: number,
     ): void {
         if (!this.map?.mapLoaded) return;
 

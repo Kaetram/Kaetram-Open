@@ -11,7 +11,7 @@ export default class MapPacket extends Packet {
             Packets.Map,
             undefined,
             Utils.compress(JSON.stringify(data)),
-            Utils.getBufferSize(data)
+            Utils.getBufferSize(data),
         );
     }
 }

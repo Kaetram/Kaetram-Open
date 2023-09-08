@@ -80,5 +80,5 @@ export default {
     TRADE_COMPLETE: '¡Gracias por usar el sistema de comercio de Kaetram!',
     WELCOME: '¡Bienvenido a {{name}}!',
     WELCOME_BACK: '¡Bienvenido de nuevo a {{name}}!',
-    WHY_GO_THERE: 'Espera, ¿por qué querría entrar allí?'
+    WHY_GO_THERE: 'Espera, ¿por qué querría entrar allí?',
 } as const;

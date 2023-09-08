@@ -35,7 +35,7 @@ export default class Splat {
         public x: number,
         public y: number,
         isTarget = false,
-        skill = -1
+        skill = -1,
     ) {
         this.text = `${value}`;
         this.updateY = this.isHeal() ? 2 : 1;

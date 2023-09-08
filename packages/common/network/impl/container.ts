@@ -13,7 +13,7 @@ export interface ContainerPacketData {
 
 export type ContainerPacketCallback = (
     opcode: Opcodes.Container,
-    info: ContainerPacketData
+    info: ContainerPacketData,
 ) => void;
 
 export default class ContainerPacket extends Packet {

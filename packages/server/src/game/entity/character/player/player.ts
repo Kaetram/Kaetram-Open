@@ -40,7 +40,7 @@ import {
     SpawnPacket,
     SyncPacket,
     TeleportPacket,
-    WelcomePacket
+    WelcomePacket,
 } from '@kaetram/common/network/impl';
 
 import type Pet from '../pet/pet';
@@ -189,7 +189,11 @@ export default class Player extends Character {
 
     private cheatScoreCallback?: () => void;
 
-    public constructor(world: World, public database: MongoDB, public connection: Connection) {
+    public constructor(
+        world: World,
+        public database: MongoDB,
+        public connection: Connection,
+    ) {
         super(connection.instance, world, '', -1, -1);
 
         this.connection.onClose(this.handleClose.bind(this));
@@ -261,7 +265,7 @@ export default class Player extends Character {
 
         // Synchronize login with the hub's server list.
         this.world.client.send(
-            new PlayerPacket(Opcodes.Player.Login, { username: this.username, guild: this.guild })
+            new PlayerPacket(Opcodes.Player.Login, { username: this.username, guild: this.guild }),
         );
 
         // Quests and achievements have to be loaded prior to introducing the player.
@@ -364,8 +368,8 @@ export default class Player extends Character {
             this.world.client.send(
                 new PlayerPacket(Opcodes.Player.Logout, {
                     username: this.username,
-                    guild: this.guild
-                })
+                    guild: this.guild,
+                }),
             );
         }
 
@@ -520,8 +524,8 @@ export default class Player extends Character {
                     new HealPacket({
                         instance: this.instance,
                         type,
-                        amount
-                    })
+                        amount,
+                    }),
                 );
                 break;
             }
@@ -633,8 +637,8 @@ export default class Player extends Character {
                 instance: this.instance,
                 x,
                 y,
-                withAnimation
-            })
+                withAnimation,
+            }),
         );
     }
 
@@ -766,7 +770,7 @@ export default class Player extends Character {
         fromContainer: Modules.ContainerType,
         fromIndex: number,
         toContainer: Modules.ContainerType,
-        toIndex?: number
+        toIndex?: number,
     ): void {
         let item: Item;
 
@@ -841,11 +845,11 @@ export default class Player extends Character {
     public handleContainerSwap(
         type: Modules.ContainerType,
         fromIndex: number,
-        toIndex: number
+        toIndex: number,
     ): void {
         if (isNaN(fromIndex) || isNaN(toIndex) || fromIndex < 0 || toIndex < 0)
             return log.warning(
-                `[${this.username}] Invalid container swap [${fromIndex}, ${toIndex}}]`
+                `[${this.username}] Invalid container swap [${fromIndex}, ${toIndex}}]`,
             );
 
         // Ignore same index swaps.
@@ -1216,7 +1220,7 @@ export default class Player extends Character {
             // Prevent picking up dropped items that belong to other players.
             if (!entity.isOwner(this.username))
                 return this.notify(
-                    `misc:CANNOT_PICK_UP_ITEM;username=${Utils.formatName(entity.owner)}`
+                    `misc:CANNOT_PICK_UP_ITEM;username=${Utils.formatName(entity.owner)}`,
                 );
 
             // If the item's owner is existent and the player is the owner we add it to the statistics.
@@ -1256,8 +1260,8 @@ export default class Player extends Character {
 
         this.send(
             new PVPPacket({
-                state: this.pvp
-            })
+                state: this.pvp,
+            }),
         );
     }
 
@@ -1296,8 +1300,8 @@ export default class Player extends Character {
         this.send(
             new OverlayPacket(Opcodes.Overlay.Set, {
                 image: overlay.fog || 'blank',
-                colour
-            })
+                colour,
+            }),
         );
 
         if (overlay.isStatusArea()) overlay.addPlayer(this);
@@ -1416,8 +1420,8 @@ export default class Player extends Character {
         this.sendToRegions(
             new MovementPacket(Opcodes.Movement.Speed, {
                 instance: this.instance,
-                movementSpeed
-            })
+                movementSpeed,
+            }),
         );
     }
 
@@ -1441,8 +1445,8 @@ export default class Player extends Character {
         this.sendToRegions(
             new MovementPacket(Opcodes.Movement.Speed, {
                 instance: this.instance,
-                movementSpeed: this.getMovementSpeed()
-            })
+                movementSpeed: this.getMovementSpeed(),
+            }),
         );
     }
 
@@ -1474,11 +1478,11 @@ export default class Player extends Character {
             Modules.Constants.SNOW_POTION_DURATION,
             () => {
                 this.notify('misc:FREEZE_IMMUNITY_WORN_OFF');
-            }
+            },
         );
 
         this.notify(
-            `misc:FREEZE_IMMUNITY;duration=${Modules.Constants.SNOW_POTION_DURATION / 1000}`
+            `misc:FREEZE_IMMUNITY;duration=${Modules.Constants.SNOW_POTION_DURATION / 1000}`,
         );
     }
 
@@ -1496,7 +1500,7 @@ export default class Player extends Character {
             Modules.Constants.FIRE_POTION_DURATION,
             () => {
                 this.notify('misc:FIRE_IMMUNITY_WORN_OFF');
-            }
+            },
         );
 
         let duration = (Modules.Constants.FIRE_POTION_DURATION / 1000).toString();
@@ -1542,9 +1546,9 @@ export default class Player extends Character {
                 instance: this.instance,
                 x,
                 y,
-                forced
+                forced,
             }),
-            true
+            true,
         );
     }
 
@@ -1630,7 +1634,7 @@ export default class Player extends Character {
     public override getDisplayInfo(): EntityDisplayInfo {
         return {
             instance: this.instance,
-            colour: this.team === Team.Red ? 'red' : 'blue'
+            colour: this.team === Team.Red ? 'red' : 'blue',
         };
     }
 
@@ -2099,7 +2103,7 @@ export default class Player extends Character {
     public send(packet: Packet): void {
         this.world.push(PacketType.Player, {
             packet,
-            player: this
+            player: this,
         });
     }
 
@@ -2112,7 +2116,7 @@ export default class Player extends Character {
     public sendToRecentRegions(packet: Packet): void {
         this.world.push(PacketType.RegionList, {
             list: this.recentRegions,
-            packet
+            packet,
         });
     }
 
@@ -2136,7 +2140,7 @@ export default class Player extends Character {
     public sendPrivateMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
             this.world.client.send(
-                new ChatPacket({ source: this.username, message, target: playerName })
+                new ChatPacket({ source: this.username, message, target: playerName }),
             );
             return;
         }
@@ -2206,7 +2210,7 @@ export default class Player extends Character {
             if (!this.canGlobalChat())
                 return this.notify(
                     `misc:CANNOT_GLOBAL_CHAT_MINUTES;duration=${this.getGlobalChatDuration()}`,
-                    'crimson'
+                    'crimson',
                 );
 
             this.lastGlobalChat = Date.now();
@@ -2235,7 +2239,7 @@ export default class Player extends Character {
             instance: this.instance,
             message,
             withBubble,
-            colour
+            colour,
         });
 
         log.chat(`${this.username}: ${message}`);
@@ -2258,8 +2262,8 @@ export default class Player extends Character {
             new NotificationPacket(Opcodes.Notification.Popup, {
                 title,
                 message,
-                colour
-            })
+                colour,
+            }),
         );
     }
 
@@ -2280,8 +2284,8 @@ export default class Player extends Character {
             new NotificationPacket(Opcodes.Notification.Text, {
                 message,
                 colour,
-                source
-            })
+                source,
+            }),
         );
 
         this.lastNotify = Date.now();
@@ -2338,7 +2342,7 @@ export default class Player extends Character {
     public override serialize(
         withEquipment = false,
         withExperience = false,
-        withMana = false
+        withMana = false,
     ): PlayerData {
         let data = super.serialize() as PlayerData;
 

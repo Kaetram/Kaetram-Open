@@ -15,5 +15,5 @@ export default {
     hotshot,
     thickskin,
     precognition,
-    secretcalling
+    secretcalling,
 };

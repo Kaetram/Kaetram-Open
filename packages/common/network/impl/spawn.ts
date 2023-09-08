@@ -25,7 +25,7 @@ export default class SpawnPacket extends Packet {
                 ? entity.serialize(true)
                 : entity.isMob()
                 ? entity.serialize(player)
-                : entity.serialize()
+                : entity.serialize(),
         );
     }
 }

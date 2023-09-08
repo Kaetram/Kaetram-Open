@@ -17,5 +17,5 @@ export default {
     santa,
     piratecaptain,
     spider,
-    hellhound
+    hellhound,
 };

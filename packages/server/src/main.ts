@@ -129,7 +129,7 @@ class Main {
     private handleLicensing(): boolean {
         if (!config.acceptLicense) {
             log.critical(
-                `You must read and accept both MPL2.0 and OPL licensing agreements. Once you've done so, toggle ACCEPT_LICENSE in your environment variables.`
+                `You must read and accept both MPL2.0 and OPL licensing agreements. Once you've done so, toggle ACCEPT_LICENSE in your environment variables.`,
             );
 
             return false;

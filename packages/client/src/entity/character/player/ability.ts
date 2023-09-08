@@ -7,7 +7,7 @@ export default class Ability {
         public type: Modules.AbilityType,
         public key: string,
         public level: number,
-        public quickSlot = -1
+        public quickSlot = -1,
     ) {}
 
     /**

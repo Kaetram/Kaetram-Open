@@ -85,7 +85,7 @@ export default class Entities {
                 info.y,
                 true,
                 info.achievement,
-                info.mimic
+                info.mimic,
             );
 
         log.info(`Spawned ${Object.keys(this.chests).length} static chests!`);
@@ -93,7 +93,7 @@ export default class Entities {
         // Initialize the roaming interval for mobs
         setInterval(
             () => this.forEachMob((mob) => mob.roamingCallback?.()),
-            Modules.MobDefaults.ROAM_FREQUENCY
+            Modules.MobDefaults.ROAM_FREQUENCY,
         );
     }
 
@@ -116,7 +116,7 @@ export default class Entities {
         dropped = false,
         count = 1,
         enchantments: Enchantments = {},
-        owner = ''
+        owner = '',
     ): void {
         this.addItem(new Item(key, x, y, dropped, count, enchantments, owner));
     }
@@ -170,7 +170,7 @@ export default class Entities {
         y: number,
         isStatic = false,
         achievement?: string,
-        mimic = false
+        mimic = false,
     ): Chest {
         let chest = new Chest(x, y, achievement, mimic, items);
 
@@ -320,8 +320,8 @@ export default class Entities {
             // Blinking timeout before the item despawns.
             item.onBlink(() =>
                 this.world.push(Modules.PacketType.Broadcast, {
-                    packet: new BlinkPacket(item.instance)
-                })
+                    packet: new BlinkPacket(item.instance),
+                }),
             );
         } else item.onRespawn(() => this.addItem(item));
 
@@ -415,8 +415,8 @@ export default class Entities {
         this.world.push(Modules.PacketType.Regions, {
             region: entity.region,
             packet: new DespawnPacket({
-                instance: entity.instance
-            })
+                instance: entity.instance,
+            }),
         });
 
         // Remove the entity from the entity grid
@@ -559,7 +559,7 @@ export default class Entities {
 
     public getPlayersByIp(ip: string): Player[] {
         return Object.values(this.players).filter(
-            (player: Player) => player.connection.address === ip
+            (player: Player) => player.connection.address === ip,
         );
     }
 

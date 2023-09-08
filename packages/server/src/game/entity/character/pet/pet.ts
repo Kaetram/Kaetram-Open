@@ -7,7 +7,12 @@ import type Player from '../player/player';
 import type { PetData } from '@kaetram/common/types/pet';
 
 export default class Pet extends Character {
-    public constructor(public owner: Player, key: string, x = owner.x, y = owner.y) {
+    public constructor(
+        public owner: Player,
+        key: string,
+        x = owner.x,
+        y = owner.y,
+    ) {
         super(Utils.createInstance(Modules.EntityType.Pet), owner.world, key, x, y);
     }
 
@@ -20,7 +25,7 @@ export default class Pet extends Character {
         return {
             ...super.serialize(),
             owner: this.owner.instance,
-            movementSpeed: this.owner.movementSpeed
+            movementSpeed: this.owner.movementSpeed,
         };
     }
 }

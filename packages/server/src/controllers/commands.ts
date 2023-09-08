@@ -56,7 +56,7 @@ export default class Commands {
                 this.player.notify(
                     `There ${singular ? 'is' : 'are'} currently ${population} ${
                         singular ? 'person' : 'people'
-                    } online.`
+                    } online.`,
                 );
 
                 // Show the names of the players that are online.
@@ -76,7 +76,7 @@ export default class Commands {
                     Filter.clean(blocks.join(' ')),
                     true,
                     false,
-                    'rgba(191, 161, 63, 1.0)'
+                    'rgba(191, 161, 63, 1.0)',
                 );
             }
 
@@ -110,7 +110,7 @@ export default class Commands {
 
                         if (!username)
                             return this.player.notify(
-                                'Malformed command, expected /guild kick [username]'
+                                'Malformed command, expected /guild kick [username]',
                             );
 
                         this.world.guilds.kick(this.player, username);
@@ -126,7 +126,7 @@ export default class Commands {
 
                         if (!rank || !username)
                             return this.player.notify(
-                                'Malformed command, expected /guild rank [rank 0-6] [username]'
+                                'Malformed command, expected /guild rank [rank 0-6] [username]',
                             );
 
                         // Prevent the player from setting the rank to landlord.
@@ -141,7 +141,7 @@ export default class Commands {
 
                         if (!member)
                             return this.player.notify(
-                                `Could not find a member with the name: ${username}.`
+                                `Could not find a member with the name: ${username}.`,
                             );
 
                         this.world.guilds.setRank(guild, this.player, member, parseInt(rank));
@@ -174,7 +174,7 @@ export default class Commands {
 
                 if (!duration || !targetName)
                     return this.player.notify(
-                        'Malformed command, expected /ban(mute) [duration] [username]'
+                        'Malformed command, expected /ban(mute) [duration] [username]',
                     );
 
                 // Prevent banning yourself.
@@ -245,7 +245,7 @@ export default class Commands {
 
                 player.connection.close(
                     `${this.player.username} kicked ${username}`,
-                    command === 'forcekick'
+                    command === 'forcekick',
                 );
 
                 break;
@@ -257,7 +257,7 @@ export default class Commands {
 
                 if (!duration || !username)
                     return this.player.notify(
-                        'Malformed command, expected /jail [duration] [username]'
+                        'Malformed command, expected /jail [duration] [username]',
                     );
 
                 let player = this.world.getPlayerByName(username);
@@ -354,7 +354,7 @@ export default class Commands {
 
                 if (!index || !username)
                     return this.player.notify(
-                        'Invalid command, usage /take [index] [container=bank/inventory] [username]'
+                        'Invalid command, usage /take [index] [container=bank/inventory] [username]',
                     );
 
                 let player = this.world.getPlayerByName(username);
@@ -382,7 +382,7 @@ export default class Commands {
 
                 if (!key || !username || (container !== 'inventory' && container !== 'bank'))
                     return this.player.notify(
-                        'Invalid command, usage /takeitem [key] [count] [container=bank/inventory] [username]'
+                        'Invalid command, usage /takeitem [key] [count] [container=bank/inventory] [username]',
                     );
 
                 let player = this.world.getPlayerByName(username);
@@ -413,13 +413,13 @@ export default class Commands {
                     this.player.bank.empty();
 
                     player.bank.forEachSlot((slot) =>
-                        this.player.bank.add(this.player.bank.getItem(slot))
+                        this.player.bank.add(this.player.bank.getItem(slot)),
                     );
                 } else {
                     this.player.inventory.empty();
 
                     player.inventory.forEachSlot((slot) =>
-                        this.player.inventory.add(this.player.inventory.getItem(slot))
+                        this.player.inventory.add(this.player.inventory.getItem(slot)),
                     );
                 }
 
@@ -514,7 +514,7 @@ export default class Commands {
 
                 if (!target)
                     return this.player.notify(
-                        `Invalid command. Usage: /allattack [target_instance]`
+                        `Invalid command. Usage: /allattack [target_instance]`,
                     );
 
                 if (!region) return this.player.notify('Bro what.');
@@ -543,7 +543,7 @@ export default class Commands {
                         type: Opcodes.Pointer.Location,
                         instance: this.player.instance,
                         x: posX,
-                        y: posY
+                        y: posY,
                     });
                 } else {
                     let instance = blocks.shift()!;
@@ -553,9 +553,9 @@ export default class Commands {
                     this.player.pointer(
                         {
                             type: Opcodes.Pointer.Entity,
-                            instance
+                            instance,
                         },
-                        false
+                        false,
                     );
                 }
 
@@ -604,7 +604,7 @@ export default class Commands {
 
                 if (!username || !key || !x)
                     return this.player.notify(
-                        'Malformed command, expected /setlevel [skill] [level] [username]'
+                        'Malformed command, expected /setlevel [skill] [level] [username]',
                     );
 
                 player = this.world.getPlayerByName(username);
@@ -706,7 +706,7 @@ export default class Commands {
             case 'popup': {
                 this.player.popup(
                     'New Quest Found!',
-                    '@blue@New @darkblue@quest @green@has@red@ been discovered!'
+                    '@blue@New @darkblue@quest @green@has@red@ been discovered!',
                 );
 
                 break;
@@ -732,7 +732,7 @@ export default class Commands {
 
             case 'resetachievements': {
                 this.player.achievements.forEachAchievement((achievement) =>
-                    achievement.setStage(0)
+                    achievement.setStage(0),
                 );
 
                 this.player.updateRegion();
@@ -783,7 +783,7 @@ export default class Commands {
 
                 if (!username)
                     return this.player.notify(
-                        `Malformed command, expected /kill username/instance`
+                        `Malformed command, expected /kill username/instance`,
                     );
 
                 player = this.world.getPlayerByName(username);
@@ -816,7 +816,7 @@ export default class Commands {
 
                 if (!achievementKey)
                     return this.player.notify(
-                        `Malformed command, expected /finishachievement achievementKey`
+                        `Malformed command, expected /finishachievement achievementKey`,
                     );
 
                 achievement = this.player.achievements.get(achievementKey);
@@ -829,7 +829,7 @@ export default class Commands {
 
             case 'finishachievements': {
                 return this.player.achievements.forEachAchievement((achievement) =>
-                    achievement.finish()
+                    achievement.finish(),
                 );
             }
 
@@ -843,7 +843,7 @@ export default class Commands {
 
                     if (!entity)
                         return this.player.notify(
-                            `Could not find entity with instance: ${instance}`
+                            `Could not find entity with instance: ${instance}`,
                         );
 
                     if (!entity.isMob() && !entity.isPlayer())
@@ -927,7 +927,7 @@ export default class Commands {
                     return this.player.notify(`Malformed command, expected /distance x y`);
 
                 this.player.notify(
-                    `Distance: ${Utils.getDistance(this.player.x, this.player.y, x, y)}`
+                    `Distance: ${Utils.getDistance(this.player.x, this.player.y, x, y)}`,
                 );
 
                 break;
@@ -948,7 +948,7 @@ export default class Commands {
                 });
 
                 this.player.notify(
-                    'Congratulations, you killed everyone, are you happy with yourself?'
+                    'Congratulations, you killed everyone, are you happy with yourself?',
                 );
 
                 break;
@@ -988,7 +988,7 @@ export default class Commands {
 
                 if (!key || isNaN(x))
                     return this.player.notify(
-                        `Malformed command, expected /setquickslot key quickslot`
+                        `Malformed command, expected /setquickslot key quickslot`,
                     );
 
                 this.player.abilities.setQuickSlot(key, x);
@@ -1005,7 +1005,7 @@ export default class Commands {
                 if (!key) return this.player.notify(`Malformed command, expected /store key`);
 
                 this.player.send(
-                    new StorePacket(Opcodes.Store.Open, this.world.stores.serialize(key))
+                    new StorePacket(Opcodes.Store.Open, this.world.stores.serialize(key)),
                 );
 
                 this.player.storeOpen = key;
@@ -1055,7 +1055,7 @@ export default class Commands {
                 if (!player)
                     return this.world.database.setRank(
                         username,
-                        Modules.Ranks[rankText as keyof typeof Modules.Ranks]
+                        Modules.Ranks[rankText as keyof typeof Modules.Ranks],
                     );
 
                 let rank = Modules.Ranks[rankText as keyof typeof Modules.Ranks];
@@ -1090,14 +1090,14 @@ export default class Commands {
                 let items: Item[] = [
                     new Item('oldonesblade', -1, -1, false, 1),
                     new Item('froghelm', -1, -1, false, 1),
-                    new Item('gold', -1, -1, false, 1500)
+                    new Item('gold', -1, -1, false, 1500),
                 ];
 
                 this.world.entities.spawnLootBag(
                     this.player.x,
                     this.player.y,
                     this.player.username,
-                    items
+                    items,
                 );
                 break;
             }

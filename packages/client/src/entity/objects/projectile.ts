@@ -16,7 +16,11 @@ export default class Projectile extends Entity {
     // Callback created when the projectile impacts the target.
     public impactCallback?(): void;
 
-    public constructor(instance: string, public owner: Entity, private hitType: Modules.Hits) {
+    public constructor(
+        instance: string,
+        public owner: Entity,
+        private hitType: Modules.Hits,
+    ) {
         super(instance, Modules.EntityType.Projectile);
 
         // Update the projectile's position to the owner's position.

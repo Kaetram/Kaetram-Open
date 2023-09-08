@@ -70,7 +70,7 @@ export default class Resource {
             } else if (dataIntersect.length > 0)
                 // Remove tree data.
                 this.depleted[index] = flatTile.filter(
-                    (tile) => !dataIntersect.includes(tile)
+                    (tile) => !dataIntersect.includes(tile),
                 ) as Tile;
 
             // Set tile data to 0 indicating nothing there instead of empty array '[]'

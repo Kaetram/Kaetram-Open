@@ -83,7 +83,7 @@ export default class Storage {
                 autoLogin: false,
                 rememberMe: false,
                 orientation: Modules.Orientation.Down,
-                zoom: 3
+                zoom: 3,
             },
 
             settings: {
@@ -97,8 +97,8 @@ export default class Storage {
                 showNames: true,
                 showLevels: true,
                 disableCaching: false,
-                webgl: false
-            }
+                webgl: false,
+            },
         };
     }
 
@@ -487,7 +487,7 @@ export default class Storage {
         let info: RegionMapData = {
             regionData: {},
             objects: [],
-            cursorTiles: {}
+            cursorTiles: {},
         };
 
         if (!this.mapData) return callback(info);
@@ -495,7 +495,7 @@ export default class Storage {
         // Create the transaction and begin grabbing data from each object store.
         let transaction = this.mapData.transaction(
                 ['regions', 'objects', 'cursorTiles'],
-                'readonly'
+                'readonly',
             ),
             regionRequest = transaction.objectStore('regions').openCursor(), // Grab all the indexes and the keys.
             objectRequest = transaction.objectStore('objects').get(0), // Only need the first index.

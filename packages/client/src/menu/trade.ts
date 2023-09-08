@@ -18,13 +18,13 @@ export default class Trade extends Menu {
     public override identifier: number = Modules.Interfaces.Trade;
 
     private inventoryList: HTMLUListElement = document.querySelector(
-        '#trade-inventory-slots > ul'
+        '#trade-inventory-slots > ul',
     )!;
 
     // Where we visually display the changes to the trade.
     private playerSlots: HTMLUListElement = document.querySelector('#trade-player-slots > ul')!;
     private otherPlayerSlots: HTMLUListElement = document.querySelector(
-        '#trade-oplayer-slots > ul'
+        '#trade-oplayer-slots > ul',
     )!;
 
     private playerName: HTMLElement = document.querySelector('#trade-player-name')!;
@@ -73,13 +73,13 @@ export default class Trade extends Menu {
                     Modules.ContainerType.Inventory,
                     i,
                     this.select.bind(this),
-                    this.showTradeAmountDialog.bind(this)
-                )
+                    this.showTradeAmountDialog.bind(this),
+                ),
             );
 
             // Player slots
             this.playerSlots.append(
-                Util.createSlot(Modules.ContainerType.Trade, i, this.select.bind(this))
+                Util.createSlot(Modules.ContainerType.Trade, i, this.select.bind(this)),
             );
 
             // Other player slots
@@ -183,7 +183,7 @@ export default class Trade extends Menu {
 
         if (!otherPlayer) {
             let itemCount = this.getElement(this.inventoryIndex).querySelector<HTMLElement>(
-                    '.item-count'
+                    '.item-count',
                 )!,
                 actualCount = this.inventory.getCount(this.inventoryIndex) - count;
 
@@ -218,7 +218,7 @@ export default class Trade extends Menu {
             this.setSlot(
                 inventoryIndex,
                 image.style.backgroundImage,
-                this.inventory.getCount(inventoryIndex)
+                this.inventory.getCount(inventoryIndex),
             );
         }
 

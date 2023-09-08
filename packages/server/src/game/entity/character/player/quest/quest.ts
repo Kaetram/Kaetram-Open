@@ -16,7 +16,7 @@ import type {
     RawStage,
     StageData,
     HideNPC,
-    QuestItem
+    QuestItem,
 } from '@kaetram/common/network/impl/quest';
 
 type InterfaceCallback = (key: string) => void;
@@ -71,7 +71,10 @@ export default abstract class Quest {
     public killCallback?: KillCallback;
     public resourceCallback?: ResourceCallback;
 
-    public constructor(private key: string, rawData: RawQuest) {
+    public constructor(
+        private key: string,
+        rawData: RawQuest,
+    ) {
         this.name = rawData.name;
         this.description = rawData.description;
         this.rewards = rawData.rewards || [];
@@ -190,7 +193,7 @@ export default abstract class Quest {
 
     private handleKill(mob: Mob): void {
         log.debug(
-            `[${this.name}] Killing mob: ${mob.key}, stage: ${this.stage}, subStage: ${this.subStage}.`
+            `[${this.name}] Killing mob: ${mob.key}, stage: ${this.stage}, subStage: ${this.subStage}.`,
         );
 
         if (!this.stageData.mob)
@@ -319,7 +322,7 @@ export default abstract class Quest {
     private givePlayerRewards(
         player: Player,
         itemRewards: QuestItem[] = [],
-        progress = false
+        progress = false,
     ): void {
         // We play it extra safe by ensuring there are at least as many empty spaces as there are reward items.
         if (!player.inventory.hasSpace(itemRewards.length))
@@ -551,7 +554,7 @@ export default abstract class Quest {
             treeCount: stage.treeCount || 0,
             skill: stage.skill || '',
             experience: stage.experience || 0,
-            timer: stage.timer || 0
+            timer: stage.timer || 0,
         };
     }
 
@@ -627,7 +630,7 @@ export default abstract class Quest {
         stage: number,
         subStage = 0,
         progressCallback = true,
-        skipPrompts = false
+        skipPrompts = false,
     ): void {
         let isProgress = this.stage !== stage;
 
@@ -706,7 +709,7 @@ export default abstract class Quest {
             key: this.key,
             stage: this.stage,
             subStage: this.subStage,
-            completedSubStages: this.completedSubStages
+            completedSubStages: this.completedSubStages,
         };
 
         if (batch) {

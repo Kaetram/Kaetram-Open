@@ -13,7 +13,7 @@ import type {
     RawStore,
     SerializedStoreInfo,
     SerializedStoreItem,
-    StoreData
+    StoreData,
 } from '@kaetram/common/network/impl/store';
 
 interface StoreInfo {
@@ -90,7 +90,7 @@ export default class Stores {
             refresh,
             currency,
             restricted,
-            lastUpdate: Date.now()
+            lastUpdate: Date.now(),
         };
     }
 
@@ -230,7 +230,7 @@ export default class Stores {
         log.stores(
             `Player ${player.username} purchased ${amount} ${item.key} for ${item.price * amount} ${
                 store.currency
-            }.`
+            }.`,
         );
         // Sync up new store data to all players.
         this.updatePlayers(storeKey);
@@ -345,7 +345,7 @@ export default class Stores {
         log.stores(
             `Player ${player.username} sold ${count} ${item.key} for ${item.price * count} ${
                 store.currency
-            }.`
+            }.`,
         );
 
         // Create the select packet for the client to process and move the item into the slot.
@@ -357,9 +357,9 @@ export default class Stores {
                     name: item.name,
                     count,
                     price: totalCoins,
-                    index
-                }
-            })
+                    index,
+                },
+            }),
         );
     }
 
@@ -395,7 +395,7 @@ export default class Stores {
         // Check if store exists.
         if (!store) {
             log.warning(
-                `Player ${player.username} tried to refresh a non-existent store with ID: ${storeKey}.`
+                `Player ${player.username} tried to refresh a non-existent store with ID: ${storeKey}.`,
             );
 
             return false;
@@ -518,13 +518,13 @@ export default class Stores {
                 key: item.key,
                 name: item.name,
                 count: item.count,
-                price: item.price
+                price: item.price,
             });
 
         return {
             key,
             items,
-            currency: store.currency
+            currency: store.currency,
         };
     }
 }

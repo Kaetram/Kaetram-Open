@@ -114,7 +114,7 @@ export default class Server extends Model {
 
                 // Send the list of active members back to the source server's player.
                 this.send(
-                    new GuildPacket(Opcodes.Guild.Update, { username, members: activeMembers })
+                    new GuildPacket(Opcodes.Guild.Update, { username, members: activeMembers }),
                 );
             }
         }
@@ -193,7 +193,11 @@ export default class Server extends Model {
 
         // Broadcast the login to all the servers.
         this.controller.broadcastServers(
-            new Packet(Packets.Player, Opcodes.Player.Login, { username, serverId: this.id, guild })
+            new Packet(Packets.Player, Opcodes.Player.Login, {
+                username,
+                serverId: this.id,
+                guild,
+            }),
         );
 
         // Create a callback for the player logging in.
@@ -214,8 +218,8 @@ export default class Server extends Model {
             new Packet(Packets.Player, Opcodes.Player.Logout, {
                 username,
                 serverId: this.id,
-                guild
-            })
+                guild,
+            }),
         );
 
         // Create a callback for the player logging out.
@@ -260,7 +264,7 @@ export default class Server extends Model {
             host: this.host,
             port: this.port,
             players: this.players.length,
-            maxPlayers: this.maxPlayers
+            maxPlayers: this.maxPlayers,
         };
     }
 }

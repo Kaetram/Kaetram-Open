@@ -30,7 +30,10 @@ export default class Minigame {
     // Tick interval for the minigame.
     private tickInterval = 1000; // Every 1 second.
 
-    public constructor(protected world: World, private type: Opcodes.Minigame) {
+    public constructor(
+        protected world: World,
+        private type: Opcodes.Minigame,
+    ) {
         // Begin the tick interval for the minigame.
         setInterval(this.tick.bind(this), this.tickInterval);
     }
@@ -100,7 +103,7 @@ export default class Minigame {
     public stop(): void {
         // Signal to the players in game that the minigame has ended.
         this.sendPacket(this.playersInGame, {
-            action: Opcodes.MinigameActions.End
+            action: Opcodes.MinigameActions.End,
         });
 
         this.started = false;
@@ -126,7 +129,7 @@ export default class Minigame {
         this.playersInLobby.push(player);
 
         this.sendPacket([player], {
-            action: Opcodes.MinigameState.Lobby
+            action: Opcodes.MinigameState.Lobby,
         });
 
         // Notify the player of the minigame.
@@ -142,7 +145,7 @@ export default class Minigame {
         this.playersInLobby.splice(this.playersInLobby.indexOf(player), 1);
 
         this.sendPacket([player], {
-            action: Opcodes.MinigameActions.Exit
+            action: Opcodes.MinigameActions.Exit,
         });
 
         // Notify the player of the minigame.
@@ -160,7 +163,7 @@ export default class Minigame {
     protected sendPacket(players: Player[], info: MinigamePacketData): void {
         this.world.push(Modules.PacketType.Players, {
             players,
-            packet: new Packet(this.type, info)
+            packet: new Packet(this.type, info),
         });
     }
 
@@ -191,7 +194,7 @@ export default class Minigame {
     public getLobbyPosition(): Position {
         return {
             x: Utils.randomInt(this.lobby.x + 2, this.lobby.x + this.lobby.width - 3),
-            y: Utils.randomInt(this.lobby.y + 2, this.lobby.y + this.lobby.height - 3)
+            y: Utils.randomInt(this.lobby.y + 2, this.lobby.y + this.lobby.height - 3),
         };
     }
 

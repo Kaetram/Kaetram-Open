@@ -74,18 +74,18 @@ export default class Main {
         username: string,
         serverId: number,
         logout: boolean,
-        population: number
+        population: number,
     ): void {
         this.discord.sendMessage(
             Utils.formatName(username),
             logout ? 'has logged out!' : 'has logged in!',
             `${config.name} ${serverId}`,
-            false
+            false,
         );
 
         // Update the population of the Discord server.
         this.discord.setTopic(
-            `Currently ${population} player${population === 1 ? '' : 's'} online.`
+            `Currently ${population} player${population === 1 ? '' : 's'} online.`,
         );
     }
 }

@@ -15,7 +15,7 @@ import type { TransformedTile } from '@kaetram/common/types/map';
 enum FlipFlags {
     FlippedAntiDiagonal = 0x20_00_00_00,
     FlippedVertical = 0x40_00_00_00,
-    FlippedHorizontal = 0x80_00_00_00
+    FlippedHorizontal = 0x80_00_00_00,
 }
 
 interface AnimatedTiles {
@@ -65,7 +65,7 @@ export default class Layer {
     public bindTexture(
         context: WebGLRenderingContext,
         program: WebGLProgram,
-        foreground = false
+        foreground = false,
     ): void {
         // Program hasn't loaded yet so there's no need to bind the texture.
         if (!program) return;
@@ -78,7 +78,7 @@ export default class Layer {
 
         context.bindTexture(
             context.TEXTURE_2D,
-            foreground ? this.foregroundTexture : this.backgroundTexture
+            foreground ? this.foregroundTexture : this.backgroundTexture,
         );
 
         context.texParameteri(context.TEXTURE_2D, context.TEXTURE_MAG_FILTER, context.NEAREST);
@@ -112,7 +112,7 @@ export default class Layer {
             0,
             context.RGBA,
             context.UNSIGNED_BYTE,
-            foreground ? this.foregroundData : this.backgroundData
+            foreground ? this.foregroundData : this.backgroundData,
         );
     }
 
@@ -193,7 +193,7 @@ export default class Layer {
                 this.map.getTileAnimation(tileId),
                 flipped,
                 isHighTile,
-                this.map.dynamicAnimatedTiles[index]
+                this.map.dynamicAnimatedTiles[index],
             );
     }
 
@@ -209,12 +209,12 @@ export default class Layer {
         context: WebGLRenderingContext,
         time: number,
         foreground = false,
-        lowPower = false
+        lowPower = false,
     ): void {
         // Bind the texture according to whether we want to draw the foreground or background.
         context.bindTexture(
             context.TEXTURE_2D,
-            foreground ? this.foregroundTexture : this.backgroundTexture
+            foreground ? this.foregroundTexture : this.backgroundTexture,
         );
 
         // Draw the triangles

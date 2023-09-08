@@ -25,7 +25,7 @@ function resetTimeout() {
 // Register event listeners to detect a hold event.
 export function onSecondaryPress(
     element: HTMLElement,
-    callback: (position: { x: number; y: number }) => void
+    callback: (position: { x: number; y: number }) => void,
 ) {
     // Get the game container element.
     let gameContainer = document.querySelector<HTMLElement>('#game-container')!;
@@ -51,7 +51,7 @@ export function onSecondaryPress(
         // Set a timeout to call the callback after HOLD_TIME ms.
         holdTimeout = window.setTimeout(
             () => callback({ x: touch.clientX, y: touch.clientY }),
-            HOLD_TIME
+            HOLD_TIME,
         );
     });
 
@@ -69,7 +69,7 @@ export function onSecondaryPress(
 export function onDragDrop(
     element: HTMLElement,
     dropCallback: (clone: HTMLElement, target: HTMLElement) => void,
-    exception?: () => boolean
+    exception?: () => boolean,
 ) {
     let isHolding = false,
         dragClone: HTMLElement | undefined,
