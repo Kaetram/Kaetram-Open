@@ -875,7 +875,7 @@ export default class Renderer {
      */
 
     private drawName(entity: Character & Item): void {
-        if (entity.isPet()) return;
+        if (entity.isPet() || entity.isProjectile()) return;
 
         let x = entity.x + 8, // Default offsets
             y = entity.y - 10,
