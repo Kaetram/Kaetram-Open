@@ -4592,7 +4592,7 @@
         "name": "Bronze Ring",
         "price": 100,
         "skill": "defense",
-        "level": 5,
+        "level": 20,
         "attackStats": {
             "crush": 1,
             "slash": 1,
@@ -4641,12 +4641,822 @@
             "magic": 1
         }
     },
-    "berylsilverring": {
+    "ringbronzeberyl": {
+        "type": "ring",
+        "name": "Beryl Gold Ring",
+        "price": 1000,
+        "skill": "accuracy",
+        "level": 20,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 1,
+            "magic": 1
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 3,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 3,
+            "archery": 1,
+            "magic": 1
+        }
+    },
+    "ringbronzeemerald": {
+        "type": "ring",
+        "name": "Emerald Bronze Ring",
+        "price": 1000,
+        "skill": "archery",
+        "level": 20,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 4,
+            "archery": 5,
+            "magic": 2
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 3,
+            "stab": 7,
+            "archery": 5,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 1,
+            "archery": 2,
+            "magic": 2
+        }
+    },
+    "ringbronzepythar": {
+        "type": "ring",
+        "name": "Pythar Bronze Ring",
+        "price": 1000,
+        "skill": "defense",
+        "level": 20,
+        "attackStats": {
+            "crush": 4,
+            "slash": 3,
+            "stab": 3,
+            "archery": 1,
+            "magic": 1
+        },
+        "defenseStats": {
+            "crush": 5,
+            "slash": 5,
+            "stab": 5,
+            "archery": 3,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 4,
+            "archery": 1,
+            "magic": 1
+        }
+    },
+    "ringbronzeruby": {
+        "type": "ring",
+        "name": "Ruby Bronze Ring",
+        "price": 1000,
+        "skill": "strength",
+        "level": 20,
+        "attackStats": {
+            "crush": 3,
+            "slash": 4,
+            "stab": 4,
+            "archery": 1,
+            "magic": 1
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 2,
+            "archery": 2,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 5,
+            "archery": 1,
+            "magic": 1
+        }
+    },
+    "ringbronzesapphire": {
+        "type": "ring",
+        "name": "Sapphire Bronze Ring",
+        "price": 1000,
+        "skill": "magic",
+        "level": 20,
+        "attackStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 2,
+            "archery": 1,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 4,
+            "stab": 2,
+            "archery": 1,
+            "magic": 5
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 1,
+            "magic": 4
+        }
+    },
+     "ringsilverberyl": {
         "type": "ring",
         "name": "Beryl Silver Ring",
-        "price": 200,
+        "price": 2500,
+        "skill": "accuracy",
+        "level": 30,
+        "attackStats": {
+            "crush": 7,
+            "slash": 6,
+            "stab": 6,
+            "archery": 3,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 4,
+            "stab": 6,
+            "archery": 3,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 3,
+            "archery": 3,
+            "magic": 3
+        }
+    },
+    "ringsilveremerald": {
+        "type": "ring",
+        "name": "Emerald Silver Ring",
+        "price": 2500,
+        "skill": "archery",
+        "level": 40,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": 6,
+            "magic": 2
+        },
+        "defenseStats": {
+            "crush": 0,
+            "slash": 3,
+            "stab": 7,
+            "archery": 21,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 1,
+            "archery": 1,
+            "magic": 3
+        }
+    },
+    "ringsilverpythar": {
+        "type": "ring",
+        "name": "Pythar Silver Ring",
+        "price": 2500,
         "skill": "defense",
-        "level": 15,
+        "level": 30,
+        "attackStats": {
+            "crush": 7,
+            "slash": 5,
+            "stab": 3,
+            "archery": 3,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 8,
+            "slash": 8,
+            "stab": 8,
+            "archery": 5,
+            "magic": 5
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 7,
+            "archery": 3,
+            "magic": 3
+        }
+    },
+    "ringsilverruby": {
+        "type": "ring",
+        "name": "Ruby Silver Ring",
+        "price": 2500,
+        "skill": "strength",
+        "level": 30,
+        "attackStats": {
+            "crush": 7,
+            "slash": 6,
+            "stab": 5,
+            "archery": 3,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 6,
+            "stab": 5,
+            "archery": 4,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 8,
+            "archery": 3,
+            "magic": 3
+        }
+    },
+    "ringsilversapphire": {
+        "type": "ring",
+        "name": "Sapphire Silver Ring",
+        "price": 2500,
+        "skill": "defense",
+        "level": 30,
+        "attackStats": {
+            "crush": 5,
+            "slash": 4,
+            "stab": 4,
+            "archery": 3,
+            "magic": 8
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 4,
+            "stab": 4,
+            "archery": 3,
+            "magic": 8
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 3,
+            "magic": 8
+        }
+    },
+    "ringgoldberyl": {
+        "type": "ring",
+        "name": "Beryl Gold Ring",
+        "price": 3650,
+        "skill": "accuracy",
+        "level": 50,
+        "attackStats": {
+            "crush": 9,
+            "slash": 8,
+            "stab": 8,
+            "archery": 6,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 7,
+            "slash": 10,
+            "stab": 10,
+            "archery": 7,
+            "magic": 7
+        },
+        "bonuses": {
+            "accuracy": 12,
+            "strength": 6,
+            "archery": 6,
+            "magic": 6
+        }
+    },
+    "ringgoldemerald": {
+        "type": "ring",
+        "name": "Emerald Gold Ring",
+        "price": 3650,
+        "skill": "archery",
+        "level": 50,
+        "attackStats": {
+            "crush": 6,
+            "slash": 7,
+            "stab": 9,
+            "archery": 12,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 7,
+            "slash": 8,
+            "stab": 6,
+            "archery": 12,
+            "magic": 6
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 6,
+            "archery": 7,
+            "magic": 6
+        }
+    },
+    "ringgoldpythar": {
+        "type": "ring",
+        "name": "Pythar Gold Ring",
+        "price": 3650,
+        "skill": "defense",
+        "level": 50,
+        "attackStats": {
+            "crush": 11,
+            "slash": 8,
+            "stab": 7,
+            "archery": 6,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 12,
+            "slash": 12,
+            "stab": 12,
+            "archery": 10,
+            "magic": 9
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 9,
+            "archery": 6,
+            "magic": 6
+        }
+    },
+    "ringgoldruby": {
+        "type": "ring",
+        "name": "Ruby Gold Ring",
+        "price": 3650,
+        "skill": "strength",
+        "level": 50,
+        "attackStats": {
+            "crush": 7,
+            "slash": 10,
+            "stab": 9,
+            "archery": 6,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 8,
+            "slash": 6,
+            "stab": 7,
+            "archery": 6,
+            "magic": 6
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 12,
+            "archery": 6,
+            "magic": 6
+        }
+    },
+    "ringgoldsapphire": {
+        "type": "ring",
+        "name": "Sapphire Gold Ring",
+        "price": 3650,
+        "skill": "magic",
+        "level": 50,
+        "attackStats": {
+            "crush": 7,
+            "slash": 9,
+            "stab": 7,
+            "archery": 6,
+            "magic": 12
+        },
+        "defenseStats": {
+            "crush": 7,
+            "slash": 6,
+            "stab": 8,
+            "archery": 6,
+            "magic": 12
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 6,
+            "archery": 6,
+            "magic": 12
+        }
+    },
+    "pendantbronzeberyl": {
+        "type": "pendant",
+        "name": "Beryl Gold Pendant",
+        "price": 1500,
+        "skill": "accuracy",
+        "level": 20,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": 1,
+            "magic": 1
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 4,
+            "archery": 2,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 1,
+            "archery": 1,
+            "magic": 1
+        }
+    },
+    "pendantbronzeemerald": {
+        "type": "pendant",
+        "name": "Emerald Bronze Pendant",
+        "price": 1500,
+        "skill": "archery",
+        "level": 20,
+        "attackStats": {
+            "crush": 0,
+            "slash": 3,
+            "stab": 2,
+            "archery": 5,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": 5,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 2,
+            "archery": 4,
+            "magic": 1
+        }
+    },
+    "pendantbronzepythar": {
+        "type": "pendant",
+        "name": "Pythar Bronze Pendant",
+        "price": 1500,
+        "skill": "defense",
+        "level": 20,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 5,
+            "slash": 5,
+            "stab": 5,
+            "archery": 3,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 4,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "pendantbronzeruby": {
+        "type": "pendant",
+        "name": "Ruby Bronze Pendant",
+        "price": 1500,
+        "skill": "strength",
+        "level": 20,
+        "attackStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 3,
+            "archery": 1,
+            "magic": 1
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 2,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 5,
+            "archery": 1,
+            "magic": 1
+        }
+    },
+    "pendantbronzesapphire": {
+        "type": "pendant",
+        "name": "Sapphire Bronze Pendant",
+        "price": 1500,
+        "skill": "magic",
+        "level": 20,
+        "attackStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 1,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 1,
+            "magic": 5
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 1,
+            "magic": 4
+        }
+    },
+    "pendantsilverberyl": {
+        "type": "pendant",
+        "name": "Beryl Silver Pendant",
+        "price": 2500,
+        "skill": "accuracy",
+        "level": 30,
+        "attackStats": {
+            "crush": 6,
+            "slash": 5,
+            "stab": 6,
+            "archery": 2,
+            "magic": 2
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 4,
+            "stab": 4,
+            "archery": 2,
+            "magic": 1
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 3,
+            "archery": 2,
+            "magic": 2
+        }
+    },
+    "pendantsilveremerald": {
+        "type": "pendant",
+        "name": "Emerald Silver Pendant",
+        "price": 2500,
+        "skill": "archery",
+        "level": 40,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 4,
+            "archery": 8,
+            "magic": 1
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 4,
+            "archery": 8,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 2,
+            "archery": 6,
+            "magic": 2
+        }
+    },
+    "pendantsilverpythar": {
+        "type": "pendant",
+        "name": "Pythar Silver Pendant",
+        "price": 2500,
+        "skill": "defense",
+        "level": 30,
+        "attackStats": {
+            "crush": 5,
+            "slash": 3,
+            "stab": 2,
+            "archery": 3,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 8,
+            "slash": 8,
+            "stab": 8,
+            "archery": 5,
+            "magic": 5
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 6,
+            "archery": 3,
+            "magic": 3
+        }
+    },
+    "pendantsilverruby": {
+        "type": "pendant",
+        "name": "Ruby Silver Pendant",
+        "price": 2500,
+        "skill": "strength",
+        "level": 30,
+        "attackStats": {
+            "crush": 6,
+            "slash": 6,
+            "stab": 6,
+            "archery": 3,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 6,
+            "stab": 5,
+            "archery": 4,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 8,
+            "archery": 3,
+            "magic": 3
+        }
+    },
+    "pendantsilversapphire": {
+        "type": "pendant",
+        "name": "Sapphire Silver Pendant",
+        "price": 2500,
+        "skill": "defense",
+        "level": 30,
+        "attackStats": {
+            "crush": 4,
+            "slash": 3,
+            "stab": 2,
+            "archery": 3,
+            "magic": 8
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 4,
+            "stab": 4,
+            "archery": 3,
+            "magic": 8
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 3,
+            "magic": 8
+        }
+    },
+    "pendantgoldberyl": {
+        "type": "pendant",
+        "name": "Beryl Gold Pendant",
+        "price": 3650,
+        "skill": "accuracy",
+        "level": 50,
+        "attackStats": {
+            "crush": 6,
+            "slash": 7,
+            "stab": 9,
+            "archery": 6,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 9,
+            "stab": 7,
+            "archery": 6,
+            "magic": 6
+        },
+        "bonuses": {
+            "accuracy": 12,
+            "strength": 1,
+            "archery": 2,
+            "magic": 2
+        }
+    },
+    "pendantgoldemerald": {
+        "type": "pendant",
+        "name": "Emerald Gold Pendant",
+        "price": 3650,
+        "skill": "archery",
+        "level": 50,
+        "attackStats": {
+            "crush": 3,
+            "slash": 6,
+            "stab": 6,
+            "archery": 12,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 5,
+            "slash": 4,
+            "stab": 3,
+            "archery": 12,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 5,
+            "archery": 7,
+            "magic": 2
+        }
+    },
+    "pendantgoldpythar": {
+        "type": "pendant",
+        "name": "Pythar Gold Pendant",
+        "price": 3650,
+        "skill": "defense",
+        "level": 50,
+        "attackStats": {
+            "crush": 10,
+            "slash": 7,
+            "stab": 6,
+            "archery": 6,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 12,
+            "slash": 12,
+            "stab": 12,
+            "archery": 8,
+            "magic": 9
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 8,
+            "archery": 6,
+            "magic": 6
+        }
+    },
+    "pendantgoldruby": {
+        "type": "pendant",
+        "name": "Ruby Gold Pendant",
+        "price": 3650,
+        "skill": "strength",
+        "level": 50,
+        "attackStats": {
+            "crush": 8,
+            "slash": 8,
+            "stab": 8,
+            "archery": 6,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 7,
+            "stab": 7,
+            "archery": 6,
+            "magic": 6
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 12,
+            "archery": 6,
+            "magic": 6
+        }
+    },
+    "pendantgoldsapphire": {
+        "type": "pendant",
+        "name": "Sapphire Gold Pendant",
+        "price": 3650,
+        "skill": "magic",
+        "level": 50,
+        "attackStats": {
+            "crush": 6,
+            "slash": 8,
+            "stab": 7,
+            "archery": 6,
+            "magic": 12
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 6,
+            "stab": 6,
+            "archery": 6,
+            "magic": 12
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 6,
+            "archery": 6,
+            "magic": 12
+        }
+    },
+     "braceletbronzeberyl": {
+        "type": "bracelet",
+        "name": "Beryl Bronze Bracelet",
+        "price": 1000,
+        "skill": "accuracy",
+        "level": 20,
         "attackStats": {
             "crush": 2,
             "slash": 2,
@@ -4655,44 +5465,395 @@
             "magic": 2
         },
         "defenseStats": {
-            "crush": 1,
+            "crush": 2,
             "slash": 1,
             "stab": 3,
             "archery": 1,
             "magic": 3
         },
         "bonuses": {
-            "accuracy": 1,
+            "accuracy": 5,
             "strength": 1,
             "archery": 1,
             "magic": 1
         }
     },
-    "berylgoldring": {
-        "type": "ring",
-        "name": "Beryl Gold Ring",
-        "price": 2000,
+    "braceletbronzeemerald": {
+        "type": "bracelet",
+        "name": "Emerald Bronze Bracelet",
+        "price": 1000,
+        "skill": "archery",
+        "level": 20,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": 5,
+            "magic": 1
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 3,
+            "stab": 2,
+            "archery": 5,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 1,
+            "archery": 3,
+            "magic": 2
+        }
+    },
+    "braceletbronzepythar": {
+        "type": "bracelet",
+        "name": "Pythar Bronze Bracelet",
+        "price": 1000,
         "skill": "defense",
         "level": 20,
         "attackStats": {
             "crush": 2,
             "slash": 3,
-            "stab": 4,
-            "archery": 2,
-            "magic": 2
+            "stab": 2,
+            "archery": 0,
+            "magic": 1
         },
         "defenseStats": {
-            "crush": 2,
-            "slash": 3,
-            "stab": 1,
-            "archery": 1,
+            "crush": 5,
+            "slash": 5,
+            "stab": 5,
+            "archery": 3,
             "magic": 3
         },
         "bonuses": {
-            "accuracy": 2,
-            "strength": 1,
+            "accuracy": 1,
+            "strength": 3,
             "archery": 1,
             "magic": 2
+        }
+    },
+    "braceletbronzeruby": {
+        "type": "bracelet",
+        "name": "Ruby Bronze Bracelet",
+        "price": 1000,
+        "skill": "strength",
+        "level": 20,
+        "attackStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 4,
+            "archery": 1,
+            "magic": 1
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 5,
+            "archery": 1,
+            "magic": 2
+        }
+    },
+    "braceletbronzesapphire": {
+        "type": "bracelet",
+        "name": "Sapphire Bronze Bracelet",
+        "price": 1000,
+        "skill": "magic",
+        "level": 20,
+        "attackStats": {
+            "crush": 2,
+            "slash": 4,
+            "stab": 1,
+            "archery": 1,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 3,
+            "stab": 1,
+            "archery": 1,
+            "magic": 5
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 1,
+            "magic": 4
+        }
+    },
+     "braceletsilverberyl": {
+        "type": "bracelet",
+        "name": "Beryl Silver Bracelet",
+        "price": 2500,
+        "skill": "accuracy",
+        "level": 30,
+        "attackStats": {
+            "crush": 6,
+            "slash": 5,
+            "stab": 6,
+            "archery": 3,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 5,
+            "slash": 4,
+            "stab": 3,
+            "archery": 3,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 3,
+            "archery": 3,
+            "magic": 3
+        }
+    },
+    "braceletsilveremerald": {
+        "type": "bracelet",
+        "name": "Emerald Silver Bracelet",
+        "price": 2500,
+        "skill": "archery",
+        "level": 30,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 4,
+            "archery": 8,
+            "magic": 2
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 8,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 3,
+            "archery": 6,
+            "magic": 3
+        }
+    },
+    "braceletsilverpythar": {
+        "type": "bracelet",
+        "name": "Pythar Silver Bracelet",
+        "price": 2500,
+        "skill": "defense",
+        "level": 30,
+        "attackStats": {
+            "crush": 4,
+            "slash": 4,
+            "stab": 3,
+            "archery": 3,
+            "magic": 2
+        },
+        "defenseStats": {
+            "crush": 8,
+            "slash": 8,
+            "stab": 8,
+            "archery": 4,
+            "magic": 5
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 4,
+            "archery": 1,
+            "magic": 2
+        }
+    },
+    "braceletsilverruby": {
+        "type": "bracelet",
+        "name": "Ruby Silver Bracelet",
+        "price": 2500,
+        "skill": "strength",
+        "level": 30,
+        "attackStats": {
+            "crush": 4,
+            "slash": 6,
+            "stab": 5,
+            "archery": 3,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 4,
+            "stab": 4,
+            "archery": 4,
+            "magic": 4
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 8,
+            "archery": 3,
+            "magic": 3
+        }
+    },
+    "braceletsilversapphire": {
+        "type": "bracelet",
+        "name": "Sapphire Silver Bracelet",
+        "price": 2500,
+        "skill": "defense",
+        "level": 30,
+        "attackStats": {
+            "crush": 3,
+            "slash": 6,
+            "stab": 3,
+            "archery": 3,
+            "magic": 8
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 5,
+            "stab": 3,
+            "archery": 3,
+            "magic": 8
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 1,
+            "magic": 6
+        }
+    },
+     "braceletgoldberyl": {
+        "type": "bracelet",
+        "name": "Beryl Gold Bracelet",
+        "price": 2500,
+        "skill": "accuracy",
+        "level": 50,
+        "attackStats": {
+            "crush": 8,
+            "slash": 6,
+            "stab": 9,
+            "archery": 6,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 9,
+            "slash": 8,
+            "stab": 9,
+            "archery": 7,
+            "magic": 6
+        },
+        "bonuses": {
+            "accuracy": 12,
+            "strength": 6,
+            "archery": 6,
+            "magic": 6
+        }
+    },
+    "braceletgoldemerald": {
+        "type": "bracelet",
+        "name": "Emerald Gold Bracelet",
+        "price": 3650,
+        "skill": "archery",
+        "level": 50,
+        "attackStats": {
+            "crush": 5,
+            "slash": 4,
+            "stab": 7,
+            "archery": 12,
+            "magic": 3
+        },
+        "defenseStats": {
+            "crush": 5,
+            "slash": 3,
+            "stab": 2,
+            "archery": 12,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 6,
+            "archery": 7,
+            "magic": 3
+        }
+    },
+    "braceletgoldpythar": {
+        "type": "bracelet",
+        "name": "Pythar Gold Bracelet",
+        "price": 3650,
+        "skill": "defense",
+        "level": 50,
+        "attackStats": {
+            "crush": 6,
+            "slash": 6,
+            "stab": 6,
+            "archery": 6,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 12,
+            "slash": 12,
+            "stab": 12,
+            "archery": 6,
+            "magic": 7
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 5,
+            "archery": 3,
+            "magic": 3
+        }
+    },
+    "braceletgoldruby": {
+        "type": "bracelet",
+        "name": "Ruby Gold Bracelet",
+        "price": 3650,
+        "skill": "strength",
+        "level": 50,
+        "attackStats": {
+            "crush": 7,
+            "slash": 11,
+            "stab": 5,
+            "archery": 4,
+            "magic": 2
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 6,
+            "stab": 6,
+            "archery": 5,
+            "magic": 5
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 12,
+            "archery": 4,
+            "magic": 5
+        }
+    },
+    "braceletgoldsapphire": {
+        "type": "bracelet",
+        "name": "Sapphire Gold Bracelet",
+        "price": 3650,
+        "skill": "magic",
+        "level": 50,
+        "attackStats": {
+            "crush": 5,
+            "slash": 8,
+            "stab": 7,
+            "archery": 4,
+            "magic": 12
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 5,
+            "stab": 3,
+            "archery": 3,
+            "magic": 12
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 1,
+            "magic": 8
         }
     },
     "woodenbow": {
