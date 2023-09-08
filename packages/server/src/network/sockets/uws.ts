@@ -26,7 +26,7 @@ export default class UWS extends WebSocket {
                 upgrade: this.handleUpgrade.bind(this),
                 open: this.handleConnection.bind(this),
                 message: this.handleMessage.bind(this),
-                close: this.handleClose.bind(this)
+                close: this.handleClose.bind(this),
             })
             .listen(config.port, (socket: WS<ConnectionInfo>) => {
                 if (!socket) throw new Error(`Failed to listen on port ${config.port}`);
@@ -43,17 +43,17 @@ export default class UWS extends WebSocket {
     private handleUpgrade(
         response: HttpResponse,
         request: HttpRequest,
-        context: us_socket_context_t
+        context: us_socket_context_t,
     ): void {
         response.upgrade(
             {
                 url: request.getUrl(),
-                remoteAddress: request.getHeader('cf-connecting-ip')
+                remoteAddress: request.getHeader('cf-connecting-ip'),
             },
             request.getHeader('sec-websocket-key'),
             request.getHeader('sec-websocket-protocol'),
             request.getHeader('sec-websocket-extensions'),
-            context
+            context,
         );
     }
 

@@ -14,25 +14,25 @@ export default class Settings extends Menu {
     private brightnessSlider: HTMLInputElement = document.querySelector('#brightness')!;
 
     private audioEnabledCheckbox: HTMLInputElement = document.querySelector(
-        '#audio-enabled-checkbox > input'
+        '#audio-enabled-checkbox > input',
     )!;
     private lowPowerCheckbox: HTMLInputElement = document.querySelector(
-        '#low-power-checkbox > input'
+        '#low-power-checkbox > input',
     )!;
     private joystickEnabledCheckbox: HTMLInputElement = document.querySelector(
-        '#joystick-enabled-checkbox > input'
+        '#joystick-enabled-checkbox > input',
     )!;
     private debugCheckbox: HTMLInputElement = document.querySelector(
-        '#debug-mode-checkbox > input'
+        '#debug-mode-checkbox > input',
     )!;
     private showNamesCheckbox: HTMLInputElement = document.querySelector(
-        '#show-names-checkbox > input'
+        '#show-names-checkbox > input',
     )!;
     private showLevelsCheckbox: HTMLInputElement = document.querySelector(
-        '#show-levels-checkbox > input'
+        '#show-levels-checkbox > input',
     )!;
     private disableCachingCheckbox: HTMLInputElement = document.querySelector(
-        '#disable-region-caching-checkbox > input'
+        '#disable-region-caching-checkbox > input',
     )!;
     private webGlCheckbox: HTMLInputElement = document.querySelector('#webgl-checkbox > input')!;
 
@@ -47,7 +47,7 @@ export default class Settings extends Menu {
         this.lowPowerCheckbox.addEventListener('change', this.handleLowPower.bind(this));
         this.joystickEnabledCheckbox.addEventListener(
             'change',
-            this.handleJoystickEnabled.bind(this)
+            this.handleJoystickEnabled.bind(this),
         );
         this.debugCheckbox.addEventListener('change', this.handleDebug.bind(this));
         this.showNamesCheckbox.addEventListener('change', this.handleName.bind(this));
@@ -226,7 +226,7 @@ export default class Settings extends Menu {
     private handleInfo() {
         let { config } = this.game.app;
         document.querySelector(
-            '#game-info-version'
+            '#game-info-version',
         )!.textContent = `${config.version}${config.minor}`;
 
         let { serverId } = this.game.player;

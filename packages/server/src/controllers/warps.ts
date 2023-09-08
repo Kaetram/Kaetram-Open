@@ -111,8 +111,8 @@ export default class Warp {
             if (!quest?.isFinished()) {
                 player.notify(
                     `warps:CANNOT_WARP_QUEST;questName=${quest.name};name=${Utils.formatName(
-                        warp.name
-                    )}`
+                        warp.name,
+                    )}`,
                 );
                 return false;
             }

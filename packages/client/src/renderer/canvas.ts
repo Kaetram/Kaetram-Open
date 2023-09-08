@@ -9,7 +9,7 @@ import type { ClientTile, TransformedTile } from '@kaetram/common/types/map';
 enum TileFlip {
     Horizontal,
     Vertical,
-    Diagonal
+    Diagonal,
 }
 
 interface RendererTile {
@@ -181,7 +181,7 @@ export default class Canvas extends Renderer {
         context: CanvasRenderingContext2D,
         tileId: number,
         index: number,
-        flips: number[] = []
+        flips: number[] = [],
     ): void {
         if (tileId < 0) return;
 
@@ -206,7 +206,7 @@ export default class Canvas extends Renderer {
                 x: this.getX(relativeTileId + 1, setWidth) * this.tileSize,
                 y: Math.floor(relativeTileId / setWidth) * this.tileSize,
                 width: this.tileSize,
-                height: this.tileSize
+                height: this.tileSize,
             };
         }
 
@@ -221,7 +221,7 @@ export default class Canvas extends Renderer {
                 dx: Math.ceil(this.getX(index + 1, this.map.width) * this.actualTileSize),
                 dy: Math.ceil(Math.floor(index / this.map.width) * this.actualTileSize),
                 width: Math.ceil(this.actualTileSize),
-                height: Math.ceil(this.actualTileSize)
+                height: Math.ceil(this.actualTileSize),
             };
 
         this.drawImage(context, tileset, this.tiles[tileId], this.cells[index], flips);
@@ -240,7 +240,7 @@ export default class Canvas extends Renderer {
         image: CanvasImageSource,
         tile: RendererTile,
         cell: RendererCell,
-        flips: number[] = []
+        flips: number[] = [],
     ): void {
         let dx = 0,
             dy = 0,
@@ -315,7 +315,7 @@ export default class Canvas extends Renderer {
             dx || cell.dx, // Destination X
             dy || cell.dy, // Destination Y
             cell.width, // Destination Width
-            cell.height // Destination Height
+            cell.height, // Destination Height
         );
 
         if (isFlipped) context.restore();
@@ -355,7 +355,7 @@ export default class Canvas extends Renderer {
 
     private updateDrawingView(): void {
         this.forEachDrawingContext((context: CanvasRenderingContext2D) =>
-            this.setCameraView(context)
+            this.setCameraView(context),
         );
     }
 
@@ -397,7 +397,7 @@ export default class Canvas extends Renderer {
             this.map.getTileAnimation(tileId),
             false,
             this.map.isHighTile(tileId),
-            isDynamicallyAnimated ? this.map.dynamicAnimatedTiles[index] : undefined
+            isDynamicallyAnimated ? this.map.dynamicAnimatedTiles[index] : undefined,
         );
 
         // If the tile is dynamically animated then we keep track of it and not reset the tiles.

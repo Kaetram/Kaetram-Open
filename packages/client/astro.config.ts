@@ -2,21 +2,22 @@ import { fileURLToPath } from 'node:url';
 
 import { name, description } from '../../package.json';
 
-import { locales, defaultLocale, dir, t, type Locale } from '@kaetram/common/i18n';
-import { defineConfig } from 'astro/config';
-import config, { exposedConfig } from '@kaetram/common/config';
+import * as sass from 'sass';
 import webmanifest from 'astro-webmanifest';
-import { i18n, defaultLocaleSitemapFilter } from 'astro-i18n-aut/integration';
 import sitemap from '@astrojs/sitemap';
 import robotsTxt from 'astro-robots-txt';
 import partytown from '@astrojs/partytown';
+import compress from 'astro-compress';
 import compressor from 'astro-compressor';
 import glsl from 'vite-plugin-glsl';
+import { imageSize } from 'image-size';
+import { internalIpV4 } from 'internal-ip';
+import { defineConfig } from 'astro/config';
 import { VitePWA as pwa } from 'vite-plugin-pwa';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
-import { internalIpV4 } from 'internal-ip';
-import { imageSize } from 'image-size';
-import * as sass from 'sass';
+import config, { exposedConfig } from '@kaetram/common/config';
+import { i18n } from 'astro-i18n-aut/integration';
+import { locales, defaultLocale, dir, t, type Locale } from '@kaetram/common/i18n';
 
 export let env = exposedConfig('name', 'host', 'ssl', 'serverId', 'sentryDsn', 'acceptLicense');
 
@@ -29,7 +30,7 @@ Object.assign(env, {
     minor: config.minor,
     host: clientHost,
     port: clientPort,
-    hub: config.hubEnabled && hub
+    hub: config.hubEnabled && hub,
 });
 
 let ipv4 = await internalIpV4(),
@@ -41,20 +42,19 @@ let ipv4 = await internalIpV4(),
                 cacheId: name,
                 globDirectory: 'dist',
                 globPatterns: ['**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}'],
-                navigateFallback: null
-            }
-        })
+                navigateFallback: null,
+            },
+        }),
     ];
 
 if (config.sentryDsn && !config.debugging)
     plugins.push(
         sentryVitePlugin({
-            include: '.',
             org: config.sentryOrg,
             project: config.sentryProject,
             authToken: config.sentryAuthToken,
-            sourcemaps: { assets: './dist/**' }
-        })
+            sourcemaps: { assets: './dist/**' },
+        }),
     );
 
 let imageCache = new Map<string, { width?: number; height?: number }>();
@@ -92,22 +92,23 @@ if (import.meta.env.PROD)
                         lang,
                         dir: dir(locale as Locale),
                         name: t('game:NAME', { lng: locale }),
-                        description: t('game:DESCRIPTION', { lng: locale })
-                    }
-                ])
+                        description: t('game:DESCRIPTION', { lng: locale }),
+                    },
+                ]),
             ),
             config: {
                 insertAppleTouchLinks: true,
-                iconPurpose: ['any', 'maskable']
-            }
+                iconPurpose: ['any', 'maskable'],
+            },
         }),
         sitemap({
             i18n: { locales, defaultLocale },
-            filter: defaultLocaleSitemapFilter({ defaultLocale })
+            //filter: filterSitemapByDefaultLocale({ defaultLocale })
         }),
         partytown({ config: { debug: false } }),
         robotsTxt({ host: true }),
-        compressor({ gzip: true, brotli: true })
+        compress({ logger: 1, Image: false }),
+        compressor({ gzip: true, brotli: true }),
     );
 
 // https://astro.build/config
@@ -122,7 +123,7 @@ export default defineConfig({
         build: { sourcemap: true },
         server: {
             strictPort: true,
-            hmr: { protocol: 'ws', host: ipv4, port: 5183 }
+            hmr: { protocol: 'ws', host: ipv4, port: 5183 },
         },
         define: { globalConfig: env },
         css: {
@@ -138,10 +139,10 @@ export default defineConfig({
                             let { height } = getImageSize(image.getValue());
 
                             return new sass.types.Number(height!);
-                        }
-                    }
-                }
-            }
-        }
-    }
+                        },
+                    },
+                },
+            },
+        },
+    },
 });

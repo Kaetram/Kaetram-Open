@@ -78,7 +78,7 @@ export default class Regions {
         if (this.map.width % this.divisionSize !== 0) {
             log.error(`Corrupted map regions. Unable to evenly divide into sections.`);
             log.error(
-                `Map: ${this.map.width}x${this.map.height} - divisions: ${this.divisionSize}.`
+                `Map: ${this.map.width}x${this.map.height} - divisions: ${this.divisionSize}.`,
             );
             return;
         }
@@ -125,7 +125,7 @@ export default class Regions {
     private loadRegionCache(update = false): void {
         let cache: RegionCache = {
                 data: {},
-                version: this.map.version
+                version: this.map.version,
             },
             path = './cache/regions.json';
 
@@ -143,11 +143,11 @@ export default class Regions {
 
                 // Iterate through all the regions and assign the data to them according to their index.
                 this.forEachRegion(
-                    (region: Region, index: number) => (region.data = cache.data[index])
+                    (region: Region, index: number) => (region.data = cache.data[index]),
                 );
 
                 log.debug(
-                    `Successfully loaded ${Object.keys(cache.data).length} regions from cache.`
+                    `Successfully loaded ${Object.keys(cache.data).length} regions from cache.`,
                 );
             });
 
@@ -367,7 +367,7 @@ export default class Regions {
             // Store the position of the entity.
             positions[entity.instance] = {
                 x: entity.x,
-                y: entity.y
+                y: entity.y,
             };
         });
 
@@ -386,7 +386,7 @@ export default class Regions {
             this.world.push(Modules.PacketType.Regions, {
                 region,
                 ignore: entity.isPlayer() ? entity.instance : '',
-                packet: new SpawnPacket(entity)
+                packet: new SpawnPacket(entity),
             });
         });
 
@@ -520,7 +520,7 @@ export default class Regions {
             // We skip if the region is loaded and we are not forcing static data.
             if (!player.hasLoadedRegion(surroundingRegion) || force) {
                 data[surroundingRegion].push(
-                    ...(config.regionCache ? region.data : this.getRegionTileData(region))
+                    ...(config.regionCache ? region.data : this.getRegionTileData(region)),
                 );
 
                 player.loadRegion(surroundingRegion);
@@ -548,7 +548,7 @@ export default class Regions {
 
         if (dynamic)
             region.forEachDynamicTile((x: number, y: number, area: Area) =>
-                tileData.push(this.buildDynamicTile(player!, area, x, y))
+                tileData.push(this.buildDynamicTile(player!, area, x, y)),
             );
         else
             region.forEachTile((x: number, y: number) => {
@@ -626,7 +626,7 @@ export default class Regions {
 
             if (!region)
                 return log.warning(
-                    `[${player.username}] Invalid surrounding region: ${surroundingRegion} for player's region: ${player.region}.`
+                    `[${player.username}] Invalid surrounding region: ${surroundingRegion} for player's region: ${player.region}.`,
                 );
 
             region.forEachEntity((entity: Entity) => {
@@ -667,7 +667,7 @@ export default class Regions {
         let tile: RegionTileData = {
             x,
             y,
-            data
+            data,
         };
 
         /**
@@ -790,14 +790,14 @@ export default class Regions {
                     region - sideLength,
                     region - sideLength + 1,
                     region + sideLength,
-                    region + sideLength + 1
+                    region + sideLength + 1,
                 );
             else if (this.isRightEdge(region))
                 surroundingRegions.push(
                     region - sideLength,
                     region - sideLength - 1,
                     region + sideLength,
-                    region + sideLength - 1
+                    region + sideLength - 1,
                 );
             else
                 surroundingRegions.push(
@@ -806,7 +806,7 @@ export default class Regions {
                     region + sideLength - 1,
                     region + sideLength + 1,
                     region - sideLength - 1,
-                    region - sideLength + 1
+                    region - sideLength + 1,
                 );
         }
 

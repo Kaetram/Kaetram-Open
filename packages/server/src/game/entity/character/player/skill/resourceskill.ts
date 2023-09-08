@@ -26,7 +26,10 @@ export default class ResourceSkill extends Skill {
 
     public randomDepletion = false;
 
-    public constructor(type: Modules.Skills, private data: ResourceData) {
+    public constructor(
+        type: Modules.Skills,
+        private data: ResourceData,
+    ) {
         super(type);
     }
 
@@ -42,7 +45,7 @@ export default class ResourceSkill extends Skill {
     public interact(player: Player, resource: Resource, weaponLevel = 0): void {
         if (resource.isDepleted())
             return log.debug(
-                `${player.username} attempted to interact with an exhausted resource.`
+                `${player.username} attempted to interact with an exhausted resource.`,
             );
 
         let resourceInfo = this.data[resource.type];
@@ -50,13 +53,13 @@ export default class ResourceSkill extends Skill {
         // Could not find resource interaction data for the resource.
         if (!resourceInfo)
             return log.warning(
-                `${player.username} attempted to interact with a resource with invalid data: ${resource.type}`
+                `${player.username} attempted to interact with a resource with invalid data: ${resource.type}`,
             );
 
         // Level required for this resource is too high for the yplayer.
         if (resourceInfo.levelRequirement > this.level)
             return player.notify(
-                ResourceText.INVALID_LEVEL(this.type, resourceInfo.levelRequirement)
+                ResourceText.INVALID_LEVEL(this.type, resourceInfo.levelRequirement),
             );
 
         // Unable to interact with the resource if the player hasn't completed the required achievement.
@@ -85,7 +88,7 @@ export default class ResourceSkill extends Skill {
 
             // Send the animation packet to the region player is in.
             player.sendToRegion(
-                new AnimationPacket({ instance: player.instance, action: Modules.Actions.Attack })
+                new AnimationPacket({ instance: player.instance, action: Modules.Actions.Attack }),
             );
 
             // Use probability to check if we can exhaust the resource.

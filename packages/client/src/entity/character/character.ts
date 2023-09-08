@@ -58,56 +58,56 @@ export default class Character extends Entity {
     private effects: { [id: number]: EffectInfo } = {
         [Modules.Effects.Critical]: {
             key: 'effects/critical',
-            animation: new Animation('effect', 10, 0, 48, 48)
+            animation: new Animation('effect', 10, 0, 48, 48),
         },
         [Modules.Effects.Terror]: {
             key: 'effects/terror',
-            animation: new Animation('effect', 8, 0, 64, 64)
+            animation: new Animation('effect', 8, 0, 64, 64),
         },
         [Modules.Effects.TerrorStatus]: {
             key: 'effects/terror2',
             animation: new Animation('effect', 5, 0, 32, 32),
             perpetual: true,
-            speed: 200
+            speed: 200,
         },
         [Modules.Effects.Stun]: {
             key: 'effects/stun',
             animation: new Animation('effect', 6, 0, 48, 48),
-            perpetual: true
+            perpetual: true,
         },
         [Modules.Effects.Healing]: {
             key: 'effects/heal',
-            animation: new Animation('effect', 8, 0, 64, 64)
+            animation: new Animation('effect', 8, 0, 64, 64),
         },
         [Modules.Effects.Fireball]: {
             key: 'effects/fireball',
-            animation: new Animation('effect', 8, 0, 64, 64)
+            animation: new Animation('effect', 8, 0, 64, 64),
         },
         [Modules.Effects.Iceball]: {
             key: 'effects/iceball',
-            animation: new Animation('effect', 8, 0, 64, 64)
+            animation: new Animation('effect', 8, 0, 64, 64),
         },
         [Modules.Effects.Burning]: {
             key: 'effects/burn',
             animation: new Animation('effect', 5, 0, 32, 32),
             perpetual: true,
-            speed: 150
+            speed: 150,
         },
         [Modules.Effects.Freezing]: {
             key: 'effects/freeze',
             animation: new Animation('effect', 6, 0, 32, 32),
             perpetual: true,
-            speed: 200
+            speed: 200,
         },
         [Modules.Effects.Poisonball]: {
             key: 'effects/poisonball',
             animation: new Animation('effect', 10, 0, 40, 40),
-            speed: 175
+            speed: 175,
         },
         [Modules.Effects.Boulder]: {
             key: 'effects/boulder',
-            animation: new Animation('effect', 7, 0, 32, 32)
-        }
+            animation: new Animation('effect', 7, 0, 32, 32),
+        },
     };
 
     private requestPathCallback?: RequestPathingCallback;
@@ -121,7 +121,11 @@ export default class Character extends Entity {
     private fallbackCallback?: FallbackCallback;
     private hitPointsCallback?: HitPointsCallback;
 
-    public constructor(instance: string, type: Modules.EntityType, public game: Game) {
+    public constructor(
+        instance: string,
+        type: Modules.EntityType,
+        public game: Game,
+    ) {
         super(instance, type);
 
         this.loadAnimations();
@@ -170,7 +174,7 @@ export default class Character extends Entity {
         name: string,
         speed = 120,
         count = 0,
-        onEndCount?: () => void
+        onEndCount?: () => void,
     ): void {
         let o = ['atk', 'bow_atk', 'walk', 'idle'];
 
@@ -544,7 +548,7 @@ export default class Character extends Entity {
     private proceed(x: number, y: number): void {
         this.newDestination = {
             x,
-            y
+            y,
         };
     }
 
@@ -802,7 +806,7 @@ export default class Character extends Entity {
         let character = new Character(
             `${position.gridX}-${position.gridY}`,
             Modules.EntityType.Object,
-            this.game
+            this.game,
         );
         character.setGridPosition(position.gridX, position.gridY);
 

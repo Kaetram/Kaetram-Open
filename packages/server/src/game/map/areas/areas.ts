@@ -8,7 +8,10 @@ import type { ProcessedArea } from '@kaetram/common/types/map';
 export default abstract class Areas {
     public areas: Area[] = [];
 
-    protected constructor(public data: ProcessedArea[], public world: World) {}
+    protected constructor(
+        public data: ProcessedArea[],
+        public world: World,
+    ) {}
 
     /**
      * Parses through the mapAreas and sets their base properties (id, x, y, width, height).
@@ -20,7 +23,7 @@ export default abstract class Areas {
 
     public load(
         mapAreas: ProcessedArea[],
-        callback?: (area: Area, mapArea: ProcessedArea) => void
+        callback?: (area: Area, mapArea: ProcessedArea) => void,
     ): void {
         for (let a of mapAreas) {
             let area: Area = new Area(a.id, a.x, a.y, a.width, a.height);

@@ -41,7 +41,11 @@ export default class Camera {
     public maxZoom = 6;
     public minZoom = 2.6;
 
-    public constructor(private width: number, private height: number, private tileSize: number) {
+    public constructor(
+        private width: number,
+        private height: number,
+        private tileSize: number,
+    ) {
         this.update();
     }
 
@@ -131,7 +135,7 @@ export default class Camera {
     public clip(): void {
         this.setGridPosition(
             Math.round(this.x / this.tileSize),
-            Math.round(this.y / this.tileSize)
+            Math.round(this.y / this.tileSize),
         );
     }
 

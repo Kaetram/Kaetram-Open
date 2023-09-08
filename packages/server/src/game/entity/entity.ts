@@ -42,7 +42,12 @@ abstract class Entity {
 
     public movementCallback?: MovementCallback;
 
-    protected constructor(public instance = '', public key = '', x: number, y: number) {
+    protected constructor(
+        public instance = '',
+        public key = '',
+        x: number,
+        y: number,
+    ) {
         this.type = Utils.getEntityType(this.instance);
 
         this.updatePosition(x, y);
@@ -123,7 +128,7 @@ abstract class Entity {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getDisplayInfo(_var1?: unknown): EntityDisplayInfo {
         return {
-            instance: this.instance
+            instance: this.instance,
         };
     }
 
@@ -306,7 +311,7 @@ abstract class Entity {
             name,
             key,
             x,
-            y
+            y,
         };
     }
 

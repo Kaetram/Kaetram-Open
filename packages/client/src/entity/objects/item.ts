@@ -11,7 +11,7 @@ export default class Item extends Entity {
     public constructor(
         instance: string,
         public count: number = 1,
-        public enchantments: Enchantments = {}
+        public enchantments: Enchantments = {},
     ) {
         super(instance, Modules.EntityType.Item);
     }
@@ -25,7 +25,7 @@ export default class Item extends Entity {
         name: string,
         speed?: number,
         count?: number,
-        onEndCount?: (() => void) | undefined
+        onEndCount?: (() => void) | undefined,
     ): void {
         super.setAnimation(name, speed, count, onEndCount);
 

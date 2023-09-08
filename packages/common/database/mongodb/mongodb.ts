@@ -16,7 +16,7 @@ import type {
     MobAggregate,
     PvpAggregate,
     SkillExperience,
-    TotalExperience
+    TotalExperience,
 } from '@kaetram/common/types/leaderboards';
 
 export default class MongoDB {
@@ -38,7 +38,7 @@ export default class MongoDB {
         private databaseName: string,
         private tls: boolean,
         srv: boolean,
-        authSource: string
+        authSource: string,
     ) {
         let srvInsert = srv ? 'mongodb+srv' : 'mongodb',
             authInsert = username && password ? `${username}:${password}@` : '',
@@ -60,7 +60,7 @@ export default class MongoDB {
             connectTimeoutMS: 5000,
             serverSelectionTimeoutMS: 5000,
             wtimeoutMS: 10,
-            tls: this.tls
+            tls: this.tls,
         });
 
         client
@@ -238,10 +238,10 @@ export default class MongoDB {
                     { username },
                     {
                         $set: {
-                            rank: rankId
-                        }
+                            rank: rankId,
+                        },
                     },
-                    { upsert: true }
+                    { upsert: true },
                 );
             });
     }
@@ -271,7 +271,7 @@ export default class MongoDB {
 
     public createResetToken(
         email: string,
-        callback: (id?: ObjectId, token?: string) => void
+        callback: (id?: ObjectId, token?: string) => void,
     ): void {
         if (!this.hasDatabase()) return callback();
 
@@ -289,7 +289,7 @@ export default class MongoDB {
                 // Create a reset token and apply a one hour expiration.
                 let resetToken: ResetToken = {
                     token: hash,
-                    expiration: Date.now() + 60 * 60 * 1000 // 1 hour.
+                    expiration: Date.now() + 60 * 60 * 1000, // 1 hour.
                 };
 
                 // Update the account with the new reset token.
@@ -297,10 +297,10 @@ export default class MongoDB {
                     { email },
                     {
                         $set: {
-                            resetToken
-                        }
+                            resetToken,
+                        },
                     },
-                    { upsert: true }
+                    { upsert: true },
                 );
             });
 
@@ -321,7 +321,7 @@ export default class MongoDB {
         id: string,
         token: string,
         password: string,
-        callback: (status: boolean) => void
+        callback: (status: boolean) => void,
     ): void {
         if (!this.hasDatabase()) return callback(false);
 
@@ -356,13 +356,13 @@ export default class MongoDB {
                         { _id: objectId },
                         {
                             $set: {
-                                password: hash
+                                password: hash,
                             },
                             $unset: {
-                                resetToken: ''
-                            }
+                                resetToken: '',
+                            },
                         },
-                        { upsert: true }
+                        { upsert: true },
                     );
                 });
 
@@ -377,7 +377,7 @@ export default class MongoDB {
      */
 
     public getTotalExperienceAggregate(
-        callback: (totalExperience: TotalExperience[]) => void
+        callback: (totalExperience: TotalExperience[]) => void,
     ): void {
         if (!this.hasDatabase()) return;
 
@@ -391,11 +391,11 @@ export default class MongoDB {
                     $group: {
                         _id: '$username',
                         experience: { $sum: '$skills.experience' },
-                        cheater: { $first: '$cheater' }
-                    }
+                        cheater: { $first: '$cheater' },
+                    },
                 },
                 { $sort: { experience: -1 } },
-                { $limit: 150 }
+                { $limit: 150 },
             ])
             .toArray()
             .then((data) => callback(data as TotalExperience[]));
@@ -409,7 +409,7 @@ export default class MongoDB {
 
     public getSkillAggregate(
         skill: Modules.Skills,
-        callback: (experience: SkillExperience[]) => void
+        callback: (experience: SkillExperience[]) => void,
     ): void {
         if (!this.hasDatabase()) return;
 
@@ -424,11 +424,11 @@ export default class MongoDB {
                     $group: {
                         _id: '$username',
                         experience: { $first: '$skills.experience' },
-                        cheater: { $first: '$cheater' }
-                    }
+                        cheater: { $first: '$cheater' },
+                    },
                 },
                 { $sort: { experience: -1 } },
-                { $limit: 150 }
+                { $limit: 150 },
             ])
             .toArray()
             .then((data) => callback(data as SkillExperience[]));
@@ -450,11 +450,11 @@ export default class MongoDB {
                 $group: {
                     _id: '$username',
                     kills: { $sum: `$mobKills.${key}` },
-                    cheater: { $first: '$cheater' }
-                }
+                    cheater: { $first: '$cheater' },
+                },
             },
             { $sort: { kills: -1 } },
-            { $limit: 150 }
+            { $limit: 150 },
         ])
             .toArray()
             .then((data) => callback(data as MobAggregate[]));
@@ -475,11 +475,11 @@ export default class MongoDB {
                 $group: {
                     _id: '$username',
                     kills: { $sum: '$pvpKills' },
-                    cheater: { $first: '$cheater' }
-                }
+                    cheater: { $first: '$cheater' },
+                },
             },
             { $sort: { kills: -1 } },
-            { $limit: 150 }
+            { $limit: 150 },
         ])
             .toArray()
             .then((data) => callback(data as PvpAggregate[]));

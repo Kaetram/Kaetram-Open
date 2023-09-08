@@ -34,7 +34,7 @@ export default class Leaderboards extends Menu {
     // Search elements available (key is the search URL term, value is the name displayed).
     private searchElements: SearchElement[] = [
         { name: 'Total Experience', key: '', type: '' },
-        { name: 'PVP Kills', key: 'pvp', type: 'pvp' }
+        { name: 'PVP Kills', key: 'pvp', type: 'pvp' },
     ];
     private availableMobs: { [key: string]: string } = {};
 
@@ -63,7 +63,7 @@ export default class Leaderboards extends Menu {
                         this.searchElements.push({
                             name: this.availableMobs[mob],
                             key: mob,
-                            type: 'mob'
+                            type: 'mob',
                         });
 
                     this.load();

@@ -97,7 +97,7 @@ export default class Item extends Entity {
         public dropped = false,
         public count = -1,
         public enchantments: Enchantments = {},
-        public owner = ''
+        public owner = '',
     ) {
         super(Utils.createInstance(Modules.EntityType.Item), key, x, y);
 
@@ -179,7 +179,7 @@ export default class Item extends Entity {
             this.dropped,
             Utils.sanitizeNumber(this.count),
             this.copyEnchantments(),
-            this.owner
+            this.owner,
         ) as this;
     }
 
@@ -260,7 +260,7 @@ export default class Item extends Entity {
                 if (skill.level < requirement) {
                     // If the player's skill level is less than the requirement.
                     player.notify(
-                        `item:SKILL_LEVEL_REQUIREMENT_EQUIP;skill=${skill.name};level=${requirement}`
+                        `item:SKILL_LEVEL_REQUIREMENT_EQUIP;skill=${skill.name};level=${requirement}`,
                     );
                     return false;
                 } else return true; // If the player's skill fulfills the requirement.
@@ -413,7 +413,7 @@ export default class Item extends Entity {
                     Modules.AttackStyle.Stab,
                     Modules.AttackStyle.Slash,
                     Modules.AttackStyle.Shared,
-                    Modules.AttackStyle.Defensive
+                    Modules.AttackStyle.Defensive,
                 ];
             }
 
@@ -421,7 +421,7 @@ export default class Item extends Entity {
                 return [
                     Modules.AttackStyle.Slash,
                     Modules.AttackStyle.Crush,
-                    Modules.AttackStyle.Defensive
+                    Modules.AttackStyle.Defensive,
                 ];
             }
 
@@ -429,7 +429,7 @@ export default class Item extends Entity {
                 return [
                     Modules.AttackStyle.Hack,
                     Modules.AttackStyle.Chop,
-                    Modules.AttackStyle.Defensive
+                    Modules.AttackStyle.Defensive,
                 ];
             }
 
@@ -441,7 +441,7 @@ export default class Item extends Entity {
                 return [
                     Modules.AttackStyle.Crush,
                     Modules.AttackStyle.Shared,
-                    Modules.AttackStyle.Defensive
+                    Modules.AttackStyle.Defensive,
                 ];
             }
 
@@ -449,7 +449,7 @@ export default class Item extends Entity {
                 return [
                     Modules.AttackStyle.Stab,
                     Modules.AttackStyle.Slash,
-                    Modules.AttackStyle.Defensive
+                    Modules.AttackStyle.Defensive,
                 ];
             }
 
@@ -457,7 +457,7 @@ export default class Item extends Entity {
                 return [
                     Modules.AttackStyle.Slash,
                     Modules.AttackStyle.Crush,
-                    Modules.AttackStyle.Defensive
+                    Modules.AttackStyle.Defensive,
                 ];
             }
 
@@ -465,7 +465,7 @@ export default class Item extends Entity {
                 return [
                     Modules.AttackStyle.Accurate,
                     Modules.AttackStyle.Fast,
-                    Modules.AttackStyle.LongRange
+                    Modules.AttackStyle.LongRange,
                 ];
             }
 
@@ -493,7 +493,7 @@ export default class Item extends Entity {
                 return [
                     Modules.Enchantment.Bloodsucking,
                     Modules.Enchantment.Critical,
-                    Modules.Enchantment.DoubleEdged
+                    Modules.Enchantment.DoubleEdged,
                 ];
             }
 
@@ -507,7 +507,7 @@ export default class Item extends Entity {
                 return [
                     Modules.Enchantment.Evasion,
                     Modules.Enchantment.Thorns,
-                    Modules.Enchantment.AntiStun
+                    Modules.Enchantment.AntiStun,
                 ];
             }
 
@@ -582,7 +582,7 @@ export default class Item extends Entity {
             'ring',
             'arrow',
             'shield',
-            'cape'
+            'cape',
         ];
 
         return types.includes(this.itemType);

@@ -88,7 +88,7 @@ export default class Handler {
                 opcode: Opcodes.Movement.Entity,
                 targetInstance: this.character.instance,
                 requestX: this.character.gridX,
-                requestY: this.character.gridY
+                requestY: this.character.gridY,
             });
 
         /**

@@ -40,7 +40,7 @@ export default class Enchant extends Menu {
         // Create an empty inventory slot list.
         for (let i = 0; i < Modules.Constants.INVENTORY_SIZE; i++)
             this.list.append(
-                Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this))
+                Util.createSlot(Modules.ContainerType.Inventory, i, this.select.bind(this)),
             );
     }
 

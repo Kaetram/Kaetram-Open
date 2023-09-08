@@ -117,7 +117,7 @@ export default class Trade {
         this.itemsOffered[trueIndex] = {
             inventoryIndex: index,
             maxCount: slot.count,
-            item
+            item,
         };
 
         // Any addition or removal of an item resets the trade acceptance.
@@ -234,13 +234,13 @@ export default class Trade {
         target.notify(
             `misc:TRADE_REQUEST_OTHER;username=${Utils.formatName(this.player.username)}`,
             'rgb(84, 224, 255)',
-            'TRADE'
+            'TRADE',
         );
 
         this.player.notify(
             `misc:TRADE_REQUEST;username=${Utils.formatName(target.username)}`,
             '',
-            'TRADE'
+            'TRADE',
         );
     }
 
@@ -278,7 +278,7 @@ export default class Trade {
         if (!this.activeTrade) return;
 
         log.debug(
-            `Closing trade between ${this.player.username} and ${this.activeTrade?.username}.`
+            `Closing trade between ${this.player.username} and ${this.activeTrade?.username}.`,
         );
 
         // Close the trade for the player.
@@ -324,7 +324,7 @@ export default class Trade {
         if (flagged) {
             this.player.notify('misc:PLEASE_REPORT_BUG', '', 'TRADE');
             log.warning(
-                `Trade exchange failed for ${this.player.username} and ${this.activeTrade?.username}.`
+                `Trade exchange failed for ${this.player.username} and ${this.activeTrade?.username}.`,
             );
             return this.close();
         }
@@ -519,7 +519,7 @@ export default class Trade {
 
     private isAdded(index: number): boolean {
         return Object.values(this.itemsOffered).some(
-            (offer) => offer?.inventoryIndex === index && offer.item.count === offer.maxCount
+            (offer) => offer?.inventoryIndex === index && offer.item.count === offer.maxCount,
         );
     }
 

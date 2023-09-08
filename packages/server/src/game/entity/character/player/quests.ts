@@ -76,8 +76,8 @@ export default class Quests {
             new QuestPacket(Opcodes.Quest.Progress, {
                 key,
                 stage,
-                subStage
-            })
+                subStage,
+            }),
         );
 
         // Update region when quest is completed.
@@ -237,7 +237,7 @@ export default class Quests {
         this.forEachQuest((quest: Quest) => quests.push(quest.serialize(batch)));
 
         return {
-            quests
+            quests,
         };
     }
 

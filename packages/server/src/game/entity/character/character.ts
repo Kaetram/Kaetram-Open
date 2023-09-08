@@ -17,7 +17,7 @@ import {
     EffectPacket,
     MovementPacket,
     PointsPacket,
-    TeleportPacket
+    TeleportPacket,
 } from '@kaetram/common/network/impl';
 
 import type World from '../../world';
@@ -85,7 +85,7 @@ export default abstract class Character extends Entity {
         public world: World,
         key: string,
         x: number,
-        y: number
+        y: number,
     ) {
         super(instance, key, x, y);
 
@@ -113,8 +113,8 @@ export default abstract class Character extends Entity {
             new PointsPacket({
                 instance: this.instance,
                 hitPoints: this.hitPoints.getHitPoints(),
-                maxHitPoints: this.hitPoints.getMaxHitPoints()
-            })
+                maxHitPoints: this.hitPoints.getMaxHitPoints(),
+            }),
         );
     }
 
@@ -129,7 +129,7 @@ export default abstract class Character extends Entity {
         if (this.isPlayer() && effect === Modules.Effects.Freezing) this.sync();
 
         this.sendToRegions(
-            new EffectPacket(Opcodes.Effect.Add, { instance: this.instance, effect })
+            new EffectPacket(Opcodes.Effect.Add, { instance: this.instance, effect }),
         );
     }
 
@@ -150,7 +150,7 @@ export default abstract class Character extends Entity {
         }
 
         this.sendToRegions(
-            new EffectPacket(Opcodes.Effect.Remove, { instance: this.instance, effect })
+            new EffectPacket(Opcodes.Effect.Remove, { instance: this.instance, effect }),
         );
     }
 
@@ -174,8 +174,8 @@ export default abstract class Character extends Entity {
             new CombatPacket(Opcodes.Combat.Hit, {
                 instance: this.instance,
                 target: this.instance,
-                hit
-            })
+                hit,
+            }),
         );
 
         // Do the actual damage to the character.
@@ -199,7 +199,7 @@ export default abstract class Character extends Entity {
                     Modules.Hits.Normal,
                     Math.floor(damage / distance),
                     false,
-                    distance
+                    distance,
                 ).serialize();
 
             // Create a hit packet and send it to the nearby regions.
@@ -207,8 +207,8 @@ export default abstract class Character extends Entity {
                 new CombatPacket(Opcodes.Combat.Hit, {
                     instance: attacker?.instance || '',
                     target: character.instance,
-                    hit
-                })
+                    hit,
+                }),
             );
 
             // Apply the damage to the character.
@@ -234,8 +234,8 @@ export default abstract class Character extends Entity {
             new CombatPacket(Opcodes.Combat.Hit, {
                 instance: this.instance,
                 target: this.instance,
-                hit
-            })
+                hit,
+            }),
         );
 
         // Do the actual damage to the character.
@@ -253,7 +253,7 @@ export default abstract class Character extends Entity {
         // Create a hit object for burning damage and serialize it.
         let hit = new Hit(
             Modules.Hits.Burning,
-            Modules.Constants.BURNING_EFFECT_DAMAGE
+            Modules.Constants.BURNING_EFFECT_DAMAGE,
         ).serialize();
 
         // Send a hit packet to display the info to the client.
@@ -261,8 +261,8 @@ export default abstract class Character extends Entity {
             new CombatPacket(Opcodes.Combat.Hit, {
                 instance: this.instance,
                 target: this.instance,
-                hit
-            })
+                hit,
+            }),
         );
 
         // Do the actual damage to the character.
@@ -439,8 +439,8 @@ export default abstract class Character extends Entity {
         this.sendToRegions(
             new MovementPacket(Opcodes.Movement.Follow, {
                 instance: this.instance,
-                target: target?.instance || this.target!.instance
-            })
+                target: target?.instance || this.target!.instance,
+            }),
         );
     }
 
@@ -459,8 +459,8 @@ export default abstract class Character extends Entity {
                 instance: this.instance,
                 x,
                 y,
-                withAnimation
-            })
+                withAnimation,
+            }),
         );
 
         // Untoggle the teleporting flag after 500ms.
@@ -476,8 +476,8 @@ export default abstract class Character extends Entity {
         this.sendToRegions(
             new CountdownPacket({
                 instance: this.instance,
-                time
-            })
+                time,
+            }),
         );
     }
 
@@ -488,8 +488,8 @@ export default abstract class Character extends Entity {
     public stopMovement(): void {
         this.sendToRegions(
             new MovementPacket(Opcodes.Movement.Stop, {
-                instance: this.instance
-            })
+                instance: this.instance,
+            }),
         );
     }
 
@@ -1009,14 +1009,14 @@ export default abstract class Character extends Entity {
             case Modules.Hits.Stun: {
                 return this.status.addWithTimeout(
                     Modules.Effects.Stun,
-                    Modules.Constants.STUN_DURATION
+                    Modules.Constants.STUN_DURATION,
                 );
             }
 
             case Modules.Hits.Terror: {
                 return this.status.addWithTimeout(
                     Modules.Effects.Terror,
-                    Modules.Constants.TERROR_DURATION
+                    Modules.Constants.TERROR_DURATION,
                 );
             }
 
@@ -1025,7 +1025,7 @@ export default abstract class Character extends Entity {
 
                 return this.status.addWithTimeout(
                     Modules.Effects.Freezing,
-                    Modules.Constants.FREEZING_DURATION
+                    Modules.Constants.FREEZING_DURATION,
                 );
             }
 
@@ -1034,7 +1034,7 @@ export default abstract class Character extends Entity {
 
                 return this.status.addWithTimeout(
                     Modules.Effects.Burning,
-                    Modules.Constants.BURNING_DURATION
+                    Modules.Constants.BURNING_DURATION,
                 );
             }
         }
@@ -1111,7 +1111,7 @@ export default abstract class Character extends Entity {
         this.world.push(PacketType.Region, {
             region: this.region,
             packet,
-            ignore: ignore ? this.instance : ''
+            ignore: ignore ? this.instance : '',
         });
     }
 
@@ -1125,7 +1125,7 @@ export default abstract class Character extends Entity {
         this.world.push(PacketType.Regions, {
             region: this.region,
             packet,
-            ignore: ignore ? this.instance : ''
+            ignore: ignore ? this.instance : '',
         });
     }
 
@@ -1136,7 +1136,7 @@ export default abstract class Character extends Entity {
 
     public sendBroadcast(packet: Packet): void {
         this.world.push(PacketType.Broadcast, {
-            packet
+            packet,
         });
     }
 
@@ -1171,7 +1171,7 @@ export default abstract class Character extends Entity {
 
                 callback(entity as Character);
             },
-            range
+            range,
         );
     }
 

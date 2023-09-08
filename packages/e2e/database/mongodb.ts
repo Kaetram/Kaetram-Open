@@ -21,7 +21,7 @@ export default class MongoDB {
         password: string,
         private databaseName: string,
         private tls: boolean,
-        srv: boolean
+        srv: boolean,
     ) {
         let srvInsert = srv ? 'mongodb+srv' : 'mongodb',
             authInsert = username && password ? `${username}:${password}@` : '',
@@ -42,7 +42,7 @@ export default class MongoDB {
             connectTimeoutMS: 5000,
             serverSelectionTimeoutMS: 5000,
             wtimeoutMS: 10,
-            tls: this.tls
+            tls: this.tls,
         });
 
         client.connect((error: Error | undefined, _client: MongoClient | undefined) => {
@@ -69,7 +69,7 @@ export default class MongoDB {
     public load(
         filter: { [key: string]: string },
         collection: string,
-        callback: (data: unknown[]) => void
+        callback: (data: unknown[]) => void,
     ): void {
         // Used for when we're working without a database to return empty data.
         if (!this.database || config.skipDatabase) return callback([]);
@@ -89,7 +89,7 @@ export default class MongoDB {
         filter: { [key: string]: string },
         collectionName: string,
         body: unknown,
-        callback: (error?: AnyError) => void
+        callback: (error?: AnyError) => void,
     ) {
         let collection = this.database.collection(collectionName);
         collection.updateOne(filter, { $set: body }, { upsert: true }, (error, result) => {
@@ -98,12 +98,12 @@ export default class MongoDB {
                     `An error occurred while saving ${
                         collection.collectionName
                     } for ${JSON.stringify(filter)}:`,
-                    error
+                    error,
                 );
 
             if (!result)
                 log.error(
-                    `Unable to save ${collection.collectionName} for ${JSON.stringify(filter)}.`
+                    `Unable to save ${collection.collectionName} for ${JSON.stringify(filter)}.`,
                 );
             callback(error);
         });
@@ -112,7 +112,7 @@ export default class MongoDB {
     public delete(
         filter: { [key: string]: string },
         collectionName: string,
-        callback: (error?: AnyError) => void
+        callback: (error?: AnyError) => void,
     ) {
         let collection = this.database.collection(collectionName);
         collection.deleteOne(filter, (error) => {
@@ -121,7 +121,7 @@ export default class MongoDB {
                     `An error occurred while deleting ${JSON.stringify(filter)} from ${
                         collection.collectionName
                     }:`,
-                    error
+                    error,
                 );
             callback(error);
         });
@@ -133,7 +133,9 @@ export default class MongoDB {
             .drop()
             .then((success) => {
                 callback(
-                    success ? undefined : new Error(`Could not drop collection [${collectionName}]`)
+                    success
+                        ? undefined
+                        : new Error(`Could not drop collection [${collectionName}]`),
                 );
             })
             .catch(function () {

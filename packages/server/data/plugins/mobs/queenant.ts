@@ -23,7 +23,7 @@ export default class QueenAnt extends Default {
             { x: this.mob.spawnX + 3, y: this.mob.spawnY },
             { x: this.mob.spawnX - 3, y: this.mob.spawnY },
             { x: this.mob.spawnX, y: this.mob.spawnY + 3 },
-            { x: this.mob.spawnX, y: this.mob.spawnY - 3 }
+            { x: this.mob.spawnX, y: this.mob.spawnY - 3 },
         ];
     }
 

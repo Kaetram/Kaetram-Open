@@ -57,18 +57,19 @@ export type TFunction = <
           >,
     const O extends { ns?: Ns },
     const KUnion = K extends readonly (infer KUnion)[] ? KUnion : K,
-    const Ns extends keyof NsInter = KUnion extends `${infer Ns extends keyof NsInter}${NsSeparator}${string}`
+    const Ns extends keyof NsInter = KUnion extends `${infer Ns extends
+        keyof NsInter}${NsSeparator}${string}`
         ? Ns
         : O extends { ns: infer Ns extends keyof NsInter }
         ? Ns
-        : DefaultNs
+        : DefaultNs,
 >(
     key: K,
     options?: TOptions<
         O &
             NsInter[Ns][(KUnion extends `${string}${NsSeparator}${infer N}` ? N : KUnion) &
                 keyof NsInter[Ns]]
-    >
+    >,
 ) => string;
 
 export type GetFixedTFunction = <
@@ -76,9 +77,9 @@ export type GetFixedTFunction = <
     const N extends keyof NsInter,
     const K extends keyof NsInter[Ns],
     const Ns extends [keyof NsInter[N]] extends [never] ? DefaultNs : N,
-    const KObject extends [keyof NsInter[Ns][K]] extends [never] ? NsInter[Ns] : NsInter[Ns][K]
+    const KObject extends [keyof NsInter[Ns][K]] extends [never] ? NsInter[Ns] : NsInter[Ns][K],
 >(
     lng: L | undefined,
     ns?: N,
-    keyPrefix?: K
+    keyPrefix?: K,
 ) => (key: keyof KObject, options?: TOptions) => string;

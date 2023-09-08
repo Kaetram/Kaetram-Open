@@ -13,7 +13,7 @@ export interface ExperiencePacketData {
 
 export type ExperiencePacketCallback = (
     opcode: Opcodes.Experience,
-    info: ExperiencePacketData
+    info: ExperiencePacketData,
 ) => void;
 
 export default class ExperiencePacket extends Packet {

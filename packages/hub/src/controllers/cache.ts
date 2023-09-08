@@ -12,7 +12,7 @@ import type {
     MobAggregate,
     PvpAggregate,
     SkillExperience,
-    TotalExperience
+    TotalExperience,
 } from '@kaetram/common/types/leaderboards';
 
 export default class Cache {
@@ -100,7 +100,7 @@ export default class Cache {
 
     public getSkillsExperience(
         skill: Modules.Skills,
-        callback: (skillInfo: SkillExperience[]) => void
+        callback: (skillInfo: SkillExperience[]) => void,
     ): void {
         if (!this.canAggregateData(this.lastAggregates[skill]))
             return callback(this.skillsExperience[skill]);

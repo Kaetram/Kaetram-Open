@@ -62,7 +62,10 @@ export default class World {
 
     public connectionCallback?: ConnectionCallback;
 
-    public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
+    public constructor(
+        public socketHandler: SocketHandler,
+        public database: MongoDB,
+    ) {
         this.map = new Map(this);
         this.api = new API(this);
         this.stores = new Stores(this);
@@ -127,7 +130,7 @@ export default class World {
                 return this.network.sendToSurroundingRegions(
                     data.region!,
                     data.packet,
-                    data.ignore
+                    data.ignore,
                 );
             }
 
@@ -150,8 +153,8 @@ export default class World {
             packet: new ChatPacket({
                 source: noPrefix ? source : `[Global]: ${source}`,
                 message,
-                colour
-            })
+                colour,
+            }),
         });
     }
 
@@ -202,7 +205,7 @@ export default class World {
         identifier: string,
         username: string,
         logout = false,
-        serverId = config.serverId
+        serverId = config.serverId,
     ): Promise<void> {
         if (!identifier) return;
 
@@ -226,10 +229,10 @@ export default class World {
                     members: [
                         {
                             username,
-                            serverId: logout ? -1 : serverId
-                        }
-                    ]
-                })
+                            serverId: logout ? -1 : serverId,
+                        },
+                    ],
+                }),
             );
         }
     }

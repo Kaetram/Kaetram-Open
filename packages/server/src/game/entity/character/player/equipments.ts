@@ -50,7 +50,7 @@ export default class Equipments {
         this.weaponSkin,
         this.legplates,
         this.cape,
-        this.boots
+        this.boots,
     ];
 
     public totalAttackStats: Stats = Utils.getEmptyStats();
@@ -100,7 +100,7 @@ export default class Equipments {
     public equip(item: Item, fromIndex: number): void {
         if (!item)
             return log.warning(
-                `[${this.player.username}] Attempted to equip something mysterious.`
+                `[${this.player.username}] Attempted to equip something mysterious.`,
             );
 
         let type = item.getEquipmentType()!,
@@ -137,7 +137,7 @@ export default class Equipments {
         // If there is already an item equipped, we unequip it.
         if (!equipment.isEmpty())
             this.player.inventory.add(
-                new Item(equipment.key, -1, -1, false, equipment.count, equipment.enchantments)
+                new Item(equipment.key, -1, -1, false, equipment.count, equipment.enchantments),
             );
 
         // Include the last attack style when we're equipping a weapon.
@@ -375,7 +375,7 @@ export default class Equipments {
         let equipments: EquipmentData[] = [];
 
         this.forEachEquipment((equipment: Equipment) =>
-            equipments.push(equipment.serialize(clientInfo))
+            equipments.push(equipment.serialize(clientInfo)),
         );
 
         // Store in an object so that it gets saved into Database faster.

@@ -10,7 +10,10 @@ import type Map from '../../map/map';
 export default class Tileset {
     public textures: WebGLTexture[] = [];
 
-    public constructor(private map: Map, private context: WebGLRenderingContext) {
+    public constructor(
+        private map: Map,
+        private context: WebGLRenderingContext,
+    ) {
         // Create the textures for each tileset.
         for (let tileset of this.map.tilesets) this.createTexture(tileset);
     }
@@ -38,29 +41,29 @@ export default class Tileset {
             this.context.RGBA,
             this.context.RGBA,
             this.context.UNSIGNED_BYTE,
-            image
+            image,
         );
 
         // Apply the texture parameters to the context.
         this.context.texParameteri(
             this.context.TEXTURE_2D,
             this.context.TEXTURE_MAG_FILTER,
-            this.context.NEAREST
+            this.context.NEAREST,
         );
         this.context.texParameteri(
             this.context.TEXTURE_2D,
             this.context.TEXTURE_MIN_FILTER,
-            this.context.NEAREST
+            this.context.NEAREST,
         );
         this.context.texParameteri(
             this.context.TEXTURE_2D,
             this.context.TEXTURE_WRAP_S,
-            this.context.CLAMP_TO_EDGE
+            this.context.CLAMP_TO_EDGE,
         );
         this.context.texParameteri(
             this.context.TEXTURE_2D,
             this.context.TEXTURE_WRAP_T,
-            this.context.CLAMP_TO_EDGE
+            this.context.CLAMP_TO_EDGE,
         );
 
         // Append the texture to the list of textures.

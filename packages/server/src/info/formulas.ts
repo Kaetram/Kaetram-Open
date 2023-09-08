@@ -213,7 +213,7 @@ export default {
                 slash: (attackerStats.slash - targetStats.slash) / 3,
                 stab: (attackerStats.stab - targetStats.stab) / 3,
                 magic: (attackerStats.magic - targetStats.magic) / 3,
-                archery: (attackerStats.archery - targetStats.archery) / 3
+                archery: (attackerStats.archery - targetStats.archery) / 3,
             },
             totalWeight =
                 weights.crush + weights.slash + weights.stab + weights.magic + weights.archery;
@@ -405,5 +405,5 @@ export default {
 
     getEnchantChance(tier: number): boolean {
         return Utils.randomInt(0, 100) < 8 * tier;
-    }
+    },
 };

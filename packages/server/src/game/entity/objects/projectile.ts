@@ -10,12 +10,16 @@ import type { EntityData } from '@kaetram/common/types/entity';
 export default class Projectile extends Entity {
     private impactCallback?: () => void;
 
-    public constructor(public owner: Character, public target: Character, public hit: Hit) {
+    public constructor(
+        public owner: Character,
+        public target: Character,
+        public hit: Hit,
+    ) {
         super(
             Utils.createInstance(Modules.EntityType.Projectile),
             owner.getProjectileName(),
             owner.x,
-            owner.y
+            owner.y,
         );
 
         // Apply the terror hit type if the projectile is a terror projectile.

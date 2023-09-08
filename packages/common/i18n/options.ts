@@ -72,7 +72,7 @@ export let resources = {
         resource: ResourceEn,
         store: StoreEn,
         game: GameEn,
-        warps: WarpsEn
+        warps: WarpsEn,
     },
     de: {
         crafting: CraftingDe,
@@ -83,7 +83,7 @@ export let resources = {
         resource: ResourceDe,
         store: StoreDe,
         game: GameDe,
-        warps: WarpsDe
+        warps: WarpsDe,
     },
     es: {
         crafting: CraftingEs,
@@ -94,7 +94,7 @@ export let resources = {
         resource: ResourceEs,
         store: StoreEs,
         game: GameEs,
-        warps: WarpsEs
+        warps: WarpsEs,
     },
     fr: {
         crafting: CraftingFr,
@@ -105,7 +105,7 @@ export let resources = {
         resource: ResourceFr,
         store: StoreFr,
         game: GameFr,
-        warps: WarpsFr
+        warps: WarpsFr,
     },
     pt: {
         crafting: CraftingPt,
@@ -116,7 +116,7 @@ export let resources = {
         resource: ResourcePt,
         store: StorePt,
         game: GamePt,
-        warps: WarpsPt
+        warps: WarpsPt,
     },
     ro: {
         crafting: CraftingRo,
@@ -127,7 +127,7 @@ export let resources = {
         resource: ResourceRo,
         store: StoreRo,
         game: GameRo,
-        warps: WarpsRo
+        warps: WarpsRo,
     },
     ru: {
         crafting: CraftingRu,
@@ -138,8 +138,8 @@ export let resources = {
         resource: ResourceRu,
         store: StoreRu,
         game: GameRu,
-        warps: WarpsRu
-    }
+        warps: WarpsRu,
+    },
 } as const;
 
 export type Locale = keyof typeof resources;
@@ -151,7 +151,7 @@ export let locales: { [K in Locale]: string } = {
     fr: 'fr-FR',
     pt: 'pt-PT',
     ro: 'ro-RO',
-    ru: 'ru-RU'
+    ru: 'ru-RU',
 } as const;
 
 export let defaultLocale = 'en' as const;

@@ -51,7 +51,7 @@ export default class Chest extends Areas {
             chestArea.items,
             chestArea.cx,
             chestArea.cy,
-            false
+            false,
         );
 
         chestArea.lastSpawn = Date.now();

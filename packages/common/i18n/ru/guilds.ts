@@ -8,5 +8,5 @@ export default {
     NO_PERMISSION_RANK: 'У вас нет разрешения на обновление ранга этого пользователя.',
     NOT_ENOUGH_GOLD: 'Для создания гильдии необходимо иметь в инвентаре 30,000 золотых.',
     NOT_ALLOWED_GUESTS_JOIN: 'Гостям не разрешается вступать в гильдии.',
-    NOT_ALLOWED_GUESTS_CREATE: 'Гости не могут создавать гильдии.'
+    NOT_ALLOWED_GUESTS_CREATE: 'Гости не могут создавать гильдии.',
 } as const;

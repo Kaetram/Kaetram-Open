@@ -4,5 +4,5 @@ if (import.meta.env.PROD && globalConfig.sentryDsn)
     init({
         dsn: globalConfig.sentryDsn,
         integrations: [new BrowserTracing()],
-        tracesSampleRate: 1
+        tracesSampleRate: 1,
     });

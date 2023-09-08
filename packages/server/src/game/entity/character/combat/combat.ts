@@ -178,8 +178,8 @@ export default class Combat {
             new CombatPacket(Opcodes.Combat.Hit, {
                 instance: this.character.instance,
                 target: this.character.target!.instance,
-                hit: hit.serialize()
-            })
+                hit: hit.serialize(),
+            }),
         );
 
         // Handle combat damage here since melee is instant.
@@ -203,7 +203,7 @@ export default class Combat {
         let projectile = this.character.world.entities.spawnProjectile(
             this.character,
             this.character.target!,
-            hit
+            hit,
         );
 
         // Spawn the projectile in the game client.
@@ -224,10 +224,10 @@ export default class Combat {
             Formulas.getDamage(
                 this.character,
                 this.character.target!,
-                damageType === Modules.Hits.Critical
+                damageType === Modules.Hits.Critical,
             ),
             this.character.isRanged(),
-            this.character.getAoE()
+            this.character.getAoE(),
         );
     }
 

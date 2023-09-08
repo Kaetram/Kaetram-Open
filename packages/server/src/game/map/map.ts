@@ -14,7 +14,7 @@ import type {
     ProcessedDoor,
     ProcessedMap,
     ProcessedResource,
-    Tile
+    Tile,
 } from '@kaetram/common/types/map';
 
 let map = mapData as ProcessedMap;
@@ -71,7 +71,7 @@ export default class Map {
 
             this.areas[key] = new AreasIndex[key as keyof typeof AreasIndex](
                 map.areas[key],
-                this.world
+                this.world,
             );
         }
     }
@@ -116,7 +116,7 @@ export default class Map {
                 reqItemCount: door.reqItemCount || 0,
                 stage: door.stage || 0,
                 skill: door.skill || '',
-                level: door.level || 0
+                level: door.level || 0,
             };
         }
     }
@@ -140,7 +140,7 @@ export default class Map {
     public indexToCoord(index: number): Position {
         return {
             x: index % this.width,
-            y: Math.floor(index / this.width)
+            y: Math.floor(index / this.width),
         };
     }
 

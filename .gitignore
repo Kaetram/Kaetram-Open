@@ -5,6 +5,8 @@ packages/tools/map/data/tilesets
 
 packages/server/cache
 
+astro_tmp_pages_*
+
 map.json.backup*
 
 ### Astro ###

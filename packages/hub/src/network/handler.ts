@@ -30,7 +30,7 @@ export default class Handler {
 
                 open: this.handleConnection.bind(this),
                 message: this.handleMessage.bind(this),
-                close: this.handleClose.bind(this)
+                close: this.handleClose.bind(this),
             })
             .listen(config.hubWsPort, (socket: WebSocket<ConnectionInfo>) => {
                 if (!socket) throw new Error(`Failed to listen on port ${config.hubWsPort}`);
@@ -57,7 +57,7 @@ export default class Handler {
 
     private handleConnection(socket: WebSocket<ConnectionInfo>): void {
         log.notice(
-            `Received a connection from ${Utils.bufferToAddress(socket.getRemoteAddressAsText())}`
+            `Received a connection from ${Utils.bufferToAddress(socket.getRemoteAddressAsText())}`,
         );
 
         let instance = Utils.createInstance();

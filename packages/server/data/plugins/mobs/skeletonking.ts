@@ -11,7 +11,7 @@ export default class SkeletonKing extends Default {
     // Two positions where the minions will spawn.
     private positions: Position[] = [
         { x: 22, y: 684 },
-        { x: 28, y: 684 }
+        { x: 28, y: 684 },
     ];
 
     private minionsSpawned = 0;

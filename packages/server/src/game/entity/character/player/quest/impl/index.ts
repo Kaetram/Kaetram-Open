@@ -29,5 +29,5 @@ export default {
     royaldrama,
     clamchowder,
     royalpet,
-    scientistspotion
+    scientistspotion,
 };

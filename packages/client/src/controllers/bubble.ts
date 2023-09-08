@@ -15,7 +15,10 @@ export default class BubbleController {
 
     private scale = 1;
 
-    public constructor(private renderer: Renderer, private entities: EntitiesController) {
+    public constructor(
+        private renderer: Renderer,
+        private entities: EntitiesController,
+    ) {
         this.camera = this.renderer.camera;
     }
 

@@ -13,9 +13,9 @@ class Main {
                 JSON.stringify(
                     new Handshake({
                         type: 'admin',
-                        accessToken: globalConfig.accessToken
-                    }).serialize()
-                )
+                        accessToken: globalConfig.accessToken,
+                    }).serialize(),
+                ),
             );
         });
 

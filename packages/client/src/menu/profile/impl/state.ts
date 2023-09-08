@@ -24,40 +24,40 @@ export default class State extends Menu {
 
     // Equipment information
     private helmet: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-helmet > .equipment-slot-image'
+        '.equipment-slot-helmet > .equipment-slot-image',
     )!;
     private pendant: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-pendant > .equipment-slot-image'
+        '.equipment-slot-pendant > .equipment-slot-image',
     )!;
     private arrows: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-arrows > .equipment-slot-image'
+        '.equipment-slot-arrows > .equipment-slot-image',
     )!;
     private chestplate: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-chestplate > .equipment-slot-image'
+        '.equipment-slot-chestplate > .equipment-slot-image',
     )!;
     private weapon: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-weapon > .equipment-slot-image'
+        '.equipment-slot-weapon > .equipment-slot-image',
     )!;
     private shield: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-shield > .equipment-slot-image'
+        '.equipment-slot-shield > .equipment-slot-image',
     )!;
     private ring: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-ring > .equipment-slot-image'
+        '.equipment-slot-ring > .equipment-slot-image',
     )!;
     private weaponSkin: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-weapon-skin > .equipment-slot-image'
+        '.equipment-slot-weapon-skin > .equipment-slot-image',
     )!;
     private armourSkin: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-armour-skin > .equipment-slot-image'
+        '.equipment-slot-armour-skin > .equipment-slot-image',
     )!;
     private legplates: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-legplates > .equipment-slot-image'
+        '.equipment-slot-legplates > .equipment-slot-image',
     )!;
     private cape: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-cape > .equipment-slot-image'
+        '.equipment-slot-cape > .equipment-slot-image',
     )!;
     private boots: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-boots > .equipment-slot-image'
+        '.equipment-slot-boots > .equipment-slot-image',
     )!;
 
     private unequipCallback?: UnequipCallback;
@@ -69,33 +69,42 @@ export default class State extends Menu {
 
         this.petPickupButton.addEventListener('click', () => this.pickupCallback?.());
 
-        this.helmet.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Helmet)
+        this.helmet.addEventListener(
+            'click',
+            () => this.unequipCallback?.(Modules.Equipment.Helmet),
         );
-        this.pendant.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Pendant)
+        this.pendant.addEventListener(
+            'click',
+            () => this.unequipCallback?.(Modules.Equipment.Pendant),
         );
-        this.arrows.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Arrows)
+        this.arrows.addEventListener(
+            'click',
+            () => this.unequipCallback?.(Modules.Equipment.Arrows),
         );
-        this.chestplate.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Chestplate)
+        this.chestplate.addEventListener(
+            'click',
+            () => this.unequipCallback?.(Modules.Equipment.Chestplate),
         );
-        this.weapon.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Weapon)
+        this.weapon.addEventListener(
+            'click',
+            () => this.unequipCallback?.(Modules.Equipment.Weapon),
         );
-        this.shield.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Shield)
+        this.shield.addEventListener(
+            'click',
+            () => this.unequipCallback?.(Modules.Equipment.Shield),
         );
         this.ring.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Ring));
-        this.weaponSkin.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.WeaponSkin)
+        this.weaponSkin.addEventListener(
+            'click',
+            () => this.unequipCallback?.(Modules.Equipment.WeaponSkin),
         );
-        this.armourSkin.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.ArmourSkin)
+        this.armourSkin.addEventListener(
+            'click',
+            () => this.unequipCallback?.(Modules.Equipment.ArmourSkin),
         );
-        this.legplates.addEventListener('click', () =>
-            this.unequipCallback?.(Modules.Equipment.Legplates)
+        this.legplates.addEventListener(
+            'click',
+            () => this.unequipCallback?.(Modules.Equipment.Legplates),
         );
         this.cape.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Cape));
         this.boots.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Boots));
@@ -191,7 +200,7 @@ export default class State extends Menu {
         // Add the attack style image.
         image.classList.add(
             'attack-style',
-            `attack-style-${Modules.AttackStyle[style].toLowerCase()}`
+            `attack-style-${Modules.AttackStyle[style].toLowerCase()}`,
         );
 
         // If the style is the same as the player's current style, we add the active class.

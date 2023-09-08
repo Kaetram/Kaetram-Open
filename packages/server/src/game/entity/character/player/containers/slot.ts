@@ -24,7 +24,7 @@ export default class Slot {
         public index: number,
         public key = '',
         public count = -1,
-        public enchantments: Enchantments = {}
+        public enchantments: Enchantments = {},
     ) {}
 
     /**
@@ -156,7 +156,7 @@ export default class Slot {
             index: this.index,
             key: this.key,
             count: this.count,
-            enchantments: this.enchantments
+            enchantments: this.enchantments,
         };
 
         if (clientInfo) {

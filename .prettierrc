@@ -3,7 +3,7 @@
     "useTabs": false,
     "tabWidth": 4,
     "singleQuote": true,
-    "trailingComma": "none",
+    "trailingComma": "all",
     "endOfLine": "auto",
     "overrides": [{ "files": "*.json", "options": { "printWidth": 120 } }]
 }

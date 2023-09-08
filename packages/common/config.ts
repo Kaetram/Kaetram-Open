@@ -118,11 +118,11 @@ config.remoteServerHost ||= config.host;
 if (NODE_ENV === 'e2e' && !config.mongodbDatabase.includes('e2e')) {
     console.error(
         `Something is wrong with your configuration, your NODE_ENV is set to 'e2e' and your database name does not include 'e2e'.
-        This might cause you to mess up [${config.mongodbDatabase}] via the e2e tests. Stopping the server.`
+        This might cause you to mess up [${config.mongodbDatabase}] via the e2e tests. Stopping the server.`,
     );
 
     throw new Error(
-        `NODE_ENV and database name mismatch [NODE_ENV=${NODE_ENV},mongodbDatabase=${config.mongodbDatabase}]`
+        `NODE_ENV and database name mismatch [NODE_ENV=${NODE_ENV},mongodbDatabase=${config.mongodbDatabase}]`,
     );
 }
 

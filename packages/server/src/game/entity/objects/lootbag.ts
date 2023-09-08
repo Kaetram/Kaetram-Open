@@ -33,7 +33,7 @@ export default class LootBag extends Entity {
         x: number,
         y: number,
         public owner: string,
-        items: Item[]
+        items: Item[],
     ) {
         super(Utils.createInstance(Modules.EntityType.LootBag), 'lootbag', x, y);
 
@@ -93,15 +93,15 @@ export default class LootBag extends Entity {
         // Prevent cheating and packet manipulation.
         if (this.getDistance(player) > 1)
             return log.warning(
-                `open(): Player ${player.username} tried to open a loot bag that was too far away.`
+                `open(): Player ${player.username} tried to open a loot bag that was too far away.`,
             );
 
         player.activeLootBag = this.instance;
 
         player.send(
             new LootBagPacket(Opcodes.LootBag.Open, {
-                items: this.getItems()
-            })
+                items: this.getItems(),
+            }),
         );
     }
 
@@ -116,7 +116,7 @@ export default class LootBag extends Entity {
     public take(player: Player, index: number, count = 1): void {
         if (this.instance !== player.activeLootBag)
             return log.warning(
-                `Player ${player.username} tried to take an item from a loot bag without opening it.`
+                `Player ${player.username} tried to take an item from a loot bag without opening it.`,
             );
 
         // Double check that the player has access to the loot bag.
@@ -125,7 +125,7 @@ export default class LootBag extends Entity {
         // Verify that the player is close enough to the lootbag.
         if (this.getDistance(player) > 1)
             return log.warning(
-                `take(): Player ${player.username} tried to take an item from a loot bag that was too far away.`
+                `take(): Player ${player.username} tried to take an item from a loot bag that was too far away.`,
             );
 
         let item = this.container[index];
@@ -165,7 +165,7 @@ export default class LootBag extends Entity {
     public close(): void {
         this.world.network.sendToSurroundingRegions(
             this.region,
-            new LootBagPacket(Opcodes.LootBag.Close, {})
+            new LootBagPacket(Opcodes.LootBag.Close, {}),
         );
     }
 
@@ -178,7 +178,7 @@ export default class LootBag extends Entity {
     public sendTakePacket(index: number): void {
         this.world.network.sendToSurroundingRegions(
             this.region,
-            new LootBagPacket(Opcodes.LootBag.Take, { index })
+            new LootBagPacket(Opcodes.LootBag.Take, { index }),
         );
     }
 
@@ -223,7 +223,7 @@ export default class LootBag extends Entity {
                 index: parseInt(i),
                 key: item.key,
                 count: item.count,
-                enchantments: item.enchantments
+                enchantments: item.enchantments,
             });
         }
 

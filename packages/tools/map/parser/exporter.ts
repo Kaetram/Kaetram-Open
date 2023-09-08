@@ -35,7 +35,7 @@ export default class Exporter {
         // Read the map file synchronously.
         let data = fs.readFileSync(this.#map, {
             encoding: 'utf8',
-            flag: 'r'
+            flag: 'r',
         });
 
         // Check that the data is valid
@@ -119,9 +119,9 @@ export default class Exporter {
             (error) => {
                 if (error)
                     throw new Error(`An error has occurred while copying tilesets:\n`, {
-                        cause: error
+                        cause: error,
                     });
-            }
+            },
         );
     }
 

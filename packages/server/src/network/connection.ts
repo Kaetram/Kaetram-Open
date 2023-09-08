@@ -29,7 +29,10 @@ export default class Connection {
 
     private closeCallback?: () => void;
 
-    public constructor(public instance: string, private socket: HeaderWebSocket) {
+    public constructor(
+        public instance: string,
+        private socket: HeaderWebSocket,
+    ) {
         // Convert the IP address hex string to a readable IP address.
         this.address =
             socket.remoteAddress || Utils.bufferToAddress(socket.getRemoteAddressAsText());

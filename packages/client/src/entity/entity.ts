@@ -82,7 +82,10 @@ export default abstract class Entity {
 
     public counterInterval!: NodeJS.Timeout | undefined;
 
-    public constructor(public instance = '', public type: Modules.EntityType) {}
+    public constructor(
+        public instance = '',
+        public type: Modules.EntityType,
+    ) {}
 
     /**
      * Fades in the entity when spawning in.
@@ -220,7 +223,7 @@ export default abstract class Entity {
         name: string,
         speed = this.sprite.idleSpeed,
         count = 1,
-        onEndCount?: () => void
+        onEndCount?: () => void,
     ): void {
         // Prevent setting animation if no sprite or it's the same animation.
         if (this.animation?.name === name) return;

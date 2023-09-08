@@ -28,9 +28,9 @@ Then(
                     let count = text.length > 0 ? Number(text) : NaN;
                     if ((isNaN(count) && amount > 1) || (!isNaN(count) && count !== amount))
                         assert.fail(
-                            `Inventory slot item count label does not contain the correct amount [${amount} =! ${text}, ${count}]`
+                            `Inventory slot item count label does not contain the correct amount [${amount} =! ${text}, ${count}]`,
                         );
                 });
         });
-    }
+    },
 );

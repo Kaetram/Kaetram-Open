@@ -25,7 +25,11 @@ export default class Minigame {
      * @param status Whether the player is in-game or in the lobby.
      * @param countdown Lobby/in-game countdown timer updated from the server.
      */
-    public constructor(public type = -1, public status: Status = 'exit', public countdown = 180) {}
+    public constructor(
+        public type = -1,
+        public status: Status = 'exit',
+        public countdown = 180,
+    ) {}
 
     /**
      * Resets the minigame status to default.

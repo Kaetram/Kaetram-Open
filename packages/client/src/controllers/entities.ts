@@ -258,7 +258,7 @@ export default class EntitiesController {
                 info.damage!,
                 target.x,
                 target.y,
-                this.isPlayer(target.instance)
+                this.isPlayer(target.instance),
             );
 
             target.triggerHealthBar();

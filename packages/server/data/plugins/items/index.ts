@@ -23,5 +23,5 @@ export default {
     firepotion,
     knife,
     chisel,
-    effectpotion
+    effectpotion,
 };

@@ -7,7 +7,7 @@ import type Bot from './bot';
 import type { PlayerData } from '@kaetram/common/network/impl/player';
 import type {
     HandshakePacketData,
-    TeleportPacketData
+    TeleportPacketData,
 } from '@kaetram/common/types/messages/outgoing';
 import type { connection as Connection, Message } from 'websocket';
 
@@ -22,7 +22,10 @@ export default class Entity {
 
     private readyCallback?: () => void;
 
-    public constructor(public bot: Bot, public connection: Connection) {
+    public constructor(
+        public bot: Bot,
+        public connection: Connection,
+    ) {
         this.connection.on('message', this.handleMessage.bind(this));
     }
 
@@ -87,7 +90,7 @@ export default class Entity {
             this.send(Packets.Login, {
                 username: this.username,
                 password: 'chocolate',
-                opcode: Opcodes.Login.Login
+                opcode: Opcodes.Login.Login,
             });
         else this.send(Packets.Login, { opcode: Opcodes.Login.Guest });
     }
@@ -112,13 +115,16 @@ export default class Entity {
         log.info(`Successfully logged in as ${this.username} at ${this.x}, ${this.y}.`);
 
         // Begin the roaming interval and sending chats.
-        setInterval(() => {
-            let chat = Utils.randomInt(1, 16) === 4;
+        setInterval(
+            () => {
+                let chat = Utils.randomInt(1, 16) === 4;
 
-            // If we are sending a chat, we generate a random string to send.
-            if (chat) this.chat('Hello this is a chat message from a bot!');
-            else this.move(this.x + Utils.randomInt(-1, 1), this.y + Utils.randomInt(-1, 1));
-        }, Utils.randomInt(4000, 15_000));
+                // If we are sending a chat, we generate a random string to send.
+                if (chat) this.chat('Hello this is a chat message from a bot!');
+                else this.move(this.x + Utils.randomInt(-1, 1), this.y + Utils.randomInt(-1, 1));
+            },
+            Utils.randomInt(4000, 15_000),
+        );
     }
 
     /**
@@ -162,7 +168,7 @@ export default class Entity {
             playerX: this.x,
             playerY: this.y,
             targetInstance: undefined,
-            following: false
+            following: false,
         });
 
         // send the start packet to the server.
@@ -173,7 +179,7 @@ export default class Entity {
             playerX: this.x,
             playerY: this.y,
             movementSpeed: 250,
-            targetInstance: undefined
+            targetInstance: undefined,
         });
 
         // Send a step packet to the server 250 milliseconds later and stop the movement.
@@ -187,7 +193,7 @@ export default class Entity {
                 opcode: Opcodes.Movement.Step,
                 playerX: x,
                 playerY: y,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             });
         }, 250);
 
@@ -199,7 +205,7 @@ export default class Entity {
                 playerX: x,
                 playerY: y,
                 targetInstance: undefined,
-                orientation: Modules.Orientation.Down
+                orientation: Modules.Orientation.Down,
             });
         }, 750);
     }

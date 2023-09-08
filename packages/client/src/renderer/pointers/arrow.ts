@@ -14,7 +14,10 @@ export default class Arrow {
     private blinkInterval = -1;
     private visible = true;
 
-    public constructor(public type: Opcodes.Pointer, public instance: string) {
+    public constructor(
+        public type: Opcodes.Pointer,
+        public instance: string,
+    ) {
         // Apply the correct class name to the element.
         this.element.classList.add('pointer');
 

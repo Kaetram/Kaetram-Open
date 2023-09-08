@@ -4,5 +4,5 @@ export enum Team {
     Red,
     Blue,
     Prey,
-    Hunter
+    Hunter,
 }

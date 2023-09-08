@@ -24,7 +24,7 @@ export default class QuickSlots {
 
         for (let child of this.abilityBar.children)
             child.addEventListener('click', () =>
-                this.handleAction(parseInt(child.id.slice(-1)) - 1)
+                this.handleAction(parseInt(child.id.slice(-1)) - 1),
             );
     }
 

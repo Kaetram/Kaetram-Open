@@ -5,10 +5,10 @@
     "devDependencies": {
         "@types/dotenv-parse-variables": "^2.0.1",
         "bcryptjs": "^2.4.3",
-        "discord.js": "^14.3.0",
+        "discord.js": "^14.13.0",
         "dotenv-extended": "^2.9.0",
         "dotenv-parse-variables": "^2.0.0",
-        "i18next": "^23.2.11",
-        "ipaddr.js": "^2.0.1"
+        "i18next": "^23.5.1",
+        "ipaddr.js": "^2.1.0"
     }
 }

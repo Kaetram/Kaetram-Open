@@ -11,7 +11,7 @@ export default class Hellhound extends Default {
     // Positions where minions will spawn.
     private positions: Position[] = [
         { x: 963, y: 668 },
-        { x: 948, y: 666 }
+        { x: 948, y: 666 },
     ];
 
     private minionsSpawned = 0;

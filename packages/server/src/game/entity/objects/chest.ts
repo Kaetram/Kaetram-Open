@@ -25,7 +25,7 @@ export default class Chest extends Entity {
         y: number,
         public achievement?: string,
         public mimic = false,
-        private items: string[] = []
+        private items: string[] = [],
     ) {
         super(Utils.createInstance(Modules.EntityType.Chest), 'chest', x, y);
     }
@@ -84,7 +84,7 @@ export default class Chest extends Entity {
 
         return {
             key: item,
-            count
+            count,
         };
     }
 

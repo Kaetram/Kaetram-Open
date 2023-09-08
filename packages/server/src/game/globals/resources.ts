@@ -18,7 +18,10 @@ export default class Resources {
      * in the case of trees, rocks in the case of mining, etc.
      */
 
-    public constructor(private world: World, private data: ProcessedResource[]) {
+    public constructor(
+        private world: World,
+        private data: ProcessedResource[],
+    ) {
         this.map = this.world.map;
         this.regions = this.world.map.regions;
 

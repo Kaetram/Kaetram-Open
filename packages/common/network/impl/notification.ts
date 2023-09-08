@@ -13,7 +13,7 @@ export interface NotificationPacketData {
 
 export type NotificationPacketCallback = (
     opcode: Opcodes.Notification,
-    info: NotificationPacketData
+    info: NotificationPacketData,
 ) => void;
 
 export default class NotificationPacket extends Packet {

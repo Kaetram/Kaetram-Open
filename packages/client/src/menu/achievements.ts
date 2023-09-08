@@ -10,7 +10,7 @@ export default class Achievements extends Menu {
 
     private tabArrowLeft: HTMLDivElement = document.querySelector('#achievements-tab-arrow-left')!;
     private tabArrowRight: HTMLDivElement = document.querySelector(
-        '#achievements-tab-arrow-right'
+        '#achievements-tab-arrow-right',
     )!;
 
     private tabText: HTMLSpanElement = document.querySelector('#achievements-tab-text')!;
@@ -215,8 +215,6 @@ export default class Achievements extends Menu {
 
         title.innerHTML = task.name;
         description.innerHTML = task.description;
-
-        console.log(task);
 
         if (task.isFinished()) {
             // Title is displayed as gold if the achievement is completed.

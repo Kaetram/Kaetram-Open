@@ -24,14 +24,14 @@ type Successor = (
     rows: number,
     cols: number,
     result: Result[],
-    i: number
+    i: number,
 ) => Result[];
 
 type MathFunction = (
     start: Position,
     end: Position,
     f1: (...values: number[]) => number,
-    f2: (...values: number[]) => number
+    f2: (...values: number[]) => number,
 ) => number;
 
 /**
@@ -44,7 +44,7 @@ function AStar(
     grid: number[][],
     start: [number, number],
     end: [number, number],
-    f: FunctionTypes
+    f: FunctionTypes,
 ): number[][] {
     let cols = grid[0].length,
         rows = grid.length,
@@ -58,8 +58,8 @@ function AStar(
                 y: start[1],
                 f: 0,
                 g: 0,
-                v: start[0] + start[1] * cols
-            }
+                v: start[0] + start[1] * cols,
+            },
         ],
         length = 1,
         distance: MathFunction,
@@ -169,7 +169,7 @@ let diagonalSuccessors: Successor = ($N, $S, $E, $W, N, S, E, W, grid, _rows, _c
         rows,
         cols,
         result,
-        i
+        i,
     ) => {
         $N = N > -1;
         $S = S < rows;
@@ -196,7 +196,7 @@ function successors(
     y: number,
     grid: number[][],
     rows: number,
-    cols: number
+    cols: number,
 ) {
     let N = y - 1,
         S = y + 1,

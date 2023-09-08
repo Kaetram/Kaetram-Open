@@ -66,7 +66,7 @@ export interface AchievementPacketData {
 
 export type AchievementPacketCallback = (
     opcode: Opcodes.Achievement,
-    info: AchievementPacketData
+    info: AchievementPacketData,
 ) => void;
 export default class AchievementPacket extends Packet {
     public constructor(opcode: Opcodes.Achievement, data: AchievementPacketData) {

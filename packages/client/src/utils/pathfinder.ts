@@ -36,7 +36,7 @@ export default class PathFinder {
         startY: number,
         endX: number,
         endY: number,
-        ignores: TileIgnore[] = []
+        ignores: TileIgnore[] = [],
     ): number[][] {
         // Parse through the ignores and remove collision from the grid.
         this.handleIgnore(grid, ignores, true);

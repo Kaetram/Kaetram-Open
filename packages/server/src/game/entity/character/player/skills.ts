@@ -64,7 +64,7 @@ export default class Skills {
         [Modules.Skills.Foraging]: this.foraging,
         [Modules.Skills.Eating]: this.eating,
         [Modules.Skills.Loitering]: this.loitering,
-        [Modules.Skills.Alchemy]: this.alchemy
+        [Modules.Skills.Alchemy]: this.alchemy,
     };
 
     private loadCallback?: () => void;
@@ -118,8 +118,8 @@ export default class Skills {
         this.player.send(
             new ExperiencePacket(Opcodes.Experience.Sync, {
                 instance: this.player.instance,
-                level: this.player.level
-            })
+                level: this.player.level,
+            }),
         );
 
         // Synchronize mana and hit points.
@@ -129,8 +129,8 @@ export default class Skills {
                 hitPoints: this.player.hitPoints.getHitPoints(),
                 maxHitPoints: this.player.hitPoints.getMaxHitPoints(),
                 mana: this.player.mana.getMana(),
-                maxMana: this.player.mana.getMaxMana()
-            })
+                maxMana: this.player.mana.getMaxMana(),
+            }),
         );
     }
 
@@ -160,13 +160,13 @@ export default class Skills {
         withInfo: boolean,
         experience: number,
         level: number,
-        newLevel = false
+        newLevel = false,
     ): void {
         if (newLevel) {
             this.player.popup(
                 `misc:SKILL_LEVEL_UP`,
                 `misc:SKILL_LEVEL_UP_DESC;name=${name};level=${level}`,
-                '#9933ff'
+                '#9933ff',
             );
 
             // Update the player's max health if they have gained a level in health skill.
@@ -182,8 +182,8 @@ export default class Skills {
                 new ExperiencePacket(Opcodes.Experience.Skill, {
                     instance: this.player.instance,
                     amount: experience,
-                    skill: type
-                })
+                    skill: type,
+                }),
             );
 
         this.player.send(new SkillPacket(Opcodes.Skill.Update, this.skills[type].serialize(true)));
@@ -270,7 +270,7 @@ export default class Skills {
 
         return {
             skills,
-            cheater: this.player.isCheater()
+            cheater: this.player.isCheater(),
         };
     }
 

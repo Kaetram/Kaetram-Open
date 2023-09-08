@@ -56,7 +56,7 @@ export default class Updater {
                 let mDistance = entity.speed * entity.getTimeDiff(),
                     dx = entity.target.x - entity.x, // delta x current position to target
                     dy = entity.target.y - entity.y, // delta y current position to target
-                    tDistance = Math.sqrt(dx * dx + dy * dy), // pythagorean theorem uwu
+                    tDistance = Math.hypot(dx, dy), // pythagorean theorem uwu
                     amount = mDistance / tDistance;
 
                 // Always angle the projectile towards the target.
@@ -127,7 +127,7 @@ export default class Updater {
                     // Callback for an entity movement.
                     entity.moved();
                     entity.nextStep();
-                }
+                },
             );
         });
     }
@@ -166,7 +166,7 @@ export default class Updater {
                 x: -1,
                 y: -1,
                 gridX: player.gridX,
-                gridY: player.gridY
+                gridY: player.gridY,
             };
 
         /**

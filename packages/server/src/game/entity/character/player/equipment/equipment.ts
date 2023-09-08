@@ -33,7 +33,7 @@ export default class Equipment {
         public type: Modules.Equipment,
         public key = '',
         public count = -1,
-        public enchantments: Enchantments = {}
+        public enchantments: Enchantments = {},
     ) {}
 
     /**
@@ -107,7 +107,7 @@ export default class Equipment {
             type: this.type,
             key: this.key,
             count: this.count,
-            enchantments: this.enchantments
+            enchantments: this.enchantments,
         };
 
         // Includes information only relevant to the client.

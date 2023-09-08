@@ -109,8 +109,10 @@ export default class LootBag extends Menu {
 
         // Iterate through the items and create a new inventory slot for each one.
         for (let item of items) {
-            let element = Utils.createSlot(Modules.ContainerType.LootBag, item.index, () =>
-                    this.selectCallback?.(item.index)
+            let element = Utils.createSlot(
+                    Modules.ContainerType.LootBag,
+                    item.index,
+                    () => this.selectCallback?.(item.index),
                 ) as LootElement,
                 image: HTMLElement = element.querySelector('.item-image')!;
 

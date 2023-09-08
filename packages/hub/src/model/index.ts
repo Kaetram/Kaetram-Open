@@ -10,7 +10,7 @@ export default abstract class Model {
     public constructor(
         public controller: Models,
         public instance: string,
-        public connection: Connection
+        public connection: Connection,
     ) {
         this.address = Utils.bufferToAddress(this.connection.socket.getRemoteAddressAsText());
     }
