@@ -17,14 +17,14 @@ type PlayerCallback = (
     username: string,
     serverId: number,
     logout: boolean,
-    population: number,
+    population: number
 ) => void;
 type ServerCallback = (id: number, name: string) => void;
 type MessageCallback = (
     source: string,
     message: string,
     serverName?: string,
-    withArrow?: boolean,
+    withArrow?: boolean
 ) => void;
 
 export default class Models {
@@ -64,7 +64,7 @@ export default class Models {
             case 'hub': {
                 if (config.gver !== data.gVer) {
                     log.error(
-                        `Game version mismatch: ${config.gver} ${data.gVer} from ${data.serverId}`,
+                        `Game version mismatch: ${config.gver} ${data.gVer} from ${data.serverId}`
                     );
 
                     return connection.close();
@@ -167,7 +167,7 @@ export default class Models {
 
     private syncAdmins() {
         this.broadcastAdmins(
-            new Packet(Packets.AdminSync, undefined, { servers: this.serializeServers() }),
+            new Packet(Packets.AdminSync, undefined, { servers: this.serializeServers() })
         );
     }
 

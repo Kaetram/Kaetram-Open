@@ -14,5 +14,5 @@ export default {
     RESTRICTED_STORE: 'Esta tienda no acepta ningún artículo.',
     RESTRICTED_ITEM: 'Este artículo no se puede vender aquí.',
     INVALID_ITEM_COUNT: 'Has introducido una cantidad no válida de artículos.',
-    HOLLOW_ADMIN: 'Como administrador no puedes interactuar con la economía.',
+    HOLLOW_ADMIN: 'Como administrador no puedes interactuar con la economía.'
 } as const;

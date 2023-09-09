@@ -50,7 +50,7 @@ export default class Equipment {
         bonuses?: Bonuses,
         attackStyle = Modules.AttackStyle.None,
         attackStyles: Modules.AttackStyle[] = [],
-        light: Light = {},
+        light: Light = {}
     ): void {
         this.key = key;
         this.name = name;

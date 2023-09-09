@@ -81,8 +81,8 @@ export default class Network {
                 new HandshakePacket({
                     type: 'client',
                     instance: player.instance,
-                    serverId: config.serverId,
-                }),
+                    serverId: config.serverId
+                })
             );
         });
     }

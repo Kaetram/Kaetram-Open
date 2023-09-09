@@ -7,7 +7,7 @@ const { addCucumberPreprocessorPlugin } = badeballPreprocessor;
 
 async function setupNodeEvents(
     on: Cypress.PluginEvents,
-    config: Cypress.PluginConfigOptions,
+    config: Cypress.PluginConfigOptions
 ): Promise<Cypress.PluginConfigOptions> {
     await addCucumberPreprocessorPlugin(on, config);
 
@@ -15,8 +15,8 @@ async function setupNodeEvents(
         'file:preprocessor',
         createBundler({
             plugins: [createEsbuildPlugin(config)],
-            preserveSymlinks: true,
-        }),
+            preserveSymlinks: true
+        })
     );
 
     // Make sure to return the config object as it might have been modified by the plugin.
@@ -30,6 +30,6 @@ export default defineConfig({
         defaultCommandTimeout: 10_000,
         specPattern: '**/*.feature',
         watchForFileChanges: true,
-        setupNodeEvents,
-    },
+        setupNodeEvents
+    }
 });

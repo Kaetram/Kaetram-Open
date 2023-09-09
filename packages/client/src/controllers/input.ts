@@ -158,7 +158,7 @@ export default class InputController {
         if (this.isCtrlKey())
             return this.game.socket.send(Packets.Command, [
                 Opcodes.Command.CtrlClick,
-                this.getCoords(),
+                this.getCoords()
             ]);
 
         this.move(this.getCoords());
@@ -357,7 +357,7 @@ export default class InputController {
                     x: this.interactEntity.x,
                     y: this.interactEntity.y,
                     gridX: this.interactEntity.gridX,
-                    gridY: this.interactEntity.gridY,
+                    gridY: this.interactEntity.gridY
                 });
             }
 
@@ -380,7 +380,7 @@ export default class InputController {
             case Modules.MenuActions.AddFriend: {
                 this.game.socket.send(Packets.Friends, {
                     opcode: Opcodes.Friends.Add,
-                    username: this.interactEntity.name,
+                    username: this.interactEntity.name
                 });
                 break;
             }
@@ -467,7 +467,7 @@ export default class InputController {
                     if (this.player.canAttackTarget())
                         this.game.socket.send(Packets.Target, [
                             Opcodes.Target.Attack,
-                            this.entity.instance,
+                            this.entity.instance
                         ]);
                 }
                 return;
@@ -721,7 +721,7 @@ export default class InputController {
             dx: this.selectedX * tileSize * zoomFactor,
             dy: this.selectedY * tileSize * zoomFactor,
             dw: sprite.width * zoomFactor,
-            dh: sprite.height * zoomFactor,
+            dh: sprite.height * zoomFactor
         };
     }
 

@@ -14,7 +14,7 @@ import type {
     RegionData,
     RegionTileData,
     Tile,
-    TransformedTile,
+    TransformedTile
 } from '@kaetram/common/types/map';
 
 export interface CursorTiles {
@@ -222,7 +222,7 @@ export default class Map {
     private loadTileset(
         tileset: ProcessedTileset,
         index: number,
-        callback: (tileset: TilesetInfo) => void,
+        callback: (tileset: TilesetInfo) => void
     ): void {
         let tilesetInfo = new Image() as TilesetInfo,
             path = `/img/tilesets/${tileset.relativePath}`; // tileset path in the client.
@@ -347,7 +347,7 @@ export default class Map {
             tileId,
             h,
             v,
-            d,
+            d
         };
     }
 
@@ -378,7 +378,7 @@ export default class Map {
     public indexToCoord(index: number): Position {
         return {
             x: index % this.width,
-            y: Math.floor(index / this.width),
+            y: Math.floor(index / this.width)
         };
     }
 

@@ -152,7 +152,7 @@ export default class Player extends Character {
                 quest.subStage,
                 quest.rewards,
                 quest.skillRequirements,
-                quest.questRequirements,
+                quest.questRequirements
             );
     }
 
@@ -170,7 +170,7 @@ export default class Player extends Character {
                     achievement.name!,
                     achievement.description!,
                     achievement.stage,
-                    achievement.stageCount!,
+                    achievement.stageCount!
                 );
 
             // Secret tasks are displayed slightly different.
@@ -230,7 +230,7 @@ export default class Player extends Character {
             attackStyle,
             attackStyles,
             bow,
-            light,
+            light
         } = equipment;
 
         if (!key) return this.unequip(type);
@@ -245,7 +245,7 @@ export default class Player extends Character {
             enchantments,
             attackStats,
             defenseStats,
-            bonuses,
+            bonuses
         );
 
         // Updates the weapon attack range and attack style.
@@ -273,7 +273,7 @@ export default class Player extends Character {
             Object.keys(this.friends).length,
             username,
             status,
-            serverId,
+            serverId
         );
     }
 
@@ -289,7 +289,7 @@ export default class Player extends Character {
         // Add the member to the guild list.
         this.guild!.members!.push({
             username,
-            serverId,
+            serverId
         });
     }
 
@@ -694,7 +694,7 @@ export default class Player extends Character {
             experience,
             nextExperience!,
             level!,
-            percentage!,
+            percentage!
         );
     }
 
@@ -746,7 +746,7 @@ export default class Player extends Character {
         key: string,
         level: number,
         type?: Modules.AbilityType,
-        quickSlot = -1,
+        quickSlot = -1
     ): void {
         // This function is used when adding abilities for the first time too.
         if (key in this.abilities) this.abilities[key]?.update(level, quickSlot);
@@ -817,7 +817,7 @@ export default class Player extends Character {
 
         this.guild = {
             name: packet.name,
-            members: packet.members,
+            members: packet.members
         };
     }
 
@@ -835,7 +835,7 @@ export default class Player extends Character {
         name: string,
         speed = 120,
         count = 0,
-        onEndCount?: () => void,
+        onEndCount?: () => void
     ): void {
         // Update the animation name if we're using a bow.
         if (name === 'atk' && this.getWeapon().bow) name = 'bow_atk';
@@ -851,7 +851,7 @@ export default class Player extends Character {
 
     public setGuildMember(
         username: string,
-        rank: Modules.GuildRank = Modules.GuildRank.Fledgling,
+        rank: Modules.GuildRank = Modules.GuildRank.Fledgling
     ): void {
         if (!this.guild) return;
 
@@ -885,7 +885,7 @@ export default class Player extends Character {
                     Modules.Equipment.Shield,
                     Modules.Equipment.Weapon,
                     Modules.Equipment.WeaponSkin,
-                    Modules.Equipment.Cape,
+                    Modules.Equipment.Cape
                 ];
                 break;
             }
@@ -1014,7 +1014,7 @@ export default class Player extends Character {
 
     public forEachEquipment(
         callback: (equipment: Equipment, type?: number) => void,
-        ignoreEmpty = false,
+        ignoreEmpty = false
     ): void {
         for (let type of this.equipmentOrder) {
             let equipment = this.equipments[type as never] as Equipment;

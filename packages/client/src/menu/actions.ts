@@ -15,7 +15,7 @@ export default class Actions extends Menu {
     // Info about the current action.
     private name: HTMLElement = document.querySelector('#action-page > .action-item-name')!;
     private description: HTMLElement = document.querySelector(
-        '#action-page > .action-item-description',
+        '#action-page > .action-item-description'
     )!;
 
     // Drop dialog elements
@@ -71,7 +71,7 @@ export default class Actions extends Menu {
         defenseStats: Stats,
         bonuses: Bonuses,
         enchantments: Enchantments,
-        itemDescription = '',
+        itemDescription = ''
     ): void {
         this.clear();
 

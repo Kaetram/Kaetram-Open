@@ -18,14 +18,14 @@ export default class PirateCaptain extends Default {
         { x: 822, y: 649 },
         { x: 825, y: 659 },
         { x: 836, y: 659 },
-        { x: 834, y: 649 },
+        { x: 834, y: 649 }
     ];
 
     private minionSpots: Position[] = [
         { x: 826, y: 651 },
         { x: 837, y: 650 },
         { x: 835, y: 657 },
-        { x: 824, y: 654 },
+        { x: 824, y: 654 }
     ];
 
     public constructor(mob: Mob) {

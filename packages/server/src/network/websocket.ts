@@ -9,7 +9,7 @@ export default abstract class WebSocket {
     protected constructor(
         protected host: string,
         protected port: number,
-        protected socketHandler: SocketHandler,
+        protected socketHandler: SocketHandler
     ) {}
 
     /**

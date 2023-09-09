@@ -77,7 +77,7 @@ export default {
     positionOffset(radius: number): Position {
         return {
             x: this.randomInt(0, radius),
-            y: this.randomInt(0, radius),
+            y: this.randomInt(0, radius)
         };
     },
 
@@ -105,7 +105,7 @@ export default {
     formatName(name = ''): string {
         return name.replace(
             /\w\S*/g,
-            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase(),
+            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
         );
     },
 
@@ -224,7 +224,7 @@ export default {
 
     isEmail(email: string): boolean {
         return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
-            email,
+            email
         );
     },
 
@@ -270,7 +270,7 @@ export default {
 
         return {
             x: parseInt(splitPosition[0]),
-            y: parseInt(splitPosition[1]),
+            y: parseInt(splitPosition[1])
         };
     },
 
@@ -327,7 +327,7 @@ export default {
             slash: 0,
             stab: 0,
             archery: 0,
-            magic: 0,
+            magic: 0
         };
     },
 
@@ -341,7 +341,7 @@ export default {
             accuracy: 0,
             strength: 0,
             archery: 0,
-            magic: 0,
+            magic: 0
         };
-    },
+    }
 };

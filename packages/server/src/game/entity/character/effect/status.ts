@@ -65,7 +65,7 @@ export default class {
     public addWithTimeout(
         statusEffect: Modules.Effects,
         duration: number,
-        callback?: () => void,
+        callback?: () => void
     ): void {
         // A temporary freezing effect cannot be added if the player has a permanent one.
         if (statusEffect === Modules.Effects.Freezing && this.hasPermanentFreezing()) return;
@@ -87,7 +87,7 @@ export default class {
                 callback?.();
             }, duration),
             startTime: Date.now(),
-            duration,
+            duration
         };
     }
 
@@ -167,7 +167,7 @@ export default class {
 
             effects[status] = {
                 startTime: duration.startTime,
-                duration: duration.duration,
+                duration: duration.duration
             } as SerializedDuration;
         }
 

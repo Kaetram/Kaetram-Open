@@ -9,7 +9,7 @@ import { AchievementPacket } from '@kaetram/common/network/impl';
 import type { Modules } from '@kaetram/common/network';
 import type {
     AchievementData,
-    SerializedAchievement,
+    SerializedAchievement
 } from '@kaetram/common/network/impl/achievement';
 import type { PopupData } from '@kaetram/common/types/popup';
 import type NPC from '../../npc/npc';
@@ -67,7 +67,7 @@ export default class Achievements {
         itemKey?: string,
         itemCount?: number,
         ability?: string,
-        abilityLevel?: number,
+        abilityLevel?: number
     ): void {
         // Handles an item reward.
         if (itemKey) {
@@ -80,7 +80,7 @@ export default class Achievements {
                     this.player.x,
                     this.player.y,
                     true,
-                    itemCount,
+                    itemCount
                 );
         }
 
@@ -110,8 +110,8 @@ export default class Achievements {
                 key,
                 stage,
                 name,
-                description,
-            }),
+                description
+            })
         );
 
         this.player.updateEntities();
@@ -190,7 +190,7 @@ export default class Achievements {
         });
 
         return {
-            achievements,
+            achievements
         };
     }
 

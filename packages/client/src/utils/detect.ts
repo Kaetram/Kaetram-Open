@@ -22,7 +22,7 @@ export function iOSVersion(): number | undefined {
         let version = [
             parseInt(match[1], 10),
             parseInt(match[2], 10),
-            parseInt(match[3] || '0', 10),
+            parseInt(match[3] || '0', 10)
         ];
 
         return parseFloat(version.join('.'));

@@ -27,7 +27,7 @@ export default class Minigames {
         log.info(
             `Finished loading ${Object.keys(this.minigames).length} minigame${
                 Object.keys(this.minigames).length > 1 ? 's' : ''
-            }.`,
+            }.`
         );
 
         this.linkAreas();

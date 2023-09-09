@@ -9,7 +9,7 @@ export default class Sign {
     public constructor(
         public x: number,
         public y: number,
-        public text: string[],
+        public text: string[]
     ) {
         this.instance = `${x}-${y}`;
     }
@@ -45,10 +45,10 @@ export default class Sign {
                     instance: `${this.x}-${this.y}`,
                     x: this.x,
                     y: this.y,
-                    text: message,
+                    text: message
                 },
-                Opcodes.Bubble.Position,
-            ),
+                Opcodes.Bubble.Position
+            )
         );
     }
 }

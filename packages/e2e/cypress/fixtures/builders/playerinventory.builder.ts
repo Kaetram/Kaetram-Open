@@ -5,11 +5,11 @@ import type { PlayerInventory } from '@kaetram/e2e/cypress/entities/playerinvent
 export function buildPlayerInventory(
     username: string,
     overwrites: Partial<PlayerInventory> = {},
-    defaults: PlayerInventory = defaultPlayerInventory,
+    defaults: PlayerInventory = defaultPlayerInventory
 ): PlayerInventory {
     return {
         ...defaults,
         ...overwrites,
-        username,
+        username
     };
 }

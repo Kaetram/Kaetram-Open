@@ -22,47 +22,47 @@ export default class Equipments extends Menu {
 
     // Player image canvas
     private playerCanvas: HTMLCanvasElement = document.querySelector(
-        '#equipments-player-image-canvas',
+        '#equipments-player-image-canvas'
     )!;
 
     private equipmentSlots: HTMLElement = document.querySelector('#equipment-slots')!;
 
     // Equipment slots elements
     private helmet: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-helmet > .equipment-slot-image',
+        '.equipment-slot-helmet > .equipment-slot-image'
     )!;
     private pendant: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-pendant > .equipment-slot-image',
+        '.equipment-slot-pendant > .equipment-slot-image'
     )!;
     private arrows: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-arrows > .equipment-slot-image',
+        '.equipment-slot-arrows > .equipment-slot-image'
     )!;
     private chestplate: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-chestplate > .equipment-slot-image',
+        '.equipment-slot-chestplate > .equipment-slot-image'
     )!;
     private weapon: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-weapon > .equipment-slot-image',
+        '.equipment-slot-weapon > .equipment-slot-image'
     )!;
     private shield: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-shield > .equipment-slot-image',
+        '.equipment-slot-shield > .equipment-slot-image'
     )!;
     private ring: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-ring > .equipment-slot-image',
+        '.equipment-slot-ring > .equipment-slot-image'
     )!;
     private weaponSkin: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-weapon-skin > .equipment-slot-image',
+        '.equipment-slot-weapon-skin > .equipment-slot-image'
     )!;
     private armourSkin: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-armour-skin > .equipment-slot-image',
+        '.equipment-slot-armour-skin > .equipment-slot-image'
     )!;
     private legplates: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-legplates > .equipment-slot-image',
+        '.equipment-slot-legplates > .equipment-slot-image'
     )!;
     private cape: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-cape > .equipment-slot-image',
+        '.equipment-slot-cape > .equipment-slot-image'
     )!;
     private boots: HTMLElement = this.equipmentSlots.querySelector(
-        '.equipment-slot-boots > .equipment-slot-image',
+        '.equipment-slot-boots > .equipment-slot-image'
     )!;
 
     // Counts
@@ -70,10 +70,10 @@ export default class Equipments extends Menu {
 
     // Navigation elements
     private previous: HTMLElement = document.querySelector(
-        '#equipments-player-image-navigator > .previous',
+        '#equipments-player-image-navigator > .previous'
     )!;
     private next: HTMLElement = document.querySelector(
-        '#equipments-player-image-navigator > .next',
+        '#equipments-player-image-navigator > .next'
     )!;
 
     // Stats elements
@@ -99,40 +99,40 @@ export default class Equipments extends Menu {
         // Equipment slot event listeners -- definitely not stolen from the state page :)
         this.helmet.addEventListener(
             'click',
-            () => this.unequipCallback?.(Modules.Equipment.Helmet),
+            () => this.unequipCallback?.(Modules.Equipment.Helmet)
         );
         this.pendant.addEventListener(
             'click',
-            () => this.unequipCallback?.(Modules.Equipment.Pendant),
+            () => this.unequipCallback?.(Modules.Equipment.Pendant)
         );
         this.arrows.addEventListener(
             'click',
-            () => this.unequipCallback?.(Modules.Equipment.Arrows),
+            () => this.unequipCallback?.(Modules.Equipment.Arrows)
         );
         this.chestplate.addEventListener(
             'click',
-            () => this.unequipCallback?.(Modules.Equipment.Chestplate),
+            () => this.unequipCallback?.(Modules.Equipment.Chestplate)
         );
         this.weapon.addEventListener(
             'click',
-            () => this.unequipCallback?.(Modules.Equipment.Weapon),
+            () => this.unequipCallback?.(Modules.Equipment.Weapon)
         );
         this.shield.addEventListener(
             'click',
-            () => this.unequipCallback?.(Modules.Equipment.Shield),
+            () => this.unequipCallback?.(Modules.Equipment.Shield)
         );
         this.ring.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Ring));
         this.weaponSkin.addEventListener(
             'click',
-            () => this.unequipCallback?.(Modules.Equipment.WeaponSkin),
+            () => this.unequipCallback?.(Modules.Equipment.WeaponSkin)
         );
         this.armourSkin.addEventListener(
             'click',
-            () => this.unequipCallback?.(Modules.Equipment.ArmourSkin),
+            () => this.unequipCallback?.(Modules.Equipment.ArmourSkin)
         );
         this.legplates.addEventListener(
             'click',
-            () => this.unequipCallback?.(Modules.Equipment.Legplates),
+            () => this.unequipCallback?.(Modules.Equipment.Legplates)
         );
         this.cape.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Cape));
         this.boots.addEventListener('click', () => this.unequipCallback?.(Modules.Equipment.Boots));
@@ -210,7 +210,7 @@ export default class Equipments extends Menu {
                 Modules.Orientation.Left,
                 Modules.Orientation.Up,
                 Modules.Orientation.Right,
-                Modules.Orientation.Down,
+                Modules.Orientation.Down
             ],
             index = orientations.indexOf(this.imageOrientation);
 
@@ -229,7 +229,7 @@ export default class Equipments extends Menu {
         this.imageOrientation = orientations[index];
 
         this.updatePlayerImage(
-            Modules.Orientation[this.imageOrientation].toString().toLowerCase() as ImageOrientation,
+            Modules.Orientation[this.imageOrientation].toString().toLowerCase() as ImageOrientation
         );
     }
 
@@ -348,7 +348,7 @@ export default class Equipments extends Menu {
             0,
             0,
             canvasWidth,
-            canvasHeight,
+            canvasHeight
         );
 
         // Draw the equipment on top of the base sprite.
@@ -392,7 +392,7 @@ export default class Equipments extends Menu {
                 0,
                 0,
                 canvasWidth * scalingWidth,
-                canvasHeight * scalingHeight,
+                canvasHeight * scalingHeight
             );
 
             if (mismatchSize) context.restore();

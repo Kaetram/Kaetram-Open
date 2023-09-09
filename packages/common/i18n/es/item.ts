@@ -5,5 +5,5 @@ export default {
     SKILL_LEVEL_REQUIREMENT_EQUIP:
         'Tu {{skill}} debe tener al menos el nivel {{level}} para equipar esto.',
     TOTAL_LEVEL_REQUIREMENT:
-        'Tu nivel total debe ser al menos {{level}} para equipar este artículo.',
+        'Tu nivel total debe ser al menos {{level}} para equipar este artículo.'
 } as const;

@@ -14,7 +14,7 @@ export default class Poison {
 
     public constructor(
         public type: Modules.PoisonTypes,
-        public start = Date.now(),
+        public start = Date.now()
     ) {
         if (!this.start) this.start = Date.now();
 

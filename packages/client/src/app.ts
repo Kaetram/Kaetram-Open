@@ -33,7 +33,7 @@ export default class App {
     private worldsList: HTMLOListElement = document.querySelector('#worlds')!;
 
     private passwordConfirmation: HTMLInputElement = document.querySelector(
-        '#register-password-confirmation-input',
+        '#register-password-confirmation-input'
     )!;
     private emailField: HTMLInputElement = document.querySelector('#register-email-input')!;
 
@@ -94,7 +94,7 @@ export default class App {
     private load(): void {
         if (!this.config.acceptLicense) {
             this.sendError(
-                'You must read and accept both MPL2.0 and OPL licensing agreements. Once you have done so, toggle ACCEPT_LICENSE in your environment variables.',
+                'You must read and accept both MPL2.0 and OPL licensing agreements. Once you have done so, toggle ACCEPT_LICENSE in your environment variables.'
             );
 
             return;
@@ -143,7 +143,7 @@ export default class App {
         // Body callbacks
         onSecondaryPress(
             document.querySelector('#canvas')!,
-            (position) => this.rightClickCallback?.(position),
+            (position) => this.rightClickCallback?.(position)
         );
 
         for (let input of document.querySelectorAll<HTMLInputElement>("input[type='number']"))
@@ -210,7 +210,7 @@ export default class App {
         if (!('indexedDB' in window))
             this.setValidation(
                 'validation-warning',
-                'Your browser does not support IndexedDB. Regions will not be cached.',
+                'Your browser does not support IndexedDB. Regions will not be cached.'
             );
     }
 
@@ -351,13 +351,13 @@ export default class App {
             if (this.getPassword().length < 3)
                 return this.sendError(
                     'Password must be at least 3 characters long.',
-                    this.getPasswordField(),
+                    this.getPasswordField()
                 );
 
             if (this.getPassword().length > 64)
                 return this.sendError(
                     'Password must be less than 64 characters long.',
-                    this.getPasswordField(),
+                    this.getPasswordField()
                 );
 
             // Check that the password matches the password confirmation.
@@ -549,7 +549,7 @@ export default class App {
 
     private getUsernameField(): HTMLInputElement {
         return document.querySelector(
-            this.isRegistering() ? '#register-name-input' : '#login-name-input',
+            this.isRegistering() ? '#register-name-input' : '#login-name-input'
         )!;
     }
 
@@ -569,7 +569,7 @@ export default class App {
 
     private getPasswordField(): HTMLInputElement {
         return document.querySelector(
-            this.isRegistering() ? '#register-password-input' : '#login-password-input',
+            this.isRegistering() ? '#register-password-input' : '#login-password-input'
         )!;
     }
 
@@ -694,14 +694,14 @@ export default class App {
         let res = await fetch(`${this.config.hub}/api/v1/requestReset`, {
             method: 'POST',
             headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ email })
         }).catch(() => null);
 
         // If we do not get a response, then we display an error message.
         if (!res)
             return this.setValidation(
                 'validation-error',
-                'Please contact an administrator for support.',
+                'Please contact an administrator for support.'
             );
 
         // If we receive a response then just let the player know that the request was sent.

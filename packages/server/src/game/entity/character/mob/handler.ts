@@ -54,7 +54,7 @@ export default class Handler {
             this.mob.outsideRoaming(
                 this.mob.target?.x,
                 this.mob.target?.y,
-                this.mob.roamDistance * 2,
+                this.mob.roamDistance * 2
             )
         )
             if (this.mob.getAttackerCount() > 1) this.mob.setTarget(this.mob.findNearestTarget());
@@ -201,8 +201,8 @@ export default class Handler {
         this.mob.sendToRegions(
             new BubblePacket({
                 instance: this.mob.instance,
-                text,
-            }),
+                text
+            })
         );
     }
 

@@ -28,7 +28,7 @@ export default class Minigame {
     public constructor(
         public type = -1,
         public status: Status = 'exit',
-        public countdown = 180,
+        public countdown = 180
     ) {}
 
     /**

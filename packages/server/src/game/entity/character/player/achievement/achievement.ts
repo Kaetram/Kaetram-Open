@@ -21,7 +21,7 @@ type FinishCallback = (
     item?: string,
     itemCount?: number,
     ability?: string,
-    abilityLevel?: number,
+    abilityLevel?: number
 ) => void;
 type ProgressCallback = (key: string, stage: number, name: string, description: string) => void;
 type PopupCallback = (popup: PopupData) => void;
@@ -58,7 +58,7 @@ export default class Achievement {
 
     public constructor(
         private key: string,
-        rawData: RawAchievement,
+        rawData: RawAchievement
     ) {
         // Load all the data from the raw information.
         this.name = rawData.name;
@@ -195,7 +195,7 @@ export default class Achievement {
                 this.rewardItem,
                 this.rewardItemCount,
                 this.rewardAbility,
-                this.rewardAbilityLevel,
+                this.rewardAbilityLevel
             );
         } else if (this.stage === 1) this.popupCallback?.(this.getDiscoveredPopup());
     }
@@ -277,7 +277,7 @@ export default class Achievement {
         return {
             title: 'Achievement Discovered',
             text: `${this.name} has been discovered!`,
-            colour: '#33cc33',
+            colour: '#33cc33'
         };
     }
 
@@ -303,7 +303,7 @@ export default class Achievement {
         return {
             title: 'Achievement Completed!',
             text,
-            colour: '#33cc33',
+            colour: '#33cc33'
         };
     }
 
@@ -318,7 +318,7 @@ export default class Achievement {
     public serialize(withInfo = false): AchievementData {
         let data: AchievementData = {
             key: this.key,
-            stage: this.stage,
+            stage: this.stage
         };
 
         if (withInfo) {

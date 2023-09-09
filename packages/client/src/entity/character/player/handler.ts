@@ -58,7 +58,7 @@ export default class Handler extends CharacterHandler {
             playerX: this.character.gridX,
             playerY: this.character.gridY,
             targetInstance: this.character.target?.instance,
-            following: this.character.following,
+            following: this.character.following
         });
 
         let ignores: TileIgnore[] = [],
@@ -98,7 +98,7 @@ export default class Handler extends CharacterHandler {
             playerX: this.character.gridX,
             playerY: this.character.gridY,
             movementSpeed: this.character.movementSpeed,
-            targetInstance: this.character.target?.instance,
+            targetInstance: this.character.target?.instance
         });
     }
 
@@ -125,18 +125,18 @@ export default class Handler extends CharacterHandler {
             playerY: this.character.gridY,
             targetInstance:
                 this.character.target?.instance || this.game.getEntityAt(x, y)?.instance,
-            orientation: this.character.orientation,
+            orientation: this.character.orientation
         });
 
         if (this.character.trading)
             this.game.socket.send(Packets.Trade, {
                 opcode: Opcodes.Trade.Request,
-                instance: this.character.target?.instance,
+                instance: this.character.target?.instance
             });
 
         this.game.socket.send(Packets.Target, [
             this.getTargetType(),
-            this.character.target?.instance || '',
+            this.character.target?.instance || ''
         ]);
 
         // ---------------------------------------------------------
@@ -193,7 +193,7 @@ export default class Handler extends CharacterHandler {
                 opcode: Opcodes.Movement.Entity,
                 targetInstance: this.character.target?.instance,
                 requestX: this.character.target?.gridX,
-                requestY: this.character.target?.gridY,
+                requestY: this.character.target?.gridY
             });
 
         // Send the packet to the server to inform it that the player has moved.
@@ -201,7 +201,7 @@ export default class Handler extends CharacterHandler {
             opcode: Opcodes.Movement.Step,
             playerX: this.character.gridX,
             playerY: this.character.gridY,
-            timestamp: Date.now(),
+            timestamp: Date.now()
         });
 
         // Update the last step coordinates.

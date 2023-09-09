@@ -8,7 +8,7 @@ import type { GuildData } from '@kaetram/common/network/impl/guild';
 import type { StatisticsData } from '@kaetram/common/types/statistics';
 import type {
     AchievementData,
-    SerializedAchievement,
+    SerializedAchievement
 } from '@kaetram/common/network/impl/achievement';
 import type { QuestData, SerializedQuest } from '@kaetram/common/network/impl/quest';
 import type { SerializedSkills, SkillData } from '@kaetram/common/network/impl/skill';
@@ -224,7 +224,7 @@ export default class Loader {
     public loadGuilds(
         from: number,
         to: number,
-        callback: (guilds: GuildData[], total: number) => void,
+        callback: (guilds: GuildData[], total: number) => void
     ): void {
         if (!this.database || config.skipDatabase) return callback([], 0);
 

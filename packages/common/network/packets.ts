@@ -59,7 +59,7 @@ enum Packets {
     Pet,
 
     // Hub <-> Admin
-    AdminSync,
+    AdminSync
 }
 
 export default Packets;

@@ -29,7 +29,7 @@ export default class Guilds {
         banner: Modules.BannerColour,
         outline: Modules.BannerOutline,
         outlineColour: Modules.BannerColour,
-        crest: Modules.BannerCrests,
+        crest: Modules.BannerCrests
     ): Promise<void> {
         // Ensure the player isn't already in a guild.
         if (player.guild) return player.notify('guilds:ALREADY_IN_GUILD');
@@ -70,15 +70,15 @@ export default class Guilds {
                 {
                     username: player.username,
                     rank: Modules.GuildRank.Landlord,
-                    joinDate: Date.now(),
-                },
+                    joinDate: Date.now()
+                }
             ],
             decoration: {
                 banner,
                 outline,
                 outlineColour,
-                crest,
-            },
+                crest
+            }
         };
 
         this.database.creator.saveGuild(data);
@@ -89,8 +89,8 @@ export default class Guilds {
                 name,
                 owner: player.username,
                 members: data.members,
-                decoration: data.decoration,
-            }),
+                decoration: data.decoration
+            })
         );
 
         // Assign the guild identifier to the player.
@@ -132,8 +132,8 @@ export default class Guilds {
                 name: guild.name,
                 owner: guild.owner,
                 members: guild.members,
-                decoration: guild.decoration,
-            }),
+                decoration: guild.decoration
+            })
         );
 
         // Synchronize the connection with all the members in the guild.
@@ -160,7 +160,7 @@ export default class Guilds {
             this.get(player, 0, 10);
 
             return log.general(
-                `Player ${player.username} tried to join a guild that doesn't exist.`,
+                `Player ${player.username} tried to join a guild that doesn't exist.`
             );
         }
 
@@ -172,7 +172,7 @@ export default class Guilds {
         guild.members.push({
             username: player.username,
             rank: Modules.GuildRank.Fledgling,
-            joinDate: Date.now(),
+            joinDate: Date.now()
         });
 
         // Save the guild to the database.
@@ -192,14 +192,14 @@ export default class Guilds {
                     name: guild!.name,
                     owner: guild!.owner,
                     members: guild!.members,
-                    decoration: guild!.decoration,
-                }),
+                    decoration: guild!.decoration
+                })
             );
 
             // Sync to all the members in the guild.
             this.synchronize(guild!.members, Opcodes.Guild.Join, {
                 username: player.username,
-                serverId: config.serverId,
+                serverId: config.serverId
             });
         });
     }
@@ -220,7 +220,7 @@ export default class Guilds {
 
         if (!guild)
             return log.general(
-                `Player ${player.username} tried to leave a guild that doesn't exist.`,
+                `Player ${player.username} tried to leave a guild that doesn't exist.`
             );
 
         // Disband the guild if the player is the owner.
@@ -254,7 +254,7 @@ export default class Guilds {
 
         // Sync to all the members in the guild.
         this.synchronize(guild.members, Opcodes.Guild.Leave, {
-            username: player.username,
+            username: player.username
         });
     }
 
@@ -268,7 +268,7 @@ export default class Guilds {
     public async kick(player: Player, username: string): Promise<void> {
         if (!player.guild)
             return log.warning(
-                `${player.username} tried to kick someone from a guild that they're not in.`,
+                `${player.username} tried to kick someone from a guild that they're not in.`
             );
 
         // Grab the guild from the database.
@@ -276,7 +276,7 @@ export default class Guilds {
 
         if (!guild)
             return log.general(
-                `Player ${player.username} tried to kick someone from a guild that doesn't exist.`,
+                `Player ${player.username} tried to kick someone from a guild that doesn't exist.`
             );
 
         // Ensure the player is the owner of the guild.
@@ -292,7 +292,7 @@ export default class Guilds {
 
         // Sync to all the members in the guild.
         this.synchronize(guild.members, Opcodes.Guild.Leave, {
-            username,
+            username
         });
 
         // Remove the player from the guild's member list.
@@ -316,13 +316,13 @@ export default class Guilds {
 
         if (!guild)
             return log.general(
-                `Player ${player.username} tried to chat in a guild that doesn't exist.`,
+                `Player ${player.username} tried to chat in a guild that doesn't exist.`
             );
 
         this.synchronize(guild.members, Opcodes.Guild.Chat, {
             username: player.username,
             serverId: config.serverId,
-            message,
+            message
         });
     }
 
@@ -337,14 +337,14 @@ export default class Guilds {
 
         if (!guild)
             return log.warning(
-                `${player.username} tried to promote someone in a guild that they're not in.`,
+                `${player.username} tried to promote someone in a guild that they're not in.`
             );
 
         let member = await this.getMember(guild, username);
 
         if (member?.rank === undefined)
             return log.warning(
-                `${player.username} tried to promote someone in a guild that they're not in.`,
+                `${player.username} tried to promote someone in a guild that they're not in.`
             );
 
         this.setRank(guild, player, member, member.rank + 1);
@@ -361,14 +361,14 @@ export default class Guilds {
 
         if (!guild)
             return log.warning(
-                `${player.username} tried to promote someone in a guild that they're not in.`,
+                `${player.username} tried to promote someone in a guild that they're not in.`
             );
 
         let member = await this.getMember(guild, username);
 
         if (member?.rank === undefined)
             return log.warning(
-                `${player.username} tried to promote someone in a guild that they're not in.`,
+                `${player.username} tried to promote someone in a guild that they're not in.`
             );
 
         this.setRank(guild, player, member, member.rank - 1);
@@ -384,14 +384,14 @@ export default class Guilds {
     public async addExperience(player: Player, experience: number): Promise<void> {
         if (!player.guild)
             return log.warning(
-                `${player.username} tried to add experience to a guild that they're not in.`,
+                `${player.username} tried to add experience to a guild that they're not in.`
             );
 
         let guild = await this.database.loader.loadGuild(player.guild);
 
         if (!guild)
             return log.general(
-                `Player ${player.username} tried to add experience to a guild that doesn't exist.`,
+                `Player ${player.username} tried to add experience to a guild that doesn't exist.`
             );
 
         guild.experience += experience;
@@ -399,7 +399,7 @@ export default class Guilds {
         this.database.creator.saveGuild(guild);
 
         this.synchronize(guild.members, Opcodes.Guild.Experience, {
-            experience: guild.experience,
+            experience: guild.experience
         });
     }
 
@@ -415,16 +415,16 @@ export default class Guilds {
         guild: GuildData,
         player: Player,
         member: Member,
-        rank: Modules.GuildRank,
+        rank: Modules.GuildRank
     ): Promise<void> {
         if (!player.guild)
             return log.warning(
-                `${player.username} tried to set a rank in a guild that they're not in.`,
+                `${player.username} tried to set a rank in a guild that they're not in.`
             );
 
         if (!guild)
             return log.general(
-                `Player ${player.username} tried to set a rank in a guild that doesn't exist.`,
+                `Player ${player.username} tried to set a rank in a guild that doesn't exist.`
             );
 
         let { username } = member;
@@ -442,7 +442,7 @@ export default class Guilds {
 
         if (playerMember?.rank === undefined)
             return log.warning(
-                `${player.username} tried to set a rank in a guild that they're not in.`,
+                `${player.username} tried to set a rank in a guild that they're not in.`
             );
 
         // Ensure the player has the correct permissions to update the rank.
@@ -454,7 +454,7 @@ export default class Guilds {
 
         this.synchronize(guild.members, Opcodes.Guild.Rank, {
             username,
-            rank,
+            rank
         });
     }
 
@@ -531,7 +531,7 @@ export default class Guilds {
             if (this.world.isOnline(member.username))
                 onlineMembers.push({
                     username: member.username,
-                    serverId: config.serverId,
+                    serverId: config.serverId
                 });
             else offlineMembers.push(member.username);
 
@@ -542,8 +542,8 @@ export default class Guilds {
         this.world.client.send(
             new GuildPacket(Opcodes.Guild.Update, {
                 username: player.username,
-                usernames: offlineMembers,
-            }),
+                usernames: offlineMembers
+            })
         );
     }
 
@@ -560,7 +560,7 @@ export default class Guilds {
             // Filter guild data that are full and/or invite only.
             info = info.filter(
                 (guild: GuildData) =>
-                    guild.members.length < Modules.Constants.MAX_GUILD_MEMBERS && !guild.inviteOnly,
+                    guild.members.length < Modules.Constants.MAX_GUILD_MEMBERS && !guild.inviteOnly
             );
 
             // Extract the cruical information and store it in a ListInfo array.
@@ -568,7 +568,7 @@ export default class Guilds {
                 name: guild.name,
                 members: guild.members.length,
                 decoration: guild.decoration,
-                inviteOnly: guild.inviteOnly,
+                inviteOnly: guild.inviteOnly
             }));
 
             player.send(new GuildPacket(Opcodes.Guild.List, { guilds, total }));

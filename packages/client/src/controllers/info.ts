@@ -22,7 +22,7 @@ export default class InfoController {
         y: number,
         isTarget = false,
         skill = -1,
-        randomize = false,
+        randomize = false
     ): void {
         if (randomize) {
             x += Utils.randomInt(-16, 16);

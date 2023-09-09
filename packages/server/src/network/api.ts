@@ -57,7 +57,7 @@ export default class API {
         Sentry.init({
             dsn: config.sentryDsn,
             integrations,
-            tracesSampleRate: 1,
+            tracesSampleRate: 1
         });
     }
 
@@ -75,7 +75,7 @@ export default class API {
                 port: config.port, // Sends the server port.
                 gameVersion: config.gver,
                 maxPlayers: config.maxPlayers,
-                playerCount: this.world.getPopulation(),
+                playerCount: this.world.getPopulation()
             });
         });
     }
@@ -92,7 +92,7 @@ export default class API {
             data = {
                 hubAccessToken: config.hubAccessToken,
                 serverId: config.serverId,
-                username,
+                username
             };
 
         axios

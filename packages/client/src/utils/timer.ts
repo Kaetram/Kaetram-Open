@@ -1,7 +1,7 @@
 export default class Timer {
     public constructor(
         public time: number,
-        public duration: number,
+        public duration: number
     ) {}
 
     /**

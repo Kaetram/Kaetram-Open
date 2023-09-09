@@ -13,7 +13,7 @@ import type {
     CraftingInfo,
     CraftingItem,
     CraftingItemPreview,
-    CraftingRequirement,
+    CraftingRequirement
 } from '@kaetram/common/network/impl/crafting';
 
 /**
@@ -45,8 +45,8 @@ export default class Crafting {
         player.send(
             new CraftingPacket(Opcodes.Crafting.Open, {
                 type,
-                previews,
-            }),
+                previews
+            })
         );
     }
 
@@ -79,8 +79,8 @@ export default class Crafting {
                 name: (Items as RawData)[key]?.name,
                 level: craftingItem.level,
                 result: craftingItem.result.count,
-                requirements: this.getRequirements(craftingItem),
-            }),
+                requirements: this.getRequirements(craftingItem)
+            })
         );
     }
 
@@ -121,7 +121,7 @@ export default class Crafting {
         // Ensure the player has the correct level to craft the item.
         if (skill.level < craftingItem.level)
             return player.notify(
-                CraftingEn.INVALID_LEVEL(player.activeCraftingInterface, craftingItem.level),
+                CraftingEn.INVALID_LEVEL(player.activeCraftingInterface, craftingItem.level)
             );
 
         /**
@@ -163,7 +163,7 @@ export default class Crafting {
         // Notify the players of the amount of failures.
         if (failures > 0)
             player.notify(
-                `${'crafting:FAILED_CRAFT'} ${failures}x ${(Items as RawData)[key].name}.`,
+                `${'crafting:FAILED_CRAFT'} ${failures}x ${(Items as RawData)[key].name}.`
             );
 
         // Award experience to the player.

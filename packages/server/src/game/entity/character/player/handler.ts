@@ -17,7 +17,7 @@ import {
     PoisonPacket,
     QuestPacket,
     SkillPacket,
-    TradePacketPacket,
+    TradePacketPacket
 } from '@kaetram/common/network/impl';
 
 import type Player from './player';
@@ -158,9 +158,9 @@ export default class Handler {
         // Send despawn packet to all the nearby entities except the player.
         this.player.sendToRegions(
             new DespawnPacket({
-                instance: this.player.instance,
+                instance: this.player.instance
             }),
-            true,
+            true
         );
 
         // Despawn the pet from the world.
@@ -284,7 +284,7 @@ export default class Handler {
 
             if (!achievement?.isFinished())
                 return this.player.notify(
-                    `misc:NO_ACHIEVEMENT_DOOR;achievement=${achievement?.name}`,
+                    `misc:NO_ACHIEVEMENT_DOOR;achievement=${achievement?.name}`
                 );
         }
 
@@ -375,8 +375,8 @@ export default class Handler {
         this.player.sendToRecentRegions(
             new DespawnPacket({
                 instance: this.player.instance,
-                regions,
-            }),
+                regions
+            })
         );
     }
 
@@ -387,8 +387,8 @@ export default class Handler {
     private handleEquipment(): void {
         this.player.send(
             new EquipmentPacket(Opcodes.Equipment.Batch, {
-                data: this.player.equipment.serialize(true),
-            }),
+                data: this.player.equipment.serialize(true)
+            })
         );
     }
 
@@ -400,8 +400,8 @@ export default class Handler {
     private handleEquip(equipment: Equipment): void {
         this.player.send(
             new EquipmentPacket(Opcodes.Equipment.Equip, {
-                data: equipment.serialize(true),
-            }),
+                data: equipment.serialize(true)
+            })
         );
 
         // Sync to nearby players.
@@ -430,8 +430,8 @@ export default class Handler {
         this.player.send(
             new EquipmentPacket(Opcodes.Equipment.Style, {
                 attackStyle,
-                attackRange: this.player.attackRange,
-            }),
+                attackRange: this.player.attackRange
+            })
         );
     }
 
@@ -501,8 +501,8 @@ export default class Handler {
         this.player.send(
             new ContainerPacket(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
-                data: this.player.inventory.serialize(true),
-            }),
+                data: this.player.inventory.serialize(true)
+            })
         );
     }
 
@@ -515,8 +515,8 @@ export default class Handler {
         this.player.send(
             new ContainerPacket(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Bank,
-                data: this.player.bank.serialize(true),
-            }),
+                data: this.player.bank.serialize(true)
+            })
         );
     }
 
@@ -530,8 +530,8 @@ export default class Handler {
         this.player.send(
             new ContainerPacket(Opcodes.Container.Add, {
                 type: Modules.ContainerType.Inventory,
-                slot,
-            }),
+                slot
+            })
         );
     }
 
@@ -549,7 +549,7 @@ export default class Handler {
         key: string,
         count: number,
         enchantments: Enchantments,
-        drop?: boolean,
+        drop?: boolean
     ): void {
         // Spawn the item in the world if drop is true, cheater accounts don't drop anything.
         if (drop && !this.player.isCheater() && !this.player.isHollowAdmin()) {
@@ -568,8 +568,8 @@ export default class Handler {
         this.player.send(
             new ContainerPacket(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Inventory,
-                slot: slot.serialize(true),
-            }),
+                slot: slot.serialize(true)
+            })
         );
     }
 
@@ -589,8 +589,8 @@ export default class Handler {
         this.player.send(
             new AchievementPacket(
                 Opcodes.Achievement.Batch,
-                this.player.achievements?.serialize(true),
-            ),
+                this.player.achievements?.serialize(true)
+            )
         );
     }
 
@@ -609,7 +609,7 @@ export default class Handler {
 
     private handleAbilities(): void {
         this.player.send(
-            new AbilityPacket(Opcodes.Ability.Batch, this.player.abilities?.serialize(true)),
+            new AbilityPacket(Opcodes.Ability.Batch, this.player.abilities?.serialize(true))
         );
     }
 
@@ -623,8 +623,8 @@ export default class Handler {
         this.player.send(
             new ContainerPacket(Opcodes.Container.Add, {
                 type: Modules.ContainerType.Bank,
-                slot,
-            }),
+                slot
+            })
         );
     }
 
@@ -637,8 +637,8 @@ export default class Handler {
         this.player.send(
             new ContainerPacket(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Bank,
-                slot: slot.serialize(true),
-            }),
+                slot: slot.serialize(true)
+            })
         );
     }
 
@@ -649,8 +649,8 @@ export default class Handler {
     private handleFriends(): void {
         this.player.send(
             new FriendsPacket(Opcodes.Friends.List, {
-                list: this.player.friends?.getFriendsList(),
-            }),
+                list: this.player.friends?.getFriendsList()
+            })
         );
     }
 
@@ -666,8 +666,8 @@ export default class Handler {
             new FriendsPacket(Opcodes.Friends.Add, {
                 username,
                 status,
-                serverId,
-            }),
+                serverId
+            })
         );
     }
 
@@ -678,8 +678,8 @@ export default class Handler {
     private handleFriendsRemove(username: string): void {
         this.player.send(
             new FriendsPacket(Opcodes.Friends.Remove, {
-                username,
-            }),
+                username
+            })
         );
     }
 
@@ -695,8 +695,8 @@ export default class Handler {
             new FriendsPacket(Opcodes.Friends.Status, {
                 username,
                 status,
-                serverId,
-            }),
+                serverId
+            })
         );
     }
 
@@ -709,7 +709,7 @@ export default class Handler {
         // Primarily for the prevention of packet injection.
         if (!this.player.isAdjacent(npc))
             return log.warning(
-                `Player ${this.player.username} tried to talk to NPC ${npc.key} but is not adjacent.`,
+                `Player ${this.player.username} tried to talk to NPC ${npc.key} but is not adjacent.`
             );
 
         // Checks if the NPC has an active quest associated with it.
@@ -823,8 +823,8 @@ export default class Handler {
             new PointsPacket({
                 instance: this.player.instance,
                 mana: this.player.mana.getMana(),
-                maxMana: this.player.mana.getMaxMana(),
-            }),
+                maxMana: this.player.mana.getMaxMana()
+            })
         );
     }
 
@@ -844,8 +844,8 @@ export default class Handler {
 
                 this.player.send(
                     new OverlayPacket(Opcodes.Overlay.Lamp, {
-                        light: light.serialize(),
-                    }),
+                        light: light.serialize()
+                    })
                 );
 
                 this.player.lightsLoaded.push(light.id);
@@ -891,7 +891,7 @@ export default class Handler {
                     }
                 }
             },
-            ['pvp', 'music', 'overlay', 'camera', 'minigame'],
+            ['pvp', 'music', 'overlay', 'camera', 'minigame']
         );
     }
 

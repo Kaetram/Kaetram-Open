@@ -14,7 +14,7 @@ export default class Blob {
         public instance: string,
         message: string,
         duration = 5000,
-        public position?: Position,
+        public position?: Position
     ) {
         this.timer = new Timer(Date.now(), duration);
 

@@ -64,20 +64,20 @@ export default class Main {
         let response = await fetch(`${this.config.hub}/api/v1/resetPassword`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 id: this.id,
                 token: this.token,
-                password,
-            }),
+                password
+            })
         }).catch(() => null);
 
         // If we didn't get a response, we don't do anything.
         if (!response)
             return this.setValidation(
                 'validation-error',
-                'Something went wrong. Please try again later.',
+                'Something went wrong. Please try again later.'
             );
 
         let json = await response.json();
@@ -86,7 +86,7 @@ export default class Main {
         if (json?.status !== 'success')
             return this.setValidation(
                 'validation-error',
-                'Your password reset link has expired. Please try again.',
+                'Your password reset link has expired. Please try again.'
             );
 
         this.setValidation('status', 'Password reset successfully, redirecting in 5 seconds...');

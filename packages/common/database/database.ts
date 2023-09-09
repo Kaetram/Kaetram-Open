@@ -22,7 +22,7 @@ export default class Database {
                     config.mongodbDatabase,
                     config.mongodbTls,
                     config.mongodbSrv,
-                    config.mongodbAuthSource,
+                    config.mongodbAuthSource
                 );
                 break;
             }
@@ -37,7 +37,7 @@ export default class Database {
     public getDatabase(): DatabaseType {
         if (!this.database)
             log.error(
-                '[Database] No database is currently present. It is advised against proceeding in this state.',
+                '[Database] No database is currently present. It is advised against proceeding in this state.'
             );
 
         return this.database;

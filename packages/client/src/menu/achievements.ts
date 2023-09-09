@@ -10,7 +10,7 @@ export default class Achievements extends Menu {
 
     private tabArrowLeft: HTMLDivElement = document.querySelector('#achievements-tab-arrow-left')!;
     private tabArrowRight: HTMLDivElement = document.querySelector(
-        '#achievements-tab-arrow-right',
+        '#achievements-tab-arrow-right'
     )!;
 
     private tabText: HTMLSpanElement = document.querySelector('#achievements-tab-text')!;

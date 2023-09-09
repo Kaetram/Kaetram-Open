@@ -137,7 +137,7 @@ export default class Statistics {
                 ? timePlayed
                 : Math.floor(
                       (this.averageTimePlayed * (this.loginCount - 1) + timePlayed) /
-                          this.loginCount,
+                          this.loginCount
                   );
     }
 
@@ -164,7 +164,7 @@ export default class Statistics {
             averageTimePlayed: this.averageTimePlayed,
             lastLogin: this.lastLogin,
             loginCount: this.loginCount,
-            cheater: this.player.isCheater(),
+            cheater: this.player.isCheater()
         };
     }
 }

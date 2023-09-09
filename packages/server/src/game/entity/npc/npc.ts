@@ -71,8 +71,8 @@ export default class NPC extends Entity {
         player.send(
             new NPCPacket(Opcodes.NPC.Talk, {
                 instance: this.instance,
-                text: message,
-            }),
+                text: message
+            })
         );
     }
 
@@ -128,7 +128,7 @@ export default class NPC extends Entity {
         return {
             instance: this.instance,
             colour: this.getNameColour(player),
-            exclamation: this.getExclamation(player),
+            exclamation: this.getExclamation(player)
         };
     }
 

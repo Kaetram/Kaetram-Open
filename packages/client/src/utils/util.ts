@@ -69,7 +69,7 @@ export default {
         type: Modules.ContainerType,
         index: number,
         primaryCallback?: (type: Modules.ContainerType, index: number) => void,
-        secondaryCallback?: (type: Modules.ContainerType, index: number) => void,
+        secondaryCallback?: (type: Modules.ContainerType, index: number) => void
     ): HTMLLIElement {
         let listElement = document.createElement('li'),
             slot = document.createElement('div'),
@@ -144,7 +144,7 @@ export default {
     formatName(name = '', trim = 0): string {
         name = name.replace(
             /\w\S*/g,
-            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase(),
+            (string) => string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
         );
 
         // Trim the name if specified.
@@ -265,7 +265,7 @@ export default {
 
     isEmail(email: string): boolean {
         return /^(([^\s"(),.:;<>@[\\\]]+(\.[^\s"(),.:;<>@[\\\]]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([\dA-Za-z-]+\.)+[A-Za-z]{2,}))$/.test(
-            email,
+            email
         );
     },
 
@@ -294,7 +294,7 @@ export default {
             slash: 0,
             stab: 0,
             archery: 0,
-            magic: 0,
+            magic: 0
         };
     },
 
@@ -308,7 +308,7 @@ export default {
             accuracy: 0,
             strength: 0,
             archery: 0,
-            magic: 0,
+            magic: 0
         };
     },
 
@@ -404,7 +404,7 @@ export default {
                 cloneData.data[i - 1], // Left
                 cloneData.data[i + 7], // Right
                 cloneData.data[i - cloneData.width * 4 + 3], // Up
-                cloneData.data[i + cloneData.width * 4 + 3], // Down
+                cloneData.data[i + cloneData.width * 4 + 3] // Down
             ];
 
             // If any of the adjacent pixels are non-empty, we set the current pixel to yellow.
@@ -493,8 +493,8 @@ export default {
                 return {
                     idle: {
                         length: 1,
-                        row: 0,
-                    },
+                        row: 0
+                    }
                 };
             }
 
@@ -502,8 +502,8 @@ export default {
                 return {
                     idle_down: {
                         length: 2,
-                        row: 0,
-                    },
+                        row: 0
+                    }
                 };
             }
 
@@ -511,40 +511,40 @@ export default {
                 return {
                     atk_right: {
                         length: 5,
-                        row: 0,
+                        row: 0
                     },
                     walk_right: {
                         length: 4,
-                        row: 1,
+                        row: 1
                     },
                     idle_right: {
                         length: 2,
-                        row: 2,
+                        row: 2
                     },
                     atk_up: {
                         length: 5,
-                        row: 3,
+                        row: 3
                     },
                     walk_up: {
                         length: 4,
-                        row: 4,
+                        row: 4
                     },
                     idle_up: {
                         length: 2,
-                        row: 5,
+                        row: 5
                     },
                     atk_down: {
                         length: 5,
-                        row: 6,
+                        row: 6
                     },
                     walk_down: {
                         length: 4,
-                        row: 7,
+                        row: 7
                     },
                     idle_down: {
                         length: 2,
-                        row: 8,
-                    },
+                        row: 8
+                    }
                 };
             }
 
@@ -553,52 +553,52 @@ export default {
                 return {
                     idle_down: {
                         length: 4,
-                        row: 0,
+                        row: 0
                     },
                     idle_right: {
                         length: 4,
-                        row: 1,
+                        row: 1
                     },
                     idle_up: {
                         length: 4,
-                        row: 2,
+                        row: 2
                     },
                     walk_down: {
                         length: 4,
-                        row: 3,
+                        row: 3
                     },
                     walk_right: {
                         length: 4,
-                        row: 4,
+                        row: 4
                     },
                     walk_up: {
                         length: 4,
-                        row: 5,
+                        row: 5
                     },
                     atk_down: {
                         length: 4,
-                        row: 6,
+                        row: 6
                     },
                     atk_right: {
                         length: 4,
-                        row: 7,
+                        row: 7
                     },
                     atk_up: {
                         length: 4,
-                        row: 8,
+                        row: 8
                     },
                     bow_atk_down: {
                         length: 4,
-                        row: 9,
+                        row: 9
                     },
                     bow_atk_right: {
                         length: 4,
-                        row: 10,
+                        row: 10
                     },
                     bow_atk_up: {
                         length: 4,
-                        row: 11,
-                    },
+                        row: 11
+                    }
                 };
             }
         }
@@ -645,5 +645,5 @@ export default {
         };
 
         requestAnimationFrame(fade);
-    },
+    }
 };

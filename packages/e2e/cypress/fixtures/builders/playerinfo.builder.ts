@@ -5,11 +5,11 @@ import type { PlayerInfo } from '@kaetram/e2e/cypress/entities/playerinfo';
 export function buildPlayerInfo(
     username: string,
     overwrites: Partial<PlayerInfo> = {},
-    defaults: PlayerInfo = defaultPlayerInfo,
+    defaults: PlayerInfo = defaultPlayerInfo
 ): PlayerInfo {
     return {
         ...defaults,
         ...overwrites,
-        username,
+        username
     };
 }

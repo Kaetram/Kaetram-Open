@@ -11,7 +11,7 @@ export default class Grids {
 
     public constructor(
         private width: number,
-        private height: number,
+        private height: number
     ) {
         /**
          * Create the two-dimensional grids.
@@ -103,7 +103,7 @@ export default class Grids {
         x: number,
         y: number,
         callback: (entity: Entity) => void,
-        radius = 1,
+        radius = 1
     ): void {
         for (let i = x - radius; i <= x + radius; i++)
             for (let j = y - radius; j <= y + radius; j++)

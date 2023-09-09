@@ -127,7 +127,7 @@ export default class Updater {
                     // Callback for an entity movement.
                     entity.moved();
                     entity.nextStep();
-                },
+                }
             );
         });
     }
@@ -166,7 +166,7 @@ export default class Updater {
                 x: -1,
                 y: -1,
                 gridX: player.gridX,
-                gridY: player.gridY,
+                gridY: player.gridY
             };
 
         /**

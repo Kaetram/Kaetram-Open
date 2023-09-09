@@ -70,7 +70,7 @@ export default class TeamWar extends Minigame {
 
         return {
             x: Utils.randomInt(area.x + 1, area.x + area.width - 1),
-            y: Utils.randomInt(area.y + 1, area.y + area.height - 1),
+            y: Utils.randomInt(area.y + 1, area.y + area.height - 1)
         };
     }
 
@@ -97,7 +97,7 @@ export default class TeamWar extends Minigame {
                 action: Opcodes.MinigameActions.Score,
                 countdown: this.countdown,
                 redTeamKills: this.redTeamKills,
-                blueTeamKills: this.blueTeamKills,
+                blueTeamKills: this.blueTeamKills
             });
 
         // Send the countdown packet to the players in the lobby.
@@ -105,7 +105,7 @@ export default class TeamWar extends Minigame {
             this.sendPacket(this.playersInLobby, {
                 action: Opcodes.MinigameActions.Lobby,
                 countdown: this.countdown,
-                started: this.started,
+                started: this.started
             });
     }
 
@@ -122,7 +122,7 @@ export default class TeamWar extends Minigame {
             // Notify all players there aren't enough players in the lobby.
             for (let player of redTeam)
                 player.notify(
-                    `misc:MINIMUM_PLAYERS_MINIGAME;minimum=${Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS}`,
+                    `misc:MINIMUM_PLAYERS_MINIGAME;minimum=${Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS}`
                 );
 
             return;

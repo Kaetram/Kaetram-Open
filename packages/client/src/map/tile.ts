@@ -23,7 +23,7 @@ export default class Tile {
         public animationInfo: ProcessedAnimation[],
         public isFlipped = false,
         public isHighTile = false, // Used by the WebGL renderer.
-        public postAnimationData?: ClientTile,
+        public postAnimationData?: ClientTile
     ) {}
 
     /**

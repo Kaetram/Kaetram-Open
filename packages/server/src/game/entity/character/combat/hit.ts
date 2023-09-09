@@ -6,7 +6,7 @@ export default class Hit {
         public type: Modules.Hits,
         private damage = 0,
         private ranged = false,
-        public aoe = 0,
+        public aoe = 0
     ) {}
 
     /**
@@ -35,7 +35,7 @@ export default class Hit {
             type: this.type,
             damage: this.damage,
             ranged: this.ranged,
-            aoe: this.aoe,
+            aoe: this.aoe
         };
     }
 }

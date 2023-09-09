@@ -3,7 +3,7 @@
 import { Pointer } from './opcodes';
 
 export let EmptyPointer = {
-    type: Pointer.Remove,
+    type: Pointer.Remove
 };
 
 export enum PacketType {
@@ -12,21 +12,21 @@ export enum PacketType {
     Players,
     Region,
     Regions,
-    RegionList,
+    RegionList
 }
 
 export enum ContainerType {
     Bank,
     Inventory,
     Trade,
-    LootBag,
+    LootBag
 }
 
 export enum Orientation {
     Up,
     Down,
     Left,
-    Right,
+    Right
 }
 
 export enum EntityType {
@@ -39,7 +39,7 @@ export enum EntityType {
     Object,
     Pet,
     LootBag,
-    Effect,
+    Effect
 }
 
 export enum Interfaces {
@@ -63,12 +63,12 @@ export enum Interfaces {
     Book,
     Lootbag,
     Equipments,
-    Welcome,
+    Welcome
 }
 
 export enum AbilityType {
     Active,
-    Passive,
+    Passive
 }
 
 export type HealTypes = 'passive' | 'hitpoints' | 'mana';
@@ -83,14 +83,14 @@ export enum SpecialEntityTypes {
     Quest,
     Area,
     Boss,
-    Miniboss,
+    Miniboss
 }
 
 export enum Actions {
     Idle,
     Attack,
     Walk,
-    Orientate,
+    Orientate
 }
 
 export enum MenuActions {
@@ -104,7 +104,7 @@ export enum MenuActions {
     Potion = 'potion',
     Follow = 'follow',
     Examine = 'examine',
-    AddFriend = 'addfriend',
+    AddFriend = 'addfriend'
 }
 
 export enum InteractActions {}
@@ -122,7 +122,7 @@ export enum Hits {
     Freezing,
     Burning,
     Terror,
-    Explosive,
+    Explosive
 }
 
 export enum Equipment {
@@ -137,7 +137,7 @@ export enum Equipment {
     WeaponSkin,
     Legplates,
     Cape,
-    Boots,
+    Boots
 }
 
 export let EquipmentRenderOrder = [
@@ -148,7 +148,7 @@ export let EquipmentRenderOrder = [
     Equipment.ArmourSkin,
     Equipment.Shield,
     Equipment.Weapon,
-    Equipment.WeaponSkin,
+    Equipment.WeaponSkin
 ];
 
 export enum AttackStyle {
@@ -171,7 +171,7 @@ export enum AttackStyle {
     Focused, // Slower but higher damage/accuracy
 
     // Archery and Magic
-    LongRange, // Increased attack range and less accurate
+    LongRange // Increased attack range and less accurate
 }
 
 export enum Hovering {
@@ -181,18 +181,18 @@ export enum Hovering {
     Item,
     NPC,
     Chest,
-    Object,
+    Object
 }
 
 export enum AudioTypes {
     Music,
-    SFX,
+    SFX
 }
 
 export enum PoisonTypes {
     Venom, // When a mob hits you
     Plague, // When entering a poisoned area.
-    Persistent, // Poison that doesn't wear off until it's cured.
+    Persistent // Poison that doesn't wear off until it's cured.
 }
 
 export enum Warps {
@@ -201,7 +201,7 @@ export enum Warps {
     Lakesworld,
     Patsow,
     Crullfield,
-    Undersea,
+    Undersea
 }
 
 export enum Skills {
@@ -223,7 +223,7 @@ export enum Skills {
     Foraging,
     Eating,
     Loitering,
-    Alchemy,
+    Alchemy
 }
 
 // It's easier to define and swap order around here.
@@ -244,7 +244,7 @@ export let SkillsOrder = [
     Skills.Smithing,
     Skills.Alchemy,
     Skills.Eating,
-    Skills.Loitering,
+    Skills.Loitering
 ];
 
 export enum Enchantment {
@@ -256,7 +256,7 @@ export enum Enchantment {
     Stun,
     AntiStun,
     Splash,
-    DoubleEdged,
+    DoubleEdged
 }
 
 // Client sided special effects.
@@ -282,7 +282,7 @@ export enum Effects {
     Invincible,
     AccuracyPotion,
     StrengthPotion,
-    DefensePotion,
+    DefensePotion
 }
 
 export enum DamageStyle {
@@ -291,7 +291,7 @@ export enum DamageStyle {
     Slash,
     Stab,
     Magic,
-    Archery,
+    Archery
 }
 
 export enum Crowns {
@@ -305,7 +305,7 @@ export enum Crowns {
     Tier4,
     Tier5,
     Tier6,
-    Tier7,
+    Tier7
 }
 
 export enum Ranks {
@@ -324,7 +324,7 @@ export enum Ranks {
     TierSix,
     TierSeven,
     HollowAdmin,
-    Booster,
+    Booster
 }
 
 export let RankColours = {
@@ -343,7 +343,7 @@ export let RankColours = {
     [Ranks.TierSix]: '#77e691',
     [Ranks.TierSeven]: '#77e691',
     [Ranks.HollowAdmin]: '#3bbaff',
-    [Ranks.Booster]: '#f47fff',
+    [Ranks.Booster]: '#f47fff'
 };
 
 export let RankTitles = {
@@ -362,7 +362,7 @@ export let RankTitles = {
     [Ranks.TierSix]: 'T6 Patron',
     [Ranks.TierSeven]: 'T7 Patron',
     [Ranks.HollowAdmin]: 'Admin',
-    [Ranks.Booster]: 'Booster',
+    [Ranks.Booster]: 'Booster'
 };
 
 export interface Colours {
@@ -377,8 +377,8 @@ export let DamageColours = {
         stroke: 'rgb(255, 180, 180)',
         inflicted: {
             fill: 'white',
-            stroke: '#373737',
-        },
+            stroke: '#373737'
+        }
     },
 
     [Hits.Explosive]: {
@@ -386,8 +386,8 @@ export let DamageColours = {
         stroke: 'rgb(255, 180, 180)',
         inflicted: {
             fill: 'white',
-            stroke: '#373737',
-        },
+            stroke: '#373737'
+        }
     },
 
     [Hits.Critical]: {
@@ -395,146 +395,146 @@ export let DamageColours = {
         stroke: 'rgb(255, 180, 180)',
         inflicted: {
             fill: 'rgb(255, 153, 204)',
-            stroke: '#373737',
-        },
+            stroke: '#373737'
+        }
     },
 
     [Hits.Poison]: {
         fill: 'rgb(66, 183, 77)',
-        stroke: 'rgb(50, 120 , 50)',
+        stroke: 'rgb(50, 120 , 50)'
     },
 
     [Hits.Heal]: {
         fill: 'rgb(80, 255, 80)',
-        stroke: 'rgb(50, 120, 50)',
+        stroke: 'rgb(50, 120, 50)'
     },
 
     [Hits.Mana]: {
         fill: 'rgb(73, 94, 228)',
-        stroke: 'rgb(56, 63, 133)',
+        stroke: 'rgb(56, 63, 133)'
     },
 
     [Hits.Experience]: {
         fill: 'rgb(80, 180, 255)',
-        stroke: 'rgb(15, 85, 138)',
+        stroke: 'rgb(15, 85, 138)'
     },
 
     [Hits.LevelUp]: {
         fill: 'rgb(80, 180, 255)',
-        stroke: 'rgb(15, 85, 138)',
+        stroke: 'rgb(15, 85, 138)'
     },
 
     [Hits.Profession]: {
         fill: 'rgb(204, 0, 153)',
-        stroke: 'rgb(112, 17, 112)',
+        stroke: 'rgb(112, 17, 112)'
     },
 
     [Hits.Freezing]: {
         fill: 'rgb(52, 195, 235)',
-        stroke: 'rgb(14, 138, 227)',
+        stroke: 'rgb(14, 138, 227)'
     },
 
     [Hits.Burning]: {
         fill: 'rgb(227, 170, 14)',
-        stroke: 'rgb(235, 135, 52)',
+        stroke: 'rgb(235, 135, 52)'
     },
 
     [Hits.Terror]: {
         fill: 'rgb(89, 21, 125)',
-        stroke: 'rgb(136, 29, 194)',
-    },
+        stroke: 'rgb(136, 29, 194)'
+    }
 };
 
 export let SkillExpColours = {
     [Skills.Lumberjacking]: {
         fill: 'rgb(132, 57, 45)',
-        stroke: 'rgb(101, 48, 35)',
+        stroke: 'rgb(101, 48, 35)'
     },
 
     [Skills.Accuracy]: {
         fill: 'rgb(6, 191, 188)',
-        stroke: 'rgb(2, 94, 93)',
+        stroke: 'rgb(2, 94, 93)'
     },
 
     [Skills.Archery]: {
         fill: 'rgb(34, 214, 130)',
-        stroke: 'rgb(7, 184, 101)',
+        stroke: 'rgb(7, 184, 101)'
     },
 
     [Skills.Health]: {
         fill: 'rgb(239, 90, 90)',
-        stroke: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
     },
 
     [Skills.Magic]: {
         fill: 'rgb(37, 124, 210)',
-        stroke: 'rgb(12, 55, 208)',
+        stroke: 'rgb(12, 55, 208)'
     },
 
     [Skills.Mining]: {
         fill: 'rgb(105, 106, 107)',
-        stroke: 'rgb(45, 45, 46)',
+        stroke: 'rgb(45, 45, 46)'
     },
 
     [Skills.Strength]: {
         fill: 'rgb(232, 211, 185)',
-        stroke: 'rgb(189, 172, 151)',
+        stroke: 'rgb(189, 172, 151)'
     },
 
     [Skills.Defense]: {
         fill: 'rgb(110, 158, 255)',
-        stroke: 'rgb(7, 63, 176)',
+        stroke: 'rgb(7, 63, 176)'
     },
 
     [Skills.Fishing]: {
         fill: 'rgb(0, 255, 255)',
-        stroke: 'rgb(0, 255, 255)',
+        stroke: 'rgb(0, 255, 255)'
     },
 
     [Skills.Cooking]: {
         fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
     },
 
     [Skills.Smithing]: {
         fill: 'rgb(132, 57, 45)',
-        stroke: 'rgb(101, 48, 35)',
+        stroke: 'rgb(101, 48, 35)'
     },
 
     [Skills.Crafting]: {
         fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
     },
 
     [Skills.Fletching]: {
         fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
     },
 
     [Skills.Smelting]: {
         fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
     },
 
     [Skills.Chiseling]: {
         fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)',
+        stroke: 'rgb(255, 255, 0)'
     },
 
     [Skills.Eating]: {
         fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
     },
 
     [Skills.Loitering]: {
         fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)',
+        stroke: 'rgb(255, 0, 0)'
     },
 
     [Skills.Foraging]: {
         fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)',
-    },
+        stroke: 'rgb(255, 0, 0)'
+    }
 };
 
 export let NameColours = {
@@ -542,11 +542,11 @@ export let NameColours = {
     [SpecialEntityTypes.Quest]: 'rgb(106, 90, 205)',
     [SpecialEntityTypes.Area]: 'rgb(255, 165, 0)',
     [SpecialEntityTypes.Boss]: 'rgb(150, 0, 51)',
-    [SpecialEntityTypes.Miniboss]: 'rgb(204, 51, 0)',
+    [SpecialEntityTypes.Miniboss]: 'rgb(204, 51, 0)'
 };
 
 export let EntityScale = {
-    [SpecialEntityTypes.Miniboss]: 1.2,
+    [SpecialEntityTypes.Miniboss]: 1.2
 };
 
 export let PoisonInfo = {
@@ -554,26 +554,26 @@ export let PoisonInfo = {
         name: 'Venom',
         damage: 5,
         duration: 30,
-        rate: 2, // every 2 seconds
+        rate: 2 // every 2 seconds
     },
     [PoisonTypes.Plague]: {
         name: 'Plague',
         damage: 5,
         duration: 60,
-        rate: 1,
+        rate: 1
     },
     [PoisonTypes.Persistent]: {
         name: 'Persistent',
         damage: 2,
         duration: -1,
-        rate: 1,
-    },
+        rate: 1
+    }
 };
 
 export enum NPCRole {
     Banker,
     Enchanter,
-    Clerk,
+    Clerk
 }
 
 export enum GuildRank {
@@ -584,7 +584,7 @@ export enum GuildRank {
     Veteran,
     Elite,
     Master,
-    Landlord,
+    Landlord
 }
 
 export enum BannerColour {
@@ -596,7 +596,7 @@ export enum BannerColour {
     Cyan = 'cyan',
     DarkGrey = 'darkgrey',
     Teal = 'teal',
-    GoldenYellow = 'goldenyellow',
+    GoldenYellow = 'goldenyellow'
 }
 
 export enum BannerOutline {
@@ -604,14 +604,14 @@ export enum BannerOutline {
     StyleTwo,
     StyleThree,
     StyleFour,
-    StyleFive,
+    StyleFive
 }
 
 export enum BannerCrests {
     None = 'none',
     Star = 'star',
     Hawk = 'hawk',
-    Phoenix = 'phoenix',
+    Phoenix = 'phoenix'
 }
 
 export const Constants = {
@@ -652,7 +652,7 @@ export const Constants = {
     BURNING_EFFECT_DAMAGE: 20,
     ATTACKER_TIMEOUT: 20_000, // 20 seconds
     MAX_GUILD_MEMBERS: 50, // Maximum number of members in a guild
-    EVENTS_CHECK_INTERVAL: 3_600_000, // Every 1 hour
+    EVENTS_CHECK_INTERVAL: 3_600_000 // Every 1 hour
 };
 
 export enum MinigameConstants {
@@ -660,27 +660,27 @@ export enum MinigameConstants {
     TEAM_WAR_MIN_PLAYERS = 2, // Minimum number of players to start a team war
     COURSING_COUNTDOWN = 45, // 360 seconds (6 minutes) in the lobby and in-game
     COURSING_MIN_PLAYERS = 2, // Minimum number of players to start coursing
-    COURSING_SCORE_DIVISOR = 10, // Divide the score by 100 to get the number of points
+    COURSING_SCORE_DIVISOR = 10 // Divide the score by 100 to get the number of points
 }
 
 export enum APIConstants {
     UNHANDLED_HTTP_METHOD,
     NOT_FOUND_ERROR,
     MALFORMED_PARAMETERS,
-    PLAYER_NOT_ONLINE,
+    PLAYER_NOT_ONLINE
 }
 
 // Defaults that apply to all types of entities
 export enum Defaults {
     MOVEMENT_SPEED = 220, // 250 milliseconds to traverse one tile
     ATTACK_RATE = 1000, // every 1 second
-    POISON_CHANCE = 15, // 15 in (235 - level) chance to poison
+    POISON_CHANCE = 15 // 15 in (235 - level) chance to poison
 }
 
 export enum ItemDefaults {
     RESPAWN_DELAY = 30_000, // 30 seconds
     DESPAWN_DURATION = 34_000, // 34 seconds of blinking before despawning
-    BLINK_DELAY = 30_000, // 40 seconds until item starts blinking.
+    BLINK_DELAY = 30_000 // 40 seconds until item starts blinking.
 }
 
 // Defaults that apply specifically to mobs
@@ -695,18 +695,18 @@ export enum MobDefaults {
     DEFENSE_LEVEL = 1,
     MAGIC_LEVEL = 1,
     ARCHERY_LEVEL = 1,
-    ATTACK_LEVEL = 1,
+    ATTACK_LEVEL = 1
 }
 
 // Flags used by Tiled to determine tile rotation.
 export enum MapFlags {
     DIAGONAL_FLAG = 0x20_00_00_00,
     VERTICAL_FLAG = 0x40_00_00_00,
-    HORIZONTAL_FLAG = 0x80_00_00_00,
+    HORIZONTAL_FLAG = 0x80_00_00_00
 }
 
 // Handles the two states of a resource, default or depleted.
 export enum ResourceState {
     Default,
-    Depleted,
+    Depleted
 }

@@ -18,7 +18,7 @@ type RemoveCallback = (
     key: string,
     count: number,
     enchantments: Enchantments,
-    drop?: boolean,
+    drop?: boolean
 ) => void;
 type NotifyCallback = (message: string) => void;
 
@@ -35,7 +35,7 @@ export default abstract class Container {
 
     public constructor(
         public type: Modules.ContainerType,
-        public size: number,
+        public size: number
     ) {
         // Create `size` amount of slots with empty data.
         for (let i = 0; i < size; i++) this.slots.push(new Slot(i));
@@ -279,7 +279,7 @@ export default abstract class Container {
 
                 log.assert(
                     toSlot.count >= fromSlot.count,
-                    'source slot count is greater than target slot count',
+                    'source slot count is greater than target slot count'
                 );
 
                 fromSlot.update(toItem, this.stackSize);
@@ -344,7 +344,7 @@ export default abstract class Container {
                     // And the item is not enchanted.
                     !item.isEnchanted() &&
                     // And the slot is not enchanted.
-                    !slot.isEnchanted(),
+                    !slot.isEnchanted()
             );
 
         // If there's no slot with the same item, find an empty slot.

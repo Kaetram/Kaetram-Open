@@ -37,7 +37,7 @@ export default class Console {
                     log.info(
                         `There are a total of ${
                             this.world.entities.getPlayerUsernames().length
-                        } player(s) logged in.`,
+                        } player(s) logged in.`
                     );
 
                     break;
@@ -102,13 +102,13 @@ export default class Console {
                     if (!player) return log.info(`Player not found.`);
 
                     player.setRank(
-                        command === 'setadmin' ? Modules.Ranks.Admin : Modules.Ranks.Moderator,
+                        command === 'setadmin' ? Modules.Ranks.Admin : Modules.Ranks.Moderator
                     );
 
                     player.sync();
 
                     log.info(
-                        `${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`,
+                        `${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`
                     );
 
                     break;

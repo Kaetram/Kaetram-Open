@@ -19,11 +19,11 @@ export type { AbilityPacketData, AbilityPacketCallback } from '../../network/imp
 export type { QuestPacketData, QuestPacketCallback } from '../../network/impl/quest';
 export type {
     AchievementPacketData,
-    AchievementPacketCallback,
+    AchievementPacketCallback
 } from '../../network/impl/achievement';
 export type {
     NotificationPacketData,
-    NotificationPacketCallback,
+    NotificationPacketCallback
 } from '../../network/impl/notification';
 export type { BlinkPacketCallback } from '../../network/impl/blink';
 export type { HealPacketData, HealPacketCallback } from '../../network/impl/heal';

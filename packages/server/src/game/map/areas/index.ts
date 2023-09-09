@@ -13,5 +13,5 @@ export default {
     overlay,
     pvp,
     dynamic,
-    minigame,
+    minigame
 };

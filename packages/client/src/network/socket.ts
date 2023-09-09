@@ -121,7 +121,7 @@ export default class Socket {
 
         // Send the handshake with the game version.
         this.send(Packets.Handshake, {
-            gVer: this.config.version,
+            gVer: this.config.version
         });
     }
 
@@ -139,7 +139,7 @@ export default class Socket {
         this.game.app.sendError(
             import.meta.env.DEV
                 ? `Couldn't connect to ${host}:${port}`
-                : 'Could not connect to the game server.',
+                : 'Could not connect to the game server.'
         );
     }
 }

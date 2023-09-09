@@ -60,8 +60,8 @@ export default class AudioController {
                     positionY: target.y,
                     distanceModel: 'linear',
                     refDistance: tileSize,
-                    maxDistance: tileSize * 10, // Maximum of 10 tiles.
-                }),
+                    maxDistance: tileSize * 10 // Maximum of 10 tiles.
+                })
             );
         }
 
@@ -114,7 +114,7 @@ export default class AudioController {
         this.buffers[url] ??= this.loadAudio(url);
 
         return new AudioBufferSourceNode(this.context, {
-            buffer: await this.buffers[url],
+            buffer: await this.buffers[url]
         });
     }
 

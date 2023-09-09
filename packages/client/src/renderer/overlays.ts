@@ -4,7 +4,7 @@ export default class Overlay {
     private currentOverlay = '';
 
     private overlays: { [key: string]: HTMLImageElement } = {
-        fog: this.load('fog'),
+        fog: this.load('fog')
     };
 
     /**

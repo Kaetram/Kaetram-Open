@@ -13,13 +13,13 @@ export default class Projectile extends Entity {
     public constructor(
         public owner: Character,
         public target: Character,
-        public hit: Hit,
+        public hit: Hit
     ) {
         super(
             Utils.createInstance(Modules.EntityType.Projectile),
             owner.getProjectileName(),
             owner.x,
-            owner.y,
+            owner.y
         );
 
         // Apply the terror hit type if the projectile is a terror projectile.

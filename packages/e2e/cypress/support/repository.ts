@@ -22,7 +22,7 @@ Cypress.Commands.add('createPlayerInfo', (playerInfo: PlayerInfo) => {
         .request(
             'POST',
             `http://localhost:3000/api/v1/player_info/username/${playerInfo.username}`,
-            playerInfo,
+            playerInfo
         )
         .then(() => {
             return true;
@@ -41,7 +41,7 @@ Cypress.Commands.add(
             .then(() => {
                 return true;
             });
-    },
+    }
 );
 
 /**
@@ -69,7 +69,7 @@ Cypress.Commands.add('createPlayerInventory', (playerInventory: PlayerInventory)
         .request(
             'POST',
             `http://localhost:3000/api/v1/player_inventory/username/${playerInventory.username}`,
-            playerInventory,
+            playerInventory
         )
         .then(() => {
             return true;
@@ -83,7 +83,7 @@ declare global {
             createPlayerInfo(playerInfo: PlayerInfo): Chainable<boolean>;
             removePlayerFromCollection(
                 collection: CollectionName,
-                username: string,
+                username: string
             ): Chainable<boolean>;
             getPlayerInfo(username: string): Chainable<PlayerInfo>;
             createPlayerInventory(playerInventory: PlayerInventory): Chainable<boolean>;

@@ -77,5 +77,5 @@ export default {
     TRADE_COMPLETE: 'Thank you for using Kaetram trading system!',
     WELCOME: 'Welcome to {{name}}!',
     WELCOME_BACK: 'Welcome back to {{name}}!',
-    WHY_GO_THERE: 'Now hang on, why would I wanna go in there?',
+    WHY_GO_THERE: 'Now hang on, why would I wanna go in there?'
 } as const;
