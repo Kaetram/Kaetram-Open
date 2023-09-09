@@ -306,20 +306,22 @@ export default class Renderer {
     private drawHoveringCell(): void {
         if (this.mobile) return;
 
-        let { input } = this.game,
-            location = input.getCoords();
+        let location = this.game.input.getCoords();
 
-        if (!input.isOnCanvas || this.isSelectedCell(location.gridX, location.gridY)) return;
+        if (!this.game.input.isOnCanvas || this.isSelectedCell(location.gridX, location.gridY))
+            return;
 
-        let canCollide =
-            this.map.isColliding(location.gridX, location.gridY) &&
-            !this.map.isObject(location.gridX, location.gridY);
+        let colour = this.game.input.targetColour,
+            isObject = this.map.isObject(location.gridX, location.gridY);
 
-        this.drawCellHighlight(
-            location.gridX,
-            location.gridY,
-            canCollide ? 'rgba(230, 0, 0, 0.7)' : input.targetColour,
-        );
+        // Update the colour for the cell highlight if it's an object.
+        if (isObject) colour = 'rgba(245, 230, 66, 0.5)';
+
+        // Colliding map cells are highlighted in red.
+        if (this.map.isColliding(location.gridX, location.gridY) && !isObject)
+            colour = 'rgba(230, 0, 0, 0.7)';
+
+        this.drawCellHighlight(location.gridX, location.gridY, colour);
     }
 
     /**
