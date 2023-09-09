@@ -111,6 +111,7 @@ export default class Player extends Character {
     public invalidateMovement = false;
     public achievementsLoaded = false;
     public displayedManaWarning = false;
+    public bypassAntiCheat = false;
     public pickingUpPet = false; // Used to doubly ensure the player is not spamming the pickup button.
     public overrideMovementSpeed = -1;
 
@@ -607,21 +608,26 @@ export default class Player extends Character {
      * @param withAnimation Whether or not to display a special effect when teleporting.
      */
 
-    public override teleport(x: number, y: number, withAnimation = false, before = false): void {
+    public override teleport(
+        x: number,
+        y: number,
+        withAnimation = false,
+        before = false,
+        bypass = false,
+    ): void {
         if (this.dead) return;
+        if (bypass) this.bypassAntiCheat = true;
 
         if (before) this.sendTeleportPacket(x, y, withAnimation);
 
-        this.setPosition(x, y, true);
+        this.setPosition(x, y, false);
         this.world.cleanCombat(this);
-
-        // Stop combat and skill activity when teleporting
-        this.combat.stop();
-        this.skills.stop();
 
         if (before) return;
 
         this.sendTeleportPacket(x, y, withAnimation);
+
+        this.bypassAntiCheat = false;
     }
 
     /**
@@ -649,7 +655,9 @@ export default class Player extends Character {
      */
 
     public incrementCheatScore(reason = '', amount = 1): void {
+        if (this.bypassAntiCheat) return;
         if (this.combat.started) return;
+
         if (reason) log.debug(`[${this.username}] ${reason}`);
 
         this.cheatScore += amount;

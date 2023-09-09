@@ -455,8 +455,7 @@ export default class Incoming {
 
         switch (opcode) {
             case Opcodes.Command.CtrlClick: {
-                this.player.teleport(position.gridX, position.gridY, true);
-                break;
+                return this.player.teleport(position.gridX, position.gridY, true, false, true);
             }
         }
     }
