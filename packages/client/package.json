@@ -36,7 +36,6 @@
         "dotenv-extended": "^2.9.0",
         "dotenv-parse-variables": "^2.0.0",
         "image-size": "^1.0.2",
-        "internal-ip": "^8.0.0",
         "sass": "^1.66.1",
         "sirv-cli": "^2.0.2",
         "typescript": "^5.2.2",

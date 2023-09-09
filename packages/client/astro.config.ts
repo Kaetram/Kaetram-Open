@@ -11,7 +11,6 @@ import compress from 'astro-compress';
 import compressor from 'astro-compressor';
 import glsl from 'vite-plugin-glsl';
 import { imageSize } from 'image-size';
-import { internalIpV4 } from 'internal-ip';
 import { defineConfig } from 'astro/config';
 import { VitePWA as pwa } from 'vite-plugin-pwa';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
@@ -33,19 +32,18 @@ Object.assign(env, {
     hub: config.hubEnabled && hub,
 });
 
-let ipv4 = await internalIpV4(),
-    plugins = [
-        glsl(),
-        pwa({
-            registerType: 'autoUpdate',
-            workbox: {
-                cacheId: name,
-                globDirectory: 'dist',
-                globPatterns: ['**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}'],
-                navigateFallback: null,
-            },
-        }),
-    ];
+let plugins = [
+    glsl(),
+    pwa({
+        registerType: 'autoUpdate',
+        workbox: {
+            cacheId: name,
+            globDirectory: 'dist',
+            globPatterns: ['**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}'],
+            navigateFallback: null,
+        },
+    }),
+];
 
 if (config.sentryDsn && !config.debugging)
     plugins.push(
@@ -123,7 +121,7 @@ export default defineConfig({
         build: { sourcemap: true },
         server: {
             strictPort: true,
-            hmr: { protocol: 'ws', host: ipv4, port: 5183 },
+            hmr: { protocol: 'ws', host: config.host, port: 5183 },
         },
         define: { globalConfig: env },
         css: {
