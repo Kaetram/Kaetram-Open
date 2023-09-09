@@ -8,5 +8,5 @@ export default {
     NO_PERMISSION_RANK: 'No tienes permiso para actualizar el rango de ese miembro.',
     NOT_ENOUGH_GOLD: 'Necesitas 30 000 de oro en tu inventario para crear un gremio.',
     NOT_ALLOWED_GUESTS_JOIN: 'Los invitados no pueden unirse a los gremios.',
-    NOT_ALLOWED_GUESTS_CREATE: 'Los invitados no pueden crear gremios.',
+    NOT_ALLOWED_GUESTS_CREATE: 'Los invitados no pueden crear gremios.'
 } as const;

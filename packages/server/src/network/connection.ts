@@ -31,7 +31,7 @@ export default class Connection {
 
     public constructor(
         public instance: string,
-        private socket: HeaderWebSocket,
+        private socket: HeaderWebSocket
     ) {
         // Convert the IP address hex string to a readable IP address.
         this.address =

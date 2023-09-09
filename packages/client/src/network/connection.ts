@@ -63,7 +63,7 @@ import type {
     CraftingPacketData,
     LootBagPacketData,
     CountdownPacketData,
-    InterfacePacketData,
+    InterfacePacketData
 } from '@kaetram/common/types/messages/outgoing';
 import type { TradePacketValues } from '@kaetram/common/network/impl/trade';
 import type { EquipmentPacketValues } from '@kaetram/common/network/impl/equipment';
@@ -203,14 +203,14 @@ export default class Connection {
                 opcode: Opcodes.Login.Register,
                 username,
                 password,
-                email,
+                email
             });
 
         // Send login packet if the user is logging in.
         this.socket.send(Packets.Login, {
             opcode: Opcodes.Login.Login,
             username,
-            password,
+            password
         });
     }
 
@@ -312,7 +312,7 @@ export default class Connection {
         switch (opcode) {
             case Opcodes.List.Spawns: {
                 let ids = new Set(
-                        Object.values(this.entities.getAll()).map((entity) => entity.instance),
+                        Object.values(this.entities.getAll()).map((entity) => entity.instance)
                     ),
                     known = new Set(info.entities!.filter((id) => ids.has(id))),
                     newIds = info.entities!.filter((id) => !known.has(id));
@@ -320,8 +320,7 @@ export default class Connection {
                 // Prepare the entities ready for despawning.
                 this.entities.decrepit = Object.values(this.entities.getAll()).filter(
                     (entity) =>
-                        !known.has(entity.instance) &&
-                        entity.instance !== this.game.player.instance,
+                        !known.has(entity.instance) && entity.instance !== this.game.player.instance
                 );
 
                 // Clear the entities in the decrepit queue.
@@ -406,7 +405,7 @@ export default class Connection {
                     info.x!,
                     info.y!,
                     info.forced,
-                    info.instance !== this.game.player.instance,
+                    info.instance !== this.game.player.instance
                 );
                 break;
             }
@@ -808,7 +807,7 @@ export default class Connection {
                     info.key!,
                     info.stage!,
                     info.name!,
-                    info.description!,
+                    info.description!
                 );
                 break;
             }
@@ -833,7 +832,7 @@ export default class Connection {
                     info.source || 'WORLD',
                     Util.parseMessage(message),
                     info.colour,
-                    true,
+                    true
                 );
             }
 
@@ -843,7 +842,7 @@ export default class Connection {
                     .show(
                         Util.parseMessage(Util.formatNotification(info.title!)),
                         Util.parseMessage(Util.formatNotification(info.message)),
-                        info.colour!,
+                        info.colour!
                     );
             }
         }
@@ -922,7 +921,7 @@ export default class Connection {
                         player.y,
                         false,
                         info.skill,
-                        true,
+                        true
                     );
 
                 break;
@@ -1157,7 +1156,7 @@ export default class Connection {
                     opcode,
                     info.instance,
                     info.x! * this.map.tileSize,
-                    info.y! * this.map.tileSize,
+                    info.y! * this.map.tileSize
                 );
                 break;
             }
@@ -1283,7 +1282,7 @@ export default class Connection {
             ? undefined
             : {
                   x: info.x! * this.map.tileSize,
-                  y: info.y! * this.map.tileSize,
+                  y: info.y! * this.map.tileSize
               };
 
         // Create the bubble and assign its position.
@@ -1291,7 +1290,7 @@ export default class Connection {
         this.bubble.setTo(
             info.instance,
             position ? position.x : entity.x,
-            position ? position.y : entity.y,
+            position ? position.y : entity.y
         );
     }
 

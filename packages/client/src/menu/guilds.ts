@@ -43,10 +43,10 @@ export default class Guilds extends Menu {
     private bannerOutlineButton: HTMLElement = document.querySelector('#banner-outline-button')!;
 
     private bannerOutlineRight: HTMLElement = this.bannerOutlineButton.querySelector(
-        '.colour-button-arrow-left',
+        '.colour-button-arrow-left'
     )!;
     private bannerOutlineLeft: HTMLElement = this.bannerOutlineButton.querySelector(
-        '.colour-button-arrow-right',
+        '.colour-button-arrow-right'
     )!;
 
     // The guild information container (if the player is in a guild).
@@ -94,17 +94,17 @@ export default class Guilds extends Menu {
         this.leaveButton.addEventListener('click', this.handleLeave.bind(this));
 
         this.bannerColourButton.addEventListener('click', () =>
-            this.handleColourSelection('banner'),
+            this.handleColourSelection('banner')
         );
         this.bannerOutlineButton.addEventListener('click', () =>
-            this.handleColourSelection('outline'),
+            this.handleColourSelection('outline')
         );
 
         this.bannerOutlineRight.addEventListener('click', () =>
-            this.handleBannerOutlineStyle('right'),
+            this.handleBannerOutlineStyle('right')
         );
         this.bannerOutlineLeft.addEventListener('click', () =>
-            this.handleBannerOutlineStyle('left'),
+            this.handleBannerOutlineStyle('left')
         );
 
         this.memberPromote.addEventListener('click', this.handlePromote.bind(this));
@@ -242,7 +242,7 @@ export default class Guilds extends Menu {
             colour: this.bannerColour,
             outline: this.bannerOutline,
             outlineColour: this.bannerOutlineColour,
-            crest: this.bannerCrest,
+            crest: this.bannerCrest
         });
     }
 
@@ -252,7 +252,7 @@ export default class Guilds extends Menu {
 
     private handleLeave(): void {
         this.game.socket.send(Packets.Guild, {
-            opcode: Opcodes.Guild.Leave,
+            opcode: Opcodes.Guild.Leave
         });
     }
 
@@ -266,7 +266,7 @@ export default class Guilds extends Menu {
 
         this.game.socket.send(Packets.Guild, {
             opcode: Opcodes.Guild.Promote,
-            username: this.selectedMember,
+            username: this.selectedMember
         });
     }
 
@@ -280,7 +280,7 @@ export default class Guilds extends Menu {
 
         this.game.socket.send(Packets.Guild, {
             opcode: Opcodes.Guild.Demote,
-            username: this.selectedMember,
+            username: this.selectedMember
         });
     }
 
@@ -294,7 +294,7 @@ export default class Guilds extends Menu {
 
         this.game.socket.send(Packets.Guild, {
             opcode: Opcodes.Guild.Kick,
-            username: this.selectedMember,
+            username: this.selectedMember
         });
     }
 
@@ -506,7 +506,7 @@ export default class Guilds extends Menu {
         return this.game.socket.send(Packets.Guild, {
             opcode: Opcodes.Guild.List,
             from: this.from,
-            to: this.to,
+            to: this.to
         });
     }
 
@@ -521,7 +521,7 @@ export default class Guilds extends Menu {
         // Send the message to the server.
         this.game.socket.send(Packets.Guild, {
             opcode: Opcodes.Guild.Chat,
-            message: this.chatInput.value,
+            message: this.chatInput.value
         });
 
         // Clear the input.
@@ -759,7 +759,7 @@ export default class Guilds extends Menu {
         list: HTMLUListElement,
         type: Modules.GuildRank | 'guild',
         name: string,
-        count = 0,
+        count = 0
     ): void {
         let element = document.createElement('li'),
             nameElement = document.createElement('span'),
@@ -797,8 +797,8 @@ export default class Guilds extends Menu {
             element.addEventListener('click', () =>
                 this.game.socket.send(Packets.Guild, {
                     opcode: Opcodes.Guild.Join,
-                    identifier: name.toLowerCase(),
-                }),
+                    identifier: name.toLowerCase()
+                })
             );
         } // Case for when we are dealing with members within a guild.
         else {

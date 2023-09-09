@@ -39,7 +39,7 @@ export default class Header {
             this.healthText,
             hitPoints,
             maxHitPoints,
-            decrease,
+            decrease
         );
     }
 
@@ -91,7 +91,7 @@ export default class Header {
         textElement: HTMLElement,
         points: number,
         maxPoints: number,
-        decrease?: boolean,
+        decrease?: boolean
     ): void {
         let percentage = points / maxPoints;
 

@@ -29,7 +29,7 @@ Object.assign(env, {
     minor: config.minor,
     host: clientHost,
     port: clientPort,
-    hub: config.hubEnabled && hub,
+    hub: config.hubEnabled && hub
 });
 
 let plugins = [
@@ -40,9 +40,9 @@ let plugins = [
             cacheId: name,
             globDirectory: 'dist',
             globPatterns: ['**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}'],
-            navigateFallback: null,
-        },
-    }),
+            navigateFallback: null
+        }
+    })
 ];
 
 if (config.sentryDsn && !config.debugging)
@@ -51,8 +51,8 @@ if (config.sentryDsn && !config.debugging)
             org: config.sentryOrg,
             project: config.sentryProject,
             authToken: config.sentryAuthToken,
-            sourcemaps: { assets: './dist/**' },
-        }),
+            sourcemaps: { assets: './dist/**' }
+        })
     );
 
 let imageCache = new Map<string, { width?: number; height?: number }>();
@@ -90,23 +90,23 @@ if (import.meta.env.PROD)
                         lang,
                         dir: dir(locale as Locale),
                         name: t('game:NAME', { lng: locale }),
-                        description: t('game:DESCRIPTION', { lng: locale }),
-                    },
-                ]),
+                        description: t('game:DESCRIPTION', { lng: locale })
+                    }
+                ])
             ),
             config: {
                 insertAppleTouchLinks: true,
-                iconPurpose: ['any', 'maskable'],
-            },
+                iconPurpose: ['any', 'maskable']
+            }
         }),
         sitemap({
-            i18n: { locales, defaultLocale },
+            i18n: { locales, defaultLocale }
             //filter: filterSitemapByDefaultLocale({ defaultLocale })
         }),
         partytown({ config: { debug: false } }),
         robotsTxt({ host: true }),
         compress({ logger: 1, Image: false }),
-        compressor({ gzip: true, brotli: true }),
+        compressor({ gzip: true, brotli: true })
     );
 
 // https://astro.build/config
@@ -121,7 +121,7 @@ export default defineConfig({
         build: { sourcemap: true },
         server: {
             strictPort: true,
-            hmr: { protocol: 'ws', host: config.host, port: 5183 },
+            hmr: { protocol: 'ws', host: config.host, port: 5183 }
         },
         define: { globalConfig: env },
         css: {
@@ -137,10 +137,10 @@ export default defineConfig({
                             let { height } = getImageSize(image.getValue());
 
                             return new sass.types.Number(height!);
-                        },
-                    },
-                },
-            },
-        },
-    },
+                        }
+                    }
+                }
+            }
+        }
+    }
 });

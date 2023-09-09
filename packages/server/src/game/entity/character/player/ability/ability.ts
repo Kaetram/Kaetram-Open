@@ -19,7 +19,7 @@ export default class Ability {
     public constructor(
         public key: string,
         private level = 1,
-        private quickSlot = -1,
+        private quickSlot = -1
     ) {
         this.data = (Data as RawAbility)[this.key];
     }
@@ -160,7 +160,7 @@ export default class Ability {
         let data: AbilityData = {
             key: this.key,
             level: this.level,
-            quickSlot: this.quickSlot,
+            quickSlot: this.quickSlot
         };
 
         if (includeType) data.type = this.getType() as number;

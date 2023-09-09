@@ -62,7 +62,7 @@ export default class Area {
         public x: number,
         public y: number,
         public width: number,
-        public height: number,
+        public height: number
     ) {}
 
     /**
@@ -153,7 +153,7 @@ export default class Area {
 
         return {
             x: this.mappedArea.x + relativeX,
-            y: this.mappedArea.y + relativeY,
+            y: this.mappedArea.y + relativeY
         };
     }
 
@@ -175,7 +175,7 @@ export default class Area {
 
         return {
             x: this.mappedAnimation.x + relativeX,
-            y: this.mappedAnimation.y + relativeY,
+            y: this.mappedAnimation.y + relativeY
         };
     }
 

@@ -97,7 +97,7 @@ export default class MenuController {
             crafting: this.crafting,
             lootBag: this.lootBag,
             welcome: this.welcome,
-            quest: this.quest,
+            quest: this.quest
         };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
@@ -339,13 +339,13 @@ export default class MenuController {
     private handleInventorySelect(
         opcode: Opcodes.Container,
         fromIndex: number,
-        value?: number,
+        value?: number
     ): void {
         this.game.socket.send(Packets.Container, {
             opcode,
             type: Modules.ContainerType.Inventory,
             fromIndex,
-            value,
+            value
         });
     }
 
@@ -359,7 +359,7 @@ export default class MenuController {
         fromContainer: Modules.ContainerType,
         fromIndex: number,
         toContainer: Modules.ContainerType,
-        toIndex?: number,
+        toIndex?: number
     ): void {
         this.game.socket.send(Packets.Container, {
             opcode: Opcodes.Container.Select,
@@ -367,7 +367,7 @@ export default class MenuController {
             fromContainer,
             fromIndex,
             toContainer,
-            value: toIndex,
+            value: toIndex
         });
     }
 
@@ -385,7 +385,7 @@ export default class MenuController {
             opcode,
             key,
             index,
-            count,
+            count
         });
     }
 
@@ -399,7 +399,7 @@ export default class MenuController {
     private handleProfileUnequip(type: Modules.Equipment): void {
         this.game.socket.send(Packets.Equipment, {
             opcode: Opcodes.Equipment.Unequip,
-            type,
+            type
         });
     }
 
@@ -412,7 +412,7 @@ export default class MenuController {
     private handleProfileAttackStyle(style: Modules.AttackStyle): void {
         this.game.socket.send(Packets.Equipment, {
             opcode: Opcodes.Equipment.Style,
-            style,
+            style
         });
     }
 
@@ -422,7 +422,7 @@ export default class MenuController {
 
     private handleProfilePickup(): void {
         this.game.socket.send(Packets.Pet, {
-            opcode: Opcodes.Pet.Pickup,
+            opcode: Opcodes.Pet.Pickup
         });
     }
 
@@ -439,7 +439,7 @@ export default class MenuController {
         this.game.socket.send(Packets.Ability, {
             opcode: type,
             key,
-            index,
+            index
         });
     }
 
@@ -453,7 +453,7 @@ export default class MenuController {
     private handleEnchantSelect(index: number): void {
         this.game.socket.send(Packets.Enchant, {
             opcode: Opcodes.Enchant.Select,
-            index,
+            index
         });
     }
 
@@ -469,7 +469,7 @@ export default class MenuController {
         this.game.socket.send(Packets.Enchant, {
             opcode: Opcodes.Enchant.Confirm,
             index,
-            shardIndex,
+            shardIndex
         });
     }
 
@@ -480,7 +480,7 @@ export default class MenuController {
 
     private handleWarp(id: number): void {
         this.game.socket.send(Packets.Warp, {
-            id,
+            id
         });
     }
 
@@ -494,7 +494,7 @@ export default class MenuController {
     private handleFriendConfirm(username: string, remove = false): void {
         this.game.socket.send(Packets.Friends, {
             opcode: remove ? Opcodes.Friends.Remove : Opcodes.Friends.Add,
-            username,
+            username
         });
     }
 
@@ -513,7 +513,7 @@ export default class MenuController {
                 return this.game.socket.send(Packets.Trade, {
                     opcode: Opcodes.Trade.Add,
                     index,
-                    count,
+                    count
                 });
             }
 
@@ -521,7 +521,7 @@ export default class MenuController {
                 return this.game.socket.send(Packets.Trade, {
                     opcode: Opcodes.Trade.Remove,
                     index,
-                    count,
+                    count
                 });
             }
         }
@@ -534,7 +534,7 @@ export default class MenuController {
 
     private handleTradeAccept(): void {
         this.game.socket.send(Packets.Trade, {
-            opcode: Opcodes.Trade.Accept,
+            opcode: Opcodes.Trade.Accept
         });
     }
 
@@ -544,7 +544,7 @@ export default class MenuController {
 
     private handleTradeClose(): void {
         this.game.socket.send(Packets.Trade, {
-            opcode: Opcodes.Trade.Close,
+            opcode: Opcodes.Trade.Close
         });
     }
 
@@ -556,7 +556,7 @@ export default class MenuController {
     private handleCraftingSelect(key: string): void {
         this.game.socket.send(Packets.Crafting, {
             opcode: Opcodes.Crafting.Select,
-            key,
+            key
         });
     }
 
@@ -571,7 +571,7 @@ export default class MenuController {
         this.game.socket.send(Packets.Crafting, {
             opcode: Opcodes.Crafting.Craft,
             key,
-            count,
+            count
         });
     }
 
@@ -583,7 +583,7 @@ export default class MenuController {
     private handleLootBagSelect(index: number): void {
         this.game.socket.send(Packets.LootBag, {
             opcode: Opcodes.LootBag.Take,
-            index,
+            index
         });
     }
 
@@ -594,7 +594,7 @@ export default class MenuController {
 
     private handleQuestAccept(key: string): void {
         this.game.socket.send(Packets.Quest, {
-            key,
+            key
         });
     }
 

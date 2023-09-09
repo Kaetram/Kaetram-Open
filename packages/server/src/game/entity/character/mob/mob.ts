@@ -26,7 +26,7 @@ import type {
     MobData,
     MobSkills,
     MobDrop,
-    MobDropTable,
+    MobDropTable
 } from '@kaetram/common/types/mob';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
@@ -71,7 +71,7 @@ export default class Mob extends Character {
         strength: Modules.MobDefaults.STRENGTH_LEVEL,
         defense: Modules.MobDefaults.DEFENSE_LEVEL,
         magic: Modules.MobDefaults.MAGIC_LEVEL,
-        archery: Modules.MobDefaults.ARCHERY_LEVEL,
+        archery: Modules.MobDefaults.ARCHERY_LEVEL
     };
 
     public respawnDelay: number = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
@@ -216,8 +216,8 @@ export default class Mob extends Character {
                 new HealPacket({
                     instance: this.instance,
                     type,
-                    amount,
-                }),
+                    amount
+                })
             );
         }
     }
@@ -272,7 +272,7 @@ export default class Mob extends Character {
                 true,
                 drops[0].count,
                 {},
-                player.username,
+                player.username
             );
             return;
         }
@@ -311,8 +311,8 @@ export default class Mob extends Character {
                 packet: new MovementPacket(Opcodes.Movement.Move, {
                     instance: this.instance,
                     x,
-                    y,
-                }),
+                    y
+                })
             });
     }
 
@@ -552,7 +552,7 @@ export default class Mob extends Character {
     public override getDisplayInfo(player?: Player): EntityDisplayInfo {
         let displayInfo: EntityDisplayInfo = {
             instance: this.instance,
-            colour: this.getNameColour(player),
+            colour: this.getNameColour(player)
         };
 
         // Only minibosses have a special scale, we send the scale only if the mob is a miniboss.

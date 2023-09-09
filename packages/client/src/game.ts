@@ -187,7 +187,7 @@ export default class Game {
 
         this.socket.send(Packets.Ready, {
             regionsLoaded: this.map.regionsLoaded,
-            userAgent: agent,
+            userAgent: agent
         });
 
         if (this.storage.data.new) {
@@ -215,7 +215,7 @@ export default class Game {
         x: number,
         y: number,
         ignores: TileIgnore[] = [],
-        cursor = '',
+        cursor = ''
     ): number[][] {
         let path: number[][] = [];
 
@@ -344,7 +344,7 @@ export default class Game {
         let entities = this.entities.grids.getEntitiesAround(
                 position.gridX!,
                 position.gridY!,
-                radius,
+                radius
             ),
             closest: Entity | undefined,
             boundary = this.map.tileSize - 2;

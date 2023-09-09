@@ -19,7 +19,7 @@ export default class Projectile extends Entity {
     public constructor(
         instance: string,
         public owner: Entity,
-        private hitType: Modules.Hits,
+        private hitType: Modules.Hits
     ) {
         super(instance, Modules.EntityType.Projectile);
 

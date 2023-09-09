@@ -23,8 +23,8 @@ export default class Discord {
                 IntentsBitField.Flags.Guilds,
                 IntentsBitField.Flags.GuildMessages,
                 IntentsBitField.Flags.MessageContent,
-                IntentsBitField.Flags.GuildPresences,
-            ],
+                IntentsBitField.Flags.GuildPresences
+            ]
         });
 
         // Discord is successfully connected.
@@ -88,7 +88,7 @@ export default class Discord {
         source: string,
         text: string,
         serverName = config.name,
-        withArrow = true,
+        withArrow = true
     ): void {
         if (!source || !config.discordEnabled) return;
 

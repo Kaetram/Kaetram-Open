@@ -7,7 +7,7 @@ import { Modules, Opcodes } from '@kaetram/common/network';
 import type Player from '../entity/character/player/player';
 import type {
     CraftingItemPreview,
-    CraftingRequirement,
+    CraftingRequirement
 } from '@kaetram/common/network/impl/crafting';
 import type { CraftingPacketData } from '@kaetram/common/types/messages/outgoing';
 
@@ -76,7 +76,7 @@ export default class Crafting extends Menu {
                     info.name!,
                     info.level!,
                     info.result!,
-                    info.requirements!,
+                    info.requirements!
                 );
             }
         }
@@ -96,7 +96,7 @@ export default class Crafting extends Menu {
         name: string,
         level: number,
         count: number,
-        requirements: CraftingRequirement[],
+        requirements: CraftingRequirement[]
     ): void {
         // Clear the requirements and result.
         this.requirements.innerHTML = '';
@@ -126,7 +126,7 @@ export default class Crafting extends Menu {
         // Create new requirement element and append it to the list of requirements.
         for (let requirement of requirements)
             this.requirements.append(
-                this.createSlot(requirement.key, requirement.name!, requirement.count, 0, true),
+                this.createSlot(requirement.key, requirement.name!, requirement.count, 0, true)
             );
     }
 
@@ -239,7 +239,7 @@ export default class Crafting extends Menu {
         name?: string,
         count?: number,
         level = 0,
-        disableClick = false,
+        disableClick = false
     ): HTMLLIElement {
         let element = document.createElement('li'),
             icon = document.createElement('div');

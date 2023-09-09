@@ -22,8 +22,8 @@ export default class Lights {
                     light.diffuse,
                     light.distance,
                     light.flickerSpeed,
-                    light.flickerIntensity,
-                ),
+                    light.flickerIntensity
+                )
             );
         }
 

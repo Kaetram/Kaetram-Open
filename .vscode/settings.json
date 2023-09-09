@@ -4,7 +4,7 @@
     "editor.formatOnPaste": true,
     "editor.codeActionsOnSave": { "source.fixAll": true },
     "npm.packageManager": "yarn",
-    "prettier.trailingComma": "all",
+    "prettier.trailingComma": "none",
     "typescript.tsdk": "./node_modules/typescript/lib",
     "typescript.enablePromptUseWorkspaceTsdk": true,
     "eslint.format.enable": true,

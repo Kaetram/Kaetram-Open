@@ -18,7 +18,7 @@ export default class PointerController {
 
     public constructor(
         private renderer: Renderer,
-        private entities: EntitiesController,
+        private entities: EntitiesController
     ) {
         this.camera = this.renderer.camera;
     }

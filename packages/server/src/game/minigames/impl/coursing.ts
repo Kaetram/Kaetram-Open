@@ -83,7 +83,7 @@ export default class Coursing extends Minigame {
             this.sendPacket(this.playersInLobby, {
                 action: Opcodes.MinigameActions.Lobby,
                 countdown: this.countdown,
-                started: this.started,
+                started: this.started
             });
 
         // We only update the score and send the packet every 4 ticks.
@@ -110,7 +110,7 @@ export default class Coursing extends Minigame {
                 // Send a packet updating the player's score.
                 this.sendPacket([player], {
                     action: Opcodes.MinigameActions.Score,
-                    score: player.coursingScore,
+                    score: player.coursingScore
                 });
             }
         });
@@ -132,7 +132,7 @@ export default class Coursing extends Minigame {
 
         return {
             x: Utils.randomInt(area.x + 1, area.x + area.width - 1),
-            y: Utils.randomInt(area.y + 1, area.y + area.height - 1),
+            y: Utils.randomInt(area.y + 1, area.y + area.height - 1)
         };
     }
 
@@ -152,7 +152,7 @@ export default class Coursing extends Minigame {
             // Notify the players that we need more players.
             for (let player of this.playersInLobby)
                 player.notify(
-                    `misc:MINIMUM_PLAYERS_MINIGAME;minimum=${Modules.MinigameConstants.COURSING_MIN_PLAYERS}`,
+                    `misc:MINIMUM_PLAYERS_MINIGAME;minimum=${Modules.MinigameConstants.COURSING_MIN_PLAYERS}`
                 );
 
             return;
@@ -217,7 +217,7 @@ export default class Coursing extends Minigame {
         for (let player of this.playersInGame)
             player.pointer({
                 type: Opcodes.Pointer.Entity,
-                instance: player.coursingTarget,
+                instance: player.coursingTarget
             });
     }
 }

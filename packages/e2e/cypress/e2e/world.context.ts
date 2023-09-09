@@ -20,7 +20,7 @@ export default abstract class WorldContext {
     public findElementViaTitle(title: string) {
         if (!this.lookups.has(title))
             assert.fail(
-                `Cannot find element with lookup title [${title}]. Did you register it in your active context?`,
+                `Cannot find element with lookup title [${title}]. Did you register it in your active context?`
             );
 
         let lookup = this.lookups.get(title);
@@ -39,7 +39,7 @@ export default abstract class WorldContext {
         let [x, y] = Constants.SPAWN_POINT?.split(',') || [0, 0],
             playerInfo = buildPlayerInfo(this.USERNAME, {
                 x: +x,
-                y: +y,
+                y: +y
             });
 
         cy.createPlayerInfo(playerInfo);

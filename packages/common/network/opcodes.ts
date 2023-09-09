@@ -1,19 +1,19 @@
 export enum Login {
     Login,
     Register,
-    Guest,
+    Guest
 }
 
 export enum List {
     Spawns,
-    Positions,
+    Positions
 }
 
 export enum Equipment {
     Batch,
     Equip,
     Unequip,
-    Style,
+    Style
 }
 
 export enum Movement {
@@ -24,21 +24,21 @@ export enum Movement {
     Move,
     Follow,
     Entity,
-    Speed,
+    Speed
 }
 
 export enum Target {
     Talk,
     Attack,
     None,
-    Object,
+    Object
 }
 
 export enum Combat {
     Initiate,
     Hit,
     Finish,
-    Sync,
+    Sync
 }
 
 export enum Projectile {
@@ -46,12 +46,12 @@ export enum Projectile {
     Dynamic,
     Create,
     Update,
-    Impact,
+    Impact
 }
 
 export enum Network {
     Ping,
-    Pong,
+    Pong
 }
 
 export enum Container {
@@ -59,7 +59,7 @@ export enum Container {
     Add,
     Remove,
     Select,
-    Swap,
+    Swap
 }
 
 export enum Ability {
@@ -68,31 +68,31 @@ export enum Ability {
     Update,
     Use,
     QuickSlot,
-    Toggle,
+    Toggle
 }
 
 export enum Quest {
     Batch,
     Progress,
     Finish,
-    Start,
+    Start
 }
 
 export enum Achievement {
     Batch,
-    Progress,
+    Progress
 }
 
 export enum Notification {
     Ok,
     YesNo,
     Text,
-    Popup,
+    Popup
 }
 
 export enum Experience {
     Sync,
-    Skill,
+    Skill
 }
 
 export enum NPC {
@@ -100,7 +100,7 @@ export enum NPC {
     Store,
     Bank,
     Enchant,
-    Countdown,
+    Countdown
 }
 
 export const enum Trade {
@@ -109,12 +109,12 @@ export const enum Trade {
     Remove,
     Accept,
     Close,
-    Open,
+    Open
 }
 
 export enum Enchant {
     Select,
-    Confirm,
+    Confirm
 }
 
 export enum Guild {
@@ -132,14 +132,14 @@ export enum Guild {
     Chat,
     Promote,
     Demote,
-    Kick,
+    Kick
 }
 
 export enum Pointer {
     Location, // Pointer on the map
     Entity, // Pointer following an entity
     Relative,
-    Remove,
+    Remove
 }
 
 export enum Store {
@@ -148,7 +148,7 @@ export enum Store {
     Buy,
     Sell,
     Update,
-    Select,
+    Select
 }
 
 export enum Overlay {
@@ -156,34 +156,34 @@ export enum Overlay {
     Remove,
     Lamp,
     RemoveLamps,
-    Darkness,
+    Darkness
 }
 
 export enum Camera {
     LockX,
     LockY,
     FreeFlow,
-    Player,
+    Player
 }
 
 export enum Command {
-    CtrlClick,
+    CtrlClick
 }
 
 export enum Skill {
     Batch,
-    Update,
+    Update
 }
 
 export enum Minigame {
     TeamWar,
-    Coursing,
+    Coursing
 }
 
 export enum MinigameState {
     Lobby,
     End,
-    Exit,
+    Exit
 }
 
 // Generic actions for when in a minigame.
@@ -191,17 +191,17 @@ export enum MinigameActions {
     Score,
     End,
     Lobby,
-    Exit,
+    Exit
 }
 
 export enum Bubble {
     Entity,
-    Position,
+    Position
 }
 
 export enum Effect {
     Add,
-    Remove,
+    Remove
 }
 
 export enum Friends {
@@ -209,31 +209,31 @@ export enum Friends {
     Add,
     Remove,
     Status,
-    Sync,
+    Sync
 }
 
 export enum Player {
     Login,
-    Logout,
+    Logout
 }
 
 export enum Crafting {
     Open,
     Select,
-    Craft,
+    Craft
 }
 
 export enum LootBag {
     Open,
     Take,
-    Close,
+    Close
 }
 
 export enum Pet {
-    Pickup,
+    Pickup
 }
 
 export enum Interface {
     Open,
-    Close,
+    Close
 }

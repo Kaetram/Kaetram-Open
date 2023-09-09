@@ -20,7 +20,7 @@ export default class Resources {
 
     public constructor(
         private world: World,
-        private data: ProcessedResource[],
+        private data: ProcessedResource[]
     ) {
         this.map = this.world.map;
         this.regions = this.world.map.regions;

@@ -10,7 +10,7 @@ export interface InterfacePacketData {
 
 export type InterfacePacketCallback = (
     opcode: Opcodes.Interface,
-    data: InterfacePacketData,
+    data: InterfacePacketData
 ) => void;
 
 export default class Interface extends Packet {

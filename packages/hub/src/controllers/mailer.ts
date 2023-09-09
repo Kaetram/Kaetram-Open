@@ -13,8 +13,8 @@ export default class Mailer {
               secure: config.smtpUseSecure,
               auth: {
                   user: config.smtpUser,
-                  pass: config.smtpPassword,
-              },
+                  pass: config.smtpPassword
+              }
           })
         : undefined;
 
@@ -34,7 +34,7 @@ export default class Mailer {
                 from: config.smtpUser,
                 to,
                 subject,
-                text,
+                text
             });
         } catch {
             log.error(`Failed to send email to ${to}!`);

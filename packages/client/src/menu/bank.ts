@@ -13,7 +13,7 @@ type SelectCallback = (
     fromContainer: Modules.ContainerType,
     fromIndex: number,
     toContainer: Modules.ContainerType,
-    toIndex?: number,
+    toIndex?: number
 ) => void;
 
 export default class Bank extends Menu {
@@ -44,7 +44,7 @@ export default class Bank extends Menu {
             let slot = this.createDraggableSlot(
                 i,
                 Modules.ContainerType.Bank,
-                Modules.ContainerType.Inventory,
+                Modules.ContainerType.Inventory
             );
 
             this.bankList.append(slot);
@@ -54,7 +54,7 @@ export default class Bank extends Menu {
             let slot = this.createDraggableSlot(
                 i,
                 Modules.ContainerType.Inventory,
-                Modules.ContainerType.Bank,
+                Modules.ContainerType.Bank
             );
 
             this.inventoryList.append(slot);
@@ -74,15 +74,15 @@ export default class Bank extends Menu {
     private createDraggableSlot(
         index: number,
         fromContainer: Modules.ContainerType,
-        defaultContainer: Modules.ContainerType,
+        defaultContainer: Modules.ContainerType
     ): HTMLLIElement {
         let slot = Util.createSlot(fromContainer, index, () =>
-                this.select(fromContainer, index, defaultContainer),
+                this.select(fromContainer, index, defaultContainer)
             ),
             item = slot.querySelector<HTMLDivElement>('.item-slot')!;
 
         onDragDrop(item, this.handleHold.bind(this), () =>
-            this.inventory.isEmpty(this.getElement(index, fromContainer)),
+            this.inventory.isEmpty(this.getElement(index, fromContainer))
         );
 
         return slot;
@@ -108,7 +108,7 @@ export default class Bank extends Menu {
             parseInt(fromContainer!),
             parseInt(fromIndex!),
             parseInt(toContainer!),
-            parseInt(toIndex!),
+            parseInt(toIndex!)
         );
     }
 
@@ -124,7 +124,7 @@ export default class Bank extends Menu {
         fromContainer: Modules.ContainerType,
         fromIndex: number,
         toContainer: Modules.ContainerType,
-        toIndex?: number,
+        toIndex?: number
     ): void {
         this.selectCallback?.(fromContainer, fromIndex, toContainer, toIndex);
     }
@@ -140,7 +140,7 @@ export default class Bank extends Menu {
     private setSlot(slot: SlotData): void {
         let image = this.getBankElement(slot.index).querySelector<HTMLElement>('.item-image')!,
             countElement = this.getBankElement(slot.index).querySelector<HTMLElement>(
-                '.item-count',
+                '.item-count'
             )!;
 
         image.style.backgroundImage = Util.getImageURL(slot.key);

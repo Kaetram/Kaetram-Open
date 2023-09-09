@@ -10,7 +10,7 @@ export default abstract class Areas {
 
     protected constructor(
         public data: ProcessedArea[],
-        public world: World,
+        public world: World
     ) {}
 
     /**
@@ -23,7 +23,7 @@ export default abstract class Areas {
 
     public load(
         mapAreas: ProcessedArea[],
-        callback?: (area: Area, mapArea: ProcessedArea) => void,
+        callback?: (area: Area, mapArea: ProcessedArea) => void
     ): void {
         for (let a of mapAreas) {
             let area: Area = new Area(a.id, a.x, a.y, a.width, a.height);

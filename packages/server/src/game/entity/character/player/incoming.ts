@@ -35,7 +35,7 @@ import type {
     GuildPacket,
     CraftingPacket,
     PetPacket,
-    LootBagPacket,
+    LootBagPacket
 } from '@kaetram/common/types/messages/incoming';
 import type { QuestPacketData } from '@kaetram/common/network/impl/quest';
 
@@ -267,8 +267,8 @@ export default class Incoming {
             this.player.send(
                 new SpawnPacket(
                     entity,
-                    entity.hasDisplayInfo(this.player) ? this.player : undefined,
-                ),
+                    entity.hasDisplayInfo(this.player) ? this.player : undefined
+                )
             );
         }
     }
@@ -306,7 +306,7 @@ export default class Incoming {
                 movementSpeed,
                 targetInstance,
                 orientation,
-                timestamp,
+                timestamp
             } = data,
             entity: Entity;
 
@@ -332,7 +332,7 @@ export default class Incoming {
                     playerX!,
                     playerY!,
                     movementSpeed!,
-                    targetInstance!,
+                    targetInstance!
                 );
             }
 
@@ -345,7 +345,7 @@ export default class Incoming {
                     playerX!,
                     playerY!,
                     targetInstance!,
-                    orientation!,
+                    orientation!
                 );
             }
 
@@ -484,7 +484,7 @@ export default class Incoming {
                     packet.fromContainer,
                     packet.fromIndex!,
                     packet.toContainer!,
-                    packet.value,
+                    packet.value
                 );
             }
 
@@ -492,7 +492,7 @@ export default class Incoming {
                 return this.player.handleContainerRemove(
                     packet.type,
                     packet.fromIndex!,
-                    packet.value!,
+                    packet.value!
                 );
             }
 
@@ -500,7 +500,7 @@ export default class Incoming {
                 return this.player.handleContainerSwap(
                     packet.type,
                     packet.fromIndex!,
-                    packet.value!,
+                    packet.value!
                 );
             }
         }
@@ -561,7 +561,7 @@ export default class Incoming {
             case Opcodes.Trade.Add: {
                 return this.player.trade.add(
                     packet.index,
-                    Utils.sanitizeNumber(packet.count, true),
+                    Utils.sanitizeNumber(packet.count, true)
                 );
             }
 
@@ -609,7 +609,7 @@ export default class Incoming {
                     packet.colour!,
                     packet.outline!,
                     packet.outlineColour!,
-                    packet.crest!,
+                    packet.crest!
                 );
 
                 break;

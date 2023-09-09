@@ -44,7 +44,7 @@ export default class Camera {
     public constructor(
         private width: number,
         private height: number,
-        private tileSize: number,
+        private tileSize: number
     ) {
         this.update();
     }
@@ -135,7 +135,7 @@ export default class Camera {
     public clip(): void {
         this.setGridPosition(
             Math.round(this.x / this.tileSize),
-            Math.round(this.y / this.tileSize),
+            Math.round(this.y / this.tileSize)
         );
     }
 

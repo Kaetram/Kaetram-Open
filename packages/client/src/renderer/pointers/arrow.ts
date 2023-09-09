@@ -16,7 +16,7 @@ export default class Arrow {
 
     public constructor(
         public type: Opcodes.Pointer,
-        public instance: string,
+        public instance: string
     ) {
         // Apply the correct class name to the element.
         this.element.classList.add('pointer');

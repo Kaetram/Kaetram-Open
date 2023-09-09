@@ -15,7 +15,7 @@ export default class RespawnPacket extends Packet {
     public constructor(entity: Entity) {
         super(Packets.Respawn, undefined, {
             x: entity.x,
-            y: entity.y,
+            y: entity.y
         });
     }
 }

@@ -13,5 +13,5 @@ export default {
     CHEATER: 'You have been flagged for cheating. You cannot purchase anything.',
     RESTRICTED_STORE: 'This store does not accept any items.',
     INVALID_ITEM_COUNT: 'You have entered an invalid amount of items.',
-    HOLLOW_ADMIN: 'As an admin you cannot interact with the economy.',
+    HOLLOW_ADMIN: 'As an admin you cannot interact with the economy.'
 };

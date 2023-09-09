@@ -33,7 +33,7 @@ export default class ProgramData {
         context: WebGLRenderingContext,
         vertexShader: string,
         fragmentShader: string,
-        attributes: Attributes = {},
+        attributes: Attributes = {}
     ) {
         this.id = (context.canvas as HTMLCanvasElement).id;
         this.program = this.compile(context, vertexShader, fragmentShader, attributes)!;
@@ -48,7 +48,7 @@ export default class ProgramData {
 
             this.attributes[attribute.name] = context.getAttribLocation(
                 this.program,
-                attribute.name,
+                attribute.name
             );
         }
 
@@ -82,7 +82,7 @@ export default class ProgramData {
         context: WebGLRenderingContext,
         vertexShader: string,
         fragmentShader: string,
-        attributes: Attributes = {},
+        attributes: Attributes = {}
     ): WebGLProgram | undefined {
         // Compile both the vertex and fragment shaders and store the results.
         let glVertex = this.compileShader(context, context.VERTEX_SHADER, vertexShader),
@@ -133,7 +133,7 @@ export default class ProgramData {
     private compileShader(
         context: WebGLRenderingContext,
         type: number,
-        source: string,
+        source: string
     ): WebGLShader | undefined {
         let shader = context.createShader(type);
 

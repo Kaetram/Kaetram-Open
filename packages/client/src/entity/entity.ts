@@ -84,7 +84,7 @@ export default abstract class Entity {
 
     public constructor(
         public instance = '',
-        public type: Modules.EntityType,
+        public type: Modules.EntityType
     ) {}
 
     /**
@@ -223,7 +223,7 @@ export default abstract class Entity {
         name: string,
         speed = this.sprite.idleSpeed,
         count = 1,
-        onEndCount?: () => void,
+        onEndCount?: () => void
     ): void {
         // Prevent setting animation if no sprite or it's the same animation.
         if (this.animation?.name === name) return;

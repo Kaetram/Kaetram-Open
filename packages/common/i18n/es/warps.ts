@@ -9,5 +9,5 @@ export default {
     CANNOT_WARP_TUTORIAL: 'Debes terminar el tutorial antes de teletransportarte.',
     CANNOT_WARP_COMBAT:
         'Debes esperar 10 segundos después de terminar el combate para teletransportarte.',
-    CANNOT_WARP_COOLDOWN: 'Debes esperar otro {{time}} para teletransportarte.',
+    CANNOT_WARP_COOLDOWN: 'Debes esperar otro {{time}} para teletransportarte.'
 } as const;

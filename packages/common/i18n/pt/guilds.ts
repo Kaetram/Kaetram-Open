@@ -8,5 +8,5 @@ export default {
     NO_PERMISSION_RANK: 'You do not have permission to update the rank of that member.',
     NOT_ENOUGH_GOLD: 'You need 30,000 gold in your inventory to create a guild.',
     NOT_ALLOWED_GUESTS_JOIN: 'Guests are not allowed to join guilds.',
-    NOT_ALLOWED_GUESTS_CREATE: 'Guests are not allowed to create guilds.',
+    NOT_ALLOWED_GUESTS_CREATE: 'Guests are not allowed to create guilds.'
 } as const;

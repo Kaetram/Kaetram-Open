@@ -40,7 +40,7 @@ export default class Replacer {
 
         let data = fs.readFileSync(this.#map, {
             encoding: 'utf8',
-            flag: 'r',
+            flag: 'r'
         });
 
         if (!data) {

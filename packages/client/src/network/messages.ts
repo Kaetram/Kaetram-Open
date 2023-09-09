@@ -49,7 +49,7 @@ import type {
     TeleportPacketCallback,
     TradePacketCallback,
     UpdatePacketCallback,
-    WelcomePacketCallback,
+    WelcomePacketCallback
 } from '@kaetram/common/types/messages/outgoing';
 
 export default class Messages {
@@ -240,7 +240,7 @@ export default class Messages {
 
             case 'invalidinput': {
                 this.app.sendError(
-                    'The input you have entered is invalid. Please do not use special characters.',
+                    'The input you have entered is invalid. Please do not use special characters.'
                 );
                 break;
             }

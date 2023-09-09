@@ -20,12 +20,12 @@ import type {
     MobAggregate,
     PvpAggregate,
     SkillExperience,
-    TotalExperience,
+    TotalExperience
 } from '@kaetram/common/types/leaderboards';
 
 // Initialize stripe
 const stripe = new Stripe(config.stripeSecretKey, {
-    apiVersion: '2023-08-16',
+    apiVersion: '2023-08-16'
 });
 
 /**
@@ -35,7 +35,7 @@ export default class API {
     public constructor(
         private models: Models,
         private mailer: Mailer,
-        private cache: Cache,
+        private cache: Cache
     ) {
         let apiEnabled = config.apiEnabled || config.hubEnabled,
             app: Express | undefined,
@@ -70,7 +70,7 @@ export default class API {
         Sentry.init({
             dsn: config.sentryDsn,
             integrations,
-            tracesSampleRate: 1,
+            tracesSampleRate: 1
         });
     }
 
@@ -94,7 +94,7 @@ export default class API {
             router.post(
                 `/${config.stripeEndpoint}`,
                 express.raw({ type: 'application/json' }),
-                this.handleStripe.bind(this),
+                this.handleStripe.bind(this)
             );
 
             log.notice(`Stripe endpoint is enabled at /${config.stripeEndpoint}.`);
@@ -167,7 +167,7 @@ export default class API {
             this.cache.getSkillsExperience(skillId, (data: SkillExperience[]) => {
                 response.json({
                     status: 'success',
-                    list: data,
+                    list: data
                 });
             });
 
@@ -188,7 +188,7 @@ export default class API {
             this.cache.getMobKills(mobKey, (data: MobAggregate[]) => {
                 response.json({
                     status: 'success',
-                    list: data,
+                    list: data
                 });
             });
 
@@ -200,7 +200,7 @@ export default class API {
             this.cache.getPvpData((data: PvpAggregate[]) => {
                 response.json({
                     status: 'success',
-                    list: data,
+                    list: data
                 });
             });
 
@@ -211,7 +211,7 @@ export default class API {
             response.json({
                 status: 'success',
                 list: data,
-                availableMobs: this.cache.availableMobs,
+                availableMobs: this.cache.availableMobs
             });
         });
     }
@@ -240,7 +240,7 @@ export default class API {
 
         response.json({
             status: 'success',
-            online,
+            online
         });
     }
 
@@ -272,7 +272,7 @@ export default class API {
             this.mailer.send(
                 email,
                 'Kaetram Account Password Reset',
-                `Hello there, you have requested a password reset for your account. Please use the following link to reset your password: https://kaetram.com/reset/?token=${token}&id=${id}`,
+                `Hello there, you have requested a password reset for your account. Please use the following link to reset your password: https://kaetram.com/reset/?token=${token}&id=${id}`
             );
 
             // Send a response back to the client.
@@ -326,7 +326,7 @@ export default class API {
             let event = stripe.webhooks.constructEvent(
                 request.body,
                 signature,
-                config.stripeKeyLocal,
+                config.stripeKeyLocal
             );
 
             // Handle events as needed.

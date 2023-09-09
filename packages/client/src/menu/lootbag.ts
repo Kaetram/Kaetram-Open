@@ -112,7 +112,7 @@ export default class LootBag extends Menu {
             let element = Utils.createSlot(
                     Modules.ContainerType.LootBag,
                     item.index,
-                    () => this.selectCallback?.(item.index),
+                    () => this.selectCallback?.(item.index)
                 ) as LootElement,
                 image: HTMLElement = element.querySelector('.item-image')!;
 

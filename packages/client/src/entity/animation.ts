@@ -24,7 +24,7 @@ export default class Animation {
         public length: number,
         public row: number,
         public width: number,
-        public height: number,
+        public height: number
     ) {
         this.reset();
     }
@@ -121,7 +121,7 @@ export default class Animation {
         this.frame = {
             index: 0,
             x: 0,
-            y: this.row * this.height,
+            y: this.row * this.height
         };
     }
 

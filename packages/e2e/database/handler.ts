@@ -16,11 +16,11 @@ export default class Handler {
         if (NODE_ENV !== 'e2e' || !config.mongodbDatabase.includes('e2e')) {
             log.error(
                 `Something is wrong with your configuration, your NODE_ENV is not set to 'e2e' or your database name does not include 'e2e'.
-        This might cause you to mess up [${config.mongodbDatabase}] via the e2e tests. Stopping the server.`,
+        This might cause you to mess up [${config.mongodbDatabase}] via the e2e tests. Stopping the server.`
             );
 
             throw new Error(
-                `Wrong input to run mongo test REST server. [NODE_ENV=${NODE_ENV},mongodbDatabase=${config.mongodbDatabase}]`,
+                `Wrong input to run mongo test REST server. [NODE_ENV=${NODE_ENV},mongodbDatabase=${config.mongodbDatabase}]`
             );
         }
 
@@ -31,14 +31,14 @@ export default class Handler {
             config.mongodbPassword,
             config.mongodbDatabase,
             config.mongodbTls,
-            config.mongodbSrv,
+            config.mongodbSrv
         );
     }
 
     public getByUsername(
         collectionName: string,
         username: string,
-        callback: (data: unknown[]) => void,
+        callback: (data: unknown[]) => void
     ) {
         this.mongo.load({ username }, collectionName, callback);
     }
@@ -47,7 +47,7 @@ export default class Handler {
         collectionName: string,
         username: string,
         body: unknown,
-        callback: (error?: AnyError) => void,
+        callback: (error?: AnyError) => void
     ) {
         this.mongo.upsert({ username }, collectionName, body, callback);
     }

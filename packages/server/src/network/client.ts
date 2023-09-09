@@ -67,9 +67,9 @@ export default class Client {
                     remoteHost: config.remoteServerHost,
                     port: config.port,
                     players: this.world.entities.getPlayerUsernames(),
-                    maxPlayers: config.maxPlayers,
-                }).serialize(),
-            ),
+                    maxPlayers: config.maxPlayers
+                }).serialize()
+            )
         );
     }
 

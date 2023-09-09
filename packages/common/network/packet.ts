@@ -12,7 +12,7 @@ export default class Packet {
         public id: Packets,
         public opcode?: number,
         public data?: unknown,
-        private bufferSize?: number,
+        private bufferSize?: number
     ) {}
 
     /**

@@ -11,7 +11,7 @@ export default class Pet extends Character {
         public owner: Player,
         key: string,
         x = owner.x,
-        y = owner.y,
+        y = owner.y
     ) {
         super(Utils.createInstance(Modules.EntityType.Pet), owner.world, key, x, y);
     }
@@ -25,7 +25,7 @@ export default class Pet extends Character {
         return {
             ...super.serialize(),
             owner: this.owner.instance,
-            movementSpeed: this.owner.movementSpeed,
+            movementSpeed: this.owner.movementSpeed
         };
     }
 }

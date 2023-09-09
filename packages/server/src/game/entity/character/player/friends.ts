@@ -32,7 +32,7 @@ export default class Friends {
 
             this.list[username] = {
                 online,
-                serverId: online ? config.serverId : -1,
+                serverId: online ? config.serverId : -1
             };
         }
 
@@ -64,7 +64,7 @@ export default class Friends {
 
             this.list[username] = {
                 online,
-                serverId: online ? config.serverId : -1,
+                serverId: online ? config.serverId : -1
             };
 
             // Add the friend to the list and pass on the online status to the client.
@@ -107,8 +107,8 @@ export default class Friends {
         this.player.world.client.send(
             new FriendsPacket(Opcodes.Friends.Sync, {
                 username: this.player.username,
-                inactiveFriends,
-            }),
+                inactiveFriends
+            })
         );
     }
 

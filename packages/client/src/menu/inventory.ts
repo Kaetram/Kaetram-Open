@@ -193,7 +193,7 @@ export default class Inventory extends Menu {
             element.defenseStats!,
             element.bonuses!,
             element.enchantments!,
-            element.description,
+            element.description
         );
     }
 
@@ -346,7 +346,7 @@ export default class Inventory extends Menu {
         return count < 1000
             ? description
             : `${description} You have a stack of ${count.toLocaleString(
-                  'en-US',
+                  'en-US'
               )} ${name.toLowerCase()}. `;
     }
 

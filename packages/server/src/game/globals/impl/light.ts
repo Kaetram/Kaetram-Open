@@ -19,7 +19,7 @@ export default class Light {
         public diffuse = 0.2,
         public distance = 100,
         public flickerSpeed = 300, // Use -1 to disable flickering.
-        public flickerIntensity = 1,
+        public flickerIntensity = 1
     ) {}
 
     /**
@@ -36,7 +36,7 @@ export default class Light {
             diffuse: this.diffuse,
             distance: this.distance, // Temporarily hardcoded until distance bug is fixed.
             flickerSpeed: this.flickerSpeed,
-            flickerIntensity: this.flickerIntensity,
+            flickerIntensity: this.flickerIntensity
         };
     }
 }
