@@ -7,7 +7,13 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { CommandPacket, NPCPacket, StorePacket } from '@kaetram/common/network/impl';
+import {
+    CommandPacket,
+    DespawnPacket,
+    NPCPacket,
+    SpawnPacket,
+    StorePacket,
+} from '@kaetram/common/network/impl';
 
 import type Region from '../game/map/region';
 import type Entity from '../game/entity/entity';
@@ -461,7 +467,7 @@ export default class Commands {
                     y = parseInt(blocks.shift()!),
                     withAnimation = parseInt(blocks.shift()!);
 
-                if (x && y) this.player.teleport(x, y, !!withAnimation);
+                if (x && y) this.player.teleport(x, y, !!withAnimation, false, true);
 
                 return;
             }
@@ -470,7 +476,7 @@ export default class Commands {
                 username = blocks.join(' ');
                 player = this.world.getPlayerByName(username);
 
-                player?.teleport(this.player.x, this.player.y);
+                player?.teleport(this.player.x, this.player.y, false, false, true);
 
                 return;
             }
@@ -479,11 +485,12 @@ export default class Commands {
                 username = blocks.join(' ');
                 player = this.world.getPlayerByName(username);
 
-                if (player) this.player.teleport(player.x, player.y);
+                if (player) this.player.teleport(player.x, player.y, false, false, true);
 
                 return;
             }
 
+            case 'immortal':
             case 'nohit':
             case 'invincible': {
                 if (this.player.status.has(Modules.Effects.Invincible)) {
@@ -564,7 +571,7 @@ export default class Commands {
 
             case 'teleall': {
                 this.entities.forEachPlayer((player: Player) => {
-                    player.teleport(this.player.x, this.player.y);
+                    player.teleport(this.player.x, this.player.y, false, false, true);
                 });
 
                 return;
@@ -1154,6 +1161,25 @@ export default class Commands {
                 this.player.notify(`${this.world.map.isColliding(x, y)} - index: ${index}`);
 
                 log.debug(`Data: ${this.world.map.data[index]}`);
+
+                break;
+            }
+
+            case 'hide': {
+                this.player.visible = !this.player.visible;
+
+                if (this.player.visible) {
+                    this.player.notify(`You are now visible.`);
+
+                    this.player.sendToRegions(new SpawnPacket(this.player), true);
+                } else {
+                    this.player.notify(`You are now invisible.`);
+
+                    this.player.sendToRegions(
+                        new DespawnPacket({ instance: this.player.instance }),
+                        true,
+                    );
+                }
 
                 break;
             }
