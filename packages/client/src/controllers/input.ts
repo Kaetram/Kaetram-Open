@@ -607,7 +607,7 @@ export default class InputController {
      */
 
     private setCursor(cursor: Sprite): void {
-        if (cursor) this.cursor = cursor;
+        this.cursor = cursor;
     }
 
     /**
