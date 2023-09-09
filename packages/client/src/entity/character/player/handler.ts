@@ -7,7 +7,6 @@ import type Player from './player';
 import type Game from '../../../game';
 import type EntitiesController from '../../../controllers/entities';
 import type { TileIgnore } from '../../../utils/pathfinder';
-import type { MovementPacket } from '@kaetram/common/types/messages/incoming';
 
 export default class Handler extends CharacterHandler {
     private map: Map;
@@ -157,7 +156,9 @@ export default class Handler extends CharacterHandler {
         // Save the player's orientation.
         this.game.storage.setOrientation(this.character.orientation);
 
-        this.character.performAction(this.character.orientation, Modules.Actions.Idle);
+        // Default to idling state once we stop pathing.
+        if (!this.character.hasKeyboardMovement())
+            this.character.performAction(this.character.orientation, Modules.Actions.Idle);
 
         // Reset movement and trading variables
         this.character.moving = false;
