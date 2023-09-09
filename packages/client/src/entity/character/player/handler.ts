@@ -157,6 +157,8 @@ export default class Handler extends CharacterHandler {
         // Save the player's orientation.
         this.game.storage.setOrientation(this.character.orientation);
 
+        this.character.performAction(this.character.orientation, Modules.Actions.Idle);
+
         // Reset movement and trading variables
         this.character.moving = false;
         this.character.trading = false;
@@ -207,13 +209,7 @@ export default class Handler extends CharacterHandler {
         this.lastStepY = this.character.gridY;
 
         // Check if we can initiate combat.
-        if (this.character.canAttackTarget()) {
-            this.character.stop();
-
-            // Gives that snappy effect when the player attacks a mob.
-            this.character.lookAt(this.character.target!);
-            this.character.performAction(this.character.orientation, Modules.Actions.Idle);
-        }
+        if (this.character.canAttackTarget()) this.character.stop();
     }
 
     /**
