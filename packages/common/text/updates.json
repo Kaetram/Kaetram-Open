@@ -1,20 +1,12 @@
 {
-    "0.3.5-beta": {
-        "title": "Kaetram 0.3.5-beta",
+    "0.3.6-beta": {
+        "title": "Kaetram 0.3.6-beta",
         "content": [
-            "- Combat system fixed",
-            "- Completely redone sprites",
-            "- Reskinned interfaces",
-            "- Reskinned tiles",
-            "- Added new alchemy skill",
-            "- New minigames",
-            "- I'm trying to make this list long to test things",
-            "- There's literally so many updates I don't even know",
-            "- New interfaces for settings",
-            "- Added pets",
-            "- 120 new weapons",
-            "- Huge improvements to performance and stability",
-            "- Major bug fixes to all areas of the game"
+            "- Added new bracelets, rings, and pendants",
+            "- Added trees and map content",
+            "- Polishes object interaction",
+            "- Fixes projectiles drawing names",
+            "- Improves admin teleport functionality"
         ]
     }
 }
