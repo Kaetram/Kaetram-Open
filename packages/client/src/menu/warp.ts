@@ -4,8 +4,6 @@ import log from '../lib/log';
 
 import { Modules } from '@kaetram/common/network';
 
-import type Socket from '../network/socket';
-
 export default class Warp extends Menu {
     public override identifier: number = Modules.Interfaces.Warp;
 
@@ -13,7 +11,7 @@ export default class Warp extends Menu {
 
     private selectCallback?: (id: number) => void;
 
-    public constructor(private socket: Socket) {
+    public constructor() {
         super('#map-frame', '#close-map-frame', '#warp-button');
 
         for (let element of this.list)

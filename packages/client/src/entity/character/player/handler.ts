@@ -114,9 +114,6 @@ export default class Handler extends CharacterHandler {
         // Once stopped, remove the selected tile animation.
         this.game.input.selectedCellVisible = false;
 
-        // Clipping the camera ensures it's always bound to the nearest tile.
-        this.game.camera.clip();
-
         // Sends the stop pathing packet to the server
         this.game.socket.send(Packets.Movement, {
             opcode: Opcodes.Movement.Stop,

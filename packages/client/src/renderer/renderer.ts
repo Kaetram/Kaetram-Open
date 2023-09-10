@@ -14,6 +14,7 @@ import type Map from '../map/map';
 import type Canvas from './canvas';
 import type Camera from './camera';
 import type Splat from './infos/splat';
+import type WebGL from './webgl/webgl';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Item from '../entity/objects/item';
@@ -21,7 +22,6 @@ import type Player from '../entity/character/player/player';
 import type { LampData } from '@kaetram/common/types/item';
 import type { ClientTile } from '@kaetram/common/types/map';
 import type { SerializedLight } from '@kaetram/common/network/impl/overlay';
-import type WebGL from './webgl/webgl';
 
 interface Light extends Lamp {
     originalX: number;
@@ -123,6 +123,7 @@ export default class Renderer {
 
     // Default values
     public fontSize = 10;
+    public strokeSize = 4;
 
     // Detect functions
     public mobile = isMobile();
@@ -149,6 +150,11 @@ export default class Renderer {
         // Event listeners for zooming in and out
         this.zoomIn.addEventListener('click', () => this.game.zoom(0.2));
         this.zoomOut.addEventListener('click', () => this.game.zoom(-0.2));
+
+        this.camera.onZoom(() => {
+            this.fontSize = ~~(14 + this.camera.zoomFactor * 3);
+            this.strokeSize = ~~(this.fontSize / 6);
+        });
     }
 
     /**
@@ -391,13 +397,13 @@ export default class Renderer {
             this.textContext.globalAlpha = info.opacity;
             this.drawText(
                 `${info.getText()}`,
-                Math.floor(info.x + 8),
-                Math.floor(info.y),
+                ~~(info.x + 8),
+                ~~info.y,
+                true,
                 true,
                 info.fill,
                 info.stroke,
-                26,
-                true
+                26
             );
             this.textContext.restore();
         });
@@ -446,7 +452,7 @@ export default class Renderer {
 
     private drawFPS(): void {
         this.calculateFPS();
-        this.drawText(`[${this.type}] FPS: ${this.fps}`, 10, 61, false, 'white');
+        this.drawText(`[${this.type}] FPS: ${this.fps}`, 50, 180);
     }
 
     /**
@@ -487,29 +493,25 @@ export default class Renderer {
                 player.gridX,
                 player.gridY
             )} movementSpeed: ${player.movementSpeed}`,
-            10,
-            81,
-            false,
-            'white'
+            50,
+            240
         );
 
-        this.drawText(`zoomFactor: ${this.camera.zoomFactor}`, 10, 141, false, 'white');
-        this.drawText(`actulTileSize: ${this.actualTileSize}`, 10, 161, false, 'white');
+        this.drawText(`zoomFactor: ${this.camera.zoomFactor}`, 50, 420);
+        this.drawText(`actulTileSize: ${this.actualTileSize}`, 50, 480);
 
         // Draw information about the entity we're hovering over.
         if (input.hovering && input.entity) {
             // Draw the entity's grid coordinates and tile index.
             this.drawText(
                 `x: ${input.entity.gridX} y: ${input.entity.gridY} instance: ${input.entity.instance}`,
-                10,
-                101,
-                false,
-                'white'
+                50,
+                300
             );
 
             // Draw the entity's attack range.
             if (input.entity.attackRange)
-                this.drawText(`att range: ${input.entity.attackRange}`, 10, 121, false, 'white');
+                this.drawText(`att range: ${input.entity.attackRange}`, 50, 360);
         }
     }
 
@@ -550,8 +552,8 @@ export default class Renderer {
 
     private drawEntity(entity: Entity): void {
         let frame = entity.animation?.frame,
-            dx = entity.x * this.camera.zoomFactor,
-            dy = entity.y * this.camera.zoomFactor,
+            dx = ~~(entity.x * this.camera.zoomFactor),
+            dy = ~~(entity.y * this.camera.zoomFactor),
             flipX = dx + this.actualTileSize,
             flipY = dy + entity.sprite.height;
 
@@ -613,7 +615,10 @@ export default class Renderer {
 
         this.drawHealth(entity as Character);
 
-        if (!this.game.overlays.hasOverlay()) this.drawName(entity as Player & Item);
+        if (!this.game.overlays.hasOverlay())
+            if (this.game.player.instance === entity.instance && this.camera.isCentered())
+                this.drawPlayerName(entity as Player);
+            else this.drawName(entity as Character & Item);
     }
 
     /**
@@ -840,6 +845,31 @@ export default class Renderer {
     }
 
     /**
+     * Handles drawing the crown for the currently active player. We follow a similar logic
+     * to how we draw player name and level, and we draw it relative to the middle of the
+     * screen.
+     * @param key The key of the crown we want to draw.
+     */
+
+    private drawPlayerCrown(key: string): void {
+        let crown = this.getCrown(key);
+
+        if (!crown) return;
+
+        this.textContext.drawImage(
+            crown.image,
+            0,
+            0,
+            crown.width,
+            crown.height,
+            this.camera.borderOffsetWidth / 2 - crown.width + 8 * this.camera.zoomFactor,
+            this.camera.borderOffsetHeight / 2 - crown.height * 3 - 24 * this.camera.zoomFactor,
+            crown.width * 2,
+            crown.height * 2
+        );
+    }
+
+    /**
      * Draws the health bar above the entity character provided.
      * @param entity The character we are drawing the health bar for.
      */
@@ -850,8 +880,10 @@ export default class Renderer {
         let barLength = this.tileSize,
             healthX = entity.x * this.camera.zoomFactor - barLength / 2 + 8,
             healthY = (entity.y - entity.sprite.height / 4) * this.camera.zoomFactor,
-            healthWidth = Math.round(
-                (entity.hitPoints / entity.maxHitPoints) * barLength * this.camera.zoomFactor
+            healthWidth = ~~(
+                (entity.hitPoints / entity.maxHitPoints) *
+                barLength *
+                this.camera.zoomFactor
             ),
             healthHeight = 2 * this.camera.zoomFactor;
 
@@ -876,22 +908,21 @@ export default class Renderer {
      * @param entity The entity we're drawing the name for.
      */
 
-    private drawName(entity: Character & Item): void {
+    private drawName(entity: Character | Item): void {
         if (entity.isPet() || entity.isProjectile()) return;
 
         let x = entity.x + 8, // Default offsets
-            y = entity.y - 10,
+            y = entity.y - 5,
             colour = 'white',
-            stroke = 'rgba(0, 0, 0, 1)',
-            fontSize = 14;
+            stroke = 'rgba(0, 0, 0, 1)';
 
         // Handle the counter if an entity has one.
         if (entity.hasCounter())
-            return this.drawText(`${entity.counter}`, x, y, true, colour, stroke, fontSize, true);
+            return this.drawText(`${entity.counter}`, x, y, true, true, colour, stroke);
 
         // Handle the item amount if the entity is an item.
         if (entity.isItem() && entity.count > 1)
-            return this.drawText(`${entity.count}`, x, y, true, colour, stroke, fontSize, true);
+            return this.drawText(`${entity.count}`, x, y, true, true, colour, stroke);
 
         if (
             entity.hidden ||
@@ -903,7 +934,7 @@ export default class Renderer {
 
         let drawNames = this.drawNames && entity.drawNames() && !entity.isItem(),
             drawLevels = this.drawLevels && !entity.isNPC() && !entity.isItem(),
-            nameY = this.drawLevels ? y - 7 : y - 4,
+            nameY = this.drawLevels ? y - 10 : y - 4,
             levelY = this.drawLevels ? y : y - 7,
             levelText = `Level ${entity.level}`;
 
@@ -928,11 +959,44 @@ export default class Renderer {
         if (entity.nameColour) colour = entity.nameColour;
 
         // Draw the name if we're drawing names.
-        if (drawNames) this.drawText(entity.name, x, nameY, true, colour, stroke, fontSize, true);
+        if (drawNames) this.drawText(entity.name, x, nameY, true, true, colour, stroke);
 
         // Draw the level if we're drawing levels.
         if (drawLevels && entity.level)
-            this.drawText(levelText, x, levelY, true, colour, stroke, fontSize, true);
+            this.drawText(levelText, x, levelY, true, true, colour, stroke);
+    }
+
+    /**
+     * Handles an optimized way of drawing the player's name. Since it's always centred with
+     * the player, we can just draw the text statically right in the middle when using centred
+     * camera.
+     */
+
+    private drawPlayerName(entity: Player): void {
+        let nameOffset = this.drawLevels ? 22 : 10;
+
+        if (this.drawNames) {
+            this.drawText(
+                entity.name,
+                this.camera.borderOffsetWidth / 2 + 8 * this.camera.zoomFactor,
+                this.camera.borderOffsetHeight / 2 - nameOffset * this.camera.zoomFactor,
+                true,
+                false,
+                'rgba(252,218,92, 1)'
+            );
+
+            if (entity.hasCrown()) this.drawPlayerCrown(entity.getCrownKey());
+        }
+
+        if (this.drawLevels && entity.level)
+            this.drawText(
+                `Level ${entity.level}`,
+                this.camera.borderOffsetWidth / 2 + 8 * this.camera.zoomFactor,
+                this.camera.borderOffsetHeight / 2 - 10 * this.camera.zoomFactor,
+                true,
+                false,
+                'rgba(252,218,92, 1)'
+            );
     }
 
     /**
@@ -973,16 +1037,15 @@ export default class Renderer {
                         : `Game starts in ${countdown} seconds`,
                     scoreX,
                     30,
-                    true,
-                    'white'
+                    true
                 );
                 return;
             }
 
             case 'ingame': {
-                this.drawText(`Red: ${redTeamScore}`, scoreX - 20, 30, true, 'red');
-                this.drawText(`Blue: ${blueTeamScore}`, scoreX + 20, 30, true, 'blue');
-                this.drawText(`Time left: ${countdown} seconds`, scoreX, 50, true, 'white');
+                this.drawText(`Red: ${redTeamScore}`, scoreX - 20, 30, true, false, 'red');
+                this.drawText(`Blue: ${blueTeamScore}`, scoreX + 20, 30, true, false, 'blue');
+                this.drawText(`Time left: ${countdown} seconds`, scoreX, 50, true, false, 'white');
                 return;
             }
         }
@@ -1005,15 +1068,13 @@ export default class Renderer {
                         ? `There is a game in progress, remaining time: ${countdown} seconds`
                         : `Game starts in ${countdown} seconds`,
                     scoreX,
-                    30,
-                    true,
-                    'white'
+                    30
                 );
                 return;
             }
 
             case 'ingame': {
-                this.drawText(`Score: ${score}`, scoreX, 30, true, 'white');
+                this.drawText(`Score: ${score}`, scoreX, 30, true);
                 return;
             }
         }
@@ -1107,6 +1168,7 @@ export default class Renderer {
      * @param x The x coordinate of the text.
      * @param y The y coordinate of the text.
      * @param centered Whether or not we want the text to be centered.
+     * @param setViews Whether or not we want to set the camera view.
      * @param colour The colour of the text in rgba format.
      * @param strokeColour The colour of the stroke in rgba format.
      * @param fontSize (Optional) The font size of the text.
@@ -1116,28 +1178,28 @@ export default class Renderer {
         text: string,
         x: number,
         y: number,
-        centered: boolean,
-        colour: string,
-        strokeColour?: string,
-        fontSize: number = this.fontSize,
-        setViews = false
+        centered = false,
+        setViews = false,
+        colour = 'white',
+        strokeColour = 'rgba(55, 55, 55, 1)',
+        fontSize: number = this.fontSize
     ): void {
-        let strokeSize = 3;
-
         this.textContext.save();
 
         if (centered) this.textContext.textAlign = 'center';
-        if (setViews) this.setCameraView(this.textContext);
+        if (setViews) {
+            this.setCameraView(this.textContext);
 
-        // Decrease font size relative to zoom out.
-        fontSize += Math.floor(this.camera.zoomFactor * 2);
+            x = ~~(x * this.camera.zoomFactor);
+            y = ~~(y * this.camera.zoomFactor);
+        }
 
-        //this.textContext.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
-        this.textContext.lineWidth = strokeSize;
+        this.textContext.strokeStyle = strokeColour;
+        this.textContext.lineWidth = this.strokeSize;
         this.textContext.font = `${fontSize}px KerrieFont`;
-        this.textContext.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
+        this.textContext.strokeText(text, x, y);
         this.textContext.fillStyle = colour || 'white';
-        this.textContext.fillText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
+        this.textContext.fillText(text, x, y);
 
         this.textContext.restore();
     }
@@ -1391,8 +1453,8 @@ export default class Renderer {
         if (!this.camera || this.stopRendering) return;
 
         context.translate(
-            Math.round(-this.camera.x * this.camera.zoomFactor),
-            Math.round(-this.camera.y * this.camera.zoomFactor)
+            ~~(-this.camera.x * this.camera.zoomFactor),
+            ~~(-this.camera.y * this.camera.zoomFactor)
         );
     }
 
