@@ -38,8 +38,8 @@ export default abstract class Menu {
         this.close = document.querySelector(this.closeButton!)!;
         this.button = document.querySelector(this.toggleButton!)!;
 
-        this.close?.addEventListener('click', this.hide.bind(this));
-        this.button?.addEventListener('click', this.toggle.bind(this));
+        this.close?.addEventListener('click', () => this.hide());
+        this.button?.addEventListener('click', () => this.toggle());
     }
 
     /**
