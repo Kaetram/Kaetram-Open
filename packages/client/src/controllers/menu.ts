@@ -28,6 +28,7 @@ import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();
+    private warp: Warp = new Warp();
     private crafting: Crafting;
 
     private inventory: Inventory;
@@ -35,7 +36,6 @@ export default class MenuController {
     private store: Store;
     private profile: Profile;
     private enchant: Enchant;
-    private warp: Warp;
     private notification: Notification;
     private settings: Settings;
     private equipments: Equipments;
@@ -61,7 +61,6 @@ export default class MenuController {
         this.store = new Store(this.inventory);
         this.profile = new Profile(game.player);
         this.enchant = new Enchant(this.inventory);
-        this.warp = new Warp(game.socket);
         this.notification = new Notification();
         this.settings = new Settings(game);
         this.header = new Header(game.player);

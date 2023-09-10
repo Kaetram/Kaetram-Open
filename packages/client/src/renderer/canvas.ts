@@ -120,7 +120,7 @@ export default class Canvas extends Renderer {
             // Draw animated tiles if the tile is animated and we're animating tiles.
             if (this.animateTiles && animated) this.drawAnimatedTile(tile as number, index, flips);
             else this.drawTile(context, tile as number, index, flips);
-        });
+        }, 2);
 
         this.saveFrame();
         this.restoreDrawing();

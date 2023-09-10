@@ -4,7 +4,6 @@ import Projectile from '../entity/objects/projectile';
 import { Modules } from '@kaetram/common/network';
 
 import type Game from '../game';
-import type Canvas from './canvas';
 import type Renderer from './renderer';
 import type Entity from '../entity/entity';
 import type SpritesController from '../controllers/sprites';

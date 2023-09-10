@@ -1808,7 +1808,7 @@ export default class Player extends Character {
             }
 
             case Modules.Ranks.TierSeven: {
-                return 20 * 60_000;
+                return 15 * 60_000;
             }
 
             case Modules.Ranks.Moderator:
