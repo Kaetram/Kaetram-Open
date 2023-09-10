@@ -36,7 +36,7 @@ export default {
      */
 
     randomInt(min: number, max: number): number {
-        return min + Math.floor(Math.random() * (max - min + 1));
+        return min + ~~(Math.random() * (max - min + 1));
     },
 
     /**
@@ -393,7 +393,7 @@ export default {
 
             // Extract the x and y coordinates of the pixel.
             let x = (i / 4) % sprite.image.width,
-                y = Math.floor(i / 4 / sprite.image.width);
+                y = ~~(i / 4 / sprite.image.width);
 
             // Test edge cases, we don't want to draw a silhouette on the edge of the sprite.
             if (x === 0 || x === sprite.image.width - 1 || y === 0 || y === sprite.image.height - 1)

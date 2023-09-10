@@ -204,7 +204,7 @@ export default class Canvas extends Renderer {
                 relativeTileId,
                 setWidth,
                 x: this.getX(relativeTileId + 1, setWidth) * this.tileSize,
-                y: Math.floor(relativeTileId / setWidth) * this.tileSize,
+                y: ~~(relativeTileId / setWidth) * this.tileSize,
                 width: this.tileSize,
                 height: this.tileSize
             };
@@ -218,10 +218,10 @@ export default class Canvas extends Renderer {
 
         if (!(index in this.cells) || flips.length > 0)
             this.cells[index] = {
-                dx: Math.ceil(this.getX(index + 1, this.map.width) * this.actualTileSize),
-                dy: Math.ceil(Math.floor(index / this.map.width) * this.actualTileSize),
-                width: Math.ceil(this.actualTileSize),
-                height: Math.ceil(this.actualTileSize)
+                dx: ~~(this.getX(index + 1, this.map.width) * this.actualTileSize) + 1,
+                dy: ~~(~~(index / this.map.width) * this.actualTileSize) + 1,
+                width: this.ceilActualTileSize,
+                height: this.ceilActualTileSize
             };
 
         this.drawImage(context, tileset, this.tiles[tileId], this.cells[index], flips);

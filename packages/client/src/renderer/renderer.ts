@@ -94,6 +94,7 @@ export default class Renderer {
     // Variables used for calculating multiple things
     public tileSize = Utils.tileSize;
     public actualTileSize = Utils.tileSize;
+    public ceilActualTileSize = Utils.tileSize;
 
     // Screen dimensions
     public screenWidth = 0;
@@ -143,6 +144,7 @@ export default class Renderer {
 
         this.tileSize = game.map.tileSize;
         this.actualTileSize = this.tileSize * this.camera.zoomFactor;
+        this.ceilActualTileSize = Math.ceil(this.actualTileSize);
 
         // Load the sizes of the canvases
         this.loadSizes();
@@ -152,8 +154,8 @@ export default class Renderer {
         this.zoomOut.addEventListener('click', () => this.game.zoom(-0.2));
 
         this.camera.onZoom(() => {
-            this.fontSize = ~~(14 + this.camera.zoomFactor * 3);
-            this.strokeSize = ~~(this.fontSize / 6);
+            this.fontSize = Math.floor(14 + this.camera.zoomFactor * 3);
+            this.strokeSize = Math.floor(this.fontSize / 6);
         });
     }
 
@@ -176,6 +178,7 @@ export default class Renderer {
     private loadSizes(): void {
         // Actual tile size is the tile size times the zoom factor.
         this.actualTileSize = this.tileSize * this.camera.zoomFactor;
+        this.ceilActualTileSize = Math.ceil(this.actualTileSize);
 
         // Screen width in pixels is the amount of grid spaces times the tile size.
         this.screenWidth = this.camera.gridWidth * this.tileSize;
@@ -403,7 +406,7 @@ export default class Renderer {
                 true,
                 info.fill,
                 info.stroke,
-                26
+                32
             );
             this.textContext.restore();
         });
