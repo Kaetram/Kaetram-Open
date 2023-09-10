@@ -686,8 +686,8 @@ export default class InputController {
             offsetY = this.mouse.y % this.camera.zoomFactor,
             x = (this.mouse.x - offsetX) / this.camera.zoomFactor + this.camera.x,
             y = (this.mouse.y - offsetY) / this.camera.zoomFactor + this.camera.y,
-            gridX = Math.floor(x / this.map.tileSize),
-            gridY = Math.floor(y / this.map.tileSize);
+            gridX = ~~(x / this.map.tileSize),
+            gridY = ~~(y / this.map.tileSize);
 
         return { x, y, gridX, gridY };
     }

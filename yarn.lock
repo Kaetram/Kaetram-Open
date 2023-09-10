@@ -3442,7 +3442,6 @@ __metadata:
     gl-tiled: "npm:^1.0.0"
     illuminated: "npm:^1.3.7"
     image-size: "npm:^1.0.2"
-    internal-ip: "npm:^8.0.0"
     kaetram: "workspace:*"
     pako: "npm:^2.1.0"
     sass: "npm:^1.66.1"
@@ -5990,27 +5989,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cidr-regex@npm:4.0.3":
-  version: 4.0.3
-  resolution: "cidr-regex@npm:4.0.3"
-  dependencies:
-    ip-regex: "npm:^5.0.0"
-  checksum: a1c215cc7f9217f3c31a7571c4703c5841bc5131b7e1b3052c8b6856938beb284c577ed32f11aa5c9a2db2e62a920dd31a8c2516d36758b303afea0b52f73a54
-  languageName: node
-  linkType: hard
-
-"cidr-tools@npm:^6.4.1":
-  version: 6.4.1
-  resolution: "cidr-tools@npm:6.4.1"
-  dependencies:
-    cidr-regex: "npm:4.0.3"
-    ip-bigint: "npm:7.2.1"
-    ip-regex: "npm:5.0.0"
-    string-natural-compare: "npm:3.0.1"
-  checksum: 6053cf2bd57440eb72e0d3b010c75c856a195c8f3818cf2d05359f3fc141c256192bee554654df0b2c8f49c5accee0940d8030694c209c90129c64a6426ce7c2
-  languageName: node
-  linkType: hard
-
 "class-transformer@npm:0.5.1":
   version: 0.5.1
   resolution: "class-transformer@npm:0.5.1"
@@ -6136,15 +6114,6 @@ __metadata:
     strip-ansi: "npm:^6.0.1"
     wrap-ansi: "npm:^7.0.0"
   checksum: 4db0fc81f3dbd46b65840a739a43ce83a69e58d7da5ae701948fbfc14c25d82a02dd3a3dbed5a20828000e93b4bf2217b181a0a089d580af5daf9452e9c9eab3
-  languageName: node
-  linkType: hard
-
-"clone-regexp@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "clone-regexp@npm:3.0.0"
-  dependencies:
-    is-regexp: "npm:^3.0.0"
-  checksum: c8abfb5dbe66c696b17f99657f4e0913c1da80d5afd8ea532d369971e3f9bf4485d7b392ca09a98c2db27172980f62bdf4f5cbf405028492ba0c9cbe0ef2343c
   languageName: node
   linkType: hard
 
@@ -6392,13 +6361,6 @@ __metadata:
   bin:
     conventional-commits-parser: cli.js
   checksum: 1e820de0b670927ff50d896c19f1f46e0cbf234bf92985985b1244091609823911362ec3646bc4222474cb92bb8ed3b34c1e2fad5c4e1ece812b5af2c7448eeb
-  languageName: node
-  linkType: hard
-
-"convert-hrtime@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "convert-hrtime@npm:5.0.0"
-  checksum: de9066c1cbc30ed0375df9f50186b784be2db6aeca1ac1380f42f1b35684aeef16794b47b9bb7c81bd64d63ea1d5b7bbba0fdeb6b1b1bcac34924ddf616dedea
   languageName: node
   linkType: hard
 
@@ -6858,15 +6820,6 @@ __metadata:
     execa: "npm:^7.1.1"
     titleize: "npm:^3.0.0"
   checksum: ac1138a297e95cfb18f89e3e69e0bbeb8a2d2ba90325f773bcb8b8211b525357f45f05a07dd6f5a40d3f44a0a1a423b58d356c17bb69b406a8c0c9afe869296c
-  languageName: node
-  linkType: hard
-
-"default-gateway@npm:^7.2.2":
-  version: 7.2.2
-  resolution: "default-gateway@npm:7.2.2"
-  dependencies:
-    execa: "npm:^7.1.1"
-  checksum: cf50587c26cc4eac59544cbfc70ecedee9ebcca6bfd38161a244d29a0055a52c3ff1e99288b69878cff9c2cd8f1a42ecb126ec6294320ef07ccf62b9710d169b
   languageName: node
   linkType: hard
 
@@ -8885,13 +8838,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"function-timeout@npm:^0.1.0":
-  version: 0.1.1
-  resolution: "function-timeout@npm:0.1.1"
-  checksum: 9b167c53cbcd0e3b630efaf1ef2e84a01bf176e50994ccb70bc2c14f7af3af6631fa03a5c67e452d0c78770f46e14ae14af78856bbe58914d1043292cf9ed479
-  languageName: node
-  linkType: hard
-
 "function.name@npm:^1.0.3":
   version: 1.0.13
   resolution: "function.name@npm:1.0.13"
@@ -9767,18 +9713,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"internal-ip@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "internal-ip@npm:8.0.0"
-  dependencies:
-    cidr-tools: "npm:^6.4.1"
-    default-gateway: "npm:^7.2.2"
-    is-ip: "npm:^5.0.0"
-    p-event: "npm:^5.0.1"
-  checksum: fbbcd96984b96afcf3cb8f41a64486ee7d298495f9549fa07463ce8f5a34185e975e697cea661a8be237009dbebea84ad42ad580700fdecc8f7425e74ba7bd01
-  languageName: node
-  linkType: hard
-
 "internal-slot@npm:^1.0.3, internal-slot@npm:^1.0.5":
   version: 1.0.5
   resolution: "internal-slot@npm:1.0.5"
@@ -9787,20 +9721,6 @@ __metadata:
     has: "npm:^1.0.3"
     side-channel: "npm:^1.0.4"
   checksum: 7ba9f797e33d9f7fb623ed4eb63a8f4697da1423e8dd47a336c759707a14aebc9d2e04c7df286a493f4eac30c178c6ffad89f559beb3e9641992b6a57f933088
-  languageName: node
-  linkType: hard
-
-"ip-bigint@npm:7.2.1":
-  version: 7.2.1
-  resolution: "ip-bigint@npm:7.2.1"
-  checksum: cec79592b1517572a95c217726c8c94944a9c4127b7408f8405ea9b3c2df20a046be2325498a1366c0485dc2686d7e320b161f5fe67af2816484654177814425
-  languageName: node
-  linkType: hard
-
-"ip-regex@npm:5.0.0, ip-regex@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "ip-regex@npm:5.0.0"
-  checksum: 167a97389fcfa91e13c1a97bb12452b88fc25425d3092a88ea06d76633b34225d30c915f74bf8539339521728e9ba40fb1b69401f7df7dab70c5b4614fd32d51
   languageName: node
   linkType: hard
 
@@ -10022,16 +9942,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-ip@npm:^5.0.0":
-  version: 5.0.1
-  resolution: "is-ip@npm:5.0.1"
-  dependencies:
-    ip-regex: "npm:^5.0.0"
-    super-regex: "npm:^0.2.0"
-  checksum: c7b2fb3f92bb4e75d3c61971c4cec46b6d678731d44c004b7b8174e7ef391ef42f7e26a206925e136c7bc9cd08d36334faf495c8e7f430b706b9c3643e897fa8
-  languageName: node
-  linkType: hard
-
 "is-lambda@npm:^1.0.1":
   version: 1.0.1
   resolution: "is-lambda@npm:1.0.1"
@@ -10132,13 +10042,6 @@ __metadata:
   version: 1.0.0
   resolution: "is-regexp@npm:1.0.0"
   checksum: b545163b0128bb87e1993141ea4840941b5d2c624acdc456c090ebf4d9969da2ac32bd938c6f2182ab3f4c78f4db5a06004bead6e13eaba7de197fd13eba31a5
-  languageName: node
-  linkType: hard
-
-"is-regexp@npm:^3.0.0":
-  version: 3.1.0
-  resolution: "is-regexp@npm:3.1.0"
-  checksum: d747342c91e953af1eedcff5e62c4700906f32009881f2a1fccc87a28c65eb01394cae616d9359af1a515c5cdd0959bbe8fb7eb9c2bfed86e1018ef0f5cfe5be
   languageName: node
   linkType: hard
 
@@ -12459,15 +12362,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-event@npm:^5.0.1":
-  version: 5.0.1
-  resolution: "p-event@npm:5.0.1"
-  dependencies:
-    p-timeout: "npm:^5.0.2"
-  checksum: 44182b48764ae324be094877f1e2669c8a060d93538634cf64e214db349815e021fca636160be243e95f657ac1a621d6932b5eb30db2b99fdf009bd425084c23
-  languageName: node
-  linkType: hard
-
 "p-limit@npm:^2.2.0":
   version: 2.3.0
   resolution: "p-limit@npm:2.3.0"
@@ -12519,13 +12413,6 @@ __metadata:
   dependencies:
     aggregate-error: "npm:^3.0.0"
   checksum: 619df8954fe81933903bc760e9884d85540ef7e8f6c24c4e28e2c8f0ad14d480bb7d4541787eee2e2d61aa0fae8b54abc42f7afc35db457884e589386e78a922
-  languageName: node
-  linkType: hard
-
-"p-timeout@npm:^5.0.2":
-  version: 5.1.0
-  resolution: "p-timeout@npm:5.1.0"
-  checksum: 76a7859acee180296d0f4a4650fa70b03973ec13ce73fa3a44540c19634a221592d1c05efff339e1bf76cc0b66bcc96fe51988ac11d451aa5cb13fbf752a2d2a
   languageName: node
   linkType: hard
 
@@ -14860,13 +14747,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-natural-compare@npm:3.0.1":
-  version: 3.0.1
-  resolution: "string-natural-compare@npm:3.0.1"
-  checksum: d4d4b349d48798cbdef5f6d201772958f3064cf0eff2957d8623ec096cfae049b03334f2d69f6be748c14994eb6c5209023696ea05f4f9446b94e2ab4c1d0d70
-  languageName: node
-  linkType: hard
-
 "string-width-cjs@npm:string-width@^4.2.0, string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.0, string-width@npm:^4.2.3":
   version: 4.2.3
   resolution: "string-width@npm:4.2.3"
@@ -15271,17 +15151,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"super-regex@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "super-regex@npm:0.2.0"
-  dependencies:
-    clone-regexp: "npm:^3.0.0"
-    function-timeout: "npm:^0.1.0"
-    time-span: "npm:^5.1.0"
-  checksum: b30ffa62745812602006d8833694ce1373178ffbebf44df369f22906585c564a1bc49275fa0320b3dc4d18551b28204dfb17c62ac5789d67c1b127e36eb5109b
-  languageName: node
-  linkType: hard
-
 "supports-color@npm:8.1.1, supports-color@npm:^8.1.1":
   version: 8.1.1
   resolution: "supports-color@npm:8.1.1"
@@ -15524,15 +15393,6 @@ __metadata:
   version: 2.3.8
   resolution: "through@npm:2.3.8"
   checksum: c9d6883ace26b3c967283827cafdd4ceee6164fa4d3754865f5032dcb564e0cbdea9dc6f43806afa51e1f2863d8e3beca141cbf7b8dcff989982aef69bb851c0
-  languageName: node
-  linkType: hard
-
-"time-span@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "time-span@npm:5.1.0"
-  dependencies:
-    convert-hrtime: "npm:^5.0.0"
-  checksum: 29438958ff31c24aff8a350b127fd654a26c89489e57332af77f7f6402b53586e3857f3f1e71b83152f6772fa98422c7aed5b9fd5100971832efc853daef3831
   languageName: node
   linkType: hard
 

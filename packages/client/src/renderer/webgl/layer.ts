@@ -178,7 +178,7 @@ export default class Layer {
 
         // Write the texture information to the texture data array.
         textureData[dataIndex] = relativeId % tilesWidth; // tile's x coordinate in the tileset
-        textureData[dataIndex + 1] = Math.floor(relativeId / tilesWidth); // tile's y coordinate in the tileset
+        textureData[dataIndex + 1] = ~~(relativeId / tilesWidth); // tile's y coordinate in the tileset
         textureData[dataIndex + 2] = tileset.index; // tileset index
         textureData[dataIndex + 3] = flipped ? this.getFlippedFlag(tile as TransformedTile) : 0; // tile flags
 

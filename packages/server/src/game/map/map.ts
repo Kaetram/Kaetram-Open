@@ -140,7 +140,7 @@ export default class Map {
     public indexToCoord(index: number): Position {
         return {
             x: index % this.width,
-            y: Math.floor(index / this.width)
+            y: ~~(index / this.width)
         };
     }
 
