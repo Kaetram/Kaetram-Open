@@ -828,6 +828,8 @@ export default class Connection {
             case Opcodes.Notification.Text: {
                 let message = info.source ? info.message : Util.formatNotification(info.message);
 
+                if (info.source === 'TRADE') message = Util.formatNotification(message);
+
                 return this.input.chatHandler.add(
                     info.source || 'WORLD',
                     Util.parseMessage(message),
@@ -1085,7 +1087,9 @@ export default class Connection {
             case Opcodes.Trade.Accept: {
                 let { message } = info as TradePacketData[typeof opcode];
 
-                return this.menu.getTrade().accept(message);
+                return this.menu
+                    .getTrade()
+                    .accept(Util.parseMessage(Util.formatNotification(message!)));
             }
         }
     }
