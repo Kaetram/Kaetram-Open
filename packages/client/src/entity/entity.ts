@@ -295,7 +295,7 @@ export default abstract class Entity {
      * @param visible New visibility value.
      */
 
-    private setVisible(visible: boolean): void {
+    public setVisible(visible: boolean): void {
         this.visible = visible;
     }
 
