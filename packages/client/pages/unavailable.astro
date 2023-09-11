@@ -1,0 +1,31 @@
+---
+import DefaultLayout from '../layouts/default.astro';
+import '../scss/main.scss';
+---
+
+<DefaultLayout title="Unavailable">
+    <div id="intro">
+        <section id="parchment" class="slice-menu">
+            <article id="unavailable-screen">
+                <h1 class="title-decoration">Kaetram</h1>
+
+                <p>
+                    Kaetram alpha has ended. The beta version will be available October 7th, 2023.
+                    If you would like to stay up-to-date with the project, make sure you join our
+                    <a target="_blank" href="https://discord.gg/MmbGAaw">Discord server</a>.
+                </p>
+            </article>
+        </section>
+    </div>
+</DefaultLayout>
+
+<style is:global>
+    #unavailable-screen {
+        pointer-events: auto;
+        opacity: 1;
+
+        p {
+            margin-top: 3em;
+        }
+    }
+</style>
