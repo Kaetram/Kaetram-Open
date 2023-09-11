@@ -588,6 +588,12 @@ export default class Commands {
                 return;
             }
 
+            case 'toggle hide': {
+                this.player.send(new CommandPacket({ command: 'hide' }));
+
+                return;
+            }
+
             case 'addexp':
             case 'addexperience': {
                 key = blocks.shift()!;

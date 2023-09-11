@@ -689,6 +689,10 @@ export default class Connection {
                 this.renderer.debugging = !this.renderer.debugging;
                 return;
             }
+
+            case 'hide': {
+                return this.game.player.setVisible(!this.game.player.isVisible());
+            }
         }
     }
 
