@@ -1188,8 +1188,13 @@ export default class Player extends Character {
             this.stopMovement();
         }
 
+        let now = Date.now();
+
+        // Use time stamp if within normal latency.
+        timestamp = now - timestamp > 350 ? now : timestamp;
+
         if (this.verifyMovement(x, y, timestamp))
-            this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
+            this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - timestamp}`);
 
         this.setPosition(x, y);
 
