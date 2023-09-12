@@ -213,6 +213,11 @@ export default class Messages {
                 break;
             }
 
+            case 'disabledregister': {
+                this.app.sendError('Registration is currently disabled.');
+                break;
+            }
+
             case 'development': {
                 this.app.sendError('The game is currently in development mode.');
                 break;
