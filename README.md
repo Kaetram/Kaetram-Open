@@ -27,19 +27,19 @@ Live Version &ndash; <https://kaetram.com>
 
 Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
-![Demo 1](https://i.imgur.com/MvErlP4.png)
+![Demo 1](https://i.imgur.com/PJdVts7.png)
 
-![Demo 2](https://i.imgur.com/jS5d3oq.png)
+![Demo 2](https://i.imgur.com/fmpcLhK.png)
 
-![Demo 3](https://i.imgur.com/KrqVNFw.png)![Demo 4](https://i.imgur.com/1U7iiJo.png)
+![Demo 3](https://i.imgur.com/tQxib9S.png)
 
-![Demo 5](https://i.imgur.com/8Is0pY0.png)![Demo 6](https://i.imgur.com/ErBNdkf.png)
+![Demo 4](https://i.imgur.com/Vlb3z8W.png)
 
-![Demo 7](https://i.imgur.com/L0MN6LO.png)
+![Demo 5](https://i.imgur.com/Fhvrw2S.png)
 
-![Demo 8](https://i.imgur.com/aFXdmpv.png)
+![Demo 6](https://i.imgur.com/eiK6wcr.png)
 
-![Demo 9](https://i.imgur.com/ewtLbyZ.png)
+![Demo 7](https://i.imgur.com/C7cZsuf.png)
 
 ## Technologies
 
