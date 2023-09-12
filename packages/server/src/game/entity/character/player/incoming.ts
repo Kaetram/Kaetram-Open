@@ -204,6 +204,8 @@ export default class Incoming {
             }
 
             case Opcodes.Login.Register: {
+                if (config.disableRegister) return this.connection.reject('disabledregister');
+
                 return this.database.register(this.player);
             }
 

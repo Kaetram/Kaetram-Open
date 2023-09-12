@@ -48,6 +48,7 @@ export interface Config {
 
     tutorialEnabled: boolean;
     overrideAuth: boolean;
+    disableRegister: boolean;
     maxPlayers: number;
     updateTime: number;
     gver: string;
