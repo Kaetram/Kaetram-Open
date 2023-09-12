@@ -1191,7 +1191,7 @@ export default class Player extends Character {
         let now = Date.now();
 
         // Use time stamp if within normal latency.
-        timestamp = now - timestamp > 350 ? now : timestamp;
+        timestamp = now - timestamp < 250 ? now : timestamp;
 
         if (this.verifyMovement(x, y, timestamp))
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - timestamp}`);
