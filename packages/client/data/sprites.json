@@ -68,6 +68,10 @@
     { "id": "player/helmet/slimepurplehelmet", "offsetX": -8 },
     { "id": "player/helmet/slimeredhelmet", "offsetX": -8 },
     { "id": "player/helmet/slimetealhelmet", "offsetX": -8 },
+    { "id": "player/helmet/knighthelmet", "offsetX": -8 },
+    { "id": "player/helmet/paladinhelmet", "offsetX": -8 },
+    { "id": "player/helmet/samuraihelmet", "offsetX": -8 },
+    { "id": "player/helmet/toyhat", "offsetX": -8 },
 
     { "id": "player/chestplate/copperchestplate", "offsetX": -8 },
     { "id": "player/chestplate/tinchestplate", "offsetX": -8 },
@@ -83,6 +87,7 @@
     { "id": "player/chestplate/amethystchestplate", "offsetX": -8 },
     { "id": "player/chestplate/midnightamethystchestplate", "offsetX": -8 },
     { "id": "player/chestplate/rubychestplate", "offsetX": -8 },
+    { "id": "player/chestplate/paladinchestplate", "offsetX": -8 },
 
     { "id": "player/legplates/copperlegplates", "offsetX": -8 },
     { "id": "player/legplates/tinlegplates", "offsetX": -8 },
@@ -97,6 +102,7 @@
     { "id": "player/legplates/amethystlegplates", "offsetX": -8 },
     { "id": "player/legplates/midnightamethystlegplates", "offsetX": -8 },
     { "id": "player/legplates/rubylegplates", "offsetX": -8 },
+    { "id": "player/legplates/paladinlegplates", "offsetX": -8 },
 
     { "id": "player/cape/wings", "offsetX": -8 },
     { "id": "player/cape/wingsdark", "offsetX": -8 },
@@ -6966,5 +6972,11 @@
     { "id": "items/zephyrsgaleblade" },
     { "id": "items/zoncillogs" },
     { "id": "items/zondullogs" },
-    { "id": "items/zweipiercer" }
+    { "id": "items/zweipiercer" },
+    { "id": "items/paladinhelmet" },
+    { "id": "items/knighthelmet" },
+    { "id": "items/samuraihelmet" },
+    { "id": "items/toyhat" },
+    { "id": "items/paladinchestplate" },
+    { "id": "items/paladinlegplates" }
 ]
