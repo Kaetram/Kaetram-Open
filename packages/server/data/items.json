@@ -3411,6 +3411,114 @@
             "magic": 0
         }
     },
+    "knighthelmet": {
+        "type": "helmet",
+        "name": "Knight Helmet",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "paladinhelmet": {
+        "type": "helmet",
+        "name": "Paladin Helmet",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "samuraihelmet": {
+        "type": "helmet",
+        "name": "Samurai Helmet",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "toyhat": {
+        "type": "helmet",
+        "name": "Toy Hat",
+        "price": 100,
+        "skill": "defense",
+        "level": 1,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "copperchestplate": {
         "type": "chestplate",
         "name": "Copper Chestplate",
@@ -3786,6 +3894,33 @@
             "magic": -7
         }
     },
+    "paladinchestplate": {
+        "type": "chestplate",
+        "name": "Paladin Chestplate",
+        "price": 200,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 7,
+            "slash": 5,
+            "stab": 6,
+            "archery": -3,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 18,
+            "slash": 14,
+            "stab": 15,
+            "archery": 9,
+            "magic": -12
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 10,
+            "archery": -4,
+            "magic": -7
+        }
+    },
     "copperlegplates": {
         "type": "legplates",
         "name": "Copper Legplates",
@@ -4109,6 +4244,33 @@
     "sentinellegplates": {
         "type": "legplates",
         "name": "Sentinel Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 7,
+            "slash": 4,
+            "stab": 6,
+            "archery": -3,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 17,
+            "slash": 13,
+            "stab": 12,
+            "archery": 7,
+            "magic": -10
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 12,
+            "archery": -4,
+            "magic": -6
+        }
+    },
+    "paladinlegplates": {
+        "type": "legplates",
+        "name": "Paladin Legplates",
         "price": 200,
         "skill": "defense",
         "level": 36,
