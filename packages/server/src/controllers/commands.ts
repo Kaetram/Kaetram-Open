@@ -1184,6 +1184,78 @@ export default class Commands {
                 break;
             }
 
+            case 'tp': {
+                let key = blocks.shift()!;
+
+                switch (key) {
+                    case 'home': {
+                        return this.player.teleport(191, 166, true, false, true);
+                    }
+
+                    case 'underwater': {
+                        return this.player.teleport(119, 290, true, false, true);
+                    }
+
+                    case 'underwatervolcano': {
+                        return this.player.teleport(194, 427, true, false, true);
+                    }
+
+                    case 'kok': {
+                        return this.player.teleport(290, 357, true, false, true);
+                    }
+
+                    case 'mountain': {
+                        return this.player.teleport(440, 312, true, false, true);
+                    }
+
+                    case 'santa': {
+                        return this.player.teleport(526, 256, true, false, true);
+                    }
+
+                    case 'ice': {
+                        return this.player.teleport(608, 332, true, false, true);
+                    }
+
+                    case 'pink': {
+                        return this.player.teleport(685, 433, true, false, true);
+                    }
+
+                    case 'hell': {
+                        return this.player.teleport(1112, 787, true, false, true);
+                    }
+
+                    case 'sewer': {
+                        return this.player.teleport(1117, 709, true, false, true);
+                    }
+
+                    case 'shroom': {
+                        return this.player.teleport(992, 631, true, false, true);
+                    }
+
+                    case 'skeletonking': {
+                        return this.player.teleport(120, 794, true, false, true);
+                    }
+
+                    case 'ogrelord': {
+                        return this.player.teleport(342, 166, true, false, true);
+                    }
+
+                    case 'queenant': {
+                        return this.player.teleport(591, 820, true, false, true);
+                    }
+
+                    case 'forestdragon': {
+                        return this.player.teleport(457, 807, true, false, true);
+                    }
+
+                    case 'crystalcave': {
+                        return this.player.teleport(886, 622, true, false, true);
+                    }
+                }
+
+                break;
+            }
+
             case 'toggle': {
                 let key = blocks.shift()!,
                     effect: Modules.Effects = Modules.Effects.None;

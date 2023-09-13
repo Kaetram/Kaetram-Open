@@ -17,6 +17,9 @@ export default class Area {
     public hasRespawned = true;
     public ignore = false; // If the area is omitted from player walk callbacks.
 
+    public boundaryX = 0;
+    public boundaryY = 0;
+
     // Overlay properties
     public darkness = 0;
     public rgb: number[] = [];
@@ -63,7 +66,10 @@ export default class Area {
         public y: number,
         public width: number,
         public height: number
-    ) {}
+    ) {
+        this.boundaryX = x + width;
+        this.boundaryY = y + height;
+    }
 
     /**
      * Adds a mob to the area.
@@ -220,7 +226,7 @@ export default class Area {
      */
 
     private inRectangularArea(x: number, y: number): boolean {
-        return x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
+        return x >= this.x && y >= this.y && x < this.boundaryX && y < this.boundaryY;
     }
 
     /**
@@ -252,8 +258,8 @@ export default class Area {
      */
 
     public forEachTile(callback: (x: number, y: number) => void): void {
-        for (let i = this.y; i < this.y + this.height; i++)
-            for (let j = this.x; j < this.x + this.width; j++) callback(j, i);
+        for (let i = this.y; i < this.boundaryY; i++)
+            for (let j = this.x; j < this.boundaryX; j++) callback(j, i);
     }
 
     /**
