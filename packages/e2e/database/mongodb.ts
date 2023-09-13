@@ -128,17 +128,13 @@ export default class MongoDB {
     ) {
         let collection = this.database.collection(collectionName);
 
-        try {
-            collection.deleteOne(filter);
-        } catch (error: unknown) {
-            log.error(
-                `An error occurred while deleting ${JSON.stringify(filter)} from ${
-                    collection.collectionName
-                }:`,
-                error
-            );
-            callback(error as AnyError);
-        }
+        collection.deleteOne(filter).then((result) => {
+            if (!result)
+                log.error(
+                    `Unable to delete ${collection.collectionName} for ${JSON.stringify(filter)}.`
+                );
+            callback();
+        });
     }
 
     public deleteCollection(collectionName: string, callback: (error?: AnyError) => void) {
