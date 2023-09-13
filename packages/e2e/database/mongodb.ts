@@ -21,12 +21,16 @@ export default class MongoDB {
         password: string,
         private databaseName: string,
         private tls: boolean,
-        srv: boolean
+        srv: boolean,
+        authSource: string
     ) {
         let srvInsert = srv ? 'mongodb+srv' : 'mongodb',
             authInsert = username && password ? `${username}:${password}@` : '',
-            portInsert = port > 0 ? `:${port}` : '';
-        this.connectionUrl = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}`;
+            portInsert = port > 0 ? `:${port}` : '',
+            authSourceInsert = authSource ? `?authSource=${authSource}` : '';
+        this.connectionUrl = `${srvInsert}://${authInsert}${host}${portInsert}/${databaseName}${authSourceInsert}`;
+
+        console.log(`MongoDB connection URL: ${this.connectionUrl}`);
 
         // Attempt to connect to MongoDB.
         this.createConnection();
@@ -45,15 +49,18 @@ export default class MongoDB {
             tls: this.tls
         });
 
-        client.connect((error: Error | undefined, _client: MongoClient | undefined) => {
-            if (error) throw new Error(`Error while connecting to mongodb: [${error}]`);
+        client
+            .connect()
+            .then((mongoClient: MongoClient) => {
+                this.database = mongoClient.db(this.databaseName);
 
-            this.database = _client!.db(this.databaseName);
+                this._isReady = true;
 
-            this._isReady = true;
-
-            log.notice('Successfully connected to the MongoDB server.');
-        });
+                log.notice('Successfully connected to the MongoDB server.');
+            })
+            .catch((error: Error) => {
+                throw new Error(`Error while connecting to mongodb: [${error}]`);
+            });
     }
 
     /**
@@ -92,21 +99,26 @@ export default class MongoDB {
         callback: (error?: AnyError) => void
     ) {
         let collection = this.database.collection(collectionName);
-        collection.updateOne(filter, { $set: body }, { upsert: true }, (error, result) => {
-            if (error)
-                log.error(
-                    `An error occurred while saving ${
-                        collection.collectionName
-                    } for ${JSON.stringify(filter)}:`,
-                    error
-                );
 
-            if (!result)
-                log.error(
-                    `Unable to save ${collection.collectionName} for ${JSON.stringify(filter)}.`
-                );
-            callback(error);
-        });
+        collection
+            .updateOne(filter, { $set: body }, { upsert: true })
+            .then((result) => {
+                if (!result)
+                    log.error(
+                        `Unable to save ${collection.collectionName} for ${JSON.stringify(filter)}.`
+                    );
+                callback();
+            })
+            .catch((error) => {
+                if (error)
+                    log.error(
+                        `An error occurred while saving ${
+                            collection.collectionName
+                        } for ${JSON.stringify(filter)}:`,
+                        error
+                    );
+                callback(error);
+            });
     }
 
     public delete(
@@ -115,16 +127,18 @@ export default class MongoDB {
         callback: (error?: AnyError) => void
     ) {
         let collection = this.database.collection(collectionName);
-        collection.deleteOne(filter, (error) => {
-            if (error)
-                log.error(
-                    `An error occurred while deleting ${JSON.stringify(filter)} from ${
-                        collection.collectionName
-                    }:`,
-                    error
-                );
-            callback(error);
-        });
+
+        try {
+            collection.deleteOne(filter);
+        } catch (error: unknown) {
+            log.error(
+                `An error occurred while deleting ${JSON.stringify(filter)} from ${
+                    collection.collectionName
+                }:`,
+                error
+            );
+            callback(error as AnyError);
+        }
     }
 
     public deleteCollection(collectionName: string, callback: (error?: AnyError) => void) {
