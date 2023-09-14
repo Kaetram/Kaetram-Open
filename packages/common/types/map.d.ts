@@ -60,6 +60,7 @@ export interface ProcessedArea {
     destination?: number;
     orientation?: string;
     stage?: number;
+    npc?: string;
 
     // Light
     colour?: string;
@@ -122,6 +123,7 @@ export interface ProcessedDoor {
     stage: number;
     skill: string;
     level: number;
+    npc: string; // NPC to trigger chat when player can't pass through.
 }
 
 export interface ProcessedResource {
