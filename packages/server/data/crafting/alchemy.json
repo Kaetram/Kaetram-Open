@@ -1,0 +1,181 @@
+{
+    "hotsauce": {
+        "level": 1,
+        "experience": 15,
+        "requirements": [
+            {
+                "key": "smallemptyvial",
+                "count": 1
+            },
+            {
+                "key": "chilli",
+                "count": 3
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "flask": {
+        "level": 1,
+        "experience": 15,
+        "requirements": [
+            {
+                "key": "smallemptyvial",
+                "count": 1
+            },
+            {
+                "key": "bayleaves",
+                "count": 2
+            },
+            {
+                "key": "mushroom2",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "manaflask": {
+        "level": 3,
+        "experience": 15,
+        "requirements": [
+            {
+                "key": "smallemptyvial",
+                "count": 1
+            },
+            {
+                "key": "manaberry",
+                "count": 2
+            },
+            {
+                "key": "mushroom3",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "cure": {
+        "level": 5,
+        "experience": 35,
+        "requirements": [
+            {
+                "key": "bigemptyvial",
+                "count": 1
+            },
+            {
+                "key": "horseradish",
+                "count": 2
+            },
+            {
+                "key": "leaf",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bigflask": {
+        "level": 10,
+        "experience": 55,
+        "requirements": [
+            {
+                "key": "bigemptyvial",
+                "count": 1
+            },
+            {
+                "key": "bayleaves",
+                "count": 5
+            },
+            {
+                "key": "mushroom2",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "blackpotion": {
+        "level": 10,
+        "experience": 135,
+        "requirements": [
+            {
+                "key": "bigemptyvial",
+                "count": 1
+            },
+            {
+                "key": "nisocore",
+                "count": 2
+            },
+            {
+                "key": "banana",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bigmanaflask": {
+        "level": 15,
+        "experience": 55,
+        "requirements": [
+            {
+                "key": "bigemptyvial",
+                "count": 1
+            },
+            {
+                "key": "galaxylilies",
+                "count": 5
+            },
+            {
+                "key": "mushroom3",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "firepotion": {
+        "level": 55,
+        "experience": 125,
+        "requirements": [
+            {
+                "key": "largeemptyvial",
+                "count": 1
+            },
+            {
+                "key": "seed",
+                "count": 2
+            },
+            {
+                "key": "chilli",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    }
+}

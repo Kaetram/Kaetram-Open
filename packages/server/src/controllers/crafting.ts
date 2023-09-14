@@ -1,5 +1,5 @@
 import Item from '../game/entity/objects/item';
-import CraftingData from '../../data/crafting.json';
+import CraftingData from '../../data/crafting';
 import Items from '../../data/items.json';
 
 import Utils from '@kaetram/common/util/utils';

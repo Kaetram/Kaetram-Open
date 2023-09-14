@@ -116,6 +116,12 @@
     gap: 0.75em;
 }
 
+.crafting-option-count {
+    position: absolute;
+    top: 2.8em;
+    left: 1em;
+}
+
 @include sprite.sheet($image: 'crafting', $width: 208, $height: 126, $selectors: #crafting);
 
 @include sprite.sheet(

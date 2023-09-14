@@ -1,0 +1,105 @@
+{
+    "copperbar": {
+        "level": 1,
+        "experience": 20,
+        "chance": 90,
+        "requirements": [
+            {
+                "key": "copperore",
+                "count": 1
+            },
+
+            {
+                "key": "coal",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "tinbar": {
+        "level": 1,
+        "experience": 20,
+        "chance": 90,
+        "requirements": [
+            {
+                "key": "tinore",
+                "count": 1
+            },
+
+            {
+                "key": "coal",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzebar": {
+        "level": 5,
+        "experience": 20,
+        "chance": 70,
+        "requirements": [
+            {
+                "key": "copperore",
+                "count": 1
+            },
+            {
+                "key": "tinore",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironbar": {
+        "level": 20,
+        "experience": 30,
+        "chance": 60,
+        "requirements": [
+            {
+                "key": "ironore",
+                "count": 1
+            },
+
+            {
+                "key": "coal",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldbar": {
+        "level": 20,
+        "experience": 50,
+        "chance": 40,
+        "requirements": [
+            {
+                "key": "goldore",
+                "count": 1
+            },
+
+            {
+                "key": "coal",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    }
+}
