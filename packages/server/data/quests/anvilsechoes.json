@@ -23,6 +23,7 @@
         "1": {
             "task": "talk",
             "npc": "blacksmith",
+            "text": ["Please, go check out the beach for any clues."],
             "hasItemText": [
                 "Oh! My wonderful hammer!",
                 "I can finally get back to break- I mean smithing.",
@@ -32,6 +33,12 @@
             ],
             "skill": "smithing",
             "experience": 420,
+            "itemRequirements": [
+                {
+                    "key": "hammer",
+                    "count": 1
+                }
+            ],
             "itemRewards": [
                 {
                     "key": "smithingboots",
