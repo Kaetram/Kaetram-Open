@@ -564,6 +564,17 @@ export default class Entities {
     }
 
     /**
+     * Attempts to find an NPC based on a key. Note that this will find the first
+     * NPC we come across with the key, so it is not recommended to use this
+     * function if there are multiple NPCs with the same key.
+     * @param key The key of the NPC we are looking for.
+     */
+
+    public getNPCByKey(key: string): NPC | undefined {
+        return Object.values(this.npcs).find((npc: NPC) => npc.key === key);
+    }
+
+    /**
      * Looks for the string of the entity in all the data files
      * and returns the type of entity it is.
      * @param key The string key of the entity we are determining.
