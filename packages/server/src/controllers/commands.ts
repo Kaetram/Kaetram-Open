@@ -1093,6 +1093,10 @@ export default class Commands {
                 return this.world.crafting.open(this.player, Modules.Skills.Alchemy);
             }
 
+            case 'opencooking': {
+                return this.world.crafting.open(this.player, Modules.Skills.Cooking);
+            }
+
             case 'lootbag': {
                 let items: Item[] = [
                     new Item('oldonesblade', -1, -1, false, 1),
@@ -1136,6 +1140,18 @@ export default class Commands {
                 if (!time) return this.player.notify(`Malformed command, expected /countdown time`);
 
                 this.player.countdown(time);
+
+                break;
+            }
+
+            case 'find': {
+                let npc = this.world.entities.getNPCByKey(blocks.join(' '));
+
+                this.player.notify(
+                    npc
+                        ? `Found NPC: ${npc.name} at x: ${npc.x}, y: ${npc.y}`
+                        : `Could not find NPC.`
+                );
 
                 break;
             }

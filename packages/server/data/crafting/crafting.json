@@ -1,0 +1,340 @@
+{
+    "string": {
+        "level": 1,
+        "experience": 10,
+        "requirements": [
+            {
+                "key": "bluelily",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bucket": {
+        "level": 10,
+        "experience": 35,
+        "requirements": [
+            {
+                "key": "logs",
+                "count": 5
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "aquastaff": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "stick",
+                "count": 5
+            },
+
+            {
+                "key": "bead",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "lightningstaff": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "staff",
+                "count": 1
+            },
+
+            {
+                "key": "lightningbead",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "naturestaff": {
+        "level": 20,
+        "experience": 160,
+        "requirements": [
+            {
+                "key": "staff",
+                "count": 1
+            },
+
+            {
+                "key": "naturebead",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "firestaff": {
+        "level": 35,
+        "experience": 400,
+        "requirements": [
+            {
+                "key": "staff",
+                "count": 1
+            },
+
+            {
+                "key": "firebead",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "cursestaff": {
+        "level": 55,
+        "experience": 600,
+        "requirements": [
+            {
+                "key": "staff",
+                "count": 1
+            },
+
+            {
+                "key": "icebead",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "berylpendant": {
+        "level": 1,
+        "experience": 50,
+        "requirements": [
+            {
+                "key": "beryl",
+                "count": 1
+            },
+            {
+                "key": "string",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "rubypendant": {
+        "level": 20,
+        "experience": 145,
+        "requirements": [
+            {
+                "key": "ruby",
+                "count": 1
+            },
+            {
+                "key": "string",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "emeraldpendant": {
+        "level": 25,
+        "experience": 200,
+        "requirements": [
+            {
+                "key": "emerald",
+                "count": 1
+            },
+            {
+                "key": "string",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ring1": {
+        "level": 1,
+        "experience": 30,
+        "requirements": [
+            {
+                "key": "emerald",
+                "count": 1
+            },
+            {
+                "key": "silverring",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "nisocring": {
+        "level": 5,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "nisocore",
+                "count": 1
+            },
+            {
+                "key": "silverring",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "pytharring": {
+        "level": 5,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "pytharore",
+                "count": 1
+            },
+            {
+                "key": "silverring",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "topazring": {
+        "level": 5,
+        "experience": 100,
+        "requirements": [
+            {
+                "key": "topaz",
+                "count": 1
+            },
+            {
+                "key": "goldring",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "berylsilverring": {
+        "level": 10,
+        "experience": 110,
+        "requirements": [
+            {
+                "key": "beryl",
+                "count": 1
+            },
+            {
+                "key": "silverring2",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "berylgoldring": {
+        "level": 20,
+        "experience": 145,
+        "requirements": [
+            {
+                "key": "beryl",
+                "count": 1
+            },
+            {
+                "key": "goldring2",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "rubyring": {
+        "level": 20,
+        "experience": 145,
+        "requirements": [
+            {
+                "key": "ruby",
+                "count": 1
+            },
+            {
+                "key": "goldring",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "emeraldring": {
+        "level": 25,
+        "experience": 200,
+        "requirements": [
+            {
+                "key": "emerald",
+                "count": 1
+            },
+            {
+                "key": "goldring",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    }
+}
