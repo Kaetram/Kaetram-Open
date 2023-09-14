@@ -13,6 +13,7 @@ import royaldrama from './royaldrama';
 import clamchowder from './clamchowder';
 import royalpet from './royalpet';
 import scientistspotion from './scientistspotion';
+import anvilsechoes from './anvilsechoes.ts';
 
 export default {
     tutorial,
@@ -29,5 +30,6 @@ export default {
     royaldrama,
     clamchowder,
     royalpet,
-    scientistspotion
+    scientistspotion,
+    anvilsechoes
 };
