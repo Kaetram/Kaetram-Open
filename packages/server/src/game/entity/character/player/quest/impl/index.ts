@@ -15,6 +15,7 @@ import royalpet from './royalpet';
 import scientistspotion from './scientistspotion';
 import anvilsechoes from './anvilsechoes.ts';
 import herbalistdesperation from './herbalistdesperation';
+import ricksroll from './ricksroll';
 
 export default {
     tutorial,
@@ -33,5 +34,6 @@ export default {
     royalpet,
     scientistspotion,
     anvilsechoes,
-    herbalistdesperation
+    herbalistdesperation,
+    ricksroll
 };
