@@ -14,6 +14,8 @@ import clamchowder from './clamchowder';
 import royalpet from './royalpet';
 import scientistspotion from './scientistspotion';
 import anvilsechoes from './anvilsechoes.ts';
+import herbalistdesperation from './herbalistdesperation';
+import ricksroll from './ricksroll';
 
 export default {
     tutorial,
@@ -31,5 +33,7 @@ export default {
     clamchowder,
     royalpet,
     scientistspotion,
-    anvilsechoes
+    anvilsechoes,
+    herbalistdesperation,
+    ricksroll
 };
