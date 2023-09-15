@@ -300,7 +300,7 @@ export default class Equipments extends Menu {
             { sprite } = this.player;
 
         // Ensure we have a valid sprite and context before drawing anything.
-        if (!context || !sprite) return;
+        if (!context || !sprite || sprite.key === 'death') return;
 
         if (flip) frame = 'right';
 

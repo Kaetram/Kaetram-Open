@@ -475,11 +475,11 @@ export default class Connection {
         // Copy the entity's sprite temporarily.
         let entitySprite = entity.sprite.key;
 
-        // Prevent rendering of the sword.
-        entity.teleporting = true;
-
         // Set the entity's sprite to the death animation sprite.
         entity.setSprite(this.sprites.getDeath());
+
+        // Prevent rendering of the sword.
+        entity.teleporting = true;
 
         entity.animateDeath(() => {
             this.game.teleport(entity, info.x, info.y);
