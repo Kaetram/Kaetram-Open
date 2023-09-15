@@ -1827,6 +1827,31 @@
             "magic": 0
         }
     },
+    "leatherhelmet": {
+        "type": "helmet",
+        "name": "Leather Helmet",
+        "price": 100,
+        "attackStats": {
+            "crush": 0,
+            "slash": 1,
+            "stab": 1,
+            "archery": 4,
+            "magic": 1
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 0,
+            "stab": 1,
+            "archery": 3,
+            "magic": 2
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 1,
+            "magic": 0
+        }
+    },
     "copperhelmet": {
         "type": "helmet",
         "name": "Copper Helmet",
@@ -3519,6 +3544,31 @@
             "magic": 0
         }
     },
+    "leatherchest": {
+        "type": "chestplate",
+        "name": "Leather Chestpiece",
+        "price": 100,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "copperchestplate": {
         "type": "chestplate",
         "name": "Copper Chestplate",
@@ -3921,6 +3971,85 @@
             "magic": -7
         }
     },
+    "samuraichestplate": {
+        "type": "chestplate",
+        "name": "Samurai Chestplate",
+        "price": 200,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 7,
+            "slash": 5,
+            "stab": 6,
+            "archery": -3,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 18,
+            "slash": 14,
+            "stab": 15,
+            "archery": 9,
+            "magic": -12
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 10,
+            "archery": -4,
+            "magic": -7
+        }
+    },
+    "knightchestplate": {
+        "type": "chestplate",
+        "name": "Knight Chestplate",
+        "price": 200,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 7,
+            "slash": 5,
+            "stab": 6,
+            "archery": -3,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 18,
+            "slash": 14,
+            "stab": 15,
+            "archery": 9,
+            "magic": -12
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 10,
+            "archery": -4,
+            "magic": -7
+        }
+    },
+    "leatherleggings": {
+        "type": "legplates",
+        "name": "Leather Leggings",
+        "price": 100,
+        "attackStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 3,
+            "stab": 3,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "copperlegplates": {
         "type": "legplates",
         "name": "Copper Legplates",
@@ -4295,6 +4424,87 @@
             "magic": -6
         }
     },
+    "samurailegplates": {
+        "type": "legplates",
+        "name": "Samurai Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 7,
+            "slash": 4,
+            "stab": 6,
+            "archery": -3,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 17,
+            "slash": 13,
+            "stab": 12,
+            "archery": 7,
+            "magic": -10
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 12,
+            "archery": -4,
+            "magic": -6
+        }
+    },
+    "knightlegplates": {
+        "type": "legplates",
+        "name": "Knight Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 7,
+            "slash": 4,
+            "stab": 6,
+            "archery": -3,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 17,
+            "slash": 13,
+            "stab": 12,
+            "archery": 7,
+            "magic": -10
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 12,
+            "archery": -4,
+            "magic": -6
+        }
+    },
+    "refinedsapphirelegplates": {
+        "type": "legplates",
+        "name": "Refined Sapphire Legplates",
+        "price": 200,
+        "skill": "defense",
+        "level": 36,
+        "attackStats": {
+            "crush": 7,
+            "slash": 4,
+            "stab": 6,
+            "archery": -3,
+            "magic": -3
+        },
+        "defenseStats": {
+            "crush": 17,
+            "slash": 13,
+            "stab": 12,
+            "archery": 7,
+            "magic": -10
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 12,
+            "archery": -4,
+            "magic": -6
+        }
+    },
     "wings": {
         "type": "cape",
         "name": "Wings",
@@ -4593,6 +4803,33 @@
         "price": 1850,
         "skill": "defense",
         "level": 33,
+        "attackStats": {
+            "crush": 1,
+            "slash": 0,
+            "stab": 1,
+            "archery": 4,
+            "magic": 2
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 0,
+            "stab": 1,
+            "archery": 6,
+            "magic": 3
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 2,
+            "magic": 1
+        }
+    },
+    "refinedsapphireboots": {
+        "type": "boots",
+        "name": "Refined Sapphire Boots",
+        "price": 1850,
+        "skill": "defense",
+        "level": 36,
         "attackStats": {
             "crush": 1,
             "slash": 0,
