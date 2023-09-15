@@ -192,6 +192,8 @@ export default abstract class Entity {
      */
 
     public setSprite(sprite: Sprite): void {
+        if (this.teleporting) return;
+
         // Load the sprite if it hasn't been loaded yet.
         if (!sprite.loaded) {
             sprite.load();
