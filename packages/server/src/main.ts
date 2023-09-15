@@ -4,6 +4,7 @@ import Console from './console';
 import World from './game/world';
 import Loader from './info/loader';
 import SocketHandler from './network/sockethandler';
+import Args from './args';
 
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
@@ -19,7 +20,7 @@ class Main {
 
     private ready = false;
 
-    public constructor() {
+    public constructor(private params: string[] = process.argv) {
         if (!this.handleLicensing()) return;
 
         log.info(`Initializing ${config.name} game engine...`);
@@ -138,5 +139,8 @@ class Main {
         return true;
     }
 }
+
+// Parse the override arguments.
+new Args();
 
 export default new Main();
