@@ -2314,7 +2314,8 @@
                 "row": 8
             }
         },
-        "offsetY": -25
+        "offsetX": -10,
+        "offsetY": -18
     },
     {
         "id": "mobs/lightningguardian",
@@ -4193,7 +4194,7 @@
         "offsetY": -12
     },
     { "id": "mobs/redfish", "width": 32, "height": 32, "offsetX": -8, "offsetY": -12 },
-    { "id": "mobs/redguard", "width": 32, "height": 32, "offsetX": -8, "offsetY": -13 },
+    { "id": "mobs/redguard", "width": 32, "height": 32, "offsetX": -4, "offsetY": -8 },
     {
         "id": "mobs/redmouse",
         "width": 26,
