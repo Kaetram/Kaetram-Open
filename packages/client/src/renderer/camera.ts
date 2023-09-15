@@ -3,7 +3,7 @@ import { Modules } from '@kaetram/common/network';
 import type Character from '../entity/character/character';
 
 export const MAXIMUM_ZOOM = 8,
-    DEFAULT_ZOOM = 3,
+    DEFAULT_ZOOM = 4,
     MAX_GRID_WIDTH = 64,
     MAX_GRID_HEIGHT = 32;
 
