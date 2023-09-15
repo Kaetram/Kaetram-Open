@@ -1,12 +1,16 @@
 {
-    "0.3.6-beta": {
-        "title": "Kaetram 0.3.6-beta",
+    "0.4.0-beta": {
+        "title": "Kaetram 0.4.0-beta",
         "content": [
-            "- Added new bracelets, rings, and pendants",
-            "- Added trees and map content",
-            "- Polishes object interaction",
-            "- Fixes projectiles drawing names",
-            "- Improves admin teleport functionality"
+            "- Added 3 new quests",
+            "- Added a bunch of new sprites and armours",
+            "- Hovering over interactable yellow cell",
+            "- Improvements to the camera system",
+            "- Fixes WASD movement w/ caps lock",
+            "- Fixes majority of the map errors.",
+            "- Fixes most dynamic door tiles.",
+            "- Fixes most door tiles.",
+            "- Fix 9-slices on Safari."
         ]
     }
 }
