@@ -10,8 +10,8 @@ const MAX_MINIONS = 6;
 export default class SkeletonKing extends Default {
     // Two positions where the minions will spawn.
     private positions: Position[] = [
-        { x: 22, y: 684 },
-        { x: 28, y: 684 }
+        { x: 139, y: 782 },
+        { x: 125, y: 785 }
     ];
 
     private minionsSpawned = 0;

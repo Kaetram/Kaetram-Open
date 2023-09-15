@@ -15,17 +15,17 @@ export default class PirateCaptain extends Default {
     private lastPickedTeleport: Position = { x: 0, y: 0 };
 
     private teleportSpots: Position[] = [
-        { x: 822, y: 649 },
-        { x: 825, y: 659 },
-        { x: 836, y: 659 },
-        { x: 834, y: 649 }
+        { x: 935, y: 743 },
+        { x: 930, y: 755 },
+        { x: 920, y: 753 },
+        { x: 918, y: 743 }
     ];
 
     private minionSpots: Position[] = [
-        { x: 826, y: 651 },
-        { x: 837, y: 650 },
-        { x: 835, y: 657 },
-        { x: 824, y: 654 }
+        { x: 923, y: 745 },
+        { x: 931, y: 746 },
+        { x: 929, y: 754 },
+        { x: 923, y: 752 }
     ];
 
     public constructor(mob: Mob) {
