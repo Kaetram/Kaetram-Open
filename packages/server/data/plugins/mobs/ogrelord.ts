@@ -13,10 +13,10 @@ export default class OgreLord extends Default {
     ];
 
     private positions: Position[] = [
-        { x: 240, y: 65 },
-        { x: 248, y: 65 },
-        { x: 240, y: 70 },
-        { x: 248, y: 70 }
+        { x: 338, y: 160 },
+        { x: 346, y: 164 },
+        { x: 342, y: 169 },
+        { x: 335, y: 164 }
     ];
 
     // Waves of minions the boss spawns.
