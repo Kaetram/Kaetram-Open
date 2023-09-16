@@ -139,6 +139,18 @@ export default class Leaderboards extends Menu {
     }
 
     /**
+     * Override for the show function to scroll all the elements back to the top
+     * when we display the leaderboards interface.
+     */
+
+    public override show(): void {
+        super.show();
+
+        this.searchList.scrollTop = 0;
+        this.resultsList.scrollTop = 0;
+    }
+
+    /**
      * Override for the hide function where we also clear the input field.
      */
 

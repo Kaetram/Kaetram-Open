@@ -167,6 +167,8 @@ export default class Store extends Menu {
 
         this.clearSellSlot();
 
+        this.inventoryList.scrollTop = 0;
+
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
             let image = this.getElement(index).querySelector<HTMLElement>('.item-image')!,
                 count = this.getElement(index).querySelector<HTMLElement>('.item-count')!,
@@ -203,6 +205,7 @@ export default class Store extends Menu {
         this.currency = 'gold';
 
         this.storeList.innerHTML = '';
+        this.storeList.scrollTop = 0;
     }
 
     /**

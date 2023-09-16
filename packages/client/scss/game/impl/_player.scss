@@ -12,12 +12,12 @@
 
 #health {
     top: 0.5em;
-    left: 0.5em;
+    left: 1em;
 }
 
 #mana {
-    top: 2.875em;
-    left: 0.5em;
+    top: 3.25em;
+    left: 1em;
 }
 
 #mana-mask,
@@ -45,18 +45,36 @@
 }
 
 .health-text {
-    top: 1.25em;
+    top: 1.5em;
 }
 
 .mana-text {
-    top: 0.375em;
+    top: 0.5em;
+}
+
+/* Safari 7.1+ */
+
+_::-webkit-full-page-media,
+_:future,
+:root .safari_only {
+    #health,
+    #mana {
+        left: 2.5em !important;
+    }
+}
+
+@media (--lg) {
+    #health,
+    #mana {
+        font-size: 0.85em;
+    }
 }
 
 @include sprite.sheet(
     $image: 'bars',
     $width: 63,
     $height: 15,
-    $scale: 3.5,
+    $scale: 4,
     $selectors: (
         #health,
         #mana,

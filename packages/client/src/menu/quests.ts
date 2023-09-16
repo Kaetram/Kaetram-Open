@@ -11,6 +11,9 @@ export default class Quests extends Menu {
     // Contains the list of all the quests and their respective status.
     private list: HTMLUListElement = document.querySelector('#quests-list > ul')!;
 
+    // The quest log element (used for scrolling actions).
+    private questsLogsContainer: HTMLElement = document.querySelector('#quests-logs-container')!;
+
     // Contains information about a selected quest.
     private title: HTMLElement = document.querySelector('#quests-logs-title')!;
     private shortDescription: HTMLElement = document.querySelector('#quests-logs-shortdesc')!;
@@ -101,6 +104,8 @@ export default class Quests extends Menu {
      */
 
     private buildLog(quest: Task): void {
+        this.questsLogsContainer.scrollTop = 0;
+
         let [shortDescription, description] = quest.description.split('|');
 
         this.title.innerHTML = quest.name;
