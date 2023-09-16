@@ -154,6 +154,8 @@ export default class Bank extends Menu {
     public override synchronize(): void {
         if (!this.isVisible()) return;
 
+        this.inventoryList.scrollTop = 0;
+
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
             let element = this.getInventoryElement(index),
                 image = element.querySelector<HTMLElement>('.item-image')!,
@@ -205,6 +207,8 @@ export default class Bank extends Menu {
 
     public override show(slots: SlotData[]): void {
         super.show();
+
+        this.bankList.scrollTop = 0;
 
         this.synchronize();
 

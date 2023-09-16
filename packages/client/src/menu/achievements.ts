@@ -99,6 +99,7 @@ export default class Achievements extends Menu {
     private displayAchievements(): void {
         // Clear the existing list.
         this.list.innerHTML = '';
+        this.list.scrollTop = 0;
 
         // Iterate through the player's achievements.
         for (let key in this.player.achievements) {
