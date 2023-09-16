@@ -190,14 +190,14 @@ export default class Game {
             userAgent: agent
         });
 
+        if (this.storage.isNew()) this.menu.getWelcome().show();
+
         if (this.storage.data.new) {
             this.storage.data.new = false;
             this.storage.save();
         }
 
         if (this.map.hasCachedDate()) this.app.fadeMenu();
-
-        if (this.storage.isNew()) this.menu.getWelcome().show();
     }
 
     /**
