@@ -1,16 +1,15 @@
 {
-    "0.4.0-beta": {
-        "title": "Kaetram 0.4.0-beta",
+    "0.4.1-beta": {
+        "title": "Kaetram 0.4.1-beta",
         "content": [
-            "- Added 3 new quests",
-            "- Added a bunch of new sprites and armours",
-            "- Hovering over interactable yellow cell",
-            "- Improvements to the camera system",
-            "- Fixes WASD movement w/ caps lock",
-            "- Fixes majority of the map errors.",
-            "- Fixes most dynamic door tiles.",
-            "- Fixes most door tiles.",
-            "- Fix 9-slices on Safari."
+            "- Fixed many doors and missing tiles",
+            "- Fixes to user interfaces and menus",
+            "- Fixed some trees around the world",
+            "- Fixed fishing spots not being interactable",
+            "- Fixes some teleportation issues",
+            "- Fixed bosses not spawning their minions",
+            "- Exclamation mark above NPC now disappears when they don't have info for you",
+            "- Max levels now capped at 120"
         ]
     }
 }
