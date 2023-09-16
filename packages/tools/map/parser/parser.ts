@@ -248,6 +248,7 @@ export default class ProcessMap {
             }
 
             // Fishing
+            case 'fish':
             case 'fishspot': {
                 // Fish spots share the same base and data tiles.
                 this.parseResourceProperty(this.fishSpots, 'base', tileId, value);

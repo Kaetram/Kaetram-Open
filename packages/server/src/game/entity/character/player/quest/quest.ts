@@ -493,6 +493,28 @@ export default abstract class Quest {
     }
 
     /**
+     * Whether or not the current stage we're on requires that the player
+     * talk to an NPC.
+     * @param npc The NPC we are checking.
+     * @returns Whether or not the NPC is the NPC required for the current stage.
+     */
+
+    public isNPCForStage(player: Player, npc: NPC): boolean {
+        let stage = this.getStageData();
+
+        // NPC is not in the current stage so we just skip.
+        if (stage.npc !== npc.key) return false;
+
+        // If the stage doesn't have any item requirements, then the NPC belongs to the stage and the player must talk to them.
+        if (!this.hasItemRequirement(stage)) return true;
+
+        // If the player has all the requirements for the stage.
+        if (this.hasAllItems(player, stage.itemRequirements)) return true;
+
+        return false;
+    }
+
+    /**
      * @returns Whether or not the current task is to walk through a door.
      */
 

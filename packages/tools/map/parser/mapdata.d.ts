@@ -32,6 +32,7 @@ export interface PropertyValues {
     rock?: string;
     rockbase?: string;
     rockempty?: string;
+    fish?: string;
     fishspot?: string;
     fishempty?: string;
     forage?: string; // A forageable tile

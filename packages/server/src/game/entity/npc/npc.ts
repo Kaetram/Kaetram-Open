@@ -111,7 +111,9 @@ export default class NPC extends Entity {
 
     private getExclamation(player?: Player): string {
         if (player) {
-            if (player.quests.getQuestFromNPC(this)) return 'blue';
+            let quest = player.quests.getQuestFromNPC(this);
+
+            if (quest?.isNPCForStage(player, this)) return 'blue';
             if (player?.achievements.getAchievementFromEntity(this)) return 'achievement';
         }
 
