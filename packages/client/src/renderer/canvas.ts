@@ -90,10 +90,6 @@ export default class Canvas extends Renderer {
         this.clearDrawing();
         this.saveDrawing();
 
-        // Draw the default background colour
-        this.backContext.fillStyle = 'rgba(9, 10, 20, 1)';
-        this.backContext.fillRect(0, 0, this.background.width, this.background.height);
-
         // Sets the view according to the camera.
         this.updateDrawingView();
 
