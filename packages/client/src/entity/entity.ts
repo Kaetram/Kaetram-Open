@@ -77,7 +77,7 @@ export default abstract class Entity {
     public pvp = false;
     public nameColour = '';
     public customScale!: number;
-    public fadingAlpha!: number;
+    public fadingAlpha = 0;
     public lastUpdate = Date.now();
 
     public counterInterval!: NodeJS.Timeout | undefined;
