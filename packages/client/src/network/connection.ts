@@ -952,11 +952,11 @@ export default class Connection {
         // Remove the minigame interfaces.
         this.game.minigame.reset();
 
-        // Stops the player from performing actions.
-        this.game.player.teleporting = true;
-
         // Set the player's sprite to the death animation sprite.
         this.game.player.setSprite(this.sprites.getDeath());
+
+        // Stops the player from performing actions.
+        this.game.player.teleporting = true;
 
         // Set health and mana to 0
         this.game.player.setHitPoints(0);
