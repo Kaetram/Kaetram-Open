@@ -18,7 +18,8 @@
 #foreground,
 #cursor,
 #text-canvas,
-#overlay {
+#overlay,
+#entities-mask {
     position: absolute;
     transform: translateZ(0);
     margin: 0;
