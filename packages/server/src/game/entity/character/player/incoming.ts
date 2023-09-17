@@ -369,16 +369,14 @@ export default class Incoming {
                 // Prevent crazy position updates, add some leeway to the roaming distance.
                 if (entity.outsideRoaming(requestX!, requestY!, entity.roamDistance * 2)) return;
 
-                entity.lastMovement = Date.now();
-
                 // For mobs update the position without a packet.
                 return entity.setPosition(requestX!, requestY!, false);
             }
         }
     }
 
-    private handleTarget(message: [Opcodes.Target, string]): void {
-        let [opcode, instance] = message;
+    private handleTarget(message: [Opcodes.Target, string, number?, number?]): void {
+        let [opcode, instance, x, y] = message;
 
         switch (opcode) {
             case Opcodes.Target.Talk: {
@@ -402,7 +400,7 @@ export default class Incoming {
             }
 
             case Opcodes.Target.Attack: {
-                return this.player.handleTargetAttack(instance);
+                return this.player.handleTargetAttack(instance, x, y);
             }
 
             case Opcodes.Target.Object: {

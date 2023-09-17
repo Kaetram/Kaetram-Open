@@ -42,6 +42,7 @@ export default class PirateCaptain extends Default {
         for (let minion of Object.values(this.minions)) minion.deathCallback?.();
 
         this.minionsSpawned = 0;
+        this.mob.attackRange = 1;
     }
 
     /**
@@ -69,7 +70,7 @@ export default class PirateCaptain extends Default {
         // Stop all players from attacking the pirate captain.
         this.mob.world.cleanCombat(this.mob);
 
-        this.mob.attackRange = 14;
+        this.mob.attackRange = 16;
 
         // Update the position and teleport the captain with an animation.
         this.mob.teleport(position.x, position.y, true);
@@ -87,7 +88,7 @@ export default class PirateCaptain extends Default {
             target = super.getTarget(); // Pick a random target from the attackers
 
         // Update the roam distance for minions (so they don't go back to spawn point).
-        minion.roamDistance = this.mob.roamDistance;
+        minion.roamDistance = 20;
 
         // Set the target for the minion.
         if (target) minion.combat.attack(target);

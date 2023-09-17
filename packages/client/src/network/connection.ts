@@ -458,7 +458,7 @@ export default class Connection {
         let currentPlayer = entity.instance === this.game.player.instance;
 
         // Stop and freeze the player until teleprtation is complete.
-        entity.stop(true);
+        entity.stop();
         entity.frozen = true;
 
         // Clears all bubbles when our main entity teleports.

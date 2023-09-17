@@ -745,7 +745,7 @@ export default class Player extends Character {
      * @param instance The instance of the target we are attacking.
      */
 
-    public handleTargetAttack(instance: string): void {
+    public handleTargetAttack(instance: string, x?: number, y?: number): void {
         // Prevent targetting yourself.
         if (instance === this.instance) return;
 
@@ -756,6 +756,8 @@ export default class Player extends Character {
 
         // Ensure that the player can actually attack the target.
         if (!this.canAttack(target)) return;
+
+        if (target.isMob() && !target.combat.started && x && y) target.setPosition(x, y);
 
         // Clear the cheat score
         this.cheatScore = 0;

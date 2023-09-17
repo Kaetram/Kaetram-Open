@@ -13,7 +13,7 @@ export let isInt = (n: number): boolean => n % 1 === 0;
 export default {
     tileSize: -1,
     sideLength: -1,
-    thirdTile: -1,
+    halfTile: -1,
     tileAndAQuarter: -1,
 
     /**

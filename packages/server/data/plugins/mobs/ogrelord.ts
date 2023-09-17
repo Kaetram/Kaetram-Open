@@ -85,6 +85,8 @@ export default class OgreLord extends Default {
             let minion = super.spawn(key, position.x, position.y),
                 target = super.getTarget();
 
+            minion.roamDistance = 24;
+
             // Have the minions attack one of the boss' attackers.
             if (target) minion.combat.attack(target);
         }

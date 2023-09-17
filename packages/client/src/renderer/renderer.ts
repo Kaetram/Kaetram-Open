@@ -1698,7 +1698,7 @@ export default class Renderer {
         this.camera.forEachVisiblePosition((x, y) => {
             if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
                 for (let entity of Object.values(grids.renderingGrid[y][x])) callback(entity);
-        });
+        }, 10);
     }
 
     /**
