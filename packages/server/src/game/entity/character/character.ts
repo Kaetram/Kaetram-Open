@@ -68,7 +68,6 @@ export default abstract class Character extends Entity {
     public lastStep = -1;
     public lastMovement = -1;
     public lastRegionChange = -1;
-    public lastAttacker?: Character | undefined;
 
     private healingInterval?: NodeJS.Timeout | undefined;
     private effectInterval?: NodeJS.Timeout | undefined;
