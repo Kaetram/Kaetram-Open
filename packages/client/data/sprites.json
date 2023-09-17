@@ -6019,8 +6019,8 @@
                 "row": 0
             }
         },
-        "offsetX": 0,
-        "offsetY": 0
+        "offsetX": -12,
+        "offsetY": -12
     },
     {
         "id": "projectiles/firearrow",
@@ -6031,8 +6031,8 @@
                 "row": 0
             }
         },
-        "offsetX": 0,
-        "offsetY": 0
+        "offsetX": -16,
+        "offsetY": -8
     },
     {
         "id": "projectiles/poisonarrow",
@@ -6043,8 +6043,8 @@
                 "row": 0
             }
         },
-        "offsetX": 0,
-        "offsetY": 0
+        "offsetX": -12,
+        "offsetY": -12
     },
     {
         "id": "projectiles/icearrow",
@@ -6055,8 +6055,8 @@
                 "row": 0
             }
         },
-        "offsetX": 0,
-        "offsetY": 0
+        "offsetX": -12,
+        "offsetY": -12
     },
     {
         "id": "projectiles/lightningarrow",
@@ -6067,8 +6067,8 @@
                 "row": 0
             }
         },
-        "offsetX": 0,
-        "offsetY": 0
+        "offsetX": -12,
+        "offsetY": -12
     },
     {
         "id": "projectiles/nisocarrow",
@@ -6079,8 +6079,8 @@
                 "row": 0
             }
         },
-        "offsetX": 0,
-        "offsetY": 0
+        "offsetX": -12,
+        "offsetY": -12
     },
     {
         "id": "projectiles/cinnabararrow",
@@ -6091,8 +6091,8 @@
                 "row": 0
             }
         },
-        "offsetX": 0,
-        "offsetY": 0
+        "offsetX": -12,
+        "offsetY": -12
     },
     {
         "id": "projectiles/pythararrow",
@@ -6103,8 +6103,8 @@
                 "row": 0
             }
         },
-        "offsetX": 0,
-        "offsetY": 0
+        "offsetX": -12,
+        "offsetY": -12
     },
     {
         "id": "projectiles/iboarrow",
@@ -6115,8 +6115,8 @@
                 "row": 0
             }
         },
-        "offsetX": 0,
-        "offsetY": 0
+        "offsetX": -12,
+        "offsetY": -12
     },
     {
         "id": "projectiles/none",

@@ -57,6 +57,7 @@ export default class Renderer {
     protected textCanvas = document.querySelector<HTMLCanvasElement>('#text-canvas')!;
     protected entities = document.querySelector<HTMLCanvasElement>('#entities')!;
     protected cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
+    protected entitiesMask = document.querySelector<HTMLCanvasElement>('#entities-mask')!;
 
     // Store all canvases for easy iteration
     protected canvases: HTMLCanvasElement[] = [
@@ -65,7 +66,8 @@ export default class Renderer {
         this.overlay,
         this.textCanvas,
         this.entities,
-        this.cursor
+        this.cursor,
+        this.entitiesMask
     ];
 
     // Create the contexts based on the canvases.
@@ -73,16 +75,23 @@ export default class Renderer {
     protected overlayContext: CanvasRenderingContext2D = this.overlay.getContext('2d')!;
     protected textContext: CanvasRenderingContext2D = this.textCanvas.getContext('2d')!;
     protected cursorContext: CanvasRenderingContext2D = this.cursor.getContext('2d')!;
+    protected entitiesMaskContext: CanvasRenderingContext2D = this.entitiesMask.getContext('2d')!;
 
     protected allContexts = [
         this.entitiesContext,
         this.overlayContext,
         this.textContext,
-        this.cursorContext
+        this.cursorContext,
+        this.entitiesMaskContext
     ];
 
     // We split contexts into two arrays, one for tilemap rendering and one for the rest.
-    protected contexts = [this.entitiesContext, this.textContext, this.overlayContext];
+    protected contexts = [
+        this.entitiesContext,
+        this.textContext,
+        this.overlayContext,
+        this.entitiesMaskContext
+    ];
 
     // Zooming buttons
     private zoomIn: HTMLElement = document.querySelector('#zoom-in')!;
@@ -383,6 +392,9 @@ export default class Renderer {
 
             this.drawEntity(entity);
         });
+
+        this.entitiesMaskContext.globalAlpha = 0.3;
+        this.entitiesMaskContext.drawImage(this.entities, 0, 0);
     }
 
     /**
