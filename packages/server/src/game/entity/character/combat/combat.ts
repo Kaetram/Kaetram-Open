@@ -114,7 +114,12 @@ export default class Combat {
 
     private handleLoop(): void {
         // No target or target is dead, stop combat.
-        if (!this.character.hasTarget() || this.character.target?.isDead()) return this.stop();
+        if (
+            !this.character.hasTarget() ||
+            this.character.target?.isDead() ||
+            this.character.teleporting
+        )
+            return this.stop();
 
         // Prevent combat loop from persisting during PVP flag changes.
         if (
@@ -123,9 +128,6 @@ export default class Combat {
             !this.character.target!.pvp
         )
             return this.stop();
-
-        // Do not attack while teleporting.
-        if (this.character.teleporting) return;
 
         this.loopCallback?.(this.lastAttack);
 
