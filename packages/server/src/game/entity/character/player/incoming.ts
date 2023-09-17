@@ -369,6 +369,8 @@ export default class Incoming {
                 // Prevent crazy position updates, add some leeway to the roaming distance.
                 if (entity.outsideRoaming(requestX!, requestY!, entity.roamDistance * 2)) return;
 
+                entity.lastMovement = Date.now();
+
                 // For mobs update the position without a packet.
                 return entity.setPosition(requestX!, requestY!, false);
             }

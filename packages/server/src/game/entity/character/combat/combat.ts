@@ -149,6 +149,8 @@ export default class Combat {
 
             this.character.follow();
             this.lastFollow = Date.now();
+
+            if (this.shouldTeleportNearby()) this.character.findAdjacentTile();
         }
     }
 
@@ -261,6 +263,18 @@ export default class Combat {
             !!this.character.target?.isPlayer() &&
             this.character.target?.pvp
         );
+    }
+
+    /**
+     * Mob positions may not be updated if there is not a spectator and the player switches
+     * tabs. In this case we just teleport the mob next to the player. Because the lastMovement
+     * exceeds 3 seconds and the mob is still not nearby, we can conclude it's not able to
+     * move and we should teleport it.
+     * @returns Whether the character is a mob and it hasn't moved in the last 3 seconds.
+     */
+
+    private shouldTeleportNearby(): boolean {
+        return this.character.isMob() && Date.now() - this.character.lastMovement > 3000;
     }
 
     /**

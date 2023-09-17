@@ -338,7 +338,7 @@ export default class Connection {
                         entity = this.entities.get<Character>(instance);
 
                     // No entity found, just skip.
-                    if (!entity || entity.moving || entity.hasPath()) return;
+                    if (!entity) return;
 
                     /**
                      * When we detect a mismatch in client-sided and server-sided
