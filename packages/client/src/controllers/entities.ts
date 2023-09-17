@@ -130,7 +130,10 @@ export default class EntitiesController {
         }
 
         // Something went wrong creating the entity.
-        if (!entity) return log.error(`Failed to create entity ${info.instance}`);
+        if (!entity) {
+            console.log(info);
+            return log.error(`Failed to create entity ${info.instance}`);
+        }
 
         let sprite = entity.sprite || this.game.sprites.get(`${prefix}/${info.key}`);
 

@@ -468,6 +468,9 @@ export default class InputController {
                 if (this.isAttackable(this.entity)) {
                     (this.entity as Character).addAttacker(this.player);
 
+                    // Update the last target to the last clicked attackable entity.
+                    this.player.lastTarget = this.entity.instance;
+
                     if (this.player.canAttackTarget())
                         this.game.socket.send(Packets.Target, [
                             Opcodes.Target.Attack,
