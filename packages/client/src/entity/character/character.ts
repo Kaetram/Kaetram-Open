@@ -779,8 +779,6 @@ export default class Character extends Entity {
 
     public setTarget(target: Entity): void {
         this.target = target;
-
-        this.lastTarget = target.instance;
     }
 
     /**

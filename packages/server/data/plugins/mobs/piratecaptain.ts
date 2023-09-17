@@ -70,7 +70,7 @@ export default class PirateCaptain extends Default {
         // Stop all players from attacking the pirate captain.
         this.mob.world.cleanCombat(this.mob);
 
-        this.mob.attackRange = 16;
+        this.mob.attackRange = 11;
 
         // Update the position and teleport the captain with an animation.
         this.mob.teleport(position.x, position.y, true);
