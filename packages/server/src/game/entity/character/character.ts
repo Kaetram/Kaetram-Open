@@ -66,7 +66,7 @@ export default abstract class Character extends Entity {
     public projectileName = 'arrow';
 
     public lastStep = -1;
-    public lastMovement = -1;
+    public lastMovement = Date.now();
     public lastRegionChange = -1;
 
     private healingInterval?: NodeJS.Timeout | undefined;

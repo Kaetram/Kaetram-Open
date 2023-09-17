@@ -63,7 +63,7 @@ export default class SkeletonKing extends Default {
             target = super.getTarget();
 
         // Minions have the same roaming distance as the skeleton king.
-        minion.roamDistance = this.mob.roamDistance;
+        minion.roamDistance = 24;
 
         if (target) minion.combat.attack(target);
 

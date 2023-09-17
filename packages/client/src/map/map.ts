@@ -72,7 +72,7 @@ export default class Map {
         // Store tile size globally into the utils.
         Utils.tileSize = this.tileSize;
         Utils.sideLength = this.width / Modules.Constants.MAP_DIVISION_SIZE;
-        Utils.thirdTile = this.tileSize / 3;
+        Utils.halfTile = this.tileSize / 2;
         Utils.tileAndAQuarter = this.tileSize * 1.25;
     }
 

@@ -11,7 +11,7 @@ import PluginIndex from '../../../../../data/plugins/mobs';
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { HealPacket, MovementPacket } from '@kaetram/common/network/impl';
+import { HealPacket, MovementPacket, TeleportPacket } from '@kaetram/common/network/impl';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
 import type Area from '../../../map/areas/area';
@@ -293,6 +293,32 @@ export default class Mob extends Character {
     }
 
     /**
+     * Override for the teleport functionality with added support for stopping
+     * all additional packets from being sent to the regions.
+     * @param x The x grid coordinate.
+     * @param y The y grid coordinate.
+     * @param withAnimation Whether or not to teleport with an animation.
+     */
+
+    public override teleport(x: number, y: number, withAnimation = false): void {
+        this.setPosition(x, y, false);
+
+        this.teleporting = true;
+
+        this.sendToRegions(
+            new TeleportPacket({
+                instance: this.instance,
+                x,
+                y,
+                withAnimation
+            })
+        );
+
+        // Untoggle the teleporting flag after 500ms.
+        setTimeout(() => (this.teleporting = false), 500);
+    }
+
+    /**
      * Moves the mob and broadcasts the action
      * to all the adjacent regions.
      * @param x The new x position of the mob.
@@ -301,6 +327,8 @@ export default class Mob extends Character {
      */
 
     public override setPosition(x: number, y: number, withPacket = true): void {
+        if (this.teleporting) return;
+
         super.setPosition(x, y);
 
         this.calculateOrientation();
@@ -314,6 +342,8 @@ export default class Mob extends Character {
                     y
                 })
             });
+
+        this.lastMovement = Date.now();
     }
 
     /**

@@ -1267,6 +1267,10 @@ export default class Commands {
                     case 'crystalcave': {
                         return this.player.teleport(886, 622, true, false, true);
                     }
+
+                    case 'piratecaptain': {
+                        return this.player.teleport(930, 752, true, false, true);
+                    }
                 }
 
                 break;

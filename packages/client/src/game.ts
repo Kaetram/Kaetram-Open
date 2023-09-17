@@ -346,8 +346,7 @@ export default class Game {
                 position.gridY!,
                 radius
             ),
-            closest: Entity | undefined,
-            boundary = this.map.tileSize - 2;
+            closest: Entity | undefined;
 
         /**
          * The `position` parameter contains the absolute x and y coordinates
@@ -361,10 +360,15 @@ export default class Game {
             // Skip pets from the search.
             if (entity.isPet()) continue;
 
-            let entityX = entity.x - entity.sprite.offsetX / 2,
-                entityY = entity.y - entity.sprite.offsetY / 2,
-                distance = Utils.distance(position.x, position.y, entityX, entityY);
+            let { x, y, sprite } = entity,
+                { width, height, offsetX, offsetY } = sprite,
+                largest = width > height ? width : height,
+                toX = x - offsetX / 2,
+                toY = y + offsetY / 2,
+                distance = Utils.distance(position.x, position.y, toX, toY),
+                boundary = largest / 2 + Utils.halfTile + (width > 32 ? this.map.tileSize : 0);
 
+            // Skip if the distance is greater than the boundary.
             if (distance > boundary) continue;
 
             if (!closest || distance < closest.distance) {

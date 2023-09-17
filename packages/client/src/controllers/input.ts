@@ -471,7 +471,9 @@ export default class InputController {
                     if (this.player.canAttackTarget())
                         this.game.socket.send(Packets.Target, [
                             Opcodes.Target.Attack,
-                            this.entity.instance
+                            this.entity.instance,
+                            this.entity.gridX,
+                            this.entity.gridY
                         ]);
                 }
                 return;

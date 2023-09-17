@@ -233,7 +233,7 @@ export default class Character extends Entity {
      */
 
     public trade(entity: Entity): void {
-        if (this.dead) return;
+        if (this.dead || this.teleporting) return;
 
         this.trading = true;
 
@@ -252,7 +252,7 @@ export default class Character extends Entity {
         if (Date.now() - this.lastFollow < 300) return;
 
         // Prevent following when entity is stunned or dead.
-        if (this.dead || this.isStunned()) return;
+        if (this.dead || this.isStunned() || this.teleporting) return;
 
         this.lastFollow = Date.now();
 
@@ -270,7 +270,7 @@ export default class Character extends Entity {
      */
 
     public pursue(character: Character): void {
-        if (this.dead || this.isStunned()) return;
+        if (this.dead || this.isStunned() || this.teleporting) return;
 
         this.setTarget(character);
         this.move(character.gridX, character.gridY);
