@@ -9,6 +9,7 @@ export interface NotificationPacketData {
     message: string; // String message to display.
     colour?: string; // Colour of the message.
     source?: string;
+    soundEffect?: string;
 }
 
 export type NotificationPacketCallback = (

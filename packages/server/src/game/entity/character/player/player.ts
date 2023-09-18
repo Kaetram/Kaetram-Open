@@ -2268,16 +2268,18 @@ export default class Player extends Character {
      * @param title The header text for the popup.
      * @param message The text contents of the popup.
      * @param colour The colour of the popup's text.
+     * @param soundEffect The sound effect to play when the popup is displayed.
      */
 
-    public popup(title: string, message: string, colour = '#00000'): void {
+    public popup(title: string, message: string, colour = '#00000', soundEffect = ''): void {
         if (!title) return;
 
         this.send(
             new NotificationPacket(Opcodes.Notification.Popup, {
                 title,
                 message,
-                colour
+                colour,
+                soundEffect
             })
         );
     }

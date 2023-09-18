@@ -843,6 +843,8 @@ export default class Connection {
             }
 
             case Opcodes.Notification.Popup: {
+                if (info.soundEffect) this.audio.playSound(info.soundEffect);
+
                 return this.menu
                     .getNotification()
                     .show(
@@ -883,6 +885,9 @@ export default class Connection {
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
                 character.addEffect(Modules.Effects.Healing);
+
+                if (this.game.player.instance === character.instance) this.audio.playSound('heal');
+
                 break;
             }
 
@@ -943,6 +948,8 @@ export default class Connection {
      */
 
     private handleDeath(): void {
+        this.audio.playSound('death');
+
         // Stop player movement
         this.game.player.stop(true);
 
@@ -1038,6 +1045,8 @@ export default class Connection {
      */
 
     private handleRespawn(info: RespawnPacketData): void {
+        this.game.audio.playSound('revive');
+
         this.game.player.setGridPosition(info.x, info.y);
 
         this.camera.centreOn(this.game.player);
