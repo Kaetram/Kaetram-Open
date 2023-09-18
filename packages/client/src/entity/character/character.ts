@@ -774,6 +774,8 @@ export default class Character extends Entity {
     }
 
     public moved(): void {
+        if (!this.isPlayer()) return;
+
         this.moveCallback?.();
     }
 

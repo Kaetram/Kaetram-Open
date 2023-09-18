@@ -880,7 +880,11 @@ export default class Player extends Character {
     public handleObjectInteraction(instance: string): void {
         this.cheatScore = 0;
 
-        // Attempt to first find a sign with the given instance.
+        let entity = this.entities.get(instance);
+
+        if (entity?.isTree()) this.skills.getLumberjacking().cut(this, entity);
+
+        // Attempt to find a sign first.
         let sign = this.world.globals.getSigns().get(instance);
 
         if (sign) return sign.talk(this);
@@ -893,25 +897,25 @@ export default class Player extends Character {
         // Ensure that the player is close enough to the object.
         if (diffX > 2 || diffY > 2) return;
 
-        let index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
-            tree = this.world.globals.getTrees().findResource(index);
+        // let index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+        //     tree = this.world.globals.getTrees().findResource(index);
 
-        if (tree) return this.skills.getLumberjacking().cut(this, tree);
+        // if (tree) return this.skills.getLumberjacking().cut(this, tree);
 
-        // If we don't find a tree then we try finding a rock.
-        let rock = this.world.globals.getRocks().findResource(index);
+        // // If we don't find a tree then we try finding a rock.
+        // let rock = this.world.globals.getRocks().findResource(index);
 
-        if (rock) return this.skills.getMining().mine(this, rock);
+        // if (rock) return this.skills.getMining().mine(this, rock);
 
-        // If we don't find a rock then we try finding a fishing spot.
-        let fishingSpot = this.world.globals.getFishingSpots().findResource(index);
+        // // If we don't find a rock then we try finding a fishing spot.
+        // let fishingSpot = this.world.globals.getFishingSpots().findResource(index);
 
-        if (fishingSpot) return this.skills.getFishing().catch(this, fishingSpot);
+        // if (fishingSpot) return this.skills.getFishing().catch(this, fishingSpot);
 
-        // If we don't find a fishing spot, look for foragable plants.
-        let forage = this.world.globals.getForaging().findResource(index);
+        // // If we don't find a fishing spot, look for foragable plants.
+        // let forage = this.world.globals.getForaging().findResource(index);
 
-        if (forage) return this.skills.getForaging().harvest(this, forage);
+        // if (forage) return this.skills.getForaging().harvest(this, forage);
 
         /**
          * Here we use the cursor (I know, it's a bit of a hack) to handle
@@ -919,7 +923,8 @@ export default class Player extends Character {
          * are used by crafting stations.
          */
 
-        let cursor = this.map.getCursor(index);
+        let index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+            cursor = this.map.getCursor(index);
 
         if (!cursor) return;
 

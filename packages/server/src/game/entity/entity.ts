@@ -12,6 +12,7 @@ import type Projectile from './objects/projectile';
 import type Player from './character/player/player';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type LootBag from './objects/lootbag';
+import type Tree from './objects/resource/impl/tree';
 
 type MovementCallback = (x: number, y: number) => void;
 
@@ -22,7 +23,7 @@ type MovementCallback = (x: number, y: number) => void;
  */
 
 abstract class Entity {
-    private type: number; // EntityType
+    public type: number; // EntityType
     public name = '';
 
     public x = -1;
@@ -292,6 +293,15 @@ abstract class Entity {
 
     public isEffect(): this is Effect {
         return this.type === (Modules.EntityType.Effect as number);
+    }
+
+    /**
+     * Checks whether or not the entity is a tree.
+     * @returns Whether the type is equal to the EntityType tree.
+     */
+
+    public isTree(): this is Tree {
+        return this.type === (Modules.EntityType.Tree as number);
     }
 
     /**

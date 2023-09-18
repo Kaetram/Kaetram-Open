@@ -12,6 +12,13 @@
         ]
     },
 
+    "spruce": {
+        "levelRequirement": 10,
+        "experience": 24,
+        "difficulty": 30,
+        "item": "logs"
+    },
+
     "oak2": {
         "levelRequirement": 1,
         "experience": 10,
@@ -188,12 +195,5 @@
         "experience": 350,
         "difficulty": 240,
         "item": "bloodwoodlogs"
-    },
-
-    "sprucetree": {
-        "levelRequirement": 45,
-        "experience": 400,
-        "difficulty": 250,
-        "item": "logs"
     }
 }

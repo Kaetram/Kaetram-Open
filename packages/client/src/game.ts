@@ -30,6 +30,7 @@ import type Entity from './entity/entity';
 import type Storage from './utils/storage';
 import type Character from './entity/character/character';
 import type { TileIgnore } from './utils/pathfinder';
+import type Resource from './entity/objects/resource/resource';
 
 export default class Game {
     public player: Player;
@@ -360,6 +361,8 @@ export default class Game {
             // Skip pets from the search.
             if (entity.isPet()) continue;
 
+            if (entity.isResource() && (entity as Resource).exhausted) continue;
+
             let { x, y, sprite } = entity,
                 { width, height, offsetX, offsetY } = sprite,
                 largest = width > height ? width : height,
@@ -429,5 +432,16 @@ export default class Game {
 
     public isLowPowerMode(): boolean {
         return !this.camera.isCentered() && !this.renderer.animateTiles;
+    }
+
+    /**
+     * Function to consolidate all calls to check whether or not the current
+     * entity we're dealing with is the main player.
+     * @param instance The instance we want to check.
+     * @returns Whether the main player's instance matches the instance provided.
+     */
+
+    public isMainPlayer(instance: string): boolean {
+        return this.player.instance === instance;
     }
 }

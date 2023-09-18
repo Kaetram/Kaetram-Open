@@ -7,7 +7,7 @@ import ResourceText from '@kaetram/common/text/en/resource';
 import { Modules } from '@kaetram/common/network';
 
 import type Player from '../../player';
-import type Resource from '../../../../../globals/impl/resource';
+import type Resource from '../../../../../entity/objects/resource/resource';
 
 export default class Lumberjacking extends ResourceSkill {
     public constructor() {
@@ -25,7 +25,7 @@ export default class Lumberjacking extends ResourceSkill {
 
     private handleExhaust(player: Player, resource?: Resource): void {
         // Use the superclass logic to handle the random item selection.
-        super.handleRandomItems(player, Trees[resource!.type as keyof typeof Trees]);
+        super.handleRandomItems(player, Trees[resource!.key as keyof typeof Trees]);
     }
 
     /**

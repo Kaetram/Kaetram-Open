@@ -387,14 +387,15 @@ export default class Map {
      * marked as a collision.
      * @param x The x grid coordinate.
      * @param y The y grid coordinate.
+     * @param all Whether to include additional collisions.
      * @returns Whether the x and y coordinates in the 2D grid are colliding.
      */
 
-    public isColliding(x: number, y: number): boolean {
+    public isColliding(x: number, y: number, all = false): boolean {
         if (this.isOutOfBounds(x, y)) return true;
         if ((this.data[this.coordToIndex(x, y)] as number) < 1) return true;
 
-        return this.grid[y][x] === 1;
+        return this.grid[y][x] === 1 || (all && this.grid[y][x] === 2);
     }
 
     /**

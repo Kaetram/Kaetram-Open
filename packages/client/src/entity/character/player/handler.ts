@@ -133,10 +133,14 @@ export default class Handler extends CharacterHandler {
                 instance: this.character.target?.instance
             });
 
-        this.game.socket.send(Packets.Target, [
-            this.getTargetType(),
-            this.character.target?.instance || ''
-        ]);
+        let targetType = this.getTargetType();
+
+        // Send target packet only if we have a target.
+        if (targetType !== Opcodes.Target.None)
+            this.game.socket.send(Packets.Target, [
+                this.getTargetType(),
+                this.character.target?.instance || ''
+            ]);
 
         // ---------------------------------------------------------
 
@@ -238,7 +242,8 @@ export default class Handler extends CharacterHandler {
             return Opcodes.Target.Talk;
 
         // Interaction type for objects.
-        if (this.character.target.isObject()) return Opcodes.Target.Object;
+        if (this.character.target.isObject() || this.character.target.isTree())
+            return Opcodes.Target.Object;
 
         // Interaction for attacking
         if (this.character.target.isMob() || (this.character.target.isPlayer() && this.game.pvp))

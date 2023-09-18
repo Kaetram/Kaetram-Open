@@ -7,6 +7,7 @@ import type { Modules } from '@kaetram/common/network';
 export interface AnimationPacketData {
     instance: string;
     action: Modules.Actions;
+    resourceInstance?: string;
 }
 
 export type AnimationPacketCallback = (info: AnimationPacketData) => void;

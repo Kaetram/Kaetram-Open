@@ -21,6 +21,7 @@ import type Map from '../map/map';
 import type Trade from '../menu/trade';
 import type Leaderboards from '../menu/leaderboards';
 import type Guilds from '../menu/guilds';
+import type Tree from '../entity/objects/resource/impl/tree';
 
 interface TargetData {
     sprite: Sprite;
@@ -561,6 +562,8 @@ export default class InputController {
             }
 
             case Modules.EntityType.Tree: {
+                if ((entity as Tree).exhausted) return;
+
                 this.setCursor(this.cursors.axe);
                 this.hovering = Modules.Hovering.Tree;
                 break;

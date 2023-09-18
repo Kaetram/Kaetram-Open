@@ -57,6 +57,7 @@ enum Packets {
     LootBag,
     Countdown,
     Pet,
+    Resource,
 
     // Hub <-> Admin
     AdminSync
