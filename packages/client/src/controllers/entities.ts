@@ -233,11 +233,9 @@ export default class EntitiesController {
         let attacker = this.get<Character>(info.ownerInstance!),
             target = this.get<Character>(info.targetInstance!);
 
-        if (!attacker || !target) return undefined;
+        if (!target) return undefined;
 
-        attacker.lookAt(target);
-
-        let projectile = new Projectile(info.instance, attacker, info.hitType!);
+        let projectile = new Projectile(info.instance, info.hitType!);
 
         projectile.name = info.name;
         projectile.setTarget(target);
@@ -271,6 +269,10 @@ export default class EntitiesController {
             delete this.entities[projectile.instance];
         });
 
+        // Stop here and return the projectile if the attacker despawns (e.g. out of view).
+        if (!attacker) return projectile;
+
+        attacker.lookAt(target);
         attacker.performAction(attacker.orientation, Modules.Actions.Attack);
         attacker.triggerHealthBar();
 

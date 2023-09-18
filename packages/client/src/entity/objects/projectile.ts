@@ -18,13 +18,9 @@ export default class Projectile extends Entity {
 
     public constructor(
         instance: string,
-        public owner: Entity,
         private hitType: Modules.Hits
     ) {
         super(instance, Modules.EntityType.Projectile);
-
-        // Update the projectile's position to the owner's position.
-        this.setGridPosition(owner.gridX, owner.gridY);
     }
 
     /**
