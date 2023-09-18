@@ -400,6 +400,8 @@ export default class Entities {
      */
 
     private addEffect(effect: Effect): void {
+        effect.onDespawn(() => this.removeEffect(effect));
+
         this.add(effect);
 
         this.effects[effect.instance] = effect;

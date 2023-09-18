@@ -327,6 +327,7 @@ export default class Handler {
 
         this.detectAggro();
         this.detectAreas(x, y);
+        this.detectEffects(x, y);
 
         this.player.storeOpen = '';
         this.player.plateauLevel = this.map.getPlateauLevel(x, y);
@@ -911,6 +912,28 @@ export default class Handler {
             // Check if the mob can aggro the player and initiate the combat.
             if (entity.canAggro(this.player)) entity.combat.attack(this.player);
         });
+    }
+
+    /**
+     * Used for detecting effect entities at a specific coordinate. These are generally
+     * like ground hazards such as lava pools and slime pools. Walking on top of those
+     * applies a status effect to the player.
+     * @param x The x grid coordinate we are checking the effects at.
+     * @param y The y grid coordinate we are checking the effects at.
+     */
+
+    private detectEffects(x: number, y: number): void {
+        let entity = this.world.getGrids().getEffectAt(x, y);
+
+        if (!entity) return;
+
+        switch (entity.key) {
+            case 'lava': {
+                if (this.player.status.has(Modules.Effects.Burning)) return;
+
+                return this.player.status.addWithTimeout(Modules.Effects.Burning, 15_000);
+            }
+        }
     }
 
     /**
