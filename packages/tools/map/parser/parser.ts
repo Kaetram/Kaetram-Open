@@ -205,6 +205,9 @@ export default class ProcessMap {
     private parseTileLayer(layer: Layer): void {
         let name = layer.name.toLowerCase();
 
+        // These are visual-only tiles that we use to create map images.
+        if (name === 'trees' || name === 'rocks' || name === 'foraging') return;
+
         layer.data = this.getLayerData(layer.data, layer.compression)!;
 
         if (name === 'entities') return this.parseEntities(layer);
