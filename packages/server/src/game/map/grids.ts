@@ -42,7 +42,7 @@ export default class Grids {
             entity = e;
         });
 
-        return entity;
+        return entity as Effect | undefined;
     }
 
     /**
