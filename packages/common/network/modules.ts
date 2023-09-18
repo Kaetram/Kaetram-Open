@@ -39,7 +39,8 @@ export enum EntityType {
     Object,
     Pet,
     LootBag,
-    Effect
+    Effect,
+    Tree
 }
 
 export enum Interfaces {
@@ -181,7 +182,8 @@ export enum Hovering {
     Item,
     NPC,
     Chest,
-    Object
+    Object,
+    Tree
 }
 
 export enum AudioTypes {

@@ -27,7 +27,7 @@ export default {
      */
 
     createInstance(identifier = 0): string {
-        return `${identifier}${this.randomInt(1000, 100_000)}${++this.counter}`;
+        return `${identifier}-${this.randomInt(1000, 100_000)}${++this.counter}`;
     },
 
     /**
@@ -137,7 +137,7 @@ export default {
      */
 
     getEntityType(instance: string): number {
-        return parseInt(instance.slice(0, 1));
+        return parseInt(instance.split('-')[0]);
     },
 
     /**

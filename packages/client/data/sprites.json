@@ -502,6 +502,7 @@
         },
         "offsetY": -24
     },
+
     { "id": "mobs/angel", "width": 32, "height": 32, "offsetX": -8, "offsetY": -13 },
     { "id": "mobs/card", "width": 32, "height": 32, "offsetX": -8, "offsetY": -13 },
     { "id": "mobs/card2", "width": 32, "height": 32, "offsetX": -8, "offsetY": -13 },
@@ -1163,6 +1164,27 @@
         },
         "offsetX": 0,
         "offsetY": 0
+    },
+    {
+        "id": "objects/sprucetree",
+        "width": 64,
+        "height": 80,
+        "animations": {
+            "idle": {
+                "length": 1,
+                "row": 0
+            },
+            "shake": {
+                "length": 5,
+                "row": 1
+            },
+            "stump": {
+                "length": 1,
+                "row": 2
+            }
+        },
+        "offsetX": -24,
+        "offsetY": -56
     },
     {
         "id": "mobs/clam",

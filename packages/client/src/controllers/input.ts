@@ -560,6 +560,12 @@ export default class InputController {
                 break;
             }
 
+            case Modules.EntityType.Tree: {
+                this.setCursor(this.cursors.axe);
+                this.hovering = Modules.Hovering.Tree;
+                break;
+            }
+
             case Modules.EntityType.Player: {
                 if (this.game.pvp) {
                     this.setCursor(this.getAttackCursor());
@@ -750,7 +756,7 @@ export default class InputController {
      */
 
     private isTargetable(entity: Entity): boolean {
-        return this.isAttackable(entity) || entity.isNPC() || entity.isChest();
+        return this.isAttackable(entity) || entity.isNPC() || entity.isChest() || entity.isTree();
     }
 
     /**

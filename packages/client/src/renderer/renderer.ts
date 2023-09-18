@@ -56,6 +56,7 @@ export default class Renderer {
     protected overlay = document.querySelector<HTMLCanvasElement>('#overlay')!;
     protected textCanvas = document.querySelector<HTMLCanvasElement>('#text-canvas')!;
     protected entities = document.querySelector<HTMLCanvasElement>('#entities')!;
+    protected entitiesFore = document.querySelector<HTMLCanvasElement>('#entities-fore')!;
     protected cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
     protected entitiesMask = document.querySelector<HTMLCanvasElement>('#entities-mask')!;
 
@@ -66,12 +67,14 @@ export default class Renderer {
         this.overlay,
         this.textCanvas,
         this.entities,
+        this.entitiesFore,
         this.cursor,
         this.entitiesMask
     ];
 
     // Create the contexts based on the canvases.
     protected entitiesContext: CanvasRenderingContext2D = this.entities.getContext('2d')!;
+    protected entitiesForeContext: CanvasRenderingContext2D = this.entitiesFore.getContext('2d')!;
     protected overlayContext: CanvasRenderingContext2D = this.overlay.getContext('2d')!;
     protected textContext: CanvasRenderingContext2D = this.textCanvas.getContext('2d')!;
     protected cursorContext: CanvasRenderingContext2D = this.cursor.getContext('2d')!;
@@ -79,18 +82,20 @@ export default class Renderer {
 
     protected allContexts = [
         this.entitiesContext,
+        this.entitiesForeContext,
+        this.entitiesMaskContext,
         this.overlayContext,
         this.textContext,
-        this.cursorContext,
-        this.entitiesMaskContext
+        this.cursorContext
     ];
 
     // We split contexts into two arrays, one for tilemap rendering and one for the rest.
     protected contexts = [
         this.entitiesContext,
+        this.entitiesForeContext,
+        this.entitiesMaskContext,
         this.textContext,
-        this.overlayContext,
-        this.entitiesMaskContext
+        this.overlayContext
     ];
 
     // Zooming buttons
@@ -385,6 +390,7 @@ export default class Renderer {
         if (this.game.player.dead) return;
 
         this.setCameraView(this.entitiesContext);
+        this.setCameraView(this.entitiesForeContext);
 
         this.forEachVisibleEntity((entity: Entity) => {
             // Skip entities that aren't properly loaded or are invisible.
@@ -393,7 +399,7 @@ export default class Renderer {
             this.drawEntity(entity);
         });
 
-        this.entitiesMaskContext.globalAlpha = 0.3;
+        this.entitiesMaskContext.globalAlpha = 0.2;
         this.entitiesMaskContext.drawImage(this.entities, 0, 0);
     }
 
@@ -570,36 +576,37 @@ export default class Renderer {
             dx = ~~(entity.x * this.camera.zoomFactor),
             dy = ~~(entity.y * this.camera.zoomFactor),
             flipX = dx + this.actualTileSize,
-            flipY = dy + entity.sprite.height;
+            flipY = dy + entity.sprite.height,
+            context = entity.isTree() ? this.entitiesForeContext : this.entitiesContext;
 
-        this.entitiesContext.save();
+        context.save();
 
         // Update the entity fading onto the context.
-        if (entity.fading) this.entitiesContext.globalAlpha = entity.fadingAlpha;
+        if (entity.fading) context.globalAlpha = entity.fadingAlpha;
 
         // Handle flipping since we use the same sprite for right/left.
         if (entity.spriteFlipX) {
-            this.entitiesContext.translate(flipX, dy);
-            this.entitiesContext.scale(-1, 1);
+            context.translate(flipX, dy);
+            context.scale(-1, 1);
         } else if (entity.spriteFlipY) {
-            this.entitiesContext.translate(dx, flipY);
-            this.entitiesContext.scale(1, -1);
-        } else this.entitiesContext.translate(dx, dy);
+            context.translate(dx, flipY);
+            context.scale(1, -1);
+        } else context.translate(dx, dy);
 
         // Scale the entity to the current zoom factor.
-        this.entitiesContext.scale(this.camera.zoomFactor, this.camera.zoomFactor);
+        context.scale(this.camera.zoomFactor, this.camera.zoomFactor);
 
         // Scale the entity again if it has a custom scaling associated with it.
-        if (entity.customScale) this.entitiesContext.scale(entity.customScale, entity.customScale);
+        if (entity.customScale) context.scale(entity.customScale, entity.customScale);
 
         // Rotate using the entity's angle.
-        if (entity.angle !== 0) this.entitiesContext.rotate(entity.angle);
+        if (entity.angle !== 0) context.rotate(entity.angle);
 
         // Draw the entity shadowf
         if (entity.hasShadow()) {
             let shadowSprite = this.game.sprites.get('shadow')!;
 
-            this.entitiesContext.drawImage(
+            context.drawImage(
                 shadowSprite.image,
                 0,
                 0,
@@ -612,7 +619,7 @@ export default class Renderer {
             );
         }
 
-        this.entitiesContext.drawImage(
+        context.drawImage(
             entity.getSprite().image,
             frame!.x,
             frame!.y,
@@ -626,9 +633,11 @@ export default class Renderer {
 
         this.drawEntityFore(entity);
 
-        this.entitiesContext.restore();
+        context.restore();
 
         this.drawHealth(entity as Character);
+
+        if (!entity.isPlayer() && !entity.isMob() && !entity.isNPC() && !entity.isItem()) return;
 
         if (!this.game.overlays.hasOverlay())
             if (this.game.player.instance === entity.instance && this.camera.isCentered())
@@ -924,8 +933,6 @@ export default class Renderer {
      */
 
     private drawName(entity: Character | Item): void {
-        if (entity.isPet() || entity.isProjectile()) return;
-
         let x = entity.x + 8, // Default offsets
             y = entity.y - 5,
             colour = 'white',

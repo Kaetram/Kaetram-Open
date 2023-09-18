@@ -20,7 +20,6 @@ export default class Guilds extends Menu {
 
     // Container for creating a new guild.
     private create: HTMLElement = document.querySelector('#guilds-create')!;
-
     private createError: HTMLElement = document.querySelector('#guilds-create-error')!;
 
     private backButton: HTMLElement = document.querySelector('#guilds-back-button')!;
@@ -904,6 +903,6 @@ export default class Guilds extends Menu {
      */
 
     private setError(text = ''): void {
-        this.createError.innerHTML = text;
+        this.createError.innerHTML = Util.parseMessage(Util.formatNotification(text));
     }
 }

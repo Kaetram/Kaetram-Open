@@ -103,7 +103,7 @@ export default class Sprite {
 
     public loadHurtSprite(): void {
         // Hurt sprite already exists or there's not hurt effect, no need to load.
-        if (this.hurtSprite || !this.hasHurtSprite()) return;
+        if (this.hurtSprite || !this.hasHurtSprite() || !this.loaded) return;
 
         this.hurtSprite = Utils.getHurtSprite(this);
     }
@@ -115,7 +115,7 @@ export default class Sprite {
 
     public loadSilhouetteSprite(): void {
         // Silhouette sprite already exists or there's no silhouette, no need to load.
-        if (this.silhouetteSprite || !this.hasSilhouette() || isMobile()) return;
+        if (this.silhouetteSprite || !this.hasSilhouette() || isMobile() || !this.loaded) return;
 
         this.silhouetteSprite = Utils.getSilhouetteSprite(this);
     }
@@ -197,7 +197,7 @@ export default class Sprite {
     public hasSilhouette(): boolean {
         let type = this.getType();
 
-        return type === 'mobs' || type === 'player' || type === 'npcs';
+        return type === 'mobs' || type === 'player' || type === 'npcs' || type === 'objects';
     }
 
     /**

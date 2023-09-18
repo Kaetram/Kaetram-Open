@@ -389,7 +389,7 @@ export default {
 
         for (let i = 0; i < cloneData.data.length; i += 4) {
             // Non-empty pixels are skipped.
-            if (cloneData.data[i + 3] !== 0) continue;
+            if (cloneData.data[i + 3] > 24) continue;
 
             // Extract the x and y coordinates of the pixel.
             let x = (i / 4) % sprite.image.width,
