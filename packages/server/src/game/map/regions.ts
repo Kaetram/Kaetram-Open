@@ -9,13 +9,12 @@ import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { ListPacket, MapPacket, SpawnPacket, UpdatePacket } from '@kaetram/common/network/impl';
 
-import type Player from '../entity/character/player/player';
-import type Entity from '../entity/entity';
-import type Resource from '../globals/impl/resource';
+import type Map from './map';
 import type World from '../world';
 import type Area from './areas/area';
+import type Entity from '../entity/entity';
 import type Dynamic from './areas/impl/dynamic';
-import type Map from './map';
+import type Player from '../entity/character/player/player';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { RegionCache, RegionData, RegionTileData, Tile } from '@kaetram/common/types/map';
 
@@ -509,10 +508,6 @@ export default class Regions {
             // Initialize empty array for the region tile data.
             data[surroundingRegion] = [];
 
-            // Parse and send resource data.
-            if (region.hasResources())
-                data[surroundingRegion].push(...this.getRegionResourceData(region, player));
-
             // Parse and send dynamic areas.
             if (region.hasDynamicAreas())
                 data[surroundingRegion].push(...this.getRegionTileData(region, true, player));
@@ -563,49 +558,6 @@ export default class Regions {
 
                 tileData.push(tile);
             });
-
-        return tileData;
-    }
-
-    /**
-     * Parses through all the resources within the region specified and
-     * grabs tile data from them. It returns a RegionTileData array.
-     * @param region The region we are looking for resources in.
-     * @returns RegionTileData containing resource information.
-     */
-
-    private getRegionResourceData(region: Region, player: Player): RegionTileData[] {
-        let tileData: RegionTileData[] = [];
-
-        // Iterate through all the resources in the region.
-        region.forEachResource((resource: Resource) => {
-            // No need to reload resources that haven't changed.
-            if (player.hasLoadedResource(resource)) return;
-
-            // Parse resource tiles.
-            tileData.push(...this.getResourceData(resource));
-
-            player.loadResource(resource);
-        });
-
-        return tileData;
-    }
-
-    /**
-     * Grabs individual resource data from a specified resource.
-     * @param resource The resource we are grabbing data for.
-     * @returns RegionTileData array containing resource information.
-     */
-
-    private getResourceData(resource: Resource): RegionTileData[] {
-        let tileData: RegionTileData[] = [];
-
-        resource.forEachTile((data: Tile, index: number) => {
-            // Perhaps we can optimize further by storing this directly in the resource?
-            let coord = this.map.indexToCoord(index);
-
-            tileData.push(this.buildTile(coord.x, coord.y, index, data));
-        });
 
         return tileData;
     }

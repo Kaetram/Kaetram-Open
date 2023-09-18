@@ -51,7 +51,6 @@ import type World from '../../../world';
 import type Area from '../../../map/areas/area';
 import type Regions from '../../../map/regions';
 import type Connection from '../../../../network/connection';
-import type Resource from '../../../globals/impl/resource';
 import type Minigame from '../../../minigames/minigame';
 import type Entities from '../../../../controllers/entities';
 import type Packet from '@kaetram/common/network/packet';
@@ -158,7 +157,6 @@ export default class Player extends Character {
 
     // Region data
     public regionsLoaded: number[] = [];
-    public resourcesLoaded: { [instance: string]: Modules.ResourceState } = {};
     public lightsLoaded: number[] = [];
 
     // NPC talking
@@ -1856,15 +1854,6 @@ export default class Player extends Character {
     }
 
     /**
-     * Adds a resource to our loaded resource instances.
-     * @param resource The resource we are adding.
-     */
-
-    public loadResource(resource: Resource): void {
-        this.resourcesLoaded[resource.instance] = resource.state;
-    }
-
-    /**
      * @param region Region id of the region we are checking.
      * @returns Whether or not the region has been added to the list of loaded regions.
      */
@@ -1874,17 +1863,9 @@ export default class Player extends Character {
     }
 
     /**
-     * Checks if the resource is within our loaded resources and that the state matches.
-     * @param resource The resource we are chceking.
-     * @returns If the resource is loaded and the state matches.
+     * @param light The light that we are checking if it exists in the list of loaded lights.
+     * @returns Whether or not the light has been added to the list of loaded lights.
      */
-
-    public hasLoadedResource(resource: Resource): boolean {
-        return (
-            resource.instance in this.resourcesLoaded &&
-            this.resourcesLoaded[resource.instance] === resource.state
-        );
-    }
 
     public hasLoadedLight(light: number): boolean {
         return this.lightsLoaded.includes(light);

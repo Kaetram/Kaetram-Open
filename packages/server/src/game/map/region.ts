@@ -1,7 +1,6 @@
 import type Area from './areas/area';
 import type Entity from '../entity/entity';
 import type Light from '../globals/impl/light';
-import type Resource from '../globals/impl/resource';
 import type Player from '../entity/character/player/player';
 import type { RegionTileData } from '@kaetram/common/types/map';
 
@@ -12,7 +11,6 @@ export default class Region {
     private players: string[] = []; // A list of instance ids for players.
     private joining: Entity[] = []; // Used for sending spawn positions.
     private dynamicAreas: Area[] = [];
-    private resources: Resource[] = [];
     private lights: Light[] = [];
 
     public constructor(
@@ -97,23 +95,6 @@ export default class Region {
     }
 
     /**
-     * Adds a resource to the region.
-     * @param resource The resource we are adding to the region.
-     */
-
-    public addResource(resource: Resource): void {
-        this.resources.push(resource);
-    }
-
-    /**
-     * @returns If the amount of resources in the array is greater than 0.
-     */
-
-    public hasResources(): boolean {
-        return this.resources.length > 0;
-    }
-
-    /**
      * Adds a light object to the region.
      * @param light The light object we are adding.
      */
@@ -160,16 +141,6 @@ export default class Region {
         for (let area of this.dynamicAreas) if (area.contains(x, y)) return area;
 
         return undefined;
-    }
-
-    /**
-     * Attempts to grab a resource from a region based on the index in the map.
-     * @param index The index at which we are trying to grab the resource.
-     * @returns The resource object if it exists.
-     */
-
-    public getResource(index: number): Resource | undefined {
-        for (let resource of this.resources) if (index in resource.data) return resource;
     }
 
     /**
@@ -224,15 +195,6 @@ export default class Region {
 
     public forEachEntity(callback: (entity: Entity) => void): void {
         for (let entity of Object.values(this.entities)) callback(entity);
-    }
-
-    /**
-     * Iterates through all the resources and returns each resource.
-     * @param callback Resource that is being iterated.
-     */
-
-    public forEachResource(callback: (resource: Resource) => void): void {
-        for (let resource of this.resources) callback(resource);
     }
 
     /**

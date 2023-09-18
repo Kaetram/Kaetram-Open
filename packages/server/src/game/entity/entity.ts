@@ -13,6 +13,9 @@ import type Player from './character/player/player';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type LootBag from './objects/lootbag';
 import type Tree from './objects/resource/impl/tree';
+import type Rock from './objects/resource/impl/rock';
+import type FishSpot from './objects/resource/impl/fishspot';
+import type Foraging from './objects/resource/impl/foraging';
 
 type MovementCallback = (x: number, y: number) => void;
 
@@ -302,6 +305,33 @@ abstract class Entity {
 
     public isTree(): this is Tree {
         return this.type === (Modules.EntityType.Tree as number);
+    }
+
+    /**
+     * Checks whether or not the entity is a rock.
+     * @returns Whether the type is equal to the EntityType rock.
+     */
+
+    public isRock(): this is Rock {
+        return this.type === (Modules.EntityType.Rock as number);
+    }
+
+    /**
+     * Checks whether or not the entity is a fish spot.
+     * @returns Whether the type is equal to the EntityType fish spot.
+     */
+
+    public isFishSpot(): this is FishSpot {
+        return this.type === (Modules.EntityType.FishSpot as number);
+    }
+
+    /**
+     * Checks whether or not the entity is a foraging spot.
+     * @returns Whether the type is equal to the EntityType foraging spot.
+     */
+
+    public isForaging(): this is Foraging {
+        return this.type === (Modules.EntityType.Foraging as number);
     }
 
     /**
