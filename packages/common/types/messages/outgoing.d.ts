@@ -53,3 +53,4 @@ export type { CraftingPacketData, CraftingPacketCallback } from '../../network/i
 export type { CountdownPacketData, CountdownPacketCallback } from '../../network/impl/countdown';
 export type { InterfacePacketData, InterfacePacketCallback } from '../../network/impl/interface';
 export type { LootBagPacketData, LootBagPacketCallback } from '../../network/impl/lootbag';
+export type { ResourcePacketCallback } from '../../network/impl/resource';

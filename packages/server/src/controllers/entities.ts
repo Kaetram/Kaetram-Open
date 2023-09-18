@@ -11,11 +11,11 @@ import Projectile from '../game/entity/objects/projectile';
 import LootBag from '../game/entity/objects/lootbag';
 import Pet from '../game/entity/character/pet/pet';
 import Effect from '../game/entity/objects/effect';
-import Tree from '../game/entity/objects/tree';
+import Tree from '../game/entity/objects/resource/impl/tree';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
-import { BlinkPacket, DespawnPacket } from '@kaetram/common/network/impl';
+import { BlinkPacket, DespawnPacket, ResourcePacket } from '@kaetram/common/network/impl';
 
 import type Map from '../game/map/map';
 import type World from '../game/world';
@@ -174,6 +174,16 @@ export default class Entities {
 
     public spawnTree(key: string, x: number, y: number): Tree {
         let tree = new Tree(key, x, y);
+
+        tree.onStateChange(() => {
+            this.world.push(Modules.PacketType.Regions, {
+                region: tree.region,
+                packet: new ResourcePacket({
+                    instance: tree.instance,
+                    state: tree.state
+                })
+            });
+        });
 
         this.add(tree);
 

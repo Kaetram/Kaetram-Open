@@ -41,6 +41,7 @@ import type {
     PVPPacketCallback,
     QuestPacketCallback,
     RankPacketCallback,
+    ResourcePacketCallback,
     RespawnPacketCallback,
     SkillPacketCallback,
     SpawnPacketCallback,
@@ -103,6 +104,7 @@ export default class Messages {
     private interfaceCallback?: InterfacePacketCallback;
     private lootBagCallback?: LootBagPacketCallback;
     private countdownCallback?: CountdownPacketCallback;
+    private resourceCallback?: ResourcePacketCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -163,6 +165,7 @@ export default class Messages {
         this.messages[Packets.Interface] = () => this.interfaceCallback;
         this.messages[Packets.LootBag] = () => this.lootBagCallback;
         this.messages[Packets.Countdown] = () => this.countdownCallback;
+        this.messages[Packets.Resource] = () => this.resourceCallback;
     }
 
     /**
@@ -501,5 +504,9 @@ export default class Messages {
 
     public onCountdown(callback: CountdownPacketCallback): void {
         this.countdownCallback = callback;
+    }
+
+    public onResource(callback: ResourcePacketCallback): void {
+        this.resourceCallback = callback;
     }
 }

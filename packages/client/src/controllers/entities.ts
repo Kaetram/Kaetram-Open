@@ -7,7 +7,7 @@ import Pet from '../entity/character/pet/pet';
 import Player from '../entity/character/player/player';
 import Projectile from '../entity/objects/projectile';
 import Effect from '../entity/objects/effect';
-import Tree from '../entity/objects/tree';
+import Tree from '../entity/objects/resource/impl/tree';
 
 import { Modules } from '@kaetram/common/network';
 
@@ -19,6 +19,7 @@ import type Character from '../entity/character/character';
 import type { PetData } from '@kaetram/common/types/pet';
 import type { PlayerData } from '@kaetram/common/network/impl/player';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type { ResourceEntityData } from '@kaetram/common/types/resource';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
@@ -130,7 +131,7 @@ export default class EntitiesController {
             }
 
             case Modules.EntityType.Tree: {
-                entity = this.createTree(info as EntityData);
+                entity = this.createTree(info as ResourceEntityData);
 
                 prefix = 'objects';
                 break;
@@ -347,8 +348,13 @@ export default class EntitiesController {
      * @returns A new tree object.
      */
 
-    private createTree(info: EntityData): Entity {
-        return new Tree(info.instance);
+    private createTree(info: ResourceEntityData): Entity {
+        let tree = new Tree(info.instance);
+
+        // Update the state of the tree.
+        tree.exhausted = info.state === Modules.ResourceState.Depleted;
+
+        return tree;
     }
 
     /**

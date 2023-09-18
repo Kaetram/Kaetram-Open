@@ -391,6 +391,9 @@ export default {
             // Non-empty pixels are skipped.
             if (cloneData.data[i + 3] > 24) continue;
 
+            // Ignore the delimiter pixels (RGBA: x, x, x, 1);
+            if (cloneData.data[i + 3] === 1) continue;
+
             // Extract the x and y coordinates of the pixel.
             let x = (i / 4) % sprite.image.width,
                 y = ~~(i / 4 / sprite.image.width);

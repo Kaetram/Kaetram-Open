@@ -4,12 +4,12 @@ import Item from '../../../objects/item';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
+import ResourceText from '@kaetram/common/text/en/resource';
 import { Modules } from '@kaetram/common/network';
 import { AnimationPacket } from '@kaetram/common/network/impl';
-import ResourceText from '@kaetram/common/text/en/resource';
 
 import type Player from '../player';
-import type Resource from '../../../../globals/impl/resource';
+import type Resource from '../../../objects/resource/resource';
 import type { ResourceData, ResourceInfo } from '@kaetram/common/types/resource';
 
 type ExhaustCallback = (player: Player, resource?: Resource) => void;
@@ -48,7 +48,7 @@ export default class ResourceSkill extends Skill {
                 `${player.username} attempted to interact with an exhausted resource.`
             );
 
-        let resourceInfo = this.data[resource.type];
+        let resourceInfo = this.data[resource.key];
 
         // Could not find resource interaction data for the resource.
         if (!resourceInfo)
@@ -88,7 +88,11 @@ export default class ResourceSkill extends Skill {
 
             // Send the animation packet to the region player is in.
             player.sendToRegion(
-                new AnimationPacket({ instance: player.instance, action: Modules.Actions.Attack })
+                new AnimationPacket({
+                    instance: player.instance,
+                    resourceInstance: resource.instance,
+                    action: Modules.Actions.Attack
+                })
             );
 
             // Use probability to check if we can exhaust the resource.
@@ -110,7 +114,7 @@ export default class ResourceSkill extends Skill {
                 if (resourceInfo.quest)
                     player.quests
                         .get(resourceInfo.quest)
-                        ?.resourceCallback?.(this.type, resource.type);
+                        ?.resourceCallback?.(this.type, resource.key);
 
                 // Deplete the resource and send the signal to the region
                 if (this.shouldDeplete()) resource.deplete();

@@ -22,6 +22,7 @@ import type Player from '../entity/character/player/player';
 import type { LampData } from '@kaetram/common/types/item';
 import type { ClientTile } from '@kaetram/common/types/map';
 import type { SerializedLight } from '@kaetram/common/network/impl/overlay';
+import type Tree from '../entity/objects/resource/impl/tree';
 
 interface Light extends Lamp {
     originalX: number;
@@ -396,6 +397,9 @@ export default class Renderer {
             // Skip entities that aren't properly loaded or are invisible.
             if (!entity.sprite?.loaded || !entity.animation || !entity.isVisible()) return;
 
+            // Handle tree drawing as separate from other entities.
+            if (entity.isTree()) return this.drawTree(entity as Tree);
+
             this.drawEntity(entity);
         });
 
@@ -576,37 +580,36 @@ export default class Renderer {
             dx = ~~(entity.x * this.camera.zoomFactor),
             dy = ~~(entity.y * this.camera.zoomFactor),
             flipX = dx + this.actualTileSize,
-            flipY = dy + entity.sprite.height,
-            context = entity.isTree() ? this.entitiesForeContext : this.entitiesContext;
+            flipY = dy + entity.sprite.height;
 
-        context.save();
+        this.entitiesContext.save();
 
-        // Update the entity fading onto the context.
-        if (entity.fading) context.globalAlpha = entity.fadingAlpha;
+        // Update the entity fading onto the this.entitiesContext.
+        if (entity.fading) this.entitiesContext.globalAlpha = entity.fadingAlpha;
 
         // Handle flipping since we use the same sprite for right/left.
         if (entity.spriteFlipX) {
-            context.translate(flipX, dy);
-            context.scale(-1, 1);
+            this.entitiesContext.translate(flipX, dy);
+            this.entitiesContext.scale(-1, 1);
         } else if (entity.spriteFlipY) {
-            context.translate(dx, flipY);
-            context.scale(1, -1);
-        } else context.translate(dx, dy);
+            this.entitiesContext.translate(dx, flipY);
+            this.entitiesContext.scale(1, -1);
+        } else this.entitiesContext.translate(dx, dy);
 
         // Scale the entity to the current zoom factor.
-        context.scale(this.camera.zoomFactor, this.camera.zoomFactor);
+        this.entitiesContext.scale(this.camera.zoomFactor, this.camera.zoomFactor);
 
         // Scale the entity again if it has a custom scaling associated with it.
-        if (entity.customScale) context.scale(entity.customScale, entity.customScale);
+        if (entity.customScale) this.entitiesContext.scale(entity.customScale, entity.customScale);
 
         // Rotate using the entity's angle.
-        if (entity.angle !== 0) context.rotate(entity.angle);
+        if (entity.angle !== 0) this.entitiesContext.rotate(entity.angle);
 
         // Draw the entity shadowf
         if (entity.hasShadow()) {
             let shadowSprite = this.game.sprites.get('shadow')!;
 
-            context.drawImage(
+            this.entitiesContext.drawImage(
                 shadowSprite.image,
                 0,
                 0,
@@ -619,7 +622,7 @@ export default class Renderer {
             );
         }
 
-        context.drawImage(
+        this.entitiesContext.drawImage(
             entity.getSprite().image,
             frame!.x,
             frame!.y,
@@ -633,7 +636,7 @@ export default class Renderer {
 
         this.drawEntityFore(entity);
 
-        context.restore();
+        this.entitiesContext.restore();
 
         this.drawHealth(entity as Character);
 
@@ -643,6 +646,67 @@ export default class Renderer {
             if (this.game.player.instance === entity.instance && this.camera.isCentered())
                 this.drawPlayerName(entity as Player);
             else this.drawName(entity as Character & Item);
+    }
+
+    /**
+     * We use a separate function for rendering trees since we need to do a bit more magic. Trees
+     * require their stumps be rendered below the player, and their leaves be rendered above the
+     * player. Both renderings are done on the same entities fore context, however the trick is to
+     * use globalCompositeOperation to render the leaves on top of the player, and the stumps
+     * below the player.
+     * @param entity The tree entity that we are drawing.
+     */
+
+    private drawTree(entity: Tree): void {
+        // We extract the normal animation frames about the tree.
+        let frame = entity.animation?.frame,
+            baseFrame = entity.exhausted ? entity.exhaustedFrame : entity.baseFrame, // use stump if cut
+            dx = ~~(entity.x * this.camera.zoomFactor),
+            dy = ~~(entity.y * this.camera.zoomFactor);
+
+        this.entitiesForeContext.save();
+        this.entitiesContext.save();
+
+        // Translate the context to the tree's position.
+        this.entitiesForeContext.translate(dx, dy);
+        this.entitiesContext.translate(dx, dy);
+
+        // Scale relative to the camera zoom factor.
+        this.entitiesForeContext.scale(this.camera.zoomFactor, this.camera.zoomFactor);
+        this.entitiesContext.scale(this.camera.zoomFactor, this.camera.zoomFactor);
+
+        // Draw the top part of the tree if the tree is not cut.
+        if (!entity.exhausted)
+            this.entitiesForeContext.drawImage(
+                entity.getSprite().image,
+                frame!.x,
+                frame!.y,
+                entity.sprite.width,
+                entity.sprite.height,
+                entity.sprite.offsetX,
+                entity.sprite.offsetY + entity.offsetY,
+                entity.sprite.width,
+                entity.sprite.height
+            );
+
+        // Set the global composite operation to destination over.
+        this.entitiesContext.globalCompositeOperation = 'destination-over';
+
+        // Draw the bottom part of the tree.
+        this.entitiesContext.drawImage(
+            entity.getSprite().image,
+            baseFrame.x,
+            baseFrame.y,
+            entity.sprite.width,
+            entity.sprite.height,
+            entity.sprite.offsetX,
+            entity.sprite.offsetY + entity.offsetY,
+            entity.sprite.width,
+            entity.sprite.height
+        );
+
+        this.entitiesForeContext.restore();
+        this.entitiesContext.restore();
     }
 
     /**

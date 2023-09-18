@@ -67,6 +67,8 @@ import type {
 } from '@kaetram/common/types/messages/outgoing';
 import type { TradePacketValues } from '@kaetram/common/network/impl/trade';
 import type { EquipmentPacketValues } from '@kaetram/common/network/impl/equipment';
+import type Resource from '../entity/objects/resource/resource';
+import type { ResourcePacketData } from '@kaetram/common/network/impl/resource';
 
 export default class Connection {
     /**
@@ -165,6 +167,7 @@ export default class Connection {
         this.messages.onInterface(this.handleInterface.bind(this));
         this.messages.onLootBag(this.handleLootBag.bind(this));
         this.messages.onCountdown(this.handleCountdown.bind(this));
+        this.messages.onResource(this.handleResource.bind(this));
     }
 
     /**
@@ -602,9 +605,13 @@ export default class Connection {
     private handleAnimation(info: AnimationPacketData): void {
         let character = this.entities.get<Character>(info.instance);
 
-        if (!character) return;
+        character?.performAction(character.orientation, info.action);
 
-        character.performAction(character.orientation, info.action);
+        if (info.resourceInstance) {
+            let resource = this.entities.get<Resource>(info.resourceInstance);
+
+            resource?.shake();
+        }
     }
 
     /**
@@ -1514,6 +1521,28 @@ export default class Connection {
         if (!entity) return;
 
         entity.setCountdown(info.time);
+    }
+
+    /**
+     * Handles the incoming resource packet. We essentially update the exhausted status
+     * of the resource based on what the server is telling us.
+     * @param info Contains the instance and the state of the resource.
+     */
+
+    private handleResource(info: ResourcePacketData): void {
+        let entity = this.entities.get(info.instance);
+
+        // Entity either doesn't exist or it's not a resource.
+        if (!entity?.isResource()) return;
+
+        let depleted = info.state === Modules.ResourceState.Depleted;
+
+        (entity as Resource).setExhausted(depleted);
+
+        // Update the cursor and silhouette
+        this.input.moveCursor();
+
+        if (depleted) entity.updateSilhouette(false);
     }
 
     /**

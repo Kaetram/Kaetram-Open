@@ -1,3 +1,6 @@
+import type { Modules } from '../network';
+import type { EntityData } from './entity';
+
 export interface ResourceRandomItem {
     key: string;
     chance: number;
@@ -18,4 +21,8 @@ export interface ResourceInfo {
 
 export interface ResourceData {
     [key: string]: ResourceInfo;
+}
+
+export interface ResourceEntityData extends EntityData {
+    state: Modules.ResourceState; // The state of the resource
 }

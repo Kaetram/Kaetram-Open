@@ -1,4 +1,4 @@
-interface Frame {
+export interface Frame {
     index: number;
     x: number;
     y: number;
@@ -117,6 +117,20 @@ export default class Animation {
 
     private canAnimate(): boolean {
         return Date.now() - this.lastTime > this.speed && !this.stopped;
+    }
+
+    /**
+     * Used by tree objects to select the correct animation frame when trying to use the
+     * base of the tree or the cut stump.
+     * @returns The second animation in the row.
+     */
+
+    public getSecondFrame(): Frame {
+        return {
+            index: 1,
+            x: this.width,
+            y: this.row * this.height
+        };
     }
 
     /**

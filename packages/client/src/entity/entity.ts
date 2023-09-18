@@ -442,6 +442,16 @@ export default abstract class Entity {
     }
 
     /**
+     * Used for unifying multiple resources into one function. Things
+     * like trees, rocks, and bushes are all considered resources.
+     * @returns Whether or not the entity is a tree, a rock, or a bush.
+     */
+
+    public isResource(): boolean {
+        return this.isTree();
+    }
+
+    /**
      * Default implementation for `isModerator()`
      * @returns False by default.
      */

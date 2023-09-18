@@ -235,7 +235,7 @@
     { "id": "player/weapon/bowwillowtwine", "offsetX": -8, "offsetY": -32 },
 
     { "id": "player/shield/lantern", "offsetY": -20 },
-    { "id": "player/shield/lantern2", "offsetY": -20 },
+    { "id": "player/shield/lantern2", "offsetY": -21 },
     { "id": "player/shield/lanternarcan", "offsetY": -24 },
     { "id": "player/shield/coppershield", "offsetY": -24 },
     { "id": "player/shield/tinshield", "offsetY": -24 },
@@ -1166,7 +1166,7 @@
         "offsetY": 0
     },
     {
-        "id": "objects/sprucetree",
+        "id": "objects/spruce",
         "width": 64,
         "height": 80,
         "animations": {
@@ -1178,13 +1178,34 @@
                 "length": 5,
                 "row": 1
             },
-            "stump": {
+            "exhausted": {
                 "length": 1,
                 "row": 2
             }
         },
         "offsetX": -24,
         "offsetY": -56
+    },
+    {
+        "id": "objects/oak",
+        "width": 64,
+        "height": 96,
+        "animations": {
+            "idle": {
+                "length": 1,
+                "row": 0
+            },
+            "shake": {
+                "length": 1,
+                "row": 1
+            },
+            "exhausted": {
+                "length": 1,
+                "row": 2
+            }
+        },
+        "offsetX": -24,
+        "offsetY": -64
     },
     {
         "id": "mobs/clam",
