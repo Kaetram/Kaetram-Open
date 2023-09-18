@@ -4,7 +4,7 @@ import ForagingSpots from '../../../../../../../data/foraging.json';
 import { Modules } from '@kaetram/common/network';
 
 import type Player from '../../player';
-import type Resource from '../../../../../globals/impl/resource';
+import type Resource from '../../../../../entity/objects/resource/resource';
 import type { ResourceInfo } from '@kaetram/common/types/resource';
 
 export default class Foraging extends ResourceSkill {

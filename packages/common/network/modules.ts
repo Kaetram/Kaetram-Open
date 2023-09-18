@@ -40,7 +40,10 @@ export enum EntityType {
     Pet,
     LootBag,
     Effect,
-    Tree
+    Tree,
+    Rock,
+    Foraging,
+    FishSpot
 }
 
 export enum Interfaces {

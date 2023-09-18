@@ -3,26 +3,12 @@ import zlib from 'node:zlib';
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import type {
-    ProcessedAnimation,
-    ProcessedMap,
-    ProcessedResource,
-    ProcessedTileset
-} from '@kaetram/common/types/map';
+import type { ProcessedAnimation, ProcessedMap, ProcessedTileset } from '@kaetram/common/types/map';
 import type { Animation, Layer, LayerObject, MapData, Property, Tileset } from './mapdata';
-
-interface Resources {
-    [key: string]: ProcessedResource;
-}
 
 export default class ProcessMap {
     private map: ProcessedMap;
     private tilesetEntities: { [tileId: number]: string } = {};
-
-    private trees: Resources = {};
-    private rocks: Resources = {};
-    private fishSpots: Resources = {};
-    private foraging: Resources = {};
 
     /**
      * We create the skeleton file for the ExportedMap.
@@ -59,11 +45,7 @@ export default class ProcessMap {
             obstructing: [],
             objects: [],
             areas: {},
-            cursors: {},
-            trees: [],
-            rocks: [],
-            fishSpots: [],
-            foraging: []
+            cursors: {}
         };
 
         this.parseTilesets();
@@ -105,16 +87,6 @@ export default class ProcessMap {
 
             this.parseTileset(tileset);
         }
-
-        // As the last step of the tileset processing, we parse the resources and add them to the map.
-        this.parseResources(this.trees, (tree: ProcessedResource) => this.map.trees.push(tree));
-        this.parseResources(this.rocks, (rock: ProcessedResource) => this.map.rocks.push(rock));
-        this.parseResources(this.fishSpots, (fishSpot: ProcessedResource) =>
-            this.map.fishSpots.push(fishSpot)
-        );
-        this.parseResources(this.foraging, (forage: ProcessedResource) =>
-            this.map.foraging.push(forage)
-        );
     }
 
     /**
@@ -218,56 +190,6 @@ export default class ProcessMap {
             case 'cursor': {
                 cursors[tileId] = value;
                 break;
-            }
-
-            // Properties fo resource classification.
-            case 'tree': {
-                return this.parseResourceProperty(this.trees, 'data', tileId, value);
-            }
-
-            case 'stump': {
-                return this.parseResourceProperty(this.trees, 'base', tileId, value);
-            }
-
-            case 'cutstump':
-            case 'stumpcut': {
-                return this.parseResourceProperty(this.trees, 'depleted', tileId, value);
-            }
-
-            // Mining
-            case 'rock': {
-                return this.parseResourceProperty(this.rocks, 'data', tileId, value);
-            }
-
-            case 'rockbase': {
-                return this.parseResourceProperty(this.rocks, 'base', tileId, value);
-            }
-
-            case 'rockempty': {
-                return this.parseResourceProperty(this.rocks, 'depleted', tileId, value);
-            }
-
-            // Fishing
-            case 'fish':
-            case 'fishspot': {
-                // Fish spots share the same base and data tiles.
-                this.parseResourceProperty(this.fishSpots, 'base', tileId, value);
-                return this.parseResourceProperty(this.fishSpots, 'data', tileId, value);
-            }
-
-            case 'fishempty': {
-                return this.parseResourceProperty(this.fishSpots, 'depleted', tileId, value);
-            }
-
-            // Foraging
-            case 'forage': {
-                // Foraging spots share the same base and data tiles.
-                this.parseResourceProperty(this.foraging, 'base', tileId, value);
-                return this.parseResourceProperty(this.foraging, 'data', tileId, value);
-            }
-
-            case 'forageempty': {
-                return this.parseResourceProperty(this.foraging, 'depleted', tileId, value);
             }
         }
     }
@@ -407,69 +329,6 @@ export default class ProcessMap {
                 { name, value } = property;
 
             this.map.areas[areaName][index][name as never] = value;
-        }
-    }
-
-    /**
-     * Generic implementation for parsing a resource property. This may be a tree, or a rock
-     * or anything else in the future. When we pass properties onto this function, we ensure
-     * they use the standard `data,` `base,` and `depleted` properties.
-     * @param resourceType The type of resource we are adding data onto (trees, rocks, etc.)
-     * @param name The name of the property (data, base, depleted)
-     * @param tileId The tileId being processed currently (the tile data).
-     * @param value The value represents the resource's identifier.
-     */
-
-    private parseResourceProperty(
-        resourceType: Resources,
-        name: string,
-        tileId: number,
-        value: never
-    ): void {
-        // Create a new resource type if it does not exist.
-        if (!(value in resourceType))
-            resourceType[value] = {
-                data: [],
-                base: [],
-                depleted: [],
-                type: value
-            };
-
-        // Organize resource data into their respective arrays.
-        switch (name) {
-            case 'data': {
-                resourceType[value].data.push(tileId);
-                break;
-            }
-
-            case 'base': {
-                resourceType[value].base.push(tileId);
-                break;
-            }
-
-            case 'depleted': {
-                resourceType[value].depleted.push(tileId);
-                break;
-            }
-        }
-    }
-
-    /**
-     * Parses through a specified resource and creates a callback after it has been validated.
-     * @param resources The list of processed resources to look through.
-     * @param callback Contains resource currently being processed.
-     */
-
-    private parseResources(
-        resources: Resources,
-        callback: (resource: ProcessedResource) => void
-    ): void {
-        for (let resource of Object.values(resources)) {
-            // Determine whether the normal and exhausted resource match lengths, otherwise skip.
-            if (resource.base.length !== resource.depleted.length)
-                return log.error(`${resource.type} has a base and depleted length mismatch.`);
-
-            callback(resource);
         }
     }
 
@@ -671,11 +530,7 @@ export default class ProcessMap {
             high,
             objects,
             cursors,
-            entities,
-            trees,
-            rocks,
-            fishSpots,
-            foraging
+            entities
         } = this.map;
 
         return JSON.stringify({
@@ -690,11 +545,7 @@ export default class ProcessMap {
             high,
             objects,
             cursors,
-            entities,
-            trees,
-            rocks,
-            fishSpots,
-            foraging
+            entities
         });
     }
 

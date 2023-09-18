@@ -170,8 +170,4 @@ export interface ProcessedMap {
     obstructing?: number[];
     areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
-    trees: ProcessedResource[];
-    rocks: ProcessedResource[];
-    fishSpots: ProcessedResource[];
-    foraging: ProcessedResource[];
 }

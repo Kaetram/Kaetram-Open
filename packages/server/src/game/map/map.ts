@@ -9,13 +9,7 @@ import { Modules } from '@kaetram/common/network';
 import type World from '../world';
 import type Areas from './areas/areas';
 import type Player from '../entity/character/player/player';
-import type {
-    ProcessedArea,
-    ProcessedDoor,
-    ProcessedMap,
-    ProcessedResource,
-    Tile
-} from '@kaetram/common/types/map';
+import type { ProcessedArea, ProcessedDoor, ProcessedMap, Tile } from '@kaetram/common/types/map';
 
 let map = mapData as ProcessedMap;
 
@@ -40,10 +34,6 @@ export default class Map {
     public cursors: { [tileId: number]: string } = map.cursors;
     public doors: { [index: number]: ProcessedDoor } = {};
     public warps: ProcessedArea[] = map.areas.warps || [];
-    public trees: ProcessedResource[] = map.trees || [];
-    public rocks: ProcessedResource[] = map.rocks || [];
-    public fishSpots: ProcessedResource[] = map.fishSpots || [];
-    public foraging: ProcessedResource[] = map.foraging || [];
     public lights: ProcessedArea[] = map.areas.lights || [];
     public signs: ProcessedArea[] = map.areas.signs || [];
 
@@ -250,13 +240,6 @@ export default class Map {
                 // Check collision if we can find a mapping tile.
                 if (mappedTile) return this.isColliding(mappedTile.x, mappedTile.y);
             }
-        }
-
-        // Check whether a resource has collision properties.
-        if (region.hasResources()) {
-            let resource = region.getResource(index);
-
-            if (resource) return this.isCollision(resource.data[index] as Tile);
         }
 
         // Check the collision at a specified index.
