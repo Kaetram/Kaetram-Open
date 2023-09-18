@@ -124,7 +124,7 @@ export default class Achievements {
      */
 
     private handlePopup(popup: PopupData): void {
-        this.player.popup(popup.title, popup.text, popup.colour);
+        this.player.popup(popup.title, popup.text, popup.colour, popup.soundEffect);
     }
 
     /**

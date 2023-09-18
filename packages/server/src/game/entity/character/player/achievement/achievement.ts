@@ -303,7 +303,8 @@ export default class Achievement {
         return {
             title: 'Achievement Completed!',
             text,
-            colour: '#33cc33'
+            colour: '#33cc33',
+            soundEffect: 'achievement'
         };
     }
 
