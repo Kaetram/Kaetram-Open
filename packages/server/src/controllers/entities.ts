@@ -1,6 +1,7 @@
 import mobData from '../../data/mobs.json';
 import itemData from '../../data/items.json';
 import npcData from '../../data/npcs.json';
+import treeData from '../../data/trees.json';
 import NPC from '../game/entity/npc/npc';
 import Item from '../game/entity/objects/item';
 import Chest from '../game/entity/objects/chest';
@@ -10,6 +11,7 @@ import Projectile from '../game/entity/objects/projectile';
 import LootBag from '../game/entity/objects/lootbag';
 import Pet from '../game/entity/character/pet/pet';
 import Effect from '../game/entity/objects/effect';
+import Tree from '../game/entity/objects/tree';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
@@ -40,6 +42,7 @@ export default class Entities {
     private pets: { [instance: string]: Pet } = {};
     private lootBags: { [instance: string]: LootBag } = {};
     private effects: { [instance: string]: Effect } = {};
+    private trees: { [instance: string]: Tree } = {};
 
     public constructor(private world: World) {
         this.map = world.map;
@@ -71,10 +74,17 @@ export default class Entities {
                 case Modules.EntityType.Mob: {
                     return this.spawnMob(key, position.x, position.y);
                 }
+
+                case Modules.EntityType.Tree: {
+                    return this.spawnTree(key, position.x, position.y);
+                }
             }
         });
 
-        log.info(`Spawned ${Object.keys(this.entities).length} entities!`);
+        log.info(`Spawned ${Object.keys(this.items).length} items!`);
+        log.info(`Spawned ${Object.keys(this.npcs).length} NPCs!`);
+        log.info(`Spawned ${Object.keys(this.mobs).length} mobs!`);
+        log.info(`Spawned ${Object.keys(this.trees).length} trees!`);
 
         // Spawns the static chests throughout the world.
 
@@ -152,6 +162,24 @@ export default class Entities {
         this.addMob(mob);
 
         return mob;
+    }
+
+    /**
+     * Spawns a tree in the world and adds it to the world.
+     * @param key The key of the tree, used to determine its sprite.
+     * @param x The x grid coordinate of the tree spawn.
+     * @param y The y grid coordinate of the tree spawn.
+     * @returns A new tree object.
+     */
+
+    public spawnTree(key: string, x: number, y: number): Tree {
+        let tree = new Tree(key, x, y);
+
+        this.add(tree);
+
+        this.trees[tree.instance] = tree;
+
+        return tree;
     }
 
     /**
@@ -587,6 +615,7 @@ export default class Entities {
         if (key in itemData) return Modules.EntityType.Item;
         if (key in npcData) return Modules.EntityType.NPC;
         if (key in mobData) return Modules.EntityType.Mob;
+        if (key in treeData) return Modules.EntityType.Tree;
 
         return -1;
     }

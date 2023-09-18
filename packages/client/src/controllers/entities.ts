@@ -7,6 +7,7 @@ import Pet from '../entity/character/pet/pet';
 import Player from '../entity/character/player/player';
 import Projectile from '../entity/objects/projectile';
 import Effect from '../entity/objects/effect';
+import Tree from '../entity/objects/tree';
 
 import { Modules } from '@kaetram/common/network';
 
@@ -127,13 +128,17 @@ export default class EntitiesController {
                 prefix = 'effectentity';
                 break;
             }
+
+            case Modules.EntityType.Tree: {
+                entity = this.createTree(info as EntityData);
+
+                prefix = 'objects';
+                break;
+            }
         }
 
         // Something went wrong creating the entity.
-        if (!entity) {
-            console.log(info);
-            return log.error(`Failed to create entity ${info.instance}`);
-        }
+        if (!entity) return log.error(`Failed to create entity ${info.instance}`);
 
         let sprite = entity.sprite || this.game.sprites.get(`${prefix}/${info.key}`);
 
@@ -337,6 +342,16 @@ export default class EntitiesController {
     }
 
     /**
+     * Creates a new tree object based on the info provided.
+     * @param info Contains the key and instance of the tree.
+     * @returns A new tree object.
+     */
+
+    private createTree(info: EntityData): Entity {
+        return new Tree(info.instance);
+    }
+
+    /**
      * Checks if the instance provided is the same as the main player.
      * @param instance The instance we are checking.
      * @returns If the instance is the same as the main player's instance.
@@ -446,6 +461,9 @@ export default class EntitiesController {
      */
 
     public registerPosition(entity: Entity): void {
+        // Tree entities are registered as colliding on the rendering grid.
+        if (entity.isTree()) this.game.map.grid[entity.gridY][entity.gridX] = 2;
+
         this.grids.addToRenderingGrid(entity);
     }
 

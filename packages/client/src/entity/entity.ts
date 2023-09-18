@@ -225,7 +225,8 @@ export default abstract class Entity {
         name: string,
         speed = this.sprite.idleSpeed,
         count = 1,
-        onEndCount?: () => void
+        onEndCount?: () => void,
+        withStop = false
     ): void {
         // Prevent setting animation if no sprite or it's the same animation.
         if (this.animation?.name === name) return;
@@ -234,7 +235,7 @@ export default abstract class Entity {
         let { length, row, width, height } = this.sprite.animations[name];
 
         // Create a new animation instance to prevent pointer issues.
-        this.animation = new Animation(name, length, row, width, height);
+        this.animation = new Animation(name, length, row, width, height, withStop);
 
         // Restart the attack animation if it's already playing.
         if (name.startsWith('atk')) this.animation.reset();
@@ -430,6 +431,14 @@ export default abstract class Entity {
 
     public isObject(): boolean {
         return this.type === Modules.EntityType.Object;
+    }
+
+    /**
+     * @returns Whether or not the entity is a tree type.
+     */
+
+    public isTree(): boolean {
+        return this.type === Modules.EntityType.Tree;
     }
 
     /**

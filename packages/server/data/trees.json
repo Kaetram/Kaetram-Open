@@ -188,5 +188,12 @@
         "experience": 350,
         "difficulty": 240,
         "item": "bloodwoodlogs"
+    },
+
+    "sprucetree": {
+        "levelRequirement": 45,
+        "experience": 400,
+        "difficulty": 250,
+        "item": "logs"
     }
 }

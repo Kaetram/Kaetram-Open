@@ -44,10 +44,11 @@ export default class Handler extends CharacterHandler {
         // Prevent calculating pathing when we target a mob that is within range.
         if (this.character.canAttackTarget() && !this.character.trading) return [];
 
-        let isObject = this.map.isObject(x, y);
+        let isObject = this.map.isObject(x, y),
+            isTree = this.character.target?.isTree();
 
         // Ignore requests into colliding tiles but allow targetable objects.
-        if (this.map.isColliding(x, y) && !isObject) return [];
+        if (this.map.isColliding(x, y) && !isObject && !isTree) return [];
 
         // Sends the packet to the server with the request.
         this.game.socket.send(Packets.Movement, {
@@ -73,6 +74,8 @@ export default class Handler extends CharacterHandler {
             if (cursor === 'fishing')
                 ignores.push({ x: x + 1, y }, { x: x - 1, y }, { x, y: y + 1 }, { x, y: y - 1 });
         }
+
+        if (isTree) ignores.push({ x, y });
 
         return this.game.findPath(this.character, x, y, ignores, cursor);
     }
