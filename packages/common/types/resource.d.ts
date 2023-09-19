@@ -7,6 +7,7 @@ export interface ResourceRandomItem {
 }
 
 export interface ResourceInfo {
+    name?: string;
     levelRequirement: number; // Required level to exhaust the resource
     experience: number; // Experience gained when exhausting the resource
     difficulty: number; // How hard it is to exhaust the resource

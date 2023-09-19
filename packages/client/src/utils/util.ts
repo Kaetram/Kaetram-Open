@@ -510,7 +510,10 @@ export default {
                 };
             }
 
-            case 'trees': {
+            case 'trees':
+            case 'rocks':
+            case 'fishspots':
+            case 'bushes': {
                 return {
                     idle: {
                         length: 1,

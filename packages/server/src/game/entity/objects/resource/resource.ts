@@ -2,12 +2,19 @@ import Entity from '../../entity';
 
 import { Modules } from '@kaetram/common/network';
 
-import type { EntityData } from '@kaetram/common/types/entity';
-import type { ResourceEntityData } from '@kaetram/common/types/resource';
+import type { ResourceEntityData, ResourceInfo } from '@kaetram/common/types/resource';
 
 export default abstract class Resource extends Entity {
     // Amount of time it takes for the resource to respawn.
     protected respawnTime: number = Modules.Constants.RESOURCE_RESPAWN;
+
+    // Empty initialization for the resource info, subclasses will override this.
+    public data: ResourceInfo = {
+        levelRequirement: 1,
+        experience: 0,
+        difficulty: 0,
+        item: ''
+    };
 
     // The state of the resource
     public state: Modules.ResourceState = Modules.ResourceState.Default;
@@ -77,6 +84,17 @@ export default abstract class Resource extends Entity {
 
     public setRespawnTime(time = this.getRespawnTime()): void {
         this.respawnTime = time;
+    }
+
+    /**
+     * Updates the resource data and applies the new name.
+     * @param data The new data to apply to the resource.
+     */
+
+    protected setData(data: ResourceInfo): void {
+        this.data = data;
+
+        this.name = data.name ?? this.name;
     }
 
     /**

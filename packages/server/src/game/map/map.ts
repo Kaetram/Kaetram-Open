@@ -10,6 +10,7 @@ import type World from '../world';
 import type Areas from './areas/areas';
 import type Player from '../entity/character/player/player';
 import type { ProcessedArea, ProcessedDoor, ProcessedMap, Tile } from '@kaetram/common/types/map';
+import type Entity from '../entity/entity';
 
 let map = mapData as ProcessedMap;
 
@@ -242,8 +243,15 @@ export default class Map {
             }
         }
 
+        let hasEntity = false;
+
+        if (this.grids.hasEntityAt(x, y))
+            this.grids.forEachEntityAt(x, y, (entity: Entity) => {
+                if (entity.isResource()) hasEntity = true;
+            });
+
         // Check the collision at a specified index.
-        return this.isCollisionIndex(index);
+        return hasEntity || this.isCollisionIndex(index);
     }
 
     /**

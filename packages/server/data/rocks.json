@@ -1,5 +1,6 @@
 {
-    "nisoc": {
+    "nisocrock": {
+        "name": "Nisoc Rock",
         "levelRequirement": 1,
         "experience": 20,
         "difficulty": 15,
@@ -7,35 +8,40 @@
         "achievement": "firstrock"
     },
 
-    "cinnabar": {
+    "cinnabarrock": {
+        "name": "Cinnabar Rock",
         "levelRequirement": 5,
         "experience": 30,
         "difficulty": 20,
         "item": "cinnabarore"
     },
 
-    "pythar": {
+    "pytharrock": {
+        "name": "Pythar Rock",
         "levelRequirement": 15,
         "experience": 70,
         "difficulty": 40,
         "item": "pytharore"
     },
 
-    "gold": {
+    "goldrock": {
+        "name": "Gold Ore",
         "levelRequirement": 25,
         "experience": 150,
         "difficulty": 80,
         "item": "goldnugget"
     },
 
-    "ibo": {
+    "iborock": {
+        "name": "Ibo Rock",
         "levelRequirement": 30,
         "experience": 210,
         "difficulty": 160,
         "item": "iboore"
     },
 
-    "moonrock": {
+    "moonrockrock": {
+        "name": "Moonrock Rock",
         "levelRequirement": 40,
         "experience": 300,
         "difficulty": 220,
@@ -43,14 +49,16 @@
         "respawnTime": 90000
     },
 
-    "topaz": {
+    "topazrock": {
+        "name": "Topaz Rock",
         "levelRequirement": 15,
         "experience": 160,
         "difficulty": 160,
         "item": "topaz"
     },
 
-    "beryl": {
+    "berylrock": {
+        "name": "Beryl Rock",
         "levelRequirement": 1,
         "experience": 22,
         "difficulty": 20,
@@ -59,14 +67,16 @@
         "achievement": "firstrock"
     },
 
-    "lapislazuli": {
+    "lapislazulirock": {
+        "name": "Lapis Lazuli Rock",
         "levelRequirement": 45,
         "experience": 350,
         "difficulty": 250,
         "item": "lapislazuli"
     },
 
-    "citrine": {
+    "citrinerock": {
+        "name": "Citrine Rock",
         "levelRequirement": 50,
         "experience": 400,
         "difficulty": 285,
@@ -74,7 +84,8 @@
         "respawnTime": 98000
     },
 
-    "taaffeite": {
+    "taaffeiterock": {
+        "name": "Taaffeite Rock",
         "levelRequirement": 30,
         "experience": 310,
         "difficulty": 225,
@@ -82,7 +93,8 @@
         "respawnTime": 90000
     },
 
-    "ruby": {
+    "rubyrock": {
+        "name": "Ruby Rock",
         "levelRequirement": 62,
         "experience": 550,
         "difficulty": 325,
@@ -90,7 +102,8 @@
         "respawnTime": 276000
     },
 
-    "peridot": {
+    "peridotrock": {
+        "name": "Peridot Rock",
         "levelRequirement": 55,
         "experience": 475,
         "difficulty": 345,
@@ -98,14 +111,16 @@
         "respawnTime": 140000
     },
 
-    "opal": {
+    "opalrock": {
+        "name": "Opal Rock",
         "levelRequirement": 10,
         "experience": 100,
         "difficulty": 140,
         "item": "opal"
     },
 
-    "emerald": {
+    "emeraldrock": {
+        "name": "Emerald Rock",
         "levelRequirement": 57,
         "experience": 510,
         "difficulty": 345,
@@ -113,7 +128,8 @@
         "respawnTime": 180000
     },
 
-    "amethyst": {
+    "amethystrock": {
+        "name": "Amethyst Rock",
         "levelRequirement": 65,
         "experience": 580,
         "difficulty": 375,
@@ -121,7 +137,8 @@
         "respawnTime": 300000
     },
 
-    "coal": {
+    "coalrock": {
+        "name": "Coal",
         "levelRequirement": 1,
         "experience": 20,
         "difficulty": 5,
@@ -129,7 +146,8 @@
         "achievement": "firstrock"
     },
 
-    "copper": {
+    "copperrock": {
+        "name": "Copper Ore",
         "levelRequirement": 1,
         "experience": 20,
         "difficulty": 15,
@@ -137,7 +155,8 @@
         "achievement": "firstrock"
     },
 
-    "tin": {
+    "tinrock": {
+        "name": "Tin Ore",
         "levelRequirement": 1,
         "experience": 20,
         "difficulty": 15,
@@ -145,7 +164,8 @@
         "achievement": "firstrock"
     },
 
-    "iron": {
+    "ironrock": {
+        "name": "Iron Ore",
         "levelRequirement": 10,
         "experience": 40,
         "difficulty": 15,

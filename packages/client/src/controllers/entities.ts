@@ -155,7 +155,7 @@ export default class EntitiesController {
             }
 
             case Modules.EntityType.Foraging: {
-                entity = this.createTree(info as ResourceEntityData);
+                entity = this.createForaging(info as ResourceEntityData);
 
                 prefix = 'bushes';
                 break;
@@ -537,7 +537,7 @@ export default class EntitiesController {
 
     public registerPosition(entity: Entity): void {
         // Tree entities are registered as colliding on the rendering grid.
-        if (entity.isTree()) this.game.map.grid[entity.gridY][entity.gridX] = 2;
+        if (entity.isResource()) this.game.map.grid[entity.gridY][entity.gridX] = 2;
 
         this.grids.addToRenderingGrid(entity);
     }

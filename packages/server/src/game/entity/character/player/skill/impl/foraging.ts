@@ -1,5 +1,4 @@
 import ResourceSkill from '../resourceskill';
-import ForagingSpots from '../../../../../../../data/foraging.json';
 
 import { Modules } from '@kaetram/common/network';
 
@@ -9,7 +8,7 @@ import type { ResourceInfo } from '@kaetram/common/types/resource';
 
 export default class Foraging extends ResourceSkill {
     public constructor() {
-        super(Modules.Skills.Foraging, ForagingSpots);
+        super(Modules.Skills.Foraging);
     }
 
     /**
