@@ -288,6 +288,7 @@ export default class AudioController {
     /**
      * Picks between the two possible hit sound effects
      * and plays one of them randomly.
+     * @param target The target used for dimensional audio.
      */
 
     public playHitSound(target: Entity): void {
@@ -296,9 +297,28 @@ export default class AudioController {
 
     /**
      * Plays one of the kill sound effects randomly.
+     * @param target The target used for dimensional audio.
      */
 
     public playKillSound(target: Entity): void {
         this.playSound(`kill${Util.randomInt(1, 2)}`, target);
+    }
+
+    /**
+     * Plays one of the mining sound effects randomly.
+     * @param target The target used for dimensional audio.
+     */
+
+    public playMiningSound(target: Entity): void {
+        this.playSound(`mining${Util.randomInt(1, 3)}`, target);
+    }
+
+    /**
+     * Plays one of the chopping sound effects randomly.
+     * @param target The target used for dimensional audio.
+     */
+
+    public playChoppingSound(target: Entity): void {
+        this.playSound(`wood${Util.randomInt(1, 4)}`, target);
     }
 }
