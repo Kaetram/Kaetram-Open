@@ -302,6 +302,8 @@ export default class EntitiesController {
         // Stop here and return the projectile if the attacker despawns (e.g. out of view).
         if (!attacker) return projectile;
 
+        projectile.setGridPosition(attacker.gridX, attacker.gridY);
+
         attacker.lookAt(target);
         attacker.performAction(attacker.orientation, Modules.Actions.Attack);
         attacker.triggerHealthBar();

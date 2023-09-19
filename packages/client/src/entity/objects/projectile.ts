@@ -11,6 +11,8 @@ export default class Projectile extends Entity {
 
     public speed = 150;
 
+    public hasSpawned = false;
+
     public target!: Character;
 
     // Callback created when the projectile impacts the target.
@@ -40,6 +42,23 @@ export default class Projectile extends Entity {
         this.target = target;
 
         this.updateAngle();
+    }
+
+    /**
+     * Override for `setGridPosition` to support projectile spawning logic. When we
+     * have an owner, we spawn it at the owner's position, otherwise we use whatever
+     * the server sent us.
+     * @param gridX The grid x coordinate to set the projectile to.
+     * @param gridY The grid y coordinate to set the projectile to.
+     */
+
+    public override setGridPosition(gridX: number, gridY: number): void {
+        // Prevent projectile from updating its position again after spawning.
+        if (this.hasSpawned) return;
+
+        super.setGridPosition(gridX, gridY);
+
+        this.hasSpawned = true;
     }
 
     /**
