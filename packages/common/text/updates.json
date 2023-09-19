@@ -1,15 +1,16 @@
 {
-    "0.4.1-beta": {
-        "title": "Kaetram 0.4.1-beta",
+    "0.5.0-beta": {
+        "title": "Kaetram 0.5.0-beta",
         "content": [
-            "- Fixed many doors and missing tiles",
-            "- Fixes to user interfaces and menus",
-            "- Fixed some trees around the world",
-            "- Fixed fishing spots not being interactable",
-            "- Fixes some teleportation issues",
-            "- Fixed bosses not spawning their minions",
-            "- Exclamation mark above NPC now disappears when they don't have info for you",
-            "- Max levels now capped at 120"
+            "- Added entity masking",
+            "- Added sound effects and new music.",
+            "- All resources are now entities.",
+            "- Improvements to projectile spawning.",
+            "- Fixes many combat bugs.",
+            "- Fixes teleporting bugs.",
+            "- Fixes some no-clip glitches.",
+            "- Fixes last target changing.",
+            "- Fixes death bug."
         ]
     }
 }
