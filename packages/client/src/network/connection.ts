@@ -617,6 +617,11 @@ export default class Connection {
             let resource = this.entities.get<Resource>(info.resourceInstance);
 
             resource?.shake();
+
+            // Play the tree chopping sound effect with every animation.
+            if (resource?.isTree()) this.audio.playChoppingSound(this.game.player);
+            // Play the mining sound effect with every animation.
+            else if (resource?.isRock()) this.audio.playMiningSound(this.game.player);
         }
     }
 
