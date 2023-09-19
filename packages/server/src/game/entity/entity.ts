@@ -10,12 +10,12 @@ import type Pet from './character/pet/pet';
 import type Effect from './objects/effect';
 import type Projectile from './objects/projectile';
 import type Player from './character/player/player';
-import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type LootBag from './objects/lootbag';
 import type Tree from './objects/resource/impl/tree';
 import type Rock from './objects/resource/impl/rock';
 import type FishSpot from './objects/resource/impl/fishspot';
 import type Foraging from './objects/resource/impl/foraging';
+import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 type MovementCallback = (x: number, y: number) => void;
 

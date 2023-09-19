@@ -774,7 +774,7 @@ export default class Character extends Entity {
     }
 
     public moved(): void {
-        if (!this.isPlayer()) return;
+        if (!this.game.isMainPlayer(this.instance)) return;
 
         this.moveCallback?.();
     }
