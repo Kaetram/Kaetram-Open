@@ -499,6 +499,24 @@ export default class Character extends Entity {
     }
 
     /**
+     * Same functionality as the `lookAt` function except it takes in a position
+     * rather than an entity.
+     * @param x The grid x position to look at.
+     * @param y The grid y position to look at.
+     */
+
+    public lookAtPosition(x: number, y: number): void {
+        let { gridX, gridY } = this;
+
+        if (x > gridX) this.setOrientation(Modules.Orientation.Right);
+        else if (x < gridX) this.setOrientation(Modules.Orientation.Left);
+        else if (y > gridY) this.setOrientation(Modules.Orientation.Down);
+        else if (y < gridY) this.setOrientation(Modules.Orientation.Up);
+
+        this.idle();
+    }
+
+    /**
      * Begins the movement of the entity to the given position.
      * @param x The grid x position to move to.
      * @param y The grid y position to move to.

@@ -129,6 +129,14 @@ export default class Region {
     }
 
     /**
+     * @returns The number of players in the region.
+     */
+
+    public hasPlayersInRegion(): number {
+        return this.players.length;
+    }
+
+    /**
      * Iterates through the dynamic areas to see if the tile is contained
      * within it. This method is a lot faster than using the areas `inArea`
      * function.

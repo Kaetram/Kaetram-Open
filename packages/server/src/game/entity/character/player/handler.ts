@@ -360,7 +360,7 @@ export default class Handler {
         this.handleLights(region);
 
         this.player.updateEntityList();
-        this.player.updateEntityPositions();
+        //this.player.updateEntityPositions();
 
         this.player.lastRegionChange = Date.now();
     }

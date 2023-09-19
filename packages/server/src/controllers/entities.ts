@@ -126,7 +126,17 @@ export default class Entities {
 
         // Initialize the roaming interval for mobs
         setInterval(
-            () => this.forEachMob((mob) => mob.roamingCallback?.()),
+            () =>
+                this.forEachMob((mob) => {
+                    // Roaming only when players are in the region when there are more than 30 players online.
+                    if (
+                        !this.regions.get(mob.region)?.hasPlayersInRegion() &&
+                        this.world.getPopulation() > 30
+                    )
+                        return;
+
+                    mob.roamingCallback?.();
+                }),
             Modules.MobDefaults.ROAM_FREQUENCY
         );
     }
