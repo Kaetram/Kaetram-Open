@@ -335,6 +335,15 @@ abstract class Entity {
     }
 
     /**
+     * Checks whether or not the entity is a resource.
+     * @returns Whether the entity is a tree, rock, fish spot, or foraging spot.
+     */
+
+    public isResource(): boolean {
+        return this.isTree() || this.isRock() || this.isFishSpot() || this.isForaging();
+    }
+
+    /**
      * This is entity superclass serialization. It provides
      * the absolute most basic data about the entity. Entities
      * that extend the Entity class will use this to get initial data

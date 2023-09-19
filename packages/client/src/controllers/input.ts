@@ -22,6 +22,9 @@ import type Trade from '../menu/trade';
 import type Leaderboards from '../menu/leaderboards';
 import type Guilds from '../menu/guilds';
 import type Tree from '../entity/objects/resource/impl/tree';
+import type Rock from '../entity/objects/resource/impl/rock';
+import type FishSpot from '../entity/objects/resource/impl/fishspot';
+import type Foraging from '../entity/objects/resource/impl/foraging';
 
 interface TargetData {
     sprite: Sprite;
@@ -569,6 +572,33 @@ export default class InputController {
                 break;
             }
 
+            case Modules.EntityType.Rock: {
+                if ((entity as Rock).exhausted) return;
+
+                this.setCursor(this.cursors.pickaxe);
+                this.hovering = Modules.Hovering.Rock;
+
+                break;
+            }
+
+            case Modules.EntityType.FishSpot: {
+                if ((entity as FishSpot).exhausted) return;
+
+                this.setCursor(this.cursors.fishing);
+                this.hovering = Modules.Hovering.FishSpot;
+
+                break;
+            }
+
+            case Modules.EntityType.Foraging: {
+                if ((entity as Foraging).exhausted) return;
+
+                this.setCursor(this.cursors.foraging);
+                this.hovering = Modules.Hovering.Foraging;
+
+                break;
+            }
+
             case Modules.EntityType.Player: {
                 if (this.game.pvp) {
                     this.setCursor(this.getAttackCursor());
@@ -759,7 +789,9 @@ export default class InputController {
      */
 
     private isTargetable(entity: Entity): boolean {
-        return this.isAttackable(entity) || entity.isNPC() || entity.isChest() || entity.isTree();
+        return (
+            this.isAttackable(entity) || entity.isNPC() || entity.isChest() || entity.isResource()
+        );
     }
 
     /**

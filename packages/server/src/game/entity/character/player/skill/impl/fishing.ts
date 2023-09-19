@@ -1,5 +1,4 @@
 import ResourceSkill from '../resourceskill';
-import FishingSpots from '../../../../../../../data/fishing.json';
 
 import Utils from '@kaetram/common/util/utils';
 import ResourceText from '@kaetram/common/text/en/resource';
@@ -13,7 +12,7 @@ export default class Fishing extends ResourceSkill {
     public override randomDepletion = true;
 
     public constructor() {
-        super(Modules.Skills.Fishing, FishingSpots);
+        super(Modules.Skills.Fishing);
 
         this.onExhaust(this.handleExhaust.bind(this));
     }

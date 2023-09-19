@@ -2,6 +2,9 @@ import mobData from '../../data/mobs.json';
 import itemData from '../../data/items.json';
 import npcData from '../../data/npcs.json';
 import treeData from '../../data/trees.json';
+import rockData from '../../data/rocks.json';
+import fishSpotData from '../../data/fishing.json';
+import foragingData from '../../data/foraging.json';
 import NPC from '../game/entity/npc/npc';
 import Item from '../game/entity/objects/item';
 import Chest from '../game/entity/objects/chest';
@@ -14,6 +17,7 @@ import Effect from '../game/entity/objects/effect';
 import Tree from '../game/entity/objects/resource/impl/tree';
 import Rock from '../game/entity/objects/resource/impl/rock';
 import FishSpot from '../game/entity/objects/resource/impl/fishspot';
+import Foraging from '../game/entity/objects/resource/impl/foraging';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
@@ -26,7 +30,6 @@ import type Regions from '../game/map/regions';
 import type Entity from '../game/entity/entity';
 import type Hit from '../game/entity/character/combat/hit';
 import type Player from '../game/entity/character/player/player';
-import type Foraging from '../game/entity/objects/resource/impl/foraging';
 import type { Enchantments } from '@kaetram/common/types/item';
 
 export default class Entities {
@@ -103,6 +106,9 @@ export default class Entities {
         log.info(`Spawned ${Object.keys(this.npcs).length} NPCs!`);
         log.info(`Spawned ${Object.keys(this.mobs).length} mobs!`);
         log.info(`Spawned ${Object.keys(this.trees).length} trees!`);
+        log.info(`Spawned ${Object.keys(this.rocks).length} rocks!`);
+        log.info(`Spawned ${Object.keys(this.fishSpots).length} fish spots!`);
+        log.info(`Spawned ${Object.keys(this.foragings).length} foraging spots!`);
 
         // Spawns the static chests throughout the world.
 
@@ -275,7 +281,7 @@ export default class Entities {
      */
 
     public spawnForaging(key: string, x: number, y: number): Tree {
-        let foraging = new Tree(key, x, y);
+        let foraging = new Foraging(key, x, y);
 
         foraging.onStateChange(() => {
             this.world.push(Modules.PacketType.Regions, {
@@ -728,6 +734,9 @@ export default class Entities {
         if (key in npcData) return Modules.EntityType.NPC;
         if (key in mobData) return Modules.EntityType.Mob;
         if (key in treeData) return Modules.EntityType.Tree;
+        if (key in rockData) return Modules.EntityType.Rock;
+        if (key in fishSpotData) return Modules.EntityType.FishSpot;
+        if (key in foragingData) return Modules.EntityType.Foraging;
 
         return -1;
     }

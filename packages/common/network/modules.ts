@@ -186,7 +186,10 @@ export enum Hovering {
     NPC,
     Chest,
     Object,
-    Tree
+    Tree,
+    Rock,
+    FishSpot,
+    Foraging
 }
 
 export enum AudioTypes {

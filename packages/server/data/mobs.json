@@ -12,14 +12,14 @@
         "attackStats": {
             "crush": 1,
             "slash": 1,
-            "stab": 1,
+            "stab": 2,
             "archery": 0,
             "magic": 0
         },
         "defenseStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": -2,
+            "slash": -3,
+            "stab": -1,
             "archery": 0,
             "magic": 0
         },
@@ -43,7 +43,7 @@
         "movementSpeed": 420,
         "respawnDelay": 20000,
         "attackStats": {
-            "crush": 1,
+            "crush": 3,
             "slash": 3,
             "stab": 2,
             "archery": 0,
@@ -57,8 +57,8 @@
             "magic": 0
         },
         "bonuses": {
-            "accuracy": 0,
-            "strength": 0,
+            "accuracy": 1,
+            "strength": 1,
             "archery": 0,
             "magic": 0
         }

@@ -10,7 +10,7 @@ import { AnimationPacket } from '@kaetram/common/network/impl';
 
 import type Player from '../player';
 import type Resource from '../../../objects/resource/resource';
-import type { ResourceData, ResourceInfo } from '@kaetram/common/types/resource';
+import type { ResourceInfo } from '@kaetram/common/types/resource';
 
 type ExhaustCallback = (player: Player, resource?: Resource) => void;
 
@@ -26,10 +26,7 @@ export default class ResourceSkill extends Skill {
 
     public randomDepletion = false;
 
-    public constructor(
-        type: Modules.Skills,
-        private data: ResourceData
-    ) {
+    public constructor(type: Modules.Skills) {
         super(type);
     }
 
@@ -48,29 +45,27 @@ export default class ResourceSkill extends Skill {
                 `${player.username} attempted to interact with an exhausted resource.`
             );
 
-        let resourceInfo = this.data[resource.key];
-
         // Could not find resource interaction data for the resource.
-        if (!resourceInfo)
+        if (!resource.data)
             return log.warning(
                 `${player.username} attempted to interact with a resource with invalid data: ${resource.type}`
             );
 
         // Level required for this resource is too high for the yplayer.
-        if (resourceInfo.levelRequirement > this.level)
+        if (resource.data.levelRequirement > this.level)
             return player.notify(
-                ResourceText.INVALID_LEVEL(this.type, resourceInfo.levelRequirement)
+                ResourceText.INVALID_LEVEL(this.type, resource.data.levelRequirement)
             );
 
         // Unable to interact with the resource if the player hasn't completed the required achievement.
         if (
-            resourceInfo.reqAchievement &&
-            !player.achievements.get(resourceInfo.reqAchievement)?.isFinished()
+            resource.data.reqAchievement &&
+            !player.achievements.get(resource.data.reqAchievement)?.isFinished()
         )
             return player.notify(ResourceText.UNABLE_TO_INTERACT(this.type));
 
         // Unable to interact with the resource if the player hasn't completed the required quest.
-        if (resourceInfo.reqQuest && !player.quests.get(resourceInfo.reqQuest)?.isFinished())
+        if (resource.data.reqQuest && !player.quests.get(resource.data.reqQuest)?.isFinished())
             return player.notify(ResourceText.UNABLE_TO_INTERACT(this.type));
 
         if (!this.canHold(player)) return player.notify('misc:NO_SPACE');
@@ -96,24 +91,24 @@ export default class ResourceSkill extends Skill {
             );
 
             // Use probability to check if we can exhaust the resource.
-            if (this.canExhaustResource(weaponLevel, resourceInfo)) {
+            if (this.canExhaustResource(weaponLevel, resource.data)) {
                 // Add the logs to the inventory.
-                player.inventory.add(this.getItem(resourceInfo.item));
+                player.inventory.add(this.getItem(resource.data.item));
 
                 // Add experience to our skill.
-                this.addExperience(resourceInfo.experience);
+                this.addExperience(resource.data.experience);
 
                 // Increment the statistics for the player.
                 player.statistics.handleSkill(this.type);
 
                 // If resource has an achievement, attempt to award it if it hasn't been awarded yet.
-                if (resourceInfo.achievement)
-                    player.achievements.get(resourceInfo.achievement)?.finish();
+                if (resource.data.achievement)
+                    player.achievements.get(resource.data.achievement)?.finish();
 
                 // If the resource has a quest then we will call the resource callback.
-                if (resourceInfo.quest)
+                if (resource.data.quest)
                     player.quests
-                        .get(resourceInfo.quest)
+                        .get(resource.data.quest)
                         ?.resourceCallback?.(this.type, resource.key);
 
                 // Deplete the resource and send the signal to the region

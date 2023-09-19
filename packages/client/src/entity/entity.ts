@@ -442,13 +442,37 @@ export default abstract class Entity {
     }
 
     /**
+     * @returns Whether or not the entity is a rock type.
+     */
+
+    public isRock(): boolean {
+        return this.type === Modules.EntityType.Rock;
+    }
+
+    /**
+     * @returns Whether or not the entity is a fish spot type.
+     */
+
+    public isFishSpot(): boolean {
+        return this.type === Modules.EntityType.FishSpot;
+    }
+
+    /**
+     * @returns Whether or not the entity is a foraging type.
+     */
+
+    public isForaging(): boolean {
+        return this.type === Modules.EntityType.Foraging;
+    }
+
+    /**
      * Used for unifying multiple resources into one function. Things
      * like trees, rocks, and bushes are all considered resources.
      * @returns Whether or not the entity is a tree, a rock, or a bush.
      */
 
     public isResource(): boolean {
-        return this.isTree();
+        return this.isTree() || this.isRock() || this.isFishSpot() || this.isForaging();
     }
 
     /**

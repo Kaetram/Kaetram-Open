@@ -19,10 +19,10 @@ import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Item from '../entity/objects/item';
 import type Player from '../entity/character/player/player';
+import type Tree from '../entity/objects/resource/impl/tree';
 import type { LampData } from '@kaetram/common/types/item';
 import type { ClientTile } from '@kaetram/common/types/map';
 import type { SerializedLight } from '@kaetram/common/network/impl/overlay';
-import type Tree from '../entity/objects/resource/impl/tree';
 
 interface Light extends Lamp {
     originalX: number;
@@ -580,36 +580,37 @@ export default class Renderer {
             dx = ~~(entity.x * this.camera.zoomFactor),
             dy = ~~(entity.y * this.camera.zoomFactor),
             flipX = dx + this.actualTileSize,
-            flipY = dy + entity.sprite.height;
+            flipY = dy + entity.sprite.height,
+            context = entity.isForaging() ? this.entitiesForeContext : this.entitiesContext;
 
-        this.entitiesContext.save();
+        context.save();
 
-        // Update the entity fading onto the this.entitiesContext.
-        if (entity.fading) this.entitiesContext.globalAlpha = entity.fadingAlpha;
+        // Update the entity fading onto the context.
+        if (entity.fading) context.globalAlpha = entity.fadingAlpha;
 
         // Handle flipping since we use the same sprite for right/left.
         if (entity.spriteFlipX) {
-            this.entitiesContext.translate(flipX, dy);
-            this.entitiesContext.scale(-1, 1);
+            context.translate(flipX, dy);
+            context.scale(-1, 1);
         } else if (entity.spriteFlipY) {
-            this.entitiesContext.translate(dx, flipY);
-            this.entitiesContext.scale(1, -1);
-        } else this.entitiesContext.translate(dx, dy);
+            context.translate(dx, flipY);
+            context.scale(1, -1);
+        } else context.translate(dx, dy);
 
         // Scale the entity to the current zoom factor.
-        this.entitiesContext.scale(this.camera.zoomFactor, this.camera.zoomFactor);
+        context.scale(this.camera.zoomFactor, this.camera.zoomFactor);
 
         // Scale the entity again if it has a custom scaling associated with it.
-        if (entity.customScale) this.entitiesContext.scale(entity.customScale, entity.customScale);
+        if (entity.customScale) context.scale(entity.customScale, entity.customScale);
 
         // Rotate using the entity's angle.
-        if (entity.angle !== 0) this.entitiesContext.rotate(entity.angle);
+        if (entity.angle !== 0) context.rotate(entity.angle);
 
         // Draw the entity shadowf
         if (entity.hasShadow()) {
             let shadowSprite = this.game.sprites.get('shadow')!;
 
-            this.entitiesContext.drawImage(
+            context.drawImage(
                 shadowSprite.image,
                 0,
                 0,
@@ -622,7 +623,7 @@ export default class Renderer {
             );
         }
 
-        this.entitiesContext.drawImage(
+        context.drawImage(
             entity.getSprite().image,
             frame!.x,
             frame!.y,
@@ -636,7 +637,7 @@ export default class Renderer {
 
         this.drawEntityFore(entity);
 
-        this.entitiesContext.restore();
+        context.restore();
 
         this.drawHealth(entity as Character);
 

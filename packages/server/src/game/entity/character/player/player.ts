@@ -880,7 +880,20 @@ export default class Player extends Character {
 
         let entity = this.entities.get(instance);
 
+        // Ensure that the entity is close enough to interact with.
+        if (entity?.getDistance(this) > 2) return;
+
+        // If the entity is a tree we use the lumberjacking skill to handle the interaction.
         if (entity?.isTree()) this.skills.getLumberjacking().cut(this, entity);
+
+        // If the entity is a rock we use the mining skill to handle the interaction.
+        if (entity?.isRock()) this.skills.getMining().mine(this, entity);
+
+        // If the entity is a fishing spot we use the fishing skill to handle the interaction.
+        if (entity?.isFishSpot()) this.skills.getFishing().catch(this, entity);
+
+        // If the entity is a forageable plant we use the foraging skill to handle the interaction.
+        if (entity?.isForaging()) this.skills.getForaging().harvest(this, entity);
 
         // Attempt to find a sign first.
         let sign = this.world.globals.getSigns().get(instance);
@@ -894,26 +907,6 @@ export default class Player extends Character {
 
         // Ensure that the player is close enough to the object.
         if (diffX > 2 || diffY > 2) return;
-
-        // let index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
-        //     tree = this.world.globals.getTrees().findResource(index);
-
-        // if (tree) return this.skills.getLumberjacking().cut(this, tree);
-
-        // // If we don't find a tree then we try finding a rock.
-        // let rock = this.world.globals.getRocks().findResource(index);
-
-        // if (rock) return this.skills.getMining().mine(this, rock);
-
-        // // If we don't find a rock then we try finding a fishing spot.
-        // let fishingSpot = this.world.globals.getFishingSpots().findResource(index);
-
-        // if (fishingSpot) return this.skills.getFishing().catch(this, fishingSpot);
-
-        // // If we don't find a fishing spot, look for foragable plants.
-        // let forage = this.world.globals.getForaging().findResource(index);
-
-        // if (forage) return this.skills.getForaging().harvest(this, forage);
 
         /**
          * Here we use the cursor (I know, it's a bit of a hack) to handle

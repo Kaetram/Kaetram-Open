@@ -45,10 +45,10 @@ export default class Handler extends CharacterHandler {
         if (this.character.canAttackTarget() && !this.character.trading) return [];
 
         let isObject = this.map.isObject(x, y),
-            isTree = this.character.target?.isTree();
+            isResource = this.character.target?.isResource();
 
         // Ignore requests into colliding tiles but allow targetable objects.
-        if (this.map.isColliding(x, y) && !isObject && !isTree) return [];
+        if (this.map.isColliding(x, y) && !isObject && !isResource) return [];
 
         // Sends the packet to the server with the request.
         this.game.socket.send(Packets.Movement, {
@@ -75,7 +75,7 @@ export default class Handler extends CharacterHandler {
                 ignores.push({ x: x + 1, y }, { x: x - 1, y }, { x, y: y + 1 }, { x, y: y - 1 });
         }
 
-        if (isTree) ignores.push({ x, y });
+        if (isResource) ignores.push({ x, y });
 
         return this.game.findPath(this.character, x, y, ignores, cursor);
     }
@@ -244,7 +244,7 @@ export default class Handler extends CharacterHandler {
             return Opcodes.Target.Talk;
 
         // Interaction type for objects.
-        if (this.character.target.isObject() || this.character.target.isTree())
+        if (this.character.target.isObject() || this.character.target.isResource())
             return Opcodes.Target.Object;
 
         // Interaction for attacking

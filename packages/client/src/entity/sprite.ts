@@ -196,7 +196,7 @@ export default class Sprite {
 
     public hasSilhouette(): boolean {
         let type = this.getType(),
-            list = ['mobs', 'player', 'npcs', 'trees', 'rocks', 'fishspots', 'foraging'];
+            list = ['mobs', 'player', 'npcs', 'trees', 'rocks', 'fishspots', 'bushes'];
 
         return list.includes(type);
     }

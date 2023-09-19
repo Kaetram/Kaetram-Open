@@ -11,7 +11,7 @@ import type Resource from '../../../../../entity/objects/resource/resource';
 
 export default class Mining extends ResourceSkill {
     public constructor() {
-        super(Modules.Skills.Mining, Rocks);
+        super(Modules.Skills.Mining);
 
         this.onExhaust(this.handleExhaust.bind(this));
     }
@@ -25,7 +25,7 @@ export default class Mining extends ResourceSkill {
 
     private handleExhaust(player: Player, resource?: Resource): void {
         // Use the superclass logic to handle the random item selection.
-        super.handleRandomItems(player, Rocks[resource!.key as keyof typeof Rocks]);
+        super.handleRandomItems(player, resource!.data);
     }
 
     /**
