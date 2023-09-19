@@ -153,7 +153,11 @@ export default class Combat {
             this.lastFollow = Date.now();
 
             if (this.shouldTeleportNearby())
-                this.character.setPosition(this.character.target!.x, this.character.target!.y);
+                this.character.setPosition(
+                    this.character.target!.x,
+                    this.character.target!.y,
+                    false
+                );
         }
     }
 
