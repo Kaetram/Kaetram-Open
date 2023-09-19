@@ -450,6 +450,16 @@ export default class EntitiesController {
     }
 
     /**
+     * Used for filtering out the existing entities from the batch
+     * that the server will send us.
+     * @returns The instance list of entities currently loaded.
+     */
+
+    public getEntityList(): string[] {
+        return Object.keys(this.entities);
+    }
+
+    /**
      * Adds an entity to the rendering grid and the list of entities.
      * We do not render in the fading if the user is on a mobile device.
      * @param entity The entity object we are adding.
@@ -578,7 +588,9 @@ export default class EntitiesController {
      */
 
     public cleanDisplayInfo(): void {
-        for (let entity of Object.values(this.entities)) {
+        for (let instance in this.entities) {
+            let entity = this.entities[instance];
+
             entity.nameColour = '';
             entity.customScale = 0;
             entity.exclamation = false;

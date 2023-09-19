@@ -117,7 +117,13 @@ export default class Connection {
         this.sprites = game.sprites;
         this.messages = this.socket.messages;
 
-        this.app.onFocus(() => this.socket.send(Packets.Focus));
+        this.app.onFocus(() => {
+            if (Date.now() - this.lastEntityListRequest < 4000) return;
+
+            this.socket.send(Packets.Focus);
+
+            this.lastEntityListRequest = Date.now();
+        });
 
         this.messages.onHandshake(this.handleHandshake.bind(this));
         this.messages.onWelcome(this.handleWelcome.bind(this));

@@ -466,6 +466,16 @@ export default abstract class Entity {
     }
 
     /**
+     * We use this to determine the drawing context for rocks and foraging spots since
+     * they may be taking up more than a tile vertically.
+     * @returns Whether the entity is a rock, a fishing spot or a foraging spot.
+     */
+
+    public isNonTreeResource(): boolean {
+        return this.isRock() || this.isForaging();
+    }
+
+    /**
      * Used for unifying multiple resources into one function. Things
      * like trees, rocks, and bushes are all considered resources.
      * @returns Whether or not the entity is a tree, a rock, or a bush.

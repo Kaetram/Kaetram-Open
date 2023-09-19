@@ -581,7 +581,10 @@ export default class Renderer {
             dy = ~~(entity.y * this.camera.zoomFactor),
             flipX = dx + this.actualTileSize,
             flipY = dy + entity.sprite.height,
-            context = entity.isForaging() ? this.entitiesForeContext : this.entitiesContext;
+            context =
+                entity.isNonTreeResource() && entity.y > this.game.player.y
+                    ? this.entitiesForeContext
+                    : this.entitiesContext;
 
         context.save();
 
@@ -1782,7 +1785,7 @@ export default class Renderer {
         this.camera.forEachVisiblePosition((x, y) => {
             if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
                 for (let entity of Object.values(grids.renderingGrid[y][x])) callback(entity);
-        }, 10);
+        }, 3);
     }
 
     /**
