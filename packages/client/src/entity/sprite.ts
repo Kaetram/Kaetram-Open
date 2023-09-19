@@ -195,9 +195,10 @@ export default class Sprite {
      */
 
     public hasSilhouette(): boolean {
-        let type = this.getType();
+        let type = this.getType(),
+            list = ['mobs', 'player', 'npcs', 'trees', 'rocks', 'fishspots', 'foraging'];
 
-        return type === 'mobs' || type === 'player' || type === 'npcs' || type === 'objects';
+        return list.includes(type);
     }
 
     /**

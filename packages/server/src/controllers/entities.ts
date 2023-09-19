@@ -12,6 +12,8 @@ import LootBag from '../game/entity/objects/lootbag';
 import Pet from '../game/entity/character/pet/pet';
 import Effect from '../game/entity/objects/effect';
 import Tree from '../game/entity/objects/resource/impl/tree';
+import Rock from '../game/entity/objects/resource/impl/rock';
+import FishSpot from '../game/entity/objects/resource/impl/fishspot';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
@@ -24,6 +26,7 @@ import type Regions from '../game/map/regions';
 import type Entity from '../game/entity/entity';
 import type Hit from '../game/entity/character/combat/hit';
 import type Player from '../game/entity/character/player/player';
+import type Foraging from '../game/entity/objects/resource/impl/foraging';
 import type { Enchantments } from '@kaetram/common/types/item';
 
 export default class Entities {
@@ -43,6 +46,9 @@ export default class Entities {
     private lootBags: { [instance: string]: LootBag } = {};
     private effects: { [instance: string]: Effect } = {};
     private trees: { [instance: string]: Tree } = {};
+    private rocks: { [instance: string]: Rock } = {};
+    private fishSpots: { [instance: string]: FishSpot } = {};
+    private foragings: { [instance: string]: Foraging } = {};
 
     public constructor(private world: World) {
         this.map = world.map;
@@ -77,6 +83,18 @@ export default class Entities {
 
                 case Modules.EntityType.Tree: {
                     return this.spawnTree(key, position.x, position.y);
+                }
+
+                case Modules.EntityType.Rock: {
+                    return this.spawnRock(key, position.x, position.y);
+                }
+
+                case Modules.EntityType.FishSpot: {
+                    return this.spawnFishSpots(key, position.x, position.y);
+                }
+
+                case Modules.EntityType.Foraging: {
+                    return this.spawnForaging(key, position.x, position.y);
                 }
             }
         });
@@ -190,6 +208,90 @@ export default class Entities {
         this.trees[tree.instance] = tree;
 
         return tree;
+    }
+
+    /**
+     * Spawns a rock in the world and adds it to the world.
+     * @param key The key of the rock, used to determine its sprite.
+     * @param x The x grid coordinate of the rock spawn.
+     * @param y The y grid coordinate of the rock spawn.
+     * @returns A new rock object.
+     */
+
+    public spawnRock(key: string, x: number, y: number): Tree {
+        let rock = new Rock(key, x, y);
+
+        rock.onStateChange(() => {
+            this.world.push(Modules.PacketType.Regions, {
+                region: rock.region,
+                packet: new ResourcePacket({
+                    instance: rock.instance,
+                    state: rock.state
+                })
+            });
+        });
+
+        this.add(rock);
+
+        this.rocks[rock.instance] = rock;
+
+        return rock;
+    }
+
+    /**
+     * Spawns a fish spots in the world and adds it to the world.
+     * @param key The key of the fish spots, used to determine its sprite.
+     * @param x The x grid coordinate of the fish spots spawn.
+     * @param y The y grid coordinate of the fish spots spawn.
+     * @returns A new fish spots object.
+     */
+
+    public spawnFishSpots(key: string, x: number, y: number): Tree {
+        let fishSpots = new FishSpot(key, x, y);
+
+        fishSpots.onStateChange(() => {
+            this.world.push(Modules.PacketType.Regions, {
+                region: fishSpots.region,
+                packet: new ResourcePacket({
+                    instance: fishSpots.instance,
+                    state: fishSpots.state
+                })
+            });
+        });
+
+        this.add(fishSpots);
+
+        this.fishSpots[fishSpots.instance] = fishSpots;
+
+        return fishSpots;
+    }
+
+    /**
+     * Spawns a foraging spot in the world and adds it to the world.
+     * @param key The key of the foraging spot, used to determine its sprite.
+     * @param x The x grid coordinate of the foraging spot spawn.
+     * @param y The y grid coordinate of the foraging spot spawn.
+     * @returns A new foraging spot object.
+     */
+
+    public spawnForaging(key: string, x: number, y: number): Tree {
+        let foraging = new Tree(key, x, y);
+
+        foraging.onStateChange(() => {
+            this.world.push(Modules.PacketType.Regions, {
+                region: foraging.region,
+                packet: new ResourcePacket({
+                    instance: foraging.instance,
+                    state: foraging.state
+                })
+            });
+        });
+
+        this.add(foraging);
+
+        this.foragings[foraging.instance] = foraging;
+
+        return foraging;
     }
 
     /**

@@ -206,6 +206,8 @@ export default class Handler extends CharacterHandler {
             opcode: Opcodes.Movement.Step,
             playerX: this.character.gridX,
             playerY: this.character.gridY,
+            nextGridX: this.character.nextGridX,
+            nextGridY: this.character.nextGridY,
             timestamp: Date.now()
         });
 

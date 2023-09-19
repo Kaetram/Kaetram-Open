@@ -1118,7 +1118,7 @@ export default class Player extends Character {
         if (target !== this.target?.instance) this.target = undefined;
 
         // Stop the movement if the player is stunned.
-        if (this.isStunned()) return this.stopMovement();
+        if (this.isStunned() || this.teleporting) return this.stopMovement();
 
         // If the player clicked anywhere outside the bank then the bank is no longer opened.
         this.canAccessContainer = false;
@@ -1182,10 +1182,18 @@ export default class Player extends Character {
      * A movement step occurs every time a player traverses to the next tile.
      * @param x The current x coordinate of the player as reported by the client.
      * @param y The current y coordinate of the player as reported by the client.
+     * @param nextX The next x coordinate of the player as reported by the client.
+     * @param nextY The next y coordinate of the player as reported by the client.
      * @param timestamp The time when the packet was sent (UNIX timestamp).
      */
 
-    public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
+    public handleMovementStep(
+        x: number,
+        y: number,
+        nextX: number,
+        nextY: number,
+        timestamp = Date.now()
+    ): void {
         // Increment cheat score if the player is moving while stunned.
         if (this.isStunned()) {
             this.incrementCheatScore(`[${this.username}] Movement while stunned.`);

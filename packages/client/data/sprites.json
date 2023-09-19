@@ -1166,7 +1166,7 @@
         "offsetY": 0
     },
     {
-        "id": "objects/spruce",
+        "id": "trees/spruce",
         "width": 64,
         "height": 80,
         "animations": {
@@ -1186,27 +1186,32 @@
         "offsetX": -24,
         "offsetY": -56
     },
-    {
-        "id": "objects/oak",
-        "width": 64,
-        "height": 96,
-        "animations": {
-            "idle": {
-                "length": 1,
-                "row": 0
-            },
-            "shake": {
-                "length": 1,
-                "row": 1
-            },
-            "exhausted": {
-                "length": 1,
-                "row": 2
-            }
-        },
-        "offsetX": -24,
-        "offsetY": -64
-    },
+    { "id": "trees/oak", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/oak2", "width": 48, "height": 80, "offsetX": -16, "offsetY": -58 },
+    { "id": "trees/oak3", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/oak4", "width": 48, "height": 80, "offsetX": -16, "offsetY": -56 },
+    { "id": "trees/oak5", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/oak6", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/oak7", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/bloodwood", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/inibti", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/puhrix", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/flastel", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/iceoak", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/iceoak4", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/iceoak5", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/iceoak6", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/palm", "width": 48, "height": 64, "offsetX": -16, "offsetY": -40 },
+    { "id": "trees/icepalm", "width": 48, "height": 64, "offsetX": -16, "offsetY": -40 },
+    { "id": "trees/snowoak", "width": 80, "height": 96, "offsetX": -36, "offsetY": -64 },
+    { "id": "trees/pine", "width": 48, "height": 64, "offsetX": -18, "offsetY": -48 },
+    { "id": "trees/zoncil", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/zondul", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/heliphatit", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/aquasillius", "width": 80, "height": 96, "offsetX": -32, "offsetY": -64 },
+    { "id": "trees/alkythn", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/iceoak2", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
+    { "id": "trees/iceoak3", "width": 64, "height": 96, "offsetX": -24, "offsetY": -64 },
     {
         "id": "mobs/clam",
         "width": 32,

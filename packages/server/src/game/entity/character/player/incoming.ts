@@ -305,6 +305,8 @@ export default class Incoming {
                 requestY,
                 playerX,
                 playerY,
+                nextGridX,
+                nextGridY,
                 movementSpeed,
                 targetInstance,
                 orientation,
@@ -319,6 +321,8 @@ export default class Incoming {
         if (requestY) requestY = Utils.sanitizeNumber(requestY);
         if (playerX) playerX = Utils.sanitizeNumber(playerX);
         if (playerY) playerY = Utils.sanitizeNumber(playerY);
+        if (nextGridX) nextGridX = Utils.sanitizeNumber(nextGridX);
+        if (nextGridY) nextGridY = Utils.sanitizeNumber(nextGridY);
 
         // Prevent any crazy packet tampering.
         if (this.world.map.isOutOfBounds(requestX!, requestY!)) return;
@@ -339,7 +343,13 @@ export default class Incoming {
             }
 
             case Opcodes.Movement.Step: {
-                return this.player.handleMovementStep(playerX!, playerY!, timestamp);
+                return this.player.handleMovementStep(
+                    playerX!,
+                    playerY!,
+                    nextGridX!,
+                    nextGridY!,
+                    timestamp
+                );
             }
 
             case Opcodes.Movement.Stop: {

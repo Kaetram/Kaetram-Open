@@ -80,6 +80,17 @@ export default class Grids {
     }
 
     /**
+     * Checks if there is an entity at a specified coordinate.
+     * @param x The grid x coordinate.
+     * @param y The grid y coordinate.
+     * @returns Whether or not there is an entity at the specified coordinate.
+     */
+
+    public hasEntityAt(x: number, y: number): boolean {
+        return !!this.entityGrid[y]?.[x];
+    }
+
+    /**
      * Iterates through each entity at a specified coordinate and returns it.
      * @param x The grid x coordinate.
      * @param y The grid y coordinate.
