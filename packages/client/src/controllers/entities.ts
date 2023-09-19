@@ -8,6 +8,9 @@ import Player from '../entity/character/player/player';
 import Projectile from '../entity/objects/projectile';
 import Effect from '../entity/objects/effect';
 import Tree from '../entity/objects/resource/impl/tree';
+import Rock from '../entity/objects/resource/impl/rock';
+import FishSpot from '../entity/objects/resource/impl/fishspot';
+import Foraging from '../entity/objects/resource/impl/foraging';
 
 import { Modules } from '@kaetram/common/network';
 
@@ -133,7 +136,28 @@ export default class EntitiesController {
             case Modules.EntityType.Tree: {
                 entity = this.createTree(info as ResourceEntityData);
 
-                prefix = 'objects';
+                prefix = 'trees';
+                break;
+            }
+
+            case Modules.EntityType.Rock: {
+                entity = this.createRock(info as ResourceEntityData);
+
+                prefix = 'rocks';
+                break;
+            }
+
+            case Modules.EntityType.FishSpot: {
+                entity = this.createFishSpot(info as ResourceEntityData);
+
+                prefix = 'fishspots';
+                break;
+            }
+
+            case Modules.EntityType.Foraging: {
+                entity = this.createTree(info as ResourceEntityData);
+
+                prefix = 'bushes';
                 break;
             }
         }
@@ -355,6 +379,51 @@ export default class EntitiesController {
         tree.exhausted = info.state === Modules.ResourceState.Depleted;
 
         return tree;
+    }
+
+    /**
+     * Creates a new rock object based on the info provided.
+     * @param info Contains the key and instance of the rock.
+     * @returns A new rock object.
+     */
+
+    private createRock(info: ResourceEntityData): Entity {
+        let rock = new Rock(info.instance);
+
+        // Update the state of the rock.
+        rock.exhausted = info.state === Modules.ResourceState.Depleted;
+
+        return rock;
+    }
+
+    /**
+     * Creates a new fish spot object based on the info provided.
+     * @param info Contains the key and instance of the fish spot.
+     * @returns A new fish spot object.
+     */
+
+    private createFishSpot(info: ResourceEntityData): Entity {
+        let fishSpot = new FishSpot(info.instance);
+
+        // Update the state of the fish spot.
+        fishSpot.exhausted = info.state === Modules.ResourceState.Depleted;
+
+        return fishSpot;
+    }
+
+    /**
+     * Creates a new foraging object based on the info provided.
+     * @param info Contains the key and instance of the foraging.
+     * @returns A new foraging object.
+     */
+
+    private createForaging(info: ResourceEntityData): Entity {
+        let foraging = new Foraging(info.instance);
+
+        // Update the state of the foraging.
+        foraging.exhausted = info.state === Modules.ResourceState.Depleted;
+
+        return foraging;
     }
 
     /**

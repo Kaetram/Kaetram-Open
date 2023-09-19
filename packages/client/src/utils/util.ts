@@ -510,6 +510,23 @@ export default {
                 };
             }
 
+            case 'trees': {
+                return {
+                    idle: {
+                        length: 1,
+                        row: 0
+                    },
+                    shake: {
+                        length: 1,
+                        row: 1
+                    },
+                    exhausted: {
+                        length: 1,
+                        row: 2
+                    }
+                };
+            }
+
             case 'mobs': {
                 return {
                     atk_right: {

@@ -189,6 +189,9 @@ export default class Handler {
         // Don't have mobs block a door.
         if (this.map.isDoor(newX, newY)) return;
 
+        // Don't have mobs walk on top of other entities.
+        if (this.world.getGrids().hasEntityAt(x, y)) return;
+
         this.mob.setPosition(newX, newY);
     }
 
