@@ -28,7 +28,7 @@ export default class Default extends Handler {
 
     protected attackAll(hitType = Modules.Hits.Normal, aoe = this.mob.aoe): void {
         this.mob.forEachAttacker((attacker: Character) => {
-            let hit = new Hit(hitType, Formulas.getDamage(this.mob, attacker), true, aoe),
+            let hit = new Hit(hitType, Formulas.getDamage(this.mob, attacker), true, aoe, true),
                 projectile = this.world.entities.spawnProjectile(this.mob, attacker, hit);
 
             this.mob.sendToRegions(new SpawnPacket(projectile));

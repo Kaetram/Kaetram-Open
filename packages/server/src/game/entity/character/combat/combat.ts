@@ -236,7 +236,10 @@ export default class Combat {
                 damageType === Modules.Hits.Critical
             ),
             this.character.isRanged(),
-            this.character.getAoE()
+            this.character.getAoE(),
+            this.character.isMagic(),
+            this.character.isArcher(),
+            this.character.getAttackStyle()
         );
     }
 
