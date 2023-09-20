@@ -458,90 +458,77 @@ export let SkillExpColours = {
         fill: 'rgb(132, 57, 45)',
         stroke: 'rgb(101, 48, 35)'
     },
-
     [Skills.Accuracy]: {
         fill: 'rgb(6, 191, 188)',
         stroke: 'rgb(2, 94, 93)'
     },
-
     [Skills.Archery]: {
         fill: 'rgb(34, 214, 130)',
         stroke: 'rgb(7, 184, 101)'
     },
-
     [Skills.Health]: {
         fill: 'rgb(239, 90, 90)',
         stroke: 'rgb(255, 0, 0)'
     },
-
     [Skills.Magic]: {
         fill: 'rgb(37, 124, 210)',
         stroke: 'rgb(12, 55, 208)'
     },
-
     [Skills.Mining]: {
         fill: 'rgb(105, 106, 107)',
         stroke: 'rgb(45, 45, 46)'
     },
-
     [Skills.Strength]: {
         fill: 'rgb(232, 211, 185)',
         stroke: 'rgb(189, 172, 151)'
     },
-
     [Skills.Defense]: {
         fill: 'rgb(110, 158, 255)',
         stroke: 'rgb(7, 63, 176)'
     },
-
     [Skills.Fishing]: {
-        fill: 'rgb(0, 255, 255)',
-        stroke: 'rgb(0, 255, 255)'
+        fill: 'rgb(0, 170, 230)',
+        stroke: 'rgb(0, 100, 180)'
     },
-
     [Skills.Cooking]: {
-        fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)'
+        fill: 'rgb(255, 165, 0)',
+        stroke: 'rgb(205, 133, 0)'
     },
-
     [Skills.Smithing]: {
         fill: 'rgb(132, 57, 45)',
         stroke: 'rgb(101, 48, 35)'
     },
-
     [Skills.Crafting]: {
-        fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)'
+        fill: 'rgb(128, 0, 128)',
+        stroke: 'rgb(85, 0, 85)'
     },
-
-    [Skills.Fletching]: {
-        fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)'
-    },
-
-    [Skills.Smelting]: {
-        fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)'
-    },
-
     [Skills.Chiseling]: {
-        fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)'
+        fill: 'rgb(188, 143, 143)',
+        stroke: 'rgb(139, 100, 100)'
     },
-
-    [Skills.Eating]: {
-        fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)'
+    [Skills.Fletching]: {
+        fill: 'rgb(139, 69, 19)',
+        stroke: 'rgb(85, 40, 0)'
     },
-
-    [Skills.Loitering]: {
-        fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)'
+    [Skills.Smelting]: {
+        fill: 'rgb(255, 99, 71)',
+        stroke: 'rgb(205, 50, 25)'
     },
-
     [Skills.Foraging]: {
-        fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)'
+        fill: 'rgb(124, 252, 0)',
+        stroke: 'rgb(85, 180, 0)'
+    },
+    [Skills.Eating]: {
+        fill: 'rgb(255, 228, 196)',
+        stroke: 'rgb(238, 213, 183)'
+    },
+    [Skills.Loitering]: {
+        fill: 'rgb(221, 160, 221)',
+        stroke: 'rgb(199, 120, 199)'
+    },
+    [Skills.Alchemy]: {
+        fill: 'rgb(255, 215, 0)',
+        stroke: 'rgb(218, 165, 0)'
     }
 };
 
