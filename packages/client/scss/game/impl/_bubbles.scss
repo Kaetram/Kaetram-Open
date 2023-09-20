@@ -41,9 +41,9 @@
 
     box-sizing: border-box;
     max-width: 12em;
-    padding: 0.5em 1em;
+    padding: 0.5em 0.55em;
 
-    font-size: 1.2em;
+    font-size: 0.9em;
     color: rgb(255 255 255 / 80%);
     text-align: center;
 
@@ -54,7 +54,7 @@
         content: '';
 
         position: absolute;
-        bottom: -0.75em;
+        bottom: -0.4em;
         left: calc(50% - 0.5em);
 
         display: block;

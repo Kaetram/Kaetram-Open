@@ -457,7 +457,7 @@ export default class Renderer {
         this.textContext.drawImage(
             sprite.image,
             x + sprite.offsetX,
-            y + (sprite.offsetY - 4) * this.camera.zoomFactor,
+            y + sprite.offsetY * this.camera.zoomFactor,
             sprite.width * 2,
             sprite.height * 2
         );
