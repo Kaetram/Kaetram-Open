@@ -17,6 +17,10 @@
 #friends-list {
     overflow: auto;
     flex: 1;
+
+    p {
+        font-size: 1.2em;
+    }
 }
 
 @include sprite.sheet(

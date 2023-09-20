@@ -43,7 +43,7 @@
     },
     "boxingman": {
         "name": "Generic Task 2",
-        "description": "Talk to Mike Tyson in Mudwich about beating stuff up",
+        "description": "Talk to Bike Lyson in Mudwich about beating stuff up",
         "region": "Mudwich",
         "npc": "boxingman",
         "dialogueHidden": [
