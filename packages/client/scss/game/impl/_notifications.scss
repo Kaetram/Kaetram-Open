@@ -55,12 +55,13 @@
 
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
+    gap: 0.2em;
 
     width: 14em;
     height: 6em;
     margin-left: -7em;
-    padding: 1.5em;
+    padding: 1em;
+    padding-top: 1.5em;
 
     opacity: 0.8;
     border-image-width: 1em 1em 0 1em;
@@ -70,6 +71,8 @@
 
 #notification-text-title {
     position: relative;
+
+    font-family: Fibberish;
     color: #45ebfc;
     text-align: center;
     text-shadow: 0.125em 0.125em #0e0a00;
@@ -78,8 +81,8 @@
 #notification-text-description {
     position: relative;
 
-    font-size: 0.75em;
+    font-size: 1em;
     color: #eee;
     text-align: center;
-    text-shadow: 0.125em 0.125em #0e0a00;
+    text-shadow: 0.05em 0.075em #0e0a00;
 }
