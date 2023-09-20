@@ -403,7 +403,7 @@ export default class Renderer {
             this.drawEntity(entity);
         });
 
-        this.entitiesMaskContext.globalAlpha = 0.2;
+        //this.entitiesMaskContext.globalAlpha = 0.2;
         this.entitiesMaskContext.drawImage(this.entities, 0, 0);
     }
 

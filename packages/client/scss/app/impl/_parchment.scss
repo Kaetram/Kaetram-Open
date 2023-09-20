@@ -99,8 +99,8 @@
 }
 
 #death {
-    p {
-        margin-top: 10%;
+    h1 {
+        margin-top: 20%;
     }
 
     #respawn {
@@ -110,7 +110,9 @@
         flex-direction: row;
         justify-content: center;
 
-        margin-top: 2em;
+        margin-top: 1em;
+
+        font-size: 1.5em;
     }
 }
 
