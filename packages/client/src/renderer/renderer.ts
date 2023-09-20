@@ -421,22 +421,26 @@ export default class Renderer {
             this.textContext.save();
             this.textContext.globalAlpha = info.opacity;
 
-            let { x, y, fill, skillKey, stroke } = info;
+            let { x, y, fill, skillKey, skills, stroke } = info,
+                hasSkill = skillKey || skills.length > 0;
 
             x += 8;
 
-            if (skillKey) {
-                console.log(skillKey);
-
+            if (hasSkill) {
                 this.setCameraView(this.textContext);
+
+                let skillX = ~~((x - 2) * this.camera.zoomFactor);
 
                 x = ~~(x * this.camera.zoomFactor);
                 y = ~~(y * this.camera.zoomFactor);
 
-                this.drawInfoSkill(skillKey, x, y);
+                if (skillKey) this.drawInfoSkill(skillKey, skillX, y);
+                else
+                    for (let i = 0; i < skills.length; i++)
+                        this.drawInfoSkill(skills[i], skillX, y, i, skills.length);
             }
 
-            this.drawText(`${info.getText()}`, x, y, true, !skillKey, fill, stroke, 32);
+            this.drawText(`${info.getText()}`, x, y, true, !hasSkill, fill, stroke, 32);
             this.textContext.restore();
         });
     }
@@ -444,15 +448,25 @@ export default class Renderer {
     /**
      * Draws a little skill icon above the info splats displayed when the
      * player gains some experience.
-     * @param skill The skill that we are drawing the splat for.
+     * @param skill The skill that we are drawing the icon for.
+     * @param x The x coordinate of the skill.
+     * @param y The y coordinate of the skill.
+     * @param index Optional parameter for displaying multiple skills
      */
 
-    private drawInfoSkill(skill: string, x: number, y: number): void {
+    private drawInfoSkill(skill: string, x: number, y: number, index = 0, total = 0): void {
         let sprite = this.game.sprites.get(skill);
 
         if (!sprite) return;
 
         if (!sprite.loaded) sprite.load();
+
+        if (total === 2)
+            if (index === 0) x -= sprite.width;
+            else x += sprite.width / 1.5;
+        else if (total === 3)
+            if (index === 0) x -= sprite.width * 2;
+            else if (index === 2) x += sprite.width * 2;
 
         this.textContext.drawImage(
             sprite.image,

@@ -36,7 +36,8 @@ export default class Splat {
         public x: number,
         public y: number,
         isTarget = false,
-        skill = -1
+        skill = -1,
+        public skills: string[] = []
     ) {
         this.text = `${value}`;
         this.updateY = this.isHeal() ? 2 : 1;
@@ -47,6 +48,8 @@ export default class Splat {
             this.colour = (Modules.SkillExpColours as Colours)[skill];
             this.skillKey = `skills/${Modules.Skills[skill].toLowerCase()}`;
         }
+
+        for (let i = 0; i < skills.length; i++) skills[i] = `skills/${skills[i]}`;
 
         this.fill = this.colour?.fill || this.fill;
         this.stroke = this.colour?.stroke || this.stroke;

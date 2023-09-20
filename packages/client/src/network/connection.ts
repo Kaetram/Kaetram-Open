@@ -586,7 +586,16 @@ export default class Connection {
         if (currentPlayerTarget && info.hit.damage > 0) this.audio.playSound('hurt');
 
         // Create the hit info to be displayed above the entity.
-        this.info.create(info.hit.type, info.hit.damage, target.x, target.y, currentPlayerTarget);
+        this.info.create(
+            info.hit.type,
+            info.hit.damage,
+            target.x,
+            target.y,
+            currentPlayerTarget,
+            -1,
+            false,
+            info.hit.skills
+        );
 
         // Flash the target character when a hit occurs.
         if (info.hit.damage > 0) target.toggleHurt();

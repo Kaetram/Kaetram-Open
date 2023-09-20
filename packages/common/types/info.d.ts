@@ -5,4 +5,5 @@ export interface HitData {
     aoe?: number;
     terror?: boolean;
     poison?: boolean;
+    skills?: string[];
 }
