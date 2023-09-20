@@ -138,7 +138,7 @@ export default class Renderer {
     public drawLevels = true;
 
     // Default values
-    public fontSize = 10;
+    public fontSize = 12;
     public strokeSize = 4;
 
     // Detect functions
@@ -169,7 +169,7 @@ export default class Renderer {
         this.zoomOut.addEventListener('click', () => this.game.zoom(-0.2));
 
         this.camera.onZoom(() => {
-            this.fontSize = Math.floor(14 + this.camera.zoomFactor * 3);
+            this.fontSize = Math.floor(12 + this.camera.zoomFactor * 3);
             this.strokeSize = Math.floor(this.fontSize / 6);
         });
     }
@@ -1003,16 +1003,15 @@ export default class Renderer {
     private drawName(entity: Character | Item): void {
         let x = entity.x + 8, // Default offsets
             y = entity.y - 5,
-            colour = 'white',
-            stroke = 'rgba(0, 0, 0, 1)';
+            colour = 'white';
 
         // Handle the counter if an entity has one.
         if (entity.hasCounter())
-            return this.drawText(`${entity.counter}`, x, y, true, true, colour, stroke);
+            return this.drawText(`${entity.counter}`, x, y, true, true, colour);
 
         // Handle the item amount if the entity is an item.
         if (entity.isItem() && entity.count > 1)
-            return this.drawText(`${entity.count}`, x, y, true, true, colour, stroke);
+            return this.drawText(`${entity.count}`, x, y, true, true, colour);
 
         if (
             entity.hidden ||
@@ -1049,11 +1048,10 @@ export default class Renderer {
         if (entity.nameColour) colour = entity.nameColour;
 
         // Draw the name if we're drawing names.
-        if (drawNames) this.drawText(entity.name, x, nameY, true, true, colour, stroke);
+        if (drawNames) this.drawText(entity.name, x, nameY, true, true, colour);
 
         // Draw the level if we're drawing levels.
-        if (drawLevels && entity.level)
-            this.drawText(levelText, x, levelY, true, true, colour, stroke);
+        if (drawLevels && entity.level) this.drawText(levelText, x, levelY, true, true, colour);
     }
 
     /**
@@ -1271,7 +1269,7 @@ export default class Renderer {
         centered = false,
         setViews = false,
         colour = 'white',
-        strokeColour = 'rgba(55, 55, 55, 1)',
+        strokeColour = 'rgba(0, 0, 0, 1)',
         fontSize: number = this.fontSize
     ): void {
         this.textContext.save();
@@ -1286,7 +1284,7 @@ export default class Renderer {
 
         this.textContext.strokeStyle = strokeColour;
         this.textContext.lineWidth = this.strokeSize;
-        this.textContext.font = `${fontSize}px KerrieFont`;
+        this.textContext.font = `${fontSize}px Quaver`;
         this.textContext.strokeText(text, x, y);
         this.textContext.fillStyle = colour || 'white';
         this.textContext.fillText(text, x, y);

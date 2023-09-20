@@ -238,6 +238,9 @@ export default class App {
      */
 
     private saveLogin(): void {
+        // Prevent saving login if logging in as guest.
+        if (this.isGuest()) return;
+
         // Always save the state of the remember me button.
         this.storage.setRemember(this.isRememberMe());
 

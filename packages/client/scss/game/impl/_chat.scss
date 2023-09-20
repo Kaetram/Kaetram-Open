@@ -32,6 +32,11 @@
     margin: 1em 0.375em 0 0.675em;
 
     text-shadow: 0.125em 0.125em 0.125em black;
+
+    p {
+        margin-bottom: 0.1em;
+        font-size: 1.25em;
+    }
 }
 
 #chat-log::-webkit-scrollbar {

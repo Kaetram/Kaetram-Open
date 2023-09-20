@@ -32,13 +32,17 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     flex: 1;
-    gap: 1em;
+    gap: 0.5em;
 
-    font-size: 0.85em;
+    font-size: 1em;
 
     .title {
-        padding-bottom: 0.7em;
+        padding-bottom: 0.5em;
         text-decoration: underline;
+    }
+
+    p {
+        margin-bottom: 0.125em;
     }
 }
 

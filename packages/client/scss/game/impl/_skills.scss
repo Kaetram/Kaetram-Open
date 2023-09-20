@@ -8,7 +8,7 @@
     flex-direction: column;
 
     width: 8em;
-    height: 8em;
+    height: 10em;
     padding-right: 0;
 
     border-image-width: 1em 0 1em 1em;
@@ -19,7 +19,7 @@
         gap: 0.5em;
         align-items: center;
 
-        font-size: 0.75em;
+        font-size: 1em;
     }
 
     .skill-info-details {
@@ -28,7 +28,7 @@
 
         span {
             padding: 0.25em;
-            font-size: 0.75em;
+            font-size: 1em;
         }
     }
 }
@@ -56,6 +56,10 @@
                 justify-content: space-evenly;
 
                 text-align: center;
+
+                .skill-level {
+                    font-size: 1.3em;
+                }
 
                 .skill-experience {
                     width: 17.25em;

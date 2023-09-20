@@ -98,7 +98,7 @@ export default class Actions extends Menu {
             enchantmentsDiv.id = 'action-description-enchantments';
 
             // Apply the attack stats to the attack div.
-            attack.innerHTML = `<u>Attack Stats:</u> <br>
+            attack.innerHTML = `<u>Attack Stats:</u>
                 Crush: ${attackStats.crush} <br>
                 Slash: ${attackStats.slash} <br>
                 Stab: ${attackStats.stab} <br>
@@ -106,7 +106,7 @@ export default class Actions extends Menu {
                 Magic: ${attackStats.magic} <br>`;
 
             // Apply the defense stats to the defense div.
-            defense.innerHTML = `<u>Defense Stats:</u> <br>
+            defense.innerHTML = `<u>Defense Stats:</u>
                 Crush: ${defenseStats.crush} <br>
                 Slash: ${defenseStats.slash} <br>
                 Stab: ${defenseStats.stab} <br>
@@ -114,7 +114,7 @@ export default class Actions extends Menu {
                 Magic: ${defenseStats.magic} <br>`;
 
             // Apply the bonuses to the bonuses div.
-            bonusesDiv.innerHTML = `<u>Bonuses:</u> <br>
+            bonusesDiv.innerHTML = `<u>Bonuses:</u>
                 Accuracy: ${bonuses.accuracy} <br>
                 Strength: ${bonuses.strength} <br>
                 Archery: ${bonuses.archery} <br>
@@ -123,7 +123,7 @@ export default class Actions extends Menu {
             // If the item has enchantments, apply them to the enchantments div.
             if (Object.keys(enchantments).length > 0) {
                 // Apply the enchantments to the enchantments div.
-                enchantmentsDiv.innerHTML = `<u>Enchantments:</u> <br>`;
+                enchantmentsDiv.innerHTML = `<u>Enchantments:</u>`;
 
                 for (let key in enchantments) {
                     let enchantment = Modules.Enchantment[key];

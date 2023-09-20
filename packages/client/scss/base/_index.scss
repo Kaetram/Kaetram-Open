@@ -11,7 +11,13 @@
 body,
 button,
 input {
-    font-family: AdvoCut, 'AdvoCut Fallback', arial, sans-serif;
+    font-family: Monogram, 'AdvoCut Fallback', arial, sans-serif;
+
+    h1,
+    h2,
+    h3 {
+        font-family: Fibberish, Monogram, AdvoCut, arial, sans-serif;
+    }
 }
 
 @each $size, $scale in media.$sizes {

@@ -43,6 +43,12 @@
     align-items: center;
     justify-content: space-between;
 
+    #profile-level,
+    #profile-experience,
+    span {
+        font-size: 1.1em;
+    }
+
     .button-row {
         display: flex;
         flex-direction: row;

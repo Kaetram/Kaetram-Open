@@ -5,8 +5,10 @@
 
     &-content {
         display: flex;
+        flex: 3;
         flex-direction: row;
         gap: 0.5em;
+
         height: 100%;
     }
 
@@ -43,7 +45,7 @@
 
     &-slots {
         display: flex;
-        flex: 1;
+        flex: 2;
         flex-direction: column;
         gap: 0.5em;
 
