@@ -13,6 +13,7 @@ interface Colours {
 
 export default class Splat {
     public opacity = 1;
+    public skillKey = '';
 
     private text = '';
     private prefix = '';
@@ -42,7 +43,10 @@ export default class Splat {
         this.duration = this.isHeal() ? 400 : 1000;
         this.colour = (Modules.DamageColours as Colours)[type] || this.colour;
 
-        if (skill > -1) this.colour = (Modules.SkillExpColours as Colours)[skill];
+        if (skill > -1) {
+            this.colour = (Modules.SkillExpColours as Colours)[skill];
+            this.skillKey = `skills/${Modules.Skills[skill].toLowerCase()}`;
+        }
 
         this.fill = this.colour?.fill || this.fill;
         this.stroke = this.colour?.stroke || this.stroke;

@@ -420,18 +420,47 @@ export default class Renderer {
         this.game.info.forEachInfo((info: Splat) => {
             this.textContext.save();
             this.textContext.globalAlpha = info.opacity;
-            this.drawText(
-                `${info.getText()}`,
-                ~~(info.x + 8),
-                ~~info.y,
-                true,
-                true,
-                info.fill,
-                info.stroke,
-                32
-            );
+
+            let { x, y, fill, skillKey, stroke } = info;
+
+            x += 8;
+
+            if (skillKey) {
+                console.log(skillKey);
+
+                this.setCameraView(this.textContext);
+
+                x = ~~(x * this.camera.zoomFactor);
+                y = ~~(y * this.camera.zoomFactor);
+
+                this.drawInfoSkill(skillKey, x, y);
+            }
+
+            this.drawText(`${info.getText()}`, x, y, true, !skillKey, fill, stroke, 32);
             this.textContext.restore();
         });
+    }
+
+    /**
+     * Draws a little skill icon above the info splats displayed when the
+     * player gains some experience.
+     * @param skill The skill that we are drawing the splat for.
+     */
+
+    private drawInfoSkill(skill: string, x: number, y: number): void {
+        let sprite = this.game.sprites.get(skill);
+
+        if (!sprite) return;
+
+        if (!sprite.loaded) sprite.load();
+
+        this.textContext.drawImage(
+            sprite.image,
+            x + sprite.offsetX,
+            y + (sprite.offsetY - 4) * this.camera.zoomFactor,
+            sprite.width * 2,
+            sprite.height * 2
+        );
     }
 
     /**
