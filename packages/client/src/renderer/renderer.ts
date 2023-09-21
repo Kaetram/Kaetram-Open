@@ -451,7 +451,8 @@ export default class Renderer {
      * @param skill The skill that we are drawing the icon for.
      * @param x The x coordinate of the skill.
      * @param y The y coordinate of the skill.
-     * @param index Optional parameter for displaying multiple skills
+     * @param index Optional parameter for displaying multiple skills, indicates the currently iterated skill.
+     * @param total Optional parameter for displaying multiple skills, indicates the total amount of skills.
      */
 
     private drawInfoSkill(skill: string, x: number, y: number, index = 0, total = 0): void {
@@ -461,6 +462,7 @@ export default class Renderer {
 
         if (!sprite.loaded) sprite.load();
 
+        // Draw the multiple skin icons in a row.
         if (total === 2)
             if (index === 0) x -= sprite.width;
             else x += sprite.width / 1.5;
@@ -471,7 +473,7 @@ export default class Renderer {
         this.textContext.drawImage(
             sprite.image,
             x + sprite.offsetX,
-            y + sprite.offsetY * this.camera.zoomFactor,
+            y + sprite.offsetY * 4,
             sprite.width * 2,
             sprite.height * 2
         );

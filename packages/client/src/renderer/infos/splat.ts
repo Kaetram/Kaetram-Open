@@ -49,6 +49,7 @@ export default class Splat {
             this.skillKey = `skills/${Modules.Skills[skill].toLowerCase()}`;
         }
 
+        // Prefix the skills sprite folder so we can load the icon.
         for (let i = 0; i < skills.length; i++) skills[i] = `skills/${skills[i]}`;
 
         this.fill = this.colour?.fill || this.fill;
@@ -60,7 +61,10 @@ export default class Splat {
         }
 
         // Text gets marked as MISS if this is a damage type and the value is 0.
-        if (this.isDamage() && value < 1) this.text = 'MISS';
+        if (this.isDamage() && value < 1) {
+            this.text = 'MISS';
+            this.skills = []; // Don't render any skills if the hit is a miss.
+        }
 
         if (this.isPoison() || this.isFreezing()) this.prefix = '--';
         if (this.isPoints()) this.prefix = '++';
