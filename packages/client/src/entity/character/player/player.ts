@@ -371,9 +371,10 @@ export default class Player extends Character {
      */
 
     public getSpriteName(): string {
+        let armourSkin = this.getArmourSkin();
+
         // Use the armour skin if it exists.
-        if (this.equipments[Modules.Equipment.ArmourSkin].key)
-            return this.equipments[Modules.Equipment.ArmourSkin].key;
+        if (armourSkin.key && armourSkin.drawable) return armourSkin.key;
 
         return 'player/base';
     }
