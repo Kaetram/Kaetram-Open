@@ -265,7 +265,7 @@ export default class EntitiesController {
 
         if (!target) return undefined;
 
-        let projectile = new Projectile(info.instance, info.hitType!);
+        let projectile = new Projectile(info.instance, info.hit!.type!);
 
         projectile.name = info.name;
         projectile.setTarget(target);
@@ -285,11 +285,14 @@ export default class EntitiesController {
             if (impactEffect !== Modules.Effects.None) target.addEffect(impactEffect);
 
             this.game.info.create(
-                info.hitType!,
-                info.damage!,
+                info.hit!.type!,
+                info.hit!.damage!,
                 target.x,
                 target.y,
-                this.isPlayer(target.instance)
+                this.isPlayer(target.instance),
+                -1,
+                true,
+                info.hit!.skills
             );
 
             target.triggerHealthBar();
