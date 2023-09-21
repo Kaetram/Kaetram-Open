@@ -627,7 +627,7 @@ export default class Renderer {
             flipX = dx + this.actualTileSize,
             flipY = dy + entity.sprite.height,
             context =
-                entity.isNonTreeResource() && entity.y > this.game.player.y
+                entity.isNonTreeResource() && this.game.player.gridY < entity.gridY
                     ? this.entitiesForeContext
                     : this.entitiesContext;
 
