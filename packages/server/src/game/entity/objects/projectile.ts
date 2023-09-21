@@ -61,8 +61,7 @@ export default class Projectile extends Entity {
 
         data.ownerInstance = this.owner.instance;
         data.targetInstance = this.target.instance;
-        data.damage = this.hit.getDamage() || 0;
-        data.hitType = this.hit.type;
+        data.hit = this.hit.serialize();
 
         return data;
     }

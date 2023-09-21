@@ -30,8 +30,6 @@ export default class InfoController {
             y += Utils.randomInt(-10, 10);
         }
 
-        console.trace();
-
         let id = Utils.createId(Date.now(), x, y);
 
         this.addInfo(new Splat(id, type, amount, x, y, isTarget, skill, skills));
