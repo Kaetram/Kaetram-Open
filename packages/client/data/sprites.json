@@ -237,6 +237,7 @@
     { "id": "player/weapon/bronzepickaxe", "offsetY": -24 },
     { "id": "player/weapon/ironpickaxe", "offsetY": -24 },
     { "id": "player/weapon/goldpickaxe", "offsetY": -24 },
+    { "id": "player/weapon/cobaltpickaxe", "offsetY": -24 },
     { "id": "player/weapon/bonepickaxe", "offsetY": -24 },
     { "id": "player/weapon/cursedbattleaxe", "offsetY": -24 },
     { "id": "player/weapon/cursedpickaxe", "offsetY": -24 },
