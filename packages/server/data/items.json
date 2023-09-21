@@ -2022,9 +2022,9 @@
             "magic": 2
         }
     },
-    "cursedsapphirebattleaxe": {
+    "cursedbattleaxe": {
         "type": "weapon",
-        "name": "Cursed Sapphire Battle Axe",
+        "name": "Cursed Battle Axe",
         "weaponType": "axe",
         "price": 200,
         "skill": "strength",
