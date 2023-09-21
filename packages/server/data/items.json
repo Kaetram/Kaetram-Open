@@ -565,6 +565,227 @@
             "magic": 0
         }
     },
+    "bronzepickaxe": {
+        "type": "weapon",
+        "name": "Bronze Pickaxe",
+        "weaponType": "pickaxe",
+        "mining": 1,
+        "price": 100,
+        "attackStats": {
+            "crush": 1,
+            "slash": 0,
+            "stab": 4,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 0,
+            "stab": 1,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 1,
+            "strength": 1,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "ironpickaxe": {
+        "type": "weapon",
+        "name": "Iron Pickaxe",
+        "weaponType": "pickaxe",
+        "mining": 10,
+        "price": 200,
+        "attackStats": {
+            "crush": 2,
+            "slash": 0,
+            "stab": 6,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 0,
+            "stab": 2,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+    "goldpickaxe": {
+        "type": "weapon",
+        "name": "Gold Pickaxe",
+        "weaponType": "pickaxe",
+        "mining": 20,
+        "price": 400,
+        "attackStats": {
+            "crush": 3,
+            "slash": 0,
+            "stab": 8,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 3,
+            "slash": 0,
+            "stab": 3,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 3,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+
+    "cobaltpickaxe": {
+        "type": "weapon",
+        "name": "Cobalt Pickaxe",
+        "weaponType": "pickaxe",
+        "mining": 15,
+        "price": 800,
+        "attackStats": {
+            "crush": 4,
+            "slash": 0,
+            "stab": 10,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 4,
+            "slash": 0,
+            "stab": 4,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 4,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+
+    "bonepickaxe": {
+        "type": "weapon",
+        "name": "Bone Pickaxe",
+        "weaponType": "pickaxe",
+        "mining": 30,
+        "price": 1600,
+        "attackStats": {
+            "crush": 5,
+            "slash": 0,
+            "stab": 12,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 5,
+            "slash": 0,
+            "stab": 5,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 5,
+            "strength": 5,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+
+    "cursedpickaxe": {
+        "type": "weapon",
+        "name": "Cursed Pickaxe",
+        "weaponType": "pickaxe",
+        "mining": 40,
+        "price": 3200,
+        "attackStats": {
+            "crush": 6,
+            "slash": 0,
+            "stab": 14,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 6,
+            "slash": 0,
+            "stab": 6,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 6,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+
+    "cursedsapphirepickaxe": {
+        "type": "weapon",
+        "name": "Cursed Sapphire Pickaxe",
+        "weaponType": "pickaxe",
+        "mining": 55,
+        "price": 6400,
+        "attackStats": {
+            "crush": 7,
+            "slash": 0,
+            "stab": 16,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 7,
+            "slash": 0,
+            "stab": 7,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 7,
+            "strength": 7,
+            "archery": 0,
+            "magic": 0
+        }
+    },
+
+    "heavyberylpickaxe": {
+        "type": "weapon",
+        "name": "Heavy Beryl Pickaxe",
+        "weaponType": "pickaxe",
+        "mining": 65,
+        "price": 12800,
+        "attackStats": {
+            "crush": 8,
+            "slash": 0,
+            "stab": 18,
+            "archery": 0,
+            "magic": 0
+        },
+        "defenseStats": {
+            "crush": 8,
+            "slash": 0,
+            "stab": 8,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 8,
+            "strength": 8,
+            "archery": 0,
+            "magic": 0
+        }
+    },
     "bronzeaxe": {
         "type": "weapon",
         "name": "Bronze Axe",
@@ -1799,6 +2020,34 @@
             "strength": 2,
             "archery": 0,
             "magic": 2
+        }
+    },
+    "cursedsapphirebattleaxe": {
+        "type": "weapon",
+        "name": "Cursed Sapphire Battle Axe",
+        "weaponType": "axe",
+        "price": 200,
+        "skill": "strength",
+        "level": 46,
+        "attackStats": {
+            "crush": 14,
+            "slash": 16,
+            "stab": 14,
+            "archery": 0,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 8,
+            "slash": 12,
+            "stab": 10,
+            "archery": 0,
+            "magic": 0
+        },
+        "bonuses": {
+            "accuracy": 12,
+            "strength": 20,
+            "archery": 0,
+            "magic": 3
         }
     },
     "fishingpole": {
