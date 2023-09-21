@@ -593,7 +593,7 @@ export default class Connection {
             target.y,
             currentPlayerTarget,
             -1,
-            false,
+            true,
             info.hit.skills
         );
 
