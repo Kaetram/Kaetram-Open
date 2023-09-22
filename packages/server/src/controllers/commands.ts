@@ -1097,6 +1097,14 @@ export default class Commands {
                 return this.world.crafting.open(this.player, Modules.Skills.Cooking);
             }
 
+            case 'opensmithing': {
+                return this.world.crafting.open(this.player, Modules.Skills.Smithing);
+            }
+
+            case 'opensmelting': {
+                return this.world.crafting.open(this.player, Modules.Skills.Smelting);
+            }
+
             case 'lootbag': {
                 let items: Item[] = [
                     new Item('oldonesblade', -1, -1, false, 1),

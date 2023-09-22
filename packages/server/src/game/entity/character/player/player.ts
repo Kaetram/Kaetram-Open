@@ -1573,6 +1573,7 @@ export default class Player extends Character {
                 instance: this.instance,
                 x,
                 y,
+                target: this.target?.instance,
                 forced
             }),
             true

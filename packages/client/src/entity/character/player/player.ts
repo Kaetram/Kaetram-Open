@@ -363,6 +363,9 @@ export default class Player extends Character {
         if ((this.hasKeyboardMovement() || this.hasAttackers() || this.hasTarget()) && this.moving)
             return;
 
+        // ?? this shouldn't affect anything but it does so just leave it for now.
+        if (this.hasPath()) return;
+
         super.idle(o, force);
     }
 

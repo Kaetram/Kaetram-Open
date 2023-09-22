@@ -167,6 +167,7 @@ export default class Handler {
 
     protected handleFollowers(): void {
         this.character.forEachFollower((follower: Character) => {
+            // Clear the followers if their target doesn't match this character (or it doesn't exist).
             if (!follower.target || follower.target.instance !== this.character.instance)
                 return this.character.removeFollower(follower);
 
