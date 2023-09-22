@@ -516,6 +516,8 @@ export default class Player extends Character {
 
             case 'hitpoints':
             case 'mana': {
+                if (this.isCheater()) this.notify(`Healing is disabled for cheaters, sorry.`);
+
                 if (type === 'hitpoints') this.hitPoints.increment(amount);
                 else if (type === 'mana') this.mana.increment(amount);
 
@@ -1236,6 +1238,9 @@ export default class Player extends Character {
 
         // Player has stopped on top of an item.
         if (entity?.isItem()) {
+            // Prevent cheaters from picking up item
+            if (this.isCheater()) return;
+
             // Prevent picking up dropped items that belong to other players.
             if (!entity.isOwner(this.username))
                 return this.notify(
@@ -1416,6 +1421,9 @@ export default class Player extends Character {
             !this.status.has(Modules.Effects.SnowPotion)
         )
             speed = Math.floor(speed * 1.25);
+
+        // Halve speed if the player is cheating.
+        if (this.isCheater()) speed = Math.floor(speed * 2);
 
         // Update the movement speed if there is a change from default.
         if (this.movementSpeed !== speed) this.setMovementSpeed(speed);

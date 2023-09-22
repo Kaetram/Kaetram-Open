@@ -1,6 +1,8 @@
 @use '../../abstracts/sprite';
 
 #welcome {
+    z-index: 100;
+    bottom: -2em;
     flex-direction: row;
 
     &-info {
@@ -25,8 +27,9 @@
     }
 
     &-play {
+        overflow: auto;
         flex: 1;
-        gap: 0.5em;
+        gap: 0.25em;
         font-size: 0.95em;
     }
 
@@ -70,6 +73,7 @@
     #welcome {
         flex-direction: column;
         width: 18em;
+        height: 31em;
     }
 }
 

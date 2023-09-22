@@ -2,6 +2,12 @@
     "rat": {
         "name": "Rat",
         "description": "Ah yes, this rat is made out of rat.",
+        "drops": [
+            {
+                "key": "petrat",
+                "chance": 5
+            }
+        ],
         "dropTables": ["ordinary"],
         "hitPoints": 27,
         "level": 1,
@@ -4261,6 +4267,12 @@
 
     "icerat": {
         "name": "Ice Rat",
+        "drops": [
+            {
+                "key": "rathatpet",
+                "chance": 3
+            }
+        ],
         "dropTables": ["ordinary", "shards", "unusual", "arrows"],
         "hitPoints": 710,
         "level": 80,
