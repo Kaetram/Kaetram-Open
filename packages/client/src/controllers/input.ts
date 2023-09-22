@@ -25,6 +25,7 @@ import type Tree from '../entity/objects/resource/impl/tree';
 import type Rock from '../entity/objects/resource/impl/rock';
 import type FishSpot from '../entity/objects/resource/impl/fishspot';
 import type Foraging from '../entity/objects/resource/impl/foraging';
+import type Store from '../menu/store';
 
 interface TargetData {
     sprite: Sprite;
@@ -49,6 +50,7 @@ export default class InputController {
     private trade: Trade;
     private leaderboards: Leaderboards;
     private guilds: Guilds;
+    private store: Store;
 
     public selectedCellVisible = false;
     public keyMovement = false;
@@ -90,6 +92,7 @@ export default class InputController {
         this.trade = game.menu.getTrade();
         this.leaderboards = game.menu.getLeaderboards();
         this.guilds = game.menu.getGuilds();
+        this.store = game.menu.getStore();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -197,6 +200,10 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
+        // Redirect input to the store handler if the store is visible.
+        if (this.store.isVisible()) return this.store.keyDown(event.key);
+
+        // Redirect input to the guilds handler if the guilds are visible.
         if (this.guilds.isVisible()) return this.guilds.keyDown(event.key);
 
         // Redirect input to the leaderboards handler if the leaderboards are visible.

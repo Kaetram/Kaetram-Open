@@ -3,7 +3,6 @@ import Menu from './menu';
 import log from '../lib/log';
 import Util from '../utils/util';
 import { isMobile } from '../utils/detect';
-import { onSecondaryPress } from '../utils/press';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 
@@ -26,7 +25,7 @@ export default class Store extends Menu {
 
     private storeContainer: HTMLElement = document.querySelector('#store-content')!;
 
-    private storeHelp: HTMLElement = document.querySelector('#store-slots-help')!;
+    //private storeHelp: HTMLElement = document.querySelector('#store-slots-help')!;
 
     private confirmSell: HTMLElement = document.querySelector('#store-sell-confirm')!;
 
@@ -69,13 +68,16 @@ export default class Store extends Menu {
     }
 
     /**
-     * Updates the helper text when the user resizes the screen.
+     * Handles incoming input from the keyboard. Things like pressing enter to accept
+     * the buy dialog and pressing escape to close the buy dialog.
+     * @param key The key that we are pressing.
      */
 
-    public override resize(): void {
-        let action = isMobile() ? 'Long tap' : 'Right click';
+    public keyDown(key: string): void {
+        if (!this.isBuyDialogVisible()) return;
 
-        this.storeHelp.textContent = `${action} to buy multiple items.`;
+        if (key === 'Enter') this.handleBuy();
+        else if (key === 'Escape') this.hideBuyDialog();
     }
 
     /**
@@ -145,7 +147,8 @@ export default class Store extends Menu {
         this.storeContainer.classList.add('dimmed');
 
         this.buyCount.value = '1';
-        this.buyCount.focus();
+
+        if (!isMobile()) this.buyCount.focus();
     }
 
     /**
@@ -192,6 +195,19 @@ export default class Store extends Menu {
 
         this.update(info);
         this.synchronize();
+    }
+
+    /**
+     * Hides the store UI and clears the store.
+     */
+
+    public override hide(): void {
+        super.hide();
+
+        this.clear();
+        this.clearSellSlot();
+
+        this.hideBuyDialog();
     }
 
     /**
@@ -286,8 +302,7 @@ export default class Store extends Menu {
         // Update the image of the element.
         image.style.backgroundImage = Util.getImageURL(item.key);
 
-        listElement.addEventListener('click', () => this.buy(index));
-        onSecondaryPress(listElement, () => {
+        listElement.addEventListener('click', () => {
             this.selectedBuyIndex = index;
 
             this.showBuyDialog();
@@ -300,6 +315,15 @@ export default class Store extends Menu {
         listElement.append(slot, name, count, price);
 
         return listElement;
+    }
+
+    /**
+     * Checks the display property of the buy dialog to see if it is visible.
+     * @returns Whether or not the buy dialog is visible.
+     */
+
+    private isBuyDialogVisible(): boolean {
+        return this.buyDialog.style.display !== 'none';
     }
 
     /**
