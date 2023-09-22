@@ -42,7 +42,8 @@ export default class Handler extends CharacterHandler {
         if (this.character.dead || this.character.frozen) return [];
 
         // Turn the character towards the tile they clicked on.
-        if (!this.character.hasKeyboardMovement()) this.character.lookAtPosition(x, y);
+        if (!this.character.hasKeyboardMovement() && !this.character.target)
+            this.character.lookAtPosition(x, y);
 
         // Prevent calculating pathing when we target a mob that is within range.
         if (this.character.canAttackTarget() && !this.character.trading) return [];

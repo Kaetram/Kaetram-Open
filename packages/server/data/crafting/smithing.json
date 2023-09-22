@@ -119,6 +119,66 @@
         }
     },
 
+    "bronzepickaxe": {
+        "level": 1,
+        "experience": 35,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 3
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironpickaxe": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 4
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldpickaxe": {
+        "level": 20,
+        "experience": 120,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 10
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
     "bronzeaxe": {
         "level": 1,
         "experience": 35,

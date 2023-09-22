@@ -347,7 +347,7 @@ export default class Connection {
                         entity = this.entities.get<Character>(instance);
 
                     // No entity found, just skip.
-                    if (!entity) return;
+                    if (!entity || entity.hasPath()) return;
 
                     /**
                      * When we detect a mismatch in client-sided and server-sided
@@ -410,6 +410,8 @@ export default class Connection {
 
         switch (opcode) {
             case Opcodes.Movement.Move: {
+                if (info.target === this.game.player.instance && entity.following) return;
+
                 entity.go(
                     info.x!,
                     info.y!,
@@ -606,6 +608,7 @@ export default class Connection {
 
         // Add the attacker to the target's list of attackers.
         target.addAttacker(attacker);
+        attacker.setTarget(target);
 
         // Ensure the attacker and the target are not on the same tile and just move them.
         if (attacker.isMob() && attacker.gridX === target.gridX && attacker.gridY === target.gridY)

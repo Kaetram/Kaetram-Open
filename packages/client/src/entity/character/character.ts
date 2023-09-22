@@ -449,7 +449,7 @@ export default class Character extends Entity {
 
     public override idle(o?: Modules.Orientation, force = false): void {
         // Prevents the idle animation from affecting the walking animation.
-        if (this.hasPath() && !force) return;
+        if ((this.hasPath() || this.moving) && !force) return;
 
         let orientation = o || this.orientation;
 
