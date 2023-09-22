@@ -1,14 +1,6 @@
 {
-    "0.5.1-beta": {
-        "title": "Kaetram 0.5.1-beta",
-        "content": [
-            "- Added skill icon to experience gained",
-            "- Added new interface and in-game fonts",
-            "- Added woodcutting and mining sound effects",
-            "- Fixes welcome screen on mobile",
-            "- Fixed game stuttering issues",
-            "- Fixes some issues with combat anti-cheat measures",
-            "- Fixes projectiles spawning where mob used to be"
-        ]
+    "0.5.2-beta": {
+        "title": "Kaetram 0.5.2-beta",
+        "content": ["- Polished combat and stuff", "- Polished areas around the map."]
     }
 }
