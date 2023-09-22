@@ -10,7 +10,7 @@
     "dependencies": {
         "@kaetram/common": "workspace:*",
         "@kaetram/server": "workspace:*",
-        "tsx": "^3.12.8",
+        "tsx": "^3.12.10",
         "websocket": "^1.0.34"
     },
     "devDependencies": {
