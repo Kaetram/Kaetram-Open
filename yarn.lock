@@ -2741,23 +2741,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@esbuild-kit/core-utils@npm:^3.2.2":
-  version: 3.2.2
-  resolution: "@esbuild-kit/core-utils@npm:3.2.2"
+"@esbuild-kit/core-utils@npm:^3.3.0, @esbuild-kit/core-utils@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "@esbuild-kit/core-utils@npm:3.3.2"
   dependencies:
     esbuild: "npm:~0.18.20"
     source-map-support: "npm:^0.5.21"
-  checksum: 2e57192e33185e32c001d917f1410973e6be592f4b0881639e9ad01908e6e29976d412fb5fd82c348f241c20e97724d1f153de0bc49d2fefaf5f89b322cb36f1
+  checksum: 52938d011f08d843e568ac6b90e1c4c7d44e1c994fd88b102dff984e7c8d3c6055687d4bfbc47677ed216dcfae3ae7ac3e5e89ccf0d71e5bb7c797585b3ba5bc
   languageName: node
   linkType: hard
 
-"@esbuild-kit/esm-loader@npm:^2.5.5":
-  version: 2.5.5
-  resolution: "@esbuild-kit/esm-loader@npm:2.5.5"
+"@esbuild-kit/esm-loader@npm:^2.6.3":
+  version: 2.6.5
+  resolution: "@esbuild-kit/esm-loader@npm:2.6.5"
   dependencies:
-    "@esbuild-kit/core-utils": "npm:^3.0.0"
-    get-tsconfig: "npm:^4.4.0"
-  checksum: 9be32831c25a6f6c330c9fb09d256f0c6e63499ce33f54442c4f1695a9090d6910e24685958b8fcb863578252d87983ae50e7d89c4c70dd255cc2f48279880d4
+    "@esbuild-kit/core-utils": "npm:^3.3.2"
+    get-tsconfig: "npm:^4.7.0"
+  checksum: 9fa98353258bbe8bd24aeb46fb68c2a109537be2f28599d59bf852d8f87ef0a6fe2d1bc49ec740d3aa29694352517be86b1b2d02ff03c9b0b706470e81c24de5
   languageName: node
   linkType: hard
 
@@ -3477,7 +3477,7 @@ __metadata:
     cypress: "npm:^13.1.0"
     esbuild: "npm:^0.19.2"
     start-server-and-test: "npm:^2.0.0"
-    tsx: "npm:^3.12.8"
+    tsx: "npm:^3.12.10"
     typescript: "npm:^5.2.2"
   languageName: unknown
   linkType: soft
@@ -3503,7 +3503,7 @@ __metadata:
     mongodb: "npm:^6.0.0"
     nodemailer: "npm:^6.9.5"
     stripe: "npm:^13.5.0"
-    tsx: "npm:^3.12.8"
+    tsx: "npm:^3.12.10"
     typescript: "npm:^5.2.2"
     uws: "https://github.com/uNetworking/uWebSockets.js.git#commit=e6ecc2102d68d99dc35969b0898fbd201e0f252b"
   languageName: unknown
@@ -3530,7 +3530,7 @@ __metadata:
     express: "npm:^4.18.2"
     mongodb: "npm:^6.0.0"
     sanitizer: "npm:^0.1.3"
-    tsx: "npm:^3.12.8"
+    tsx: "npm:^3.12.10"
     typescript: "npm:^5.2.2"
     uws: "https://github.com/uNetworking/uWebSockets.js.git#commit=e6ecc2102d68d99dc35969b0898fbd201e0f252b"
     websocket: "npm:^1.0.34"
@@ -3543,7 +3543,7 @@ __metadata:
   dependencies:
     "@kaetram/common": "workspace:*"
     "@kaetram/server": "workspace:*"
-    tsx: "npm:^3.12.8"
+    tsx: "npm:^3.12.10"
     typescript: "npm:^5.2.2"
     websocket: "npm:^1.0.34"
   languageName: unknown
@@ -8961,6 +8961,15 @@ __metadata:
   dependencies:
     resolve-pkg-maps: "npm:^1.0.0"
   checksum: f7e7d4e5853f9949a12b84ef5e4af64e2bd5dd0bf48670413300ea8bf818a1424c7af6fc8e218ed4bd1f1f1e9c78c282f3607825bdfc490ee8439792bbef24ce
+  languageName: node
+  linkType: hard
+
+"get-tsconfig@npm:^4.7.0":
+  version: 4.7.1
+  resolution: "get-tsconfig@npm:4.7.1"
+  dependencies:
+    resolve-pkg-maps: "npm:^1.0.0"
+  checksum: 824e9d959b6cceccc0eec8f84f93dc953b225d4a4ba4775b455a555a3ec1156a5c8ed34e5d168030abee1b6f6927dc25317d6bb0a34a74e6fc5bf9a4e099e4a0
   languageName: node
   linkType: hard
 
@@ -15629,20 +15638,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:^3.12.8":
-  version: 3.12.8
-  resolution: "tsx@npm:3.12.8"
+"tsx@npm:^3.12.10":
+  version: 3.12.10
+  resolution: "tsx@npm:3.12.10"
   dependencies:
     "@esbuild-kit/cjs-loader": "npm:^2.4.2"
-    "@esbuild-kit/core-utils": "npm:^3.2.2"
-    "@esbuild-kit/esm-loader": "npm:^2.5.5"
+    "@esbuild-kit/core-utils": "npm:^3.3.0"
+    "@esbuild-kit/esm-loader": "npm:^2.6.3"
     fsevents: "npm:~2.3.2"
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     tsx: dist/cli.js
-  checksum: 3e07b5493754e79318c8132f1215b11d7d087e6db940a814d3bd04fa6a61fb517d4c36083c22257aad80d29f62a43a9d0e49689fedd21fdcf3297199204921c0
+  checksum: 01ed4e30c90576c367087598be94747906ae795a0a9ea2b6207676683ba30325507cd35f40fde861adb5997afb2e0a3463d483dac10b8cb2d048e002bd77ed31
   languageName: node
   linkType: hard
 

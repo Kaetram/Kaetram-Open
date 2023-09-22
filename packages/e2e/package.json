@@ -14,7 +14,7 @@
         "cypress": "^13.1.0",
         "esbuild": "^0.19.2",
         "start-server-and-test": "^2.0.0",
-        "tsx": "^3.12.8",
+        "tsx": "^3.12.10",
         "typescript": "^5.2.2"
     },
     "cypress-cucumber-preprocessor": {
