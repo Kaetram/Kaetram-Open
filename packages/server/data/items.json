@@ -8178,6 +8178,12 @@
         "interactable": true,
         "plugin": "chisel"
     },
+    "hammer": {
+        "type": "object",
+        "name": "Hammer",
+        "description": "This looks like a mystical hammer from some blacksmith or something.",
+        "price": 5
+    },
     "string": {
         "type": "object",
         "name": "String",
