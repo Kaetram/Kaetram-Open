@@ -7,184 +7,266 @@
             "task": "talk",
             "npc": "coder",
             "text": [
-                "Hello there bud, I am the programmer of this world.",
-                "Like most MMORPGs, this is a tutorial. You must complete it unfortunately.",
-                "Do not worry, I coded it to be pretty short.",
-                "Go through those doors over there to proceed."
+                "Oh, hello! Welcome! Click on me again!",
+                "You're getting the hang of it, keep clicking.",
+                "Perfect, seems like you get the gist of it.",
+                "I am the coder, I created this world, and, well, you.",
+                "Listen, to me you are just a more sophisticated AI.",
+                "So I'm gonna need you to get used to this world and help me out.",
+                "You see, I created these previous AIs, but they went rogue.",
+                "They are now trying to destroy this world.",
+                "So, I created you in order to stop them and save us all.",
+                "Before we get to any of that, we need to teach you some of the basics.",
+                "You can move around by clicking, or using WASD keys, or arrow keys.",
+                "Make sure you talk to everyone you meet fully, you never know what you might learn.",
+                "Whenever you feel like you're ready, head on outside and talk to the guard."
             ],
-            "completedText": ["Why don't you just walk through that door over there eh?"],
+            "completedText": ["Whenever you are ready, head outside and talk to the guard."],
             "pointer": {
                 "type": 0,
-                "x": 680,
-                "y": 105
+                "x": 134,
+                "y": 559
             }
         },
+
         "1": {
             "task": "door",
             "pointer": {
                 "type": 0,
-                "x": 677,
-                "y": 107
+                "x": 135,
+                "y": 569
             }
         },
+
         "2": {
             "task": "talk",
             "npc": "guard",
             "text": [
-                "I see... a new adventurer.",
-                "Let me tell you a bit about these lands.",
-                "You'll be killing stuff...",
-                "A lot of stuff actually...",
-                "And when you're not killing stuff...",
-                "You'll still be killing stuff!",
-                "But regardless, I won't ask you to kill stuff just yet.",
-                "Take this axe and cut down 2 trees for me."
+                "Oh great anot- nevermind.",
+                "Welcome to the world of Kaetram.",
+                "I'm here to teach you about skills and combat.",
+                "Skills are activities that allow you to collect items and gain experience.",
+                "You can use the experience to discover new areas and engage in more complex tasks.",
+                "Before we get to any combat-related skills, I want you to cut two trees for me.",
+                "Here, take this axe, open your inventory, and equip it."
             ],
-            "completedText": ["What are you waiting for?", "Go cut me some trees."],
+
+            "completedText": ["Go on, cut two trees for me."],
+
             "itemRewards": [
                 {
                     "key": "bronzeaxe",
                     "count": 1
                 }
             ],
-            "popup": {
-                "title": "Item acquired!",
-                "text": "You've just received an axe! Equip it using your inventory!",
-                "colour": "#33cc33"
-            },
+
             "pointer": {
                 "type": 0,
-                "x": 666,
-                "y": 139
+                "x": 60,
+                "y": 602
             }
         },
+
         "3": {
             "task": "tree",
-            "tree": "tutorialsnowoak",
+            "tree": "tutorialoak",
             "treeCount": 2
         },
+
         "4": {
-            "task": "talk",
+            "task": "npc",
             "npc": "guard",
-            "text": ["Thank you soldier, meet me in the cave below!"],
-            "completedText": ["I'm not sure what you're waiting for...", "head on over to the cave below!"],
-            "pointer": {
-                "type": 0,
-                "x": 666,
-                "y": 139
-            }
-        },
-        "5": {
-            "task": "door",
-            "pointer": {
-                "type": 0,
-                "x": 670,
-                "y": 149
-            }
-        },
-        "6": {
-            "task": "talk",
-            "npc": "guard",
+
             "text": [
-                "Soldier! We have a crab infestation!",
-                "How did crabs make their way into a",
-                "volcanic cave under a snowy field?",
-                "You're not here to ask questions soldier!",
-                "Use the axe I just gave you to cut down 5 crabs!"
+                "Okay perfect, you can use logs to make sticks.",
+                "Take this knife and use it to fletch some sticks.",
+                "Simply click on the item in your inventory and select the interact option."
             ],
-            "completedText": ["No more chit chatter, go slice me some crabs!"],
+            "completedText": ["Go on, fletch the logs into sticks for me."],
+
+            "itemRewards": [
+                {
+                    "key": "knife",
+                    "count": 1
+                }
+            ],
             "pointer": {
                 "type": 0,
-                "x": 640,
-                "y": 111
+                "x": 60,
+                "y": 602
             }
         },
-        "7": {
-            "task": "kill",
-            "mob": ["crab"],
-            "mobCountRequirement": 5
+
+        "5": {
+            "task": "talk",
+            "npc": "guard",
+
+            "hasItemText": [
+                "Awesome, just bear with me a little longer.",
+                "I know it's boring but I am obligated to teach you this.",
+                "Now take this fishing pole and go catch two shrimps for me."
+            ],
+
+            "completedText": ["Go on, catch two shrimps for me."],
+
+            "itemRequirements": [
+                {
+                    "key": "stick",
+                    "count": 1
+                }
+            ],
+
+            "itemRewards": [
+                {
+                    "key": "stick",
+                    "count": 1
+                },
+                {
+                    "key": "fishingpole",
+                    "count": 1
+                }
+            ]
         },
+
+        "6": {
+            "task": "fish",
+            "fish": "tutorialshrimpspot",
+            "fishCount": 2
+        },
+
+        "7": {
+            "task": "talk",
+            "npc": "guard",
+
+            "text": [
+                "Great, one more thing and we're done with the boring stuff.",
+                "It's as much of a chore for me as it is for you so don't worry.",
+                "Go click on that cooking pot and cook these shrimps for me."
+            ],
+            "completedText": ["Go on, cook the shrimps for me."],
+            "pointer": {
+                "type": 0,
+                "x": 60,
+                "y": 602
+            }
+        },
+
         "8": {
             "task": "talk",
             "npc": "guard",
-            "text": [
-                "Phew, that was a close one. Those crabs can sure do some damage.",
-                "Head on over through that portal for the next part of your training!"
+
+            "hasItemText": [
+                "Awesome, you're done with the boring stuff.",
+                "Head down that suspicious ladder to the left and meet me in the cave.",
+                "Don't question it, just trust me."
             ],
-            "completedText": ["Well don't just sit there, go through the portal!"],
-            "pointer": {
-                "type": 0,
-                "x": 640,
-                "y": 111
-            }
+            "completedText": ["Head down the ladder and meet me in the cave."],
+            "itemRequirements": [
+                {
+                    "key": "cookedshrimp",
+                    "count": 1
+                }
+            ]
         },
+
         "9": {
             "task": "door",
             "pointer": {
                 "type": 0,
-                "x": 638,
-                "y": 109
+                "x": 39,
+                "y": 612
             }
         },
+
         "10": {
             "task": "talk",
-            "npc": "sorcerer",
+            "npc": "guard",
+
             "text": [
-                "Sup there young one, how's it hangin'?",
-                "Welcome to my little pocket dimensions I call home!",
-                "Over there is my small rat farm!",
-                "I'm actually going to need you to uhm...",
-                "filter out the population.",
-                "Take this bow and shoot 5 of them for me!",
-                "Don't worry, in this magical land, you don't need arrows!"
+                "Okay, now listen closely. Our budget is running low.",
+                "So we need to hurry this up. I have to teach you about combat.",
+                "Because of said budget, I can only give the very basics.",
+                "Here is a copper sword, I want you to slay 5 rats for me."
             ],
-            "completedText": [
-                "Don't be afraid young one, they'll grow back very quickly!",
-                "Kill 5 rats for me please!"
+            "completedText": ["Go on, slay 3 rats for me."],
+            "itemRewards": [
+                {
+                    "key": "coppersword",
+                    "count": 1
+                }
             ],
+            "pointer": {
+                "type": 0,
+                "x": 29,
+                "y": 541
+            }
+        },
+
+        "11": {
+            "task": "kill",
+            "mob": ["rat"],
+            "mobCountRequirement": 3
+        },
+
+        "12": {
+            "task": "talk",
+            "npc": "guard",
+
+            "text": [
+                "Wow I actually didn't expect you to be competent.",
+                "You see how slow that was? That's because you don't have any fancy equipments.",
+                "Once you're out of here you'll be able to get better equipments.",
+                "Anyway, last thing I can teach you within my curriculum is archery.",
+                "For the sake of this tutorial, you will not need to equip any arrows.",
+                "Plus it saves us a ton of money for the arrows we don't have to give you.",
+                "So anyway, I want you to kill 2 crabs with this bow."
+            ],
+            "completedText": ["Go on, kill 2 crabs for me."],
             "itemRewards": [
                 {
                     "key": "woodenbow",
                     "count": 1
                 }
             ],
-            "popup": {
-                "title": "Item acquired!",
-                "text": "You've just received a bow! Equip it using your inventory!",
-                "colour": "#33cc33"
-            },
             "pointer": {
                 "type": 0,
-                "x": 616,
-                "y": 133
+                "x": 29,
+                "y": 541
             }
         },
-        "11": {
-            "task": "kill",
-            "mob": ["rat"],
-            "mobCountRequirement": 5
-        },
-        "12": {
-            "task": "npc",
-            "npc": "sorcerer",
-            "text": [
-                "Thank you so much young one!",
-                "Rat population tends to get out of control quickly if left unchecked.",
-                "Regardless, you are now free to exit through the portal over there!"
-            ],
-            "completedText": ["Thank you again adventurer! You're free to exit anytime!"],
-            "pointer": {
-                "type": 0,
-                "x": 616,
-                "y": 133
-            }
-        },
+
         "13": {
+            "task": "kill",
+            "mob": ["crab"],
+            "mobCountRequirement": 2
+        },
+
+        "14": {
+            "task": "talk",
+            "npc": "guard",
+
+            "text": [
+                "That will be all. The rest is up to you to discover.",
+                "You may leave the tutorial by going through the portal."
+            ],
+            "completedText": [
+                "That will be all. The rest is up to you to discover.",
+                "You may leave the tutorial by going through the portal."
+            ],
+
+            "pointer": {
+                "type": 0,
+                "x": 29,
+                "y": 541
+            }
+        },
+
+        "15": {
             "task": "door",
             "pointer": {
                 "type": 0,
-                "x": 609,
-                "y": 133
+                "x": 41,
+                "y": 549
             }
         }
     }

@@ -48,6 +48,14 @@ export interface RawStage {
     tree?: string;
     treeCount?: number; // Amount of tress to be cut.
 
+    /** If a fish must be caught */
+    fish?: string;
+    fishCount?: number;
+
+    /** If a rock must be mined */
+    rock?: string;
+    rockCount?: number;
+
     /** Skill experience rewards */
     skill?: string;
     experience?: number;
@@ -83,6 +91,10 @@ export interface StageData {
     abilityLevel?: number;
     tree?: string;
     treeCount?: number;
+    fish?: string;
+    fishCount?: number;
+    rock?: string;
+    rockCount?: number;
     skill?: string;
     experience?: number;
     timer?: number;

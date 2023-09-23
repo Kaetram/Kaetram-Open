@@ -23,9 +23,9 @@
             "magic": 0
         },
         "defenseStats": {
-            "crush": -2,
-            "slash": -3,
-            "stab": -1,
+            "crush": -3,
+            "slash": -5,
+            "stab": -4,
             "archery": 0,
             "magic": 0
         },

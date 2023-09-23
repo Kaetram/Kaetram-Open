@@ -83,6 +83,9 @@ export default class Quests {
         // Update region when quest is completed.
         if (this.get(key).isFinished()) this.player.updateRegion();
 
+        // Stop skills when quest progress is made.
+        this.player.skills.stop();
+
         this.player.updateEntities();
         this.player.save();
     }
@@ -223,6 +226,18 @@ export default class Quests {
         if (this.isTutorialFinished()) return true;
 
         return !!this.get(Modules.Constants.TUTORIAL_QUEST_KEY)?.isCutTreeTask();
+    }
+
+    /**
+     * Similar to `canAttackInTutorial` but for fishing. We want to prevent
+     * people from sitting in the tutorial area and continuously fishing.
+     * @returns Whether or not the tutorial task is that of a fish task.
+     */
+
+    public canFishInTutorial(): boolean {
+        if (this.isTutorialFinished()) return true;
+
+        return !!this.get(Modules.Constants.TUTORIAL_QUEST_KEY)?.isFishingTask();
     }
 
     /**

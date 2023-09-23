@@ -26,8 +26,8 @@ export default class InfoController {
         skills: string[] = []
     ): void {
         if (randomize) {
-            x += Utils.randomInt(-16, 16);
-            y += Utils.randomInt(-10, 10);
+            x += Utils.randomInt(-8, 8);
+            y += Utils.randomInt(-6, 6);
         }
 
         let id = Utils.createId(Date.now(), x, y);
