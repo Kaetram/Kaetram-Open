@@ -64,7 +64,6 @@ export default abstract class Quest {
     private progressCallback?: ProgressCallback;
     private pointerCallback?: PointerCallback;
     private popupCallback?: PopupCallback;
-    private completeCallback?: InterfaceCallback;
 
     public talkCallback?: TalkCallback;
     public doorCallback?: DoorCallback;
@@ -220,20 +219,25 @@ export default abstract class Quest {
         // Stop if the quest has already been completed.
         if (this.isFinished()) return;
 
+        // Extract the type of resource based on the skill.
+        let resourceType = Utils.getResourceType(type),
+            resource = this.stageData[resourceType as keyof StageData],
+            resourceCount = this.stageData[`${resourceType}Count` as keyof StageData] as number;
+
         // Stage data does not require a tree to be cut.
-        if (!this.stageData.tree) return;
+        if (!resource) return;
 
         // Don't progress if we are not cutting the tree specified.
-        if (this.stageData.tree !== subType) return;
+        if (resource !== subType) return;
 
         // Progress the quest if no tree count is specified but a tree stage is present.
-        if (!this.stageData.treeCount) return this.progress();
+        if (!resourceCount) return this.progress();
 
         // Progress substage.
         this.progress(true);
 
         // Progress to next stage if we fulfill the tree count requirement.
-        if (this.subStage >= this.stageData.treeCount) this.progress();
+        if (this.subStage >= resourceCount) this.progress();
     }
 
     /**
@@ -539,6 +543,14 @@ export default abstract class Quest {
     }
 
     /**
+     * @returns Whether or not the current stage is a fish task.
+     */
+
+    public isFishingTask(): boolean {
+        return this.stageData.task === 'fish';
+    }
+
+    /**
      * Attempts to grab a sub stage NPC if it exists. Sub stage NPCs are those
      * that a player must talk to multiple (in any order) in order to progress.
      * @param key The key of the NPC we are trying to grab.
@@ -549,6 +561,14 @@ export default abstract class Quest {
         if (!this.stageData.subStages) return undefined;
 
         return this.stageData.subStages.find((subStage: RawStage) => subStage.npc === key);
+    }
+
+    /**
+     * @returns The stage the quest is currently on.
+     */
+
+    public getStage(): number {
+        return this.stage;
     }
 
     /**
@@ -574,6 +594,10 @@ export default abstract class Quest {
             popup: stage.popup || undefined,
             tree: stage.tree || '',
             treeCount: stage.treeCount || 0,
+            fish: stage.fish || '',
+            fishCount: stage.fishCount || 0,
+            rock: stage.rock || '',
+            rockCount: stage.rockCount || 0,
             skill: stage.skill || '',
             experience: stage.experience || 0,
             timer: stage.timer || 0
@@ -783,17 +807,6 @@ export default abstract class Quest {
 
     public onPopup(callback: PopupCallback): void {
         this.popupCallback = callback;
-    }
-
-    /**
-     * Callback for when the player reaches the end of the quest and must
-     * accept the rewards/quest completion. The player has to manually click
-     * the "finish quest" button in order to complete the quest.
-     * @param callback Contains the key for the quest that we are completing.
-     */
-
-    public onComplete(callback: InterfaceCallback): void {
-        this.completeCallback = callback;
     }
 
     /**

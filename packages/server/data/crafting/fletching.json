@@ -14,9 +14,28 @@
         }
     },
 
-    "bowlsmall": {
+    "arrow": {
         "level": 1,
-        "experience": 20,
+        "experience": 10,
+        "requirements": [
+            {
+                "key": "stick",
+                "count": 1
+            },
+            {
+                "key": "feather",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bowlsmall": {
+        "level": 3,
+        "experience": 15,
         "requirements": [
             {
                 "key": "stick",
@@ -41,25 +60,6 @@
 
         "result": {
             "count": 1
-        }
-    },
-
-    "arrow": {
-        "level": 1,
-        "experience": 10,
-        "requirements": [
-            {
-                "key": "stick",
-                "count": 10
-            },
-            {
-                "key": "feather",
-                "count": 10
-            }
-        ],
-
-        "result": {
-            "count": 10
         }
     },
 

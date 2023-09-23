@@ -4,9 +4,9 @@
         "name": "Copper Sword",
         "weaponType": "sword",
         "attackStats": {
-            "crush": 1,
-            "slash": 3,
-            "stab": 1,
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
             "archery": 0,
             "magic": 0
         },

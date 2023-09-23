@@ -46,7 +46,11 @@ export default class Fishing extends ResourceSkill {
     public catch(player: Player, spot: Resource): void {
         let weapon = player.equipment.getWeapon();
 
+        // Player's weapon is not a valid fishing weapon.
         if (!weapon.isFishing()) return player.notify(ResourceText.INVALID_WEAPON(this.type));
+
+        // Player is in the tutorial, we want to prevent them from fishing.
+        if (!player.quests.canFishInTutorial()) return player.notify('resource:NO_REASON');
 
         this.interact(player, spot, weapon.fishing);
     }

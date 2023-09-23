@@ -14,5 +14,6 @@ export default {
     UNABLE_TO_INTERACT_FISHING: 'No puede pescar aquí en este momento.',
     UNABLE_TO_INTERACT_FORAGING: 'No puedes recolectar este recurso en este momento.',
 
-    NO_REASON: 'No hay razón para que cortes este árbol.'
+    NO_REASON_TREE: 'No hay razón para que cortes este árbol.',
+    NO_REASON_FISHING: 'No hay razón para que pesques aquí.'
 } as const;

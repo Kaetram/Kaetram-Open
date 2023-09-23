@@ -284,9 +284,15 @@ export default class Combat {
      */
 
     private shouldTeleportNearby(): boolean {
-        return this.character.isMob() && Date.now() - this.character.lastMovement > 5000;
-    }
+        if (!this.character.isMob()) return false;
 
+        if (this.character.isStunned() || this.character.isDead()) return false;
+
+        // Prevent teleporting when differences in plateau exist.
+        if (this.character.plateauLevel !== this.character.target?.plateauLevel) return false;
+
+        return Date.now() - this.character.lastMovement > 5000;
+    }
     /**
      * Callback for when the combat starts.
      */

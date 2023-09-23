@@ -719,6 +719,20 @@ export default class Commands {
                 break;
             }
 
+            case 'undostage': {
+                key = blocks.shift()!;
+
+                if (!key) return this.player.notify('No quest specified.');
+
+                let quest = this.player.quests.get(key);
+
+                if (!quest) return this.player.notify('Could not find quest.');
+
+                quest.setStage(quest.getStage() - 1);
+
+                break;
+            }
+
             case 'resetquests': {
                 this.player.quests.forEachQuest((quest: Quest) => {
                     quest.setStage(0, undefined, true, true);

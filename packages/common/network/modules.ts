@@ -624,7 +624,7 @@ export const Constants = {
     TUTORIAL_QUEST_KEY: 'tutorial', // key of the tutorial quest.
     ALCHEMY_QUEST_KEY: 'scientistspotion', // key of the alchemy quest.
     CRAFTING_QUEST_KEY: 'artsandcrafts', // key of the crafting quest.
-    TUTORIAL_SPAWN_POINT: '675,103', // 'x,y' values
+    TUTORIAL_SPAWN_POINT: '133,562', // 'x,y' values
     JAIL_SPAWN_POINT: '110,915',
     RESOURCE_RESPAWN: 30_000,
     TREE_RESPAWN: 25_000,

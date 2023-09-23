@@ -3,9 +3,19 @@
         "name": "Shrimp Fishing Spot",
         "levelRequirement": 1,
         "experience": 20,
-        "difficulty": 15,
+        "difficulty": 7,
         "item": "rawshrimp",
         "achievement": "firstfish"
+    },
+
+    "tutorialshrimpspot": {
+        "name": "Shrimp Fishing Spot",
+        "levelRequirement": 1,
+        "experience": 15,
+        "difficulty": 7,
+        "item": "rawshrimp",
+        "achievement": "firstfish",
+        "quest": "tutorial"
     },
 
     "tunaspot": {

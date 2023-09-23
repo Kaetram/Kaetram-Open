@@ -12,6 +12,14 @@
             }
         ]
     },
+    "tutorialoak": {
+        "name": "Oak",
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 2,
+        "item": "logs",
+        "quest": "tutorial"
+    },
 
     "spruce": {
         "name": "Spruce",

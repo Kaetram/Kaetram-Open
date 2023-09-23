@@ -103,6 +103,26 @@
     }
 }
 
+.slice-button-green {
+    box-sizing: border-box;
+    padding: 0.5em 1em;
+
+    font-size: 1em;
+    color: #eee;
+    text-align: center;
+
+    background-color: transparent;
+    border-image: url('/img/interface/slices/button-green.png') 44% fill/ 1em / 0 stretch;
+
+    &:hover {
+        border-image-source: url('/img/interface/slices/button-green-hover.png');
+    }
+
+    &:active {
+        border-image-source: url('/img/interface/slices/button-green-active.png');
+    }
+}
+
 .slice-dialog {
     position: absolute;
 

@@ -343,5 +343,32 @@ export default {
             archery: 0,
             magic: 0
         };
+    },
+
+    /**
+     * Converts a skill parameter into a resource type that can be
+     * used as an identifier for quests.
+     * @param skill The skill we are converting.
+     * @returns The type of resoruce that the skill corresponds to.
+     */
+
+    getResourceType(skill: Modules.Skills): string {
+        switch (skill) {
+            case Modules.Skills.Lumberjacking: {
+                return 'tree';
+            }
+
+            case Modules.Skills.Fishing: {
+                return 'fish';
+            }
+
+            case Modules.Skills.Mining: {
+                return 'rock';
+            }
+
+            default: {
+                return 'tree';
+            }
+        }
     }
 };
