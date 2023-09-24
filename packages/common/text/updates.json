@@ -1,6 +1,6 @@
 {
-    "0.5.2-beta": {
-        "title": "Kaetram 0.5.2-beta",
-        "content": ["- Polished combat and stuff", "- Polished areas around the map."]
+    "0.5.3-beta": {
+        "title": "Kaetram 0.5.3-beta",
+        "content": ["- Improved rendering efficiency", "- Added new quests"]
     }
 }
