@@ -464,5 +464,9 @@
     "herbalist": {
         "name": "Herby Mc. Herb",
         "text": ["Hi!"]
+    },
+    "rickgf": {
+        "name": "Lena",
+        "text": ["Oh, it's been so long since I've seen another soul.", "Have you seen my love, Rick?"]
     }
 }
