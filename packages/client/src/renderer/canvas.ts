@@ -93,33 +93,68 @@ export default class Canvas extends Renderer {
         // Sets the view according to the camera.
         this.updateDrawingView();
 
-        this.forEachVisibleTile((tile: ClientTile, index: number) => {
-            let flips: number[] = this.getFlipped(tile as TransformedTile);
+        /**
+         * I made a decision to sacrifice legibility to maximize performance. We avoid using
+         * `forEachVisiblePosition` so that we do not make a ridiculous amount of callbacks
+         * for each tile. We do the iteration through the visible tiles manually and
+         * draw which tiles are visible.
+         */
 
-            // Extract the tileId from the animated region tile.
-            if (flips.length > 0) tile = (tile as TransformedTile).tileId;
+        for (let y = this.camera.gridY - 2; y < this.camera.gridY + this.map.height + 2; y++)
+            for (let x = this.camera.gridX - 2; x < this.camera.gridX + this.map.width + 2; x++) {
+                // Prevent out of bounds coordinates.
+                if (x < 0 || y < 0 || x >= this.map.width || y >= this.map.height) continue;
 
-            // Determine the layer of the tile depending on if it is a high tile or not.
-            let isHighTile = this.map.isHighTile(tile as number),
-                animated = this.map.isAnimatedTile(tile as number),
-                context = (
-                    isHighTile ? this.foreContext : this.backContext
-                ) as CanvasRenderingContext2D;
+                let index = x + y * this.map.width,
+                    tile = this.map.data[index];
 
-            // Only do the lighting logic if there is an overlay.
-            if (this.game.overlays.hasOverlay()) {
-                let isLightTile = this.map.isLightTile(tile as number);
+                if (tile === 0) continue;
 
-                context = isLightTile ? (this.overlayContext as CanvasRenderingContext2D) : context;
+                // Check for transformed tiles and draw them.
+                if ((tile as TransformedTile).tileId) {
+                    this.drawVisibleTile(tile as TransformedTile, index);
+                    continue;
+                }
+
+                // This is a hackfix to check if the tile is an array at the index.
+                if (~~tile === 0)
+                    for (let info of tile as number[]) this.drawVisibleTile(info, index);
+                else this.drawVisibleTile(tile, index);
             }
-
-            // Draw animated tiles if the tile is animated and we're animating tiles.
-            if (this.animateTiles && animated) this.drawAnimatedTile(tile as number, index, flips);
-            else this.drawTile(context, tile as number, index, flips);
-        }, 2);
 
         this.saveFrame();
         this.restoreDrawing();
+    }
+
+    /**
+     * Processes a tileId at a specified map index and draws it onto the canvas.
+     * We determine what canvas layer to draw the tile on, and whether it's an animated
+     * tile or not. If it is, we handle the animated tile logic.
+     */
+
+    private drawVisibleTile(tile: ClientTile, index: number): void {
+        let flips: number[] = this.getFlipped(tile as TransformedTile);
+
+        // Extract the tileId from the animated region tile.
+        if (flips.length > 0) tile = (tile as TransformedTile).tileId;
+
+        // Determine the layer of the tile depending on if it is a high tile or not.
+        let isHighTile = this.map.isHighTile(tile as number),
+            animated = this.map.isAnimatedTile(tile as number),
+            context = (
+                isHighTile ? this.foreContext : this.backContext
+            ) as CanvasRenderingContext2D;
+
+        // Only do the lighting logic if there is an overlay.
+        if (this.game.overlays.hasOverlay()) {
+            let isLightTile = this.map.isLightTile(tile as number);
+
+            context = isLightTile ? (this.overlayContext as CanvasRenderingContext2D) : context;
+        }
+
+        // Draw animated tiles if the tile is animated and we're animating tiles.
+        if (this.animateTiles && animated) this.drawAnimatedTile(tile as number, index, flips);
+        else this.drawTile(context, tile as number, index, flips);
     }
 
     /**

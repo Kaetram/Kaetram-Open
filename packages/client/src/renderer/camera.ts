@@ -356,8 +356,14 @@ export default class Camera {
 
     public forEachVisiblePosition(callback: (x: number, y: number) => void, offset = 1): void {
         for (let y = this.gridY - offset, maxY = y + this.gridHeight + offset * 2; y < maxY; y++)
-            for (let x = this.gridX - offset, maxX = x + this.gridWidth + offset * 2; x < maxX; x++)
+            for (
+                let x = this.gridX - offset, maxX = x + this.gridWidth + offset * 2;
+                x < maxX;
+                x++
+            ) {
+                if (x < 0 || y < 0 || x >= this.width || y >= this.height) continue;
                 callback(x, y);
+            }
     }
 
     /**

@@ -461,7 +461,7 @@ export default class Map {
      */
 
     public isOutOfBounds(x: number, y: number): boolean {
-        return isInt(x) && isInt(y) && (x < 0 || x >= this.width || y < 0 || y >= this.height);
+        return x < 0 || x >= this.width || y < 0 || y >= this.height;
     }
 
     /**

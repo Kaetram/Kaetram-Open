@@ -20,6 +20,7 @@ import type Sprite from '../entity/sprite';
 import type Item from '../entity/objects/item';
 import type Player from '../entity/character/player/player';
 import type Tree from '../entity/objects/resource/impl/tree';
+import type Grids from '../map/grids';
 import type { LampData } from '@kaetram/common/types/item';
 import type { ClientTile } from '@kaetram/common/types/map';
 import type { SerializedLight } from '@kaetram/common/network/impl/overlay';
@@ -105,6 +106,7 @@ export default class Renderer {
 
     public map: Map;
     public camera: Camera;
+    public grids: Grids;
 
     // Variables used for calculating multiple things
     public tileSize = Utils.tileSize;
@@ -156,6 +158,7 @@ export default class Renderer {
     ) {
         this.map = game.map;
         this.camera = game.camera;
+        this.grids = game.map.grids;
 
         this.tileSize = game.map.tileSize;
         this.actualTileSize = this.tileSize * this.camera.zoomFactor;
@@ -1789,30 +1792,7 @@ export default class Renderer {
 
     protected forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
         this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y)) callback(this.map.coordToIndex(x, y));
-        }, offset);
-    }
-
-    /**
-     * Iterates through all the indexes and extracts the tile data at that
-     * specified index by iterating through each tile array (if present) or
-     * returning the tile data from the map.
-     * @param callback Returns a region tile object containing rendering information
-     * such as tileId, x, y, and flip flags. The index is the positioning in the map.
-     * @param offset How much to look outside the visible camera proportions.
-     */
-
-    protected forEachVisibleTile(
-        callback: (data: ClientTile, index: number) => void,
-        offset?: number
-    ): void {
-        if (!this.map?.mapLoaded) return;
-
-        this.forEachVisibleIndex((index) => {
-            let indexData = this.map.data[index];
-
-            if (Array.isArray(indexData)) for (let data of indexData) callback(data, index);
-            else if (this.map.data[index]) callback(this.map.data[index], index);
+            callback(this.map.coordToIndex(x, y));
         }, offset);
     }
 
@@ -1823,12 +1803,10 @@ export default class Renderer {
      */
 
     protected forEachVisibleEntity(callback: (entity: Entity) => void): void {
-        let { grids } = this.game.entities;
-
         this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
-                for (let entity of Object.values(grids.renderingGrid[y][x])) callback(entity);
-        }, 3);
+            for (let entity in this.grids.renderingGrid[y][x])
+                callback(this.grids.renderingGrid[y][x][entity]);
+        }, 4);
     }
 
     /**
