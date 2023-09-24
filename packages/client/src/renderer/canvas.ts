@@ -86,6 +86,7 @@ export default class Canvas extends Renderer {
      */
 
     private draw(): void {
+        // Draw only tiles with animated indexes if we have rendered a frame.
         if (this.hasRenderedFrame()) return this.drawAnimatedIndexes();
 
         this.clearDrawing();
@@ -94,23 +95,11 @@ export default class Canvas extends Renderer {
         // Sets the view according to the camera.
         this.updateDrawingView();
 
-        /**
-         * I made a decision to sacrifice legibility to maximize performance. We avoid using
-         * `forEachVisiblePosition` so that we do not make a ridiculous amount of callbacks
-         * for each tile. We do the iteration through the visible tiles using a for loop and
-         * all within one function.
-         */
-
-        for (let y = this.camera.gridY - 2; y < this.camera.gridY + this.map.height + 2; y++)
-            for (let x = this.camera.gridX - 2; x < this.camera.gridX + this.map.width + 2; x++) {
-                // Prevent out of bounds coordinates.
-                if (x < 0 || y < 0 || x >= this.map.width || y >= this.map.height) continue;
-
-                let index = x + y * this.map.width,
-                    tile = this.map.data[index];
-
-                this.parseTile(tile, index);
-            }
+        // Iterate through all the visible tiles and draw them.
+        this.forEachVisibleTile(
+            (tile: ClientTile, index: number) => this.parseTile(tile, index),
+            2
+        );
 
         this.saveFrame();
         this.restoreDrawing();

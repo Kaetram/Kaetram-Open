@@ -525,7 +525,11 @@ export default class Renderer {
 
     private drawFPS(): void {
         this.calculateFPS();
-        this.drawText(`[${this.type}] FPS: ${this.fps}`, 50, 180);
+        this.drawText(
+            `[${this.type}, cw: ${this.camera.gridWidth}, ch: ${this.camera.gridHeight}] FPS: ${this.fps}`,
+            50,
+            180
+        );
     }
 
     /**
@@ -1780,6 +1784,31 @@ export default class Renderer {
     }
 
     /**
+     * Iterates through all the indexes and extracts the tile data at that
+     * specified index by iterating through each tile array (if present) or
+     * returning the tile data from the map.
+     * @param callback Returns a region tile object containing rendering information
+     * such as tileId, x, y, and flip flags. The index is the positioning in the map.
+     * @param offset How much to look outside the visible camera proportions.
+     */
+
+    protected forEachVisibleTile(
+        callback: (data: ClientTile, index: number) => void,
+        offset?: number
+    ): void {
+        if (!this.map?.mapLoaded) return;
+
+        this.forEachVisibleIndex((index) => {
+            let indexData = this.map.data[index];
+
+            if (indexData === 0) return;
+
+            if (Array.isArray(indexData)) for (let data of indexData) callback(data, index);
+            else if (this.map.data[index]) callback(this.map.data[index], index);
+        }, offset);
+    }
+
+    /**
      * Iterates through all the indexes in the current camera view. The offset
      * is used to look `offset` amount of tiles outside the camera view.
      * @param callback The current index that is being parsed in the view.
@@ -1799,10 +1828,14 @@ export default class Renderer {
      */
 
     protected forEachVisibleEntity(callback: (entity: Entity) => void): void {
-        this.camera.forEachVisiblePosition((x, y) => {
-            for (let entity in this.grids.renderingGrid[y][x])
-                callback(this.grids.renderingGrid[y][x][entity]);
-        }, 4);
+        this.camera.forEachVisiblePosition(
+            (x, y) => {
+                for (let entity in this.grids.renderingGrid[y][x])
+                    callback(this.grids.renderingGrid[y][x][entity]);
+            },
+            3,
+            4
+        );
     }
 
     /**
