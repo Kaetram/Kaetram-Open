@@ -611,7 +611,12 @@ export default class Connection {
         attacker.setTarget(target);
 
         // Ensure the attacker and the target are not on the same tile and just move them.
-        if (attacker.isMob() && attacker.gridX === target.gridX && attacker.gridY === target.gridY)
+        if (
+            (attacker.isMob() &&
+                attacker.gridX === target.gridX &&
+                attacker.gridY === target.gridY) ||
+            (attacker.getDistance(target!) > 2 && attacker.attackRange > 1)
+        )
             this.game.findAdjacentTile(attacker);
     }
 
