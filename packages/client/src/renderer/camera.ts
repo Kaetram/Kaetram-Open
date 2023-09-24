@@ -352,12 +352,17 @@ export default class Camera {
      * Iterates through every grid coordinate in the view port.
      * @param callback Callback contains the grid coordinates being iterated in the view.
      * @param offset How much to look outside the width and height of the viewport.
+     * @param offsetRight How much to look outside the right edge of the viewport.
      */
 
-    public forEachVisiblePosition(callback: (x: number, y: number) => void, offset = 1): void {
-        for (let y = this.gridY - offset, maxY = y + this.gridHeight + offset * 2; y < maxY; y++)
+    public forEachVisiblePosition(
+        callback: (x: number, y: number) => void,
+        offset = 2,
+        offsetRight = offset
+    ): void {
+        for (let y = this.gridY - offset, maxY = y + this.gridHeight + offsetRight; y < maxY; y++)
             for (
-                let x = this.gridX - offset, maxX = x + this.gridWidth + offset * 2;
+                let x = this.gridX - offset, maxX = x + this.gridWidth + offsetRight;
                 x < maxX;
                 x++
             ) {
