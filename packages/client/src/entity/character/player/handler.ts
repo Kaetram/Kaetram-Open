@@ -49,10 +49,11 @@ export default class Handler extends CharacterHandler {
         if (this.character.canAttackTarget() && !this.character.trading) return [];
 
         let isObject = this.map.isObject(x, y),
-            isResource = this.character.target?.isResource();
+            isResource = this.character.target?.isResource(),
+            isNPC = this.character.target?.isNPC();
 
         // Ignore requests into colliding tiles but allow targetable objects.
-        if (this.map.isColliding(x, y) && !isObject && !isResource) return [];
+        if (this.map.isColliding(x, y) && !isObject && !isResource && !isNPC) return [];
 
         // Sends the packet to the server with the request.
         this.game.socket.send(Packets.Movement, {
@@ -79,7 +80,7 @@ export default class Handler extends CharacterHandler {
                 ignores.push({ x: x + 1, y }, { x: x - 1, y }, { x, y: y + 1 }, { x, y: y - 1 });
         }
 
-        if (isResource) ignores.push({ x, y });
+        if (isResource || isNPC) ignores.push({ x, y });
 
         return this.game.findPath(this.character, x, y, ignores, cursor);
     }
