@@ -1794,17 +1794,15 @@ export default class Renderer {
 
     protected forEachVisibleTile(
         callback: (data: ClientTile, index: number) => void,
-        offset?: number
+        offset = 0
     ): void {
-        if (!this.map?.mapLoaded) return;
-
         this.forEachVisibleIndex((index) => {
             let indexData = this.map.data[index];
 
             if (indexData === 0) return;
 
             if (Array.isArray(indexData)) for (let data of indexData) callback(data, index);
-            else if (this.map.data[index]) callback(this.map.data[index], index);
+            else callback(indexData, index);
         }, offset);
     }
 
@@ -1815,7 +1813,7 @@ export default class Renderer {
      * @param offset How much to look outside the boundaries of the map.
      */
 
-    protected forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
+    protected forEachVisibleIndex(callback: (index: number) => void, offset = 0): void {
         this.camera.forEachVisiblePosition((x, y) => {
             callback(this.map.coordToIndex(x, y));
         }, offset);
@@ -1834,7 +1832,7 @@ export default class Renderer {
                     callback(this.grids.renderingGrid[y][x][entity]);
             },
             3,
-            4
+            6
         );
     }
 

@@ -202,18 +202,7 @@ export default class Game {
 
         this.menu.synchronize();
 
-        // Forcibly render the game for a few frames to ensure animated tiles are rendered.
-        let count = 0,
-            interval = setInterval(() => {
-                this.renderer.forceRendering = true;
-
-                count++;
-
-                if (count > 3) {
-                    clearInterval(interval);
-                    this.renderer.forceRendering = false;
-                }
-            }, 50);
+        this.forceRendering();
     }
 
     /**
@@ -425,6 +414,8 @@ export default class Game {
             this.player.disableAction = false;
             this.camera.centreOn(this.player);
         }
+
+        this.forceRendering();
     }
 
     /**
@@ -458,5 +449,22 @@ export default class Game {
 
     public isMainPlayer(instance: string): boolean {
         return this.player.instance === instance;
+    }
+
+    /**
+     * Forcibly makes the renderer render a couple frames to
+     * ensure animated tiles are rendered.
+     */
+
+    public forceRendering(): void {
+        // Forcibly render the game for a few frames to ensure animated tiles are rendered.
+        let count = 0,
+            interval = setInterval(() => {
+                this.renderer.forceRendering = true;
+
+                count++;
+
+                if (count > 10) clearInterval(interval);
+            }, 100);
     }
 }
