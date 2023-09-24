@@ -201,6 +201,19 @@ export default class Game {
         if (this.map.hasCachedDate()) this.app.fadeMenu();
 
         this.menu.synchronize();
+
+        // Forcibly render the game for a few frames to ensure animated tiles are rendered.
+        let count = 0,
+            interval = setInterval(() => {
+                this.renderer.forceRendering = true;
+
+                count++;
+
+                if (count > 3) {
+                    clearInterval(interval);
+                    this.renderer.forceRendering = false;
+                }
+            }, 50);
     }
 
     /**

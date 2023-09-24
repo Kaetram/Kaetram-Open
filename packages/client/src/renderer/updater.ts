@@ -251,6 +251,7 @@ export default class Updater {
             // Delete the tile and continue if it's unused or expired.
             if (tile.unused || tile.expired) {
                 delete this.renderer.animatedTiles[identifier];
+                delete this.renderer.animatedTileIndexes[identifier];
 
                 continue;
             }

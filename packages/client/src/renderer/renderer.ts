@@ -1494,9 +1494,7 @@ export default class Renderer {
      */
 
     protected hasRenderedFrame(): boolean {
-        if (this.forceRendering || !this.game.isLowPowerMode()) return false;
-
-        if (this.stopRendering) return true;
+        if (this.forceRendering) return false;
 
         return this.renderedFrame[0] === this.camera.x && this.renderedFrame[1] === this.camera.y;
     }
@@ -1547,8 +1545,6 @@ export default class Renderer {
      */
 
     protected saveFrame(): void {
-        if (!this.game.isLowPowerMode()) return;
-
         this.renderedFrame[0] = this.camera.x;
         this.renderedFrame[1] = this.camera.y;
 

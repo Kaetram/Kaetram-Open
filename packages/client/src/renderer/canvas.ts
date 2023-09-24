@@ -30,6 +30,7 @@ interface RendererCell {
 
 export default class Canvas extends Renderer {
     public animatedTiles: { [tileId: number | string]: Tile } = {};
+    public animatedTileIndexes: { [tileId: number | string]: number[] } = {};
 
     // Used for storing and caching tile information.
     private tiles: { [id: string]: RendererTile } = {};
@@ -85,7 +86,7 @@ export default class Canvas extends Renderer {
      */
 
     private draw(): void {
-        if (this.hasRenderedFrame()) return;
+        if (this.hasRenderedFrame()) return this.drawAnimatedIndexes();
 
         this.clearDrawing();
         this.saveDrawing();
@@ -96,8 +97,8 @@ export default class Canvas extends Renderer {
         /**
          * I made a decision to sacrifice legibility to maximize performance. We avoid using
          * `forEachVisiblePosition` so that we do not make a ridiculous amount of callbacks
-         * for each tile. We do the iteration through the visible tiles manually and
-         * draw which tiles are visible.
+         * for each tile. We do the iteration through the visible tiles using a for loop and
+         * all within one function.
          */
 
         for (let y = this.camera.gridY - 2; y < this.camera.gridY + this.map.height + 2; y++)
@@ -108,18 +109,7 @@ export default class Canvas extends Renderer {
                 let index = x + y * this.map.width,
                     tile = this.map.data[index];
 
-                if (tile === 0) continue;
-
-                // Check for transformed tiles and draw them.
-                if ((tile as TransformedTile).tileId) {
-                    this.drawVisibleTile(tile as TransformedTile, index);
-                    continue;
-                }
-
-                // This is a hackfix to check if the tile is an array at the index.
-                if (~~tile === 0)
-                    for (let info of tile as number[]) this.drawVisibleTile(info, index);
-                else this.drawVisibleTile(tile, index);
+                this.parseTile(tile, index);
             }
 
         this.saveFrame();
@@ -158,6 +148,30 @@ export default class Canvas extends Renderer {
     }
 
     /**
+     * We iterate through the animated indexes for each animated tile and draw them.
+     * We store the animated tiles in a dictionary since it makes it easier to delete
+     * them when they are no longer used. For each index we render the whole tile information
+     * at that index to ensure that the tile is drawn correctly.
+     */
+
+    private drawAnimatedIndexes(): void {
+        this.saveDrawing();
+        this.updateDrawingView();
+
+        for (let tileId in this.animatedTileIndexes) {
+            let indexes = this.animatedTileIndexes[tileId];
+
+            for (let index of indexes) {
+                let tile = this.map.data[index];
+
+                this.parseTile(tile, index);
+            }
+        }
+
+        this.restoreDrawing();
+    }
+
+    /**
      * Given the index of the specified animated tile, we draw the tile contained at
      * that index. We first have to check whether the tile is a foreground tile or not.
      * @param tile The tileId of the tile we are drawing, used to access the animated tile.
@@ -182,6 +196,11 @@ export default class Canvas extends Renderer {
         // The tile does not exist at the specified index, so we add it.
         if (!animatedTile)
             return this.addAnimatedTile(tile as number, isDynamicallyAnimated ? index : -1);
+
+        // Store the indices of animated tiles for later use.
+        if (!this.animatedTileIndexes[tile]) this.animatedTileIndexes[tile] = [];
+        else if (!this.animatedTileIndexes[tile].includes(index))
+            this.animatedTileIndexes[tile].push(index);
 
         // Update the last accessed time.
         animatedTile.lastAccessed = this.game.time;
@@ -436,6 +455,28 @@ export default class Canvas extends Renderer {
 
         // Synchronize all the existing tiles after we add a new one.
         this.resetAnimatedTiles();
+    }
+
+    /**
+     * Parses a map tile at a specified index and determines what to do
+     * with it. If it's an array, we iterate through the array and draw
+     * each tile. Otherwise, we draw the tile.
+     * @param tile The tile we are parsing, raw from the client map.
+     * @param index The index of the tile on the map.
+     */
+
+    private parseTile(tile: ClientTile, index: number): void {
+        if (tile === 0) return;
+
+        // Check for transformed tiles and draw them.
+        if ((tile as TransformedTile).tileId) {
+            this.drawVisibleTile(tile as TransformedTile, index);
+            return;
+        }
+
+        // This is a hackfix to check if the tile is an array at the index.
+        if (~~tile === 0) for (let info of tile as number[]) this.drawVisibleTile(info, index);
+        else this.drawVisibleTile(tile, index);
     }
 
     // ---------- Getters and Checkers ----------
