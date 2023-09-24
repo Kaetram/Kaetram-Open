@@ -8472,6 +8472,17 @@
         "plugin": "healingitem",
         "healAmount": 850
     },
+    "seaweedroll": {
+        "type": "object",
+        "name": "Seaweed Roll",
+        "price": 800,
+        "description": "A tasty seaweed roll filled with a variety of fresh ingredients. A popular choice for sushi lovers.",
+        "edible": true,
+        "stackable": true,
+        "maxStackSize": 10,
+        "plugin": "healingitem",
+        "healAmount": 750
+    },
     "barley": {
         "type": "object",
         "name": "Barley",

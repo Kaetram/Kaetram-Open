@@ -376,6 +376,7 @@
     { "id": "npcs/zombiegf", "width": 24, "height": 24, "offsetX": -4, "offsetY": -8 },
     { "id": "npcs/angelnpc", "width": 32, "height": 32 },
     { "id": "npcs/rick", "width": 32, "height": 32 },
+    { "id": "npcs/rickgf", "width": 32, "height": 32 },
     { "id": "npcs/sorcerer", "width": 32, "height": 32 },
     {
         "id": "npcs/ratnpc",
@@ -7073,6 +7074,7 @@
     { "id": "items/scholarshatred" },
     { "id": "items/scholarshatyellow" },
     { "id": "items/scimitar" },
+    { "id": "items/seaweedroll" },
     { "id": "items/seed" },
     { "id": "items/sentinelboots" },
     { "id": "items/sentinelchestplate" },
