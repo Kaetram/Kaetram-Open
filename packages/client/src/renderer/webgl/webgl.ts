@@ -263,7 +263,7 @@ export default class WebGL extends Renderer {
 
     private draw(x = this.camera.x, y = this.camera.y): void {
         // Used for low power mode
-        if (this.hasRenderedFrame()) return;
+        if (this.hasRenderedFrame() && this.game.isLowPowerMode()) return;
 
         // Iterate through the drawing contexts and apply the necessary transformations/attributes.
         this.forEachDrawingContext((context: WebGLRenderingContext) => {
