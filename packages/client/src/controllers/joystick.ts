@@ -49,7 +49,7 @@ export default class JoystickController {
             dx = Math.max(0, Math.min(1, (clientX - left) / width)),
             dy = Math.max(0, Math.min(1, (clientY - top) / height)),
             // Calculate and restrict the distance from the center of the joystick (from 0 to 0.75).
-            distance = Math.min(0.75, Math.sqrt((dx - 0.5) ** 2 + (dy - 0.5) ** 2) * 2),
+            distance = Math.min(0.75, Math.hypot(dx - 0.5, dy - 0.5) * 2),
             // Using the distance, calculate the angle of the joystick (from -PI to PI).
             angle = Math.atan2(dy - 0.5, dx - 0.5),
             // Unit vector of the angle (from -1 to 1).
@@ -92,7 +92,7 @@ export default class JoystickController {
 
         input.player.disableAction = false;
 
-        input.move({ x, y, gridX, gridY });
+        input.move({ x, y, gridX, gridY }, false);
 
         if (this.moving) requestAnimationFrame(this.move.bind(this));
     }

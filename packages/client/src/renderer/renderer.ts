@@ -212,6 +212,9 @@ export default class Renderer {
             canvas.height = this.canvasHeight;
         });
 
+        // Clear the default canvas anti-alias smoothing.
+        this.removeSmoothing();
+
         // Remove the player's light source and re-add it.
         this.resizeLights();
     }
@@ -254,8 +257,6 @@ export default class Renderer {
     public render(): void {
         this.clear();
         this.save();
-
-        this.removeSmoothing();
 
         this.drawDebugging();
 
@@ -397,7 +398,7 @@ export default class Renderer {
         this.setCameraView(this.entitiesForeContext);
 
         this.forEachVisibleEntity((entity: Entity) => {
-            // Skip entities that aren't properly loaded or are invisible.
+            // Check that the entity is loaded, has an animation, and is visible.
             if (!entity.sprite?.loaded || !entity.animation || !entity.isVisible()) return;
 
             // Handle tree drawing as separate from other entities.
