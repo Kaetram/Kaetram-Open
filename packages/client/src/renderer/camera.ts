@@ -360,12 +360,8 @@ export default class Camera {
         offset = 2,
         offsetRight = offset
     ): void {
-        for (let y = this.gridY - offset, maxY = y + this.gridHeight + offsetRight; y < maxY; y++)
-            for (
-                let x = this.gridX - offset, maxX = x + this.gridWidth + offsetRight;
-                x < maxX;
-                x++
-            ) {
+        for (let y = this.gridY - offset; y < this.gridY + this.gridHeight + offsetRight; y++)
+            for (let x = this.gridX - offset; x < this.gridX + this.gridWidth + offsetRight; x++) {
                 if (x < 0 || y < 0 || x >= this.width || y >= this.height) continue;
                 callback(x, y);
             }
