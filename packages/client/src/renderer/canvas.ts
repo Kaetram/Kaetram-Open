@@ -111,21 +111,18 @@ export default class Canvas extends Renderer {
      * tile or not. If it is, we handle the animated tile logic.
      * @param tile The tileId of the tile we are drawing, used to access the animated tile.
      * @param index The index of the tile on the map.
-     * @param clearRect Whether we should clear the cell before drawing.
      */
 
-    private drawVisibleTile(tile: ClientTile, index: number, clearRect = false): void {
+    private drawVisibleTile(tile: ClientTile, index: number): void {
         let flips: number[] = this.getFlipped(tile as TransformedTile);
 
         // Extract the tileId from the animated region tile.
         if (flips.length > 0) tile = (tile as TransformedTile).tileId;
 
         // Determine the layer of the tile depending on if it is a high tile or not.
-        let isHighTile = this.map.isHighTile(tile as number),
-            animated = this.map.isAnimatedTile(tile as number),
-            context = (
-                isHighTile ? this.foreContext : this.backContext
-            ) as CanvasRenderingContext2D;
+        let context = (
+            this.map.isHighTile(tile as number) ? this.foreContext : this.backContext
+        ) as CanvasRenderingContext2D;
 
         // Only do the lighting logic if there is an overlay.
         if (this.game.overlays.hasOverlay()) {
@@ -135,8 +132,8 @@ export default class Canvas extends Renderer {
         }
 
         // Draw animated tiles if the tile is animated and we're animating tiles.
-        if (this.animateTiles && animated)
-            this.drawAnimatedTile(tile as number, index, flips, clearRect);
+        if (this.animateTiles && this.map.isAnimatedTile(tile as number))
+            this.drawAnimatedTile(tile as number, index, flips);
         else this.drawTile(context, tile as number, index, flips);
     }
 
@@ -144,7 +141,8 @@ export default class Canvas extends Renderer {
      * We iterate through the animated indexes for each animated tile and draw them.
      * We store the animated tiles in a dictionary since it makes it easier to delete
      * them when they are no longer used. For each index we render the whole tile information
-     * at that index to ensure that the tile is drawn correctly.
+     * at that index to ensure that the tile is drawn correctly. We also check if the tile
+     * has been previously uploaded (whether or not the last frame changed).
      */
 
     private drawAnimatedIndexes(): void {
@@ -152,9 +150,27 @@ export default class Canvas extends Renderer {
         this.updateDrawingView();
 
         for (let tileId in this.animatedTileIndexes) {
+            let animatedTile = this.animatedTiles[tileId];
+
+            // Skip if the tile has been uploaded.
+            if (animatedTile?.uploaded) continue;
+
             let indexes = this.animatedTileIndexes[tileId];
 
-            for (let index of indexes) this.parseTile(this.map.data[index], index, true);
+            for (let index of indexes) {
+                let cell = this.cells[index];
+
+                // Clear the context at the cell of the index we are drawing.
+                if (cell) {
+                    this.backContext.clearRect(cell.dx, cell.dy, cell.width, cell.height);
+                    this.foreContext.clearRect(cell.dx, cell.dy, cell.width, cell.height);
+                }
+
+                this.parseTile(this.map.data[index], index);
+            }
+
+            // Mark the tile as uploaded.
+            animatedTile.uploaded = true;
         }
 
         this.restoreDrawing();
@@ -166,15 +182,9 @@ export default class Canvas extends Renderer {
      * @param tile The tileId of the tile we are drawing, used to access the animated tile.
      * @param index The index of the tile on the map.
      * @param flips An array containing transformations the tile will undergo.
-     * @param clearRect Whether we should clear the cell before drawing.
      */
 
-    private drawAnimatedTile(
-        tile: number,
-        index: number,
-        flips: number[] = [],
-        clearRect = false
-    ): void {
+    private drawAnimatedTile(tile: number, index: number, flips: number[] = []): void {
         // No drawing if we aren't animating tiles.
         if (!this.animateTiles) return;
 
@@ -207,7 +217,7 @@ export default class Canvas extends Renderer {
         let context = animatedTile.isHighTile ? this.foreContext : this.backContext;
 
         // Draw the tile given its context (determined when we initialize the tile).
-        this.drawTile(context, animatedTile.id + 1, index, flips, clearRect);
+        this.drawTile(context, animatedTile.id + 1, index, flips);
     }
 
     // ---------- Primitive Drawing Functions ----------
@@ -226,8 +236,7 @@ export default class Canvas extends Renderer {
         context: CanvasRenderingContext2D,
         tileId: number,
         index: number,
-        flips: number[] = [],
-        clearCell = false
+        flips: number[] = []
     ): void {
         let tileset = this.map.getTilesetFromId(tileId);
 
@@ -267,15 +276,6 @@ export default class Canvas extends Renderer {
                 width: this.ceilActualTileSize,
                 height: this.ceilActualTileSize
             };
-
-        // Forcibly clear a cell if we need to.
-        if (clearCell)
-            context.clearRect(
-                this.cells[index].dx,
-                this.cells[index].dy,
-                this.cells[index].width,
-                this.cells[index].height
-            );
 
         this.drawImage(context, tileset, this.tiles[tileId], this.cells[index], flips);
     }
@@ -466,22 +466,16 @@ export default class Canvas extends Renderer {
      * each tile. Otherwise, we draw the tile.
      * @param tile The tile we are parsing, raw from the client map.
      * @param index The index of the tile on the map.
-     * @param clearRect Whether we should clear the cell before drawing.
      */
 
-    private parseTile(tile: ClientTile, index: number, clearRect = false): void {
-        if (tile === 0) return;
-
+    private parseTile(tile: ClientTile, index: number): void {
         // Check for transformed tiles and draw them.
-        if ((tile as TransformedTile).tileId) {
-            this.drawVisibleTile(tile as TransformedTile, index, clearRect);
-            return;
-        }
+        if ((tile as TransformedTile).tileId)
+            return this.drawVisibleTile(tile as TransformedTile, index);
 
         // This is a hackfix to check if the tile is an array at the index.
-        if (~~tile === 0)
-            for (let info of tile as number[]) this.drawVisibleTile(info, index, clearRect);
-        else this.drawVisibleTile(tile, index, clearRect);
+        if (~~tile === 0) for (let info of tile as number[]) this.drawVisibleTile(info, index);
+        else this.drawVisibleTile(tile, index);
     }
 
     // ---------- Getters and Checkers ----------

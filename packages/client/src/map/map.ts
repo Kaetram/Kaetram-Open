@@ -40,6 +40,7 @@ export default class Map {
     public grid: number[][] = []; // Two dimensional grid array for collisions/pathing
 
     private high: number[] = mapData.high;
+    private cachedHighTiles: { [index: number]: 0 } = {};
     private objects: number[] = [];
     private lights: number[] = [];
 
@@ -419,7 +420,17 @@ export default class Map {
      */
 
     public isHighTile(tileId: number): boolean {
-        return this.high.includes(tileId);
+        // Check if the tileId is cached.
+        if (this.cachedHighTiles[tileId]) return true;
+
+        // Cache the tileId if it's in our high tiles hashmap
+        if (this.high.includes(tileId)) {
+            this.cachedHighTiles[tileId] = 0;
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

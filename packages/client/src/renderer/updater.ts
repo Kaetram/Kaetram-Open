@@ -51,7 +51,7 @@ export default class Updater {
             entity.animation?.update(this.game.time);
 
             // Handle projectile instances separately.
-            if (entity instanceof Projectile) {
+            if (entity.isProjectile()) {
                 let mDistance = entity.speed * entity.getTimeDiff(),
                     dx = entity.target.x - entity.x, // delta x current position to target
                     dy = entity.target.y - entity.y, // delta y current position to target
