@@ -1785,29 +1785,6 @@ export default class Renderer {
     }
 
     /**
-     * Iterates through all the indexes and extracts the tile data at that
-     * specified index by iterating through each tile array (if present) or
-     * returning the tile data from the map.
-     * @param callback Returns a region tile object containing rendering information
-     * such as tileId, x, y, and flip flags. The index is the positioning in the map.
-     * @param offset How much to look outside the visible camera proportions.
-     */
-
-    protected forEachVisibleTile(
-        callback: (data: ClientTile, index: number) => void,
-        offset = 0
-    ): void {
-        this.forEachVisibleIndex((index) => {
-            let indexData = this.map.data[index];
-
-            if (indexData === 0) return;
-
-            if (Array.isArray(indexData)) for (let data of indexData) callback(data, index);
-            else callback(indexData, index);
-        }, offset);
-    }
-
-    /**
      * Iterates through all the indexes in the current camera view. The offset
      * is used to look `offset` amount of tiles outside the camera view.
      * @param callback The current index that is being parsed in the view.

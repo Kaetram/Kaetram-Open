@@ -95,11 +95,26 @@ export default class Canvas extends Renderer {
         // Sets the view according to the camera.
         this.updateDrawingView();
 
-        // Iterate through all the visible tiles and draw them.
-        this.forEachVisibleTile(
-            (tile: ClientTile, index: number) => this.parseTile(tile, index),
-            2
-        );
+        /**
+         * I made a decision to sacrifice legibility to maximize performance. We avoid using
+         * `forEachVisiblePosition` so that we do not make a ridiculous amount of callbacks
+         * for each tile. We do the iteration through the visible tiles using a for loop and
+         * all within one function.
+         */
+
+        for (let y = this.camera.gridY - 2; y < this.camera.gridY + this.camera.gridHeight; y++)
+            for (
+                let x = this.camera.gridX - 2;
+                x < this.camera.gridX + this.camera.gridWidth;
+                x++
+            ) {
+                // Prevent out of bounds coordinates.
+                if (this.map.isOutOfBounds(x, y)) continue;
+
+                let index = x + y * this.map.width;
+
+                this.parseTile(this.map.data[index], index);
+            }
 
         this.saveFrame();
         this.restoreDrawing();
@@ -469,6 +484,9 @@ export default class Canvas extends Renderer {
      */
 
     private parseTile(tile: ClientTile, index: number): void {
+        // Ignore empty tiles.
+        if (tile === 0) return;
+
         // Check for transformed tiles and draw them.
         if ((tile as TransformedTile).tileId)
             return this.drawVisibleTile(tile as TransformedTile, index);
