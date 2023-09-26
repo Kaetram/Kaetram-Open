@@ -4193,8 +4193,8 @@
     },
     {
         "id": "mobs/rat",
-        "width": 48,
-        "height": 48,
+        "width": 32,
+        "height": 32,
         "idleSpeed": 250,
         "animations": {
             "death": {
@@ -4237,12 +4237,14 @@
                 "length": 4,
                 "row": 9
             }
-        }
+        },
+        "offsetX": -8,
+        "offsetY": -8
     },
     {
         "id": "mobs/icerat",
-        "width": 48,
-        "height": 48,
+        "width": 32,
+        "height": 32,
         "idleSpeed": 200,
         "animations": {
             "death": {
@@ -4285,7 +4287,9 @@
                 "length": 4,
                 "row": 9
             }
-        }
+        },
+        "offsetX": -8,
+        "offsetY": -8
     },
     {
         "id": "mobs/redcockroach",

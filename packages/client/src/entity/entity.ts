@@ -316,6 +316,21 @@ export default abstract class Entity {
     }
 
     /**
+     * Extracts the bounding rectangle box for the entity. We use this to determine the centre
+     * point for the sprite for either debugging or when detecting mouse interaction.
+     * @returns A rectangle that contains the bounding box of the entity.
+     */
+
+    public getBoundingBox(): Rectangle {
+        return {
+            x: this.x + this.sprite.offsetX / 2,
+            y: this.y + this.sprite.offsetY / 2,
+            width: this.sprite.width + this.sprite.offsetX,
+            height: this.sprite.height + this.sprite.offsetY
+        };
+    }
+
+    /**
      * Changes the values of the entity visibility.
      */
 
