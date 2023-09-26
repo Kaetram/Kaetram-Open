@@ -34,7 +34,7 @@ body.intro {
 
     footer {
         position: absolute;
-        bottom: 5%;
+        bottom: 2em;
         left: 0;
 
         width: 100%;
@@ -87,6 +87,14 @@ body.intro {
 
         &:nth-child(3) {
             animation-delay: 500ms;
+        }
+    }
+}
+
+@media (--portrait) {
+    body.intro {
+        footer {
+            //bottom: 3.5em;
         }
     }
 }

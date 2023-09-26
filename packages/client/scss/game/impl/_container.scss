@@ -87,3 +87,16 @@
     top: -0.25em;
     right: -0.25em;
 }
+
+@include sprite.sheet(
+    $image: 'container-fancy-button',
+    $width: 20,
+    $height: 26,
+    $hover: 1,
+    $active: 2,
+    $selectors: '.close-container-fancy'
+) {
+    position: absolute;
+    top: -0.25em;
+    right: -0.45em;
+}

@@ -15,6 +15,12 @@ export default {
     CANNOT_DO_THAT: 'You cannot do that right now.',
     CANNOT_DROP_ITEM_DOOR: 'You cannot drop this item while standing in a door.',
     CANNOT_PASS_DOOR: 'You cannot pass through this door.',
+    CANNOT_GLOBAL_CHAT_SECONDS:
+        'You must wait another {{duration}} seconds before using global chat.',
+    CANNOT_GLOBAL_CHAT_MINUTES:
+        'You must wait another {{duration}} minutes before using global chat.',
+    CANNOT_GLOBAL_CHAT_JAIL: 'You cannot use global chat while you are jailed.',
+    CANNOT_GLOBAL_CHAT_TUTORIAL: 'You cannot use global chat while you are in the tutorial.',
     CANNOT_PICK_UP_ITEM: 'This item can only be picked up by {{username}}.',
     CANNOT_TALK: 'You cannot talk right now.',
     CANNOT_TRADE_ITEM: 'You cannot trade this item.',

@@ -1,8 +1,9 @@
 @use '../../abstracts/media';
 
 #parchment {
-    width: 36em;
-    height: 19em;
+    top: -3em;
+    width: 38em;
+    height: 18em;
     opacity: 0;
 
     select {
@@ -31,13 +32,13 @@
     overflow: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.1em;
+    gap: 0;
 
     box-sizing: border-box;
     width: 24em;
-    height: 17em;
+    height: 15em;
     margin: auto;
-    padding: 0 0.5em;
+    padding: 0 0.25em;
 
     text-align: center;
 
@@ -51,7 +52,7 @@
         display: flex;
         flex: 1;
         flex-direction: column;
-        gap: 0.1em;
+        gap: 0;
         justify-content: space-between;
 
         height: 100%;
@@ -133,6 +134,7 @@
 
 @media (--portrait) {
     #parchment {
+        top: -5em;
         width: 20em;
         height: 26em;
     }
