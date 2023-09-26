@@ -226,5 +226,21 @@
         "experience": 350,
         "difficulty": 240,
         "item": "bloodwoodlogs"
+    },
+
+    "flastel": {
+        "name": "Flastel",
+        "levelRequirement": 50,
+        "experience": 400,
+        "difficulty": 320,
+        "item": "bloodwoodlogs"
+    },
+
+    "puhrix": {
+        "name": "Puhrix",
+        "levelRequirement": 50,
+        "experience": 400,
+        "difficulty": 320,
+        "item": "bloodwoodlogs"
     }
 }
