@@ -10,6 +10,18 @@
     border-image: url('/img/interface/slices/menu.png') 44% fill/ 1em / 0 stretch;
 }
 
+.slice-menu-fancy {
+    position: absolute;
+    inset: 0;
+
+    box-sizing: border-box;
+    margin: auto;
+
+    color: #eee;
+
+    border-image: url('/img/interface/slices/menu-fancy.png') 44% fill/ 4em / 0 stretch;
+}
+
 .slice-container {
     position: absolute;
     inset: 0;
@@ -27,6 +39,31 @@
     color: #eee;
 
     border-image: url('/img/interface/slices/container.png') 44% fill/ 1em / 0 stretch;
+
+    @media (--portrait) {
+        flex-direction: column;
+        width: 22em;
+        height: 30em;
+    }
+}
+
+.slice-container-fancy {
+    position: absolute;
+    inset: 0;
+
+    display: none;
+    flex-direction: row;
+    gap: 0.5em;
+
+    box-sizing: border-box;
+    width: 32em;
+    height: 16em;
+    margin: auto;
+    padding: 1em;
+
+    color: #eee;
+
+    border-image: url('/img/interface/slices/container-fancy.png') 44% fill/ 4.75em / 0 stretch;
 
     @media (--portrait) {
         flex-direction: column;

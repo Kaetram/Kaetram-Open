@@ -33,6 +33,7 @@
 @use 'impl/welcome';
 @use 'impl/zoom';
 @use 'impl/quest';
+@use 'impl/inappstore';
 
 body.game {
     background: #000;
@@ -52,7 +53,9 @@ body.game {
 
     #parchment {
         z-index: 0;
-        transition: 0.2s opacity linear 0.2s, z-index 0s linear 1s;
+        transition:
+            0.2s opacity linear 0.2s,
+            z-index 0s linear 1s;
     }
 
     &.credits #credits,

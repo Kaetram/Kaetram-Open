@@ -163,7 +163,11 @@ export default class Crafting {
         // Notify the players of the amount of failures.
         if (failures > 0)
             player.notify(
-                `${'crafting:FAILED_CRAFT'} ${failures}x ${(Items as RawData)[key].name}.`
+                failures > 1
+                    ? `crafting:FAILED_CRAFT;failedText=${failures}x ${
+                          (Items as RawData)[key].name
+                      }.`
+                    : 'crafting:FAILED_CRAFT_ONE'
             );
 
         // Award experience to the player.

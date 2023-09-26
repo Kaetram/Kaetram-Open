@@ -13,7 +13,7 @@
     justify-content: center;
 
     box-sizing: border-box;
-    margin: 3em;
+    margin: 1em;
 
     color: #eee;
 
@@ -71,4 +71,10 @@
 #cancel-worlds,
 #continue-worlds {
     position: relative;
+}
+
+@media (--portrait) {
+    #world-select-button {
+        bottom: 4em;
+    }
 }

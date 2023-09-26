@@ -3,5 +3,5 @@ export default {
     INVALID_ITEM: 'Выбран неверный элемент.',
     INVALID_ITEMS: 'У вас нет необходимых предметов для его создания.',
     SELECT_ITEM: 'Пожалуйста, выберите предмет для изготовления.',
-    FAILED_CRAFT: 'Вам не удалось создать.'
+    FAILED_CRAFT: 'Вам не удалось создать. {{failedText}}'
 } as const;

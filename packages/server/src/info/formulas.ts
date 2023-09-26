@@ -215,19 +215,14 @@ export default {
                 magic: (attackerStats.magic - targetStats.magic) / 3,
                 archery: (attackerStats.archery - targetStats.archery) / 3
             },
-            totalWeight =
-                weights.crush + weights.slash + weights.stab + weights.magic + weights.archery;
+            totalWeight = Object.values(weights).reduce((acc, curr) => {
+                if (curr < 0) return acc;
+                return acc + curr;
+            }, 0);
 
         // Respective classes use their own weights.
         if (attacker.isArcher()) totalWeight = weights.archery;
         if (attacker.isMagic()) totalWeight = weights.magic;
-
-        // Negative values add no weight to the accuracy modifier.
-        if (weights.crush < 0) totalWeight -= weights.crush;
-        if (weights.slash < 0) totalWeight -= weights.slash;
-        if (weights.stab < 0) totalWeight -= weights.stab;
-        if (weights.magic < 0) totalWeight -= weights.magic;
-        if (weights.archery < 0) totalWeight -= weights.archery;
 
         // If our attack style is the same or none then we do not have any advantage in our accuracy.
         if (attackStyle === defenseStyle || attackStyle === Modules.DamageStyle.None)
@@ -241,32 +236,32 @@ export default {
 
         switch (attackStyle) {
             case Modules.DamageStyle.Crush: {
-                totalWeight += weights.crush * 2;
+                totalWeight +=
+                    defenseStyle === Modules.DamageStyle.Slash ? weights.crush : -weights.crush / 2;
                 break;
             }
-
             case Modules.DamageStyle.Slash: {
-                totalWeight += weights.slash * 2;
+                totalWeight +=
+                    defenseStyle === Modules.DamageStyle.Stab ? weights.slash : -weights.slash / 2;
                 break;
             }
-
             case Modules.DamageStyle.Stab: {
-                totalWeight += weights.stab * 2;
+                totalWeight +=
+                    defenseStyle === Modules.DamageStyle.Crush ? weights.stab : -weights.stab / 2;
                 break;
             }
-
             case Modules.DamageStyle.Magic: {
-                totalWeight += weights.magic * 2;
+                totalWeight += weights.magic;
                 break;
             }
-
             case Modules.DamageStyle.Archery: {
-                totalWeight += weights.archery * 2;
+                totalWeight += weights.archery;
                 break;
             }
         }
 
-        return totalWeight || 1;
+        // Ensure the weight is always positive and more than 1 for the sake of combat mechanics
+        return Math.max(totalWeight, 1);
     },
 
     /**
