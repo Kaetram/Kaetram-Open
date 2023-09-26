@@ -3356,11 +3356,6 @@
             "magic": 0
         }
     },
-    "oldmanmask": {
-        "type": "helmet",
-        "name": "Old Man's Face",
-        "price": 100
-    },
     "refinedsapphirehelmet": {
         "type": "helmet",
         "name": "Refined Sapphire Helmet",
@@ -3766,32 +3761,165 @@
             "magic": 0
         }
     },
-    "toyhat": {
+    "conquerorhelmet": {
         "type": "helmet",
-        "name": "Toy Hat",
+        "name": "Conqueror Helmet",
         "price": 100,
         "skill": "defense",
-        "level": 1,
+        "level": 55,
         "attackStats": {
-            "crush": 1,
-            "slash": 1,
-            "stab": 1,
-            "archery": 0,
+            "crush": 6,
+            "slash": 12,
+            "stab": 8,
+            "archery": 4,
+            "magic": -14
+        },
+        "defenseStats": {
+            "crush": 16,
+            "slash": 24,
+            "stab": 20,
+            "archery": 10,
+            "magic": -12
+        },
+        "bonuses": {
+            "accuracy": 7,
+            "strength": 8,
+            "archery": 3,
             "magic": 0
+        }
+    },
+    "scarabhelmet": {
+        "type": "helmet",
+        "name": "Scarab Helmet",
+        "price": 100,
+        "skill": "archery",
+        "level": 35,
+        "attackStats": {
+            "crush": 4,
+            "slash": 3,
+            "stab": 5,
+            "archery": 19,
+            "magic": 8
         },
         "defenseStats": {
             "crush": 2,
-            "slash": 2,
-            "stab": 2,
-            "archery": 0,
-            "magic": 0
+            "slash": 4,
+            "stab": 3,
+            "archery": 10,
+            "magic": 6
         },
         "bonuses": {
-            "accuracy": 2,
-            "strength": 2,
-            "archery": 0,
-            "magic": 0
+            "accuracy": 3,
+            "strength": 4,
+            "archery": 10,
+            "magic": 3
         }
+    },
+    "minitaurshelmet": {
+        "type": "helmet",
+        "name": "Minitaur's Helmet",
+        "price": 100,
+        "skill": "archery",
+        "level": 40,
+        "attackStats": {
+            "crush": 5,
+            "slash": 3,
+            "stab": 6,
+            "archery": 20,
+            "magic": 5
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 2,
+            "stab": 2,
+            "archery": 18,
+            "magic": 14
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 2,
+            "archery": 8,
+            "magic": 4
+        }
+    },
+    "elfhelmet": {
+        "type": "helmet",
+        "name": "Elf Helmet",
+        "price": 100,
+        "skill": "archery",
+        "level": 40,
+        "attackStats": {
+            "crush": 6,
+            "slash": 4,
+            "stab": 8,
+            "archery": 24,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 3,
+            "stab": 2,
+            "archery": 18,
+            "magic": 14
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 2,
+            "archery": 12,
+            "magic": 4
+        }
+    },
+    "elfhelmetgrown": {
+        "type": "helmet",
+        "name": "Grown Elf Helmet",
+        "price": 100,
+        "skill": "magic",
+        "level": 40,
+        "attackStats": {
+            "crush": 6,
+            "slash": 4,
+            "stab": 8,
+            "archery": 7,
+            "magic": 26
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 3,
+            "stab": 2,
+            "archery": 8,
+            "magic": 22
+        },
+        "bonuses": {
+            "accuracy": 3,
+            "strength": 2,
+            "archery": 2,
+            "magic": 14
+        }
+    },
+    "oldmanmask": {
+        "type": "helmet",
+        "name": "Old Man's Face",
+        "price": 100
+    },
+    "artistcrown": {
+        "type": "helmet",
+        "name": "Artist Helmet",
+        "price": 100
+    },
+    "toyhat": {
+        "type": "helmet",
+        "name": "Toy Hat",
+        "price": 100
+    },
+    "toyhatprogrammer": {
+        "type": "helmet",
+        "name": "Toy Hat Programmer",
+        "price": 100
+    },
+    "toyhatwhite": {
+        "type": "helmet",
+        "name": "White Toy Hat",
+        "price": 100
     },
     "leatherchest": {
         "type": "chestplate",
@@ -3818,6 +3946,86 @@
             "magic": 0
         }
     },
+    "mysticchest": {
+        "type": "chestplate",
+        "name": "Mystic Chestpiece",
+        "price": 100,
+        "attackStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 8
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": -4,
+            "magic": 6
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 1,
+            "archery": 0,
+            "magic": 4
+        }
+    },
+    "bluemysticchest": {
+        "type": "chestplate",
+        "name": "Blue Mystic Chestpiece",
+        "price": 100,
+        "skill": "magic",
+        "level": 5,
+        "attackStats": {
+            "crush": 2,
+            "slash": 2,
+            "stab": 2,
+            "archery": 0,
+            "magic": 11
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": -4,
+            "magic": 8
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 1,
+            "archery": 0,
+            "magic": 6
+        }
+    },
+    "greenmysticchest": {
+        "type": "chestplate",
+        "name": "Green Mystic Chestpiece",
+        "price": 100,
+        "skill": "magic",
+        "level": 10,
+        "attackStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 2,
+            "archery": 0,
+            "magic": 13
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 1,
+            "stab": 1,
+            "archery": -4,
+            "magic": 10
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 1,
+            "archery": 0,
+            "magic": 8
+        }
+    },
+
     "copperchestplate": {
         "type": "chestplate",
         "name": "Copper Chestplate",
@@ -4272,6 +4480,87 @@
             "strength": 10,
             "archery": -4,
             "magic": -7
+        }
+    },
+    "minitaurschest": {
+        "type": "chestplate",
+        "name": "Minitaur's Chest",
+        "price": 100,
+        "skill": "archery",
+        "level": 40,
+        "attackStats": {
+            "crush": 6,
+            "slash": 4,
+            "stab": 8,
+            "archery": 24,
+            "magic": 6
+        },
+        "defenseStats": {
+            "crush": 1,
+            "slash": 3,
+            "stab": 2,
+            "archery": 21,
+            "magic": 16
+        },
+        "bonuses": {
+            "accuracy": 2,
+            "strength": 2,
+            "archery": 12,
+            "magic": 5
+        }
+    },
+    "scarabchest": {
+        "type": "chestplate",
+        "name": "Scarab's Chest",
+        "price": 100,
+        "skill": "archery",
+        "level": 35,
+        "attackStats": {
+            "crush": 4,
+            "slash": 5,
+            "stab": 6,
+            "archery": 21,
+            "magic": 8
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 3,
+            "stab": 3,
+            "archery": 13,
+            "magic": 7
+        },
+        "bonuses": {
+            "accuracy": 4,
+            "strength": 4,
+            "archery": 12,
+            "magic": 4
+        }
+    },
+    "conquerorchestplate": {
+        "type": "helmet",
+        "name": "Conqueror Chestplate",
+        "price": 100,
+        "skill": "defense",
+        "level": 55,
+        "attackStats": {
+            "crush": 7,
+            "slash": 13,
+            "stab": 10,
+            "archery": 8,
+            "magic": -18
+        },
+        "defenseStats": {
+            "crush": 18,
+            "slash": 30,
+            "stab": 22,
+            "archery": 13,
+            "magic": -15
+        },
+        "bonuses": {
+            "accuracy": 6,
+            "strength": 12,
+            "archery": 5,
+            "magic": 0
         }
     },
     "leatherleggings": {
