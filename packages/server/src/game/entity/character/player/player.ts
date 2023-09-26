@@ -1205,6 +1205,7 @@ export default class Player extends Character {
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - timestamp}`);
 
         this.setPosition(x, y);
+        this.resetTalk();
 
         this.lastStep = Date.now();
     }
