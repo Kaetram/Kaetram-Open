@@ -1,6 +1,6 @@
 {
     "name": "kaetram",
-    "version": "0.5.3",
+    "version": "0.5.4",
     "private": true,
     "type": "module",
     "packageManager": "yarn@4.0.0-rc.40",
