@@ -401,6 +401,9 @@ export default class Renderer {
             // Check that the entity is loaded, has an animation, and is visible.
             if (!entity.sprite?.loaded || !entity.animation || !entity.isVisible()) return;
 
+            // Draw the entity's debugging information if debugging is enabled.
+            if (this.debugging) this.drawEntityBoundary(entity);
+
             // Handle tree drawing as separate from other entities.
             if (entity.isTree()) return this.drawTree(entity as Tree);
 
@@ -609,6 +612,37 @@ export default class Renderer {
             // Only draw tiles in the collision grid that are marked as colliding.
             if (this.map.grid[y][x] !== 0) this.drawCellHighlight(x, y, 'rgba(50, 50, 255, 0.5)');
         });
+    }
+
+    /**
+     * Draws the boundary area around an entity. This is a circle that represents
+     * the interaction area of the entity when using a mouse or tapping on/near it.
+     * @param entity The entity we are drawing the bounding circle for.
+     */
+
+    private drawEntityBoundary(entity: Entity): void {
+        this.entitiesContext.save();
+        //this.setCameraView(this.entitiesContext);
+
+        this.entitiesContext.lineWidth = 2 * this.camera.zoomFactor;
+
+        let boundingBox = entity.getBoundingBox();
+
+        this.entitiesContext.translate(
+            (boundingBox.x + boundingBox.width / 2) * this.camera.zoomFactor,
+            (boundingBox.y + boundingBox.height / 2) * this.camera.zoomFactor
+        );
+
+        this.entitiesContext.strokeStyle = 'rgba(255, 50, 50, 0.4)';
+
+        let smallest =
+            entity.sprite.width < entity.sprite.height ? entity.sprite.width : entity.sprite.height;
+
+        this.entitiesContext.beginPath();
+        this.entitiesContext.arc(0, 0, (smallest / 2) * this.camera.zoomFactor, 0, 2 * Math.PI);
+        this.entitiesContext.stroke();
+
+        this.entitiesContext.restore();
     }
 
     /**

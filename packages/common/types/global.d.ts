@@ -22,3 +22,10 @@ declare interface Coordinate {
     gridX: number;
     gridY: number;
 }
+
+declare interface Rectangle {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}

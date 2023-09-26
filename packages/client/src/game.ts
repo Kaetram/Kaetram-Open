@@ -345,7 +345,7 @@ export default class Game {
      * @returns An entity if found, otherwise undefined.
      */
 
-    public searchForEntityAt(position: Position, radius = 2): Entity | undefined {
+    public searchForEntityAt(position: Position, radius = 3): Entity | undefined {
         let entities = this.entities.grids.getEntitiesAround(
                 position.gridX!,
                 position.gridY!,
@@ -354,30 +354,37 @@ export default class Game {
             closest: Entity | undefined;
 
         /**
-         * The `position` parameter contains the absolute x and y coordinates
-         * of the cursor. We iterate through the entities and try to find
-         * the distance between the cursor and the entity. We then compare
-         * the distance to the previous entity and if it is smaller, we
-         * replace the previous entity with the current one.
+         * We iterate through every entity that we find near the mouse position. We
+         * check if the entity can be interacted with, and then we do some magical
+         * math to determine if the mouse position is within the entity's boundaries.
+         * We take the entity's bounding box, find the centre of it, and then we
+         * calculate the distance between the mouse position and the centre of the
+         * bounding box. Think of it as a circle, actually, turn on debug mode so
+         * you can see the entity bounding box better.
          */
 
         for (let entity of entities) {
-            // Skip pets from the search.
-            if (entity.isPet()) continue;
+            // Exclude unnecessary entities.
+            if (entity.isProjectile() || entity.isPet() || this.isMainPlayer(entity.instance))
+                continue;
 
+            // Skip if the entity is a resource and is exhausted.
             if (entity.isResource() && (entity as Resource).exhausted) continue;
 
-            let { x, y, sprite } = entity,
-                { width, height, offsetX, offsetY } = sprite,
-                largest = width > height ? width : height,
-                toX = x - offsetX / 2,
-                toY = y + offsetY / 2,
-                distance = Utils.distance(position.x, position.y, toX, toY),
-                boundary = largest / 2 + Utils.halfTile + (width > 32 ? this.map.tileSize : 0);
+            // Get the bounding box, determine the centre, calculate distance between mouse and centre.
+            let boundingBox = entity.getBoundingBox(),
+                centreX = boundingBox.x + boundingBox.width / 2,
+                centreY = boundingBox.y + boundingBox.height / 2,
+                distance = Utils.distance(position.x, position.y, centreX, centreY),
+                threshold =
+                    (entity.sprite.width < entity.sprite.height
+                        ? entity.sprite.width
+                        : entity.sprite.height) / 2;
 
             // Skip if the distance is greater than the boundary.
-            if (distance > boundary) continue;
+            if (distance > threshold) continue;
 
+            // Find the closest entity to the mouse position.
             if (!closest || distance < closest.distance) {
                 closest = entity;
                 closest.distance = distance;
