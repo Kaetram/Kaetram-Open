@@ -9,7 +9,7 @@
             }
         ],
         "dropTables": ["ordinary"],
-        "hitPoints": 27,
+        "hitPoints": 20,
         "level": 1,
         "aggroRange": 1,
         "attackRate": 1400,
@@ -34,6 +34,13 @@
             "strength": 0,
             "archery": 0,
             "magic": 0
+        },
+        "skills": {
+            "accuracy": 2,
+            "strength": 1,
+            "defense": 0,
+            "archery": 0,
+            "magic": 0
         }
     },
 
@@ -41,7 +48,7 @@
         "name": "Batterfly",
         "description": "A bat that is also a butterfly, what a strange creature.",
         "dropTables": ["ordinary"],
-        "hitPoints": 68,
+        "hitPoints": 65,
         "level": 4,
         "aggroRange": 1,
         "aggressive": true,
@@ -81,9 +88,9 @@
         "movementSpeed": 500,
         "respawnDelay": 20000,
         "attackStats": {
-            "crush": 0,
-            "slash": 0,
-            "stab": 0,
+            "crush": 2,
+            "slash": 1,
+            "stab": 2,
             "archery": 0,
             "magic": 0
         },
