@@ -1,7 +1,7 @@
 import install from './lib/pwa';
-import { isMobile } from './utils/detect';
 import Storage from './utils/storage';
 import Util from './utils/util';
+import { isMobile } from './utils/detect';
 import { onSecondaryPress } from './utils/press';
 
 import type { SerializedServer } from '@kaetram/common/types/network';

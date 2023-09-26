@@ -255,14 +255,11 @@
     "coder": {
         "name": "Programmer",
         "text": [
-            "Oh.. This is awkward...",
-            "You may be wondering why I'm here as well.",
-            "Well just letting you know..",
-            "It's definitely not because we're running low on pixel art..",
-            "Regardless.. If you want to join the community",
-            "Our Discord <a target=\"_blank\" href=\"https://discord.gg/MmbGAaw\">is available here!</a>",
-            "Now listen, why don't you go talk to the local villagers?",
-            "I have heard they are in dire need of resolving a mystery."
+            "Well well, hello there. Seems you managed to esca- I mean,",
+            "find your way out of that tutorial.",
+            "Listen, your first task should be to discover the world around you.",
+            "Why don't you go talk to the villagers for starters?",
+            "After that, maybe we can look into getting you some tasks to do."
         ]
     },
 

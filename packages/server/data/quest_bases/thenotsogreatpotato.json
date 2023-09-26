@@ -1,7 +1,7 @@
 {
     "name": "The Not-So-Great Potato",
-    "description": "Root of all humor.|Pete Potato insists he's a tomato. Help him come to terms with his tuber truth.",
-    "rewards": ["potato-tiara", "sack of confused veggies"],
+    "description": "Root of all humor.|The potato king insists he's a tomato. Help him come to terms with his tuber truth.",
+    "rewards": ["potato"],
     "stages": {
         "0": {
             "task": "talk",
