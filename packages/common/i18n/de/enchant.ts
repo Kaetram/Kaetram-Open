@@ -1,7 +1,7 @@
 export default {
-    NO_ITEM_SELECTED: 'You have not selected an item to enchant.',
-    CANNOT_ENCHANT: 'The item you have selected cannot be enchanted.',
-    NO_SHARD: 'You must provide a shard to enchant an item.',
-    FAILED_ENCHANT: 'You tried enchanting but nothing happened.',
-    SUCCESSFUL_ENCHANT: 'You successfully enchanted your item.'
+    NO_ITEM_SELECTED: 'Du hast keinen Gegenstand zum Verzaubern ausgewählt.',
+    CANNOT_ENCHANT: 'Der von dir ausgewählte Gegenstand kann nicht verzaubert werden.',
+    NO_SHARD: 'Du musst einen Scherbe bereitstellen, um einen Gegenstand zu verzaubern.',
+    FAILED_ENCHANT: 'Du hast versucht zu verzaubern, aber nichts ist passiert.',
+    SUCCESSFUL_ENCHANT: 'Du hast deinen Gegenstand erfolgreich verzaubert.'
 } as const;

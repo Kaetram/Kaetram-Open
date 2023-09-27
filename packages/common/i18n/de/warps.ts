@@ -1,11 +1,15 @@
 export default {
-    WARPED_TO: 'You have warped to {{name}}.',
+    WARPED_TO: 'Du hast dich nach {{name}} teleportiert.',
 
-    CANNOT_WARP_ACHIEVEMENT: 'This warp requires an achievement to be finished before use.',
-    CANNOT_WARP_QUEST: 'You must complete {{questName}} to warp to {{name}}.',
-    CANNOT_WARP_LEVEL: 'You must be at least level {{level}} to warp here.',
-    CANNOT_WARP_JAIL: 'You cannot teleport, you are jailed for another {{time}}.',
-    CANNOT_WARP_TUTORIAL: 'You must finish the tutorial before warping.',
-    CANNOT_WARP_COMBAT: 'You must wait 10 seconds after finishing combat to warp.',
-    CANNOT_WARP_COOLDOWN: 'You must wait another {{time}} to warp.'
+    CANNOT_WARP_ACHIEVEMENT:
+        'Dieser Teleport erfordert eine Errungenschaft, die vor der Benutzung abgeschlossen werden muss.',
+    CANNOT_WARP_QUEST:
+        'Du musst {{questName}} abschließen, um nach {{name}} zu teleportieren zu können.',
+    CANNOT_WARP_LEVEL:
+        'Du musst mindestens Level {{level}} sein, um hierher zu teleportieren zu können.',
+    CANNOT_WARP_JAIL: 'Du kannst nicht teleportieren, du bist für weitere {{time}} eingesperrt.',
+    CANNOT_WARP_TUTORIAL: 'Du musst das Tutorial beenden, bevor du teleportieren kannst.',
+    CANNOT_WARP_COMBAT:
+        'Du musst 10 Sekunden nach Beendigung des Kampfes warten, um zu teleportieren zu können.',
+    CANNOT_WARP_COOLDOWN: 'Du musst weitere {{time}} warten, um zu teleportieren zu können.'
 } as const;
