@@ -13,14 +13,14 @@ export default class Statistics {
     public resources: { [key: string]: number } = {};
     public drops: { [key: string]: number } = {};
 
-    public creationTime = Date.now(); // Time of game's creation.
+    public creationTime = this.getTime(); // Time of game's creation.
     public totalTimePlayed = 0; // Total time played in milliseconds.
     public averageTimePlayed = 0;
-    public lastLogin = Date.now();
+    public lastLogin = this.getTime();
     public loginCount = 1;
 
     // Class variables for calculating login time, etc.
-    public loginTime = Date.now(); // Time when player logged in.
+    public loginTime = this.getTime(); // Time when player logged in.
 
     public constructor(private player: Player) {}
 
@@ -148,7 +148,7 @@ export default class Statistics {
 
     public serialize(): StatisticsData {
         // Serializing also gets treated as a logging out event, so we calculate stuff here.
-        this.lastLogin = Date.now();
+        this.lastLogin = this.getTime();
         this.totalTimePlayed += Date.now() - this.loginTime; // add time played to total time played.
         this.calculateAverageTimePlayed();
 
@@ -166,5 +166,15 @@ export default class Statistics {
             loginCount: this.loginCount,
             cheater: this.player.isCheater()
         };
+    }
+
+    /**
+     * Gets the UNIX epoch time in seconds. This is because storing seconds
+     * is easier for the database (as it can cause later down the line.)
+     * @returns The current UNIX epoch time in seconds.
+     */
+
+    private getTime(): number {
+        return Math.floor(Date.now() / 1000);
     }
 }
