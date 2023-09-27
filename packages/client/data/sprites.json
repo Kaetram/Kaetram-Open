@@ -553,6 +553,15 @@
         "offsetY": -24
     },
 
+    {
+        "id": "effectentity/fire",
+        "width": 16,
+        "height": 16,
+        "animations": { "idle": { "length": 8, "row": 0 } },
+        "offsetX": -4,
+        "offsetY": -4
+    },
+
     { "id": "mobs/angel", "width": 32, "height": 32, "offsetX": -8, "offsetY": -13 },
     { "id": "mobs/card", "width": 32, "height": 32, "offsetX": -8, "offsetY": -13 },
     { "id": "mobs/card2", "width": 32, "height": 32, "offsetX": -8, "offsetY": -13 },
@@ -6130,11 +6139,63 @@
     },
     {
         "id": "projectiles/poisonball",
-        "width": 40,
-        "height": 40,
+        "width": 50,
+        "height": 48,
         "animations": {
             "travel": {
                 "length": 10,
+                "row": 0
+            }
+        },
+        "offsetX": -18,
+        "offsetY": -17
+    },
+    {
+        "id": "projectiles/bloodball",
+        "width": 50,
+        "height": 48,
+        "animations": {
+            "travel": {
+                "length": 8,
+                "row": 0
+            }
+        },
+        "offsetX": -18,
+        "offsetY": -17
+    },
+    {
+        "id": "projectiles/lightningarc",
+        "width": 50,
+        "height": 48,
+        "animations": {
+            "travel": {
+                "length": 8,
+                "row": 0
+            }
+        },
+        "offsetX": -18,
+        "offsetY": -17
+    },
+    {
+        "id": "projectiles/firearc",
+        "width": 50,
+        "height": 48,
+        "animations": {
+            "travel": {
+                "length": 8,
+                "row": 0
+            }
+        },
+        "offsetX": -18,
+        "offsetY": -17
+    },
+    {
+        "id": "projectiles/shadowarc",
+        "width": 50,
+        "height": 48,
+        "animations": {
+            "travel": {
+                "length": 8,
                 "row": 0
             }
         },
@@ -6467,6 +6528,19 @@
         "offsetY": -15
     },
     {
+        "id": "effects/lightningexplosion",
+        "width": 50,
+        "height": 48,
+        "animations": {
+            "effect": {
+                "length": 8,
+                "row": 0
+            }
+        },
+        "offsetX": -18,
+        "offsetY": -15
+    },
+    {
         "id": "effects/boulder",
         "animations": {
             "effect": {
@@ -6512,6 +6586,138 @@
         },
         "offsetX": -8,
         "offsetY": -10
+    },
+    {
+        "id": "effects/attack",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
+    },
+    {
+        "id": "effects/strength",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
+    },
+    {
+        "id": "effects/defense",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
+    },
+    {
+        "id": "effects/magic",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
+    },
+    {
+        "id": "effects/archery",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
+    },
+    {
+        "id": "effects/attacksuper",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
+    },
+    {
+        "id": "effects/strengthsuper",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
+    },
+    {
+        "id": "effects/defensesuper",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
+    },
+    {
+        "id": "effects/magicsuper",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
+    },
+    {
+        "id": "effects/archerysuper",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
+    },
+    {
+        "id": "effects/bleed",
+        "width": 32,
+        "height": 32,
+        "animations": {
+            "effect": {
+                "length": 5,
+                "row": 0
+            }
+        },
+        "offsetX": -8
     },
     {
         "id": "mobs/icegoblin",

@@ -107,6 +107,66 @@ export default class Character extends Entity {
         [Modules.Effects.Boulder]: {
             key: 'effects/boulder',
             animation: new Animation('effect', 7, 0, 32, 32)
+        },
+        [Modules.Effects.AccuracyBuff]: {
+            key: 'effects/accuracy',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.StrengthBuff]: {
+            key: 'effects/strength',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.DefenseBuff]: {
+            key: 'effects/defense',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.MagicBuff]: {
+            key: 'effects/magic',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.ArcheryBuff]: {
+            key: 'effects/archery',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.AccuracySuperBuff]: {
+            key: 'effects/accuracysuper',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.StrengthSuperBuff]: {
+            key: 'effects/strengthsuper',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.DefenseSuperBuff]: {
+            key: 'effects/defensesuper',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.MagicSuperBuff]: {
+            key: 'effects/magicsuper',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.ArcherySuperBuff]: {
+            key: 'effects/archerysuper',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
         }
     };
 
