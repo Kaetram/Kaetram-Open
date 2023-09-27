@@ -288,9 +288,17 @@ export enum Effects {
     Burning,
     Freezing,
     Invincible,
-    AccuracyPotion,
-    StrengthPotion,
-    DefensePotion
+    AccuracyBuff,
+    StrengthBuff,
+    DefenseBuff,
+    MagicBuff,
+    ArcheryBuff,
+    AccuracySuperBuff,
+    StrengthSuperBuff,
+    DefenseSuperBuff,
+    MagicSuperBuff,
+    ArcherySuperBuff,
+    Bleed
 }
 
 export enum DamageStyle {

@@ -1,18 +1,20 @@
 export default {
     WARNING_DUPLICATE: 'Duplicate item key found in store: ',
-    INVALID_STORE: 'Tried to parse a non-existent store.',
-    INVALID_STORE_REFRESH: 'Tried to refresh invalid store: ',
-    INVALID_ITEM_SELECTION: 'Invalid item selection.',
-    PURCHASE_INVALID_STORE: 'tried purchasing an item that does not exist store: ',
-    SELL_INVALID_ITEM: 'tried selling an invalid item.',
-    ITEM_OUT_OF_STOCK: 'This item is currently out of stock.',
-    NOT_ENOUGH_CURRENCY: 'You do not have enough currency to buy this item.',
-    NOT_ENOUGH_SPACE: 'You do not have enough space in your inventory.',
-    CANNOT_SELL_ITEM: 'You cannot sell this item.',
-    ACTION_STORE_NOT_OPEN: 'Tried to perform an action on a store that is not open.',
-    CHEATER: 'You have been flagged for cheating. You cannot purchase anything.',
-    RESTRICTED_STORE: 'This store does not accept any items.',
-    RESTRICTED_ITEM: 'This item cannot be sold here.',
-    INVALID_ITEM_COUNT: 'You have entered an invalid amount of items.',
-    HOLLOW_ADMIN: 'As an admin you cannot interact with the economy.'
+    INVALID_STORE: 'You tried to parse a non-existent store.',
+    INVALID_STORE_REFRESH: 'hat versucht, ein ungültiges Geschäft zu aktualisieren: ',
+    INVALID_ITEM_SELECTION: 'Ungültige Gegenstandsauswahl.',
+    PURCHASE_INVALID_STORE:
+        'hat versucht, einen Gegenstand zu kaufen, den es im Geschäft nicht gibt: ',
+    SELL_INVALID_ITEM: 'hat versucht, einen ungültigen Gegenstand zu verkaufen.',
+    ITEM_OUT_OF_STOCK: 'Dieser Gegenstand ist derzeit ausverkauft.',
+    NOT_ENOUGH_CURRENCY: 'Du hast nicht genug Währung, um diesen Gegenstand zu kaufen.',
+    NOT_ENOUGH_SPACE: 'Du hast nicht genug Platz in deinem Inventar.',
+    CANNOT_SELL_ITEM: 'Du kannst diesen Gegenstand nicht verkaufen.',
+    ACTION_STORE_NOT_OPEN:
+        'hat versucht, eine Aktion in einem Geschäft durchzuführen, das nicht geöffnet ist.',
+    CHEATER: 'Du wurdest als Betrüger markiert. Du kannst nichts kaufen.',
+    RESTRICTED_STORE: 'Dieses Geschäft nimmt keine Gegenstände an.',
+    RESTRICTED_ITEM: 'Dieser Gegenstand kann hier nicht verkauft werden.',
+    INVALID_ITEM_COUNT: 'Du hast eine ungültige Anzahl von Gegenständen eingegeben.',
+    HOLLOW_ADMIN: 'Du kannst als Administrator nicht mit der Wirtschaft interagieren.'
 } as const;
