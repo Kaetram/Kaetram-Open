@@ -30,19 +30,47 @@ export default class EffectPotion implements Plugin {
     private getEffect(): Modules.Effects {
         switch (this.effect) {
             case 'accuracy': {
-                return Modules.Effects.AccuracyPotion;
+                return Modules.Effects.AccuracyBuff;
             }
 
             case 'strength': {
-                return Modules.Effects.StrengthPotion;
+                return Modules.Effects.StrengthBuff;
             }
 
             case 'defense': {
-                return Modules.Effects.DefensePotion;
+                return Modules.Effects.DefenseBuff;
+            }
+
+            case 'magic': {
+                return Modules.Effects.MagicBuff;
+            }
+
+            case 'archery': {
+                return Modules.Effects.ArcheryBuff;
+            }
+
+            case 'accuracysuper': {
+                return Modules.Effects.AccuracySuperBuff;
+            }
+
+            case 'strengthsuper': {
+                return Modules.Effects.StrengthSuperBuff;
+            }
+
+            case 'defensesuper': {
+                return Modules.Effects.DefenseSuperBuff;
+            }
+
+            case 'magicsuper': {
+                return Modules.Effects.MagicSuperBuff;
+            }
+
+            case 'archerysuper': {
+                return Modules.Effects.ArcherySuperBuff;
             }
 
             default: {
-                return Modules.Effects.StrengthPotion;
+                return Modules.Effects.StrengthBuff;
             }
         }
     }
