@@ -15,6 +15,8 @@ export default class Args {
 
             this.override(paramIdentifier, paramValue);
         }
+
+        console.log(config);
     }
 
     /**
@@ -37,22 +39,22 @@ export default class Args {
                 break;
             }
 
-            case 'remoteServerHost': {
+            case '--remoteServerHost': {
                 config.remoteServerHost = value;
                 break;
             }
 
-            case 'serverId': {
+            case '--serverId': {
                 config.serverId = parseInt(value);
                 break;
             }
 
-            case 'updateTime': {
+            case '--updateTime': {
                 config.updateTime = parseInt(value);
                 break;
             }
 
-            case 'maxPlayers': {
+            case '--maxPlayers': {
                 config.maxPlayers = parseInt(value);
             }
         }
