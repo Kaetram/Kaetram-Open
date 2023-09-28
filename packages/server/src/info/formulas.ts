@@ -121,10 +121,12 @@ export default {
         }
 
         // Increase accuracy if the attacker has the accuracy potion effect.
-        if (attacker.status.has(Modules.Effects.AccuracyPotion)) accuracy -= 0.07;
+        if (attacker.status.has(Modules.Effects.AccuracyBuff)) accuracy -= 0.07;
+        if (attacker.status.has(Modules.Effects.AccuracySuperBuff)) accuracy -= 0.12;
 
         // Decrease accuracy if the target has the defense potion effect.
-        if (target.status.has(Modules.Effects.DefensePotion)) accuracy += 0.08;
+        if (target.status.has(Modules.Effects.DefenseBuff)) accuracy += 0.08;
+        if (target.status.has(Modules.Effects.DefenseSuperBuff)) accuracy += 0.12;
 
         // Increase accuracy if the target has the terror effect.
         if (target.status.has(Modules.Effects.Terror)) accuracy -= 0.4;
@@ -186,7 +188,10 @@ export default {
         }
 
         // Apply a 10% damage boost if the character has the strength potion effect.
-        if (character.status.has(Modules.Effects.StrengthPotion)) damage *= 1.1;
+        if (character.status.has(Modules.Effects.StrengthBuff)) damage *= 1.1;
+
+        // Apply 15% damage boost if the character has the super strength potion effect.
+        if (character.status.has(Modules.Effects.StrengthSuperBuff)) damage *= 1.15;
 
         // Ensure the damage is not negative.
         if (damage < 0) damage = 0;
