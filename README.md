@@ -262,8 +262,9 @@ Open Collective &ndash; <https://opencollective.com/kaetram>
 
 ## License & Commission
 
-For all inquiries about purchasing a different license or commission work, please contact **@kaetram**
-on [Discord][discord].
+Following the release of the beta, Kaetram-Open will only be updated once every 2-4 weeks. There will be no more updates to the sprite art, music, item/mob/npc/etc properties. This repository will provide you with the tools necessary to create your own version of Kaetram, there are plenty of assets included for that. Further modifications will be primarily to the game-engine itself and improvements to the rendering.
+
+For all inquiries about purchasing a different license, commission work, or purchasing access to our up-to-date version please contact **@kaetram** on [Discord][discord] or email admin@kaetram.com.
 
 This project is distributed under the **[Mozilla Public License Version 2.0](https://choosealicense.com/licenses/mpl-2.0/)**. See [`LICENSE`][license] for more information.
 
