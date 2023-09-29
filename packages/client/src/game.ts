@@ -63,11 +63,14 @@ export default class Game {
     public connection: Connection;
 
     public time = Date.now();
-    public lastTime = Date.now();
+    public timeDiff = Date.now(); // Used for FPS calculation.
+    public timeLast = Date.now();
+    public targetFPS = 1000 / 50;
 
     public started = false;
     public ready = false;
     public pvp = false;
+    public throttle = false;
     public useWebGl = false;
 
     public constructor(public app: App) {
@@ -126,12 +129,21 @@ export default class Game {
      */
 
     private tick(): void {
+        if (this.started) requestAnimationFrame(() => this.tick());
+
         this.time = Date.now();
 
-        this.renderer.render();
-        this.updater.update();
+        // Only calculate throttling when we enable it.
+        if (this.throttle) {
+            this.timeDiff = this.time - this.timeLast;
 
-        if (this.started) requestAnimationFrame(() => this.tick());
+            if (this.timeDiff < this.targetFPS) return;
+
+            this.timeLast = this.time - (this.timeDiff % this.targetFPS);
+        }
+
+        this.updater.update();
+        this.renderer.render();
     }
 
     /**

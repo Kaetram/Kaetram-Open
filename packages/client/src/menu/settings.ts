@@ -35,6 +35,9 @@ export default class Settings extends Menu {
         '#disable-region-caching-checkbox > input'
     )!;
     private webGlCheckbox: HTMLInputElement = document.querySelector('#webgl-checkbox > input')!;
+    private fpsThrottleDropdown: HTMLSelectElement = document.querySelector(
+        '#frame-throttle > select'
+    )!;
 
     public constructor(private game: Game) {
         super('#settings-page', '#close-settings', '#settings-button');
@@ -54,6 +57,7 @@ export default class Settings extends Menu {
         this.showLevelsCheckbox.addEventListener('change', this.handleLevel.bind(this));
         this.disableCachingCheckbox.addEventListener('change', this.handleCaching.bind(this));
         this.webGlCheckbox.addEventListener('change', this.handleWebGl.bind(this));
+        this.fpsThrottleDropdown.addEventListener('change', this.handleFpsThrottle.bind(this));
 
         this.load();
     }
@@ -80,6 +84,7 @@ export default class Settings extends Menu {
         this.showLevelsCheckbox.checked = settings.showLevels;
         this.disableCachingCheckbox.checked = settings.disableCaching;
         this.webGlCheckbox.checked = settings.webgl;
+        this.fpsThrottleDropdown.selectedIndex = settings.fpsThrottle;
 
         // Hide webgl checkbox if not supported.
         if (isMacintoshFirefox()) this.hideWebGlOption();
@@ -104,6 +109,7 @@ export default class Settings extends Menu {
         this.handleLevel();
 
         this.handleInfo();
+        this.handleFpsThrottle();
     }
 
     /**
@@ -217,6 +223,26 @@ export default class Settings extends Menu {
         setTimeout(() => {
             window.location.reload();
         }, 500);
+    }
+
+    /**
+     * Handles updating of the FPS throttle from the drop down menu.
+     * @param value
+     */
+
+    private handleFpsThrottle(): void {
+        let index = this.fpsThrottleDropdown.selectedIndex;
+
+        this.game.storage.setFpsThrottle(index);
+
+        let isEnabled = index !== 0;
+
+        // Enable or disable the throttle based on the index selected.
+        this.game.throttle = isEnabled;
+
+        // Apply the FPS throttling to the game tick.
+        if (index === 1) this.game.targetFPS = 1000 / 50;
+        else if (index === 2) this.game.targetFPS = 1000 / 30;
     }
 
     /**

@@ -1,4 +1,4 @@
-import { isMobile } from './detect';
+import { isIos, isMobile } from './detect';
 
 import log from '../lib/log';
 
@@ -28,6 +28,7 @@ interface Settings {
     showLevels: boolean;
     disableCaching: boolean;
     webgl: boolean;
+    fpsThrottle: number;
 }
 
 interface RegionMapData {
@@ -97,7 +98,8 @@ export default class Storage {
                 showNames: true,
                 showLevels: true,
                 disableCaching: false,
-                webgl: false
+                webgl: false,
+                fpsThrottle: 1
             }
         };
     }
@@ -359,6 +361,17 @@ export default class Storage {
 
     public setZoom(zoom: number): void {
         this.data.player.zoom = zoom;
+
+        this.save();
+    }
+
+    /**
+     * Updates the fps throttle in the local storage.
+     * @param fpsThrottle New fps throttle we are saving.
+     */
+
+    public setFpsThrottle(fpsThrottle: number): void {
+        this.data.settings.fpsThrottle = fpsThrottle;
 
         this.save();
     }

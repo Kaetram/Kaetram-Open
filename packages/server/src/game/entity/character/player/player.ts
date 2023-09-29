@@ -715,20 +715,19 @@ export default class Player extends Character {
      * of factors to avoid false-positives.
      * @param x The grid x coordinate we are checking.
      * @param y The grid y coordinate we are checking.
-     * @param timestamp Timestamp at which the packet was originally sent.
+     * @param latency The latency of the packet.
      */
 
-    private verifyMovement(x: number, y: number, timestamp: number): boolean {
+    private verifyMovement(x: number, y: number, latency: number): boolean {
         let now = Date.now(),
-            stepDiff = now - this.lastStep + 7, // +7ms for margin of error.
-            regionDiff = now - this.lastRegionChange,
-            timestampDiff = now - timestamp;
+            stepDiff = now - this.lastStep - latency - 10, // subtract latency
+            regionDiff = now - this.lastRegionChange;
 
         // High latency may cause packets to be sent in a delayed manner, causing two to be sent/received at once.
-        if (timestampDiff > 35 && stepDiff < 35) return false;
+        if (latency > 35 && stepDiff < 35) return false;
 
         // Firstly ensure that the last step was behaving normally.
-        if (stepDiff >= this.getMovementSpeed()) return false;
+        if (stepDiff > this.getMovementSpeed()) return false;
 
         // A region change may trigger a movement anomaly, so we ignore movement for 1.5 seconds of a region change.
         if (regionDiff < 1500) return false;
@@ -1196,18 +1195,16 @@ export default class Player extends Character {
             this.stopMovement();
         }
 
-        let now = Date.now();
+        let latency = Date.now() - timestamp;
 
-        // Use time stamp if within normal latency.
-        timestamp = now - timestamp < 250 ? now : timestamp;
-
-        if (this.verifyMovement(x, y, timestamp))
+        // Ensure the movement is valid, negative latency is impossible lmfao.
+        if (this.verifyMovement(x, y, latency) || latency < 0)
             this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - timestamp}`);
 
         this.setPosition(x, y);
         this.resetTalk();
 
-        this.lastStep = Date.now();
+        this.lastStep = Date.now() - latency;
     }
 
     /**
