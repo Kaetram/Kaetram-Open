@@ -1,6 +1,11 @@
 {
-    "0.5.4-beta": {
-        "title": "Kaetram 0.5.4-beta",
-        "content": ["- UI polished"]
+    "0.5.5-beta": {
+        "title": "Kaetram 0.5.5-beta",
+        "content": [
+            "- Add language selection menu",
+            "- Add FPS throttle option",
+            "- New quests",
+            "- Anti-cheating detection improvements"
+        ]
     }
 }
