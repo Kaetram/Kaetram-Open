@@ -76,7 +76,6 @@
 
         <div id="in-app-store" class="slice-container-fancy">
             <div id="close-in-app-store" class="close-container-fancy"></div>
-
         </div>
 
         <div id="player-info">
@@ -346,6 +345,19 @@
 
                             <input type="checkbox" aria-labelledby="webgl-text" />
                             <span class="checkmark"></span>
+                        </label>
+
+                        <label id="frame-throttle">
+                            <span id="frame-throttle-text">FPS Throttle</span>
+
+                            <select
+                                id="frame-throttle-select"
+                                aria-labelledby="frame-throttle-text"
+                            >
+                                <option value="0">OFF</option>
+                                <option value="1">45 FPS</option>
+                                <option value="2">30 FPS</option>
+                            </select>
                         </label>
                     </div>
                 </div>

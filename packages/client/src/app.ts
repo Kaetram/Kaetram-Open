@@ -57,6 +57,7 @@ export default class App {
 
     private validation: NodeListOf<HTMLElement> = document.querySelectorAll('.validation-summary')!;
     private loading: HTMLElement = document.querySelector('.loader')!;
+    private langSelect: HTMLElement = document.querySelector('#lang-select')!;
     private worldSelectButton: HTMLElement = document.querySelector('#world-select-button')!;
     private gameVersion: HTMLElement = document.querySelector('#game-version')!;
 
@@ -263,6 +264,7 @@ export default class App {
         this.body.className = 'intro';
 
         this.menuHidden = false;
+        this.langSelect.hidden = false;
         this.worldSelectButton.hidden = false;
         this.gameVersion.hidden = false;
     }
@@ -278,6 +280,7 @@ export default class App {
         this.body.className = 'game';
 
         this.menuHidden = true;
+        this.langSelect.hidden = true;
         this.worldSelectButton.hidden = true;
         this.gameVersion.hidden = true;
 
@@ -775,7 +778,7 @@ export default class App {
      */
 
     private validateNumberInput(input: HTMLInputElement) {
-        input.value = input.value.replace(/\D/g, '');
+        input.value = input.value.replaceAll(/\D/g, '');
     }
 
     /**
