@@ -163,7 +163,7 @@ export default class Region {
 
         for (let instance in this.entities) {
             // Ignore if a reject is present.
-            if (reject && reject.instance === instance) continue;
+            if (reject?.instance === instance) continue;
 
             // Check if the entity is visible to the player.
             if (!this.entities[instance].isVisible(player)) continue;

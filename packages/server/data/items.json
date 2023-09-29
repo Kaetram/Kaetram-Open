@@ -7448,17 +7448,17 @@
         "name": "Iron Round Shield",
         "price": 420,
         "skill": "defense",
-        "level": 13,
+        "level": 23,
         "defenseStats": {
             "crush": 7,
-            "slash": 4,
-            "stab": 5,
-            "archery": 3,
+            "slash": 9,
+            "stab": 11,
+            "archery": 6,
             "magic": 1
         },
         "bonuses": {
             "accuracy": 2,
-            "strength": 3,
+            "strength": 4,
             "archery": 0,
             "magic": 0
         }

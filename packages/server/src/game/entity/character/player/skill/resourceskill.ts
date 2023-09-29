@@ -17,6 +17,9 @@ type ExhaustCallback = (player: Player, resource?: Resource) => void;
 export default class ResourceSkill extends Skill {
     private loop?: NodeJS.Timeout | undefined;
 
+    private lastClickedResource = ''; // Instance of the last resource the player clicked on.
+    private lastClickedCount = 0; // Number of times the player has clicked on the resource.
+
     private exhaustCallback?: ExhaustCallback;
 
     /**
@@ -70,12 +73,28 @@ export default class ResourceSkill extends Skill {
 
         if (!this.canHold(player)) return player.notify('misc:NO_SPACE');
 
+        // Notification for the player to stop clicking on a resource repeatedly.
+        if (this.lastClickedResource === resource.instance) {
+            this.lastClickedCount++;
+
+            if (this.lastClickedCount >= 2) {
+                player.notify('misc:NO_NEED_CLICK_REPEATEDLY');
+
+                // Reset the counter.
+                this.lastClickedCount = 0;
+                this.lastClickedResource = '';
+            }
+        } else this.lastClickedCount = 0;
+
         /**
          * Stops the existing loop if the player is attempting to interact with the resource
          * by continually clicking on it. This also allows the player to click between
          * resources.
          */
         if (this.loop) this.stop();
+
+        // Set the last clicked resource to the current resource.
+        this.lastClickedResource = resource.instance;
 
         this.loop = setInterval(() => {
             // Stops the loop when the resource is depleted or the player cannot hold the resource.
