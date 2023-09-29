@@ -52,6 +52,7 @@ export default {
     NOT_IN_PVP_ZONE: 'You are no longer in a PvP zone!',
     NOT_ONLINE: 'Player @aquamarine@{{username}}@crimson@ is not online.',
     NOT_ENOUGH_MANA: 'You do not have enough mana to use this ability.',
+    NO_NEED_CLICK_REPEATEDLY: 'Pstt, you do not have to repeatedly click on that.',
     PLEASE_MAKE_ROOM_REWARD: 'Please make room in your inventory to accept this reward',
     POISONED: 'You have been poisoned!',
     POISON_WORN_OFF: 'The poison has worn off.',
