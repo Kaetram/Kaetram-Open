@@ -3,20 +3,24 @@ import Data from '../../../../../../data/abilities.json';
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import type { AbilityData, RawAbility } from '@kaetram/common/types/ability';
+import type { AbilityData, RawAbility, RawAbilityData } from '@kaetram/common/network/impl/ability';
 import type Player from '../player';
 
 type DeactivateCallback = (player: Player) => void;
 type UpdateCallback = (key: string, level: number, quickSlot: number) => void;
 export default class Ability {
-    private data: RawAbility;
+    private data: RawAbilityData;
 
     private lastActivated = 0;
 
     private deactivateCallback?: DeactivateCallback;
     private updateCallback?: UpdateCallback;
 
-    public constructor(public key: string, private level = 1, private quickSlot = -1) {
+    public constructor(
+        public key: string,
+        private level = 1,
+        private quickSlot = -1
+    ) {
         this.data = (Data as RawAbility)[this.key];
     }
 
@@ -45,17 +49,15 @@ export default class Ability {
 
         // Player doesn't have enough mana.
         if (player.mana.getMana() < mana) {
-            player.notify('You do not have enough mana to use this ability.');
+            player.notify('misc:NOT_ENOUGH_MANA');
             return false;
         }
 
+        let formattedDuration = Math.floor((cooldown - (Date.now() - this.lastActivated)) / 1000);
+
         // Ensure the ability is not on cooldown.
         if (this.isCooldown(cooldown)) {
-            player.notify(
-                `You need to wait ${Math.floor(
-                    (cooldown - (Date.now() - this.lastActivated)) / 1000
-                )} seconds before using this ability again.`
-            );
+            player.notify(`misc:NEED_WAIT_ABILITY;duration=${formattedDuration}`);
             return false;
         }
 

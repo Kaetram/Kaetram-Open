@@ -1,41 +1,42 @@
-@use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
 #crafting {
-    cursor: url('/img/hand.png'), auto;
-
     position: absolute;
     inset: 0;
-
     display: none;
-
     margin: auto;
 }
 
 #crafting-options {
     position: absolute;
+    top: 1.375em;
+    left: 1.75em;
+
     overflow: auto;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+
+    width: 11.125em;
+    height: 9.875em;
 }
 
 #craft-button {
     position: absolute;
 
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
 
-    font-family: KerrieFont, sans-serif;
+    font-family: KerrieFont, 'KerrieFont Fallback', sans-serif;
     color: white;
     vertical-align: middle;
 }
 
 #crafting-requirements {
     position: absolute;
-
-    //overflow: auto;
-
     display: flex;
+    flex-direction: row;
 }
 
 #crafting-result,
@@ -46,14 +47,14 @@
 
 .crafting-option-icon {
     background-size: cover;
-    
+
     // Safari filters so the images aren't blurry.
     filter: opacity(100%);
 }
 
-#crafting-result-name, .crafting-option-count {
-    font-family: KerrieFont, sans-serif;
-    font-size: 14px;
+#crafting-result-name,
+.crafting-option-count {
+    font-family: KerrieFont, 'KerrieFont Fallback', sans-serif;
     color: white;
     text-align: center;
 }
@@ -61,6 +62,7 @@
 .crafting-buttons {
     position: absolute;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
 }
 
@@ -68,156 +70,114 @@
     flex: auto;
 }
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #crafting {
-            width: 416px * $i;
-            height: 252px * $i;
-            background: url('/img/interface/crafting.png') no-repeat;
-            background-size: calc(width('crafting.png') * $i);
-        }
+#crafting-requirements {
+    top: 1.5em;
+    right: 1.5em;
 
-        #crafting-options {
-            top: 24px * $i;
-            left: 30px * $i;
-            width: 174px * $i;
-            height: 154px * $i;
-        }
+    gap: 0.375em;
 
-        #crafting-requirements {
-            top: 24px * $i;
-            right: 24px * $i;
+    width: 8.75em;
+    height: 3em;
+}
 
-            gap: 6px * $i;
+#craft-button {
+    right: 2.875em;
+    bottom: 1.5em;
+}
 
-            width: 140px * $i;
-            height: 48px * $i;
-        }
+#crafting-result-name {
+    right: 1.375em;
+    bottom: 4.875em;
+    width: 9em;
+}
 
-        #craft-button {
-            right: 46px * $i;
-            bottom: 24px * $i;
+#crafting-result,
+#crafting-level {
+    bottom: 7em;
+}
 
-            width: 96px * $i;
-            height: 32px * $i;
+#crafting-result {
+    right: 6.625em;
+}
 
-            font-size: 12px * $i;
+#crafting-level {
+    right: 2.625em;
+}
 
-            background: url('/img/interface/crafting.png') 0 -314px * $i;
-            background-size: calc(width('crafting.png') * $i);
+.crafting-option-icon {
+    width: 2em;
+    height: 2em;
+    margin: 0.3125em;
+}
 
-            &:hover {
-                height: 28px * $i;
-                background-position-y: -382px * $i;
-            }
+.crafting-buttons {
+    bottom: 1.75em;
+    left: 2em;
+    gap: 0.75em;
+}
 
-            &:active, &.active {
-                height: 26px * $i;
-                background-position-y: -352px * $i;
-            }
-        }
+.crafting-option-count {
+    position: absolute;
+    top: 2.8em;
+    left: 1em;
+}
 
-        #crafting-result-name {
-            right: 24px * $i;
-            bottom: 78px * $i;
-            width: 140px * $i;
-            font-size: 12px * $i;
-        }
+@include sprite.sheet($image: 'crafting', $width: 208, $height: 126, $selectors: #crafting);
 
-        #crafting-result,
-        #crafting-level {
-            bottom: 96px * $i;
-        }
+@include sprite.sheet(
+    $image: 'crafting',
+    $y: 157,
+    $width: 48,
+    $height: 16,
+    $rows: false,
+    $hover: 2,
+    $active: 1,
+    $selectors: #craft-button
+) {
+    box-sizing: border-box;
+    padding-bottom: 0.25em;
 
-        #crafting-result {
-            right: 106px * $i;
-        }
+    &:hover {
+        padding-top: 0.5em;
+    }
 
-        #crafting-level {
-            right: 42px * $i;
-        }
-
-        .crafting-option {
-            width: 42px * $i;
-            height: 44px * $i;
-            margin-bottom: 8px * $i;
-
-            background: url('/img/interface/crafting.png') -96px * $i -256px * $i;
-            background-size: calc(width('crafting.png') * $i);
-
-            &:hover {
-                background-position-x: -140px * $i;
-            }
-
-            &:active, &.active {
-                background-position-x: -184px * $i;
-            }
-
-            &.disabled {
-                background-position-x: -96px * $i !important;
-            }
-        }
-
-        .crafting-option-icon {
-            width: 32px * $i;
-            height: 32px * $i;
-            margin: 5px * $i;
-        }
-
-        .crafting-option-count {
-            font-size: 14px * $i;
-        }
-
-        .crafting-buttons {
-            bottom: 28px * $i;
-            left: 32px * $i;
-            gap: 12px * $i;
-        }
-
-        .craft-slot {
-            width: 42px * $i;
-            height: 44px * $i;
-            background: url('/img/interface/crafting.png') -256px * $i -352px * $i;
-            background-size: calc(width('crafting.png') * $i);
-
-            &:hover {
-                background-position-x: -300px * $i;
-            }
-
-            &:active, &.active {
-                background-position-x: -344px * $i;
-            }
-        }
-
-        .amount-button {
-            width: 32px * $i;
-            height: 32px * $i;
-            background: url('/img/interface/crafting.png');
-            background-size: calc(width('crafting.png') * $i);
-        }
-
-        .amount-one {
-            background-position: -2px -416px * $i;
-        }
-
-        .amount-five {
-            background-position: -34px * $i -416px * $i;
-        }
-
-        .amount-ten {
-            background-position: -68px * $i -416px * $i;
-        }
-
-        .amount-one,
-        .amount-five,
-        .amount-ten {
-            &:hover, &.active {
-                background-position-y: -480px * $i;
-            }
-
-            &:active {
-                background-position-y: -448px * $i;
-            }
-        }
+    &:active {
+        padding-top: 0.75em;
     }
 }
+
+@include sprite.sheet(
+    $image: 'crafting',
+    $x: 48,
+    $y: 128,
+    $width: 21,
+    $height: 22,
+    $gap: 1,
+    $hover: 2,
+    $active: 1,
+    $selectors: '.crafting-option'
+);
+
+@include sprite.sheet(
+    $image: 'crafting',
+    $x: 128,
+    $y: 176,
+    $width: 21,
+    $height: 22,
+    $selectors: '.craft-slot'
+);
+
+@include sprite.sheet(
+    $image: 'crafting',
+    $y: 208,
+    $width: 16,
+    $height: 16,
+    $rows: false,
+    $hover: 2,
+    $active: 1,
+    $selectors: (
+        '.amount-one',
+        '.amount-five',
+        '.amount-ten'
+    )
+);

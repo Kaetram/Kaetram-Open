@@ -3,11 +3,8 @@
 #notify,
 #confirm {
     pointer-events: auto;
-
     position: absolute;
-    top: 45%;
     left: 35%;
-
     display: none;
 }
 
@@ -31,12 +28,9 @@
 
 #message {
     pointer-events: none;
-
     position: absolute;
     top: 48%;
     left: 42%;
-
-    font-family: AdvoCut, sans-serif;
 }
 
 .fade {
@@ -56,144 +50,39 @@
     pointer-events: none;
 
     position: absolute;
-    top: 100%;
+    bottom: -6em;
     left: 50%;
 
-    opacity: 0.8;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
 
-    transition: 0.7s top ease;
+    width: 14em;
+    height: 6em;
+    margin-left: -7em;
+    padding: 1em;
+    padding-top: 1.5em;
+
+    opacity: 0.8;
+    border-image-width: 1em 1em 0 1em;
+
+    transition: 0.7s bottom ease;
 }
 
 #notification-text-title {
     position: relative;
-    top: 25%;
 
-    font-family: AdvoCut, sans-serif;
-    font-size: 20px;
+    font-family: Fibberish;
     color: #45ebfc;
     text-align: center;
-    text-shadow: 2px 2px #0e0a00;
+    text-shadow: 0.125em 0.125em #0e0a00;
 }
 
 #notification-text-description {
     position: relative;
-    top: 25%;
 
-    margin-top: 10px;
-
-    font-family: AdvoCut, sans-serif;
-    font-size: 14px;
-    color: white;
+    font-size: 1em;
+    color: #eee;
     text-align: center;
-    text-shadow: 2px 2px #0e0a00;
-}
-
-@each $size, $i in media.$b-sizes {
-    @media ($size) {
-        #notification {
-            width: 216px * $i;
-            height: 34px * $i;
-            margin-left: -108px * $i;
-
-            background: url('/img/interface/spritesheet.png') no-repeat;
-            background-size: calc(width('spritesheet.png') * $i);
-        }
-
-        #notify,
-        #confirm {
-            background-image: url('/img/interface/containers.png');
-            background-size: calc(width('containers.png') * $i);
-        }
-
-        #question,
-        #exclamation {
-            position: relative;
-            display: block;
-            width: 15px * $i;
-            height: 16px * $i;
-        }
-
-        #question {
-            background: url('/img/interface/containers.png') -349px * $i -47px * $i;
-            background-size: calc(width('containers.png') * $i);
-        }
-
-        #exclamation {
-            background: url('/img/interface/containers.png') -334px * $i -47px * $i;
-            background-size: calc(width('containers.png') * $i);
-        }
-
-        #message {
-            width: 120px * $i;
-            height: 23px * $i;
-        }
-
-        #cancel {
-            background: url('/img/interface/containers.png');
-            background-size: calc(width('containers.png') * $i);
-        }
-    }
-}
-
-@media (--lg) {
-    #notification {
-        margin-left: -344px;
-    }
-}
-
-@media (--md) {
-    #notify,
-    #confirm {
-        width: 333px;
-        height: 94px;
-        background-position: -601px 0;
-    }
-
-    #notification-text-title {
-        font-size: 18px;
-    }
-
-    #notification-text-description {
-        font-size: 12px;
-    }
-
-    #cancel {
-        width: 40px;
-        height: 14px;
-        background-position: -601px -108px;
-
-        &:hover,
-        &:focus {
-            background-position-y: -94px;
-        }
-    }
-
-    #message {
-        width: 240px;
-        height: 46px;
-    }
-}
-
-@media (--sm) {
-    #notify,
-    #confirm {
-        width: 166px;
-        height: 47px;
-        background: url('/img/interface/containers.png') -300px 0;
-    }
-
-    #cancel {
-        top: 55%;
-        left: 75%;
-
-        width: 14px;
-        height: 14px;
-
-        background: url('/img/interface/containers.png') -371px -79px;
-
-        &:hover,
-        &:focus {
-            background-position-x: -65px;
-        }
-    }
+    text-shadow: 0.05em 0.075em #0e0a00;
 }

@@ -3,8 +3,9 @@ import Menu from './menu';
 import Util from '../utils/util';
 import { isLargeScreen } from '../utils/detect';
 
-import { Opcodes } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 
+import type Game from '../game';
 import type Player from '../entity/character/player/player';
 
 type ConfirmCallback = (username: string, remove?: boolean) => void;
@@ -14,6 +15,10 @@ interface FriendsElement extends HTMLLIElement {
 }
 
 export default class Friends extends Menu {
+    public override identifier: number = Modules.Interfaces.Friends;
+
+    private player: Player;
+
     private page: HTMLDivElement = document.querySelector('#friends-page')!;
 
     // List where we store all the friends.
@@ -39,8 +44,10 @@ export default class Friends extends Menu {
     private popupActive = false;
     private removeActive = false;
 
-    public constructor(private player: Player) {
+    public constructor(private game: Game) {
         super('#friends-container', undefined, '#friends-button');
+
+        this.player = game.player;
 
         this.addButton.addEventListener('click', () => this.showPopup());
         this.removeButton.addEventListener('click', () => this.showPopup(true));
@@ -131,6 +138,15 @@ export default class Friends extends Menu {
     }
 
     /**
+     * Shortcut function for sending a message notification to the user.
+     * @param message The message string that we want to display.
+     */
+
+    private notify(message: string): void {
+        this.game.input.chatHandler.add('WORLD', message, '#0dd9e0', true);
+    }
+
+    /**
      * Handles the keydown event for the friends menu.
      * @param key The key that was pressed.
      */
@@ -148,7 +164,10 @@ export default class Friends extends Menu {
         this.popupActive = true;
         this.removeActive = remove;
 
-        this.input.placeholder = remove ? 'Enter name to remove...' : 'Enter name to add...';
+        let text = remove ? 'Friend to remove' : 'Friend to add';
+
+        this.input.title = text;
+        this.input.placeholder = text;
 
         Util.fadeIn(this.popup);
 
@@ -181,16 +200,12 @@ export default class Friends extends Menu {
             world = document.createElement('p');
 
         // Add styling to the friend slot element.
-        element.classList.add('container-slot');
-
-        // Add styling to the friend name element.
-        name.classList.add('stroke', 'left');
-
-        // Add styling to the world element.
-        world.classList.add('stroke', 'right');
+        element.classList.add('slice-list-item');
 
         // If the friend is online, add the online class (makes the username green).
-        if (online) world.classList.add(this.player.serverId === serverId ? 'green' : 'yellow');
+        if (online)
+            world.classList.add(this.player.serverId === serverId ? 'text-green' : 'text-yellow');
+        else world.classList.add('text-red');
 
         // Store the username of the friend in the element.
         element.username = username.toLowerCase();
@@ -252,11 +267,15 @@ export default class Friends extends Menu {
 
         // If the friend is online, add the online class (makes the username green).
         if (online) {
-            world.classList.add(this.player.serverId === serverId ? 'green' : 'yellow');
+            world.classList.add(this.player.serverId === serverId ? 'text-green' : 'text-yellow');
             world.innerHTML = `World ${friend.serverId}`;
+
+            this.notify(`${Util.formatName(username)} has logged in.`);
         } else {
-            world.classList.remove('green', 'yellow');
+            world.classList.remove('text-green', 'text-yellow');
             world.innerHTML = 'Offline';
+
+            this.notify(`${Util.formatName(username)} has logged out.`);
         }
     }
 

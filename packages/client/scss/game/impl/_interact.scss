@@ -1,34 +1,11 @@
 @use '../../abstracts/media';
 
 #interact {
-    cursor: url('/img/hand.png'), auto;
     position: absolute;
+
     display: none;
+    flex-direction: row;
+    justify-content: space-evenly;
 
-    ul {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-}
-
-@each $size, $i in media.$b-sizes {
-    @media ($size) {
-        #interact {
-            width: 64px * $i;
-            height: 30px * $i;
-            background: url('/img/interface/main.png') -144px * $i -464px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-
-            ul {
-                top: 6px * $i;
-                left: 1px * $i;
-
-                li {
-                    margin-right: 3px * $i;
-                }
-            }
-        }
-    }
+    width: 8em;
 }

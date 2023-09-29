@@ -1,0 +1,15 @@
+{
+    "name": "@kaetram/admin",
+    "type": "module",
+    "scripts": {
+        "hub": "astro dev"
+    },
+    "dependencies": {
+        "@astrojs/node": "^6.0.1",
+        "@kaetram/common": "workspace:*",
+        "astro": "^3.2.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.2.2"
+    }
+}

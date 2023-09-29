@@ -23,24 +23,24 @@ import { PacketType } from '@kaetram/common/network/modules';
 import { Opcodes, Modules } from '@kaetram/common/network';
 import { Team } from '@kaetram/common/api/minigame';
 import {
-    Camera,
-    Chat,
-    Guild,
-    Heal,
-    Movement,
-    Music,
-    Network,
-    Notification,
-    Overlay,
-    Player as PlayerPacket,
-    Pointer,
-    PVP,
-    Rank,
-    Respawn,
-    Spawn,
-    Sync,
-    Teleport,
-    Welcome
+    CameraPacket,
+    ChatPacket,
+    GuildPacket,
+    HealPacket,
+    MovementPacket,
+    MusicPacket,
+    NetworkPacket,
+    NotificationPacket,
+    OverlayPacket,
+    PlayerPacket,
+    PointerPacket,
+    PVPPacket,
+    RankPacket,
+    RespawnPacket,
+    SpawnPacket,
+    SyncPacket,
+    TeleportPacket,
+    WelcomePacket
 } from '@kaetram/common/network/impl';
 
 import type Pet from '../pet/pet';
@@ -51,7 +51,6 @@ import type World from '../../../world';
 import type Area from '../../../map/areas/area';
 import type Regions from '../../../map/regions';
 import type Connection from '../../../../network/connection';
-import type Resource from '../../../globals/impl/resource';
 import type Minigame from '../../../minigames/minigame';
 import type Entities from '../../../../controllers/entities';
 import type Packet from '@kaetram/common/network/packet';
@@ -59,8 +58,8 @@ import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 import type { Bonuses, Stats } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
-import type { PlayerData } from '@kaetram/common/types/player';
-import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PlayerData } from '@kaetram/common/network/impl/player';
+import type { PointerData } from '@kaetram/common/network/impl/pointer';
 import type { PlayerInfo } from '@kaetram/common/database/mongodb/creator';
 
 type KillCallback = (character: Character) => void;
@@ -107,10 +106,12 @@ export default class Player extends Character {
     public isGuest = false;
     public canTalk = true;
     public noclip = false;
-    public jailed = false;
     public questsLoaded = false;
+    public invalidateMovement = false;
     public achievementsLoaded = false;
-    public invalidMovement = 0;
+    public displayedManaWarning = false;
+    public bypassAntiCheat = false;
+    public pickingUpPet = false; // Used to doubly ensure the player is not spamming the pickup button.
     public overrideMovementSpeed = -1;
 
     // Player info
@@ -131,9 +132,10 @@ export default class Player extends Character {
     // Warps
     public lastWarp = 0;
 
-    // Ban and mute values
+    // Moderation variables
     public ban = 0; // epoch timestamp
     public mute = 0;
+    public jail = 0;
 
     // Player miscellaneous data
     public mapVersion = -1;
@@ -141,17 +143,20 @@ export default class Player extends Character {
     public movementStart = 0;
     public pingTime = 0;
 
+    public lastCraft = 0;
+    public lastGlobalChat = 0;
     private lastNotify = 0;
     private lastEdible = 0;
-    public lastCraft = 0;
 
     private currentSong: string | undefined;
 
+    // Minigame variables
     public minigameArea: Area | undefined = undefined;
+    public coursingScore = 0; // Probably will have a dictionary for this data when we have more minigames.
+    public coursingTarget = ''; // The player we are chasing.
 
     // Region data
     public regionsLoaded: number[] = [];
-    public resourcesLoaded: { [instance: string]: Modules.ResourceState } = {};
     public lightsLoaded: number[] = [];
 
     // NPC talking
@@ -161,6 +166,7 @@ export default class Player extends Character {
     // Anti-cheat container
     public canAccessContainer = false;
     public activeCraftingInterface = -1; // The skill ID
+    public activeLootBag = ''; // The instance of the loot bag currently open
 
     // Minigame status of the player.
     public minigame?: Opcodes.Minigame;
@@ -182,7 +188,11 @@ export default class Player extends Character {
 
     private cheatScoreCallback?: () => void;
 
-    public constructor(world: World, public database: MongoDB, public connection: Connection) {
+    public constructor(
+        world: World,
+        public database: MongoDB,
+        public connection: Connection
+    ) {
         super(connection.instance, world, '', -1, -1);
 
         this.connection.onClose(this.handleClose.bind(this));
@@ -219,6 +229,9 @@ export default class Player extends Character {
      */
 
     public async load(data: PlayerInfo): Promise<void> {
+        // The player's ban timestamp is in the future, so they are still banned.
+        if (data.ban > Date.now()) return this.connection.reject('banned');
+
         // Store coords for when we're done loading.
         this.x = data.x;
         this.y = data.y;
@@ -226,11 +239,13 @@ export default class Player extends Character {
         this.guild = data.guild;
         this.rank = data.rank || Modules.Ranks.None;
         this.ban = data.ban;
+        this.jail = data.jail;
         this.mute = data.mute;
         this.orientation = data.orientation;
         this.mapVersion = data.mapVersion;
         this.userAgent = data.userAgent;
         this.regionsLoaded = data.regionsLoaded || [];
+        this.lastGlobalChat = data.lastGlobalChat || 0;
 
         this.setPoison(data.poison.type, Date.now() - data.poison.remaining);
         this.setLastWarp(data.lastWarp);
@@ -263,6 +278,9 @@ export default class Player extends Character {
 
         // Spawn the pet if the player has one.
         if (data.pet) this.setPet(data.pet);
+
+        // Apply the status effects from the database.
+        this.status.load(data.effects);
     }
 
     /**
@@ -394,23 +412,27 @@ export default class Player extends Character {
      */
 
     public intro(): void {
-        if (this.ban > Date.now()) return this.connection.reject('ban');
-
+        // Reset hitpoints if they are unitialized.
         if (this.hitPoints.getHitPoints() < 0)
             this.hitPoints.setHitPoints(this.hitPoints.getMaxHitPoints());
 
+        // Reset mana if it is unitialized.
         if (this.mana.getMana() < 0) this.mana.setMana(this.mana.getMaxMana());
+
+        // Update the player's timeout based on their rank.
+        if (this.rank !== Modules.Ranks.None)
+            this.connection.updateTimeout(this.getTimeoutByRank());
 
         // Timeout the player if the ready packet is not received within 10 seconds.
         this.readyTimeout = setTimeout(() => {
             if (!this.ready || this.connection.closed) this.connection.reject('error');
-        }, 5000);
+        }, 7000);
 
         this.setPosition(this.x, this.y);
 
         this.entities.addPlayer(this);
 
-        this.send(new Welcome(this.serialize(false, true, true)));
+        this.send(new WelcomePacket(this.serialize(false, true, true)));
     }
 
     /**
@@ -428,9 +450,9 @@ export default class Player extends Character {
         this.teleport(spawn.x, spawn.y);
 
         // Signal to other players that the player is spawning.
-        this.sendToRegions(new Spawn(this), true);
+        this.sendToRegions(new SpawnPacket(this), true);
 
-        this.send(new Respawn(this));
+        this.send(new RespawnPacket(this));
 
         this.hitPoints.reset();
         this.mana.reset();
@@ -445,18 +467,25 @@ export default class Player extends Character {
      */
 
     public welcome(): void {
-        if (this.isNew()) return this.notify(`Welcome to ${config.name}!`);
+        if (this.isNew()) {
+            this.save();
 
-        this.notify(`Welcome back to ${config.name}!`);
+            return this.notify(`misc:WELCOME;name=${config.name}`);
+        }
+
+        this.notify(`misc:WELCOME_BACK;name=${config.name}`);
 
         let population = this.world.getPopulation(),
             { activeEvent } = this.world.events;
 
         if (population > 1)
-            this.notify(`There are currently ${population} players online.`, '', '', true);
+            this.notify(`misc:PEOPLE_ONLINE;population=${population}`, '', '', true);
 
         if (activeEvent)
             this.notify(`The ${activeEvent} event is currently active!`, 'crimsonred', '', true);
+
+        if (this.isJailed())
+            this.notify(`misc:JAILED;duration=${this.getJailDuration()}`, 'crimsonred', '', true);
     }
 
     /**
@@ -487,11 +516,13 @@ export default class Player extends Character {
 
             case 'hitpoints':
             case 'mana': {
+                if (this.isCheater()) this.notify(`Healing is disabled for cheaters, sorry.`);
+
                 if (type === 'hitpoints') this.hitPoints.increment(amount);
                 else if (type === 'mana') this.mana.increment(amount);
 
                 this.sendToRegions(
-                    new Heal({
+                    new HealPacket({
                         instance: this.instance,
                         type,
                         amount
@@ -519,6 +550,22 @@ export default class Player extends Character {
         let loitering = this.skills.get(Modules.Skills.Loitering);
 
         loitering.addExperience(loitering.level * 5);
+    }
+
+    /**
+     * When a character is on the same tile as another character and they are in a combat,
+     * we use this function to move them near the other character.
+     */
+
+    public override findAdjacentTile(): void {
+        if (!this.world.map.isColliding(this.x + 1, this.y))
+            this.setPosition(this.x + 1, this.y, true);
+        else if (!this.world.map.isColliding(this.x - 1, this.y))
+            this.setPosition(this.x - 1, this.y, true);
+        else if (!this.world.map.isColliding(this.x, this.y + 1))
+            this.setPosition(this.x, this.y + 1, true);
+        else if (!this.world.map.isColliding(this.x, this.y - 1))
+            this.setPosition(this.x, this.y - 1, true);
     }
 
     /**
@@ -561,21 +608,26 @@ export default class Player extends Character {
      * @param withAnimation Whether or not to display a special effect when teleporting.
      */
 
-    public override teleport(x: number, y: number, withAnimation = false, before = false): void {
+    public override teleport(
+        x: number,
+        y: number,
+        withAnimation = false,
+        before = false,
+        bypass = false
+    ): void {
         if (this.dead) return;
+        if (bypass) this.bypassAntiCheat = true;
 
         if (before) this.sendTeleportPacket(x, y, withAnimation);
 
         this.setPosition(x, y, false);
         this.world.cleanCombat(this);
 
-        // Stop combat and skill activity when teleporting
-        this.combat.stop();
-        this.skills.stop();
-
         if (before) return;
 
         this.sendTeleportPacket(x, y, withAnimation);
+
+        this.bypassAntiCheat = false;
     }
 
     /**
@@ -587,7 +639,7 @@ export default class Player extends Character {
 
     private sendTeleportPacket(x: number, y: number, withAnimation = false): void {
         this.sendToRegions(
-            new Teleport({
+            new TeleportPacket({
                 instance: this.instance,
                 x,
                 y,
@@ -603,12 +655,27 @@ export default class Player extends Character {
      */
 
     public incrementCheatScore(reason = '', amount = 1): void {
+        if (this.bypassAntiCheat) return;
         if (this.combat.started) return;
+
         if (reason) log.debug(`[${this.username}] ${reason}`);
 
         this.cheatScore += amount;
 
         this.cheatScoreCallback?.();
+    }
+
+    /**
+     * Updates the coursing score of the player and handles edge cases
+     * for when we are setting negative score values for the parameter.
+     * @param score The score value we wish to increment by.
+     */
+
+    public incrementCoursingScore(score: number): void {
+        this.coursingScore += score;
+
+        // If the score is negative, we set it to 0.
+        if (this.coursingScore < 0) this.coursingScore = 0;
     }
 
     /**
@@ -648,20 +715,19 @@ export default class Player extends Character {
      * of factors to avoid false-positives.
      * @param x The grid x coordinate we are checking.
      * @param y The grid y coordinate we are checking.
-     * @param timestamp Timestamp at which the packet was originally sent.
+     * @param latency The latency of the packet.
      */
 
-    private verifyMovement(x: number, y: number, timestamp: number): boolean {
+    private verifyMovement(x: number, y: number, latency: number): boolean {
         let now = Date.now(),
-            stepDiff = now - this.lastStep + 7, // +7ms for margin of error.
-            regionDiff = now - this.lastRegionChange,
-            timestampDiff = now - timestamp;
+            stepDiff = now - this.lastStep - latency - 10, // subtract latency
+            regionDiff = now - this.lastRegionChange;
 
         // High latency may cause packets to be sent in a delayed manner, causing two to be sent/received at once.
-        if (timestampDiff > 35 && stepDiff < 35) return false;
+        if (latency > 35 && stepDiff < 35) return false;
 
         // Firstly ensure that the last step was behaving normally.
-        if (stepDiff >= this.getMovementSpeed()) return false;
+        if (stepDiff > this.getMovementSpeed()) return false;
 
         // A region change may trigger a movement anomaly, so we ignore movement for 1.5 seconds of a region change.
         if (regionDiff < 1500) return false;
@@ -678,7 +744,7 @@ export default class Player extends Character {
      * @param instance The instance of the target we are attacking.
      */
 
-    public handleTargetAttack(instance: string): void {
+    public handleTargetAttack(instance: string, x?: number, y?: number): void {
         // Prevent targetting yourself.
         if (instance === this.instance) return;
 
@@ -689,6 +755,8 @@ export default class Player extends Character {
 
         // Ensure that the player can actually attack the target.
         if (!this.canAttack(target)) return;
+
+        if (target.isMob() && !target.combat.started && x && y) target.setPosition(x, y);
 
         // Clear the cheat score
         this.cheatScore = 0;
@@ -721,6 +789,7 @@ export default class Player extends Character {
 
                 if (!item) return;
 
+                // Have the plugin handle the action if it exists.
                 if (item.interactable && item.plugin?.onUse(this)) return;
 
                 // Checks if the player can eat and uses the item's plugin to handle the action.
@@ -734,16 +803,15 @@ export default class Player extends Character {
                         this.inventory.add(new Item('bowlmedium', -1, -1, false, 1));
                 }
 
-                if (item.isEquippable() && item.canEquip(this)) {
-                    this.inventory.remove(fromIndex, item.count);
-                    this.equipment.equip(item);
-                }
+                // The item is equippable and the player has the requirements to equip it.
+                if (item.isEquippable() && item.canEquip(this))
+                    this.equipment.equip(item, fromIndex);
 
                 break;
             }
 
             case Modules.ContainerType.Bank: {
-                if (!this.canAccessContainer) return this.notify(`You cannot do that right now.`);
+                if (!this.canAccessContainer) return this.notify(`misc:CANNOT_DO_THAT`);
 
                 let from =
                         fromContainer === Modules.ContainerType.Bank ? this.bank : this.inventory,
@@ -766,12 +834,12 @@ export default class Player extends Character {
      */
 
     public handleContainerRemove(type: Modules.ContainerType, index: number, count: number): void {
-        if (count < 1 || isNaN(count)) return this.notify('You have entered an invalid amount.');
+        if (count < 1 || isNaN(count)) return this.notify('misc:INVALID_AMOUNT');
 
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
         if (type === Modules.ContainerType.Inventory && this.map.isDoor(this.x, this.y))
-            return this.notify('You cannot drop items while standing in a door.');
+            return this.notify('misc:CANNOT_DROP_ITEM_DOOR');
 
         container.remove(index, count, true);
     }
@@ -793,6 +861,9 @@ export default class Player extends Character {
                 `[${this.username}] Invalid container swap [${fromIndex}, ${toIndex}}]`
             );
 
+        // Ignore same index swaps.
+        if (fromIndex === toIndex) return log.warning(`[${this.username}] Same index swap.`);
+
         let container = type === Modules.ContainerType.Inventory ? this.inventory : this.bank;
 
         container.swap(fromIndex, container, toIndex);
@@ -808,7 +879,24 @@ export default class Player extends Character {
     public handleObjectInteraction(instance: string): void {
         this.cheatScore = 0;
 
-        // Attempt to first find a sign with the given instance.
+        let entity = this.entities.get(instance);
+
+        // Ensure that the entity is close enough to interact with.
+        if (entity?.getDistance(this) > 2) return;
+
+        // If the entity is a tree we use the lumberjacking skill to handle the interaction.
+        if (entity?.isTree()) this.skills.getLumberjacking().cut(this, entity);
+
+        // If the entity is a rock we use the mining skill to handle the interaction.
+        if (entity?.isRock()) this.skills.getMining().mine(this, entity);
+
+        // If the entity is a fishing spot we use the fishing skill to handle the interaction.
+        if (entity?.isFishSpot()) this.skills.getFishing().catch(this, entity);
+
+        // If the entity is a forageable plant we use the foraging skill to handle the interaction.
+        if (entity?.isForaging()) this.skills.getForaging().harvest(this, entity);
+
+        // Attempt to find a sign first.
         let sign = this.world.globals.getSigns().get(instance);
 
         if (sign) return sign.talk(this);
@@ -821,33 +909,14 @@ export default class Player extends Character {
         // Ensure that the player is close enough to the object.
         if (diffX > 2 || diffY > 2) return;
 
-        let index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
-            tree = this.world.globals.getTrees().findResource(index);
-
-        if (tree) return this.skills.getLumberjacking().cut(this, tree);
-
-        // If we don't find a tree then we try finding a rock.
-        let rock = this.world.globals.getRocks().findResource(index);
-
-        if (rock) return this.skills.getMining().mine(this, rock);
-
-        // If we don't find a rock then we try finding a fishing spot.
-        let fishingSpot = this.world.globals.getFishingSpots().findResource(index);
-
-        if (fishingSpot) return this.skills.getFishing().catch(this, fishingSpot);
-
-        // If we don't find a fishing spot, look for foragable plants.
-        let forage = this.world.globals.getForaging().findResource(index);
-
-        if (forage) return this.skills.getForaging().harvest(this, forage);
-
         /**
          * Here we use the cursor (I know, it's a bit of a hack) to handle
          * interactions with objects in the world. Most of these
          * are used by crafting stations.
          */
 
-        let cursor = this.map.getCursorFromIndex(index);
+        let index = this.map.coordToIndex(parseInt(coords[0]), parseInt(coords[1])),
+            cursor = this.map.getCursor(index);
 
         if (!cursor) return;
 
@@ -866,7 +935,15 @@ export default class Player extends Character {
             }
 
             case 'crafting': {
+                if (!this.canUseCrafting()) return this.notify('misc:NO_KNOWLEDGE_USE');
+
                 return this.world.crafting.open(this, Modules.Skills.Crafting);
+            }
+
+            case 'alchemy': {
+                if (!this.canUseAlchemy()) return this.notify('misc:NO_KNOWLEDGE_USE');
+
+                return this.world.crafting.open(this, Modules.Skills.Alchemy);
             }
         }
     }
@@ -1028,32 +1105,37 @@ export default class Player extends Character {
      * @param x The player's x coordinate as reported by the client.
      * @param y The player's y coordinate as reported by the client.
      * @param target If the player is requesting movement towards an entity.
-     * @param following Whether or not the player is actively following an entity.
      */
 
-    public handleMovementRequest(x: number, y: number, target: string, following: boolean): void {
+    public handleMovementRequest(x: number, y: number, target: string): void {
         // Immediately clear the target to prevent combat from sticking to previous target.
         if (target !== this.target?.instance) this.target = undefined;
 
         // Stop the movement if the player is stunned.
-        if (this.isStunned()) return this.stopMovement();
+        if (this.isStunned() || this.teleporting) return this.stopMovement();
 
         // If the player clicked anywhere outside the bank then the bank is no longer opened.
         this.canAccessContainer = false;
+        this.activeLootBag = '';
         this.activeCraftingInterface = -1;
 
-        if (this.map.isDoor(x, y) || (target && following) || this.inCombat()) return;
+        if (this.map.isDoor(x, y) || this.inCombat()) return;
 
         let diffX = Math.abs(this.x - x),
             diffY = Math.abs(this.y - y);
 
-        if (diffX > 1 || diffY > 1) {
-            this.notify(`No-clip detected at ${this.x}(${x}), ${this.y}(${y}).`);
+        // No-clip detection if the difference is greater than 2 tiles.
+        if (diffX > 2 || diffY > 2) {
+            this.notify(`No-clip detected at ${this.x}(${x}), ${this.y}(${y}). Please relog.`);
 
-            this.invalidMovement++;
             this.cheatScore++;
 
             log.bug(`${this.username} has no-clipped from ${this.x}(${x}), ${this.y}(${y}).`);
+
+            this.teleport(this.oldX, this.oldY, false);
+
+            this.invalidateMovement = true;
+            return;
         }
     }
 
@@ -1068,6 +1150,13 @@ export default class Player extends Character {
      */
 
     public handleMovementStarted(x: number, y: number, speed: number, target: string): void {
+        // Stop the movement if the client is reporting a different position.
+        let diffX = Math.abs(this.x - x),
+            diffY = Math.abs(this.y - y);
+
+        // Refuse any movement if the starting point mismatches our player's position by more than 2 tiles.
+        if (diffX > 2 || diffY > 2) return;
+
         this.movementStart = Date.now();
 
         // Invalid movement speed reported by the client.
@@ -1087,12 +1176,18 @@ export default class Player extends Character {
      * A movement step occurs every time a player traverses to the next tile.
      * @param x The current x coordinate of the player as reported by the client.
      * @param y The current y coordinate of the player as reported by the client.
+     * @param nextX The next x coordinate of the player as reported by the client.
+     * @param nextY The next y coordinate of the player as reported by the client.
      * @param timestamp The time when the packet was sent (UNIX timestamp).
      */
 
-    public handleMovementStep(x: number, y: number, timestamp = Date.now()): void {
-        if (this.isInvalidMovement()) return;
-
+    public handleMovementStep(
+        x: number,
+        y: number,
+        nextX: number,
+        nextY: number,
+        timestamp = Date.now()
+    ): void {
         // Increment cheat score if the player is moving while stunned.
         if (this.isStunned()) {
             this.incrementCheatScore(`[${this.username}] Movement while stunned.`);
@@ -1100,12 +1195,16 @@ export default class Player extends Character {
             this.stopMovement();
         }
 
-        if (this.verifyMovement(x, y, timestamp))
-            this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - this.lastStep}`);
+        let latency = Date.now() - timestamp;
+
+        // Ensure the movement is valid, negative latency is impossible lmfao.
+        if (this.verifyMovement(x, y, latency) || latency < 0)
+            this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - timestamp}`);
 
         this.setPosition(x, y);
+        this.resetTalk();
 
-        this.lastStep = Date.now();
+        this.lastStep = Date.now() - latency;
     }
 
     /**
@@ -1117,37 +1216,50 @@ export default class Player extends Character {
      */
 
     public handleMovementStop(x: number, y: number, target: string, orientation: number): void {
-        let entity = this.entities.get(target);
+        // Ignore movements that don't follow the packet order.
+        if (!this.moving)
+            return this.incrementCheatScore('Did not receive movement started packet.');
 
-        // No start movement received.
-        if (!this.moving) this.incrementCheatScore('Did not receive movement started packet.');
+        let entity = this.entities.get(target);
 
         // Update orientation
         this.setOrientation(orientation);
 
+        // Player has stopped on top of a loot bag.
+        if (entity?.isLootBag()) {
+            // Prevent access to the loot bag by other players.
+            if (!entity.isOwner(this.username))
+                return this.notify(`This lootbag belongs to ${Utils.formatName(entity.owner)}.`);
+
+            entity.open(this);
+        }
+
         // Player has stopped on top of an item.
         if (entity?.isItem()) {
+            // Prevent cheaters from picking up item
+            if (this.isCheater()) return;
+
             // Prevent picking up dropped items that belong to other players.
             if (!entity.isOwner(this.username))
                 return this.notify(
-                    `This item can only be picked up by ${Utils.formatName(entity.owner)}.`
+                    `misc:CANNOT_PICK_UP_ITEM;username=${Utils.formatName(entity.owner)}`
                 );
+
+            // If the item's owner is existent and the player is the owner we add it to the statistics.
+            if (entity.owner === this.username) this.statistics.addDrop(entity.key, entity.count);
 
             this.inventory.add(entity);
         }
 
         // Update the player's position.
-        if (!this.isInvalidMovement()) this.setPosition(x, y);
+        this.setPosition(x, y);
 
         // Handle doors when the player stops on one.
         if (this.map.isDoor(x, y)) {
-            if (entity?.isMob()) return;
-
             let door = this.map.getDoor(x, y);
 
             this.doorCallback?.(door);
         }
-
         // Movement has come to an end.
         this.moving = false;
         this.lastMovement = Date.now();
@@ -1163,13 +1275,13 @@ export default class Player extends Character {
         // Skip if pvp state is the same or it's permanent
         if (this.pvp === pvp) return;
 
-        if (this.pvp && !pvp) this.notify('You are no longer in a PvP zone!');
-        else this.notify('You have entered a PvP zone!');
+        if (this.pvp && !pvp) this.notify('misc:NOT_IN_PVP_ZONE');
+        else this.notify('misc:IN_PVP_ZONE');
 
         this.pvp = pvp;
 
         this.send(
-            new PVP({
+            new PVPPacket({
                 state: this.pvp
             })
         );
@@ -1196,16 +1308,21 @@ export default class Player extends Character {
         if (!overlay) {
             tempOverlay?.removePlayer(this);
 
-            return this.send(new Overlay(Opcodes.Overlay.Remove));
+            return this.send(new OverlayPacket(Opcodes.Overlay.Remove));
         }
 
         // New overlay is being loaded, remove lights.
         this.lightsLoaded = [];
 
+        let colour =
+            overlay.rgb.length > 1
+                ? `rgba(${overlay.rgb[0]}, ${overlay.rgb[1]}, ${overlay.rgb[2]}, ${overlay.darkness})`
+                : `rgba(0, 0, 0, ${overlay.darkness})`;
+
         this.send(
-            new Overlay(Opcodes.Overlay.Set, {
+            new OverlayPacket(Opcodes.Overlay.Set, {
                 image: overlay.fog || 'blank',
-                colour: `rgba(0, 0, 0, ${overlay.darkness})`
+                colour
             })
         );
 
@@ -1225,21 +1342,21 @@ export default class Player extends Character {
         if (camera)
             switch (camera.type) {
                 case 'lockX': {
-                    this.send(new Camera(Opcodes.Camera.LockX));
+                    this.send(new CameraPacket(Opcodes.Camera.LockX));
                     break;
                 }
 
                 case 'lockY': {
-                    this.send(new Camera(Opcodes.Camera.LockY));
+                    this.send(new CameraPacket(Opcodes.Camera.LockY));
                     break;
                 }
 
                 case 'player': {
-                    this.send(new Camera(Opcodes.Camera.Player));
+                    this.send(new CameraPacket(Opcodes.Camera.Player));
                     break;
                 }
             }
-        else this.send(new Camera(Opcodes.Camera.FreeFlow));
+        else this.send(new CameraPacket(Opcodes.Camera.FreeFlow));
     }
 
     /**
@@ -1254,7 +1371,7 @@ export default class Player extends Character {
 
         this.currentSong = song;
 
-        this.send(new Music(song));
+        this.send(new MusicPacket(song));
     }
 
     /**
@@ -1268,10 +1385,8 @@ export default class Player extends Character {
 
         let entering = info !== undefined && this.minigameArea === undefined;
 
-        if (entering) {
-            info?.enterCallback?.(this);
-            this.notify('Welcome to the TeamWar lobby!');
-        } else this.minigameArea?.exitCallback?.(this);
+        if (entering) info?.enterCallback?.(this);
+        else this.minigameArea?.exitCallback?.(this);
 
         this.minigameArea = info;
     }
@@ -1305,6 +1420,9 @@ export default class Player extends Character {
         )
             speed = Math.floor(speed * 1.25);
 
+        // Halve speed if the player is cheating.
+        if (this.isCheater()) speed = Math.floor(speed * 2);
+
         // Update the movement speed if there is a change from default.
         if (this.movementSpeed !== speed) this.setMovementSpeed(speed);
 
@@ -1325,7 +1443,7 @@ export default class Player extends Character {
 
         // Sync to other players in the region.
         this.sendToRegions(
-            new Movement(Opcodes.Movement.Speed, {
+            new MovementPacket(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed
             })
@@ -1350,7 +1468,7 @@ export default class Player extends Character {
         else this.status.remove(Modules.Effects.HotSauce);
 
         this.sendToRegions(
-            new Movement(Opcodes.Movement.Speed, {
+            new MovementPacket(Opcodes.Movement.Speed, {
                 instance: this.instance,
                 movementSpeed: this.getMovementSpeed()
             })
@@ -1384,14 +1502,12 @@ export default class Player extends Character {
             Modules.Effects.SnowPotion,
             Modules.Constants.SNOW_POTION_DURATION,
             () => {
-                this.notify('Your immunity to freezing effects has worn off.');
+                this.notify('misc:FREEZE_IMMUNITY_WORN_OFF');
             }
         );
 
         this.notify(
-            `You are now immune to freezing effects for ${
-                Modules.Constants.SNOW_POTION_DURATION / 1000
-            } seconds.`
+            `misc:FREEZE_IMMUNITY;duration=${Modules.Constants.SNOW_POTION_DURATION / 1000}`
         );
     }
 
@@ -1408,15 +1524,13 @@ export default class Player extends Character {
             Modules.Effects.FirePotion,
             Modules.Constants.FIRE_POTION_DURATION,
             () => {
-                this.notify('Your immunity to fire effects has worn off.');
+                this.notify('misc:FIRE_IMMUNITY_WORN_OFF');
             }
         );
 
-        this.notify(
-            `You are now immune to fire effects for ${
-                Modules.Constants.FIRE_POTION_DURATION / 1000
-            } seconds.`
-        );
+        let duration = (Modules.Constants.FIRE_POTION_DURATION / 1000).toString();
+
+        this.notify(`misc:FIRE_IMMUNITY;duration=${duration}`);
     }
 
     /**
@@ -1427,7 +1541,7 @@ export default class Player extends Character {
     public setRank(rank: Modules.Ranks = Modules.Ranks.None): void {
         this.rank = rank;
 
-        this.send(new Rank(rank));
+        this.send(new RankPacket(rank));
     }
 
     /**
@@ -1444,7 +1558,7 @@ export default class Player extends Character {
      */
 
     public override setPosition(x: number, y: number, forced = false, skip = false): void {
-        if (this.dead || this.verifyCollision(x, y)) return;
+        if (this.dead || this.verifyCollision(x, y) || this.invalidateMovement) return;
 
         // Sets the player's new position.
         super.setPosition(x, y);
@@ -1453,10 +1567,11 @@ export default class Player extends Character {
 
         // Relay a packet to the nearby regions without including the player.
         this.sendToRegions(
-            new Movement(Opcodes.Movement.Move, {
+            new MovementPacket(Opcodes.Movement.Move, {
                 instance: this.instance,
                 x,
                 y,
+                target: this.target?.instance,
                 forced
             }),
             true
@@ -1502,7 +1617,7 @@ export default class Player extends Character {
      */
 
     public setPet(key: string): void {
-        if (this.hasPet()) return this.notify(`You already have a pet!`);
+        if (this.hasPet()) return this.notify(`misc:ALREADY_HAVE_PET`);
 
         // Create a new pet instance based on the key.
         this.pet = this.entities.spawnPet(this, key);
@@ -1515,13 +1630,13 @@ export default class Player extends Character {
      * Removes the player's pet and adds it to their inventory if they have space.
      */
 
-    public removePet(): void {
-        if (!this.hasPet()) return;
+    public removePet(): boolean {
+        if (!this.hasPet()) return false;
 
         // Ensure the player has enough space in their inventory.
         if (!this.inventory.hasSpace()) {
-            this.notify(`You do not have enough inventory space to store your pet.`);
-            return;
+            this.notify('misc:NO_SPACE_PET');
+            return false;
         }
 
         // Create a pet item and add it to the player's inventory.
@@ -1532,6 +1647,8 @@ export default class Player extends Character {
 
         // Remove the pet from the player.
         this.pet = undefined;
+
+        return true;
     }
 
     /**
@@ -1602,10 +1719,12 @@ export default class Player extends Character {
      */
 
     public getSpawn(): Position {
+        if (this.isJailed()) return Utils.getPositionFromString(Modules.Constants.JAIL_SPAWN_POINT);
+
         if (!this.quests.isTutorialFinished())
             return Utils.getPositionFromString(Modules.Constants.TUTORIAL_SPAWN_POINT);
 
-        if (this.inMinigame()) return this.getMinigame()!.getRespawnPoint(this.team);
+        if (this.inMinigame()) return this.getMinigame()!.getSpawnPoint(this.team);
 
         return Utils.getPositionFromString(Modules.Constants.SPAWN_POINT);
     }
@@ -1632,21 +1751,114 @@ export default class Player extends Character {
     }
 
     /**
+     * This is the timeout duration in milliseconds for the player's connection
+     * depending on their rank. Patrons and administrators have a longer timeout
+     * duration than regular players.
+     */
+
+    public getTimeoutByRank(): number {
+        switch (this.rank) {
+            case Modules.Ranks.TierOne: {
+                return 15 * 60_000; // 15 minutes
+            }
+
+            case Modules.Ranks.TierTwo: {
+                return 20 * 60_000; // 20 minutes
+            }
+
+            case Modules.Ranks.TierThree: {
+                return 25 * 60_000; // 25 minutes
+            }
+
+            case Modules.Ranks.TierFour: {
+                return 30 * 60_000; // 30 minutes
+            }
+
+            case Modules.Ranks.TierFive: {
+                return 35 * 60_000; // 35 minutes
+            }
+
+            case Modules.Ranks.HollowAdmin:
+            case Modules.Ranks.Moderator:
+            case Modules.Ranks.TierSix: {
+                return 40 * 60_000; // 40 minutes
+            }
+
+            case Modules.Ranks.Admin:
+            case Modules.Ranks.TierSeven: {
+                return 45 * 60_000; // 45 minutes
+            }
+
+            default: {
+                return 10 * 60_000; // 10 minutes
+            }
+        }
+    }
+
+    /**
+     * Calculates the global chat cooldown based on the player's rank.
+     */
+
+    public getGlobalChatCooldown(): number {
+        switch (this.rank) {
+            case Modules.Ranks.TierOne: {
+                return 55 * 60_000;
+            }
+
+            case Modules.Ranks.TierTwo: {
+                return 50 * 60_000;
+            }
+
+            case Modules.Ranks.TierThree: {
+                return 45 * 60_000;
+            }
+
+            case Modules.Ranks.TierFour: {
+                return 40 * 60_000;
+            }
+
+            case Modules.Ranks.TierFive: {
+                return 35 * 60_000;
+            }
+
+            case Modules.Ranks.TierSix: {
+                return 30 * 60_000;
+            }
+
+            case Modules.Ranks.TierSeven: {
+                return 15 * 60_000;
+            }
+
+            case Modules.Ranks.Moderator:
+            case Modules.Ranks.HollowAdmin:
+            case Modules.Ranks.Admin: {
+                return 5000;
+            }
+
+            default: {
+                return 60 * 60_000;
+            }
+        }
+    }
+
+    /**
+     * Converts the global chat cooldown duration into minutes.
+     * @returns An integer representing the minutes left.
+     */
+
+    public getGlobalChatDuration(): number {
+        let difference = this.getGlobalChatCooldown() - (Date.now() - this.lastGlobalChat);
+
+        return Math.ceil(difference / 60_000);
+    }
+
+    /**
      * Adds a region id to the list of loaded regions.
      * @param region The region id we are adding.
      */
 
     public loadRegion(region: number): void {
         this.regionsLoaded.push(region);
-    }
-
-    /**
-     * Adds a resource to our loaded resource instances.
-     * @param resource The resource we are adding.
-     */
-
-    public loadResource(resource: Resource): void {
-        this.resourcesLoaded[resource.instance] = resource.state;
     }
 
     /**
@@ -1659,17 +1871,9 @@ export default class Player extends Character {
     }
 
     /**
-     * Checks if the resource is within our loaded resources and that the state matches.
-     * @param resource The resource we are chceking.
-     * @returns If the resource is loaded and the state matches.
+     * @param light The light that we are checking if it exists in the list of loaded lights.
+     * @returns Whether or not the light has been added to the list of loaded lights.
      */
-
-    public hasLoadedResource(resource: Resource): boolean {
-        return (
-            resource.instance in this.resourcesLoaded &&
-            this.resourcesLoaded[resource.instance] === resource.state
-        );
-    }
 
     public hasLoadedLight(light: number): boolean {
         return this.lightsLoaded.includes(light);
@@ -1682,7 +1886,7 @@ export default class Player extends Character {
     public ping(): void {
         this.pingTime = Date.now();
 
-        this.send(new Network(Opcodes.Network.Ping));
+        this.send(new NetworkPacket(Opcodes.Network.Ping));
     }
 
     /**
@@ -1693,6 +1897,18 @@ export default class Player extends Character {
         if (!this.inFreezingArea()) return;
 
         this.overlayArea!.removePlayer(this);
+    }
+
+    /**
+     * Clears a minigame instance from the player and erases
+     * all the minigame data for all minigames.
+     */
+
+    public clearMinigame(): void {
+        this.minigame = undefined;
+
+        this.coursingScore = 0;
+        this.coursingTarget = '';
     }
 
     /**
@@ -1716,11 +1932,28 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player is jailed.
+     */
+
+    public isJailed(): boolean {
+        return this.jail - Date.now() > 0;
+    }
+
+    /**
      * Checks if the player is currently in  a minigame.
      */
 
     public inMinigame(): boolean {
         return this.minigame !== undefined;
+    }
+
+    /**
+     * Whether or not the player is in a team war minigame.
+     * @returns The player is in a team war minigame.
+     */
+
+    public inTeamWar(): boolean {
+        return this.minigame === Opcodes.Minigame.TeamWar;
     }
 
     /**
@@ -1775,18 +2008,10 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns Whether or not the player's invalid movement count is greater than the threshold.
-     */
-
-    private isInvalidMovement(): boolean {
-        return this.invalidMovement >= Modules.Constants.INVALID_MOVEMENT_THRESHOLD;
-    }
-
-    /**
      * @returns Whether or not the player is using archery-based weapons.
      */
 
-    public isArcher(): boolean {
+    public override isArcher(): boolean {
         return this.equipment.getWeapon().isArcher();
     }
 
@@ -1850,6 +2075,30 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns Whether or not the player can use the global chat given his last global chat time.
+     */
+
+    public canGlobalChat(): boolean {
+        return Date.now() - this.lastGlobalChat > this.getGlobalChatCooldown();
+    }
+
+    /**
+     * @returns Whether or not the player has started the necessary quest to use crafting benches.
+     */
+
+    public canUseCrafting(): boolean {
+        return this.quests.get(Modules.Constants.CRAFTING_QUEST_KEY).isStarted();
+    }
+
+    /**
+     * @returns Whether or not the player has started the necessary quest to use alchemy.
+     */
+
+    public canUseAlchemy(): boolean {
+        return this.quests.get(Modules.Constants.ALCHEMY_QUEST_KEY).isStarted();
+    }
+
+    /**
      * Miscellaneous
      */
 
@@ -1900,13 +2149,13 @@ export default class Player extends Character {
     public sendPrivateMessage(playerName: string, message: string): void {
         if (config.hubEnabled) {
             this.world.client.send(
-                new Chat({ source: this.username, message, target: playerName })
+                new ChatPacket({ source: this.username, message, target: playerName })
             );
             return;
         }
 
         if (!this.world.isOnline(playerName))
-            return this.notify(`@aquamarine@${playerName}@crimson@ is not online.`, 'crimson');
+            return this.notify(`misc:NOT_ONLINE;username=${playerName}`, 'crimson');
 
         this.sendMessage(playerName, message);
     }
@@ -1943,7 +2192,7 @@ export default class Player extends Character {
         this.skills.sync();
 
         // Sync the player information to the surrounding regions.
-        this.sendToRegions(new Sync(this.serialize(true)), true);
+        this.sendToRegions(new SyncPacket(this.serialize(true)), true);
     }
 
     /**
@@ -1956,7 +2205,25 @@ export default class Player extends Character {
      */
 
     public chat(message: string, global = false, withBubble = true, colour = ''): void {
-        if (!this.canTalk) return this.notify('You cannot talk at this time.', 'crimson');
+        if (!this.canTalk) return this.notify('misc:CANNOT_TALK', 'crimson');
+
+        // Handle global chat
+        if (global) {
+            if (!this.quests.isTutorialFinished())
+                return this.notify('misc:CANNOT_GLOBAL_CHAT_TUTORIAL', 'crimson');
+
+            // Jailed players cannot global chat.
+            if (this.isJailed()) return this.notify('misc:CANNOT_GLOBAL_CHAT_JAIL', 'crimson');
+
+            // Limit the global chat to the cooldown based on ranks.
+            if (!this.canGlobalChat())
+                return this.notify(
+                    `misc:CANNOT_GLOBAL_CHAT_MINUTES;duration=${this.getGlobalChatDuration()}`,
+                    'crimson'
+                );
+
+            this.lastGlobalChat = Date.now();
+        }
 
         log.debug(`[${this.username}] ${message}`);
 
@@ -1973,11 +2240,11 @@ export default class Player extends Character {
         this.world.discord.sendMessage(source, message, undefined, true);
 
         // Relay the hub so that it can handle the discord relay.
-        this.world.client.send(new Chat({ source, message }));
+        this.world.client.send(new ChatPacket({ source, message }));
 
         if (global) return this.world.globalMessage(name, message, colour);
 
-        let packet = new Chat({
+        let packet = new ChatPacket({
             instance: this.instance,
             message,
             withBubble,
@@ -1995,19 +2262,18 @@ export default class Player extends Character {
      * @param title The header text for the popup.
      * @param message The text contents of the popup.
      * @param colour The colour of the popup's text.
+     * @param soundEffect The sound effect to play when the popup is displayed.
      */
 
-    public popup(title: string, message: string, colour = '#00000'): void {
+    public popup(title: string, message: string, colour = '#00000', soundEffect = ''): void {
         if (!title) return;
 
-        title = Utils.parseMessage(title);
-        message = Utils.parseMessage(message);
-
         this.send(
-            new Notification(Opcodes.Notification.Popup, {
+            new NotificationPacket(Opcodes.Notification.Popup, {
                 title,
                 message,
-                colour
+                colour,
+                soundEffect
             })
         );
     }
@@ -2025,10 +2291,8 @@ export default class Player extends Character {
         // Prevent notify spams
         if (!bypass && Date.now() - this.lastNotify < 250) return;
 
-        message = Utils.parseMessage(message);
-
         this.send(
-            new Notification(Opcodes.Notification.Text, {
+            new NotificationPacket(Opcodes.Notification.Text, {
                 message,
                 colour,
                 source
@@ -2044,26 +2308,25 @@ export default class Player extends Character {
      */
 
     public guildNotify(message: string): void {
-        this.send(new Guild(Opcodes.Guild.Error, { message }));
+        this.send(new GuildPacket(Opcodes.Guild.Error, { message }));
     }
 
     /**
      * Sends a pointer data packet to the player. Removes all
      * existing pointers first to prevent multiple pointers.
-     * @param opcode The pointer opcode we are sending.
-     * @param info Information for the pointer such as position.
+     * @param info Generic pointer object that contains the type and
+     * associated information with the pointer.
+     * @param remove Whether or not we should remove all existing pointers.
      */
 
-    public pointer(opcode: Opcodes.Pointer, info: PointerData): void {
+    public pointer(info: PointerData, remove = true): void {
         // Remove all existing pointers first.
-        this.send(new Pointer(Opcodes.Pointer.Remove));
+        if (remove) this.send(new PointerPacket(Opcodes.Pointer.Remove));
 
         // Invalid pointer data received.
-        if (!(opcode in Opcodes.Pointer)) return;
+        if (!(info.type in Opcodes.Pointer)) return;
 
-        info.instance = this.instance;
-
-        this.send(new Pointer(opcode, info));
+        this.send(new PointerPacket(info.type, info));
     }
 
     /**
@@ -2095,7 +2358,6 @@ export default class Player extends Character {
         let data = super.serialize() as PlayerData;
 
         // Sprite key is the armour key.
-        data.key = this.equipment.getSkin().key || 'base';
         data.name = Utils.formatName(this.username);
         data.rank = this.rank;
         data.level = this.skills.getCombatLevel();
@@ -2104,10 +2366,10 @@ export default class Player extends Character {
         data.attackRange = this.attackRange;
         data.movementSpeed = this.getMovementSpeed();
 
-        if (this.inMinigame()) data.displayInfo = this.getDisplayInfo();
+        if (this.inTeamWar()) data.displayInfo = this.getDisplayInfo();
 
         // Include equipment only when necessary.
-        if (withEquipment) data.equipments = this.equipment.serialize().equipments;
+        if (withEquipment) data.equipments = this.equipment.serialize(true).equipments;
 
         if (withExperience) data.experience = this.getTotalExperience();
 
@@ -2367,6 +2629,19 @@ export default class Player extends Character {
             return this.equipment.getWeapon().attackRate - 200;
 
         return this.equipment.getWeapon().attackRate;
+    }
+
+    /**
+     * Gets the remaining time amount in a string format.
+     * @returns The string format of the amount of minutes or seconds remaining.
+     */
+
+    public getJailDuration(): string {
+        let duration = this.jail - Date.now();
+
+        return duration > 60_000
+            ? `${Math.ceil(duration / 60_000)} more minutes`
+            : `${Math.floor(duration / 1000)} more seconds`;
     }
 
     /**

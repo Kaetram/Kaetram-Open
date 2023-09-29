@@ -1,0 +1,107 @@
+{
+    "name": "Royal Pet",
+    "description": "The king needs your help with distributing the good news to the people of Kaetram.|The king has asked you personally, yes, you, to run a couple errands for him. You must deliver some stuff and whatnot. Actually why don't you go talk to him instead of reading this description and spoiling the surprise. By surprise I mean you have to run around the place doing stupid stuff, but whatever, who cares, that's why you signed up on this game didn't you. Or was it because you wanted to grind but your addiction to being a completionist leads you to complete these useless quests. Oh well, this description is long enough.",
+    "rewards": ["A cute little pet kitty"],
+    "questRequirements": ["royaldrama"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "king",
+            "text": [
+                "Hello fellow idiot, I mean adventurer.",
+                "I must distribute the good news to the residents of Kaetram",
+                "I have all these books that I must hand out. Would you be so kind",
+                "as to deliver these to some of Kaetram's residents.",
+                "There should be a couple located throughout the city and in the swamp."
+            ],
+            "completedText": [
+                "Please deliver the books to residents of Kaetram. They're located",
+                "throughout the city and in the swamp."
+            ],
+            "itemRewards": [
+                {
+                    "key": "book",
+                    "count": 3
+                }
+            ]
+        },
+        "1": {
+            "task": "talk",
+            "subStages": [
+                {
+                    "task": "talk",
+                    "npc": "shepherdboy",
+                    "text": ["Oh hello there adventurer!"],
+                    "hasItemText": [
+                        "Hello there adventurer!",
+                        "Oh, you have a book from the king?",
+                        "Is he hiring random people to hand out pamphlets again?",
+                        "Oh well, I'll take it I guess."
+                    ],
+                    "completedText": ["Thank you for the book I guess."],
+                    "itemRequirements": [
+                        {
+                            "key": "book",
+                            "count": 1
+                        }
+                    ]
+                },
+                {
+                    "task": "talk",
+                    "npc": "redbikinigirlnpc",
+                    "text": ["Oh hello!"],
+                    "hasItemText": [
+                        "Oh, hello there, what are you doing here?",
+                        "Oh, you have more propagan- I mean, news from the king?",
+                        "Okay well thank you I guess..."
+                    ],
+                    "completedText": ["Oh hello adventurer."],
+                    "itemRequirements": [
+                        {
+                            "key": "book",
+                            "count": 1
+                        }
+                    ]
+                },
+                {
+                    "task": "talk",
+                    "npc": "fisherman",
+                    "text": ["Oh hello there adventurer!"],
+                    "hasItemText": [
+                        "Oh, hello there, what are you doing here?",
+                        "Oh, you have more propagan- I mean, news from the king?",
+                        "Okay well thank you I guess..."
+                    ],
+                    "completedText": ["Oh hello adventurer."],
+                    "itemRequirements": [
+                        {
+                            "key": "book",
+                            "count": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "king",
+            "text": [
+                "Thank you for delivering the books adventurer.",
+                "I have a special reward for you.",
+                "I have this cute little kitty that I want to give to you.",
+                "I hope you enjoy it."
+            ],
+            "itemRewards": [
+                {
+                    "key": "catpet",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Royal Pet@green@. You have gained a cute little pet kitty!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

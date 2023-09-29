@@ -1,11 +1,28 @@
+packages/tools/map/data/map.png
+packages/tools/map/data/map.json
+packages/tools/map/data/rules*
+packages/tools/map/data/tilesets
+
+packages/server/cache
+
+astro_tmp_pages_*
+
+map.json.backup*
+
+### Astro ###
+# Gitignore template for Astro projects
+# Ignore content collection generated files
+.astro
+*astro_tmp*
+
 ### CypressIO ###
 # gitignore template for the CypressIO, browser test framework
 # website: https://www.cypress.io/
 
-/packages/e2e/cypress/results/*
-/packages/e2e/cypress/reports/*
-/packages/e2e/cypress/videos/*
-/packages/e2e/cypress/screenshots/*
+cypress/results/*
+cypress/reports/*
+cypress/screenshots/*
+cypress/videos/*
 
 ### Emacs ###
 # -*- mode: gitignore; -*-
@@ -299,12 +316,6 @@ tags
 .history
 .ionide
 
-# Support for Project snippet scope
-.vscode/*.code-snippets
-
-# Ignore code-workspaces
-*.code-workspace
-
 ### WebStorm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
@@ -444,7 +455,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# https://www.toptal.com/developers/gitignore/api/git,node,cypressio,linux,macos,windows,visualstudiocode,webstorm,vim,emacs
-
-packages/tools/map/data/map.png
-packages/server/cache
+# https://www.toptal.com/developers/gitignore?templates=git,node,astro,cypressio,linux,macos,windows,visualstudiocode,webstorm,vim,emacs

@@ -1,6 +1,5 @@
 import log from '../lib/log';
 import NPC from '../entity/npc/npc';
-import Grids from '../renderer/grids';
 import Item from '../entity/objects/item';
 import Chest from '../entity/objects/chest';
 import Mob from '../entity/character/mob/mob';
@@ -8,19 +7,29 @@ import Pet from '../entity/character/pet/pet';
 import Player from '../entity/character/player/player';
 import Projectile from '../entity/objects/projectile';
 import Effect from '../entity/objects/effect';
+import Tree from '../entity/objects/resource/impl/tree';
+import Rock from '../entity/objects/resource/impl/rock';
+import FishSpot from '../entity/objects/resource/impl/fishspot';
+import Foraging from '../entity/objects/resource/impl/foraging';
 
 import { Modules } from '@kaetram/common/network';
 
+import type Grids from '../map/grids';
 import type Game from '../game';
 import type Entity from '../entity/entity';
 import type SpritesController from './sprites';
 import type Character from '../entity/character/character';
-import type { EntityData } from '@kaetram/common/types/entity';
-import type { PlayerData } from '@kaetram/common/types/player';
 import type { PetData } from '@kaetram/common/types/pet';
+import type { PlayerData } from '@kaetram/common/network/impl/player';
+import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type { ResourceEntityData } from '@kaetram/common/types/resource';
 
 interface EntitiesCollection {
     [instance: string]: Entity;
+}
+
+interface EntityUpdateQueue {
+    [instance: string]: EntityDisplayInfo;
 }
 
 export interface Movable {
@@ -36,11 +45,13 @@ export default class EntitiesController {
     public sprites: SpritesController;
 
     public entities: EntitiesCollection = {};
+    public entityUpdateQueue: EntityUpdateQueue = {};
+
     public decrepit: Entity[] = [];
 
     public constructor(private game: Game) {
-        this.grids = new Grids(game.map);
         this.sprites = game.sprites;
+        this.grids = game.map.grids;
 
         game.input.loadCursors();
     }
@@ -79,6 +90,7 @@ export default class EntitiesController {
                 break;
             }
 
+            case Modules.EntityType.LootBag:
             case Modules.EntityType.Item: {
                 entity = this.createItem(info);
 
@@ -120,15 +132,43 @@ export default class EntitiesController {
                 prefix = 'effectentity';
                 break;
             }
+
+            case Modules.EntityType.Tree: {
+                entity = this.createTree(info as ResourceEntityData);
+
+                prefix = 'trees';
+                break;
+            }
+
+            case Modules.EntityType.Rock: {
+                entity = this.createRock(info as ResourceEntityData);
+
+                prefix = 'rocks';
+                break;
+            }
+
+            case Modules.EntityType.FishSpot: {
+                entity = this.createFishSpot(info as ResourceEntityData);
+
+                prefix = 'fishspots';
+                break;
+            }
+
+            case Modules.EntityType.Foraging: {
+                entity = this.createForaging(info as ResourceEntityData);
+
+                prefix = 'bushes';
+                break;
+            }
         }
 
         // Something went wrong creating the entity.
         if (!entity) return log.error(`Failed to create entity ${info.instance}`);
 
-        let sprite = this.game.sprites.get(`${prefix}/${info.key}`);
+        let sprite = entity.sprite || this.game.sprites.get(`${prefix}/${info.key}`);
 
         // Don't add entities that don't have a sprite.
-        if (!sprite) return log.error(`Failed to create sprite for entity ${info.key}.`);
+        if (!sprite) return console.trace(`Failed to create sprite for entity ${info.key}.`);
 
         // The name the player sees for an entity.
         entity.name = info.name;
@@ -143,6 +183,12 @@ export default class EntitiesController {
         entity.idle();
 
         this.addEntity(entity);
+
+        // If the instance exists in the update queue, add the display info and remove it from the queue.
+        if (info.instance in this.entityUpdateQueue) {
+            entity.updateDisplayInfo(this.entityUpdateQueue[info.instance]);
+            delete this.entityUpdateQueue[info.instance];
+        }
     }
 
     /**
@@ -217,19 +263,12 @@ export default class EntitiesController {
         let attacker = this.get<Character>(info.ownerInstance!),
             target = this.get<Character>(info.targetInstance!);
 
-        if (!attacker || !target) return undefined;
+        if (!target) return undefined;
 
-        attacker.lookAt(target);
-
-        let projectile = new Projectile(info.instance, attacker, info.hitType!);
+        let projectile = new Projectile(info.instance, info.hit!.type!);
 
         projectile.name = info.name;
-
-        projectile.setStart(attacker.x, attacker.y);
         projectile.setTarget(target);
-
-        projectile.angled = true;
-        projectile.type = info.type;
 
         /**
          * Move this into the external overall function
@@ -246,19 +285,29 @@ export default class EntitiesController {
             if (impactEffect !== Modules.Effects.None) target.addEffect(impactEffect);
 
             this.game.info.create(
-                info.hitType!,
-                info.damage!,
+                info.hit!.type!,
+                info.hit!.damage!,
                 target.x,
                 target.y,
-                this.isPlayer(target.instance)
+                this.isPlayer(target.instance),
+                -1,
+                true,
+                info.hit!.skills
             );
 
             target.triggerHealthBar();
+            target.toggleHurt();
 
             this.unregisterPosition(projectile);
             delete this.entities[projectile.instance];
         });
 
+        // Stop here and return the projectile if the attacker despawns (e.g. out of view).
+        if (!attacker) return projectile;
+
+        projectile.setGridPosition(attacker.gridX, attacker.gridY);
+
+        attacker.lookAt(target);
         attacker.performAction(attacker.orientation, Modules.Actions.Attack);
         attacker.triggerHealthBar();
 
@@ -280,6 +329,9 @@ export default class EntitiesController {
 
         player.ready = true;
 
+        // If the player has a light source then we add it to the renderer.
+        if (player.hasLight()) this.game.renderer.addPlayerLight(player);
+
         return player;
     }
 
@@ -297,8 +349,13 @@ export default class EntitiesController {
 
         // Add the pet as the owner's follower.
         if (owner) {
+            owner.hasPet = true;
+
             owner.addFollower(pet);
             pet.setTarget(owner);
+
+            // Synchronizes the interfaces with the pet's addition.
+            if (owner.instance === this.game.player.instance) this.game.player.sync();
         }
 
         return pet;
@@ -312,6 +369,66 @@ export default class EntitiesController {
 
     private createEffect(info: EntityData): Effect {
         return new Effect(info.instance);
+    }
+
+    /**
+     * Creates a new tree object based on the info provided.
+     * @param info Contains the key and instance of the tree.
+     * @returns A new tree object.
+     */
+
+    private createTree(info: ResourceEntityData): Entity {
+        let tree = new Tree(info.instance);
+
+        // Update the state of the tree.
+        tree.exhausted = info.state === Modules.ResourceState.Depleted;
+
+        return tree;
+    }
+
+    /**
+     * Creates a new rock object based on the info provided.
+     * @param info Contains the key and instance of the rock.
+     * @returns A new rock object.
+     */
+
+    private createRock(info: ResourceEntityData): Entity {
+        let rock = new Rock(info.instance);
+
+        // Update the state of the rock.
+        rock.exhausted = info.state === Modules.ResourceState.Depleted;
+
+        return rock;
+    }
+
+    /**
+     * Creates a new fish spot object based on the info provided.
+     * @param info Contains the key and instance of the fish spot.
+     * @returns A new fish spot object.
+     */
+
+    private createFishSpot(info: ResourceEntityData): Entity {
+        let fishSpot = new FishSpot(info.instance);
+
+        // Update the state of the fish spot.
+        fishSpot.exhausted = info.state === Modules.ResourceState.Depleted;
+
+        return fishSpot;
+    }
+
+    /**
+     * Creates a new foraging object based on the info provided.
+     * @param info Contains the key and instance of the foraging.
+     * @returns A new foraging object.
+     */
+
+    private createForaging(info: ResourceEntityData): Entity {
+        let foraging = new Foraging(info.instance);
+
+        // Update the state of the foraging.
+        foraging.exhausted = info.state === Modules.ResourceState.Depleted;
+
+        return foraging;
     }
 
     /**
@@ -333,6 +450,16 @@ export default class EntitiesController {
 
     public get<E extends Entity>(instance: string): E {
         return this.entities[instance] as E;
+    }
+
+    /**
+     * Used for filtering out the existing entities from the batch
+     * that the server will send us.
+     * @returns The instance list of entities currently loaded.
+     */
+
+    public getEntityList(): string[] {
+        return Object.keys(this.entities);
     }
 
     /**
@@ -363,7 +490,13 @@ export default class EntitiesController {
             let owner = this.get<Player>(entity.owner) as Player;
 
             // Remove the pet from the owner's list of followers.
-            if (owner) owner.removeFollower(entity);
+            if (owner) {
+                owner.hasPet = false;
+                owner.removeFollower(entity);
+
+                // Synchronizes the player's menu interfaces to represent the pet's removal.
+                if (owner.instance === this.game.player.instance) this.game.player.sync();
+            }
         }
 
         this.unregisterPosition(entity);
@@ -418,6 +551,10 @@ export default class EntitiesController {
      */
 
     public registerPosition(entity: Entity): void {
+        // Tree entities are registered as colliding on the rendering grid.
+        if (entity.isResource() || entity.isNPC())
+            this.game.map.grid[entity.gridY][entity.gridX] = 2;
+
         this.grids.addToRenderingGrid(entity);
     }
 
@@ -455,9 +592,13 @@ export default class EntitiesController {
      */
 
     public cleanDisplayInfo(): void {
-        for (let entity of Object.values(this.entities)) {
+        for (let instance in this.entities) {
+            let entity = this.entities[instance];
+
             entity.nameColour = '';
             entity.customScale = 0;
+            entity.exclamation = false;
+            entity.blueExclamation = false;
         }
     }
 

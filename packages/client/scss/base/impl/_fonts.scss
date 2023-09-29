@@ -1,27 +1,94 @@
 @font-face {
     font-family: AdvoCut;
-    font-weight: normal;
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
-    src: url('/fonts/advocut/advocut-webfont.eot');
-    src: url('/fonts/advocut/advocut-webfont.eot?#iefix') format('embedded-opentype'),
+    src:
         url('/fonts/advocut/advocut-webfont.woff') format('woff'),
         url('/fonts/advocut/advocut-webfont.ttf') format('truetype'),
         url('/fonts/advocut/advocut-webfont.svg#AndinaRegular') format('svg');
 }
 
 @font-face {
+    font-family: 'AdvoCut Fallback';
+    font-weight: 400;
+    font-style: normal;
+    src: local('Arial');
+    ascent-override: 89.2%;
+    descent-override: 21.78%;
+    line-gap-override: 0%;
+
+    size-adjust: 100.89%;
+}
+
+@font-face {
     font-family: KerrieFont;
-    font-weight: normal;
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
     src: url('/fonts/kerriefont.ttf') format('truetype');
 }
 
 @font-face {
+    font-family: Monogram;
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/monogram.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: Fibberish;
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/fibberish.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: Abaddon;
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/abaddon.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: Quaver;
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/quaver.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'KerrieFont Fallback';
+    font-weight: 400;
+    font-style: normal;
+    src: local('Arial');
+    ascent-override: 68.45%;
+    descent-override: 22.82%;
+    line-gap-override: 0%;
+
+    size-adjust: 109.58%;
+}
+
+@font-face {
     font-family: DorfScratch;
-    font-weight: normal;
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
     src: url('/fonts/dorfscratch.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'DorfScratch Fallback';
+    font-weight: 400;
+    font-style: normal;
+    src: local('Arial');
+    ascent-override: 68.45%;
+    descent-override: 22.82%;
+    line-gap-override: 0%;
+
+    size-adjust: 109.58%;
 }

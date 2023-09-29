@@ -1,0 +1,67 @@
+{
+    "name": "Miner's Quest II",
+    "description": "The miner is at it again, this time he doesn't just need ores.|The miner requires your help once again, this time his sketch creations include bars of metals and stuff like that. You should probably go see what he's up to and whatnot.",
+    "rewards": ["Access to the mining cave"],
+    "skillRequirements": {
+        "mining": 30
+    },
+    "questRequirements": ["minersquest"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "miner",
+            "text": [
+                "Oh it's you again, seems you didn't learn your lesson last time.",
+                "Anyway, what do you say you help me out again, this time I need",
+                "to do something with the ores I've collected.",
+                "But I'm not gonna give them to you, you have to actually go",
+                "and collect ores again and this time smelt them.",
+                "Doesn't that sound like an amazing deal where only I benefit?",
+                "Tell you what, you help me out and I will give you access to",
+                "my special secret cave where only miners are allowed.",
+                "Okay so anyway, I need you to bring me 5 tin bars, 5 copper bars."
+            ],
+            "completedText": ["Please hurry, the time is ticking!", "Bring me 5 tin bars and 5 copper bars."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "miner",
+            "hasItemText": [
+                "Oh wonderful, but unfortunately it's not enough.",
+                "I want you to bring me 5 bronze bars."
+            ],
+            "completedText": ["Please hurry, the time is ticking!", "Bring me 5 bronze bars."],
+            "itemRequirements": [
+                {
+                    "key": "tinbar",
+                    "count": 5
+                },
+                {
+                    "key": "copperbar",
+                    "count": 5
+                }
+            ]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "miner",
+            "hasItemText": [
+                "Okay fine, I think I'm done sending you on errands.",
+                "For now that is, who knows maybe I'll need you in",
+                "the future for redundant tasks like these.",
+                "Thank you for your help, I guess you can use my cave now."
+            ],
+            "itemRequirements": [
+                {
+                    "key": "bronzebar",
+                    "count": 5
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Miner's Quest II@green@. You've been awarded @crimson@Access to the mining cave@green@!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

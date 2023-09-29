@@ -1,0 +1,41 @@
+{
+    "name": "The Grand Bowmaster's Request",
+    "description": "The Grand Bowmaster requires a special bow, one that's beyond ordinary. Help him craft the legendary Moonlit Bow.",
+    "rewards": ["Moonlit Bow Blueprint", "2500 Fletching experience"],
+    "skillRequirements": {
+        "fletching": 30
+    },
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "bowmaster",
+            "text": [
+                "Adventurer! I need a bow made from the elusive Moonwood Tree.",
+                "Will you aid me in this endeavor?"
+            ],
+            "completedText": ["Seek the Moonwood Tree in the Midnight Grove."]
+        },
+        "1": {
+            "task": "collect",
+            "itemRequirements": [{ "key": "moonwood", "count": 10 }],
+            "completedText": ["Return to the Bowmaster with the Moonwood."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "bowmaster",
+            "hasItemText": ["Ah, perfect! With this, I can teach you to craft the Moonlit Bow."],
+
+            "skillRewards": [
+                {
+                    "key": "fletching",
+                    "experience": 2500
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You've been awarded @crimson@2500 Fletching experience@green@ and the @crimson@Moonlit Bow Blueprint@green@.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

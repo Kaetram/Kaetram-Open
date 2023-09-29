@@ -4,33 +4,33 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import {
-    Ability as AbilityPacket,
-    Achievement,
-    Container,
-    Death,
-    Despawn,
-    Equipment as EquipmentPacket,
-    Friends,
-    NPC as NPCPacket,
-    Overlay,
-    Points,
-    Poison as PoisonPacket,
-    Quest,
-    Skill,
-    Trade
+    AbilityPacket,
+    AchievementPacket,
+    ContainerPacket,
+    DeathPacket,
+    DespawnPacket,
+    EquipmentPacket,
+    FriendsPacket,
+    NPCPacket,
+    OverlayPacket,
+    PointsPacket,
+    PoisonPacket,
+    QuestPacket,
+    SkillPacket,
+    TradePacketPacket
 } from '@kaetram/common/network/impl';
 
-import type Light from '../../../globals/impl/light';
+import type Player from './player';
+import type NPC from '../../npc/npc';
+import type Entity from '../../entity';
 import type Map from '../../../map/map';
 import type World from '../../../world';
-import type Entity from '../../entity';
 import type Character from '../character';
-import type Ability from './ability/ability';
 import type Slot from './containers/slot';
+import type Ability from './ability/ability';
 import type Equipment from './equipment/equipment';
 import type Areas from '../../../map/areas/areas';
-import type NPC from '../../npc/npc';
-import type Player from './player';
+import type Light from '../../../globals/impl/light';
 import type { Enchantments } from '@kaetram/common/types/item';
 import type { ProcessedDoor } from '@kaetram/common/types/map';
 
@@ -157,7 +157,7 @@ export default class Handler {
 
         // Send despawn packet to all the nearby entities except the player.
         this.player.sendToRegions(
-            new Despawn({
+            new DespawnPacket({
                 instance: this.player.instance
             }),
             true
@@ -179,7 +179,7 @@ export default class Handler {
         this.player.save();
 
         // Send death packet only to the player.
-        this.player.send(new Death(this.player.instance));
+        this.player.send(new DeathPacket(this.player.instance));
     }
 
     /**
@@ -220,15 +220,23 @@ export default class Handler {
         if (this.player.isMagic()) {
             let { manaCost } = this.player.equipment.getWeapon();
 
-            if (!this.player.hasManaForAttack())
-                return this.player.notify('You are low on mana, your attacks will be weaker.');
+            // If the player doesn't have enough mana to attack.
+            if (!this.player.hasManaForAttack()) {
+                // Warn the player once if they don't have enough mana.
+                if (!this.player.displayedManaWarning) this.player.notify('misc:LOW_MANA');
+
+                this.player.displayedManaWarning = true;
+
+                return;
+            }
+
+            this.player.displayedManaWarning = false;
 
             this.player.mana.decrement(manaCost);
         }
 
         if (this.player.isArcher()) {
-            if (!this.player.hasArrows())
-                return this.player.notify('You do not have any arrows to shoot.');
+            if (!this.player.hasArrows()) return this.player.notify('misc:NO_ARROWS');
 
             this.player.equipment.decrementArrows();
         }
@@ -254,8 +262,8 @@ export default class Handler {
                     ? this.player.skills.get(Utils.getSkill(door.skill)!).level
                     : this.player.level,
                 message = door.skill
-                    ? `Your ${door.skill} level needs to be at least ${door.level} to enter.`
-                    : `Your combat level must be at least ${door.level} to enter.`;
+                    ? `misc:NO_SKILL_DOOR;skill=${door.skill};level=${door.level}`
+                    : `misc:NO_COMBAT_DOOR;level=${door.level}`;
 
             if (level < door.level) return this.player.notify(message);
         }
@@ -276,7 +284,7 @@ export default class Handler {
 
             if (!achievement?.isFinished())
                 return this.player.notify(
-                    `You need to complete the achievement ${achievement?.name} to pass through this door.`
+                    `misc:NO_ACHIEVEMENT_DOOR;achievement=${achievement?.name}`
                 );
         }
 
@@ -285,9 +293,7 @@ export default class Handler {
             let quest = this.player.quests.get(door.reqQuest);
 
             if (!quest?.isFinished())
-                return this.player.notify(
-                    `You need to complete the quest ${quest?.name} to pass through this door.`
-                );
+                return this.player.notify(`misc:NO_QUEST_DOOR;quest=${quest?.name}`);
         }
 
         // Handle door requiring an item to proceed (and remove the item from the player's inventory).
@@ -295,13 +301,11 @@ export default class Handler {
             let count = door.reqItemCount || 1;
 
             if (!this.player.inventory.hasItem(door.reqItem, count))
-                return this.player.notify(
-                    'You do not have the required key to pass through this door.'
-                );
+                return this.player.notify('misc:NO_KEY_DOOR');
 
             this.player.inventory.removeItem(door.reqItem, count);
 
-            this.player.notify(`The key crumbles to dust as you pass through the door.`);
+            this.player.notify('misc:DOOR_KEY_CRUMBLES');
         }
 
         this.player.teleport(door.x, door.y);
@@ -323,6 +327,7 @@ export default class Handler {
 
         this.detectAggro();
         this.detectAreas(x, y);
+        this.detectEffects(x, y);
 
         this.player.storeOpen = '';
         this.player.plateauLevel = this.map.getPlateauLevel(x, y);
@@ -355,7 +360,7 @@ export default class Handler {
         this.handleLights(region);
 
         this.player.updateEntityList();
-        this.player.updateEntityPositions();
+        //this.player.updateEntityPositions();
 
         this.player.lastRegionChange = Date.now();
     }
@@ -369,7 +374,7 @@ export default class Handler {
         //log.debug(`Sending despawn to recent regions: [${regions.join(', ')}].`);
 
         this.player.sendToRecentRegions(
-            new Despawn({
+            new DespawnPacket({
                 instance: this.player.instance,
                 regions
             })
@@ -455,7 +460,7 @@ export default class Handler {
      */
 
     private handleTradeOpen(instance: string): void {
-        this.player.send(new Trade(Opcodes.Trade.Open, { instance }));
+        this.player.send(new TradePacketPacket(Opcodes.Trade.Open, { instance }));
     }
 
     /**
@@ -466,7 +471,7 @@ export default class Handler {
      */
 
     private handleTradeAdd(instance: string, index: number, count: number, key: string): void {
-        this.player.send(new Trade(Opcodes.Trade.Add, { instance, index, count, key }));
+        this.player.send(new TradePacketPacket(Opcodes.Trade.Add, { instance, index, count, key }));
     }
 
     /**
@@ -476,7 +481,7 @@ export default class Handler {
      */
 
     private handleTradeRemove(instance: string, index: number): void {
-        this.player.send(new Trade(Opcodes.Trade.Remove, { instance, index }));
+        this.player.send(new TradePacketPacket(Opcodes.Trade.Remove, { instance, index }));
     }
 
     /**
@@ -485,7 +490,7 @@ export default class Handler {
      */
 
     private handleTradeAccept(message?: string): void {
-        this.player.send(new Trade(Opcodes.Trade.Accept, { message }));
+        this.player.send(new TradePacketPacket(Opcodes.Trade.Accept, { message }));
     }
 
     /**
@@ -495,7 +500,7 @@ export default class Handler {
     private handleInventory(): void {
         // Send Batch packet to the client.
         this.player.send(
-            new Container(Opcodes.Container.Batch, {
+            new ContainerPacket(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Inventory,
                 data: this.player.inventory.serialize(true)
             })
@@ -509,7 +514,7 @@ export default class Handler {
     private handleBank(): void {
         // Send Batch packet to the client.
         this.player.send(
-            new Container(Opcodes.Container.Batch, {
+            new ContainerPacket(Opcodes.Container.Batch, {
                 type: Modules.ContainerType.Bank,
                 data: this.player.bank.serialize(true)
             })
@@ -524,7 +529,7 @@ export default class Handler {
 
     private handleInventoryAdd(slot: Slot): void {
         this.player.send(
-            new Container(Opcodes.Container.Add, {
+            new ContainerPacket(Opcodes.Container.Add, {
                 type: Modules.ContainerType.Inventory,
                 slot
             })
@@ -552,14 +557,17 @@ export default class Handler {
             let item = new Item(key, this.player.x, this.player.y, true, count, enchantments);
 
             // Pets spawn an entity, and items spawn in the world.
-            if (item.isPetItem()) this.player.setPet(item.pet);
-            else this.world.entities.addItem(item);
+            if (item.isPetItem()) {
+                if (this.player.hasPet()) return this.player.notify('misc:ALREADY_HAVE_PET');
+
+                this.player.setPet(item.pet);
+            } else this.world.entities.addItem(item);
 
             log.drop(`Player ${this.player.username} dropped ${count} ${key}.`);
         }
 
         this.player.send(
-            new Container(Opcodes.Container.Remove, {
+            new ContainerPacket(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Inventory,
                 slot: slot.serialize(true)
             })
@@ -571,7 +579,7 @@ export default class Handler {
      */
 
     private handleQuests(): void {
-        this.player.send(new Quest(Opcodes.Quest.Batch, this.player.quests?.serialize(true)));
+        this.player.send(new QuestPacket(Opcodes.Quest.Batch, this.player.quests?.serialize(true)));
     }
 
     /**
@@ -580,7 +588,10 @@ export default class Handler {
 
     private handleAchievements(): void {
         this.player.send(
-            new Achievement(Opcodes.Achievement.Batch, this.player.achievements?.serialize(true))
+            new AchievementPacket(
+                Opcodes.Achievement.Batch,
+                this.player.achievements?.serialize(true)
+            )
         );
     }
 
@@ -590,7 +601,7 @@ export default class Handler {
      */
 
     private handleSkills(): void {
-        this.player.send(new Skill(Opcodes.Skill.Batch, this.player.skills?.serialize(true)));
+        this.player.send(new SkillPacket(Opcodes.Skill.Batch, this.player.skills?.serialize(true)));
     }
 
     /**
@@ -611,7 +622,7 @@ export default class Handler {
 
     private handleBankAdd(slot: Slot): void {
         this.player.send(
-            new Container(Opcodes.Container.Add, {
+            new ContainerPacket(Opcodes.Container.Add, {
                 type: Modules.ContainerType.Bank,
                 slot
             })
@@ -625,7 +636,7 @@ export default class Handler {
 
     private handleBankRemove(slot: Slot): void {
         this.player.send(
-            new Container(Opcodes.Container.Remove, {
+            new ContainerPacket(Opcodes.Container.Remove, {
                 type: Modules.ContainerType.Bank,
                 slot: slot.serialize(true)
             })
@@ -638,7 +649,7 @@ export default class Handler {
 
     private handleFriends(): void {
         this.player.send(
-            new Friends(Opcodes.Friends.List, {
+            new FriendsPacket(Opcodes.Friends.List, {
                 list: this.player.friends?.getFriendsList()
             })
         );
@@ -653,7 +664,7 @@ export default class Handler {
 
     private handleFriendsAdd(username: string, status: boolean, serverId: number): void {
         this.player.send(
-            new Friends(Opcodes.Friends.Add, {
+            new FriendsPacket(Opcodes.Friends.Add, {
                 username,
                 status,
                 serverId
@@ -667,7 +678,7 @@ export default class Handler {
 
     private handleFriendsRemove(username: string): void {
         this.player.send(
-            new Friends(Opcodes.Friends.Remove, {
+            new FriendsPacket(Opcodes.Friends.Remove, {
                 username
             })
         );
@@ -682,7 +693,7 @@ export default class Handler {
 
     private handleFriendsStatus(username: string, status: boolean, serverId: number): void {
         this.player.send(
-            new Friends(Opcodes.Friends.Status, {
+            new FriendsPacket(Opcodes.Friends.Status, {
                 username,
                 status,
                 serverId
@@ -779,8 +790,8 @@ export default class Handler {
 
     private handlePoison(type = -1, exists = false): void {
         // Notify the player when the poison status changes.
-        if (type === -1) this.player.notify('The poison has worn off.');
-        else if (exists) this.player.notify(`You have been poisoned!`);
+        if (type === -1) this.player.notify('misc:POISONED');
+        else if (exists) this.player.notify('misc:POISON_WORN_OFF');
 
         this.player.send(new PoisonPacket(type));
     }
@@ -810,7 +821,7 @@ export default class Handler {
 
     private handleMana(): void {
         this.player.send(
-            new Points({
+            new PointsPacket({
                 instance: this.player.instance,
                 mana: this.player.mana.getMana(),
                 maxMana: this.player.mana.getMaxMana()
@@ -819,25 +830,27 @@ export default class Handler {
     }
 
     /**
-     * Synchronizes the lights within the region with the player.
+     * Sends the player the lights in the nearby regions.
      * @param regionId Identifier of the region we just entered.
      */
 
-    private handleLights(regionId: number): void {
-        let region = this.map.regions.get(regionId);
+    private handleLights(region: number): void {
+        if (region < 0) return;
 
-        if (!region) return;
+        this.map.regions.forEachSurroundingRegion(region, (regionId: number) => {
+            let region = this.map.regions.get(regionId);
 
-        region.forEachLight((light: Light) => {
-            if (this.player.hasLoadedLight(light.id)) return;
+            region.forEachLight((light: Light) => {
+                if (this.player.hasLoadedLight(light.id)) return;
 
-            this.player.send(
-                new Overlay(Opcodes.Overlay.Lamp, {
-                    light: light.serialize()
-                })
-            );
+                this.player.send(
+                    new OverlayPacket(Opcodes.Overlay.Lamp, {
+                        light: light.serialize()
+                    })
+                );
 
-            this.player.lightsLoaded.push(light.id);
+                this.player.lightsLoaded.push(light.id);
+            });
         });
     }
 
@@ -899,6 +912,28 @@ export default class Handler {
             // Check if the mob can aggro the player and initiate the combat.
             if (entity.canAggro(this.player)) entity.combat.attack(this.player);
         });
+    }
+
+    /**
+     * Used for detecting effect entities at a specific coordinate. These are generally
+     * like ground hazards such as lava pools and slime pools. Walking on top of those
+     * applies a status effect to the player.
+     * @param x The x grid coordinate we are checking the effects at.
+     * @param y The y grid coordinate we are checking the effects at.
+     */
+
+    private detectEffects(x: number, y: number): void {
+        let entity = this.world.getGrids().getEffectAt(x, y);
+
+        if (!entity) return;
+
+        switch (entity.key) {
+            case 'lava': {
+                if (this.player.status.has(Modules.Effects.Burning)) return;
+
+                return this.player.status.addWithTimeout(Modules.Effects.Burning, 15_000);
+            }
+        }
     }
 
     /**

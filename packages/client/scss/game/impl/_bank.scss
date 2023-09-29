@@ -1,136 +1,54 @@
-@use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
 #bank {
-    cursor: url('/img/hand.png'), auto;
-
     position: absolute;
     inset: 0;
 
     display: none;
+    flex-direction: row;
 
+    width: 37em;
+    height: 21em;
     margin: auto;
+
+    @media (--portrait) {
+        flex-direction: column-reverse;
+        justify-content: center;
+
+        width: 21em;
+        height: 37em;
+
+        font-size: 0.875em;
+    }
 }
 
 #bank-container {
     float: right;
 }
 
-#bank-slot {
-    position: absolute;
-    top: 9%;
-    overflow: hidden;
-    overflow-y: scroll;
-
-    ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-
-        li {
-            float: left;
-        }
-    }
+#bank-container,
+#bank-inventory-container {
+    box-sizing: border-box;
+    padding: 2.75em 1.75em;
 }
 
+#bank-slots,
 #bank-inventory-slots {
-    position: absolute;
-    overflow: hidden;
-    overflow-y: scroll;
+    overflow: auto;
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.25em;
+    justify-content: space-evenly;
 
-    ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
+    width: 100%;
+    height: 100%;
 
-        li {
-            float: left;
-        }
+    list-style-type: none;
+
+    li {
+        float: left;
     }
 }
 
-.bank-item-count {
-    font-family: AdvoCut, sans-serif !important;
-    color: gold !important;
-    text-shadow: 1px 1px black;
-}
-
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #bank {
-            width: 300px * $i;
-            height: 167px * $i;
-        }
-
-        #bank-container,
-        #bank-inventory-container {
-            background-image: url('/img/interface/bank.png');
-            background-size: calc(width('bank.png') * $i);
-        }
-
-        #bank-inventory-slots {
-            top: 16px * $i;
-            left: 20px * $i;
-            width: 96px * $i;
-            height: 92px * $i;
-
-            ul {
-                li {
-                    .item-slot {
-                        margin-bottom: 4px * $i;
-                    }
-                }
-            }
-        }
-
-        #bank-container {
-            width: 171px * $i;
-            height: 167px * $i;
-            background-position: -132px * $i 0;
-        }
-
-        #bank-slot {
-            left: 140px * $i;
-            width: 144px * $i;
-            height: 130px * $i;
-
-            ul {
-                li {
-                    .item-slot {
-                        margin-bottom: 4px * $i;
-                        margin-left: 2px * $i;
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media (--sm) {
-    #bank {
-        transform: scale(1.5);
-    }
-
-    #bank-slot {
-        ul {
-            li {
-                .item-slot {
-                    margin-bottom: 8px;
-                    margin-left: 3px;
-                }
-            }
-        }
-    }
-
-    #bank-inventory-slots {
-        left: 11px;
-        width: 106px;
-
-        ul {
-            li {
-                .item-slot {
-                    margin-bottom: 8px;
-                }
-            }
-        }
-    }
-}
+@include sprite.sheet('bank', $x: 132, $width: 168, $height: 166, $selectors: #bank-container);
+@include sprite.sheet('bank', $width: 128, $height: 126, $selectors: #bank-inventory-container);

@@ -1,81 +1,43 @@
 @use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
 dialog {
-    cursor: url('/img/hand.png'), auto;
-
-    position: absolute;
     inset: 0;
-
-    display: none;
-
-    margin: auto;
-    padding: 0;
-
-    font-family: AdvoCut, sans-serif;
-    font-size: 16px;
     color: #e3e3e3;
 
-    background-color: rgb(45 45 45 / 80%);
-    border: none;
-}
+    input {
+        display: block;
 
-.dialog-count {
-    display: block;
+        width: 7.5em;
+        margin: 0.25em;
 
-    margin: 0 auto;
+        font-size: 0.75em;
+        color: white;
 
-    font-family: AdvoCut, sans-serif;
-    color: white;
-
-    background-color: rgb(0 0 0 / 50%);
+        background-color: rgb(0 0 0 / 50%);
+    }
 }
 
 .dialog-title {
+    font-size: 0.75em;
     text-align: center;
-}
-
-.dialog-accept,
-.dialog-cancel {
-    cursor: pointer;
-    cursor: url('/img/hand.png'), auto;
 }
 
 .dialog-buttons {
     display: flex;
-    justify-content: space-between;
-    padding: 0 10px;
+    flex-direction: row;
+    justify-content: space-evenly;
 }
 
-@each $size, $i in media.$b-sizes {
-    @media ($size) {
-        .dialog {
-            width: 53px * $i;
-            height: 40px * $i;
-            background: url('/img/interface/main.png') -144px * $i -496px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .dialog-count {
-            width: 40px * $i;
-            margin-bottom: 1px * $i;
-        }
-
-        .dialog-title {
-            margin-top: 3px * $i;
-            margin-bottom: 3px * $i;
-            font-size: 6px * $i;
-        }
-    }
-
-    @media (--sm) {
-        .dialog-title {
-            font-size: 10px;
-        }
-
-        .dialog-buttons {
-            transform: scale(2);
-            margin-top: 8px;
-            padding: 0 30px;
-        }
-    }
-}
+@include sprite.sheet(
+    $image: 'characterdialogsheet',
+    $y: 308,
+    $width: 21,
+    $height: 14,
+    $hover: 2,
+    $active: 1,
+    $selectors: (
+        '.confirm',
+        '.cancel'
+    )
+);

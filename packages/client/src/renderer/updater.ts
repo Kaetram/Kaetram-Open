@@ -4,10 +4,10 @@ import Projectile from '../entity/objects/projectile';
 import { Modules } from '@kaetram/common/network';
 
 import type Game from '../game';
-import type Canvas from './canvas';
 import type Renderer from './renderer';
 import type Entity from '../entity/entity';
 import type SpritesController from '../controllers/sprites';
+import type { RendererLighting } from './renderer';
 
 export default class Updater {
     private tileSize: number;
@@ -33,6 +33,7 @@ export default class Updater {
         this.updateBubbles();
         this.updateSounds();
         this.updateAnimatedTiles();
+        this.updateLights();
     }
 
     /**
@@ -50,11 +51,11 @@ export default class Updater {
             entity.animation?.update(this.game.time);
 
             // Handle projectile instances separately.
-            if (entity instanceof Projectile) {
+            if (entity.isProjectile()) {
                 let mDistance = entity.speed * entity.getTimeDiff(),
                     dx = entity.target.x - entity.x, // delta x current position to target
                     dy = entity.target.y - entity.y, // delta y current position to target
-                    tDistance = Math.sqrt(dx * dx + dy * dy), // pythagorean theorem uwu
+                    tDistance = Math.hypot(dx, dy), // pythagorean theorem uwu
                     amount = mDistance / tDistance;
 
                 // Always angle the projectile towards the target.
@@ -66,7 +67,7 @@ export default class Updater {
                 entity.x += dx * amount;
                 entity.y += dy * amount;
 
-                if (tDistance < 5) entity.impact();
+                if (tDistance < 5) entity.impactCallback?.();
 
                 entity.lastUpdate = this.game.time;
 
@@ -192,11 +193,9 @@ export default class Updater {
 
         if (target && this.game.input.selectedCellVisible) target.update(this.game.time);
 
-        if (!this.sprites) return;
-
-        let sparks = this.sprites.sparksAnimation;
-
-        sparks?.update(this.game.time);
+        // Iterate through the preloaded animation sprites and update them.
+        for (let animation of this.sprites?.preloadedAnimations || [])
+            animation.update(this.game.time);
     }
 
     /**
@@ -227,7 +226,10 @@ export default class Updater {
     }
 
     /**
-     * Updates the animated tiles present in the renderer.
+     * Responsible for iterating through the tile ids of all animated tiles
+     * and updating their animation. Whenever a tile has not been drawn for
+     * a certain amount of time it is marked as unused and removed from the
+     * renderer.
      */
 
     private updateAnimatedTiles(): void {
@@ -237,10 +239,44 @@ export default class Updater {
          * Canvas2D rendering. We also disable animated tiles if the renderer
          * says so.
          */
-        if (this.renderer.isWebGl() || !this.renderer.animateTiles) return;
+        if (!this.renderer.isCanvas() || !this.renderer.animateTiles) return;
 
         // Update the animated tiles.
-        for (let index in (this.renderer as Canvas).animatedTiles)
-            (this.renderer as Canvas).animatedTiles[index].animate(this.game.time);
+        for (let identifier in this.renderer.animatedTiles) {
+            let tile = this.renderer.animatedTiles[identifier];
+
+            // Update the tile's frame to the postAnimationData if it is expired.
+            if (tile.expired) this.game.map.data[tile.index] = tile.postAnimationData!;
+
+            // Delete the tile and continue if it's unused or expired.
+            if (tile.unused || tile.expired) {
+                delete this.renderer.animatedTiles[identifier];
+                delete this.renderer.animatedTileIndexes[identifier];
+
+                continue;
+            }
+
+            tile.animate(this.game.time);
+        }
+    }
+
+    /**
+     * Goes through each light source and flickers the light
+     * to give the effect of a candle or torch. We essentially
+     * just change the light's radius by a small amount.
+     */
+
+    private updateLights(): void {
+        this.renderer.forEachLighting((lighting: RendererLighting) => {
+            let { light } = lighting;
+
+            // -1 intensity means that the light doesn't flicker.
+            if (light.flickerIntensity < 0) return;
+
+            light.distance =
+                light.scaledDistance +
+                Math.sin((this.game.time + light.offset) / light.flickerSpeed) *
+                    light.scaledFlickerIntensity;
+        });
     }
 }

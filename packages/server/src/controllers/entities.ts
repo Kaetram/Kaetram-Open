@@ -1,6 +1,10 @@
 import mobData from '../../data/mobs.json';
 import itemData from '../../data/items.json';
 import npcData from '../../data/npcs.json';
+import treeData from '../../data/trees.json';
+import rockData from '../../data/rocks.json';
+import fishSpotData from '../../data/fishing.json';
+import foragingData from '../../data/foraging.json';
 import NPC from '../game/entity/npc/npc';
 import Item from '../game/entity/objects/item';
 import Chest from '../game/entity/objects/chest';
@@ -10,19 +14,23 @@ import Projectile from '../game/entity/objects/projectile';
 import LootBag from '../game/entity/objects/lootbag';
 import Pet from '../game/entity/character/pet/pet';
 import Effect from '../game/entity/objects/effect';
+import Tree from '../game/entity/objects/resource/impl/tree';
+import Rock from '../game/entity/objects/resource/impl/rock';
+import FishSpot from '../game/entity/objects/resource/impl/fishspot';
+import Foraging from '../game/entity/objects/resource/impl/foraging';
 
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
-import { Blink, Despawn } from '@kaetram/common/network/impl';
+import { BlinkPacket, DespawnPacket, ResourcePacket } from '@kaetram/common/network/impl';
 
-import type { Enchantments } from '@kaetram/common/types/item';
-import type Hit from '../game/entity/character/combat/hit';
-import type Player from '../game/entity/character/player/player';
-import type Entity from '../game/entity/entity';
 import type Map from '../game/map/map';
 import type World from '../game/world';
-import type Regions from '../game/map/regions';
 import type Grids from '../game/map/grids';
+import type Regions from '../game/map/regions';
+import type Entity from '../game/entity/entity';
+import type Hit from '../game/entity/character/combat/hit';
+import type Player from '../game/entity/character/player/player';
+import type { Enchantments } from '@kaetram/common/types/item';
 
 export default class Entities {
     private map: Map;
@@ -40,6 +48,10 @@ export default class Entities {
     private pets: { [instance: string]: Pet } = {};
     private lootBags: { [instance: string]: LootBag } = {};
     private effects: { [instance: string]: Effect } = {};
+    private trees: { [instance: string]: Tree } = {};
+    private rocks: { [instance: string]: Rock } = {};
+    private fishSpots: { [instance: string]: FishSpot } = {};
+    private foragings: { [instance: string]: Foraging } = {};
 
     public constructor(private world: World) {
         this.map = world.map;
@@ -71,10 +83,32 @@ export default class Entities {
                 case Modules.EntityType.Mob: {
                     return this.spawnMob(key, position.x, position.y);
                 }
+
+                case Modules.EntityType.Tree: {
+                    return this.spawnTree(key, position.x, position.y);
+                }
+
+                case Modules.EntityType.Rock: {
+                    return this.spawnRock(key, position.x, position.y);
+                }
+
+                case Modules.EntityType.FishSpot: {
+                    return this.spawnFishSpots(key, position.x, position.y);
+                }
+
+                case Modules.EntityType.Foraging: {
+                    return this.spawnForaging(key, position.x, position.y);
+                }
             }
         });
 
-        log.info(`Spawned ${Object.keys(this.entities).length} entities!`);
+        log.info(`Spawned ${Object.keys(this.items).length} items!`);
+        log.info(`Spawned ${Object.keys(this.npcs).length} NPCs!`);
+        log.info(`Spawned ${Object.keys(this.mobs).length} mobs!`);
+        log.info(`Spawned ${Object.keys(this.trees).length} trees!`);
+        log.info(`Spawned ${Object.keys(this.rocks).length} rocks!`);
+        log.info(`Spawned ${Object.keys(this.fishSpots).length} fish spots!`);
+        log.info(`Spawned ${Object.keys(this.foragings).length} foraging spots!`);
 
         // Spawns the static chests throughout the world.
 
@@ -92,7 +126,17 @@ export default class Entities {
 
         // Initialize the roaming interval for mobs
         setInterval(
-            () => this.forEachMob((mob) => mob.roamingCallback?.()),
+            () =>
+                this.forEachMob((mob) => {
+                    // Roaming only when players are in the region when there are more than 30 players online.
+                    if (
+                        !this.regions.get(mob.region)?.hasPlayersInRegion() &&
+                        this.world.getPopulation() > 30
+                    )
+                        return;
+
+                    mob.roamingCallback?.();
+                }),
             Modules.MobDefaults.ROAM_FREQUENCY
         );
     }
@@ -133,7 +177,7 @@ export default class Entities {
         // Do not spawn a loot bag if it is empty.
         if (items.length === 0) return;
 
-        this.addLootBag(new LootBag(x, y, owner, items));
+        this.addLootBag(new LootBag(this.world, x, y, owner, items));
     }
 
     /**
@@ -152,6 +196,118 @@ export default class Entities {
         this.addMob(mob);
 
         return mob;
+    }
+
+    /**
+     * Spawns a tree in the world and adds it to the world.
+     * @param key The key of the tree, used to determine its sprite.
+     * @param x The x grid coordinate of the tree spawn.
+     * @param y The y grid coordinate of the tree spawn.
+     * @returns A new tree object.
+     */
+
+    public spawnTree(key: string, x: number, y: number): Tree {
+        let tree = new Tree(key, x, y);
+
+        tree.onStateChange(() => {
+            this.world.push(Modules.PacketType.Regions, {
+                region: tree.region,
+                packet: new ResourcePacket({
+                    instance: tree.instance,
+                    state: tree.state
+                })
+            });
+        });
+
+        this.add(tree);
+
+        this.trees[tree.instance] = tree;
+
+        return tree;
+    }
+
+    /**
+     * Spawns a rock in the world and adds it to the world.
+     * @param key The key of the rock, used to determine its sprite.
+     * @param x The x grid coordinate of the rock spawn.
+     * @param y The y grid coordinate of the rock spawn.
+     * @returns A new rock object.
+     */
+
+    public spawnRock(key: string, x: number, y: number): Tree {
+        let rock = new Rock(key, x, y);
+
+        rock.onStateChange(() => {
+            this.world.push(Modules.PacketType.Regions, {
+                region: rock.region,
+                packet: new ResourcePacket({
+                    instance: rock.instance,
+                    state: rock.state
+                })
+            });
+        });
+
+        this.add(rock);
+
+        this.rocks[rock.instance] = rock;
+
+        return rock;
+    }
+
+    /**
+     * Spawns a fish spots in the world and adds it to the world.
+     * @param key The key of the fish spots, used to determine its sprite.
+     * @param x The x grid coordinate of the fish spots spawn.
+     * @param y The y grid coordinate of the fish spots spawn.
+     * @returns A new fish spots object.
+     */
+
+    public spawnFishSpots(key: string, x: number, y: number): Tree {
+        let fishSpots = new FishSpot(key, x, y);
+
+        fishSpots.onStateChange(() => {
+            this.world.push(Modules.PacketType.Regions, {
+                region: fishSpots.region,
+                packet: new ResourcePacket({
+                    instance: fishSpots.instance,
+                    state: fishSpots.state
+                })
+            });
+        });
+
+        this.add(fishSpots);
+
+        this.fishSpots[fishSpots.instance] = fishSpots;
+
+        return fishSpots;
+    }
+
+    /**
+     * Spawns a foraging spot in the world and adds it to the world.
+     * @param key The key of the foraging spot, used to determine its sprite.
+     * @param x The x grid coordinate of the foraging spot spawn.
+     * @param y The y grid coordinate of the foraging spot spawn.
+     * @returns A new foraging spot object.
+     */
+
+    public spawnForaging(key: string, x: number, y: number): Tree {
+        let foraging = new Foraging(key, x, y);
+
+        foraging.onStateChange(() => {
+            this.world.push(Modules.PacketType.Regions, {
+                region: foraging.region,
+                packet: new ResourcePacket({
+                    instance: foraging.instance,
+                    state: foraging.state
+                })
+            });
+        });
+
+        this.add(foraging);
+
+        this.foragings[foraging.instance] = foraging;
+
+        return foraging;
     }
 
     /**
@@ -320,7 +476,7 @@ export default class Entities {
             // Blinking timeout before the item despawns.
             item.onBlink(() =>
                 this.world.push(Modules.PacketType.Broadcast, {
-                    packet: new Blink(item.instance)
+                    packet: new BlinkPacket(item.instance)
                 })
             );
         } else item.onRespawn(() => this.addItem(item));
@@ -400,6 +556,8 @@ export default class Entities {
      */
 
     private addEffect(effect: Effect): void {
+        effect.onDespawn(() => this.removeEffect(effect));
+
         this.add(effect);
 
         this.effects[effect.instance] = effect;
@@ -414,7 +572,7 @@ export default class Entities {
         // Signal to nearby regions that the entity has been removed.
         this.world.push(Modules.PacketType.Regions, {
             region: entity.region,
-            packet: new Despawn({
+            packet: new DespawnPacket({
                 instance: entity.instance
             })
         });
@@ -564,6 +722,17 @@ export default class Entities {
     }
 
     /**
+     * Attempts to find an NPC based on a key. Note that this will find the first
+     * NPC we come across with the key, so it is not recommended to use this
+     * function if there are multiple NPCs with the same key.
+     * @param key The key of the NPC we are looking for.
+     */
+
+    public getNPCByKey(key: string): NPC | undefined {
+        return Object.values(this.npcs).find((npc: NPC) => npc.key === key);
+    }
+
+    /**
      * Looks for the string of the entity in all the data files
      * and returns the type of entity it is.
      * @param key The string key of the entity we are determining.
@@ -574,6 +743,10 @@ export default class Entities {
         if (key in itemData) return Modules.EntityType.Item;
         if (key in npcData) return Modules.EntityType.NPC;
         if (key in mobData) return Modules.EntityType.Mob;
+        if (key in treeData) return Modules.EntityType.Tree;
+        if (key in rockData) return Modules.EntityType.Rock;
+        if (key in fishSpotData) return Modules.EntityType.FishSpot;
+        if (key in foragingData) return Modules.EntityType.Foraging;
 
         return -1;
     }

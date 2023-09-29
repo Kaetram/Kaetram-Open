@@ -1,0 +1,43 @@
+{
+    "name": "The Elixir of Luminance",
+    "description": "Alchemy Master Alden needs rare ingredients to craft the Elixir of Luminance. Aid him and learn the secrets of the potion.",
+    "rewards": ["Elixir of Luminance Recipe", "3200 Alchemy experience"],
+    "skillRequirements": {
+        "alchemy": 38
+    },
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "alden",
+            "text": [
+                "Adventurer, I require assistance to craft the Elixir of Luminance.",
+                "Can you fetch the Moonshade Herb for me?"
+            ],
+            "completedText": ["Seek out the elusive Moonshade Herb."]
+        },
+        "1": {
+            "task": "collect",
+            "itemRequirements": [{ "key": "moonshadeherb", "count": 3 }],
+            "completedText": ["Return to Master Alden with the herbs."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "alden",
+            "hasItemText": [
+                "You've done it! Now, observe as I craft the Elixir.",
+                "I shall share its secret with you."
+            ],
+            "skillRewards": [
+                {
+                    "key": "alchemy",
+                    "experience": 3200
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You've unlocked the @crimson@Elixir of Luminance Recipe@green@ and gained @crimson@3200 Alchemy experience@green@.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

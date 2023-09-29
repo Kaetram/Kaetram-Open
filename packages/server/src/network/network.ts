@@ -1,7 +1,7 @@
 import Player from '../game/entity/character/player/player';
 
 import config from '@kaetram/common/config';
-import { Handshake } from '@kaetram/common/network/impl';
+import { HandshakePacket } from '@kaetram/common/network/impl';
 
 import type World from '../game/world';
 import type Connection from './connection';
@@ -78,7 +78,8 @@ export default class Network {
 
             this.send(
                 player,
-                new Handshake({
+                new HandshakePacket({
+                    type: 'client',
                     instance: player.instance,
                     serverId: config.serverId
                 })

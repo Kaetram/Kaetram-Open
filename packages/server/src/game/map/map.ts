@@ -6,19 +6,11 @@ import mapData from '../../../data/map/world.json';
 
 import { Modules } from '@kaetram/common/network';
 
-import type {
-    FlatTile,
-    ProcessedArea,
-    ProcessedDoor,
-    ProcessedMap,
-    ProcessedResource,
-    RegionTile,
-    RotatedTile,
-    Tile
-} from '@kaetram/common/types/map';
-import type Player from '../entity/character/player/player';
 import type World from '../world';
 import type Areas from './areas/areas';
+import type Player from '../entity/character/player/player';
+import type { ProcessedArea, ProcessedDoor, ProcessedMap, Tile } from '@kaetram/common/types/map';
+import type Entity from '../entity/entity';
 
 let map = mapData as ProcessedMap;
 
@@ -31,11 +23,11 @@ export default class Map {
 
     // Map handlers
     public regions: Regions;
-    public grids: Grids;
+    public grids: Grids = new Grids(this.width, this.height);
 
     // Map data and collisions
     public data: (number | number[])[] = map.data;
-    private collisions: number[] = map.collisions || [];
+    public collisions: number[] = map.collisions || [];
     private entities: { [tileId: number]: string } = map.entities;
 
     public plateau: { [index: number]: number } = map.plateau;
@@ -43,10 +35,6 @@ export default class Map {
     public cursors: { [tileId: number]: string } = map.cursors;
     public doors: { [index: number]: ProcessedDoor } = {};
     public warps: ProcessedArea[] = map.areas.warps || [];
-    public trees: ProcessedResource[] = map.trees || [];
-    public rocks: ProcessedResource[] = map.rocks || [];
-    public fishSpots: ProcessedResource[] = map.fishSpots || [];
-    public foraging: ProcessedResource[] = map.foraging || [];
     public lights: ProcessedArea[] = map.areas.lights || [];
     public signs: ProcessedArea[] = map.areas.signs || [];
 
@@ -56,8 +44,6 @@ export default class Map {
     private areas: { [name: string]: Areas } = {};
 
     public constructor(public world: World) {
-        this.grids = new Grids(this.width, this.height);
-
         this.loadAreas();
         this.loadDoors();
 
@@ -121,7 +107,8 @@ export default class Map {
                 reqItemCount: door.reqItemCount || 0,
                 stage: door.stage || 0,
                 skill: door.skill || '',
-                level: door.level || 0
+                level: door.level || 0,
+                npc: door.npc || ''
             };
         }
     }
@@ -145,7 +132,7 @@ export default class Map {
     public indexToCoord(index: number): Position {
         return {
             x: index % this.width,
-            y: Math.floor(index / this.width)
+            y: ~~(index / this.width)
         };
     }
 
@@ -155,8 +142,8 @@ export default class Map {
      * @param tileId The tileId we are checking.
      */
 
-    public isFlipped(tileId: number): boolean {
-        return tileId > Modules.MapFlags.DIAGONAL_FLAG;
+    public isFlippedTileId(tileId: number): boolean {
+        return tileId > (Modules.MapFlags.DIAGONAL_FLAG as number);
     }
 
     /**
@@ -184,13 +171,40 @@ export default class Map {
     }
 
     /**
-     * Checks if the tileIndex exists in the map collisions.
+     * Checks if the tile data is a collision.
+     * @param data Contains tile information.
+     * @returns Whether or not the tile is a collision.
+     */
+
+    public isCollision(data: Tile): boolean {
+        let collision = false;
+
+        this.forEachTile(data, (tile: number) => {
+            // Remove the tile transformation flags if they exist.
+            if (this.isFlippedTileId(tile)) tile = this.getFlippedTileId(tile);
+
+            if (this.collisions.includes(tile)) collision = true;
+        });
+
+        return collision;
+    }
+
+    /**
+     * Checks if the tileIndex exists in the map collisions. We check against
+     * tile ids instead of indexes because indexes will scale exponentially as
+     * more map content is added. Think of it as this; you are more likely to add
+     * more tiles into the map than add more tilesets.
      * @param index Tile index to check.
      * @returns If the array of collision indexes contains the tileIndex.
      */
 
     public isCollisionIndex(index: number): boolean {
-        return this.collisions.includes(index);
+        let data = this.data[index];
+
+        // Empty data means the tile is a collision.
+        if (!data) return true;
+
+        return this.isCollision(data);
     }
 
     /**
@@ -213,31 +227,35 @@ export default class Map {
          */
 
         // Verify dynamic tile collision if player is provided as a parameter.
-        if (player) {
-            let region = this.regions.get(this.regions.getRegion(x, y));
+        let region = this.regions.get(this.regions.getRegion(x, y)),
+            index = this.coordToIndex(x, y);
 
-            // Skip if there are no dynamic areas in the region.
-            if (region.hasDynamicAreas()) {
-                let dynamicArea = region.getDynamicArea(x, y);
+        // Skip if there are no dynamic areas in the region.
+        if (player && region.hasDynamicAreas()) {
+            let dynamicArea = region.getDynamicArea(x, y);
 
-                // Skip if no dynamic area is found or it doesn't fulfill requirements.
-                if (dynamicArea?.fulfillsRequirement(player)) {
-                    let mappedTile = dynamicArea.getMappedTile(x, y);
+            // Skip if no dynamic area is found or it doesn't fulfill requirements.
+            if (dynamicArea?.fulfillsRequirement(player)) {
+                let mappedTile = dynamicArea.getMappedTile(x, y);
 
-                    // Check collision if we can find a mapping tile.
-                    if (mappedTile) return this.isColliding(mappedTile.x, mappedTile.y);
-                }
+                // Check collision if we can find a mapping tile.
+                if (mappedTile) return this.isColliding(mappedTile.x, mappedTile.y);
             }
         }
 
-        let index = this.coordToIndex(x, y);
+        let hasEntity = false;
 
-        // If the tile is empty it's automatically a collision tile.
-        return !this.data[index] || this.isCollisionIndex(index);
+        if (this.grids.hasEntityAt(x, y))
+            this.grids.forEachEntityAt(x, y, (entity: Entity) => {
+                if (entity.isResource()) hasEntity = true;
+            });
+
+        // Check the collision at a specified index.
+        return hasEntity || this.isCollisionIndex(index);
     }
 
     /**
-     * Checks if the tile data (at an index) is an object.
+     * Checks the tile data on whether or not it contains an object tile.
      * @param data The tile data (number or number array) we are checking.
      * @returns Boolean conditional if the tile data contains an object.
      */
@@ -293,30 +311,20 @@ export default class Map {
     }
 
     /**
-     * Looks for cursor data in the provided tile data. The tile data
-     * is directly extracted from the map data at a certain index.
+     * Given the index we try to obtain the tile data and look through
+     * it to see if it contains a cursor name.
      * @param data The tile data we are checking.
      * @returns The cursor name if it exists.
      */
 
-    public getCursor(data: Tile): string {
+    public getCursor(index: number): string {
         let cursor = '';
 
-        this.forEachTile(data, (tileId: number) => {
+        this.forEachTile(this.data[index], (tileId: number) => {
             if (tileId in this.cursors) cursor = this.cursors[tileId];
         });
 
         return cursor;
-    }
-
-    /**
-     * Obtains the cursor based on the specified tile index.
-     * @param index The tile index we are checking.
-     * @returns The cursor name if it exists.
-     */
-
-    public getCursorFromIndex(index: number): string {
-        return this.getCursor(this.data[index]);
     }
 
     /**
@@ -336,70 +344,21 @@ export default class Map {
     }
 
     /**
-     * Uses the index (see `coordToIndex`) to obtain tile inforamtion in the tilemap.
-     * The object is a region tile that is later used to send map data to the client.
-     * @param index Gets tile information at an index in the map.
-     * @returns Returns tile information (a number or number array)
+     * Extracts the original tileId from a flipped tile. We are essentially unbitmasking
+     * the tileId to get the original tileId.
+     * @param tileId The flipped tile id we are extracting.
+     * @returns The original tile id (used for collision checking).
      */
 
-    public getTileData(index: number): RegionTile {
-        let data = this.data[index];
-
-        return data ? this.parseTileData(data) : [];
-    }
-
-    /**
-     * Parses through the specified data at a given index and extracts
-     * the flipped tiles from it. Returns a formatted RegionTile ready for
-     * the client.
-     * @param data Raw data contained at an index.
-     * @returns A RegionTile object containing index tile data information.
-     */
-
-    public parseTileData(data: Tile): RegionTile {
-        let isArray = Array.isArray(data),
-            parsedData: RegionTile = isArray ? [] : 0;
-
-        this.forEachTile(data, (tileId: number) => {
-            let tile: RegionTile = tileId;
-
-            if (this.isFlipped(tileId)) tile = this.getFlippedTile(tileId);
-
-            if (isArray) (parsedData as FlatTile).push(tile);
-            else parsedData = tile;
-        });
-
-        return parsedData;
-    }
-
-    /**
-     * Grabs the rotated tile id from Tiled and performs bitwise operators
-     * on it in order to convert it to an actual tileId. The bitshifts
-     * indicate the type of rotation, and performing all the operations
-     * results in the original tileId.
-     * For more information refer to the following
-     * https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#tmx-tile-flipping
-     * @param tileId The tileId of the flipped tile.
-     * @returns A parsed tile of type `RotatedTile`.
-     */
-
-    public getFlippedTile(tileId: number): RotatedTile {
-        let h = !!(tileId & Modules.MapFlags.HORIZONTAL_FLAG),
-            v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
-            d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);
-
-        tileId &= ~(
-            Modules.MapFlags.DIAGONAL_FLAG |
-            Modules.MapFlags.VERTICAL_FLAG |
-            Modules.MapFlags.HORIZONTAL_FLAG
+    public getFlippedTileId(tileId: number): number {
+        return (
+            tileId &
+            ~(
+                Modules.MapFlags.DIAGONAL_FLAG |
+                Modules.MapFlags.VERTICAL_FLAG |
+                Modules.MapFlags.HORIZONTAL_FLAG
+            )
         );
-
-        return {
-            tileId,
-            h,
-            v,
-            d
-        };
     }
 
     /**
@@ -420,9 +379,11 @@ export default class Map {
     }
 
     /**
-     * Tile data consists of arrays and single numerical values.
-     * This callback function is used to cleanly iterate through
-     * those Tile[] arrays. i.e. [1, 2, [1, 2, 3], 4, [5, 6]]
+     * Iterates through all the tiles at a given index if it's an array, otherwise we just return
+     * the number contained at that location. This is used to speed up code when trying to handle
+     * logic for multiple tiles at a location.
+     * @param data The raw tile data (generally contained in the umodified map) at an index.
+     * @param callback The tile id and index of the tile currently being iterated.
      */
 
     public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {
@@ -436,10 +397,10 @@ export default class Map {
      */
 
     public forEachEntity(callback: (position: Position, key: string) => void): void {
-        for (let tileId in this.entities) {
-            let position = this.indexToCoord(parseInt(tileId));
+        for (let index in this.entities) {
+            let position = this.indexToCoord(parseInt(index));
 
-            callback(position, this.entities[tileId]);
+            callback(position, this.entities[index]);
         }
     }
 }

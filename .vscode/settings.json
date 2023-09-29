@@ -1,0 +1,21 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": { "source.fixAll": true },
+    "npm.packageManager": "yarn",
+    "prettier.trailingComma": "none",
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "eslint.format.enable": true,
+    "eslint.lintTask.enable": true,
+    "eslint.validate": ["javascript", "typescript", "html", "astro"],
+    "eslint.nodePath": "./node_modules",
+    "stylelint.packageManager": "yarn",
+    "stylelint.validate": ["css", "postcss", "sass", "scss", "html", "astro"],
+    "rust-analyzer.linkedProjects": ["./packages/app/Cargo.toml"],
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "githubPullRequests.ignoredPullRequestBranches": ["beta"]
+}

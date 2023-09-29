@@ -27,7 +27,7 @@ export default {
      */
 
     createInstance(identifier = 0): string {
-        return `${identifier}${this.randomInt(1000, 100_000)}${++this.counter}`;
+        return `${identifier}-${this.randomInt(1000, 100_000)}${++this.counter}`;
     },
 
     /**
@@ -110,37 +110,6 @@ export default {
     },
 
     /**
-     * This function is responsible for parsing a message and looking for special
-     * characters (primarily used for colour codes). This function will be expanded
-     * if necessary in the nearby future.
-     */
-
-    parseMessage(message: string): string {
-        try {
-            let messageBlocks = message.split('@');
-
-            if (messageBlocks.length % 2 === 0) {
-                log.warning('Improper message block format!');
-                log.warning('Ensure format follows @COLOUR@ format.');
-                return messageBlocks.join(' ');
-            }
-
-            for (let index in messageBlocks)
-                if (parseInt(index) % 2 !== 0)
-                    // we hit a colour code.
-                    messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
-
-            let codeCount = messageBlocks.length / 2 - 1;
-
-            for (let i = 0; i < codeCount; i++) messageBlocks.push('</span>');
-
-            return messageBlocks.join('');
-        } catch {
-            return '';
-        }
-    },
-
-    /**
      * This function is primarily used for comparing checksum data
      * of maps in order to determine if an update is necessary.
      * @param data Any form of data, string, numbers, etc.
@@ -168,7 +137,7 @@ export default {
      */
 
     getEntityType(instance: string): number {
-        return parseInt(instance.slice(0, 1));
+        return parseInt(instance.split('-')[0]);
     },
 
     /**
@@ -192,7 +161,7 @@ export default {
      */
 
     hash(data: string, callback: (hash: string) => void): void {
-        bcryptjs.hash(data, 10, (error: Error, hash: string) => {
+        bcryptjs.hash(data, 10, (error: Error | null, hash: string) => {
             // Throw an error to prevent any further execution of the database.
             if (error) throw error;
 
@@ -209,7 +178,7 @@ export default {
      */
 
     compare(data: string, hash: string, callback: (result: boolean) => void): void {
-        bcryptjs.compare(data, hash, (error: Error, result: boolean) => {
+        bcryptjs.compare(data, hash, (error: Error | null, result: boolean) => {
             // Throw an error to prevent any further execution of the database.
             if (error) throw error;
 
@@ -374,5 +343,32 @@ export default {
             archery: 0,
             magic: 0
         };
+    },
+
+    /**
+     * Converts a skill parameter into a resource type that can be
+     * used as an identifier for quests.
+     * @param skill The skill we are converting.
+     * @returns The type of resoruce that the skill corresponds to.
+     */
+
+    getResourceType(skill: Modules.Skills): string {
+        switch (skill) {
+            case Modules.Skills.Lumberjacking: {
+                return 'tree';
+            }
+
+            case Modules.Skills.Fishing: {
+                return 'fish';
+            }
+
+            case Modules.Skills.Mining: {
+                return 'rock';
+            }
+
+            default: {
+                return 'tree';
+            }
+        }
     }
 };

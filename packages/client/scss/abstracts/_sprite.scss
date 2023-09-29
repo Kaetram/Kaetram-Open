@@ -1,0 +1,80 @@
+@use 'sass:math';
+
+@use 'media';
+
+$default-font-size: 16;
+
+@mixin sheet(
+    $image,
+    $x: 0,
+    $y: 0,
+    $width: width($image),
+    $height: height($image),
+    $rows: true,
+    $gap: 0,
+    $scale: 2,
+    $hover: 0,
+    $active: 0,
+    $disabled: 0,
+    $selectors: '&'
+) {
+    $scale: $scale * math.div(1em, $default-font-size);
+    $x: $x * $scale;
+    $y: $y * $scale;
+    $width: $width * $scale;
+    $height: $height * $scale;
+    $gap: $gap * $scale;
+
+    #{$selectors} {
+        width: $width;
+        height: $height;
+
+        background-image: url('/img/interface/#{$image}.png');
+        background-repeat: no-repeat;
+        background-size: width($image) * $scale height($image) * $scale;
+
+        @if $rows {
+            &:hover {
+                background-position-x: -$x - $gap * $hover - $width * $hover;
+            }
+
+            &:active,
+            &.active {
+                background-position-x: -$x - $gap * $active - $width * $active;
+            }
+
+            &:disabled,
+            &.disabled {
+                background-position-x: -$x - $gap * $disabled - $width * $disabled;
+            }
+        } @else {
+            &:hover {
+                background-position-y: -$y - $gap * $hover - $height * $hover;
+            }
+
+            &:active,
+            &.active {
+                background-position-y: -$y - $gap * $active - $height * $active;
+            }
+
+            &:disabled,
+            &.disabled {
+                background-position-y: -$y - $gap * $disabled - $height * $disabled;
+            }
+        }
+
+        @content;
+    }
+
+    @for $i from 0 to length($selectors) {
+        #{nth($selectors, $i + 1)} {
+            @if $rows {
+                background-position-x: -$x;
+                background-position-y: -$y - $gap * $i - $height * $i;
+            } @else {
+                background-position-x: -$x - $gap * $i - $width * $i;
+                background-position-y: -$y;
+            }
+        }
+    }
+}

@@ -1,0 +1,60 @@
+{
+    "name": "The Lost Melody",
+    "description": "A forgotten song needs to be revived.|Ancient tales tell of a melody that could summon rains and heal the earth. The village bard believes the notes are scattered, waiting to be pieced together.",
+    "rewards": ["ancientlute"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "villagebard",
+            "text": [
+                "Greetings, traveler. I've been trying to recall a melody.",
+                "Its notes are said to be hidden in old monuments across the land.",
+                "Could you help me gather them?"
+            ],
+            "completedText": ["Seek the first monument."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "stonepillar",
+            "text": [
+                "Upon this stone, a note is faintly etched. It resonates softly.",
+                "You've discovered the first note!"
+            ],
+            "completedText": ["Find the next monument."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "ancientstatue",
+            "text": [
+                "Water trickles down the statue, revealing a hidden musical note.",
+                "Another piece of the puzzle!"
+            ],
+            "completedText": ["Seek the third note."]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "cavepainting",
+            "text": ["The cave's walls reverberate with a unique tone.", "You've found the third musical note!"],
+            "completedText": ["Return to the bard."]
+        },
+        "4": {
+            "task": "talk",
+            "npc": "villagebard",
+            "itemRequirements": [
+                {
+                    "key": "musicalnotes",
+                    "count": 3
+                }
+            ],
+            "text": [
+                "Ah, these are the notes! Let me piece them together...",
+                "Marvelous! As thanks, please take this ancient lute."
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have completed @crimson@The Lost Melody@green@. The village bard has gifted you an ancient lute!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

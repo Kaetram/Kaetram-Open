@@ -1,0 +1,48 @@
+{
+    "name": "Miner's Quest",
+    "description": "The miner needs your help with acuqiring ore.|A miner is in need of your immediate assistance. Instead of going out and looking for ore by himself, he wants to harass random adventurers to do his job for him. You can find him pretending to mine where the desert meets the volcano.",
+    "rewards": ["Access to Miner's store", "2000 Mining experience"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "miner",
+            "text": [
+                "Oh please, adventurer, please help me.",
+                "I'm supposed to be mining, but I really don't feel like it.",
+                "Please you must help me before my supervisor finds out.",
+                "I need to collect 15 nisoc ores by the end of the day or else",
+                "I'm going to be fired!",
+                "Bring me 15 of those ores and I'll",
+                "give you access to my store!"
+            ],
+            "completedText": ["Please hurry, the time is ticking!", "Bring me 15 nisoc ores."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "miner",
+            "hasItemText": [
+                "Phew, thank you for your help, now I can just do nothing.",
+                "It sure is nice being self-employed eh?",
+                "Come back any time and I'll buy your ores at a better price",
+                "than any other store!"
+            ],
+            "itemRequirements": [
+                {
+                    "key": "nisocore",
+                    "count": 15
+                }
+            ],
+            "skillRewards": [
+                {
+                    "key": "mining",
+                    "experience": 2000
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Miner's Quest@green@. You've been awarded @crimson@2000@green@ Mining experience!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

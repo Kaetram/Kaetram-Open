@@ -1,0 +1,216 @@
+.slice-menu {
+    position: absolute;
+    inset: 0;
+
+    box-sizing: border-box;
+    margin: auto;
+
+    color: #eee;
+
+    border-image: url('/img/interface/slices/menu.png') 44% fill/ 1em / 0 stretch;
+}
+
+.slice-menu-fancy {
+    position: absolute;
+    inset: 0;
+
+    box-sizing: border-box;
+    margin: auto;
+
+    color: #eee;
+
+    border-image: url('/img/interface/slices/menu-fancy.png') 44% fill/ 4em / 0 stretch;
+}
+
+.slice-container {
+    position: absolute;
+    inset: 0;
+
+    display: none;
+    flex-direction: row;
+    gap: 0.5em;
+
+    box-sizing: border-box;
+    width: 32em;
+    height: 16em;
+    margin: auto;
+    padding: 1em;
+
+    color: #eee;
+
+    border-image: url('/img/interface/slices/container.png') 44% fill/ 1em / 0 stretch;
+
+    @media (--portrait) {
+        flex-direction: column;
+        width: 22em;
+        height: 30em;
+    }
+}
+
+.slice-container-fancy {
+    position: absolute;
+    inset: 0;
+
+    display: none;
+    flex-direction: row;
+    gap: 0.5em;
+
+    box-sizing: border-box;
+    width: 32em;
+    height: 16em;
+    margin: auto;
+    padding: 1em;
+
+    color: #eee;
+
+    border-image: url('/img/interface/slices/container-fancy.png') 44% fill/ 4.75em / 0 stretch;
+
+    @media (--portrait) {
+        flex-direction: column;
+        width: 22em;
+        height: 30em;
+    }
+}
+
+.slice-inner-container {
+    overflow: auto;
+    flex: 1;
+
+    box-sizing: border-box;
+    padding: 0.75em;
+
+    border-image: url('/img/interface/slices/inner-container.png') 42% fill / 2em / 0 stretch;
+}
+
+.slice-list {
+    overflow: auto;
+    box-sizing: border-box;
+    padding: 0.5em;
+    border-image: url('/img/interface/slices/list.png') 44% fill / 1em / 0 stretch;
+
+    // &:hover {
+    //     border-image-source: url('/img/interface/slices/list-hover.png');
+    // }
+}
+
+.slice-list-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+    padding: 0.5em;
+
+    border-image: url('/img/interface/slices/list-item.png') 44% fill / 0.5em / 0 stretch;
+
+    &:hover {
+        border-image-source: url('/img/interface/slices/list-item-hover.png');
+    }
+}
+
+.slice-item-slot {
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+    padding: 0.25em;
+
+    border-image: url('/img/interface/slices/item-slot.png') 44% fill / 0.5em / 0 stretch;
+}
+
+.slice-button {
+    box-sizing: border-box;
+    padding: 0.5em 1em;
+
+    font-size: 1em;
+    color: #eee;
+    text-align: center;
+
+    background-color: transparent;
+    border-image: url('/img/interface/slices/button.png') 44% fill/ 1em / 0 stretch;
+
+    &:hover {
+        border-image-source: url('/img/interface/slices/button-hover.png');
+    }
+
+    &:active {
+        border-image-source: url('/img/interface/slices/button-active.png');
+    }
+}
+
+.slice-button-green {
+    box-sizing: border-box;
+    padding: 0.5em 1em;
+
+    font-size: 1em;
+    color: #eee;
+    text-align: center;
+
+    background-color: transparent;
+    border-image: url('/img/interface/slices/button-green.png') 44% fill/ 1em / 0 stretch;
+
+    &:hover {
+        border-image-source: url('/img/interface/slices/button-green-hover.png');
+    }
+
+    &:active {
+        border-image-source: url('/img/interface/slices/button-green-active.png');
+    }
+}
+
+.slice-dialog {
+    position: absolute;
+
+    display: none;
+
+    box-sizing: border-box;
+    margin: auto;
+    padding: 1em 0.675em 0.675em;
+
+    background: transparent;
+    border-image: url('/img/interface/slices/dialog.png') 42% fill / 1em / 0 stretch;
+}
+
+.slice-input {
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+    padding: 0.625em 0.75em;
+
+    font-size: 0.875em;
+    color: #eee;
+
+    background-color: transparent;
+    border-image: url('/img/interface/slices/input.png') 25% fill / 0.5em / 0 stretch;
+
+    &:focus,
+    &:active {
+        border-image-source: url('/img/interface/slices/input-active.png');
+    }
+
+    &.field-error {
+        border-image-source: url('/img/interface/slices/input-error.png');
+    }
+}
+
+.slice-tab {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+    padding: 0.5em 0.5em 0;
+
+    background-color: transparent;
+    border-image: url('/img/interface/slices/tab.png') 44% fill/ 1em / 0 stretch;
+
+    &:focus {
+        border-image-source: url('/img/interface/slices/tab-active.png');
+    }
+}

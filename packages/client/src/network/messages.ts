@@ -2,105 +2,109 @@ import { Packets } from '@kaetram/common/network';
 
 import type App from '../app';
 import type {
-    AbilityCallback,
-    AchievementCallback,
-    AnimationCallback,
-    BlinkCallback,
-    BubbleCallback,
-    CameraCallback,
-    ChatCallback,
-    CombatCallback,
-    CommandCallback,
-    ContainerCallback,
-    CountdownCallback,
-    CraftingCallback,
-    DeathCallback,
-    DespawnCallback,
-    EffectCallback,
-    EnchantCallback,
-    EntityListCallback,
-    EquipmentCallback,
-    ExperienceCallback,
-    FriendsCallback,
-    GuildCallback,
-    HandshakeCallback,
-    HealCallback,
-    LootBagCallback,
-    MapCallback,
-    MinigameCallback,
-    MovementCallback,
-    MusicCallback,
-    NetworkCallback,
-    NotificationCallback,
-    NPCCallback,
-    OverlayCallback,
-    PointerCallback,
-    PointsCallback,
-    PoisonCallback,
-    PVPCallback,
-    QuestCallback,
-    RankCallback,
-    RespawnCallback,
-    SkillCallback,
-    SpawnCallback,
-    StoreCallback,
-    SyncCallback,
-    TeleportCallback,
-    TradeCallback,
-    UpdateCallback,
-    WelcomeCallback
+    AbilityPacketCallback,
+    AchievementPacketCallback,
+    AnimationPacketCallback,
+    BlinkPacketCallback,
+    BubblePacketCallback,
+    CameraPacketCallback,
+    ChatPacketCallback,
+    CombatPacketCallback,
+    CommandPacketCallback,
+    ContainerPacketCallback,
+    CountdownPacketCallback,
+    CraftingPacketCallback,
+    DeathPacketCallback,
+    DespawnPacketCallback,
+    EffectPacketCallback,
+    EnchantPacketCallback,
+    EntityListPacketCallback,
+    EquipmentPacketCallback,
+    ExperiencePacketCallback,
+    FriendsPacketCallback,
+    GuildPacketCallback,
+    HandshakePacketCallback,
+    HealPacketCallback,
+    InterfacePacketCallback,
+    LootBagPacketCallback,
+    MapPacketCallback,
+    MinigamePacketCallback,
+    MovementPacketCallback,
+    MusicPacketCallback,
+    NetworkPacketCallback,
+    NotificationPacketCallback,
+    NPCPacketCallback,
+    OverlayPacketCallback,
+    PointerPacketCallback,
+    PointsPacketCallback,
+    PoisonPacketCallback,
+    PVPPacketCallback,
+    QuestPacketCallback,
+    RankPacketCallback,
+    ResourcePacketCallback,
+    RespawnPacketCallback,
+    SkillPacketCallback,
+    SpawnPacketCallback,
+    StorePacketCallback,
+    SyncPacketCallback,
+    TeleportPacketCallback,
+    TradePacketCallback,
+    UpdatePacketCallback,
+    WelcomePacketCallback
 } from '@kaetram/common/types/messages/outgoing';
 
 export default class Messages {
     private messages: (() => ((...data: never[]) => void) | undefined)[] = [];
 
-    private handshakeCallback?: HandshakeCallback;
-    private welcomeCallback?: WelcomeCallback;
-    private mapCallback?: MapCallback;
-    private spawnCallback?: SpawnCallback;
-    private equipmentCallback?: EquipmentCallback;
-    private entityListCallback?: EntityListCallback;
-    private syncCallback?: SyncCallback;
-    private movementCallback?: MovementCallback;
-    private teleportCallback?: TeleportCallback;
-    private despawnCallback?: DespawnCallback;
-    private combatCallback?: CombatCallback;
-    private animationCallback?: AnimationCallback;
-    private pointsCallback?: PointsCallback;
-    private networkCallback?: NetworkCallback;
-    private chatCallback?: ChatCallback;
-    private commandCallback?: CommandCallback;
-    private containerCallback?: ContainerCallback;
-    private abilityCallback?: AbilityCallback;
-    private questCallback?: QuestCallback;
-    private achievementCallback?: AchievementCallback;
-    private notificationCallback?: NotificationCallback;
-    private blinkCallback?: BlinkCallback;
-    private healCallback?: HealCallback;
-    private experienceCallback?: ExperienceCallback;
-    private deathCallback?: DeathCallback;
-    private musicCallback?: MusicCallback;
-    private npcCallback?: NPCCallback;
-    private respawnCallback?: RespawnCallback;
-    private tradeCallback?: TradeCallback;
-    private enchantCallback?: EnchantCallback;
-    private guildCallback?: GuildCallback;
-    private pointerCallback?: PointerCallback;
-    private pvpCallback?: PVPCallback;
-    private poisonCallback?: PoisonCallback;
-    private storeCallback?: StoreCallback;
-    private overlayCallback?: OverlayCallback;
-    private cameraCallback?: CameraCallback;
-    private bubbleCallback?: BubbleCallback;
-    private skillCallback?: SkillCallback;
-    private updateCallback?: UpdateCallback;
-    private minigameCallback?: MinigameCallback;
-    private effectCallback?: EffectCallback;
-    private friendsCallback?: FriendsCallback;
-    private rankCallback?: RankCallback;
-    private craftingCallback?: CraftingCallback;
-    private lootBagCallback?: LootBagCallback;
-    private countdownCallback?: CountdownCallback;
+    private handshakeCallback?: HandshakePacketCallback;
+    private welcomeCallback?: WelcomePacketCallback;
+    private mapCallback?: MapPacketCallback;
+    private spawnCallback?: SpawnPacketCallback;
+    private equipmentCallback?: EquipmentPacketCallback;
+    private entityListCallback?: EntityListPacketCallback;
+    private syncCallback?: SyncPacketCallback;
+    private movementCallback?: MovementPacketCallback;
+    private teleportCallback?: TeleportPacketCallback;
+    private despawnCallback?: DespawnPacketCallback;
+    private combatCallback?: CombatPacketCallback;
+    private animationCallback?: AnimationPacketCallback;
+    private pointsCallback?: PointsPacketCallback;
+    private networkCallback?: NetworkPacketCallback;
+    private chatCallback?: ChatPacketCallback;
+    private commandCallback?: CommandPacketCallback;
+    private containerCallback?: ContainerPacketCallback;
+    private abilityCallback?: AbilityPacketCallback;
+    private questCallback?: QuestPacketCallback;
+    private achievementCallback?: AchievementPacketCallback;
+    private notificationCallback?: NotificationPacketCallback;
+    private blinkCallback?: BlinkPacketCallback;
+    private healCallback?: HealPacketCallback;
+    private experienceCallback?: ExperiencePacketCallback;
+    private deathCallback?: DeathPacketCallback;
+    private musicCallback?: MusicPacketCallback;
+    private npcCallback?: NPCPacketCallback;
+    private respawnCallback?: RespawnPacketCallback;
+    private tradeCallback?: TradePacketCallback;
+    private enchantCallback?: EnchantPacketCallback;
+    private guildCallback?: GuildPacketCallback;
+    private pointerCallback?: PointerPacketCallback;
+    private pvpCallback?: PVPPacketCallback;
+    private poisonCallback?: PoisonPacketCallback;
+    private storeCallback?: StorePacketCallback;
+    private overlayCallback?: OverlayPacketCallback;
+    private cameraCallback?: CameraPacketCallback;
+    private bubbleCallback?: BubblePacketCallback;
+    private skillCallback?: SkillPacketCallback;
+    private updateCallback?: UpdatePacketCallback;
+    private minigameCallback?: MinigamePacketCallback;
+    private effectCallback?: EffectPacketCallback;
+    private friendsCallback?: FriendsPacketCallback;
+    private rankCallback?: RankPacketCallback;
+    private craftingCallback?: CraftingPacketCallback;
+    private interfaceCallback?: InterfacePacketCallback;
+    private lootBagCallback?: LootBagPacketCallback;
+    private countdownCallback?: CountdownPacketCallback;
+    private resourceCallback?: ResourcePacketCallback;
 
     /**
      * Do not clutter up the Socket class with callbacks,
@@ -158,8 +162,10 @@ export default class Messages {
         this.messages[Packets.Friends] = () => this.friendsCallback;
         this.messages[Packets.Rank] = () => this.rankCallback;
         this.messages[Packets.Crafting] = () => this.craftingCallback;
+        this.messages[Packets.Interface] = () => this.interfaceCallback;
         this.messages[Packets.LootBag] = () => this.lootBagCallback;
         this.messages[Packets.Countdown] = () => this.countdownCallback;
+        this.messages[Packets.Resource] = () => this.resourceCallback;
     }
 
     /**
@@ -207,6 +213,11 @@ export default class Messages {
 
             case 'banned': {
                 this.app.sendError('Your account has been disabled!');
+                break;
+            }
+
+            case 'disabledregister': {
+                this.app.sendError('Registration is currently disabled.');
                 break;
             }
 
@@ -303,191 +314,199 @@ export default class Messages {
      * Packet callbacks.
      */
 
-    public onHandshake(callback: HandshakeCallback): void {
+    public onHandshake(callback: HandshakePacketCallback): void {
         this.handshakeCallback = callback;
     }
 
-    public onWelcome(callback: WelcomeCallback): void {
+    public onWelcome(callback: WelcomePacketCallback): void {
         this.welcomeCallback = callback;
     }
 
-    public onSpawn(callback: SpawnCallback): void {
+    public onSpawn(callback: SpawnPacketCallback): void {
         this.spawnCallback = callback;
     }
 
-    public onEquipment(callback: EquipmentCallback): void {
+    public onEquipment(callback: EquipmentPacketCallback): void {
         this.equipmentCallback = callback;
     }
 
-    public onEntityList(callback: EntityListCallback): void {
+    public onEntityList(callback: EntityListPacketCallback): void {
         this.entityListCallback = callback;
     }
 
-    public onSync(callback: SyncCallback): void {
+    public onSync(callback: SyncPacketCallback): void {
         this.syncCallback = callback;
     }
 
-    public onMovement(callback: MovementCallback): void {
+    public onMovement(callback: MovementPacketCallback): void {
         this.movementCallback = callback;
     }
 
-    public onTeleport(callback: TeleportCallback): void {
+    public onTeleport(callback: TeleportPacketCallback): void {
         this.teleportCallback = callback;
     }
 
-    public onDespawn(callback: DespawnCallback): void {
+    public onDespawn(callback: DespawnPacketCallback): void {
         this.despawnCallback = callback;
     }
 
-    public onCombat(callback: CombatCallback): void {
+    public onCombat(callback: CombatPacketCallback): void {
         this.combatCallback = callback;
     }
 
-    public onAnimation(callback: AnimationCallback): void {
+    public onAnimation(callback: AnimationPacketCallback): void {
         this.animationCallback = callback;
     }
 
-    public onPoints(callback: PointsCallback): void {
+    public onPoints(callback: PointsPacketCallback): void {
         this.pointsCallback = callback;
     }
 
-    public onNetwork(callback: NetworkCallback): void {
+    public onNetwork(callback: NetworkPacketCallback): void {
         this.networkCallback = callback;
     }
 
-    public onChat(callback: ChatCallback): void {
+    public onChat(callback: ChatPacketCallback): void {
         this.chatCallback = callback;
     }
 
-    public onCommand(callback: CommandCallback): void {
+    public onCommand(callback: CommandPacketCallback): void {
         this.commandCallback = callback;
     }
 
-    public onContainer(callback: ContainerCallback): void {
+    public onContainer(callback: ContainerPacketCallback): void {
         this.containerCallback = callback;
     }
 
-    public onAbility(callback: AbilityCallback): void {
+    public onAbility(callback: AbilityPacketCallback): void {
         this.abilityCallback = callback;
     }
 
-    public onQuest(callback: QuestCallback): void {
+    public onQuest(callback: QuestPacketCallback): void {
         this.questCallback = callback;
     }
 
-    public onAchievement(callback: AchievementCallback): void {
+    public onAchievement(callback: AchievementPacketCallback): void {
         this.achievementCallback = callback;
     }
 
-    public onNotification(callback: NotificationCallback): void {
+    public onNotification(callback: NotificationPacketCallback): void {
         this.notificationCallback = callback;
     }
 
-    public onBlink(callback: BlinkCallback): void {
+    public onBlink(callback: BlinkPacketCallback): void {
         this.blinkCallback = callback;
     }
 
-    public onHeal(callback: HealCallback): void {
+    public onHeal(callback: HealPacketCallback): void {
         this.healCallback = callback;
     }
 
-    public onExperience(callback: ExperienceCallback): void {
+    public onExperience(callback: ExperiencePacketCallback): void {
         this.experienceCallback = callback;
     }
 
-    public onDeath(callback: DeathCallback): void {
+    public onDeath(callback: DeathPacketCallback): void {
         this.deathCallback = callback;
     }
 
-    public onMusic(callback: MusicCallback): void {
+    public onMusic(callback: MusicPacketCallback): void {
         this.musicCallback = callback;
     }
 
-    public onNPC(callback: NPCCallback): void {
+    public onNPC(callback: NPCPacketCallback): void {
         this.npcCallback = callback;
     }
 
-    public onRespawn(callback: RespawnCallback): void {
+    public onRespawn(callback: RespawnPacketCallback): void {
         this.respawnCallback = callback;
     }
 
-    public onTrade(callback: TradeCallback): void {
+    public onTrade(callback: TradePacketCallback): void {
         this.tradeCallback = callback;
     }
 
-    public onEnchant(callback: EnchantCallback): void {
+    public onEnchant(callback: EnchantPacketCallback): void {
         this.enchantCallback = callback;
     }
 
-    public onGuild(callback: GuildCallback): void {
+    public onGuild(callback: GuildPacketCallback): void {
         this.guildCallback = callback;
     }
 
-    public onPointer(callback: PointerCallback): void {
+    public onPointer(callback: PointerPacketCallback): void {
         this.pointerCallback = callback;
     }
 
-    public onPVP(callback: PVPCallback): void {
+    public onPVP(callback: PVPPacketCallback): void {
         this.pvpCallback = callback;
     }
 
-    public onPoison(callback: PoisonCallback): void {
+    public onPoison(callback: PoisonPacketCallback): void {
         this.poisonCallback = callback;
     }
 
-    public onStore(callback: StoreCallback): void {
+    public onStore(callback: StorePacketCallback): void {
         this.storeCallback = callback;
     }
 
-    public onMap(callback: MapCallback): void {
+    public onMap(callback: MapPacketCallback): void {
         this.mapCallback = callback;
     }
 
-    public onOverlay(callback: OverlayCallback): void {
+    public onOverlay(callback: OverlayPacketCallback): void {
         this.overlayCallback = callback;
     }
 
-    public onCamera(callback: CameraCallback): void {
+    public onCamera(callback: CameraPacketCallback): void {
         this.cameraCallback = callback;
     }
 
-    public onBubble(callback: BubbleCallback): void {
+    public onBubble(callback: BubblePacketCallback): void {
         this.bubbleCallback = callback;
     }
 
-    public onSkill(callback: SkillCallback): void {
+    public onSkill(callback: SkillPacketCallback): void {
         this.skillCallback = callback;
     }
 
-    public onUpdate(callback: UpdateCallback): void {
+    public onUpdate(callback: UpdatePacketCallback): void {
         this.updateCallback = callback;
     }
 
-    public onMinigame(callback: MinigameCallback): void {
+    public onMinigame(callback: MinigamePacketCallback): void {
         this.minigameCallback = callback;
     }
 
-    public onEffect(callback: EffectCallback): void {
+    public onEffect(callback: EffectPacketCallback): void {
         this.effectCallback = callback;
     }
 
-    public onFriends(callback: FriendsCallback): void {
+    public onFriends(callback: FriendsPacketCallback): void {
         this.friendsCallback = callback;
     }
 
-    public onRank(callback: RankCallback): void {
+    public onRank(callback: RankPacketCallback): void {
         this.rankCallback = callback;
     }
 
-    public onCrafting(callback: CraftingCallback): void {
+    public onCrafting(callback: CraftingPacketCallback): void {
         this.craftingCallback = callback;
     }
 
-    public onLootBag(callback: LootBagCallback): void {
+    public onInterface(callback: InterfacePacketCallback): void {
+        this.interfaceCallback = callback;
+    }
+
+    public onLootBag(callback: LootBagPacketCallback): void {
         this.lootBagCallback = callback;
     }
 
-    public onCountdown(callback: CountdownCallback): void {
+    public onCountdown(callback: CountdownPacketCallback): void {
         this.countdownCallback = callback;
+    }
+
+    public onResource(callback: ResourcePacketCallback): void {
+        this.resourceCallback = callback;
     }
 }

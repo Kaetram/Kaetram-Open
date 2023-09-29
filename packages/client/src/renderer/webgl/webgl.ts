@@ -7,7 +7,7 @@ import LayerVertex from '../shaders/layer.vert';
 import LayerFragment from '../shaders/layer.frag';
 
 import type Game from '../../game';
-import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
+import type { ClientTile, TransformedTile } from '@kaetram/common/types/map';
 
 /**
  * Huge thanks to the developer of `gl-tiled` for the point of reference in
@@ -50,12 +50,7 @@ export default class WebGL extends Renderer {
     private quadVertices = new Float32Array([
         //x  y  u  v
         // eslint-disable-next-line prettier/prettier
-        -1, -1, 0, 1,
-         1, -1, 1, 1,
-         1,  1, 1, 0,
-        -1, -1, 0, 1,
-         1,  1, 1, 0,
-        -1,  1, 0, 0,
+        -1, -1, 0, 1, 1, -1, 1, 1, 1, 1, 1, 0, -1, -1, 0, 1, 1, 1, 1, 0, -1, 1, 0, 0
     ]);
 
     private attributeIndices = {
@@ -153,7 +148,7 @@ export default class WebGL extends Renderer {
      * @param data The data we want to update the tile with, may be an array or a number.
      */
 
-    public override setTile(index: number, data: RegionTile): void {
+    public override setTile(index: number, data: ClientTile): void {
         // Clear all the tiles of every layer at the specified index.
         this.clearTile(index);
 
@@ -161,7 +156,7 @@ export default class WebGL extends Renderer {
         if (!Array.isArray(data)) return this.addTile(index, data);
 
         // If we find an array tile then we need to iterate through the array and pass the data to the layers.
-        for (let tileIndex in data) this.addTile(index, data[tileIndex], parseInt(tileIndex));
+        for (let tileIndex in data) this.addTile(index, data[tileIndex], ~~tileIndex);
     }
 
     /**
@@ -243,7 +238,7 @@ export default class WebGL extends Renderer {
             let viewPort = new Float32Array([this.screenWidth, this.screenHeight]),
                 shader = this.getShader(context);
 
-            context.viewport(0, 0, context.canvas.width, context.canvas.height);
+            context.viewport(0, 0, context.drawingBufferWidth, context.drawingBufferHeight);
 
             context.uniform2fv(shader.uniforms.uViewportSize, viewPort);
             context.uniform1f(shader.uniforms.uInverseTileScale, 1 / this.camera.zoomFactor);
@@ -268,7 +263,7 @@ export default class WebGL extends Renderer {
 
     private draw(x = this.camera.x, y = this.camera.y): void {
         // Used for low power mode
-        if (this.hasRenderedFrame()) return;
+        if (this.hasRenderedFrame() && (this.game.isLowPowerMode() || this.mobile)) return;
 
         // Iterate through the drawing contexts and apply the necessary transformations/attributes.
         this.forEachDrawingContext((context: WebGLRenderingContext) => {
@@ -319,7 +314,7 @@ export default class WebGL extends Renderer {
              * obstruct certain foreground elements (tree shadows).
              */
 
-            context.uniform1f(shader.uniforms.uAlpha, isBackground ? 1 : 2);
+            context.uniform1f(shader.uniforms.uAlpha, isBackground ? 1 : 1.5);
             context.uniform1i(shader.uniforms.uRepeatTiles, 1);
             context.uniform2fv(shader.uniforms.uInverseLayerTileCount, this.inverseTileCount);
 
@@ -327,7 +322,7 @@ export default class WebGL extends Renderer {
 
             // Do the actual drawing.
             for (let layer of this.layers)
-                layer.draw(context, this.game.time, !isBackground, this.isLowPowerMode());
+                layer.draw(context, this.game.time, !isBackground, this.game.isLowPowerMode());
         });
 
         this.saveFrame();
@@ -342,10 +337,10 @@ export default class WebGL extends Renderer {
      * @param layerIndex Which layer index we are drawing to.
      */
 
-    private addTile(index: number, tile: number | RotatedTile, layerIndex = 0): void {
-        if (!this.layers[layerIndex]) this.layers[layerIndex] = new Layer(this.map);
+    private addTile(index: number, tile: number | TransformedTile, layerIndex = 0): void {
+        if (!this.layers[layerIndex]) this.layers[layerIndex] = new Layer(this);
 
-        this.layers[layerIndex].addTile(index, tile, this.isFlipped(tile as RotatedTile));
+        this.layers[layerIndex].addTile(index, tile, this.map.isFlipped(tile));
     }
 
     /**

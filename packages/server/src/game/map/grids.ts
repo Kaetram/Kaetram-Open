@@ -9,7 +9,10 @@ import type Effect from '../entity/objects/effect';
 export default class Grids {
     private entityGrid: { [instance: string]: Entity }[][] = [];
 
-    public constructor(private width: number, private height: number) {
+    public constructor(
+        private width: number,
+        private height: number
+    ) {
         /**
          * Create the two-dimensional grids.
          */
@@ -39,7 +42,7 @@ export default class Grids {
             entity = e;
         });
 
-        return entity;
+        return entity as Effect | undefined;
     }
 
     /**
@@ -74,6 +77,17 @@ export default class Grids {
 
     public removeFromEntityGrid(entity: Entity, x = entity.x, y = entity.y): void {
         delete this.entityGrid[y][x][entity.instance];
+    }
+
+    /**
+     * Checks if there is an entity at a specified coordinate.
+     * @param x The grid x coordinate.
+     * @param y The grid y coordinate.
+     * @returns Whether or not there is an entity at the specified coordinate.
+     */
+
+    public hasEntityAt(x: number, y: number): boolean {
+        return !!this.entityGrid[y]?.[x];
     }
 
     /**

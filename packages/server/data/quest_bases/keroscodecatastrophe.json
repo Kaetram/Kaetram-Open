@@ -1,0 +1,53 @@
+{
+    "name": "Keros' Code Catastrophe",
+    "description": "Oops, he did it again!|Our dear developer, Keros, tried to implement a 'funny hat' feature but accidentally turned all monsters into chickens. Can you help revert his... 'enhancements'?",
+    "rewards": ["debugger's helm", "chicken plushie"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "keros",
+            "text": [
+                "Okay, I may have made a tiny mistake.",
+                "Who would have thought that adding a hat would turn all the dragons into chickens?",
+                "Please help me fix this!"
+            ],
+            "completedText": ["Seek the Code Guru in the Pixel Forest."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "codeguru",
+            "text": [
+                "Ah, Keros' masterpieces. Always so... unexpected.",
+                "You'll need the Debug Elixir from the Glitch Grotto.",
+                "Bring it to me, and we'll set things right."
+            ],
+            "completedText": ["Retrieve the Debug Elixir from the Glitch Grotto."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "keros",
+            "text": [
+                "You've got the elixir? Great!",
+                "Let's pour this on the main server... carefully...",
+                "...and voila! The monsters are back!",
+                "Maybe I'll stick to just designing hats from now on.",
+                "Thanks for the help! Here's a token of my appreciation."
+            ],
+            "itemRewards": [
+                {
+                    "key": "debugger's helm",
+                    "count": 1
+                },
+                {
+                    "key": "chicken plushie",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@Thanks to you, the game's integrity is restored! Wear the @crimson@debugger's helm@green@ with pride, and cuddle with your chicken plushie – a reminder of Keros' little mishap.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

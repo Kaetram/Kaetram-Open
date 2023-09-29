@@ -3,13 +3,13 @@ import Entity from '../entity';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { Modules } from '@kaetram/common/network';
 import PluginIndex from '@kaetram/server/data/plugins/items';
+import { Modules } from '@kaetram/common/network';
 
-import type { EntityData } from '@kaetram/common/types/entity';
-import type { Bonuses, Enchantments, ItemData, Stats } from '@kaetram/common/types/item';
-import type { Plugin } from '@kaetram/server/data/plugins/items';
 import type Player from '../character/player/player';
+import type { EntityData } from '@kaetram/common/types/entity';
+import type { Plugin } from '@kaetram/server/data/plugins/items';
+import type { Bonuses, Enchantments, ItemData, Light, Stats } from '@kaetram/common/types/item';
 
 interface RawData {
     [key: string]: ItemData;
@@ -48,9 +48,12 @@ export default class Item extends Entity {
 
     // Equipment variables
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
+    public twoHanded = false;
     public poisonous = false;
     public freezing = false;
     public burning = false;
+
+    public light: Light = {};
     public weaponType = '';
 
     // Bowl variables
@@ -125,9 +128,11 @@ export default class Item extends Entity {
         this.defenseStats = this.data.defenseStats || this.defenseStats;
         this.bonuses = this.data.bonuses || this.bonuses;
         this.attackRate = this.data.attackRate || this.attackRate;
+        this.twoHanded = this.data.twoHanded || this.twoHanded;
         this.poisonous = this.data.poisonous || this.poisonous;
         this.freezing = this.data.freezing || this.freezing;
         this.burning = this.data.burning || this.burning;
+        this.light = this.data.light || this.light;
         this.movementModifier = this.data.movementModifier || this.movementModifier;
         this.lumberjacking = this.data.lumberjacking || this.lumberjacking;
         this.mining = this.data.mining || this.mining;
@@ -255,7 +260,7 @@ export default class Item extends Entity {
                 if (skill.level < requirement) {
                     // If the player's skill level is less than the requirement.
                     player.notify(
-                        `Your ${skill.name} level must be at least ${requirement} to equip this item.`
+                        `item:SKILL_LEVEL_REQUIREMENT_EQUIP;skill=${skill.name};level=${requirement}`
                     );
                     return false;
                 } else return true; // If the player's skill fulfills the requirement.
@@ -263,13 +268,13 @@ export default class Item extends Entity {
 
         // Default to using the total level for the requirement.
         if (player.level < requirement) {
-            player.notify(`Your total level must be at least ${requirement} to equip this item.`);
+            player.notify(`item:TOTAL_LEVEL_REQUIREMENT;level=${requirement}`);
             return false;
         }
 
         // Check if the item has an achievement requirement and if it is completed.
         if (this.achievement && !player.achievements.get(this.achievement)?.isFinished()) {
-            player.notify(`This item requires a secret achievement to wield.`);
+            player.notify(`item:REQUIRES_ACHIEVEMENT`);
             return false;
         }
 
@@ -285,7 +290,7 @@ export default class Item extends Entity {
 
             // Check if the quest is finished.
             if (!quest.isFinished()) {
-                player.notify(`You must complete ${quest.name} to wield this item.`);
+                player.notify(`item:REQUIRES_QUEST;quest=${quest.name}`);
                 return false;
             }
         }
@@ -308,12 +313,12 @@ export default class Item extends Entity {
                 return Modules.Equipment.Chestplate;
             }
 
-            case 'legs': {
-                return Modules.Equipment.Legs;
+            case 'legplates': {
+                return Modules.Equipment.Legplates;
             }
 
             case 'skin': {
-                return Modules.Equipment.Skin;
+                return Modules.Equipment.ArmourSkin;
             }
 
             case 'weapon':
@@ -340,6 +345,14 @@ export default class Item extends Entity {
 
             case 'arrow': {
                 return Modules.Equipment.Arrows;
+            }
+
+            case 'shield': {
+                return Modules.Equipment.Shield;
+            }
+
+            case 'cape': {
+                return Modules.Equipment.Cape;
             }
         }
     }
@@ -436,6 +449,14 @@ export default class Item extends Entity {
                 return [
                     Modules.AttackStyle.Stab,
                     Modules.AttackStyle.Slash,
+                    Modules.AttackStyle.Defensive
+                ];
+            }
+
+            case 'scythe': {
+                return [
+                    Modules.AttackStyle.Slash,
+                    Modules.AttackStyle.Crush,
                     Modules.AttackStyle.Defensive
                 ];
             }
@@ -547,20 +568,24 @@ export default class Item extends Entity {
      */
 
     public isEquippable(): boolean {
-        return (
-            this.itemType === 'helmet' ||
-            this.itemType === 'chestplate' ||
-            this.itemType === 'legs' ||
-            this.itemType === 'skin' ||
-            this.itemType === 'weapon' ||
-            this.itemType === 'weaponarcher' ||
-            this.itemType === 'weaponmagic' ||
-            this.itemType === 'weaponskin' ||
-            this.itemType === 'pendant' ||
-            this.itemType === 'boots' ||
-            this.itemType === 'ring' ||
-            this.itemType === 'arrow'
-        );
+        let types = [
+            'helmet',
+            'chestplate',
+            'legplates',
+            'skin',
+            'weapon',
+            'weaponarcher',
+            'weaponmagic',
+            'weaponskin',
+            'pendant',
+            'boots',
+            'ring',
+            'arrow',
+            'shield',
+            'cape'
+        ];
+
+        return types.includes(this.itemType);
     }
 
     /**
@@ -611,6 +636,23 @@ export default class Item extends Entity {
 
     public isPetItem(): boolean {
         return this.pet !== '';
+    }
+
+    /**
+     * Checks whether the weapon type is a bow.
+     * @returns Whether or not the item is a bow.
+     */
+
+    public isBow(): boolean {
+        return this.weaponType === 'bow';
+    }
+
+    /**
+     * @returns Whether or not the equipment is two handed.
+     */
+
+    public isTwoHanded(): boolean {
+        return this.twoHanded;
     }
 
     /**

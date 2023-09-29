@@ -5,39 +5,37 @@ import Util from '../utils/util';
 import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
 import type Game from '../game';
-import type { ListInfo, Member } from '@kaetram/common/types/guild';
-import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
-
-interface ListElement extends HTMLElement {
-    identifier?: string;
-}
+import type { ListInfo, Member } from '@kaetram/common/network/impl/guild';
+import type { GuildPacketData } from '@kaetram/common/types/messages/outgoing';
 
 export default class Guilds extends Menu {
+    public override identifier: number = Modules.Interfaces.Guilds;
+
     // The banner is the banner of the guild that the player is currently in.
-    private banner: HTMLElement = document.querySelector('#guilds > .banner')!;
+    private banner: HTMLElement = document.querySelector('#guilds .banner')!;
 
     // The default container and elements for the guilds list, displayed prior to joining a guild.
     private listContainer: HTMLElement = document.querySelector('#guilds-list-container')!;
     private createButton: HTMLButtonElement = document.querySelector('#create-guild')!;
 
     // Container for creating a new guild.
-    private create: HTMLElement = document.querySelector('#guilds-create-container')!;
+    private create: HTMLElement = document.querySelector('#guilds-create')!;
+    private createError: HTMLElement = document.querySelector('#guilds-create-error')!;
 
-    private createError: HTMLElement = document.querySelector('#create-error')!;
-
-    private backButton: HTMLElement = document.querySelector('#guild-back')!;
-    private createConfirmButton: HTMLButtonElement = document.querySelector('#guild-create')!;
+    private backButton: HTMLElement = document.querySelector('#guilds-back-button')!;
+    private createConfirmButton: HTMLButtonElement =
+        document.querySelector('#guilds-create-button')!;
 
     // The colour buttons for the banner (used when creating a guild).
     private bannerColours: HTMLUListElement = document.querySelector('#banner-colours')!;
 
-    private nameInput: HTMLInputElement = document.querySelector('#guild-name-input')!;
+    private nameInput: HTMLInputElement = document.querySelector('#guilds-name-input')!;
 
     // Decorations for the guild interface banner (updated during creation or when guild data is received).
     private bannerColour: Modules.BannerColour = Modules.BannerColour.Grey;
     private bannerOutline: Modules.BannerOutline = Modules.BannerOutline.StyleOne;
     private bannerOutlineColour: Modules.BannerColour = Modules.BannerColour.GoldenYellow;
-    private bannerCrest: Modules.BannerCrests = Modules.BannerCrests.None;
+    private bannerCrest: Modules.BannerCrests | undefined = Modules.BannerCrests.None;
 
     // Buttons used for selecting which banner colours we're modifying (outline or banner).
     private bannerColourButton: HTMLElement = document.querySelector('#banner-colour-button')!;
@@ -52,16 +50,25 @@ export default class Guilds extends Menu {
 
     // The guild information container (if the player is in a guild).
     private infoContainer: HTMLElement = document.querySelector('#guilds-info-container')!;
-    private chatLog: HTMLUListElement = document.querySelector('#guild-chat-log')!;
-    private chatInput: HTMLInputElement = document.querySelector('#guild-chat-input')!;
+    private chat: HTMLUListElement = document.querySelector('#guilds-chat')!;
+    private chatLog: HTMLUListElement = document.querySelector('#guilds-chat-log')!;
+    private chatInput: HTMLInputElement = document.querySelector('#guilds-chat-input')!;
 
-    private guildName: HTMLElement = document.querySelector('#guild-name')!;
-    private leaveButton: HTMLElement = document.querySelector('#guild-leave')!;
+    private guildName: HTMLElement = document.querySelector('#guilds-name')!;
+    private leaveButton: HTMLElement = document.querySelector('#guilds-leave')!;
 
     // List where we store players/guilds list (depending on the context).
-    private guildList: HTMLUListElement = document.querySelector('#guilds-list-container > ul')!;
-    private memberList: HTMLUListElement = document.querySelector('#member-list')!;
+    private guildList: HTMLUListElement = document.querySelector('#guilds-list > ul')!;
+    private memberListContainer: HTMLElement = document.querySelector('#member-list-container')!;
+    private memberList: HTMLUListElement = this.memberListContainer.querySelector('ul')!;
     private sidebarList: HTMLUListElement = document.querySelector('#sidebar-list')!;
+
+    private selectedMember?: string;
+    private memberName: HTMLElement = document.querySelector('#guild-member-selected')!;
+    private memberDialog: HTMLElement = document.querySelector('#guild-member-dialog')!;
+    private memberPromote: HTMLElement = document.querySelector('#guild-member-promote')!;
+    private memberDemote: HTMLElement = document.querySelector('#guild-member-demote')!;
+    private memberKick: HTMLElement = document.querySelector('#guild-member-kick')!;
 
     // Indexing - default values, used for pagination.
     private from = 0;
@@ -99,8 +106,15 @@ export default class Guilds extends Menu {
             this.handleBannerOutlineStyle('left')
         );
 
+        this.memberPromote.addEventListener('click', this.handlePromote.bind(this));
+        this.memberDemote.addEventListener('click', this.handleDemote.bind(this));
+        this.memberKick.addEventListener('click', this.handleKick.bind(this));
+
         this.loadSidebar();
         this.loadDecorations();
+
+        // Request a list update every 10 seconds.
+        setInterval(() => this.requestList(), 12_000);
     }
 
     /**
@@ -109,7 +123,7 @@ export default class Guilds extends Menu {
      * @param info Information about the opcode we received.
      */
 
-    public handle(opcode: Opcodes.Guild, info: GuildPacket): void {
+    public handle(opcode: Opcodes.Guild, info: GuildPacketData): void {
         switch (opcode) {
             case Opcodes.Guild.Join: {
                 return this.handleMemberJoin(info.username!, info.serverId!);
@@ -120,8 +134,13 @@ export default class Guilds extends Menu {
             }
 
             case Opcodes.Guild.Leave: {
-                if (info?.username && info.username !== this.getUsername())
+                if (info?.username && info.username !== this.getUsername()) {
+                    this.game.player.removeGuildMember(info.username!);
+
                     return this.handleMemberLeave(info.username);
+                }
+
+                this.game.player.setGuild();
 
                 return this.handleBackButton();
             }
@@ -164,7 +183,7 @@ export default class Guilds extends Menu {
         this.infoContainer.style.display = 'none';
 
         // Display the create guild form.
-        this.create.style.display = 'block';
+        this.create.style.display = 'flex';
     }
 
     /**
@@ -196,7 +215,7 @@ export default class Guilds extends Menu {
         this.infoContainer.style.display = 'none';
 
         // Display the default information.
-        this.listContainer.style.display = 'block';
+        this.listContainer.style.display = 'flex';
 
         // Request the guilds list from the server.
         this.requestList();
@@ -237,13 +256,55 @@ export default class Guilds extends Menu {
     }
 
     /**
+     * Handler for when the player clicks the promote button.
+     */
+
+    private handlePromote(): void {
+        this.memberListContainer.querySelector('ul')!.classList.remove('dimmed');
+        this.memberDialog.style.display = 'none';
+
+        this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.Promote,
+            username: this.selectedMember
+        });
+    }
+
+    /**
+     * Handler for when the player clicks the demote button.
+     */
+
+    private handleDemote(): void {
+        this.memberListContainer.querySelector('ul')!.classList.remove('dimmed');
+        this.memberDialog.style.display = 'none';
+
+        this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.Demote,
+            username: this.selectedMember
+        });
+    }
+
+    /**
+     * Handler for when the player clicks the kick button.
+     */
+
+    private handleKick(): void {
+        this.memberListContainer.querySelector('ul')!.classList.remove('dimmed');
+        this.memberDialog.style.display = 'none';
+
+        this.game.socket.send(Packets.Guild, {
+            opcode: Opcodes.Guild.Kick,
+            username: this.selectedMember
+        });
+    }
+
+    /**
      * Handles connection received from the server. We essentially
      * clear all the other interfaces and focus on the guild interface.
      * The player object contains all the guild information necessary.
      * @param info Contains information about the guild, such as decorations.
      */
 
-    private handleConnect(info: GuildPacket): void {
+    private handleConnect(info: GuildPacketData): void {
         // Clear the error message.
         this.setError();
 
@@ -254,7 +315,7 @@ export default class Guilds extends Menu {
         this.create.style.display = 'none';
 
         // Display the guild information container.
-        this.infoContainer.style.display = 'block';
+        this.infoContainer.style.display = 'flex';
 
         // Load the guild decorations.
         this.bannerColour = info.decoration?.banner || Modules.BannerColour.Grey;
@@ -329,26 +390,20 @@ export default class Guilds extends Menu {
 
         switch (menu) {
             case 'sidebar-members': {
-                this.memberList.style.display = 'block';
+                this.memberListContainer.style.display = 'flex';
 
-                // Hide the chat input.
-                this.chatInput.style.display = 'none';
-
-                // Hide the chat log
-                this.chatLog.style.display = 'none';
+                // Hide the chat.
+                this.chat.style.display = 'none';
 
                 break;
             }
 
             case 'sidebar-chat': {
                 // Hide the members list.
-                this.memberList.style.display = 'none';
+                this.memberListContainer.style.display = 'none';
 
                 // Show the chat input.
-                this.chatInput.style.display = 'block';
-
-                // Show the chat log.
-                this.chatLog.style.display = 'block';
+                this.chat.style.display = 'flex';
 
                 break;
             }
@@ -365,7 +420,7 @@ export default class Guilds extends Menu {
      * @param packet Contains information about the message.
      */
 
-    private handleChat(packet: GuildPacket): void {
+    private handleChat(packet: GuildPacketData): void {
         // Ignore invalid packets (shouldn't happen).
         if (!packet.username || !packet.serverId) return;
 
@@ -408,8 +463,10 @@ export default class Guilds extends Menu {
             direction === 'right' ? this.bannerOutline + 1 : this.bannerOutline - 1;
 
         // Make sure the style selection is within the bounds of the array.
-        if (this.bannerOutline < 0) this.bannerOutline = this.bannerOutlineStyles.length - 1;
-        else if (this.bannerOutline >= this.bannerOutlineStyles.length) this.bannerOutline = 0;
+        if ((this.bannerOutline as number) < 0)
+            this.bannerOutline = this.bannerOutlineStyles.length - 1;
+        else if ((this.bannerOutline as number) >= this.bannerOutlineStyles.length)
+            this.bannerOutline = 0;
 
         // Update the banner outline selection button thingy.
         this.bannerOutlineButton.className = `colour-select-button outline-button-${
@@ -443,7 +500,7 @@ export default class Guilds extends Menu {
      */
 
     private requestList(): void {
-        if (this.game.player.guild) return;
+        if (this.game.player.guild || !this.isVisible()) return;
 
         return this.game.socket.send(Packets.Guild, {
             opcode: Opcodes.Guild.List,
@@ -477,16 +534,14 @@ export default class Guilds extends Menu {
      */
 
     private loadList(guilds: ListInfo[] = [], total = 0): void {
-        // Nothing to do if there are no guilds.
-        if (total === 0) return;
-
         // Clear the list of guilds.
         this.guildList.innerHTML = '';
 
         // Remove the description for no guilds available.
         let description = this.listContainer.querySelector('#guilds-info')!;
 
-        description.innerHTML = '';
+        // Description is empty if there are any guilds.
+        description.innerHTML = total === 0 ? 'There are no guilds available...' : '';
 
         // Iterate through the guilds and create a list element for each one.
         for (let guild of guilds)
@@ -572,8 +627,7 @@ export default class Guilds extends Menu {
             if (isNaN(index)) continue;
 
             // The class elements that we're going to add to the banner.
-            if (index === 0) this.bannerOutlineStyles.push('banner-outline');
-            else this.bannerOutlineStyles.push(`banner-outline-${index + 1}`);
+            this.bannerOutlineStyles.push(`banner-outline-${index + 1}`);
         }
     }
 
@@ -626,10 +680,10 @@ export default class Guilds extends Menu {
                 serverElement = element.querySelector('.server')!,
                 colour =
                     member.serverId === -1
-                        ? 'red'
+                        ? 'text-red'
                         : member.serverId === this.game.player.serverId
-                        ? 'green'
-                        : 'yellow';
+                        ? 'text-green'
+                        : 'text-yellow';
 
             // Update the colour based on the online status.
             nameElement.className = `name`;
@@ -706,19 +760,19 @@ export default class Guilds extends Menu {
         name: string,
         count = 0
     ): void {
-        let element = document.createElement('li') as ListElement,
+        let element = document.createElement('li'),
             nameElement = document.createElement('span'),
             imageElement = document.createElement('div'),
             isGuild = type === 'guild',
             slotType = type === 'guild' ? 'guild' : Modules.GuildRank[type].toLowerCase();
 
         // Assign the name as the identifier for the element
-        element.identifier = name;
+        element.dataset.name = name;
 
         // Add the classes to the element, name element, and image element.
-        element.className = `slot-element stroke`;
-        nameElement.className = `name`;
-        imageElement.className = `slot-image`;
+        element.className = 'slot-element stroke';
+        nameElement.className = 'name';
+        imageElement.className = 'slot-image';
 
         // Set the name of the element, format it if it's a player name.
         nameElement.innerHTML = isGuild ? name : Util.formatName(name, 14);
@@ -735,7 +789,7 @@ export default class Guilds extends Menu {
                 countElement.classList.add('count');
                 countElement.innerHTML = `${count}/${Modules.Constants.MAX_GUILD_MEMBERS}`;
 
-                element.append(countElement);
+                element.append(nameElement, countElement);
             }
 
             // Event listener to handle the guild selection.
@@ -745,23 +799,34 @@ export default class Guilds extends Menu {
                     identifier: name.toLowerCase()
                 })
             );
-        }
-
-        // Case for when we are dealing with members within a guild.
-        if (!isGuild) {
+        } // Case for when we are dealing with members within a guild.
+        else {
             // Handle the image element for when we are in a guild.
             imageElement.classList.add(`slot-image-${slotType}`);
 
             element.append(nameElement);
 
             let serverElement = document.createElement('span'),
-                isPlayer = this.getUsername() === element.identifier;
+                isPlayer = this.getUsername() === element.dataset.name,
+                playerMember = this.game.player.getGuildMember(this.getUsername()),
+                otherMember = this.game.player.getGuildMember(name),
+                lowerRank = (otherMember?.rank || 0) > (playerMember?.rank || 0);
 
-            serverElement.className = `server ${isPlayer ? 'green' : 'red'}`;
+            serverElement.className = `server ${isPlayer ? 'text-green' : 'text-red'}`;
 
             serverElement.innerHTML = isPlayer ? `Kaetram ${this.game.player.serverId}` : 'Offline';
 
             element.append(serverElement);
+
+            if (!isPlayer && !lowerRank)
+                element.addEventListener('click', () => {
+                    this.selectedMember = element.dataset.name;
+                    this.memberName.textContent = Util.formatName(this.selectedMember, 14);
+
+                    this.memberListContainer.querySelector('ul')!.classList.add('dimmed');
+
+                    this.memberDialog.style.display = 'flex';
+                });
         }
 
         // Append the element to the list.
@@ -792,7 +857,7 @@ export default class Guilds extends Menu {
 
     private updateBanner(): void {
         let outlineElement = this.banner.querySelector('#banner-outline')!,
-            crestElement = this.banner.querySelector('.banner-crest')!;
+            crestElement = this.banner.querySelector('#banner-crest')!;
 
         // Update the classes with the new colours.
         this.banner.className = `banner banner-${this.bannerColour}`;
@@ -813,9 +878,10 @@ export default class Guilds extends Menu {
      * @returns A list element if found otherwise undefined.
      */
 
-    private getElement(list: HTMLUListElement, identifier: string): ListElement | undefined {
+    private getElement(list: HTMLUListElement, identifier: string): HTMLLIElement | undefined {
         for (let element of list.children)
-            if ((element as ListElement).identifier === identifier) return element as ListElement;
+            if ((element as HTMLLIElement).dataset.name === identifier)
+                return element as HTMLLIElement;
 
         return undefined;
     }
@@ -837,6 +903,6 @@ export default class Guilds extends Menu {
      */
 
     private setError(text = ''): void {
-        this.createError.innerHTML = text;
+        this.createError.innerHTML = Util.parseMessage(Util.formatNotification(text));
     }
 }

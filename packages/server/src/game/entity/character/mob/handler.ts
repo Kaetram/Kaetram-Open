@@ -1,12 +1,13 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules } from '@kaetram/common/network';
-import { Bubble } from '@kaetram/common/network/impl';
+import { BubblePacket } from '@kaetram/common/network/impl';
 
+import type Mob from './mob';
 import type Map from '../../../map/map';
 import type World from '../../../world';
 import type Character from '../character';
-import type Mob from './mob';
+import type Player from '../player/player';
 
 /**
  * The handler class file for the Mob object. We use this to better
@@ -49,7 +50,13 @@ export default class Handler {
          */
 
         // We double the roaming distance for the sake of combat.
-        if (this.mob.outsideRoaming(this.mob.target, this.mob.roamDistance * 2))
+        if (
+            this.mob.outsideRoaming(
+                this.mob.target?.x,
+                this.mob.target?.y,
+                this.mob.roamDistance * 2
+            )
+        )
             if (this.mob.getAttackerCount() > 1) this.mob.setTarget(this.mob.findNearestTarget());
             else this.mob.sendToSpawn();
     }
@@ -84,7 +91,11 @@ export default class Handler {
                 [instance] = element,
                 entity = this.world.entities.get(instance);
 
-            // Ignore non-player entities.
+            /**
+             * Ensure that the entity exists and that it's a player. Drops do not occur
+             * if the entity that kills the mob is non-existent (i.e. if killed via command.)
+             */
+
             if (!entity?.isPlayer()) continue;
 
             // Kill callback is sent to the player who dealt most amount of damage.
@@ -93,7 +104,7 @@ export default class Handler {
                 entity.killCallback?.(this.mob);
 
                 // Drop the mob's loot and pass the owner's username.
-                this.mob.drop(entity.username);
+                this.mob.drop(entity as Player);
             }
         }
 
@@ -178,7 +189,7 @@ export default class Handler {
         // Don't have mobs block a door.
         if (this.map.isDoor(newX, newY)) return;
 
-        this.mob.move(newX, newY);
+        this.mob.setPosition(newX, newY);
     }
 
     /**
@@ -188,7 +199,7 @@ export default class Handler {
 
     protected handleTalk(text: string): void {
         this.mob.sendToRegions(
-            new Bubble({
+            new BubblePacket({
                 instance: this.mob.instance,
                 text
             })

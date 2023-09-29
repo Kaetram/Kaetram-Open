@@ -63,7 +63,6 @@ td {
     margin: 0;
     padding: 0;
 
-    font-size: 100%;
     vertical-align: baseline;
 
     background-color: transparent;
@@ -86,8 +85,9 @@ body {
 }
 
 canvas {
-    position: absolute;
     image-rendering: pixelated;
+
+    -webkit-font-smoothing: none;
 }
 
 body {
@@ -170,6 +170,28 @@ html [type='button'],
 }
 
 ::-webkit-scrollbar {
-    width: 0;
-    background-color: transparent; // Make scrollbar transparent
+    width: 0.5em;
+    height: 0.5em;
+
+    @media (--portrait) {
+        width: 0;
+        height: 0;
+    }
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #eee;
+
+    &:hover {
+        background-color: #ccc;
+    }
+
+    &:active {
+        background-color: #aaa;
+    }
 }

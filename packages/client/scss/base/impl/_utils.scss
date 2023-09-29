@@ -1,6 +1,33 @@
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}
+
+.stroke {
+    text-shadow: 0.0625em 0.0625em 0 #373737, 0.0625em -0.0625em 0 #373737, 0 0.0625em 0 #373737,
+        0.0625em 0 0 #373737, -0.0625em 0.0625em 0 #373737, -0.0625em -0.0625em 0 #373737,
+        0 -0.0625em 0 #373737, 0 0.0625em 0 #373737, -0.0625em 0 0 #373737;
+}
+
+.text-red {
+    color: #e00a0a;
+}
+
+.text-green {
+    color: #00a800;
+}
+
+.text-yellow {
+    color: #e0e000;
+}
+
 .dimmed {
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-    filter: brightness(50%);
+    pointer-events: none;
+    user-select: none;
+    filter: brightness(25%);
 }

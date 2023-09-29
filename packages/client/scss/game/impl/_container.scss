@@ -1,4 +1,4 @@
-@use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
 #game-container {
     position: inherit;
@@ -14,13 +14,21 @@
 }
 
 #background,
-#text-canvas,
+#entities,
+#entities-fore,
 #foreground,
 #cursor,
-#overlay {
+#text-canvas,
+#overlay,
+#entities-mask {
+    position: absolute;
     transform: translateZ(0);
     margin: 0;
     padding: 0;
+}
+
+#entities-mask {
+    opacity: 0.2;
 }
 
 #canvas,
@@ -33,16 +41,12 @@
 #cursor {
     cursor: none;
     user-select: none;
-
-    @media (--sm) {
-        cursor: url('/img/hand.png'), auto;
-    }
 }
 
-// #game-container {
-//     top: 48%;
-//     left: 50%;
-// }
+#cursor {
+    pointer-events: none;
+    z-index: 1000;
+}
 
 #border {
     position: absolute;
@@ -58,171 +62,41 @@
     border: 0;
 }
 
-.container-frame {
-    cursor: url('/img/hand.png'), auto;
-
-    position: absolute;
-    inset: 0;
-
-    margin: auto;
-
-    border-image: url('/img/interface/slices/container.png');
-    border-image-slice: 42% fill;
-    border-image-width: 16px;
-    border-image-outset: 0;
-    border-image-repeat: stretch;
-}
-
-.container-subframe {
-    cursor: url('/img/hand.png'), auto;
-
-    position: absolute;
-    inset: 0;
-
-    margin: auto;
-
-    border-image: url('/img/interface/slices/subframe.png');
-    border-image-slice: 42% fill;
-    border-image-width: 64px;
-    border-image-outset: 0;
-    border-image-repeat: stretch;
-}
-
 .container {
-    cursor: url('/img/hand.png'), auto;
     position: absolute;
     inset: 0;
     display: none;
 }
 
-.container-slot,
-.container-slot-large {
-    margin: auto;
+.greyscale {
+    opacity: 0.5;
+    filter: grayscale(100%);
 }
 
-.container-slot.flex,
-.container-slot-large.flex {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.container-slot > p,
-.container-slot-large > p {
-    font-size: 20px;
-    color: rgb(168 16 5);
-    text-align: center;
-}
-
-.container-slot > p.left,
-.container-slot-large > p.left {
-    float: left;
-    text-align: left;
-}
-
-.container-slot > p.right,
-.container-slot-large > p.right {
-    float: right;
-    text-align: right;
-}
-
-.container-slot > p.yellow,
-.container-slot-large > p.yellow {
-    color: rgb(168 168 5);
-}
-
-.container-slot > p.green,
-.container-slot-large > p.green {
-    color: rgb(16 168 5);
-}
-
-.container-slot > p.white,
-.container-slot-large > p.white {
-    color: rgb(255 255 255);
-}
-
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        .container {
-            width: 344px * $i;
-            height: 157px * $i;
-            margin: auto;
-
-            background: url('/img/interface/spritesheet.png') 0 -80px * $i no-repeat;
-            background-size: calc(width('spritesheet.png') * $i);
-        }
-
-        .container-slot {
-            width: 102px * $i;
-            height: 15px * $i;
-            margin-top: 2px * $i;
-
-            background: url('/img/interface/characterdialogsheet.png') -144px * $i -256px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-
-            &:hover {
-                background-position-y: -320px * $i;
-            }
-
-            &:active {
-                background-position-y: -336px * $i;
-            }
-        }
-
-        .container-slot-large {
-            width: 166px * $i;
-            height: 15px * $i;
-            margin-top: 2px * $i;
-
-            background: url('/img/interface/leaderboards.png') 0 -160px * $i;
-            background-size: calc(width('leaderboards.png') * $i);
-
-            &:hover {
-                background-position-y: -176px * $i;
-            }
-
-            &:active {
-                background-position-y: -192px * $i;
-            }
-        }
-
-        .container-slot > p,
-        .container-slot-large > p {
-            padding-top: 4px * $i;
-        }
-
-        .new-close-container {
-            width: 11px * $i;
-            height: 12px * $i;
-            background: url('/img/interface/guilds/elements.png') -64px * $i 0;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:hover {
-                background-position-x: -76px * $i;
-            }
-
-            &:active,
-            &.active {
-                background-position-x: -88px * $i;
-            }
-        }
-    }
-
-    @media (--sm) {
-        .container-slot > p,
-        .container-slot-large > p {
-            padding-top: 2px;
-            font-size: 10px;
-        }
-    }
-}
-
-.close-container {
-    top: -2% !important;
-    left: 96% !important;
-}
-
-.new-close-container {
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $x: 64,
+    $width: 11,
+    $height: 11,
+    $gap: 1,
+    $hover: 1,
+    $active: 2,
+    $selectors: '.close-container'
+) {
     position: absolute;
-    right: 1px;
+    top: -0.25em;
+    right: -0.25em;
+}
+
+@include sprite.sheet(
+    $image: 'container-fancy-button',
+    $width: 20,
+    $height: 26,
+    $hover: 1,
+    $active: 2,
+    $selectors: '.close-container-fancy'
+) {
+    position: absolute;
+    top: -0.25em;
+    right: -0.45em;
 }

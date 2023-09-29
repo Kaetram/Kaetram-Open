@@ -1,17 +1,30 @@
 import ResourceSkill from '../resourceskill';
 import Item from '../../../../objects/item';
-import Trees from '../../../../../../../data/trees.json';
 
 import Utils from '@kaetram/common/util/utils';
-import ResourceEn from '@kaetram/common/text/en/resource';
+import ResourceText from '@kaetram/common/text/en/resource';
 import { Modules } from '@kaetram/common/network';
 
 import type Player from '../../player';
-import type Resource from '../../../../../globals/impl/resource';
+import type Resource from '../../../../../entity/objects/resource/resource';
 
 export default class Lumberjacking extends ResourceSkill {
     public constructor() {
-        super(Modules.Skills.Lumberjacking, Trees);
+        super(Modules.Skills.Lumberjacking);
+
+        this.onExhaust(this.handleExhaust.bind(this));
+    }
+
+    /**
+     * Handles obtaining the resource information and sending it to the superclass
+     * to process handling the random item rewarding.
+     * @param player The player that is cutting the tree.
+     * @param resource The resource belonging to the tree that was cut.
+     */
+
+    private handleExhaust(player: Player, resource?: Resource): void {
+        // Use the superclass logic to handle the random item selection.
+        super.handleRandomItems(player, resource!.data);
     }
 
     /**
@@ -25,9 +38,10 @@ export default class Lumberjacking extends ResourceSkill {
         let weapon = player.equipment.getWeapon();
 
         // Player's weapon is not a valid lumberjacking weapon.
-        if (!weapon.isLumberjacking()) return player.notify(ResourceEn.INVALID_WEAPON(this.type));
+        if (!weapon.isLumberjacking()) return player.notify(ResourceText.INVALID_WEAPON(this.type));
 
-        if (!player.quests.canCutTreesInTutorial()) return player.notify(ResourceEn.NO_REASON);
+        // Player is in the tutorial, we want to prevent them from cutting trees.
+        if (!player.quests.canCutTreesInTutorial()) return player.notify('resource:NO_REASON');
 
         this.interact(player, tree, weapon.lumberjacking);
     }

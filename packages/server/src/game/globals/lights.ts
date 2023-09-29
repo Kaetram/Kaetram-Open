@@ -14,7 +14,16 @@ export default class Lights {
             if (!region) continue;
 
             region.addLight(
-                new Light(light.id, light.x, light.y, light.colour, light.diffuse, light.distance)
+                new Light(
+                    light.id,
+                    light.x,
+                    light.y,
+                    light.colour,
+                    light.diffuse,
+                    light.distance,
+                    light.flickerSpeed,
+                    light.flickerIntensity
+                )
             );
         }
 

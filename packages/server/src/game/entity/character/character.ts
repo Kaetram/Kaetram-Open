@@ -8,15 +8,16 @@ import Entity from '../entity';
 import Formulas from '../../../info/formulas';
 
 import Utils from '@kaetram/common/util/utils';
-import { PacketType } from '@kaetram/common/network/modules';
+import { Team } from '@kaetram/common/api/minigame';
 import { Modules, Opcodes } from '@kaetram/common/network';
+import { PacketType } from '@kaetram/common/network/modules';
 import {
-    Combat as CombatPacket,
-    Countdown,
-    Effect,
-    Movement,
-    Points,
-    Teleport
+    CombatPacket,
+    CountdownPacket,
+    EffectPacket,
+    MovementPacket,
+    PointsPacket,
+    TeleportPacket
 } from '@kaetram/common/network/impl';
 
 import type World from '../../world';
@@ -65,9 +66,8 @@ export default abstract class Character extends Entity {
     public projectileName = 'arrow';
 
     public lastStep = -1;
-    public lastMovement = -1;
+    public lastMovement = Date.now();
     public lastRegionChange = -1;
-    public lastAttacker?: Character | undefined;
 
     private healingInterval?: NodeJS.Timeout | undefined;
     private effectInterval?: NodeJS.Timeout | undefined;
@@ -109,7 +109,7 @@ export default abstract class Character extends Entity {
     private handleHitPoints(): void {
         // Sync the change in hitpoints to nearby entities.
         this.sendToRegions(
-            new Points({
+            new PointsPacket({
                 instance: this.instance,
                 hitPoints: this.hitPoints.getHitPoints(),
                 maxHitPoints: this.hitPoints.getMaxHitPoints()
@@ -127,7 +127,9 @@ export default abstract class Character extends Entity {
         // Synchronize the movement speed of the player when freezing applies.
         if (this.isPlayer() && effect === Modules.Effects.Freezing) this.sync();
 
-        this.sendToRegions(new Effect(Opcodes.Effect.Add, { instance: this.instance, effect }));
+        this.sendToRegions(
+            new EffectPacket(Opcodes.Effect.Add, { instance: this.instance, effect })
+        );
     }
 
     /**
@@ -146,7 +148,9 @@ export default abstract class Character extends Entity {
             if (this.inFreezingArea()) return this.status.add(Modules.Effects.Freezing);
         }
 
-        this.sendToRegions(new Effect(Opcodes.Effect.Remove, { instance: this.instance, effect }));
+        this.sendToRegions(
+            new EffectPacket(Opcodes.Effect.Remove, { instance: this.instance, effect })
+        );
     }
 
     /**
@@ -349,25 +353,18 @@ export default abstract class Character extends Entity {
     }
 
     /**
-     * Superclass empty method.
-     * @param x New x position.
-     * @param y New y position.
-     */
-
-    public move(x: number, y: number): void {
-        this.setPosition(x, y);
-    }
-
-    /**
      * When a character is on the same tile as another character and they are in a combat,
      * we use this function to move them near the other character.
      */
 
     public findAdjacentTile(): void {
-        if (!this.world.map.isColliding(this.x + 1, this.y)) this.move(this.x + 1, this.y);
-        else if (!this.world.map.isColliding(this.x - 1, this.y)) this.move(this.x - 1, this.y);
-        else if (!this.world.map.isColliding(this.x, this.y + 1)) this.move(this.x, this.y + 1);
-        else if (!this.world.map.isColliding(this.x, this.y - 1)) this.move(this.x, this.y - 1);
+        if (!this.world.map.isColliding(this.x + 1, this.y)) this.setPosition(this.x + 1, this.y);
+        else if (!this.world.map.isColliding(this.x - 1, this.y))
+            this.setPosition(this.x - 1, this.y);
+        else if (!this.world.map.isColliding(this.x, this.y + 1))
+            this.setPosition(this.x, this.y + 1);
+        else if (!this.world.map.isColliding(this.x, this.y - 1))
+            this.setPosition(this.x, this.y - 1);
     }
 
     /**
@@ -439,7 +436,7 @@ export default abstract class Character extends Entity {
         if (!target && !this.hasTarget()) return;
 
         this.sendToRegions(
-            new Movement(Opcodes.Movement.Follow, {
+            new MovementPacket(Opcodes.Movement.Follow, {
                 instance: this.instance,
                 target: target?.instance || this.target!.instance
             })
@@ -457,7 +454,7 @@ export default abstract class Character extends Entity {
         this.setPosition(x, y, true);
 
         this.sendToRegions(
-            new Teleport({
+            new TeleportPacket({
                 instance: this.instance,
                 x,
                 y,
@@ -476,7 +473,7 @@ export default abstract class Character extends Entity {
 
     public countdown(time: number): void {
         this.sendToRegions(
-            new Countdown({
+            new CountdownPacket({
                 instance: this.instance,
                 time
             })
@@ -489,7 +486,7 @@ export default abstract class Character extends Entity {
 
     public stopMovement(): void {
         this.sendToRegions(
-            new Movement(Opcodes.Movement.Stop, {
+            new MovementPacket(Opcodes.Movement.Stop, {
                 instance: this.instance
             })
         );
@@ -790,6 +787,17 @@ export default abstract class Character extends Entity {
     }
 
     /**
+     * A default function for checking if the character is using bow attacks. Since mobs
+     * don't have such specification, we default to whether they're using ranged but not
+     * magic.
+     * @returns Whether or not the character is using a bow.
+     */
+
+    public isArcher(): boolean {
+        return this.isRanged() && !this.isMagic();
+    }
+
+    /**
      * @returns Default implementation for characters.
      */
 
@@ -843,7 +851,7 @@ export default abstract class Character extends Entity {
      */
 
     public isOnSameTile(): boolean {
-        return this.getDistance(this.target!) === 0;
+        return this.x === this.target?.x && this.y === this.target?.y;
     }
 
     /**
@@ -867,8 +875,7 @@ export default abstract class Character extends Entity {
     protected canAttack(target: Character): boolean {
         // Prevent pets from being attacked.
         if (target.isPet()) {
-            if (this.isPlayer())
-                this.notify(`Are you crazy? Are you out of your mind? Why would you attack a pet?`);
+            if (this.isPlayer()) this.notify('misc:CANNOT_ATTACK_PET');
 
             return false;
         }
@@ -876,7 +883,7 @@ export default abstract class Character extends Entity {
         if (target.isMob()) {
             // Restrict the mobs in tutorial from being attacked by the player.
             if (this.isPlayer() && !this.quests.canAttackInTutorial()) {
-                this.notify('You have no reason to attack these creatures.');
+                this.notify('misc:CANNOT_ATTACK_MOB');
                 return false;
             }
 
@@ -888,29 +895,40 @@ export default abstract class Character extends Entity {
 
         // Prevent cheaters from being targeted by other players.
         if (target.isCheater()) {
-            this.notify(`That player is a cheater, you don't wanna attack someone like that!`);
+            this.notify('misc:CANNOT_ATTACK_CHEATER');
 
             return false;
         }
 
         // Prevent cheaters from starting a fight with other players.
         if (this.isCheater()) {
-            this.notify(
-                `Sorry but cheaters can't attack other players, that wouldn't be fair to them!`
-            );
+            this.notify('misc:CANNOT_ATTACK_CHEATER_SELF');
 
             return false;
         }
 
-        // Use minigame logic to determine if the players can attack each other.
-        if (this.inMinigame() && target.inMinigame()) return this.team !== target.team;
+        // Handle logic for in-minigame combat.
+        if (this.inMinigame()) {
+            if (this.team === Team.Prey) {
+                this.notify('misc:CANNOT_ATTACK_PREY');
+                return false;
+            }
+
+            if (this.team === Team.Hunter && target.instance !== this.coursingTarget) {
+                this.notify('misc:CANNOT_ATTACK_TARGET');
+                return false;
+            }
+
+            // Default implementation (used for team vs team minigames);
+            if (target.inMinigame()) return this.team !== target.team;
+        }
 
         // Prevent attacking in non-pvp areas.
         if (!this.pvp && !target.pvp) return false;
 
         // Prevent attacking when level difference is too great.
         if (Math.abs(this.level - target.level) > 30) {
-            this.notify('You cannot attack someone more than 30 levels above or below you.');
+            this.notify('misc:CANNOT_ATTACK_LEVEL_DIFF');
             return false;
         }
 

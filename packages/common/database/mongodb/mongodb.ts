@@ -55,7 +55,7 @@ export default class MongoDB {
      * no MongoDB server is present for the given host.
      */
 
-    private createConnection(): void {
+    public createConnection(): void {
         let client = new MongoClient(this.connectionUrl, {
             connectTimeoutMS: 5000,
             serverSelectionTimeoutMS: 5000,
@@ -63,22 +63,24 @@ export default class MongoDB {
             tls: this.tls
         });
 
-        client.connect((error: Error | undefined, _client: MongoClient | undefined) => {
-            if (error) {
+        client
+            .connect()
+            .then((mongoClient: MongoClient) => {
+                this.database = mongoClient.db(this.databaseName);
+
+                this.loader = new Loader(this.database);
+                this.creator = new Creator(this.database);
+
+                this.readyCallback?.();
+
+                log.notice('Successfully connected to the MongoDB server.');
+            })
+            .catch((error: Error) => {
                 // Initializes an empty loader controller.
                 this.loader = new Loader();
+
                 return this.failCallback?.(error);
-            }
-
-            this.database = _client!.db(this.databaseName);
-
-            this.loader = new Loader(this.database);
-            this.creator = new Creator(this.database);
-
-            this.readyCallback?.();
-
-            log.notice('Successfully connected to the MongoDB server.');
-        });
+            });
     }
 
     /**

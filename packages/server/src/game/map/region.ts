@@ -1,9 +1,8 @@
-import type { RegionTileData } from '@kaetram/common/types/map';
-import type Player from '../entity/character/player/player';
+import type Area from './areas/area';
 import type Entity from '../entity/entity';
 import type Light from '../globals/impl/light';
-import type Resource from '../globals/impl/resource';
-import type Area from './areas/area';
+import type Player from '../entity/character/player/player';
+import type { RegionTileData } from '@kaetram/common/types/map';
 
 export default class Region {
     public data: RegionTileData[] = [];
@@ -12,7 +11,6 @@ export default class Region {
     private players: string[] = []; // A list of instance ids for players.
     private joining: Entity[] = []; // Used for sending spawn positions.
     private dynamicAreas: Area[] = [];
-    private resources: Resource[] = [];
     private lights: Light[] = [];
 
     public constructor(
@@ -97,53 +95,12 @@ export default class Region {
     }
 
     /**
-     * Adds a resource to the region.
-     * @param resource The resource we are adding to the region.
-     */
-
-    public addResource(resource: Resource): void {
-        this.resources.push(resource);
-    }
-
-    /**
-     * @returns If the amount of resources in the array is greater than 0.
-     */
-
-    public hasResources(): boolean {
-        return this.resources.length > 0;
-    }
-
-    /**
      * Adds a light object to the region.
      * @param light The light object we are adding.
      */
 
     public addLight(light: Light): void {
         this.lights.push(light);
-    }
-
-    /**
-     * Grab a list of entity instances and remove the `reject` from the list.
-     * @param player Player object used to check dynamic visibility of the entities.
-     * @param reject Entity that we are ignoring (typically a player).
-     * @returns A list of entity instances.
-     */
-
-    public getEntities(player: Player, reject?: Entity): string[] {
-        let entities: string[] = [];
-
-        for (let instance in this.entities) {
-            // Ignore if a reject is present.
-            if (reject && reject.instance === instance) continue;
-
-            // Check if the entity is visible to the player.
-            if (!this.entities[instance].isVisible(player)) continue;
-
-            // Append our instance to the list.
-            entities.push(instance);
-        }
-
-        return entities;
     }
 
     /**
@@ -172,6 +129,14 @@ export default class Region {
     }
 
     /**
+     * @returns The number of players in the region.
+     */
+
+    public hasPlayersInRegion(): number {
+        return this.players.length;
+    }
+
+    /**
      * Iterates through the dynamic areas to see if the tile is contained
      * within it. This method is a lot faster than using the areas `inArea`
      * function.
@@ -184,6 +149,30 @@ export default class Region {
         for (let area of this.dynamicAreas) if (area.contains(x, y)) return area;
 
         return undefined;
+    }
+
+    /**
+     * Grab a list of entity instances and remove the `reject` from the list.
+     * @param player Player object used to check dynamic visibility of the entities.
+     * @param reject Entity that we are ignoring (typically a player).
+     * @returns A list of entity instances.
+     */
+
+    public getEntities(player: Player, reject?: Entity): string[] {
+        let entities: string[] = [];
+
+        for (let instance in this.entities) {
+            // Ignore if a reject is present.
+            if (reject?.instance === instance) continue;
+
+            // Check if the entity is visible to the player.
+            if (!this.entities[instance].isVisible(player)) continue;
+
+            // Append our instance to the list.
+            entities.push(instance);
+        }
+
+        return entities;
     }
 
     /**
@@ -214,15 +203,6 @@ export default class Region {
 
     public forEachEntity(callback: (entity: Entity) => void): void {
         for (let entity of Object.values(this.entities)) callback(entity);
-    }
-
-    /**
-     * Iterates through all the resources and returns each resource.
-     * @param callback Resource that is being iterated.
-     */
-
-    public forEachResource(callback: (resource: Resource) => void): void {
-        for (let resource of this.resources) callback(resource);
     }
 
     /**

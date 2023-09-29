@@ -1,0 +1,951 @@
+<div id="game-container">
+    <div id="border">
+        <div id="canvas">
+            <canvas id="background"></canvas>
+            <canvas id="entities"></canvas>
+            <canvas id="entities-fore"></canvas>
+            <canvas id="foreground"></canvas>
+            <canvas id="entities-mask"></canvas>
+            <canvas id="cursor"></canvas>
+            <canvas id="overlay"></canvas>
+            <canvas id="text-canvas"></canvas>
+        </div>
+
+        <div id="welcome" class="slice-container">
+            <div id="close-welcome" class="close-container"></div>
+
+            <div id="welcome-info">
+                <h1>Welcome to Kaetram!</h1>
+
+                <div id="welcome-stats">
+                    <strong>Last login:</strong>
+                    <strong>Time played:</strong>
+                </div>
+
+                <div id="welcome-changelog" class="slice-inner-container">
+                    <ul>
+                        <li>Version 0.3.4-beta</li>
+                        <li>- Added new stuff</li>
+                        <li>- Added more new stuff</li>
+                        <li>- Added even more new stuff</li>
+                        <li>- Added new stuff</li>
+                        <li>- Added new stuff</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="welcome-play" class="slice-inner-container">
+                <div id="welcome-instructions">
+                    <h2>How to Play</h2>
+
+                    <div id="welcome-instructions-keyboard">
+                        <span>
+                            Use <strong>WASD</strong>, the <strong>Arrow Keys</strong>, or <strong
+                                >Click</strong
+                            > to move around.
+                        </span>
+
+                        <div class="welcome-controls">
+                            <div id="controls-wasd"></div>
+                            <div id="controls-arrows"></div>
+                            <div id="controls-click"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="welcome-daily-rewards">
+                    <h2>Daily Rewards</h2>
+
+                    <div id="welcome-daily-rewards-items">
+                        <div class="slice-item-slot"></div>
+                        <div class="slice-item-slot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quest" class="slice-container">
+            <div id="close-quest" class="close-container"></div>
+
+            <h3 class="quest-title">Quest Name</h3>
+            <div class="quest-description"></div>
+            <ul class="quest-rewards"></ul>
+
+            <div id="quest-button" class="slice-button stroke">Start Quest</div>
+        </div>
+
+        <div id="in-app-store" class="slice-container-fancy">
+            <div id="close-in-app-store" class="close-container-fancy"></div>
+        </div>
+
+        <div id="player-info">
+            <div id="health" class="safari-only">
+                <div id="health-mask" class="health-mask-base"></div>
+                <div class="health-text stroke"></div>
+            </div>
+            <div id="mana" class="safari-only">
+                <div id="mana-mask"></div>
+                <div class="mana-text stroke"></div>
+            </div>
+        </div>
+
+        <ul id="buttons">
+            <li><div id="inventory-button"></div></li>
+            <li><div id="achievements-button"></div></li>
+            <li><div id="quests-button"></div></li>
+            <li><div id="warp-button"></div></li>
+            <li><div id="profile-button"></div></li>
+            <li><div id="friends-button"></div></li>
+            <li><div id="chat-button"></div></li>
+            <li><div id="settings-button"></div></li>
+        </ul>
+
+        <div id="chat">
+            <div id="chat-log"></div>
+            <div id="chat-frame"></div>
+
+            <input
+                title="Enter your message!"
+                id="chat-input"
+                type="text"
+                maxlength="256"
+                autocomplete="off"
+                data-lpignore="true"
+            />
+        </div>
+
+        <div id="joystick" hidden>
+            <div id="joystick-handle"></div>
+        </div>
+
+        <div id="zoom-buttons">
+            <button id="zoom-in" title="Zoom in"></button>
+            <button id="zoom-out" title="Zoom out"></button>
+        </div>
+
+        <div id="ability-shortcut" hidden>
+            <div id="ability-quickslot1" class="ability-quickslot"></div>
+            <div id="ability-quickslot2" class="ability-quickslot"></div>
+            <div id="ability-quickslot3" class="ability-quickslot"></div>
+            <div id="ability-quickslot4" class="ability-quickslot"></div>
+        </div>
+
+        <div id="profile-container" class="slice-page">
+            <div id="state-page">
+                <div id="profile-stats">
+                    <span>
+                        <span id="profile-level"></span>
+                    </span>
+                    <span>
+                        <strong>Total Exp:</strong>
+                        <span id="profile-experience"></span>
+                    </span>
+
+                    <ul id="attack-style-list">
+                        <li class="attack-style-box">
+                            <div class="attack-style attack-style-stab"></div>
+                        </li>
+                        <li class="attack-style-box">
+                            <div class="attack-style attack-style-slash"></div>
+                        </li>
+                        <li class="attack-style-box">
+                            <div class="attack-style attack-style-defensive"></div>
+                        </li>
+                        <li class="attack-style-box">
+                            <div class="attack-style attack-style-chop"></div>
+                        </li>
+                    </ul>
+
+                    <div class="button-row">
+                        <div id="guilds-button"></div>
+                        <div id="leaderboards-button"></div>
+                        <div id="equipment-button"></div>
+                        <div id="pickup-pet-button" hidden></div>
+                    </div>
+                </div>
+
+                <ul id="profile-equipment-slots">
+                    <li class="equipment-slot equipment-slot-helmet slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-pendant slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-arrows slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                        <div class="equipment-slot-arrows-count stroke"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-chestplate slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-weapon slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-shield slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-ring slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-armour-skin slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-weapon-skin slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-legplates slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-cape slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-boots slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="skills-page">
+                <div id="skill-info" class="slice-dialog stroke">
+                    <div class="skill-info-header">
+                        <div class="slice-item-slot">
+                            <div class="skill-info-image"></div>
+                        </div>
+                        <div class="skill-info-title"></div>
+                    </div>
+                    <div class="skill-info-details"></div>
+                </div>
+                <div id="skills-list"><ul></ul></div>
+            </div>
+
+            <div id="profile-navigator">
+                <div class="previous"></div>
+                <div class="next"></div>
+            </div>
+        </div>
+
+        <div id="settings-page" class="slice-container">
+            <div id="close-settings" class="close-container"></div>
+
+            <div id="settings-container">
+                <div id="input-settings" class="slice-inner-container">
+                    <div class="col">
+                        <label>
+                            <span id="music-volume-text">Music Volume</span>
+
+                            <input
+                                title="Music Volume"
+                                id="music"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="100"
+                                step="10"
+                                aria-labelledby="music-volume-text"
+                            />
+                        </label>
+
+                        <label>
+                            <span id="sound-volume-text">Sound Volume</span>
+
+                            <input
+                                title="Sound Volume"
+                                id="sound"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="100"
+                                step="10"
+                                aria-labelledby="sound-volume-text"
+                            />
+                        </label>
+
+                        <label>
+                            <span id="brightness-text">Brightness</span>
+
+                            <input
+                                title="Brightness"
+                                id="brightness"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value="100"
+                                step="10"
+                                aria-labelledby="brightness-text"
+                            />
+                        </label>
+
+                        <label id="audio-enabled-checkbox" class="check">
+                            <span id="audio-enabled-checkbox-text">Audio Enabled</span>
+
+                            <input type="checkbox" aria-labelledby="audio-enabled-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="low-power-checkbox" class="check">
+                            <span id="low-power-checkbox-text">Low Power Mode</span>
+
+                            <input type="checkbox" aria-labelledby="low-power-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="joystick-enabled-checkbox" class="check">
+                            <span id="joystick-enabled-checkbox-text">Joystick Enabled</span>
+
+                            <input
+                                type="checkbox"
+                                aria-labelledby="joystick-enabled-checkbox-text"
+                            />
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+
+                    <div class="col">
+                        <label id="debug-mode-checkbox" class="check">
+                            <span id="debug-mode-checkbox-text">Debug Mode</span>
+
+                            <input type="checkbox" aria-labelledby="debug-mode-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="show-names-checkbox" class="check">
+                            <span id="show-names-checkbox-text">Show Names</span>
+
+                            <input type="checkbox" aria-labelledby="show-names-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="show-levels-checkbox" class="check">
+                            <span id="show-levels-checkbox-text">Show Levels</span>
+
+                            <input type="checkbox" aria-labelledby="show-levels-checkbox-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="disable-region-caching-checkbox" class="check">
+                            <span id="disable-region-caching-text">Disable Caching</span>
+
+                            <input type="checkbox" aria-labelledby="disable-region-caching-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="webgl-checkbox" class="check">
+                            <span id="webgl-text">Enable WebGL</span>
+
+                            <input type="checkbox" aria-labelledby="webgl-text" />
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label id="frame-throttle">
+                            <span id="frame-throttle-text">FPS Throttle</span>
+
+                            <select
+                                id="frame-throttle-select"
+                                aria-labelledby="frame-throttle-text"
+                            >
+                                <option value="0">OFF</option>
+                                <option value="1">50 FPS</option>
+                                <option value="2">30 FPS</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="action-settings">
+                    <div id="game-info" class="slice-inner-container">
+                        <span>
+                            <strong>Game Version:</strong>
+                            <span id="game-info-version"></span>
+                        </span>
+
+                        <span>
+                            <strong>Game World:</strong>
+                            <span id="game-info-world"></span>
+                        </span>
+                    </div>
+
+                    <div
+                        role="button"
+                        id="logout-button"
+                        class="element-button element-button-red stroke"
+                        onclick="
+                        location.reload();
+                        "
+                        onkeydown="if (event.keyCode === 13) location.reload();"
+                        tabindex="0"
+                    >
+                        Log Out
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="friends-container" class="slice-page">
+            <div id="friends-page">
+                <ul id="friends-list" class="slice-list stroke"></ul>
+
+                <div class="dialog-buttons">
+                    <div id="add-friend" class="add"></div>
+                    <div id="remove-friend" class="remove"></div>
+                </div>
+            </div>
+
+            <dialog id="popup-container" class="slice-dialog">
+                <input
+                    id="popup-friend-input"
+                    class="stroke slice-input"
+                    type="text"
+                    maxlength="32"
+                    autocomplete="off"
+                    data-lpignore="true"
+                />
+
+                <div class="dialog-buttons">
+                    <div id="popup-friend-confirm" class="confirm"></div>
+                    <div id="popup-friend-cancel" class="cancel"></div>
+                </div>
+            </dialog>
+        </div>
+
+        <div id="attack-info" class="slice-dialog">
+            <div class="name"></div>
+            <div class="details"></div>
+            <div class="health"></div>
+        </div>
+
+        <div id="map-frame">
+            <div id="warp0" class="map-button"></div>
+            <div id="warp1" class="map-button"></div>
+            <div id="warp2" class="map-button"></div>
+            <div id="warp3" class="map-button"></div>
+            <div id="warp4" class="map-button"></div>
+            <div id="warp5" class="map-button"></div>
+
+            <div id="close-map-frame" class="close-container"></div>
+        </div>
+
+        <div id="inventory" class="slice-dialog">
+            <div id="inventory-container">
+                <ul></ul>
+            </div>
+        </div>
+
+        <div id="bank">
+            <div id="close-bank" class="close-container"></div>
+
+            <div id="bank-inventory-container">
+                <ul id="bank-inventory-slots"></ul>
+            </div>
+            <div id="bank-container">
+                <ul id="bank-slots"></ul>
+            </div>
+        </div>
+
+        <div id="trade" class="slice-container">
+            <div id="close-trade" class="close-container"></div>
+
+            <div id="trade-inventory">
+                <div class="title-decoration">Your Inventory</div>
+
+                <div id="trade-inventory-slots" class="slice-inner-container">
+                    <ul></ul>
+
+                    <dialog id="trade-count" class="slice-dialog">
+                        <div class="dialog-title">Input Amount</div>
+
+                        <input
+                            title="Count"
+                            type="number"
+                            class="dialog-count"
+                            min="1"
+                            step="1"
+                            size="6"
+                            maxlength="11"
+                        />
+
+                        <div class="dialog-buttons">
+                            <div class="confirm dialog-accept"></div>
+                            <div class="cancel dialog-cancel"></div>
+                        </div>
+                    </dialog>
+                </div>
+            </div>
+
+            <div id="trade-player">
+                <div id="trade-player-content">
+                    <div class="player-trade">
+                        <div id="trade-player-name" class="stroke"></div>
+                        <div id="trade-player-slots" class="slice-inner-container">
+                            <ul></ul>
+                        </div>
+                    </div>
+
+                    <div class="player-trade">
+                        <div id="trade-oplayer-name" class="stroke"></div>
+                        <div id="trade-oplayer-slots" class="slice-inner-container">
+                            <ul></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="trade-status"></div>
+                <div id="trade-accept" class="stroke slice-button">ACCEPT</div>
+            </div>
+        </div>
+
+        <div id="enchant" class="slice-container">
+            <div id="close-enchant" class="close-container"></div>
+
+            <div id="enchant-inventory" class="slice-inner-container">
+                <ul id="enchant-inventory-slots"></ul>
+            </div>
+
+            <div id="enchant-item">
+                <div id="enchant-item-selected" class="slice-item-slot">
+                    <div></div>
+                </div>
+
+                <div>
+                    <div id="enchant-item-shards" class="slice-item-slot">
+                        <div></div>
+                    </div>
+                    <div id="enchant-item-count"></div>
+                </div>
+
+                <div id="enchant-item-confirm" class="ok-check"></div>
+            </div>
+        </div>
+
+        <div id="store" class="slice-container">
+            <div id="close-store" class="close-container"></div>
+
+            <div id="store-content">
+                <div id="store-inventory">
+                    <div id="store-inventory-slots" class="slice-inner-container">
+                        <ul></ul>
+                    </div>
+
+                    <div id="store-sell">
+                        <div>
+                            <div class="slice-item-slot">
+                                <div id="store-sell-slot"></div>
+                            </div>
+                            <div id="store-sell-text"></div>
+                        </div>
+                        <div>
+                            <div class="slice-item-slot">
+                                <div id="store-sell-return-slot"></div>
+                            </div>
+                            <div id="store-sell-return-text"></div>
+                        </div>
+
+                        <div id="store-sell-confirm" class="ok-check"></div>
+                    </div>
+                </div>
+
+                <div id="store-slots">
+                    <div id="store-slots-content" class="slice-inner-container">
+                        <ul></ul>
+                    </div>
+                </div>
+            </div>
+
+            <dialog id="store-buy" class="slice-dialog">
+                <div class="dialog-title">Input Buy Amount</div>
+
+                <input
+                    title="Count"
+                    type="number"
+                    class="dialog-count"
+                    min="1"
+                    step="1"
+                    size="6"
+                    maxlength="11"
+                />
+
+                <div class="dialog-buttons">
+                    <div class="confirm dialog-accept"></div>
+                    <div class="cancel dialog-cancel"></div>
+                </div>
+            </dialog>
+        </div>
+
+        <div id="leaderboards" class="slice-container stroke">
+            <div id="close-leaderboards" class="close close-container"></div>
+
+            <div id="leaderboards-search" class="slice-inner-container">
+                <input
+                    title="Enter a search term..."
+                    id="leaderboards-search-input"
+                    class="slice-input"
+                    type="text"
+                    maxlength="32"
+                    autocomplete="off"
+                    data-lpignore="true"
+                    placeholder="Enter a term to search..."
+                />
+
+                <ul></ul>
+            </div>
+
+            <div id="leaderboards-results" class="slice-inner-container">
+                <ul></ul>
+            </div>
+        </div>
+
+        <div id="equipments" class="slice-container" hidden>
+            <div id="close-equipments" class="close-container"></div>
+
+            <div id="equipments-player-visual">
+                <div id="equipments-player-image">
+                    <canvas id="equipments-player-image-canvas"></canvas>
+
+                    <div id="equipments-player-image-navigator">
+                        <div class="previous"></div>
+                        <div class="next"></div>
+                    </div>
+                </div>
+                <ul id="equipment-slots">
+                    <li class="equipment-slot equipment-slot-helmet slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-pendant slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-arrows slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                        <div class="equipment-slot-arrows-count stroke"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-chestplate slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-weapon slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-shield slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-ring slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-armour-skin slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-weapon-skin slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-legplates slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-cape slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+
+                    <li class="equipment-slot equipment-slot-boots slice-list-item">
+                        <div class="equipment-slot-image"></div>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="equipments-player-stats">
+                <div id="attack-stats">
+                    <p class="title">Attack Stats</p>
+                    <p class="crush">Crush:</p>
+                    <p class="slash">Slash:</p>
+                    <p class="stab">Stab:</p>
+                    <p class="archery">Archery:</p>
+                    <p class="magic">Magic:</p>
+                </div>
+
+                <div id="defense-stats">
+                    <p class="title">Defense Stats</p>
+                    <p class="crush">Crush:</p>
+                    <p class="slash">Slash:</p>
+                    <p class="stab">Stab:</p>
+                    <p class="archery">Archery:</p>
+                    <p class="magic">Magic:</p>
+                </div>
+
+                <div id="bonuses">
+                    <p class="title">Bonuses</p>
+                    <p class="accuracy">Accuracy:</p>
+                    <p class="strength">Strength:</p>
+                    <p class="archery">Archery:</p>
+                    <p class="magic">Magic:</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="achievements" class="slice-container">
+            <div id="close-achievements" class="close-container"></div>
+
+            <div id="achievements-tab" class="slice-tab">
+                <div id="achievements-tab-arrow-left" class="slice-list-item">
+                    <div class="colour-button-arrow-left"></div>
+                </div>
+
+                <span id="achievements-tab-text"> Mudwich</span>
+
+                <div id="achievements-tab-arrow-right" class="slice-list-item">
+                    <div class="colour-button-arrow-right slice-item"></div>
+                </div>
+            </div>
+
+            <div id="achievements-content" class="slice-inner-container">
+                <ul class="stroke"></ul>
+            </div>
+        </div>
+
+        <div id="quests" class="slice-container">
+            <div id="close-quests" class="close-container"></div>
+
+            <div id="quests-container">
+                <div id="quests-list" class="slice-inner-container stroke"><ul></ul></div>
+                <div id="quests-logs" class="slice-inner-container">
+                    <div id="quests-logs-container">
+                        <h1 id="quests-logs-title" class="stroke">Quest Title</h1>
+                        <p id="quests-logs-shortdesc"></p>
+
+                        <h3 class="stroke">Description</h3>
+                        <p id="quests-logs-description"></p>
+
+                        <h3 class="stroke">Reward</h3>
+                        <p id="quests-logs-rewards"></p>
+
+                        <h3 class="stroke">Requirements</h3>
+                        <p id="quests-logs-requirements">None</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="bubbles"></div>
+
+        <div id="notification" class="slice-dialog">
+            <div id="notification-text-title"></div>
+            <div id="notification-text-description"></div>
+        </div>
+
+        <div id="notifications">
+            <div id="notify-fade" class="fade"></div>
+            <div id="notify">
+                <div id="exclamation"></div>
+                <div id="notify-done" class="done"></div>
+            </div>
+            <div id="confirm">
+                <div id="question"></div>
+                <div id="confirm-done" class="done"></div>
+                <div id="cancel"></div>
+            </div>
+            <div id="message"></div>
+        </div>
+
+        <div id="action-container" class="slice-dialog">
+            <div id="action-page">
+                <div class="action-item-name stroke"></div>
+                <div class="action-item-description"></div>
+                <ul></ul>
+            </div>
+
+            <dialog id="action-drop" class="slice-dialog">
+                <div class="dialog-title">Input Drop Amount</div>
+
+                <input
+                    title="Count"
+                    type="number"
+                    class="dialog-count"
+                    min="1"
+                    step="1"
+                    size="6"
+                    maxlength="11"
+                />
+
+                <div class="dialog-buttons">
+                    <div class="confirm dialog-accept"></div>
+                    <div class="cancel dialog-cancel"></div>
+                </div>
+            </dialog>
+        </div>
+
+        <div id="crafting">
+            <div id="close-crafting" class="close-container"></div>
+
+            <ul id="crafting-options"></ul>
+            <ul id="crafting-requirements"></ul>
+
+            <div id="crafting-result" class="crafting-option disabled">
+                <div class="crafting-option-icon"></div>
+                <div class="crafting-option-count stroke"></div>
+            </div>
+
+            <div id="crafting-level" class="crafting-option disabled">
+                <div class="crafting-option-icon"></div>
+                <div class="crafting-option-count stroke"></div>
+            </div>
+
+            <div id="crafting-result-name" class="stroke"></div>
+
+            <ul class="crafting-buttons">
+                <li id="craft-one" class="amount-button amount-one active"></li>
+                <li id="craft-five" class="amount-button amount-five"></li>
+                <li id="craft-ten" class="amount-button amount-ten"></li>
+            </ul>
+
+            <div id="craft-button" class="stroke">Craft</div>
+        </div>
+
+        <div id="guilds" class="slice-container">
+            <div id="close-guilds" class="close-container"></div>
+
+            <div class="banner banner-grey">
+                <div id="banner-outline" class="banner-outline"></div>
+                <div id="banner-crest"></div>
+            </div>
+
+            <div id="guilds-list-container" class="stroke">
+                <div id="create-guild" class="element-button element-button stroke">Create</div>
+
+                <div class="title-decoration">Guilds</div>
+
+                <div id="guilds-list" class="slice-inner-container">
+                    <p id="guilds-info" class="stroke">There are no guilds available...</p>
+                    <ul></ul>
+                </div>
+            </div>
+
+            <div id="guilds-create" class="slice-inner-container">
+                <div id="banner-select">
+                    <div
+                        id="banner-colour-button"
+                        class="colour-select-button button-banner-colour active"
+                    >
+                    </div>
+                    <div id="banner-outline-button" class="colour-select-button outline-button-1">
+                        <div class="colour-button-arrow-left"></div>
+                        <div class="colour-button-arrow-right"></div>
+                    </div>
+                </div>
+
+                <div id="banner-options">
+                    <input
+                        id="guilds-name-input"
+                        type="text"
+                        maxlength="16"
+                        autocomplete="off"
+                        data-lpignore="true"
+                        placeholder="Enter a name..."
+                        class="guilds-name-input-image stroke slice-input"
+                    />
+
+                    <ul id="banner-colours"></ul>
+
+                    <div id="guilds-create-error"></div>
+
+                    <div class="button-row stroke">
+                        <div id="guilds-back-button" class="element-button element-button-red">
+                            Back
+                        </div>
+                        <div id="guilds-create-button" class="element-button">Create</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="guilds-info-container">
+                <div id="guilds-info-header">
+                    <div id="guilds-leave" class="element-button element-button-red stroke">
+                        Leave
+                    </div>
+
+                    <div id="guilds-name" class="title-decoration"></div>
+                </div>
+
+                <div id="member-list-container" class="slice-inner-container">
+                    <ul></ul>
+
+                    <dialog id="guild-member-dialog" class="slice-dialog">
+                        <h2 id="guild-member-selected">
+                            <!--  -->
+                        </h2>
+
+                        <div class="stroke button-row">
+                            <div id="guild-member-promote" class="element-button">Promote</div>
+
+                            <div id="guild-member-demote" class="element-button element-button-red">
+                                Demote
+                            </div>
+
+                            <div id="guild-member-kick" class="element-button element-button-red">
+                                Kick
+                            </div>
+                        </div>
+                    </dialog>
+                </div>
+
+                <div id="guilds-chat" class="slice-inner-container">
+                    <div id="guilds-chat-log"></div>
+                    <input
+                        id="guilds-chat-input"
+                        type="text"
+                        maxlength="256"
+                        autocomplete="off"
+                        data-lpignore="true"
+                        placeholder="Enter your message here..."
+                        class="guilds-chat-input-image stroke slice-input"
+                    />
+                </div>
+
+                <ul id="sidebar-list">
+                    <li id="sidebar-members" class="sidebar-element active">
+                        <div class="members-icon"></div>
+                    </li>
+                    <li id="sidebar-chat" class="sidebar-element">
+                        <div class="chat-icon"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="lootbag" class="slice-container">
+            <div id="close-lootbag" class="close-container"></div>
+
+            <div id="lootbag-container">
+                <div id="lootbag-items" class="slice-inner-container">
+                    <ul></ul>
+                </div>
+                <div id="lootbag-inventory" class="slice-inner-container">
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+
+        <ul id="interact" class="slice-dialog"></ul>
+
+        <div id="book" class="slice-container" hidden>
+            <div id="close-book" class="close-container"></div>
+
+            <div class="slice-inner-container"></div>
+            <div class="slice-inner-container"></div>
+        </div>
+    </div>
+</div>

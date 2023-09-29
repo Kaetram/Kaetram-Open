@@ -1,0 +1,144 @@
+{
+    "name": "The Elemental Blade",
+    "description": "The world's elements seek a worthy bearer.|Legends speak of a blade that embodies the very essence of earth, fire, water, and air. Begin the journey to forge this elemental masterpiece and command its boundless power.",
+    "rewards": ["elementalsword"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "eldersmith",
+            "text": [
+                "Ah, an adventurer! Have you heard of the Elemental Blade?",
+                "It is a sword that channels the forces of nature.",
+                "To craft it, you must gather the four Elemental Shards from across the land."
+            ],
+            "completedText": ["Your journey begins in the Earth Caverns."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "earthguard",
+            "text": [
+                "Seeking the Earth Shard? Prove your worth by defeating the Earth Elementals.",
+                "Return with their Essence, and I shall grant you the Shard."
+            ],
+            "completedText": ["Defeat the Earth Elementals."]
+        },
+        "2": {
+            "task": "kill",
+            "mob": ["earthelementals"],
+            "mobCountRequirement": 5
+        },
+        "3": {
+            "task": "talk",
+            "npc": "earthguard",
+            "text": [
+                "You have done well. Here is the Earth Shard.",
+                "Now, seek the Flame Spirit in the Lava Pits for the Fire Shard."
+            ],
+            "itemRewards": [
+                {
+                    "key": "earthshard",
+                    "count": 1
+                }
+            ]
+        },
+        "4": {
+            "task": "talk",
+            "npc": "flamespirit",
+            "text": [
+                "To earn my Fire Shard, navigate through the Lava Maze.",
+                "Survive its trials, and the Shard is yours."
+            ],
+            "completedText": ["Navigate the Lava Maze."]
+        },
+        "5": {
+            "task": "talk",
+            "npc": "flamespirit",
+            "text": [
+                "You burn with determination. Take the Fire Shard.",
+                "Next, journey to the Water Temple for the Water Shard."
+            ],
+            "itemRewards": [
+                {
+                    "key": "fireshard",
+                    "count": 1
+                }
+            ]
+        },
+        "6": {
+            "task": "talk",
+            "npc": "watertemplar",
+            "text": [
+                "Retrieve the Sacred Pearl from the depths to earn the Water Shard.",
+                "But be wary, the depths hide many secrets."
+            ],
+            "completedText": ["Retrieve the Sacred Pearl."]
+        },
+        "7": {
+            "task": "talk",
+            "npc": "watertemplar",
+            "text": ["The Water Shard is yours.", "Finally, ascend the Sky Tower for the Air Shard."],
+            "itemRewards": [
+                {
+                    "key": "watershard",
+                    "count": 1
+                }
+            ]
+        },
+        "8": {
+            "task": "talk",
+            "npc": "windkeeper",
+            "text": [
+                "To claim the Air Shard, fly through the Cloud Rings.",
+                "Only those light of heart and sure of purpose will succeed."
+            ],
+            "completedText": ["Fly through the Cloud Rings."]
+        },
+        "9": {
+            "task": "talk",
+            "npc": "windkeeper",
+            "text": [
+                "With the power of air now yours, return to Elder Smith.",
+                "He will guide you in forging the Elemental Blade."
+            ],
+            "itemRewards": [
+                {
+                    "key": "airshard",
+                    "count": 1
+                }
+            ]
+        },
+        "10": {
+            "task": "talk",
+            "npc": "eldersmith",
+            "itemRequirements": [
+                {
+                    "key": "earthshard",
+                    "count": 1
+                },
+                {
+                    "key": "fireshard",
+                    "count": 1
+                },
+                {
+                    "key": "watershard",
+                    "count": 1
+                },
+                {
+                    "key": "airshard",
+                    "count": 1
+                }
+            ],
+            "itemRewards": [
+                {
+                    "key": "elementalsword",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@The Elemental Blade@green@. You now wield the power of the elements!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

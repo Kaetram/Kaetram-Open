@@ -4,6 +4,7 @@ import Console from './console';
 import World from './game/world';
 import Loader from './info/loader';
 import SocketHandler from './network/sockethandler';
+import Args from './args';
 
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
@@ -19,7 +20,9 @@ class Main {
 
     private ready = false;
 
-    public constructor() {
+    public constructor(private params: string[] = process.argv) {
+        if (!this.handleLicensing()) return;
+
         log.info(`Initializing ${config.name} game engine...`);
 
         this.socketHandler.onConnection(this.handleConnection.bind(this));
@@ -95,8 +98,9 @@ class Main {
         log.critical('Could not connect to the MongoDB server.');
         log.critical(`Error: ${error}`);
 
-        // Exit the process.
-        exit(1);
+        log.info(`Attempting to reconnect in 10 seconds...`);
+
+        setTimeout(() => this.database.createConnection(), 10_000);
     }
 
     /**
@@ -117,6 +121,26 @@ class Main {
         // Actually exit the process.
         setTimeout(() => exit(0), 2000);
     }
+
+    /**
+     * Ensures that the license agreements have been accepted before
+     * starting the server.
+     */
+
+    private handleLicensing(): boolean {
+        if (!config.acceptLicense) {
+            log.critical(
+                `You must read and accept both MPL2.0 and OPL licensing agreements. Once you've done so, toggle ACCEPT_LICENSE in your environment variables.`
+            );
+
+            return false;
+        }
+
+        return true;
+    }
 }
+
+// Parse the override arguments.
+new Args();
 
 export default new Main();

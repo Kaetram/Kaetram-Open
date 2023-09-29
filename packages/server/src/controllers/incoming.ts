@@ -1,16 +1,15 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Packets, Opcodes } from '@kaetram/common/network';
-import { Guild } from '@kaetram/common/network/impl';
+import { GuildPacket } from '@kaetram/common/network/impl';
 import Packet from '@kaetram/common/network/packet';
 
 import type World from '../game/world';
-import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
+import type { GuildPacketData, PlayerPacketData } from '@kaetram/common/types/messages/outgoing';
 import type {
-    ChatPacket,
-    FriendsPacket,
-    PlayerPacket,
-    RelayPacket
+    ChatPacketData,
+    FriendsPacketData,
+    RelayPacketData
 } from '@kaetram/common/types/messages/hub';
 
 /**
@@ -33,23 +32,23 @@ export default class Incoming {
     public handle([packet, opcode, data]: [number, unknown, unknown]): void {
         switch (packet) {
             case Packets.Player: {
-                return this.handlePlayer(opcode as number, data as PlayerPacket);
+                return this.handlePlayer(opcode as number, data as PlayerPacketData);
             }
 
             case Packets.Chat: {
-                return this.handleChat(opcode as ChatPacket);
+                return this.handleChat(opcode as ChatPacketData);
             }
 
             case Packets.Guild: {
-                return this.handleGuild(opcode as number, data as GuildPacket);
+                return this.handleGuild(opcode as number, data as GuildPacketData);
             }
 
             case Packets.Friends: {
-                return this.handleFriends(data as FriendsPacket);
+                return this.handleFriends(data as FriendsPacketData);
             }
 
             case Packets.Relay: {
-                return this.handleRelay(opcode as RelayPacket);
+                return this.handleRelay(opcode as RelayPacketData);
             }
         }
     }
@@ -62,7 +61,7 @@ export default class Incoming {
      * @param data Contains the player's username and server id.
      */
 
-    private handlePlayer(opcode: Opcodes.Player, data: PlayerPacket): void {
+    private handlePlayer(opcode: Opcodes.Player, data: PlayerPacketData): void {
         // Synchronize the player's login or logout to the guild members.
         if (data.guild)
             this.world.syncGuildMembers(
@@ -86,12 +85,12 @@ export default class Incoming {
      * @param chat Contains information about the message.
      */
 
-    private handleChat(data: ChatPacket) {
+    private handleChat(data: ChatPacketData) {
         // Not found occurs when the hub could not find the player anywhere.
         if (data.notFound) {
             let player = this.world.getPlayerByName(data.source!);
 
-            return player?.notify(`Player @aquamarine@${data.target}@white@ is not online.`);
+            return player?.notify(`misc:NOT_ONLINE;username=${data.target}`);
         }
 
         // Success is an event sent from the hub when the message was successfully delivered.
@@ -129,7 +128,7 @@ export default class Incoming {
      * @param data Contains information about the opcode.
      */
 
-    private handleGuild(opcode: Opcodes.Guild, data: GuildPacket): void {
+    private handleGuild(opcode: Opcodes.Guild, data: GuildPacketData): void {
         switch (opcode) {
             case Opcodes.Guild.Update: {
                 if (!data.username || !data.members) return;
@@ -137,7 +136,8 @@ export default class Incoming {
                 let player = this.world.getPlayerByName(data.username);
 
                 // Send the packet to the player's client.
-                if (player) player.send(new Guild(Opcodes.Guild.Update, { members: data.members }));
+                if (player)
+                    player.send(new GuildPacket(Opcodes.Guild.Update, { members: data.members }));
 
                 return;
             }
@@ -152,7 +152,7 @@ export default class Incoming {
      * @param data Contains the player's username and their active friends (alongside their serverId).
      */
 
-    private handleFriends(data: FriendsPacket): void {
+    private handleFriends(data: FriendsPacketData): void {
         let player = this.world.getPlayerByName(data.username!);
 
         if (data.activeFriends) player?.friends.setActiveFriends(data.activeFriends);
@@ -165,7 +165,7 @@ export default class Incoming {
      * @param data Contains the player's username and the packet we want to send to them.
      */
 
-    private handleRelay(data: RelayPacket): void {
+    private handleRelay(data: RelayPacketData): void {
         let [username, info] = data,
             player = this.world.getPlayerByName(username);
 

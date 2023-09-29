@@ -5,7 +5,12 @@ import log from '../lib/log';
 import { Packets } from '@kaetram/common/network';
 
 import type Game from '../game';
-import type { SerializedServer } from '@kaetram/common/types/api';
+import type { SerializedServer } from '@kaetram/common/types/network';
+import type { TradePacketOutgoing } from '@kaetram/common/network/impl/trade';
+
+interface OutgoingPackets {
+    [Packets.Trade]: TradePacketOutgoing;
+}
 
 export default class Socket {
     public messages;
@@ -44,8 +49,12 @@ export default class Socket {
      */
 
     public async connect(server?: SerializedServer): Promise<void> {
-        let { host, port } = server || (await this.getServer()) || this.config,
-            url = this.config.ssl ? `wss://${host}` : `ws://${host}:${port}`;
+        let { host, port } = server || (await this.getServer()) || this.config;
+
+        host ||= this.config.host;
+        port ||= this.config.port;
+
+        let url = this.config.ssl ? `wss://${host}` : `ws://${host}:${port}`;
 
         // Create a websocket connection with the url generated.
         this.connection = new WebSocket(url);
@@ -92,7 +101,7 @@ export default class Socket {
      * @param data Packet data in an array format.
      */
 
-    public send(packet: number, data?: unknown): void {
+    public send<const P extends Packets>(packet: P, data?: OutgoingPackets[P & number]): void {
         // Ensure the connection is open before sending.
         if (this.connection?.readyState !== WebSocket.OPEN) return;
 
@@ -128,7 +137,7 @@ export default class Socket {
         this.game.app.toggleLogin(false);
 
         this.game.app.sendError(
-            window.config.debug
+            import.meta.env.DEV
                 ? `Couldn't connect to ${host}:${port}`
                 : 'Could not connect to the game server.'
         );

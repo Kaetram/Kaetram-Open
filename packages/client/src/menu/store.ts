@@ -3,17 +3,18 @@ import Menu from './menu';
 import log from '../lib/log';
 import Util from '../utils/util';
 import { isMobile } from '../utils/detect';
-import { onSecondaryPress } from '../utils/press';
 
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type Inventory from './inventory';
-import type { StorePacket } from '@kaetram/common/types/messages/outgoing';
-import type { SerializedStoreItem } from '@kaetram/common/types/stores';
+import type { StorePacketData } from '@kaetram/common/types/messages/outgoing';
+import type { SerializedStoreItem } from '@kaetram/common/network/impl/store';
 
 type SelectCallback = (opcode: Opcodes.Store, key: string, index: number, count?: number) => void;
 
 export default class Store extends Menu {
+    public override identifier: number = Modules.Interfaces.Store;
+
     private key = ''; // Key of the current store
     private currency = 'gold'; // Key of the currency used, defaults to gold.
 
@@ -22,23 +23,23 @@ export default class Store extends Menu {
 
     private selectedBuyIndex = -1; // Index of currently selected item to buy.
 
-    private storeContainer: HTMLElement = document.querySelector('#store-container')!;
+    private storeContainer: HTMLElement = document.querySelector('#store-content')!;
 
-    private storeHelp: HTMLElement = document.querySelector('#store-help')!;
+    //private storeHelp: HTMLElement = document.querySelector('#store-slots-help')!;
 
-    private confirmSell: HTMLElement = document.querySelector('#confirm-sell')!;
+    private confirmSell: HTMLElement = document.querySelector('#store-sell-confirm')!;
 
     // Sell slot information
     private sellSlot: HTMLElement = document.querySelector('#store-sell-slot')!;
-    private sellSlotText: HTMLElement = document.querySelector('#store-sell-slot-text')!;
-    private sellSlotReturn: HTMLElement = document.querySelector('#store-sell-slot-return')!;
-    private sellSlotReturnText: HTMLElement = document.querySelector(
-        '#store-sell-slot-return-text'
-    )!;
+    private sellSlotText: HTMLElement = document.querySelector('#store-sell-text')!;
+    private sellSlotReturn: HTMLElement = document.querySelector('#store-sell-return-slot')!;
+    private sellSlotReturnText: HTMLElement = document.querySelector('#store-sell-return-text')!;
 
     // Lists
-    private storeList: HTMLUListElement = document.querySelector('#store-container')!;
-    private inventoryList: HTMLUListElement = document.querySelector('#store-inventory-slots')!;
+    private storeList: HTMLUListElement = document.querySelector('#store-slots-content > ul')!;
+    private inventoryList: HTMLUListElement = document.querySelector(
+        '#store-inventory-slots > ul'
+    )!;
 
     // Buy dialog elements
     public buyDialog: HTMLElement = document.querySelector('#store-buy')!;
@@ -67,13 +68,16 @@ export default class Store extends Menu {
     }
 
     /**
-     * Updates the helper text when the user resizes the screen.
+     * Handles incoming input from the keyboard. Things like pressing enter to accept
+     * the buy dialog and pressing escape to close the buy dialog.
+     * @param key The key that we are pressing.
      */
 
-    public override resize(): void {
-        let action = isMobile() ? 'Long tap' : 'Right click';
+    public keyDown(key: string): void {
+        if (!this.isBuyDialogVisible()) return;
 
-        this.storeHelp.textContent = `${action} to buy multiple items.`;
+        if (key === 'Enter') this.handleBuy();
+        else if (key === 'Escape') this.hideBuyDialog();
     }
 
     /**
@@ -83,7 +87,7 @@ export default class Store extends Menu {
      * @param info Contains the store's key, currency, and items (or specific item if selecting).
      */
 
-    public update(info: StorePacket): void {
+    public update(info: StorePacketData): void {
         this.clear();
 
         this.key = info.key!;
@@ -143,7 +147,8 @@ export default class Store extends Menu {
         this.storeContainer.classList.add('dimmed');
 
         this.buyCount.value = '1';
-        this.buyCount.focus();
+
+        if (!isMobile()) this.buyCount.focus();
     }
 
     /**
@@ -165,6 +170,8 @@ export default class Store extends Menu {
 
         this.clearSellSlot();
 
+        this.inventoryList.scrollTop = 0;
+
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
             let image = this.getElement(index).querySelector<HTMLElement>('.item-image')!,
                 count = this.getElement(index).querySelector<HTMLElement>('.item-count')!,
@@ -183,11 +190,24 @@ export default class Store extends Menu {
      * @param info Store packet data containing information about the store.
      */
 
-    public override show(info: StorePacket): void {
+    public override show(info: StorePacketData): void {
         super.show();
 
         this.update(info);
         this.synchronize();
+    }
+
+    /**
+     * Hides the store UI and clears the store.
+     */
+
+    public override hide(): void {
+        super.hide();
+
+        this.clear();
+        this.clearSellSlot();
+
+        this.hideBuyDialog();
     }
 
     /**
@@ -201,6 +221,7 @@ export default class Store extends Menu {
         this.currency = 'gold';
 
         this.storeList.innerHTML = '';
+        this.storeList.scrollTop = 0;
     }
 
     /**
@@ -225,7 +246,7 @@ export default class Store extends Menu {
      * @param info Contains store packet data such as the index, key, price, etc.
      */
 
-    public move(info: StorePacket): void {
+    public move(info: StorePacketData): void {
         if (info.key !== this.key) return log.error(`Invalid store key provided for the select.`);
 
         //Refreshes the inventory container prior to moving.s
@@ -259,13 +280,15 @@ export default class Store extends Menu {
 
     private createStoreItem(item: SerializedStoreItem, index: number): HTMLElement {
         let listElement = document.createElement('li'),
+            slot = document.createElement('div'),
             image = document.createElement('div'),
             name = document.createElement('div'),
             count = document.createElement('div'),
             price = document.createElement('div');
 
         // Add the class to the elements.
-        listElement.classList.add('store-item');
+        listElement.classList.add('slice-list-item');
+        slot.classList.add('slice-item-slot');
         image.classList.add('store-item-image');
         name.classList.add('store-item-name', 'stroke');
         count.classList.add('store-item-count', 'stroke');
@@ -279,17 +302,28 @@ export default class Store extends Menu {
         // Update the image of the element.
         image.style.backgroundImage = Util.getImageURL(item.key);
 
-        listElement.addEventListener('click', () => this.buy(index));
-        onSecondaryPress(listElement, () => {
+        listElement.addEventListener('click', () => {
             this.selectedBuyIndex = index;
 
             this.showBuyDialog();
         });
 
+        // Append the image to the slot.
+        slot.append(image);
+
         // Append all the elements together and nest them.
-        listElement.append(image, name, count, price);
+        listElement.append(slot, name, count, price);
 
         return listElement;
+    }
+
+    /**
+     * Checks the display property of the buy dialog to see if it is visible.
+     * @returns Whether or not the buy dialog is visible.
+     */
+
+    private isBuyDialogVisible(): boolean {
+        return this.buyDialog.style.display !== 'none';
     }
 
     /**
@@ -300,7 +334,7 @@ export default class Store extends Menu {
      */
 
     private getElement(index: number): HTMLElement {
-        return this.inventoryList.children[index].querySelector('div') as HTMLElement;
+        return this.inventoryList.children[index] as HTMLElement;
     }
 
     /**

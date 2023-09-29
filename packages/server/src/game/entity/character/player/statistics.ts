@@ -11,15 +11,16 @@ export default class Statistics {
     public mobKills: { [key: string]: number } = {};
     public mobExamines: string[] = [];
     public resources: { [key: string]: number } = {};
+    public drops: { [key: string]: number } = {};
 
-    public creationTime = Date.now(); // Time of game's creation.
+    public creationTime = this.getTime(); // Time of game's creation.
     public totalTimePlayed = 0; // Total time played in milliseconds.
     public averageTimePlayed = 0;
-    public lastLogin = Date.now();
+    public lastLogin = this.getTime();
     public loginCount = 1;
 
     // Class variables for calculating login time, etc.
-    public loginTime = Date.now(); // Time when player logged in.
+    public loginTime = this.getTime(); // Time when player logged in.
 
     public constructor(private player: Player) {}
 
@@ -34,6 +35,7 @@ export default class Statistics {
         this.mobKills = data.mobKills || this.mobKills;
         this.mobExamines = data.mobExamines || this.mobExamines;
         this.resources = data.resources || this.resources;
+        this.drops = data.drops || this.drops;
 
         this.creationTime = data.creationTime || this.creationTime;
         this.totalTimePlayed = data.totalTimePlayed || this.totalTimePlayed;
@@ -106,6 +108,20 @@ export default class Statistics {
     }
 
     /**
+     * Adds a drop to the player's statistics. This is called when a player
+     * receives a drop and we are incrementing the amount of items they have
+     * received of that type.
+     * @param key The key of the item that was dropped.
+     * @param count (Optional) The amount of items that were dropped.
+     */
+
+    public addDrop(key: string, count = 1): void {
+        if (!(key in this.drops)) this.drops[key] = count;
+
+        this.drops[key] += count;
+    }
+
+    /**
      * Calculates the average time played by the player. Think of this as adding
      * every amount of time the player has been logged in together and dividing
      * by the amount of logins. e.g. (login1Time + login2Time + login3Time) / 3
@@ -132,7 +148,7 @@ export default class Statistics {
 
     public serialize(): StatisticsData {
         // Serializing also gets treated as a logging out event, so we calculate stuff here.
-        this.lastLogin = Date.now();
+        this.lastLogin = this.getTime();
         this.totalTimePlayed += Date.now() - this.loginTime; // add time played to total time played.
         this.calculateAverageTimePlayed();
 
@@ -142,6 +158,7 @@ export default class Statistics {
             mobKills: this.mobKills,
             mobExamines: this.mobExamines,
             resources: this.resources,
+            drops: this.drops,
             creationTime: this.creationTime,
             totalTimePlayed: this.totalTimePlayed,
             averageTimePlayed: this.averageTimePlayed,
@@ -149,5 +166,15 @@ export default class Statistics {
             loginCount: this.loginCount,
             cheater: this.player.isCheater()
         };
+    }
+
+    /**
+     * Gets the UNIX epoch time in seconds. This is because storing seconds
+     * is easier for the database (as it can cause later down the line.)
+     * @returns The current UNIX epoch time in seconds.
+     */
+
+    private getTime(): number {
+        return Math.floor(Date.now() / 1000);
     }
 }

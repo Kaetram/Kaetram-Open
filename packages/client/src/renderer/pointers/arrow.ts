@@ -1,33 +1,40 @@
-import { Opcodes } from '@kaetram/common/network';
+import Utils from '../../utils/util';
+
+import type { Opcodes } from '@kaetram/common/network';
 
 export default class Arrow {
+    // Hardcoded value representing the width of the arrow element divided by 2.
+    public offsetWidth = 36;
+
     public x = -1;
     public y = -1;
 
-    private blinkInterval!: number;
+    public element: HTMLElement = document.createElement('div');
+
+    private blinkInterval = -1;
     private visible = true;
 
     public constructor(
-        public id: string,
-        public element: HTMLElement,
-        public type: Opcodes.Pointer
+        public type: Opcodes.Pointer,
+        public instance: string
     ) {
-        this.load();
-    }
+        // Apply the correct class name to the element.
+        this.element.classList.add('pointer');
 
-    private load(): void {
+        // Blink interval essentially hides and shows the arrow every 600ms.
         this.blinkInterval = window.setInterval(() => {
-            if (this.visible) this.hide();
-            else this.show();
+            if (this.visible) Utils.fadeOut(this.element);
+            else Utils.fadeIn(this.element);
 
             this.visible = !this.visible;
         }, 600);
     }
 
-    /**e
-     * Sets the coordinates of the pointer.
-     * @param x Sets the x position of the pointer (relative or absolute).
-     * @param y Sets the y position of the pointer (relative or absolute).
+    /**
+     * Sets the arrow's position on the screen. The position corresponds to the
+     * absolute x and y coordinate (not the grid position) in the game.
+     * @param x The x coordinate.
+     * @param y The y coordinate.
      */
 
     public setPosition(x: number, y: number): void {
@@ -42,25 +49,18 @@ export default class Arrow {
     public destroy(): void {
         clearInterval(this.blinkInterval);
 
-        if (this.type === Opcodes.Pointer.Button) this.hide();
-        else this.element.remove();
+        this.element.remove();
     }
 
     /**
-     * Displays the pointer object.
+     * Resets all the styles for the arrow element.
      */
 
-    private show(): void {
-        if (this.type === Opcodes.Pointer.Button) this.element.classList.add('active');
-        else this.element.style.display = 'block';
-    }
-
-    /**
-     * Hides the current pointer.
-     */
-
-    private hide(): void {
-        if (this.type === Opcodes.Pointer.Button) this.element.classList.remove('active');
-        else this.element.style.display = 'none';
+    public reset(): void {
+        this.element.style.top = '';
+        this.element.style.left = '';
+        this.element.style.right = '';
+        this.element.style.bottom = '';
+        this.element.style.transform = '';
     }
 }

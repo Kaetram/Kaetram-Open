@@ -4,19 +4,19 @@ export default {
     INVALID_WEAPON(type: Modules.Skills) {
         switch (type) {
             case Modules.Skills.Lumberjacking: {
-                return 'You must equip an axe in order to cut trees.';
+                return 'resource:MUST_EQUIP_AXE';
             }
 
             case Modules.Skills.Mining: {
-                return 'You must be wielding a pickaxe in order to mine rocks.';
+                return 'resource:MUST_EQUIP_PICKAXE';
             }
 
             case Modules.Skills.Fishing: {
-                return 'You must be wielding a fishing utensil in order to fish.';
+                return 'resource:MUST_EQUIP_FISHING';
             }
 
             case Modules.Skills.Foraging: {
-                return 'You require a special tool to forage this.';
+                return 'resource:MUST_EQUIP_FORAGING';
             }
 
             default: {
@@ -27,19 +27,19 @@ export default {
     INVALID_LEVEL(type: Modules.Skills, level: number) {
         switch (type) {
             case Modules.Skills.Lumberjacking: {
-                return `You must be level ${level} in order to cut this tree.`;
+                return `resource:INVALID_LEVEL_LUMBERJACKING;level=${level}`;
             }
 
             case Modules.Skills.Mining: {
-                return `You must be level ${level} in order to mine this rock.`;
+                return `resource:INVALID_LEVEL_MINING;level=${level}`;
             }
 
             case Modules.Skills.Fishing: {
-                return `You must be level ${level} in order to fish here.`;
+                return `resource:INVALID_LEVEL_FISHING;level=${level}`;
             }
 
             case Modules.Skills.Foraging: {
-                return `You must be level ${level} in order to harvest this resource.`;
+                return `resource:INVALID_LEVEL_FORAGING;level=${level}`;
             }
 
             default: {
@@ -47,29 +47,27 @@ export default {
             }
         }
     },
-    INVENTORY_FULL: 'You do not have enough space in your inventory.',
     UNABLE_TO_INTERACT(type: Modules.Skills) {
         switch (type) {
             case Modules.Skills.Lumberjacking: {
-                return 'You are unable to cut this tree at the moment.';
+                return 'resource:UNABLE_TO_INTERACT_LUMBERJACKING';
             }
 
             case Modules.Skills.Mining: {
-                return 'You do not have the necessary knowledge to mine this rock.';
+                return 'resource:UNABLE_TO_INTERACT_MINING';
             }
 
             case Modules.Skills.Fishing: {
-                return 'You are unable to fish here at the moment.';
+                return 'resource:UNABLE_TO_INTERACT_FISHING';
             }
 
             case Modules.Skills.Foraging: {
-                return 'You are unable to harvest this resource at the moment.';
+                return 'resource:UNABLE_TO_INTERACT_FORAGING';
             }
 
             default: {
                 return 'UNABLE_TO_INTERACT() NOT IMPLEMENTED';
             }
         }
-    },
-    NO_REASON: 'There is no reason for you to cut this tree.'
+    }
 };

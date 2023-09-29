@@ -52,23 +52,29 @@
         "items": [
             {
                 "key": "bronzeaxe",
-                "count": 15
-            },
-
-            {
-                "key": "cobaltaxe",
-                "count": 15
+                "count": 15,
+                "price": 1000
             },
 
             {
                 "key": "ironaxe",
-                "count": 15
-            },
-
-            {
-                "key": "goldaxe",
-                "count": 15
+                "count": 15,
+                "price": 5000
             }
+        ],
+        "allowedItems": [
+            "logs",
+            "palmlogs",
+            "pinelogs",
+            "icelogs",
+            "icepalmlogs",
+            "icepinelogs",
+            "aquasilliuslogs",
+            "alkythnlogs",
+            "heliphatitlogs",
+            "zoncillogs",
+            "zondullogs",
+            "bloodwoodlogs"
         ],
         "refresh": 120000,
         "currency": "gold"
@@ -102,36 +108,94 @@
     "miner": {
         "items": [
             {
-                "key": "nisocore",
-                "count": 1,
-                "price": 220
+                "key": "coal",
+                "count": 100,
+                "price": 50
             },
             {
-                "key": "cinnabarore",
-                "count": 0,
-                "price": 460
+                "key": "copperore",
+                "count": 25,
+                "price": 150
             },
             {
-                "key": "pytharore",
-                "count": 0,
-                "price": 670
+                "key": "tinore",
+                "count": 25,
+                "price": 150
+            },
+            {
+                "key": "bronzeore",
+                "count": 15,
+                "price": 200
+            },
+            {
+                "key": "goldore",
+                "count": 5,
+                "price": 500
             },
             {
                 "key": "goldnugget",
                 "count": 0,
-                "price": 1650
+                "price": 500
+            },
+            {
+                "key": "nisocore",
+                "count": 0,
+                "price": 450
+            },
+            {
+                "key": "cinnabarore",
+                "count": 0,
+                "price": 500
+            },
+            {
+                "key": "pytharore",
+                "count": 0,
+                "price": 600
             },
             {
                 "key": "iboore",
                 "count": 0,
-                "price": 1250
+                "price": 700
+            },
+            {
+                "key": "moonrockore",
+                "count": 0,
+                "price": 1000
             }
         ],
-        "refresh": 600000,
+        "alloweditems": [
+            "coal",
+            "copperore",
+            "tinore",
+            "bronzeore",
+            "goldore",
+            "nisocore",
+            "cinnabarore",
+            "pytharore",
+            "goldnugget",
+            "iboore",
+            "moonrockore"
+        ],
+        "refresh": 120000,
         "currency": "gold"
     },
     "cosmetics": {
         "items": [
+            {
+                "key": "lolipop",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "spoon",
+                "count": 5,
+                "price": 15
+            },
+            {
+                "key": "cellobello",
+                "count": 5,
+                "price": 15
+            },
             {
                 "key": "taekwondo",
                 "count": 5,

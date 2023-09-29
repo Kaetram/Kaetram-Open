@@ -2,10 +2,14 @@ import Packet from '../packet';
 
 import { Packets } from '@kaetram/common/network';
 
-import type { CommandPacket } from '@kaetram/common/types/messages/outgoing';
+export interface CommandPacketData {
+    command: string;
+}
 
-export default class Command extends Packet {
-    public constructor(data: CommandPacket) {
+export type CommandPacketCallback = (info: CommandPacketData) => void;
+
+export default class CommandPacket extends Packet {
+    public constructor(data: CommandPacketData) {
         super(Packets.Command, undefined, data);
     }
 }

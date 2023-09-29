@@ -1,0 +1,45 @@
+{
+    "name": "Mismatched Socks Saga",
+    "description": "Socks are missing...again.|Tired of always having mismatched socks? So is Timmy. He believes his socks are going on adventures without him. Help him find out where they're off to!",
+    "rewards": ["sockpuppet"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "timmy",
+            "text": [
+                "Hey there! My socks keep disappearing.",
+                "I've set up a little trap to find out where they go at night.",
+                "Can you help me spy on them?"
+            ],
+            "completedText": ["Spy on the socks."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "socktrap",
+            "text": [
+                "You and Timmy lie in wait. As midnight strikes, the socks begin to... move?",
+                "They're dancing! And there's a sock party happening!"
+            ],
+            "completedText": ["Join the sock party or tell Timmy?"]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "partysock",
+            "text": [
+                "Welcome, honorary sock! We just needed to unwind. Get it? Unwind?",
+                "As a token of our appreciation for not blowing our cover, take this."
+            ],
+            "itemRewards": [
+                {
+                    "key": "sockpuppet",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You've unraveled the @crimson@Mismatched Socks Saga@green@. You now have your very own sock puppet!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

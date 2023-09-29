@@ -3,16 +3,22 @@
 @use 'impl/action';
 @use 'impl/attack';
 @use 'impl/bank';
+@use 'impl/book';
 @use 'impl/bubbles';
 @use 'impl/buttons';
 @use 'impl/chat';
 @use 'impl/container';
+@use 'impl/crafting';
 @use 'impl/dialog';
 @use 'impl/enchant';
 @use 'impl/equipments';
 @use 'impl/friends';
+@use 'impl/guilds';
 @use 'impl/interact';
 @use 'impl/inventory';
+@use 'impl/joystick';
+@use 'impl/leaderboards';
+@use 'impl/lootbag';
 @use 'impl/map';
 @use 'impl/notifications';
 @use 'impl/page';
@@ -20,15 +26,23 @@
 @use 'impl/profile';
 @use 'impl/quests';
 @use 'impl/settings';
+@use 'impl/skills';
+@use 'impl/slice';
 @use 'impl/store';
 @use 'impl/trade';
+@use 'impl/welcome';
 @use 'impl/zoom';
-@use 'impl/leaderboards';
-@use 'impl/guilds';
-@use 'impl/crafting';
+@use 'impl/quest';
+@use 'impl/inappstore';
 
 body.game {
     background: #000;
+
+    label,
+    input[type],
+    a {
+        cursor: none;
+    }
 
     #load-character,
     #create-character,
@@ -39,27 +53,9 @@ body.game {
 
     #parchment {
         z-index: 0;
-        transition: 0.5s opacity linear 0.5s, z-index 0s linear 1s;
-    }
-
-    #credits,
-    #death,
-    #news,
-    #about,
-    #git {
-        z-index: 1000;
-        opacity: 0;
-        transition: 0s opacity linear 0s;
-    }
-
-    .parchment-left {
-        left: 41%;
-        transition: 0.5s left ease-in-out;
-    }
-
-    .parchment-right {
-        right: 41%;
-        transition: 0.5s right ease-in-out;
+        transition:
+            0.2s opacity linear 0.2s,
+            z-index 0s linear 1s;
     }
 
     &.credits #credits,
@@ -92,13 +88,6 @@ body.game {
         }
     }
 
-    .parchment-middle {
-        width: 0;
-        margin-left: 0;
-        transition: 0.5s width ease-in-out, 0.5s margin-left ease-in-out,
-            0.5s background-position ease-in-out;
-    }
-
     #game-container {
         opacity: 1;
     }
@@ -106,25 +95,5 @@ body.game {
     footer {
         display: none;
         color: #8a8a8a;
-    }
-}
-
-@media (--lg) {
-    body.game {
-        .parchment-middle {
-            background-position: -633px -882px;
-        }
-
-        &.credits,
-        &.death,
-        &.news,
-        &.git,
-        &.about {
-            .parchment-middle {
-                width: 1038px;
-                margin-left: -519px;
-                background-position-x: -114px;
-            }
-        }
     }
 }

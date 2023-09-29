@@ -1,0 +1,45 @@
+{
+    "name": "Pie in the Sky",
+    "description": "Dreamy desserts.|Patty Pie-maker dreams of a pie so light it floats. Help her create this culinary marvel.",
+    "rewards": ["floating-pie", "recipe-scroll"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "pattypie",
+            "text": [
+                "I have a dream of a pie that floats! But I need cloud-fluff...",
+                "Could you ascend the Floating Peaks and grab me some?"
+            ],
+            "completedText": ["Collect cloud-fluff from the Floating Peaks."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "cloudsprite",
+            "text": ["Oh my! You want some of my fluff?", "Only if you tickle me first! Tee-hee!"],
+            "completedText": ["Engage in a tickle fight with the Cloud Sprite!"]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "pattypie",
+            "text": [
+                "You've got it! Now to bake the masterpiece...",
+                "Voilà! A floating pie! And here's the recipe too."
+            ],
+            "itemRewards": [
+                {
+                    "key": "floating-pie",
+                    "count": 1
+                },
+                {
+                    "key": "recipe-scroll",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You've created culinary history! Relish your @crimson@floating-pie@green@ and perhaps bake your own with the recipe scroll.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

@@ -1,249 +1,129 @@
-@use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
 #store {
-    cursor: url('/img/hand.png'), auto;
-
-    position: absolute;
-    top: 17%;
-    left: 50%;
-
     display: none;
-}
 
-#store-inventory-container {
-    position: absolute;
-    top: 0;
-    right: 100%;
-}
+    &-content {
+        display: flex;
+        flex: 3;
+        flex-direction: row;
+        gap: 0.5em;
 
-#store-inventory-slots {
-    position: absolute;
-
-    overflow: hidden;
-    overflow-y: scroll;
-
-    margin: 0;
-    padding: 0;
-
-    list-style-type: none;
-
-    li {
-        float: left;
+        height: 100%;
     }
-}
 
-#store-container {
-    position: absolute;
-    top: 8%;
-    left: 8%;
+    &-inventory {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
 
-    overflow-y: scroll;
+        &-slots {
+            ul {
+                overflow: hidden auto;
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 0.25em;
 
-    font-family: AdvoCut, sans-serif;
-
-    li {
-        margin-bottom: 5px;
-
-        &:first-child {
-            margin-top: 5px;
+                height: 100%;
+                padding-right: 0.25em;
+            }
         }
     }
-}
 
-#store-help {
-    margin: 90% auto;
-    font-family: AdvoCut, sans-serif;
-    text-align: center;
-}
+    &-sell {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
 
-#store-sell-slot-return-text,
-#store-sell-slot-text,
-#shards-count {
-    color: black;
-}
-
-#confirm-enchant,
-#confirm-sell {
-    top: 80%;
-    left: 70%;
-}
-
-.store-item-image {
-    width: 32px;
-    height: 32px;
-    margin-bottom: 4px;
-    background-size: cover;
-}
-
-.store-item-name,
-.store-item-count,
-.store-item-price {
-    flex: 1;
-    font-family: AdvoCut, sans-serif;
-    font-size: 12px;
-    color: #fff;
-}
-
-.store-item-name {
-    float: left;
-    flex: 4;
-}
-
-.store-item-count,
-.store-item-price {
-    text-align: right;
-}
-
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #store {
-            width: 170px * $i;
-            height: 168px * $i;
-            background: url('/img/interface/containers.png') -129px * $i -22px * $i;
-            background-size: calc(width('containers.png') * $i);
+        &-text,
+        &-return-text {
+            height: 1em;
+            text-align: center;
         }
+    }
 
-        #store-container {
-            width: 146px * $i;
-            height: 134px * $i;
+    &-slots {
+        display: flex;
+        flex: 2;
+        flex-direction: column;
+        gap: 0.5em;
 
-            li {
-                .item-slot {
-                    margin-bottom: 4px * $i;
+        &-content {
+            flex: 1;
+
+            ul {
+                overflow: hidden auto;
+                display: flex;
+                flex-direction: column;
+                gap: 0.25em;
+
+                height: 100%;
+                padding-right: 0.25em;
+
+                li {
+                    display: flex;
+                    flex-direction: row;
+                    flex-shrink: 0;
+                    gap: 0.5em;
+                    align-items: center;
+
+                    padding: 0.25em;
+
+                    .store-item-image {
+                        width: 100%;
+                        height: 100%;
+                        background-size: 100%;
+                    }
+
+                    .store-item-name {
+                        flex: 3;
+                    }
+
+                    .store-item-count,
+                    .store-item-price {
+                        flex: 1;
+                    }
                 }
             }
         }
 
-        #store-help {
-            font-size: 10px * $i;
-        }
-
-        #store-inventory-container {
-            width: 129px * $i;
-            height: 155px * $i;
-            background: url('/img/interface/containers.png') 0 0;
-            background-size: calc(width('containers.png') * $i);
-        }
-
-        #store-inventory-slots {
-            top: 16px * $i;
-            left: 20px * $i;
-            width: 96px * $i;
-            height: 92px * $i;
-
-            li {
-                .item-slot {
-                    margin-bottom: 4px * $i;
-                }
-            }
-        }
-
-        #store-sell-slot,
-        #store-sell-slot-return {
-            position: absolute;
-            top: 123px * $i;
-
-            width: 16px * $i;
-            height: 16px * $i;
-
-            background-size: cover;
-        }
-
-        #store-sell-slot {
-            left: 14px * $i;
-        }
-
-        #store-sell-slot-return {
-            left: 44px * $i;
-        }
-
-        .store-item {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-
-            box-sizing: border-box;
-            width: 136px * $i;
-            height: 22px * $i;
-            margin-left: 4px * $i;
-            padding-left: 1em;
-
-            background: url('/img/interface/containers.png') -352px * $i -112px * $i;
-            background-size: calc(width('containers.png') * $i);
-
-            &:hover {
-                background-position-y: -134px * $i;
-            }
-
-            &:active {
-                background-position-y: -156px * $i;
-            }
-        }
-
-        .store-item-name,
-        .store-item-count,
-        .store-item-price {
-            font-size: 18px;
-        }
-
-        .store-item-name {
-            padding-left: 1.5em;
-        }
-
-        .store-item-count,
-        .store-item-price {
-            padding-right: 1em;
+        &-help {
+            text-align: center;
         }
     }
 
-    @media (--md) {
-        .store-item {
-            padding-left: 5px;
-        }
+    .slice-item-slot {
+        box-sizing: border-box;
+        width: 2em;
+        height: 2em;
+        padding: 0.375em;
 
-        .store-item-name,
-        .store-item-count,
-        .store-item-price {
-            font-size: 14px;
-        }
-
-        .store-item-name {
-            padding-left: 1em;
+        div {
+            width: 100%;
+            height: 100%;
+            background-size: 100%;
         }
     }
+}
 
-    @media (--sm) {
-        #store {
-            top: 30%;
-            left: 55%;
-            transform: scale(1.7);
-        }
+@media (--portrait) {
+    #store {
+        width: 16em;
+        height: 28em;
+    }
 
-        #store-inventory-slots {
-            left: 11px;
-            width: 106px;
+    #store-content {
+        flex-direction: column;
+    }
 
-            li {
-                .item-slot {
-                    margin-bottom: 8px;
-                }
-            }
-        }
+    #store-inventory {
+        gap: 0.1em;
+        height: 13em;
+    }
 
-        .store-item {
-            padding-left: 3px;
-        }
-
-        .store-item-name,
-        .store-item-count,
-        .store-item-price {
-            font-size: 7px;
-        }
-
-        .store-item-image {
-            width: 16px;
-            height: 16px;
-        }
+    #store-slots {
+        gap: 0.2em;
+        height: 12em;
     }
 }

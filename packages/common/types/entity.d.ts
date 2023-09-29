@@ -4,6 +4,7 @@
  * to stand out for some reason (i.e. miniboss has a different scale).
  */
 
+import type { HitData } from './info';
 import type { Modules } from '../network';
 import type { Enchantments } from './item';
 
@@ -11,6 +12,7 @@ export interface EntityDisplayInfo {
     instance: string;
     colour?: string;
     scale?: number;
+    exclamation?: string;
 }
 
 /**
@@ -49,8 +51,7 @@ export interface EntityData {
     // Projectile data
     ownerInstance?: string;
     targetInstance?: string;
-    damage?: number;
-    hitType?: Modules.Hits;
+    hit?: HitData;
 
     displayInfo?: EntityDisplayInfo;
 }

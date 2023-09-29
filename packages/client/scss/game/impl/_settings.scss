@@ -1,168 +1,85 @@
 @use '../../abstracts/media';
 
-#sliders {
-    position: absolute;
-    top: 15%;
-    right: 10%;
-    float: right;
-}
+#settings-page {
+    display: none;
 
-#texts {
-    position: absolute;
-    top: 15%;
-    left: 10%;
+    label {
+        display: flex;
+        gap: 0.25em;
+        align-items: center;
+        padding: 0.25em 0;
 
-    float: left;
-
-    font-family: AdvoCut, sans-serif;
-}
-
-#info {
-    position: absolute;
-    top: 78%;
-
-    width: 100%;
-    height: 8%;
-
-    text-align: center;
-}
-
-#check-marks {
-    position: absolute;
-    top: 41%;
-    right: 10%;
-    float: right;
-}
-
-#music,
-#sound,
-#brightness {
-    position: absolute;
-}
-
-#audio-enabled-checkbox,
-#low-power-checkbox,
-#debug-mode-checkbox,
-#centre-checkbox,
-#show-names-checkbox,
-#show-levels-checkbox,
-#disable-region-caching-checkbox,
-#webgl-checkbox {
-    left: 50%;
-}
-
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #sliders {
-            width: 40px * $i;
-            height: 25px * $i;
+        span,
+        input {
+            flex: 2;
+            font-size: 0.75em;
         }
 
-        #music {
-            top: -1px * $i;
+        span {
+            font-size: 1em;
         }
 
-        #sound {
-            top: 17px * $i;
-        }
+        .checkmark {
+            flex: 1;
 
-        #brightness {
-            top: 35px * $i;
-        }
-
-        #check-marks {
-            width: 40px * $i;
-            height: 120px * $i;
-        }
-
-        #texts {
-            width: 60px * $i;
-            height: 100px * $i;
-            font-size: 8px * $i;
-
-            p {
-                margin-bottom: 10px * $i;
+            &::before {
+                float: right;
             }
         }
-
-        #audio-enabled-checkbox {
-            top: -3px * $i;
-        }
-
-        #low-power-checkbox {
-            top: 15px * $i;
-        }
-
-        #debug-mode-checkbox {
-            top: 33px * $i;
-        }
-
-        #show-names-checkbox {
-            top: 50px * $i;
-        }
-
-        #show-levels-checkbox {
-            top: 68px * $i;
-        }
-
-        #disable-region-caching-checkbox {
-            top: 87px * $i;
-        }
-
-        #webgl-checkbox {
-            top: 104px * $i;
-        }
     }
 }
 
-@media (--lg) {
-    #settings-page {
-        bottom: 68px;
+#settings-container {
+    flex-direction: row;
+    gap: 0.5em;
+    height: 100%;
+
+    @media (--portrait) {
+        flex-direction: column;
     }
 }
 
-@media (--md) {
-    #settings-page {
-        bottom: 48px;
+#input-settings,
+#action-settings {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#input-settings {
+    flex: 6;
+    flex-flow: row;
+    gap: 3em;
+    padding: 0.75em 1em;
+
+    > .col {
+        flex: 1;
+        justify-content: space-between;
     }
 }
 
-@media (--sm) {
-    #settings-page {
-        right: 38px;
-        bottom: 99px;
-        transform: scale(1.5);
-    }
+#action-settings {
+    flex: 2;
+    flex-flow: column;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    #texts {
-        top: 14%;
-    }
+#game-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.5em;
 
-    #audio-enabled-checkbox {
-        top: -6px;
-    }
+    width: 100%;
 
-    #low-power-checkbox {
-        top: 13px;
+    strong,
+    span {
+        font-size: 1em;
     }
+}
 
-    #debug-mode-checkbox {
-        top: 31px;
-    }
-
-    #show-names-checkbox {
-        top: 48px;
-    }
-
-    #show-levels-checkbox {
-        top: 66px;
-    }
-
-    #disable-region-caching-checkbox {
-        top: 85px;
-    }
-
-    #webgl-checkbox {
-        top: 102px;
-    }
+#joystick-enabled-checkbox[hidden] {
+    display: none;
 }

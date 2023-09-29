@@ -1,12 +1,13 @@
 import Quest from '../quest';
+import Data from '../../../../../../../data/quests/tutorial.json';
 
 import config from '@kaetram/common/config';
 
-import type { RawQuest } from '@kaetram/common/types/quest';
-
 export default class Tutorial extends Quest {
-    public constructor(key: string, rawData: RawQuest) {
-        super(key, rawData);
+    protected override noPrompts = true;
+
+    public constructor(key: string) {
+        super(key, Data);
 
         if (!config.tutorialEnabled) this.setStage(this.stageCount, 0, false);
     }

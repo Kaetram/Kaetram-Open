@@ -9,15 +9,17 @@ import type Inventory from './inventory';
 type SelectCallback = (index: number) => void;
 type ConfirmCallback = (index: number, shardIndex: number) => void;
 export default class Enchant extends Menu {
+    public override identifier: number = Modules.Interfaces.Enchant;
+
     private list: HTMLUListElement = document.querySelector('#enchant-inventory-slots')!;
 
     // Selected items for the enchanting process.
-    private selectedItem: HTMLElement = document.querySelector('#enchant-selected-item')!;
-    private selectedShards: HTMLElement = document.querySelector('#enchant-shards')!;
-    private selectedShardsCount: HTMLElement = document.querySelector('#shards-count')!;
+    private selectedItem: HTMLElement = document.querySelector('#enchant-item-selected > div')!;
+    private selectedShards: HTMLElement = document.querySelector('#enchant-item-shards > div')!;
+    private selectedShardsCount: HTMLElement = document.querySelector('#enchant-item-count')!;
 
     // Confirm button
-    private confirmButton: HTMLElement = document.querySelector('#confirm-enchant')!;
+    private confirmButton: HTMLElement = document.querySelector('#enchant-item-confirm')!;
 
     // Selected elements for packet data
     private selectedSlot = -1; // Item slot
@@ -174,7 +176,7 @@ export default class Enchant extends Menu {
      */
 
     private getElement(index: number): HTMLElement {
-        return this.list.children[index].querySelector('div') as HTMLElement;
+        return this.list.children[index] as HTMLElement;
     }
 
     /**

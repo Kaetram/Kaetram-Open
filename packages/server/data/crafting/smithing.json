@@ -1,0 +1,811 @@
+{
+    "hilt2": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "tinbar",
+                "count": 1
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "coppersword": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "copperbar",
+                "count": 2
+            },
+
+            {
+                "key": "hilt2",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "tinsword": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "tinbar",
+                "count": 2
+            },
+
+            {
+                "key": "hilt2",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzesword": {
+        "level": 5,
+        "experience": 45,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 5
+            },
+
+            {
+                "key": "hilt2",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironsword": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 5
+            },
+
+            {
+                "key": "hilt2",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldsword": {
+        "level": 15,
+        "experience": 120,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 15
+            },
+
+            {
+                "key": "hilt2",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzepickaxe": {
+        "level": 1,
+        "experience": 35,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 3
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironpickaxe": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 4
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldpickaxe": {
+        "level": 20,
+        "experience": 120,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 10
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzeaxe": {
+        "level": 1,
+        "experience": 35,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 3
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironaxe": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 4
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldaxe": {
+        "level": 20,
+        "experience": 120,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 10
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzebattleaxe": {
+        "level": 1,
+        "experience": 35,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 3
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironbattleaxe": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 4
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldbattleaxe": {
+        "level": 20,
+        "experience": 120,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 10
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzespear": {
+        "level": 1,
+        "experience": 35,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 3
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironspear": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 4
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldspear": {
+        "level": 20,
+        "experience": 120,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 10
+            },
+
+            {
+                "key": "logs",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzescythe": {
+        "level": 1,
+        "experience": 35,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 3
+            },
+
+            {
+                "key": "logs",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironscythe": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 4
+            },
+
+            {
+                "key": "logs",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldscythe": {
+        "level": 20,
+        "experience": 120,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 10
+            },
+
+            {
+                "key": "logs",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "copperhelmet": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "copperbar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "tinhelmet": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "tinbar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzehelmet": {
+        "level": 5,
+        "experience": 45,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 5
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironhelmet": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 5
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldhelmet": {
+        "level": 15,
+        "experience": 120,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 15
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "copperchestplate": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "copperbar",
+                "count": 3
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "tinchestplate": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "tinbar",
+                "count": 3
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzechestplate": {
+        "level": 5,
+        "experience": 45,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 7
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironchestplate": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 7
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldchestplate": {
+        "level": 15,
+        "experience": 120,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 20
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "copperlegplates": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "copperbar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "tinlegplates": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "tinbar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzelegplates": {
+        "level": 5,
+        "experience": 45,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 5
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironlegplates": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 5
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldlegplates": {
+        "level": 15,
+        "experience": 120,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 15
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzeboots": {
+        "level": 5,
+        "experience": 45,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 5
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironboots": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 5
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldboots": {
+        "level": 62,
+        "experience": 350,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 15
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "coppershield": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "copperbar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldbar": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "goldnugget",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "bronzering": {
+        "level": 5,
+        "experience": 60,
+        "requirements": [
+            {
+                "key": "bronzebar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "ironring": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "silverring": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "silverring2": {
+        "level": 10,
+        "experience": 80,
+        "requirements": [
+            {
+                "key": "ironbar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldring": {
+        "level": 20,
+        "experience": 200,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "goldring2": {
+        "level": 20,
+        "experience": 200,
+        "requirements": [
+            {
+                "key": "goldbar",
+                "count": 2
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    }
+}

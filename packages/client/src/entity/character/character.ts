@@ -35,6 +35,7 @@ export default class Character extends Entity {
     public target: Entity | null = null;
 
     public lastTarget = '';
+    public lastFollow = 0;
 
     // List of active status effects currently applied on the player.
     public statusEffects: Modules.Effects[] = [];
@@ -106,6 +107,66 @@ export default class Character extends Entity {
         [Modules.Effects.Boulder]: {
             key: 'effects/boulder',
             animation: new Animation('effect', 7, 0, 32, 32)
+        },
+        [Modules.Effects.AccuracyBuff]: {
+            key: 'effects/accuracy',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.StrengthBuff]: {
+            key: 'effects/strength',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.DefenseBuff]: {
+            key: 'effects/defense',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.MagicBuff]: {
+            key: 'effects/magic',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.ArcheryBuff]: {
+            key: 'effects/archery',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.AccuracySuperBuff]: {
+            key: 'effects/accuracysuper',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.StrengthSuperBuff]: {
+            key: 'effects/strengthsuper',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.DefenseSuperBuff]: {
+            key: 'effects/defensesuper',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.MagicSuperBuff]: {
+            key: 'effects/magicsuper',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
+        },
+        [Modules.Effects.ArcherySuperBuff]: {
+            key: 'effects/archerysuper',
+            animation: new Animation('effect', 5, 0, 32, 32),
+            perpetual: true,
+            speed: 200
         }
     };
 
@@ -120,7 +181,11 @@ export default class Character extends Entity {
     private fallbackCallback?: FallbackCallback;
     private hitPointsCallback?: HitPointsCallback;
 
-    public constructor(instance: string, type: Modules.EntityType, public game: Game) {
+    public constructor(
+        instance: string,
+        type: Modules.EntityType,
+        public game: Game
+    ) {
         super(instance, type);
 
         this.loadAnimations();
@@ -136,7 +201,7 @@ export default class Character extends Entity {
         // Iterate through all the effects and load default speed and end callback events.
         for (let key in this.effects) {
             let effect = this.effects[key],
-                keyValue = parseInt(key);
+                keyValue: Modules.Effects = parseInt(key);
 
             // Default speed
             effect.animation.setSpeed(effect.speed || 50);
@@ -171,7 +236,7 @@ export default class Character extends Entity {
         count = 0,
         onEndCount?: () => void
     ): void {
-        let o = ['atk', 'walk', 'idle'];
+        let o = ['atk', 'bow_atk', 'walk', 'idle'];
 
         // Do not perform another animation while the death one is playing.
         if (this.animation?.name === 'death') return;
@@ -190,29 +255,23 @@ export default class Character extends Entity {
     }
 
     /**
-     * Takes in consideration the death animations that may be playing and
-     * ignores updating the silhouette if so.
-     * @param active Whether or not we should update the silhouette.
-     */
-
-    public override updateSilhouette(active?: boolean): void {
-        // Default the effect to the normal sprite if the character's death animation is playing.
-        if (this.hasDeathAnimation()) active = false;
-
-        super.updateSilhouette(active);
-    }
-
-    /**
      * Briefly changes the character's sprite with that of the
      * hurt sprite (a white and red sprite when a character is hurt).
      */
 
     public toggleHurt(): void {
-        if (this.dead || this.teleporting || !this.hurtSprite) return;
+        // Prevent any hurt sprite rendering while the death animation or the character is teleporting.
+        if (this.dead || this.teleporting) {
+            this.hurt = false;
+            return;
+        }
 
-        this.sprite = this.hurtSprite;
+        // Attempt to load the hurt sprite if it doesn't exist.
+        if (this.sprite.hasHurtSprite() && !this.sprite.hurtSprite) this.sprite.loadHurtSprite();
 
-        window.setTimeout(() => (this.sprite = this.normalSprite), 100);
+        this.hurt = true;
+
+        window.setTimeout(() => (this.hurt = false), 100);
     }
 
     /**
@@ -234,7 +293,7 @@ export default class Character extends Entity {
      */
 
     public trade(entity: Entity): void {
-        if (this.dead) return;
+        if (this.dead || this.teleporting) return;
 
         this.trading = true;
 
@@ -249,7 +308,13 @@ export default class Character extends Entity {
      */
 
     public follow(entity: Entity, forced = false): void {
-        if (this.dead || this.isStunned()) return;
+        // Prevents follow spam which will cause entities to visually vibrate.
+        if (Date.now() - this.lastFollow < 300) return;
+
+        // Prevent following when entity is stunned or dead.
+        if (this.dead || this.isStunned() || this.teleporting) return;
+
+        this.lastFollow = Date.now();
 
         this.following = true;
 
@@ -265,7 +330,7 @@ export default class Character extends Entity {
      */
 
     public pursue(character: Character): void {
-        if (this.dead || this.isStunned()) return;
+        if (this.dead || this.isStunned() || this.teleporting) return;
 
         this.setTarget(character);
         this.move(character.gridX, character.gridY);
@@ -444,7 +509,7 @@ export default class Character extends Entity {
 
     public override idle(o?: Modules.Orientation, force = false): void {
         // Prevents the idle animation from affecting the walking animation.
-        if (this.hasPath() && !force) return;
+        if ((this.hasPath() || this.moving) && !force) return;
 
         let orientation = o || this.orientation;
 
@@ -489,6 +554,24 @@ export default class Character extends Entity {
         else if (entity.gridX < gridX) this.setOrientation(Modules.Orientation.Left);
         else if (entity.gridY > gridY) this.setOrientation(Modules.Orientation.Down);
         else if (entity.gridY < gridY) this.setOrientation(Modules.Orientation.Up);
+
+        this.idle();
+    }
+
+    /**
+     * Same functionality as the `lookAt` function except it takes in a position
+     * rather than an entity.
+     * @param x The grid x position to look at.
+     * @param y The grid y position to look at.
+     */
+
+    public lookAtPosition(x: number, y: number): void {
+        let { gridX, gridY } = this;
+
+        if (x > gridX) this.setOrientation(Modules.Orientation.Right);
+        else if (x < gridX) this.setOrientation(Modules.Orientation.Left);
+        else if (y > gridY) this.setOrientation(Modules.Orientation.Down);
+        else if (y < gridY) this.setOrientation(Modules.Orientation.Up);
 
         this.idle();
     }
@@ -571,9 +654,13 @@ export default class Character extends Entity {
         // Set the new position onto the grid.
         this.updateGridPosition();
 
-        if (!this.interrupted && this.path) {
-            if (this.hasNextStep()) [this.nextGridX, this.nextGridY] = this.path[this.step + 1];
+        // Pathing has been interrupted, stop.
+        if (this.interrupted) stop = true;
 
+        // Append the next step if it exists.
+        if (this.hasNextStep()) [this.nextGridX, this.nextGridY] = this.path![this.step + 1];
+
+        if (!stop) {
             this.stepCallback?.();
 
             if (this.changedPath()) {
@@ -594,20 +681,33 @@ export default class Character extends Entity {
                 this.step++;
                 this.updateMovement();
             } else stop = true;
-        } else {
-            stop = true;
-            this.interrupted = false;
         }
 
-        if (stop) {
-            this.path = null;
-            this.idle();
+        if (stop) this.resetMovement();
+    }
 
-            if (this.stopPathingCallback)
-                this.stopPathingCallback(this.gridX, this.gridY, this.forced);
+    /**
+     * Used for when pathing has come to an end. We reset all the pathing
+     * variables and stop the character from moving.
+     * @param withCallback Whether or not to call the stop pathing callback.
+     */
 
-            this.forced = false;
-        }
+    private resetMovement(withCallback = true): void {
+        this.path = null;
+
+        this.idle();
+
+        this.destination = null;
+        this.newDestination = null;
+        this.movement = new Transition();
+
+        this.nextGridX = this.gridX;
+        this.nextGridY = this.gridY;
+
+        this.forced = false;
+        this.interrupted = false;
+
+        if (withCallback) this.stopPathingCallback?.(this.gridX, this.gridY, this.forced);
     }
 
     /**
@@ -666,16 +766,11 @@ export default class Character extends Entity {
      */
 
     public stop(force = false): void {
-        if (!force) this.interrupted = true;
-        else if (this.hasPath()) {
-            this.path = null;
-            this.destination = null;
-            this.newDestination = null;
-            this.movement = new Transition();
-            this.performAction(this.orientation, Modules.Actions.Idle);
-            this.nextGridX = this.gridX;
-            this.nextGridY = this.gridY;
-        }
+        if (!this.hasPath()) return;
+
+        if (force) return this.resetMovement(false);
+
+        this.interrupted = true;
     }
 
     /**
@@ -688,7 +783,7 @@ export default class Character extends Entity {
 
         if (!this.target!.isMob() && !this.target!.isPlayer()) return false;
 
-        if (this.getDistance(this.target!) > this.attackRange - 1) return false;
+        if (this.getDistance(this.target!) > this.attackRange) return false;
 
         return true;
     }
@@ -741,7 +836,7 @@ export default class Character extends Entity {
     }
 
     public hasNextStep(): boolean | null {
-        return this.path && this.path.length - 1 > this.step;
+        return this.path!.length - 1 > this.step;
     }
 
     public changedPath(): boolean {
@@ -757,13 +852,13 @@ export default class Character extends Entity {
     }
 
     public moved(): void {
+        if (!this.game.isMainPlayer(this.instance)) return;
+
         this.moveCallback?.();
     }
 
     public setTarget(target: Entity): void {
         this.target = target;
-
-        this.lastTarget = target.instance;
     }
 
     /**

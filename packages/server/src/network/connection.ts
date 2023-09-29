@@ -29,7 +29,10 @@ export default class Connection {
 
     private closeCallback?: () => void;
 
-    public constructor(public instance: string, private socket: HeaderWebSocket) {
+    public constructor(
+        public instance: string,
+        private socket: HeaderWebSocket
+    ) {
         // Convert the IP address hex string to a readable IP address.
         this.address =
             socket.remoteAddress || Utils.bufferToAddress(socket.getRemoteAddressAsText());
@@ -90,17 +93,27 @@ export default class Connection {
     }
 
     /**
-     * Resets the timeout every time an action is performed. This way we keep
-     * a `countdown` going constantly that resets every time an action is performed.
-     * @param duration The duration of the timeout. Defaults to the player's timeout duration.
+     * Updates the timeout duration for the player and refreshes the existing timeout.
+     * @param duration The new duration of the timeout.
      */
 
-    public refreshTimeout(duration = this.timeoutDuration): void {
+    public updateTimeout(duration: number): void {
+        this.timeoutDuration = duration;
+
+        this.refreshTimeout();
+    }
+
+    /**
+     * Resets the timeout every time an action is performed. This way we keep
+     * a `countdown` going constantly that resets every time an action is performed.
+     */
+
+    public refreshTimeout(): void {
         // Clear the existing timeout and start over.
         this.clearTimeout();
 
         // Start a new timeout and set the player's timeout variable.
-        this.disconnectTimeout = setTimeout(() => this.reject('timeout'), duration);
+        this.disconnectTimeout = setTimeout(() => this.reject('timeout'), this.timeoutDuration);
     }
 
     /**

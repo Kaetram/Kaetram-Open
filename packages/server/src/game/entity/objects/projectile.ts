@@ -1,16 +1,20 @@
 import Entity from '../entity';
 
-import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
-import type { EntityData } from '@kaetram/common/types/entity';
-import type Character from '../character/character';
 import type Hit from '../character/combat/hit';
+import type Character from '../character/character';
+import type { EntityData } from '@kaetram/common/types/entity';
 
 export default class Projectile extends Entity {
     private impactCallback?: () => void;
 
-    public constructor(public owner: Character, public target: Character, public hit: Hit) {
+    public constructor(
+        public owner: Character,
+        public target: Character,
+        public hit: Hit
+    ) {
         super(
             Utils.createInstance(Modules.EntityType.Projectile),
             owner.getProjectileName(),
@@ -57,8 +61,7 @@ export default class Projectile extends Entity {
 
         data.ownerInstance = this.owner.instance;
         data.targetInstance = this.target.instance;
-        data.damage = this.hit.getDamage() || 0;
-        data.hitType = this.hit.type;
+        data.hit = this.hit.serialize();
 
         return data;
     }

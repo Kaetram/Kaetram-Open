@@ -1,28 +1,34 @@
 import MobHandler from './handler';
 
+import Character from '../character';
+import Item from '../../objects/item';
+import Formulas from '../../../../info/formulas';
 import rawData from '../../../../../data/mobs.json';
+import Spawns from '../../../../../data/spawns.json';
 import dropTables from '../../../../../data/tables.json';
 import PluginIndex from '../../../../../data/plugins/mobs';
-import Spawns from '../../../../../data/spawns.json';
-import Formulas from '../../../../info/formulas';
-import Character from '../character';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Heal, Movement } from '@kaetram/common/network/impl';
+import { HealPacket, MovementPacket, TeleportPacket } from '@kaetram/common/network/impl';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
-import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type { Bonuses, Stats } from '@kaetram/common/types/item';
-import type { RawData, MobData } from '@kaetram/common/types/mob';
-import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
 import type Area from '../../../map/areas/area';
 import type Areas from '../../../map/areas/areas';
 import type World from '../../../world';
-import type Entity from '../../entity';
 import type Chest from '../../objects/chest';
 import type Player from '../player/player';
+import type DefaultPlugin from '../../../../../data/plugins/mobs/default';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type {
+    RawMobData,
+    MobData,
+    MobSkills,
+    MobDrop,
+    MobDropTable
+} from '@kaetram/common/types/mob';
+import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 interface ItemDrop {
     key: string;
@@ -44,7 +50,7 @@ export default class Mob extends Character {
     public boss = false;
     public respawnable = true;
     public miniboss = false;
-    public roaming = false;
+    public roaming = true; // Roaming is true by default
     public poisonous = false;
     public freezing = false;
     public burning = false;
@@ -57,26 +63,20 @@ export default class Mob extends Character {
     private defenseStats: Stats = Utils.getEmptyStats();
     private bonuses: Bonuses = Utils.getEmptyBonuses();
 
-    private drops: { [itemKey: string]: number } = {}; // Empty if not specified.
-    private dropTables: string[] = [
-        'ordinary',
-        'arrows',
-        'unusual',
-        'shards',
-        'fruits',
-        'vegetables',
-        'mushrooms'
-    ]; // Default drop table for all mobs.
+    private drops: MobDrop[] = [];
+    private dropTables: string[] = [];
 
-    public health: number = Modules.MobDefaults.HEALTH_LEVEL;
-    public accuracy: number = Modules.MobDefaults.ACCURACY_LEVEL;
-    public strength: number = Modules.MobDefaults.STRENGTH_LEVEL;
-    public magic: number = Modules.MobDefaults.MAGIC_LEVEL;
-    public archery: number = Modules.MobDefaults.ARCHERY_LEVEL;
-    public defense = Modules.MobDefaults.DEFENSE_LEVEL;
-    public respawnDelay = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
-    public aggroRange = Modules.MobDefaults.AGGRO_RANGE;
-    public roamDistance = Modules.MobDefaults.ROAM_DISTANCE;
+    private skills: MobSkills = {
+        accuracy: Modules.MobDefaults.ACCURACY_LEVEL,
+        strength: Modules.MobDefaults.STRENGTH_LEVEL,
+        defense: Modules.MobDefaults.DEFENSE_LEVEL,
+        magic: Modules.MobDefaults.MAGIC_LEVEL,
+        archery: Modules.MobDefaults.ARCHERY_LEVEL
+    };
+
+    public respawnDelay: number = Modules.MobDefaults.RESPAWN_DELAY; // Use default spawn delay if not specified.
+    public aggroRange: number = Modules.MobDefaults.AGGRO_RANGE;
+    public roamDistance: number = Modules.MobDefaults.ROAM_DISTANCE;
 
     private handler?: MobHandler | DefaultPlugin;
 
@@ -93,7 +93,7 @@ export default class Mob extends Character {
         this.spawnX = this.x;
         this.spawnY = this.y;
 
-        this.data = (rawData as RawData)[key];
+        this.data = (rawData as RawMobData)[key];
 
         if (!this.data) {
             log.error(`[Mob] Could not find data for ${key}.`);
@@ -103,7 +103,6 @@ export default class Mob extends Character {
         this.loadData(this.data);
         this.loadPlugin(plugin ? key : this.data.plugin!); // plugin boolean is used to load plugin based on key.
         this.loadSpawns();
-        this.loadStats();
 
         if (!this.handler) log.error(`[Mob] Mob handler for ${key} is not initialized.`);
     }
@@ -123,15 +122,10 @@ export default class Mob extends Character {
         this.drops = data.drops || this.drops;
         this.dropTables = data.dropTables || this.dropTables;
         this.level = data.level || this.level;
-        this.health = data.health || this.health;
-        this.accuracy = data.accuracy || this.accuracy;
-        this.strength = data.strength || this.strength;
-        this.magic = data.magic || this.magic;
-        this.archery = data.archery || this.magic;
+        this.skills = data.skills || this.skills;
         this.attackStats = data.attackStats || this.attackStats;
         this.defenseStats = data.defenseStats || this.defenseStats;
         this.bonuses = data.bonuses || this.bonuses;
-        this.defense = data.defense || this.defense;
         this.attackRange = data.attackRange || this.attackRange;
         this.aggroRange = data.aggroRange || this.aggroRange;
         this.aggressive = data.aggressive || this.aggressive;
@@ -149,7 +143,7 @@ export default class Mob extends Character {
         this.projectileName = data.projectileName || this.projectileName;
         this.roamDistance = data.roamDistance || this.roamDistance;
         this.healRate = data.healRate || this.healRate;
-        this.roaming = data.roaming || this.roaming;
+        this.roaming = data.roaming === undefined ? this.roaming : data.roaming;
 
         this.plateauLevel = this.world.map.getPlateauLevel(this.spawnX, this.spawnY);
 
@@ -205,35 +199,6 @@ export default class Mob extends Character {
     }
 
     /**
-     * Loads the attack, defense stats, and the bonuses for the mob.
-     */
-
-    private loadStats(): void {
-        this.attackStats = {
-            crush: this.attackStats.crush,
-            stab: this.attackStats.stab,
-            slash: this.attackStats.slash,
-            archery: this.attackStats.archery,
-            magic: this.attackStats.magic
-        };
-
-        this.defenseStats = {
-            crush: this.defenseStats.crush,
-            stab: this.defenseStats.stab,
-            slash: this.defenseStats.slash,
-            archery: this.defenseStats.archery,
-            magic: this.defenseStats.magic
-        };
-
-        this.bonuses = {
-            accuracy: this.bonuses.accuracy,
-            strength: this.bonuses.strength,
-            archery: this.bonuses.archery,
-            magic: this.bonuses.magic
-        };
-    }
-
-    /**
      * An override for the `heal` function which adds support for heal packet.
      * @param amount Amount we are healing the mob by.
      * @param type The type of healing performed (passive or hitpoints).
@@ -248,7 +213,7 @@ export default class Mob extends Character {
 
             // Send the heal packet to the nearby regions.
             this.sendToRegions(
-                new Heal({
+                new HealPacket({
                     instance: this.instance,
                     type,
                     amount
@@ -273,7 +238,7 @@ export default class Mob extends Character {
         this.respawn();
 
         this.setPoison();
-        this.setPosition(this.spawnX, this.spawnY);
+        this.setPosition(this.spawnX, this.spawnY, false);
     }
 
     /**
@@ -289,17 +254,68 @@ export default class Mob extends Character {
 
     /**
      * Handles the dropping of items from the mob.
-     * @param owner The leading attacker in the mob's death. Only they will be able
-     * to pick up the drop for a certain period of time.
+     * @param player The leading player who dealt the most damage.
      */
 
-    public drop(owner = ''): void {
-        let drops = this.getDrops();
+    public drop(player: Player): void {
+        let drops = this.getDrops(player);
 
+        // No drops were calculated, so we stop here.
         if (drops.length === 0) return;
 
-        for (let drop of drops)
-            this.world.entities.spawnItem(drop.key, this.x, this.y, true, drop.count, {}, owner);
+        // If it's a single drop, drop only the item.
+        if (drops.length === 1) {
+            this.world.entities.spawnItem(
+                drops[0].key,
+                this.x,
+                this.y,
+                true,
+                drops[0].count,
+                {},
+                player.username
+            );
+            return;
+        }
+
+        /**
+         * If we have more than two items in our drops list, then we must
+         * create a lootbag. First we turn all the ItemDrop types into actual
+         * item objects, we add those items to the lootbag alongside with spawning it.
+         */
+
+        let items: Item[] = [];
+
+        // Create the item objects from the ItemDrop types.
+        for (let drop of drops) items.push(new Item(drop.key, -1, -1, false, drop.count));
+
+        // Spawn the loot bag.
+        this.world.entities.spawnLootBag(this.x, this.y, player.username, items);
+    }
+
+    /**
+     * Override for the teleport functionality with added support for stopping
+     * all additional packets from being sent to the regions.
+     * @param x The x grid coordinate.
+     * @param y The y grid coordinate.
+     * @param withAnimation Whether or not to teleport with an animation.
+     */
+
+    public override teleport(x: number, y: number, withAnimation = false): void {
+        this.setPosition(x, y, false);
+
+        this.teleporting = true;
+
+        this.sendToRegions(
+            new TeleportPacket({
+                instance: this.instance,
+                x,
+                y,
+                withAnimation
+            })
+        );
+
+        // Untoggle the teleporting flag after 500ms.
+        setTimeout(() => (this.teleporting = false), 500);
     }
 
     /**
@@ -307,21 +323,27 @@ export default class Mob extends Character {
      * to all the adjacent regions.
      * @param x The new x position of the mob.
      * @param y The new y position of the mob.
+     * @param withPacket Whether or not to send the movement packet.
      */
 
-    public override move(x: number, y: number): void {
-        this.setPosition(x, y);
+    public override setPosition(x: number, y: number, withPacket = true): void {
+        if (this.teleporting) return;
+
+        super.setPosition(x, y);
 
         this.calculateOrientation();
 
-        this.world.push(Modules.PacketType.Regions, {
-            region: this.region,
-            packet: new Movement(Opcodes.Movement.Move, {
-                instance: this.instance,
-                x,
-                y
-            })
-        });
+        if (withPacket)
+            this.world.push(Modules.PacketType.Regions, {
+                region: this.region,
+                packet: new MovementPacket(Opcodes.Movement.Move, {
+                    instance: this.instance,
+                    x,
+                    y
+                })
+            });
+
+        this.lastMovement = Date.now();
     }
 
     /**
@@ -330,36 +352,46 @@ export default class Mob extends Character {
      * drop chance. We add the item to the list if the roll is successful. We continue
      * by looking through the mob's drop tables and doing the same thing. We then
      * return the list of items that the mob will drop.
+     * @param player Theplayer entity that we use to determine what drops we can use.
      * @returns A list of items that the mob will drop.
      */
 
-    public getDrops(): ItemDrop[] {
+    public getDrops(player: Player): ItemDrop[] {
         let drops: ItemDrop[] = [], // The items that the mob will drop
-            randomItem = this.getRandomItem(this.drops);
+            randomItem = this.getRandomItem(this.drops, player);
 
         // Add a random item from the mob's personal list of drops.
         if (randomItem) drops.push(randomItem);
 
         // Add items from the mob's drop table.
-        drops = [...drops, ...this.getDropTableItems()];
+        drops = [...drops, ...this.getDropTableItems(player)];
 
         return drops;
     }
 
     /**
      * Looks through the drop tables of the mob and iterates through those to get items.
+     * @param player The player entity that killed the mob. Used for determining whether or
+     * not we can use the drop table.
      * @returns List of items from the drop table.
      */
 
-    private getDropTableItems(): ItemDrop[] {
+    private getDropTableItems(player: Player): ItemDrop[] {
         let drops: ItemDrop[] = [];
 
         for (let key of Object.values(this.dropTables)) {
-            let table = dropTables[key as keyof typeof dropTables]; // Pick the table from the list of drop tables.
+            let table: MobDropTable = dropTables[key as keyof typeof dropTables]; // Pick the table from the list of drop tables.
+
+            // Player doesn't have the achievement for the drop table completed.
+            if (table.achievement && !player.achievements.get(table.achievement)?.isFinished())
+                continue;
+
+            // Player doesn't have the quest completed to have access to the drop table.
+            if (table.quest && !player.quests.get(table.quest)?.isFinished()) continue;
 
             // Something went wrong.
             if (table) {
-                let randomItem = this.getRandomItem(table);
+                let randomItem = this.getRandomItem(table.drops, player);
 
                 // Add a random item from the table.
                 if (randomItem) drops.push(randomItem);
@@ -374,20 +406,18 @@ export default class Mob extends Character {
      * a random item then roll that item's chance against the overall drop chance. We return
      * the item if the roll is successful, otherwise undefined.
      * @param items The list of items to pick from.
+     * @param player The player we are trying to get the item drop for.
      * @returns Returns an `ItemDrop` object containing the key and the count.
      */
 
-    private getRandomItem(items: { [key: string]: number }): ItemDrop | undefined {
-        let keys = Object.keys(items);
-
+    private getRandomItem(items: MobDrop[], player: Player): ItemDrop | undefined {
         // No items to pick from.
-        if (keys.length === 0) return undefined;
+        if (items.length === 0) return undefined;
 
-        let key = keys[Utils.randomInt(0, keys.length - 1)],
-            drop = items[key],
-            count = 1;
+        let drop = items[Utils.randomInt(0, items.length - 1)],
+            count = drop.count || 1;
 
-        switch (key) {
+        switch (drop.key) {
             case 'gold': {
                 count = Utils.randomInt(this.level, this.level * 10);
                 break;
@@ -414,6 +444,14 @@ export default class Mob extends Character {
             }
         }
 
+        // Drop a varying amount depending on the variable property.
+        if (drop.variable) count = Utils.randomInt(1, count!);
+
+        // Check for quest/achievement requirements.
+        if (drop.quest && !this.fullfillsQuest(player, drop)) return undefined;
+        if (drop.achievement && !player.achievements.get(drop.achievement)?.isFinished())
+            return undefined;
+
         // Something went wrong when trying to get the item drop.
         if (!drop) {
             log.warning(`Mob ${this.key} has an invalid drop.`);
@@ -423,9 +461,9 @@ export default class Mob extends Character {
         let probability = this.world.getDropProbability();
 
         // If the chance is greater than the drop probability, we adjust the drop
-        if (drop > probability) drop = probability;
+        if (drop.chance > probability) drop.chance = probability;
 
-        return Utils.randomInt(0, probability) < drop ? { key, count } : undefined;
+        return Utils.randomInt(0, probability) < drop.chance ? { key: drop.key, count } : undefined;
     }
 
     /**
@@ -505,22 +543,20 @@ export default class Mob extends Character {
     public sendToSpawn(): void {
         this.combat.stop();
 
-        this.move(this.spawnX, this.spawnY);
+        this.setPosition(this.spawnX, this.spawnY);
     }
 
     /**
      * Checks if the distance between the mob's current position and the spawn
      * point is greater than the roam distance.
-     * @param entity Optional parameter to check against the entity.
+     * @param x Optional parameter to specify custom x coordinate. We use this if provided.
+     * @param y Optional parameter to specify custom y coordinate.
      * @param distance Optional parameter to specify custom distance (used for combat).
      * @returns Whether or not the mob should return to the spawn.
      */
 
-    public outsideRoaming(entity?: Entity, distance = this.roamDistance): boolean {
-        return (
-            Utils.getDistance(entity?.x || this.x, entity?.y || this.y, this.spawnX, this.spawnY) >
-            distance
-        );
+    public outsideRoaming(x?: number, y?: number, distance = this.roamDistance): boolean {
+        return Utils.getDistance(x || this.x, y || this.y, this.spawnX, this.spawnY) > distance;
     }
 
     /**
@@ -595,6 +631,34 @@ export default class Mob extends Character {
         }
 
         return false;
+    }
+
+    /**
+     * Checks whether or not the player fullfills the quest requirements
+     * and the status provided by the mob drop.
+     * @param player The player entity that we are checking.
+     * @param drop The mob drop that we are checking.
+     */
+
+    private fullfillsQuest(player: Player, drop: MobDrop): boolean {
+        if (drop.status)
+            switch (drop.status) {
+                // Drop only available before the quest.
+                case 'notstarted': {
+                    return !player.quests.get(drop.quest!)?.isStarted();
+                }
+
+                // Started but hasn't finished (during the quest).
+                case 'started': {
+                    return (
+                        player.quests.get(drop.quest!)?.isStarted() &&
+                        !player.quests.get(drop.quest!)?.isFinished()
+                    );
+                }
+            }
+
+        // Just check if quest is finished by default. Drop is only available after the quest.
+        return player.quests.get(drop.quest!)?.isFinished();
     }
 
     /**
@@ -692,7 +756,7 @@ export default class Mob extends Character {
      */
 
     public override getAccuracyLevel(): number {
-        return this.accuracy;
+        return this.skills.accuracy;
     }
 
     /**
@@ -702,7 +766,7 @@ export default class Mob extends Character {
      */
 
     public override getStrengthLevel(): number {
-        return this.strength;
+        return this.skills.strength;
     }
 
     /**
@@ -712,7 +776,7 @@ export default class Mob extends Character {
      */
 
     public override getArcheryLevel(): number {
-        return this.archery;
+        return this.skills.archery;
     }
 
     /**
@@ -722,7 +786,7 @@ export default class Mob extends Character {
      */
 
     public override getDefenseLevel(): number {
-        return this.defense;
+        return this.skills.defense;
     }
 
     /**
@@ -736,6 +800,16 @@ export default class Mob extends Character {
         if (this.burning && Formulas.getEffectChance()) return Modules.Hits.Burning;
 
         return this.damageType;
+    }
+
+    /**
+     * Checks whether the mob has a magic attack in its attack stats and whether
+     * it is using projectile based attacks.
+     * @return Whether or not the mob is a magic projectile based entity.
+     */
+
+    public override isMagic(): boolean {
+        return this.isRanged() && this.attackStats.magic > 0;
     }
 
     /**

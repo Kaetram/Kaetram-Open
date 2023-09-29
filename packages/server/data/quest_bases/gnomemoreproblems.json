@@ -1,0 +1,46 @@
+{
+    "name": "Gnome More Problems",
+    "description": "Tall tales.|Gary the Gnome claims he was once as tall as a giant! Retrieve his 'height potion' from the mischievous squirrels that stole it.",
+    "rewards": ["giant-hat", "3 acorns"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "garygnome",
+            "text": [
+                "Ah, adventurer! I was once taller than the mightiest tree!",
+                "Those darn squirrels stole my height potion!",
+                "Would you help an old gnome out and get it back?"
+            ],
+            "completedText": ["Retrieve the height potion from those sneaky squirrels."]
+        },
+        "1": {
+            "task": "kill",
+            "mob": ["sneakysquirrel"],
+            "mobCountRequirement": 5
+        },
+        "2": {
+            "task": "talk",
+            "npc": "garygnome",
+            "text": [
+                "You got it! Watch as I become... still the same size.",
+                "Eh, probably expired. Thanks anyway!",
+                "Here, take this giant hat and some acorns!"
+            ],
+            "itemRewards": [
+                {
+                    "key": "giant-hat",
+                    "count": 1
+                },
+                {
+                    "key": "acorn",
+                    "count": 3
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@Gary is still gnome-sized, but you've made a tiny friend for life! Enjoy your @crimson@giant-hat@green@ and acorns.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

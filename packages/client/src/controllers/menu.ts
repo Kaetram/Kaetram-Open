@@ -17,6 +17,9 @@ import Interact from '../menu/interact';
 import Leaderboards from '../menu/leaderboards';
 import Guilds from '../menu/guilds';
 import Crafting from '../menu/crafting';
+import LootBag from '../menu/lootbag';
+import Welcome from '../menu/welcome';
+import Quest from '../menu/quest';
 
 import { Modules, Opcodes, Packets } from '@kaetram/common/network';
 
@@ -25,14 +28,14 @@ import type Menu from '../menu/menu';
 
 export default class MenuController {
     private actions: Actions = new Actions();
-    private crafting: Crafting = new Crafting();
+    private warp: Warp = new Warp();
+    private crafting: Crafting;
 
     private inventory: Inventory;
     private bank: Bank;
     private store: Store;
     private profile: Profile;
     private enchant: Enchant;
-    private warp: Warp;
     private notification: Notification;
     private settings: Settings;
     private equipments: Equipments;
@@ -43,29 +46,35 @@ export default class MenuController {
     private interact: Interact;
     private leaderboards: Leaderboards;
     private guilds: Guilds;
+    private lootBag: LootBag;
+    private welcome: Welcome;
+    private quest: Quest;
 
     public header: Header;
 
     public menus: { [key: string]: Menu };
 
     public constructor(private game: Game) {
+        this.crafting = new Crafting(game.player);
         this.inventory = new Inventory(this.actions);
         this.bank = new Bank(this.inventory);
         this.store = new Store(this.inventory);
         this.profile = new Profile(game.player);
         this.enchant = new Enchant(this.inventory);
-        this.warp = new Warp(game.socket);
         this.notification = new Notification();
         this.settings = new Settings(game);
         this.header = new Header(game.player);
-        this.equipments = new Equipments(game.player, game.sprites);
+        this.equipments = new Equipments(game);
         this.achievements = new Achievements(game.player);
         this.quests = new Quests(game.player);
-        this.friends = new Friends(game.player);
+        this.friends = new Friends(game);
         this.trade = new Trade(this.inventory);
         this.interact = new Interact(game.player);
         this.leaderboards = new Leaderboards(game.app);
         this.guilds = new Guilds(game);
+        this.lootBag = new LootBag(this.inventory);
+        this.welcome = new Welcome(game);
+        this.quest = new Quest(game.player);
 
         this.menus = {
             inventory: this.inventory,
@@ -84,7 +93,10 @@ export default class MenuController {
             interact: this.interact,
             leaderboards: this.leaderboards,
             guilds: this.guilds,
-            crafting: this.crafting
+            crafting: this.crafting,
+            lootBag: this.lootBag,
+            welcome: this.welcome,
+            quest: this.quest
         };
 
         this.inventory.onSelect(this.handleInventorySelect.bind(this));
@@ -94,7 +106,7 @@ export default class MenuController {
 
         this.profile.onUnequip(this.handleProfileUnequip.bind(this));
         this.profile.onAttackStyle(this.handleProfileAttackStyle.bind(this));
-        this.profile.onAbility(this.handleAbility.bind(this));
+        this.profile.onPickup(this.handleProfilePickup.bind(this));
 
         this.enchant.onSelect(this.handleEnchantSelect.bind(this));
         this.enchant.onConfirm(this.handleEnchantConfirm.bind(this));
@@ -109,6 +121,10 @@ export default class MenuController {
 
         this.crafting.onSelect(this.handleCraftingSelect.bind(this));
         this.crafting.onCraft(this.handleCraftingConfirm.bind(this));
+
+        this.lootBag.onSelect(this.handleLootBagSelect.bind(this));
+
+        this.quest.onAccept(this.handleQuestAccept.bind(this));
 
         this.load();
     }
@@ -153,6 +169,19 @@ export default class MenuController {
         this.header.resize(); // Non Menu UI (for now?)
 
         this.forEachMenu((menu: Menu) => menu.resize());
+    }
+
+    /**
+     * Attempts to find an interface based on a specified identifiers.
+     * @param identifier The identifier of the interface we are looking for.
+     * @returns A menu object if found, otherwise undefined.
+     */
+
+    public get(identifier: Modules.Interfaces): Menu | undefined {
+        for (let key in this.menus)
+            if (this.menus[key].identifier === (identifier as number)) return this.menus[key];
+
+        return undefined;
     }
 
     /**
@@ -276,6 +305,30 @@ export default class MenuController {
     }
 
     /**
+     * @returns The loot bag menu object.
+     */
+
+    public getLootBag(): LootBag {
+        return this.lootBag;
+    }
+
+    /**
+     * @returns The welcome menu object.
+     */
+
+    public getWelcome(): Welcome {
+        return this.welcome;
+    }
+
+    /**
+     * @returns The quest menu object.
+     */
+
+    public getQuest(): Quest {
+        return this.quest;
+    }
+
+    /**
      * Callback handler for when an item in the inventory is selected.
      * @param fromIndex Index of the item selected.
      * @param opcode Opcode identifying the type of action performed on the item.
@@ -285,13 +338,13 @@ export default class MenuController {
     private handleInventorySelect(
         opcode: Opcodes.Container,
         fromIndex: number,
-        toIndex?: number
+        value?: number
     ): void {
         this.game.socket.send(Packets.Container, {
             opcode,
             type: Modules.ContainerType.Inventory,
             fromIndex,
-            value: toIndex
+            value
         });
     }
 
@@ -359,6 +412,16 @@ export default class MenuController {
         this.game.socket.send(Packets.Equipment, {
             opcode: Opcodes.Equipment.Style,
             style
+        });
+    }
+
+    /**
+     * Sends a packet to the server to indicate wanting to pickup a pet.
+     */
+
+    private handleProfilePickup(): void {
+        this.game.socket.send(Packets.Pet, {
+            opcode: Opcodes.Pet.Pickup
         });
     }
 
@@ -508,6 +571,29 @@ export default class MenuController {
             opcode: Opcodes.Crafting.Craft,
             key,
             count
+        });
+    }
+
+    /**
+     * Handles selecting an item in a loot bag.
+     * @param index The index of the item we are selecting.
+     */
+
+    private handleLootBagSelect(index: number): void {
+        this.game.socket.send(Packets.LootBag, {
+            opcode: Opcodes.LootBag.Take,
+            index
+        });
+    }
+
+    /**
+     * Handles accepting a quest from the quest interface.
+     * @param key The key of the quest we are accepting.
+     */
+
+    private handleQuestAccept(key: string): void {
+        this.game.socket.send(Packets.Quest, {
+            key
         });
     }
 

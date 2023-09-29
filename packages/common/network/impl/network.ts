@@ -4,7 +4,9 @@ import { Packets } from '@kaetram/common/network';
 
 import type { Opcodes } from '@kaetram/common/network';
 
-export default class Network extends Packet {
+export type NetworkPacketCallback = (opcode?: Opcodes.Network) => void;
+
+export default class NetworkPacket extends Packet {
     public constructor(opcode: Opcodes.Network) {
         super(Packets.Network, opcode);
     }

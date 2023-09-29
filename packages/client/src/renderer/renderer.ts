@@ -1,37 +1,55 @@
+import { DEFAULT_ZOOM } from './camera';
+
 import Utils from '../utils/util';
 import Character from '../entity/character/character';
 import { isMobile, isTablet } from '../utils/detect';
 
-import { Modules } from '@kaetram/common/network';
+import { Modules, Opcodes } from '@kaetram/common/network';
 import { DarkMask, Vec2, Lamp, Lighting } from 'illuminated';
 
+import type Minigame from './minigame';
 import type Equipment from '../entity/character/player/equipment';
 import type Game from '../game';
 import type Map from '../map/map';
+import type Canvas from './canvas';
 import type Camera from './camera';
 import type Splat from './infos/splat';
+import type WebGL from './webgl/webgl';
 import type Entity from '../entity/entity';
 import type Sprite from '../entity/sprite';
 import type Item from '../entity/objects/item';
 import type Player from '../entity/character/player/player';
-import type { SerializedLight } from '@kaetram/common/types/light';
-import type { RegionTile, RotatedTile } from '@kaetram/common/types/map';
+import type Tree from '../entity/objects/resource/impl/tree';
+import type Grids from '../map/grids';
+import type { LampData } from '@kaetram/common/types/item';
+import type { ClientTile } from '@kaetram/common/types/map';
+import type { SerializedLight } from '@kaetram/common/network/impl/overlay';
 
-interface RendererLight {
-    origX: number;
-    origY: number;
-    diff: number;
+interface Light extends Lamp {
+    originalX: number;
+    originalY: number;
+    originalDistance: number;
+
+    scaledDistance: number;
+    scaledFlickerIntensity: number;
+
+    gridX: number;
+    gridY: number;
+
+    offset: number;
+
     relative: boolean;
-    computed: boolean;
+    entity?: string;
+
+    flickerSpeed: number;
+    flickerIntensity: number;
 }
 
-type RendererLamp = RendererLight & Lamp;
+export interface RendererLighting extends Lighting {
+    light: Light;
+}
 
 export type ContextType = '2d' | 'webgl';
-export interface RendererLighting extends RendererLight, Lighting {
-    light: RendererLamp;
-}
-
 export type ContextCallback = (context: CanvasRenderingContext2D) => void;
 
 export default class Renderer {
@@ -40,7 +58,9 @@ export default class Renderer {
     protected overlay = document.querySelector<HTMLCanvasElement>('#overlay')!;
     protected textCanvas = document.querySelector<HTMLCanvasElement>('#text-canvas')!;
     protected entities = document.querySelector<HTMLCanvasElement>('#entities')!;
+    protected entitiesFore = document.querySelector<HTMLCanvasElement>('#entities-fore')!;
     protected cursor = document.querySelector<HTMLCanvasElement>('#cursor')!;
+    protected entitiesMask = document.querySelector<HTMLCanvasElement>('#entities-mask')!;
 
     // Store all canvases for easy iteration
     protected canvases: HTMLCanvasElement[] = [
@@ -49,35 +69,49 @@ export default class Renderer {
         this.overlay,
         this.textCanvas,
         this.entities,
-        this.cursor
+        this.entitiesFore,
+        this.cursor,
+        this.entitiesMask
     ];
 
     // Create the contexts based on the canvases.
     protected entitiesContext: CanvasRenderingContext2D = this.entities.getContext('2d')!;
+    protected entitiesForeContext: CanvasRenderingContext2D = this.entitiesFore.getContext('2d')!;
     protected overlayContext: CanvasRenderingContext2D = this.overlay.getContext('2d')!;
     protected textContext: CanvasRenderingContext2D = this.textCanvas.getContext('2d')!;
     protected cursorContext: CanvasRenderingContext2D = this.cursor.getContext('2d')!;
+    protected entitiesMaskContext: CanvasRenderingContext2D = this.entitiesMask.getContext('2d')!;
 
     protected allContexts = [
         this.entitiesContext,
+        this.entitiesForeContext,
+        this.entitiesMaskContext,
         this.overlayContext,
         this.textContext,
         this.cursorContext
     ];
 
     // We split contexts into two arrays, one for tilemap rendering and one for the rest.
-    protected contexts = [this.entitiesContext, this.textContext, this.overlayContext];
+    protected contexts = [
+        this.entitiesContext,
+        this.entitiesForeContext,
+        this.entitiesMaskContext,
+        this.textContext,
+        this.overlayContext
+    ];
 
     // Zooming buttons
     private zoomIn: HTMLElement = document.querySelector('#zoom-in')!;
     private zoomOut: HTMLElement = document.querySelector('#zoom-out')!;
 
-    protected map: Map;
-    protected camera: Camera;
+    public map: Map;
+    public camera: Camera;
+    public grids: Grids;
 
     // Variables used for calculating multiple things
     public tileSize = Utils.tileSize;
     public actualTileSize = Utils.tileSize;
+    public ceilActualTileSize = Utils.tileSize;
 
     // Screen dimensions
     public screenWidth = 0;
@@ -92,7 +126,7 @@ export default class Renderer {
     private renderedFrame: number[] = [];
 
     // Lighting
-    protected lightings: RendererLighting[] = [];
+    protected lightings: { [instance: string]: RendererLighting } = {};
     protected darkMask: DarkMask = new DarkMask({
         lights: [],
         color: 'rgba(0, 0, 0, 0.84)'
@@ -106,47 +140,41 @@ export default class Renderer {
     public drawLevels = true;
 
     // Default values
-    public fontSize = 10;
+    public fontSize = 12;
+    public strokeSize = 4;
 
     // Detect functions
     public mobile = isMobile();
     public tablet = isTablet();
 
-    // FPS variables
+    // FPS variables`
     protected time = Date.now();
     protected fps = 0;
     protected frameCount = 0;
 
-    // Static sprites
-    protected shadowSprite!: Sprite;
-    protected sparksSprite!: Sprite;
-    protected silverMedal!: Sprite;
-    protected goldMedal!: Sprite;
-    protected crownArtist!: Sprite;
-    protected crownTier1!: Sprite;
-    protected crownTier2!: Sprite;
-    protected crownTier3!: Sprite;
-    protected crownTier4!: Sprite;
-    protected crownTier5!: Sprite;
-    protected crownTier6!: Sprite;
-    protected crownTier7!: Sprite;
-
-    public constructor(protected game: Game, public type = 'canvas') {
+    public constructor(
+        protected game: Game,
+        public type = 'canvas'
+    ) {
         this.map = game.map;
         this.camera = game.camera;
+        this.grids = game.map.grids;
 
         this.tileSize = game.map.tileSize;
         this.actualTileSize = this.tileSize * this.camera.zoomFactor;
+        this.ceilActualTileSize = Math.ceil(this.actualTileSize);
 
         // Load the sizes of the canvases
         this.loadSizes();
 
-        // Load the static sprites
-        this.loadStaticSprites();
-
         // Event listeners for zooming in and out
         this.zoomIn.addEventListener('click', () => this.game.zoom(0.2));
         this.zoomOut.addEventListener('click', () => this.game.zoom(-0.2));
+
+        this.camera.onZoom(() => {
+            this.fontSize = Math.floor(12 + this.camera.zoomFactor * 3);
+            this.strokeSize = Math.floor(this.fontSize / 6);
+        });
     }
 
     /**
@@ -168,6 +196,7 @@ export default class Renderer {
     private loadSizes(): void {
         // Actual tile size is the tile size times the zoom factor.
         this.actualTileSize = this.tileSize * this.camera.zoomFactor;
+        this.ceilActualTileSize = Math.ceil(this.actualTileSize);
 
         // Screen width in pixels is the amount of grid spaces times the tile size.
         this.screenWidth = this.camera.gridWidth * this.tileSize;
@@ -177,70 +206,17 @@ export default class Renderer {
         this.canvasWidth = this.screenWidth * this.camera.zoomFactor;
         this.canvasHeight = this.screenHeight * this.camera.zoomFactor;
 
-        // Update the dark mask sizes
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-
         // Iterate through the canvases and apply the new size.
         this.forEachCanvas((canvas: HTMLCanvasElement) => {
             canvas.width = this.canvasWidth;
             canvas.height = this.canvasHeight;
         });
-    }
 
-    /**
-     * Loads statically used sprites that are only necessary
-     * in the renderer. The shadow gets displayed under each
-     * entity, and the sparks are displayed around items.
-     */
+        // Clear the default canvas anti-alias smoothing.
+        this.removeSmoothing();
 
-    public loadStaticSprites(): void {
-        this.shadowSprite = this.game.sprites.get('shadow16')!;
-
-        if (!this.shadowSprite.loaded) this.shadowSprite.load();
-
-        this.sparksSprite = this.game.sprites.get('sparks')!;
-
-        if (!this.sparksSprite.loaded) this.sparksSprite.load();
-
-        this.silverMedal = this.game.sprites.get('crowns/silvermedal')!;
-
-        if (!this.silverMedal.loaded) this.silverMedal.load();
-
-        this.goldMedal = this.game.sprites.get('crowns/goldmedal')!;
-
-        if (!this.goldMedal.loaded) this.goldMedal.load();
-
-        this.crownArtist = this.game.sprites.get('crowns/artist')!;
-
-        if (!this.crownArtist.loaded) this.crownArtist.load();
-
-        this.crownTier1 = this.game.sprites.get('crowns/tier1')!;
-
-        if (!this.crownTier1.loaded) this.crownTier1.load();
-
-        this.crownTier2 = this.game.sprites.get('crowns/tier2')!;
-
-        if (!this.crownTier2.loaded) this.crownTier2.load();
-
-        this.crownTier3 = this.game.sprites.get('crowns/tier3')!;
-
-        if (!this.crownTier3.loaded) this.crownTier3.load();
-
-        this.crownTier4 = this.game.sprites.get('crowns/tier4')!;
-
-        if (!this.crownTier4.loaded) this.crownTier4.load();
-
-        this.crownTier5 = this.game.sprites.get('crowns/tier5')!;
-
-        if (!this.crownTier5.loaded) this.crownTier5.load();
-
-        this.crownTier6 = this.game.sprites.get('crowns/tier6')!;
-
-        if (!this.crownTier6.loaded) this.crownTier6.load();
-
-        this.crownTier7 = this.game.sprites.get('crowns/tier7')!;
-
-        if (!this.crownTier7.loaded) this.crownTier7.load();
+        // Remove the player's light source and re-add it.
+        this.resizeLights();
     }
 
     /**
@@ -282,8 +258,6 @@ export default class Renderer {
         this.clear();
         this.save();
 
-        this.removeSmoothing();
-
         this.drawDebugging();
 
         this.drawOverlays();
@@ -324,7 +298,7 @@ export default class Renderer {
     }
 
     /**
-     * Overlays are images drawn on top of the game. They are generally
+     * Overlays are images drawn on top of the game. They aFOvre generally
      * used in conjunction with the lighting system to give a shadow
      * effect or dark room effect. When overlays are present, the light
      * system is enabled.
@@ -342,12 +316,12 @@ export default class Renderer {
         this.overlayContext.globalCompositeOperation = 'lighter';
 
         // Draw each lighting
-        this.forEachLighting((lighting) => {
-            if (this.inRadius(lighting)) this.drawLighting(lighting);
-        });
+        this.forEachLighting((lighting: RendererLighting) => this.drawLighting(lighting));
 
         // Essentially makes the overlay be drawn on top of everything.
         this.overlayContext.globalCompositeOperation = 'source-over';
+
+        this.darkMask.compute(this.overlay.width, this.overlay.height);
         this.darkMask.render(this.overlayContext);
     }
 
@@ -360,18 +334,22 @@ export default class Renderer {
     private drawHoveringCell(): void {
         if (this.mobile) return;
 
-        let { input } = this.game,
-            location = input.getCoords();
+        let location = this.game.input.getCoords();
 
-        if (this.isSelectedCell(location.gridX, location.gridY)) return;
+        if (!this.game.input.isOnCanvas || this.isSelectedCell(location.gridX, location.gridY))
+            return;
 
-        let isColliding = this.map.isColliding(location.gridX, location.gridY);
+        let colour = this.game.input.targetColour,
+            isObject = this.map.isObject(location.gridX, location.gridY);
 
-        this.drawCellHighlight(
-            location.gridX,
-            location.gridY,
-            isColliding ? 'rgba(230, 0, 0, 0.7)' : input.targetColour
-        );
+        // Update the colour for the cell highlight if it's an object.
+        if (isObject) colour = 'rgba(245, 230, 66, 0.5)';
+
+        // Colliding map cells are highlighted in red.
+        if (this.map.isColliding(location.gridX, location.gridY) && !isObject)
+            colour = 'rgba(230, 0, 0, 0.7)';
+
+        this.drawCellHighlight(location.gridX, location.gridY, colour);
     }
 
     /**
@@ -417,13 +395,23 @@ export default class Renderer {
         if (this.game.player.dead) return;
 
         this.setCameraView(this.entitiesContext);
+        this.setCameraView(this.entitiesForeContext);
 
         this.forEachVisibleEntity((entity: Entity) => {
-            // Skip entities that aren't properly loaded or are invisible.
+            // Check that the entity is loaded, has an animation, and is visible.
             if (!entity.sprite?.loaded || !entity.animation || !entity.isVisible()) return;
+
+            // Draw the entity's debugging information if debugging is enabled.
+            if (this.debugging) this.drawEntityBoundary(entity);
+
+            // Handle tree drawing as separate from other entities.
+            if (entity.isTree()) return this.drawTree(entity as Tree);
 
             this.drawEntity(entity);
         });
+
+        //this.entitiesMaskContext.globalAlpha = 0.2;
+        this.entitiesMaskContext.drawImage(this.entities, 0, 0);
     }
 
     /**
@@ -439,18 +427,63 @@ export default class Renderer {
         this.game.info.forEachInfo((info: Splat) => {
             this.textContext.save();
             this.textContext.globalAlpha = info.opacity;
-            this.drawText(
-                `${info.getText()}`,
-                Math.floor(info.x + 8),
-                Math.floor(info.y),
-                true,
-                info.fill,
-                info.stroke,
-                26,
-                true
-            );
+
+            let { x, y, fill, skillKey, skills, stroke } = info,
+                hasSkill = skillKey || skills.length > 0;
+
+            x += 8;
+
+            if (hasSkill) {
+                this.setCameraView(this.textContext);
+
+                let skillX = ~~((x - 2) * this.camera.zoomFactor);
+
+                x = ~~(x * this.camera.zoomFactor);
+                y = ~~(y * this.camera.zoomFactor);
+
+                if (skillKey) this.drawInfoSkill(skillKey, skillX, y);
+                else
+                    for (let i = 0; i < skills.length; i++)
+                        this.drawInfoSkill(skills[i], skillX, y, i, skills.length);
+            }
+
+            this.drawText(`${info.getText()}`, x, y, true, !hasSkill, fill, stroke, 32);
             this.textContext.restore();
         });
+    }
+
+    /**
+     * Draws a little skill icon above the info splats displayed when the
+     * player gains some experience.
+     * @param skill The skill that we are drawing the icon for.
+     * @param x The x coordinate of the skill.
+     * @param y The y coordinate of the skill.
+     * @param index Optional parameter for displaying multiple skills, indicates the currently iterated skill.
+     * @param total Optional parameter for displaying multiple skills, indicates the total amount of skills.
+     */
+
+    private drawInfoSkill(skill: string, x: number, y: number, index = 0, total = 0): void {
+        let sprite = this.game.sprites.get(skill);
+
+        if (!sprite) return;
+
+        if (!sprite.loaded) sprite.load();
+
+        // Draw the multiple skin icons in a row.
+        if (total === 2)
+            if (index === 0) x -= sprite.width;
+            else x += sprite.width / 1.5;
+        else if (total === 3)
+            if (index === 0) x -= sprite.width * 2;
+            else if (index === 2) x += sprite.width * 2;
+
+        this.textContext.drawImage(
+            sprite.image,
+            x + sprite.offsetX,
+            y + sprite.offsetY * 4,
+            sprite.width * 2,
+            sprite.height * 2
+        );
     }
 
     /**
@@ -496,7 +529,11 @@ export default class Renderer {
 
     private drawFPS(): void {
         this.calculateFPS();
-        this.drawText(`[${this.type}] FPS: ${this.fps}`, 10, 61, false, 'white');
+        this.drawText(
+            `[${this.type}, cw: ${this.camera.gridWidth}, ch: ${this.camera.gridHeight}] FPS: ${this.fps}`,
+            50,
+            180
+        );
     }
 
     /**
@@ -537,28 +574,25 @@ export default class Renderer {
                 player.gridX,
                 player.gridY
             )} movementSpeed: ${player.movementSpeed}`,
-            10,
-            81,
-            false,
-            'white'
+            50,
+            240
         );
 
-        this.drawText(`zoomFactor: ${this.camera.zoomFactor}`, 10, 141, false, 'white');
+        this.drawText(`zoomFactor: ${this.camera.zoomFactor}`, 50, 420);
+        this.drawText(`actulTileSize: ${this.actualTileSize}`, 50, 480);
 
         // Draw information about the entity we're hovering over.
         if (input.hovering && input.entity) {
             // Draw the entity's grid coordinates and tile index.
             this.drawText(
                 `x: ${input.entity.gridX} y: ${input.entity.gridY} instance: ${input.entity.instance}`,
-                10,
-                101,
-                false,
-                'white'
+                50,
+                300
             );
 
             // Draw the entity's attack range.
             if (input.entity.attackRange)
-                this.drawText(`att range: ${input.entity.attackRange}`, 10, 121, false, 'white');
+                this.drawText(`att range: ${input.entity.attackRange}`, 50, 360);
         }
     }
 
@@ -581,6 +615,37 @@ export default class Renderer {
     }
 
     /**
+     * Draws the boundary area around an entity. This is a circle that represents
+     * the interaction area of the entity when using a mouse or tapping on/near it.
+     * @param entity The entity we are drawing the bounding circle for.
+     */
+
+    private drawEntityBoundary(entity: Entity): void {
+        this.entitiesContext.save();
+        //this.setCameraView(this.entitiesContext);
+
+        this.entitiesContext.lineWidth = 2 * this.camera.zoomFactor;
+
+        let boundingBox = entity.getBoundingBox();
+
+        this.entitiesContext.translate(
+            (boundingBox.x + boundingBox.width / 2) * this.camera.zoomFactor,
+            (boundingBox.y + boundingBox.height / 2) * this.camera.zoomFactor
+        );
+
+        this.entitiesContext.strokeStyle = 'rgba(255, 50, 50, 0.4)';
+
+        let smallest =
+            entity.sprite.width < entity.sprite.height ? entity.sprite.width : entity.sprite.height;
+
+        this.entitiesContext.beginPath();
+        this.entitiesContext.arc(0, 0, (smallest / 2) * this.camera.zoomFactor, 0, 2 * Math.PI);
+        this.entitiesContext.stroke();
+
+        this.entitiesContext.restore();
+    }
+
+    /**
      * Draws the currently calculated path that the player will
      * be taking. Highlights the upcoming tile cells in the path.
      */
@@ -599,72 +664,140 @@ export default class Renderer {
 
     private drawEntity(entity: Entity): void {
         let frame = entity.animation?.frame,
-            dx = entity.x * this.camera.zoomFactor,
-            dy = entity.y * this.camera.zoomFactor,
+            dx = ~~(entity.x * this.camera.zoomFactor),
+            dy = ~~(entity.y * this.camera.zoomFactor),
             flipX = dx + this.actualTileSize,
-            flipY = dy + entity.sprite.height;
+            flipY = dy + entity.sprite.height,
+            context =
+                entity.isNonTreeResource() && this.game.player.gridY < entity.gridY
+                    ? this.entitiesForeContext
+                    : this.entitiesContext;
 
-        this.entitiesContext.save();
-
-        if (entity.angled && !entity.isProjectile()) entity.angle *= Math.PI / 180;
+        context.save();
 
         // Update the entity fading onto the context.
-        if (entity.fading) this.entitiesContext.globalAlpha = entity.fadingAlpha;
+        if (entity.fading) context.globalAlpha = entity.fadingAlpha;
 
         // Handle flipping since we use the same sprite for right/left.
         if (entity.spriteFlipX) {
-            this.entitiesContext.translate(flipX, dy);
-            this.entitiesContext.scale(-1, 1);
+            context.translate(flipX, dy);
+            context.scale(-1, 1);
         } else if (entity.spriteFlipY) {
-            this.entitiesContext.translate(dx, flipY);
-            this.entitiesContext.scale(1, -1);
-        } else this.entitiesContext.translate(dx, dy);
+            context.translate(dx, flipY);
+            context.scale(1, -1);
+        } else context.translate(dx, dy);
 
         // Scale the entity to the current zoom factor.
-        this.entitiesContext.scale(this.camera.zoomFactor, this.camera.zoomFactor);
+        context.scale(this.camera.zoomFactor, this.camera.zoomFactor);
 
         // Scale the entity again if it has a custom scaling associated with it.
-        if (entity.customScale) this.entitiesContext.scale(entity.customScale, entity.customScale);
+        if (entity.customScale) context.scale(entity.customScale, entity.customScale);
 
         // Rotate using the entity's angle.
-        if (entity.angled) this.entitiesContext.rotate(entity.getAngle());
+        if (entity.angle !== 0) context.rotate(entity.angle);
 
         // Draw the entity shadowf
         if (entity.hasShadow()) {
-            this.entitiesContext.globalCompositeOperation = 'source-over';
+            let shadowSprite = this.game.sprites.get('shadow')!;
 
-            this.entitiesContext.drawImage(
-                this.shadowSprite.image,
+            context.drawImage(
+                shadowSprite.image,
                 0,
                 0,
-                this.shadowSprite.width,
-                this.shadowSprite.height,
+                shadowSprite.width,
+                shadowSprite.height,
                 0,
                 entity.shadowOffsetY,
-                this.shadowSprite.width,
-                this.shadowSprite.height
+                shadowSprite.width,
+                shadowSprite.height
             );
         }
 
-        this.entitiesContext.drawImage(
-            entity.sprite.image,
+        context.drawImage(
+            entity.getSprite().image,
             frame!.x,
             frame!.y,
             entity.sprite.width,
             entity.sprite.height,
             entity.sprite.offsetX,
-            entity.sprite.offsetY,
+            entity.sprite.offsetY + entity.offsetY,
             entity.sprite.width,
             entity.sprite.height
         );
 
         this.drawEntityFore(entity);
 
-        this.entitiesContext.restore();
+        context.restore();
 
         this.drawHealth(entity as Character);
 
-        if (!this.game.overlays.hasOverlay()) this.drawName(entity as Player & Item);
+        if (!entity.isPlayer() && !entity.isMob() && !entity.isNPC() && !entity.isItem()) return;
+
+        if (!this.game.overlays.hasOverlay())
+            if (this.game.player.instance === entity.instance && this.camera.isCentered())
+                this.drawPlayerName(entity as Player);
+            else this.drawName(entity as Character & Item);
+    }
+
+    /**
+     * We use a separate function for rendering trees since we need to do a bit more magic. Trees
+     * require their stumps be rendered below the player, and their leaves be rendered above the
+     * player. Both renderings are done on the same entities fore context, however the trick is to
+     * use globalCompositeOperation to render the leaves on top of the player, and the stumps
+     * below the player.
+     * @param entity The tree entity that we are drawing.
+     */
+
+    private drawTree(entity: Tree): void {
+        // We extract the normal animation frames about the tree.
+        let frame = entity.animation?.frame,
+            baseFrame = entity.exhausted ? entity.exhaustedFrame : entity.baseFrame, // use stump if cut
+            dx = ~~(entity.x * this.camera.zoomFactor),
+            dy = ~~(entity.y * this.camera.zoomFactor);
+
+        this.entitiesForeContext.save();
+        this.entitiesContext.save();
+
+        // Translate the context to the tree's position.
+        this.entitiesForeContext.translate(dx, dy);
+        this.entitiesContext.translate(dx, dy);
+
+        // Scale relative to the camera zoom factor.
+        this.entitiesForeContext.scale(this.camera.zoomFactor, this.camera.zoomFactor);
+        this.entitiesContext.scale(this.camera.zoomFactor, this.camera.zoomFactor);
+
+        // Draw the top part of the tree if the tree is not cut.
+        if (!entity.exhausted)
+            this.entitiesForeContext.drawImage(
+                entity.getSprite().image,
+                frame!.x,
+                frame!.y,
+                entity.sprite.width,
+                entity.sprite.height,
+                entity.sprite.offsetX,
+                entity.sprite.offsetY + entity.offsetY,
+                entity.sprite.width,
+                entity.sprite.height
+            );
+
+        // Set the global composite operation to destination over.
+        this.entitiesContext.globalCompositeOperation = 'destination-over';
+
+        // Draw the bottom part of the tree.
+        this.entitiesContext.drawImage(
+            entity.getSprite().image,
+            baseFrame.x,
+            baseFrame.y,
+            entity.sprite.width,
+            entity.sprite.height,
+            entity.sprite.offsetX,
+            entity.sprite.offsetY + entity.offsetY,
+            entity.sprite.width,
+            entity.sprite.height
+        );
+
+        this.entitiesForeContext.restore();
+        this.entitiesContext.restore();
     }
 
     /**
@@ -676,6 +809,10 @@ export default class Renderer {
 
     private drawEntityFore(entity: Entity): void {
         if (entity.isItem()) return this.drawSparks();
+
+        // Draw the exclamations if the entity has them.
+        if (entity.exclamation) this.drawExclamation();
+        if (entity.blueExclamation) this.drawBlueExclamation();
 
         if (!(entity instanceof Character)) return;
 
@@ -707,6 +844,9 @@ export default class Renderer {
 
         if (!sprite.loaded) sprite.load();
 
+        // Do not render until the image is ready.
+        if (!sprite.image) return;
+
         this.drawSprite(player, sprite);
     }
 
@@ -718,8 +858,12 @@ export default class Renderer {
 
     private drawSprite(character: Character, sprite: Sprite): void {
         let animation = character.animation!,
-            animationData = sprite.animations[animation.name],
-            { frame, row } = animation,
+            animationData = sprite.animations[animation.name];
+
+        // May occur when the death sprite is being animated.
+        if (!animationData) return;
+
+        let { frame, row } = animation,
             index =
                 frame.index < animationData.length
                     ? frame.index
@@ -787,49 +931,120 @@ export default class Renderer {
     }
 
     /**
-     * Draws the sprites sparks on top of items
-     * to give them the sparkle effect.
+     * Draws the static sparks sprite that are displayed on top of an
+     * item entity.
      */
 
     private drawSparks(): void {
-        let { sparksAnimation } = this.game.entities.sprites,
-            sparksFrame = sparksAnimation.frame;
+        let sparksSprite = this.game.sprites.get('sparks')!,
+            animation = sparksSprite.animations.idle_down;
 
         this.entitiesContext.drawImage(
-            this.sparksSprite.image,
-            this.sparksSprite.width * sparksFrame.index,
-            this.sparksSprite.height * sparksAnimation.row,
-            this.sparksSprite.width,
-            this.sparksSprite.height,
+            sparksSprite.image,
+            sparksSprite.width * animation.frame.index,
+            sparksSprite.height * animation.row,
+            sparksSprite.width,
+            sparksSprite.height,
             0,
             0,
-            this.sparksSprite.width,
-            this.sparksSprite.height
+            sparksSprite.width,
+            sparksSprite.height
         );
     }
 
     /**
-     * Draws a special medal above the player's name.
-     * @param key The key of the medal we are drawing.
+     * Draws the exclamation animation that is drawn above NPCs.
+     */
+
+    private drawExclamation(): void {
+        let sprite = this.game.sprites.get('exclamation')!,
+            animation = sprite.animations.idle_down;
+
+        this.entitiesContext.drawImage(
+            sprite.image,
+            sprite.width * animation.frame.index,
+            sprite.height * animation.row,
+            sprite.width,
+            sprite.height,
+            0,
+            sprite.offsetY,
+            sprite.width,
+            sprite.height
+        );
+    }
+
+    /**
+     * Draws the blue exclamation animation that is drawn above NPCs.
+     */
+
+    private drawBlueExclamation(): void {
+        let sprite = this.game.sprites.get('exclamationblue')!,
+            animation = sprite.animations.idle_down;
+
+        this.entitiesContext.drawImage(
+            sprite.image,
+            sprite.width * animation.frame.index,
+            sprite.height * animation.row,
+            sprite.width,
+            sprite.height,
+            0,
+            sprite.offsetY,
+            sprite.width,
+            sprite.height
+        );
+    }
+
+    /**
+     * Draws a special crown above the player's name.
+     * @param key The key of the crown we are drawing.
      * @param x The x coordinate on the screen we are drawing at.
      * @param y The y coordinate on the screen we are drawing at.
      */
 
-    private drawMedal(key: string, x: number, y: number): void {
-        let medal = this.getMedal(key);
+    private drawCrown(key: string, x: number, y: number): void {
+        let crown = this.getCrown(key);
 
-        if (!medal) return;
+        if (!crown) return;
+
+        this.setCameraView(this.textContext);
 
         this.textContext.drawImage(
-            medal.image,
+            crown.image,
             0,
             0,
-            medal.width,
-            medal.height,
-            (x - 5) * this.camera.zoomFactor,
-            (y - 17) * this.camera.zoomFactor,
-            medal.width * 2,
-            medal.height * 2
+            crown.width,
+            crown.height,
+            x * this.camera.zoomFactor - crown.width,
+            y * this.camera.zoomFactor - crown.height * 3,
+            crown.width * 2,
+            crown.height * 2
+        );
+
+        this.textContext.restore();
+    }
+
+    /**
+     * Handles drawing the crown for the currently active player. We follow a similar logic
+     * to how we draw player name and level, and we draw it relative to the middle of the
+     * screen.
+     * @param key The key of the crown we want to draw.
+     */
+
+    private drawPlayerCrown(key: string): void {
+        let crown = this.getCrown(key);
+
+        if (!crown) return;
+
+        this.textContext.drawImage(
+            crown.image,
+            0,
+            0,
+            crown.width,
+            crown.height,
+            this.camera.borderOffsetWidth / 2 - crown.width + 8 * this.camera.zoomFactor,
+            this.camera.borderOffsetHeight / 2 - crown.height * 3 - 24 * this.camera.zoomFactor,
+            crown.width * 2,
+            crown.height * 2
         );
     }
 
@@ -844,8 +1059,10 @@ export default class Renderer {
         let barLength = this.tileSize,
             healthX = entity.x * this.camera.zoomFactor - barLength / 2 + 8,
             healthY = (entity.y - entity.sprite.height / 4) * this.camera.zoomFactor,
-            healthWidth = Math.round(
-                (entity.hitPoints / entity.maxHitPoints) * barLength * this.camera.zoomFactor
+            healthWidth = ~~(
+                (entity.hitPoints / entity.maxHitPoints) *
+                barLength *
+                this.camera.zoomFactor
             ),
             healthHeight = 2 * this.camera.zoomFactor;
 
@@ -870,29 +1087,42 @@ export default class Renderer {
      * @param entity The entity we're drawing the name for.
      */
 
-    private drawName(entity: Character & Item): void {
-        if (entity.isPet()) return;
-
+    private drawName(entity: Character | Item): void {
         let x = entity.x + 8, // Default offsets
-            y = entity.y - 10,
-            colour = 'white',
-            stroke = 'rgba(0, 0, 0, 1)',
-            fontSize = 11;
+            y = entity.y - 5,
+            colour = 'white';
 
         // Handle the counter if an entity has one.
         if (entity.hasCounter())
-            return this.drawText(`${entity.counter}`, x, y, true, colour, stroke, fontSize, true);
+            return this.drawText(`${entity.counter}`, x, y, true, true, colour);
 
         // Handle the item amount if the entity is an item.
         if (entity.isItem() && entity.count > 1)
-            return this.drawText(`${entity.count}`, x, y, true, colour, stroke, fontSize, true);
+            return this.drawText(`${entity.count}`, x, y, true, true, colour);
 
-        if (entity.hidden || entity.healthBarVisible || !(entity instanceof Character)) return;
+        if (
+            entity.hidden ||
+            entity.healthBarVisible ||
+            entity.exclamation ||
+            entity.blueExclamation
+        )
+            return;
 
-        let drawNames = this.drawNames && entity.drawNames(),
-            nameY = this.drawLevels ? y - 7 : y - 4,
+        let drawNames = this.drawNames && entity.drawNames() && !entity.isItem(),
+            drawLevels = this.drawLevels && !entity.isNPC() && !entity.isItem(),
+            nameY = this.drawLevels ? y - 10 : y - 4,
             levelY = this.drawLevels ? y : y - 7,
             levelText = `Level ${entity.level}`;
+
+        // NPCs will have their name displayed closer to their sprite.
+        if (entity.isNPC()) nameY = y - 2;
+
+        // Handle additional player rank and crown logic.
+        if (entity.isPlayer()) {
+            if (entity.hasRank()) colour = Modules.RankColours[entity.rank];
+
+            if (drawNames && entity.hasCrown()) this.drawCrown(entity.getCrownKey(), x, nameY);
+        }
 
         // If there's a rank aside from default then we use that rank's colour.
         if (entity.isPlayer() && entity.rank !== Modules.Ranks.None)
@@ -905,76 +1135,172 @@ export default class Renderer {
         if (entity.nameColour) colour = entity.nameColour;
 
         // Draw the name if we're drawing names.
-        if (drawNames) this.drawText(entity.name, x, nameY, true, colour, stroke, fontSize, true);
+        if (drawNames) this.drawText(entity.name, x, nameY, true, true, colour);
 
         // Draw the level if we're drawing levels.
-        if (this.drawLevels)
-            this.drawText(levelText, x, levelY, true, colour, stroke, fontSize, true);
+        if (drawLevels && entity.level) this.drawText(levelText, x, levelY, true, true, colour);
     }
+
+    /**
+     * Handles an optimized way of drawing the player's name. Since it's always centred with
+     * the player, we can just draw the text statically right in the middle when using centred
+     * camera.
+     */
+
+    private drawPlayerName(entity: Player): void {
+        let nameOffset = this.drawLevels ? 22 : 10;
+
+        if (this.drawNames) {
+            this.drawText(
+                entity.name,
+                this.camera.borderOffsetWidth / 2 + 8 * this.camera.zoomFactor,
+                this.camera.borderOffsetHeight / 2 - nameOffset * this.camera.zoomFactor,
+                true,
+                false,
+                'rgba(252,218,92, 1)'
+            );
+
+            if (entity.hasCrown()) this.drawPlayerCrown(entity.getCrownKey());
+        }
+
+        if (this.drawLevels && entity.level)
+            this.drawText(
+                `Level ${entity.level}`,
+                this.camera.borderOffsetWidth / 2 + 8 * this.camera.zoomFactor,
+                this.camera.borderOffsetHeight / 2 - 10 * this.camera.zoomFactor,
+                true,
+                false,
+                'rgba(252,218,92, 1)'
+            );
+    }
+
+    /**
+     * Responsible for drawing the appropriate GUI for the minigame that
+     * the player is currently in. We use the minigame's type to determine
+     * what GUI to draw.
+     */
 
     private drawMinigameGUI(): void {
         if (!this.game.minigame.exists()) return;
 
-        switch (this.game.minigame.status) {
+        switch (this.game.minigame.type) {
+            case Opcodes.Minigame.TeamWar: {
+                return this.drawTeamWarGUI(this.game.minigame);
+            }
+
+            case Opcodes.Minigame.Coursing: {
+                return this.drawCoursingGUI(this.game.minigame);
+            }
+        }
+    }
+
+    /**
+     * Draws the team war minigame GUI. This consists of the score board
+     * or the countdown timer depending on the status of the minigame.
+     * @param minigame The minigame class from which we are extracting the data.
+     */
+
+    private drawTeamWarGUI(minigame: Minigame): void {
+        let { status, started, countdown, redTeamScore, blueTeamScore } = minigame,
+            scoreX = this.textCanvas.width / 6;
+
+        switch (status) {
             case 'lobby': {
                 this.drawText(
-                    this.game.minigame.started
-                        ? `There is a game in progress: ${this.game.minigame.countdown} seconds`
-                        : `Game starts in ${this.game.minigame.countdown} seconds`,
-                    this.textCanvas.width / 6,
+                    started
+                        ? `There is a game in progress, remaining time: ${countdown} seconds`
+                        : `Game starts in ${countdown} seconds`,
+                    scoreX,
                     30,
-                    true,
-                    'white'
+                    true
                 );
                 return;
             }
 
             case 'ingame': {
-                this.drawText(
-                    `Red: ${this.game.minigame.redTeamScore}`,
-                    this.textCanvas.width / 6 - 20,
-                    30,
-                    true,
-                    'red'
-                );
-
-                this.drawText(
-                    `Blue: ${this.game.minigame.blueTeamScore}`,
-                    this.textCanvas.width / 6 + 20,
-                    30,
-                    true,
-                    'blue'
-                );
-
-                this.drawText(
-                    `Time left: ${this.game.minigame.countdown} seconds`,
-                    this.textCanvas.width / 6,
-                    50,
-                    true,
-                    'white'
-                );
-
+                this.drawText(`Red: ${redTeamScore}`, scoreX - 20, 30, true, false, 'red');
+                this.drawText(`Blue: ${blueTeamScore}`, scoreX + 20, 30, true, false, 'blue');
+                this.drawText(`Time left: ${countdown} seconds`, scoreX, 50, true, false, 'white');
                 return;
             }
         }
     }
 
-    protected drawLighting(lighting: RendererLighting): void {
-        if (lighting.relative) {
-            let lightX =
-                    (lighting.light.origX - this.camera.x / this.tileSize) * this.actualTileSize,
-                lightY =
-                    (lighting.light.origY - this.camera.y / this.tileSize) * this.actualTileSize;
+    /**
+     * Draws the coursing GUI. The score is different for every player, so we
+     * are constantly updating it with the data we receive from the server.
+     * @param minigame Contains the minigame data.
+     */
 
-            lighting.light.position = new Vec2(lightX, lightY);
-            lighting.compute(this.canvasWidth, this.canvasHeight);
-            this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-        } else if (!lighting.computed) {
-            lighting.compute(this.canvasWidth, this.canvasHeight);
-            lighting.computed = true;
+    private drawCoursingGUI(minigame: Minigame): void {
+        let { status, started, countdown, score } = minigame,
+            scoreX = this.textCanvas.width / 6;
+
+        switch (status) {
+            case 'lobby': {
+                this.drawText(
+                    started
+                        ? `There is a game in progress, remaining time: ${countdown} seconds`
+                        : `Game starts in ${countdown} seconds`,
+                    scoreX,
+                    30
+                );
+                return;
+            }
+
+            case 'ingame': {
+                this.drawText(`Score: ${score}`, scoreX, 30, true);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Handles drawing the lighting for a given lighting object. We essentially have two
+     * different kinds of lights, entity based and relative ones. By default lights which
+     * do not have an entity are relative to the player. In the case of entity-based ones
+     * they follow the entity they belong to. Otherwise they stay in the same position
+     * on the map (even after moving the camera).
+     * @param lighting The lighting object that contains the lamp we are drawing.
+     */
+
+    protected drawLighting(lighting: RendererLighting): void {
+        let { light } = lighting;
+
+        // Handle drawing the light where the entity is.
+        if (light.entity) {
+            // Use our own player if the instance of the light's entity matches our own.
+            let isPlayer = light.entity === this.game.player.instance,
+                entity: Player = isPlayer ? this.game.player : this.game.entities.get(light.entity);
+
+            // Hide the light if there is light source from the entity.
+            light.hidden = !entity?.hasLight();
+
+            if (light.hidden) return;
+
+            // If the entity has a light source and it's not our own player, check its visibility.
+            if (!isPlayer) light.hidden = !this.camera.isVisible(entity.gridX, entity.gridY, 4, 8);
+
+            // Stop here if the light is hidden.
+            if (light.hidden) return;
+
+            light.position = this.getLightPosition(entity.x, entity.y);
+        } else {
+            light.hidden = !this.camera.isVisible(light.gridX, light.gridY, 4, 8);
+
+            if (light.hidden) return;
+
+            let lightX = (light.originalX - this.camera.x) * this.camera.zoomFactor,
+                lightY = (light.originalY - this.camera.y) * this.camera.zoomFactor;
+
+            light.position = new Vec2(lightX, lightY);
         }
 
-        lighting.render(this.overlayContext);
+        // // Don't do any fancy lighting if we're in low power mode.
+        // if (this.game.isLowPowerMode()) return;
+
+        // lighting.compute(this.overlay.width, this.overlay.height);
+        // lighting.render(this.overlayContext);
     }
 
     // -------------- Drawing Methods --------------
@@ -1017,6 +1343,7 @@ export default class Renderer {
      * @param x The x coordinate of the text.
      * @param y The y coordinate of the text.
      * @param centered Whether or not we want the text to be centered.
+     * @param setViews Whether or not we want to set the camera view.
      * @param colour The colour of the text in rgba format.
      * @param strokeColour The colour of the stroke in rgba format.
      * @param fontSize (Optional) The font size of the text.
@@ -1026,28 +1353,28 @@ export default class Renderer {
         text: string,
         x: number,
         y: number,
-        centered: boolean,
-        colour: string,
-        strokeColour?: string,
-        fontSize: number = this.fontSize,
-        setViews = false
+        centered = false,
+        setViews = false,
+        colour = 'white',
+        strokeColour = 'rgba(0, 0, 0, 1)',
+        fontSize: number = this.fontSize
     ): void {
-        let strokeSize = 3;
-
         this.textContext.save();
 
         if (centered) this.textContext.textAlign = 'center';
-        if (setViews) this.setCameraView(this.textContext);
+        if (setViews) {
+            this.setCameraView(this.textContext);
 
-        // Decrease font size relative to zoom out.
-        fontSize += this.camera.zoomFactor * 2;
+            x = ~~(x * this.camera.zoomFactor);
+            y = ~~(y * this.camera.zoomFactor);
+        }
 
-        this.textContext.strokeStyle = strokeColour || 'rgba(55, 55, 55, 1)';
-        this.textContext.lineWidth = strokeSize;
-        this.textContext.font = `${fontSize}px AdvoCut`;
-        this.textContext.strokeText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
+        this.textContext.strokeStyle = strokeColour;
+        this.textContext.lineWidth = this.strokeSize;
+        this.textContext.font = `${fontSize}px Quaver`;
+        this.textContext.strokeText(text, x, y);
         this.textContext.fillStyle = colour || 'white';
-        this.textContext.fillText(text, x * this.camera.zoomFactor, y * this.camera.zoomFactor);
+        this.textContext.fillText(text, x, y);
 
         this.textContext.restore();
     }
@@ -1062,68 +1389,141 @@ export default class Renderer {
 
     public updateDarkMask(color = 'rgba(0, 0, 0, 0.5)'): void {
         this.darkMask.color = color;
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
     }
 
     /**
-     * Adds a new light to the rendering screen.
+     * Creates a new light element using the provided data about its position, distance
+     * and colour. We then add it to our lightings array and draw it on the overlay.
      * @param info Contains information about the light we are adding.
+     * @param relative Whether or not the light stays in a single position in the world.
+     * @param flicker Whether or not the light should flicker.
      */
 
-    public addLight(info: SerializedLight): void {
-        let light = new Lamp(
+    public addLight(info: SerializedLight): RendererLighting | undefined {
+        // Prevent adding lighting if it already exists.
+        if (info.instance in this.lightings) return;
+
+        // Create the new lighting object and lamp with the provided data.
+        let lighting = new Lighting({
+            light: new Lamp(
                 this.getLightData(info.x, info.y, info.distance, info.diffuse, info.colour)
-            ) as RendererLamp,
-            lighting = new Lighting({
-                light
-                // diffuse: light.diffuse
-            }) as RendererLighting;
+            )
+        }) as RendererLighting;
 
-        light.origX = light.position.x;
-        light.origY = light.position.y;
+        // Store the grid position of the light (used for camera calculations).
+        lighting.light.gridX = info.x;
+        lighting.light.gridY = info.y;
 
-        light.diff = Math.round(light.distance / this.tileSize);
+        // Store the offset of the light (used for flicker calculations).
+        lighting.light.offset = Utils.randomInt(0, 1000);
 
-        if (this.hasLighting(lighting)) return;
+        // Store the absolute position of the light.
+        lighting.light.originalX = lighting.light.position.x;
+        lighting.light.originalY = lighting.light.position.y;
+        lighting.light.originalDistance = lighting.light.distance;
 
-        lighting.relative = true;
+        // Whether the light is bound to an entity
+        lighting.light.entity = info.entity;
 
-        this.lightings.push(lighting);
-        this.darkMask.lights.push(light);
+        lighting.light.flickerSpeed = info.flickerSpeed;
+        lighting.light.flickerIntensity = info.flickerIntensity;
 
-        this.drawLighting(lighting);
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
+        // Add the lighting to our dictionary and the dark mask dictionary.
+        this.lightings[info.instance] = lighting;
+        this.darkMask.lights.push(lighting.light);
+
+        return lighting;
     }
+
+    /**
+     * Adds a light to a player entity in the world. This can be our own player if we
+     * do not specify another object, or it can be another player which has a light source.
+     * @param player The player we want to add a light to, defaults to our own player.
+     */
+
+    public addPlayerLight(player: Player = this.game.player): void {
+        let light = player.getLight(),
+            x = this.overlay.width / this.tileSize / 2,
+            y = this.overlay.height / this.tileSize / 2;
+
+        // Handle the outer light if it exists.
+        if (light.outer) this.addLight(this.getSerializedLight(player.instance, x, y, light.outer));
+
+        // Handle the inner light if it exists.
+        if (light.inner)
+            this.addLight(this.getSerializedLight(`${player.instance}inner`, x, y, light.inner));
+    }
+
+    /**
+     * Responsible for synchronizing the player lighting with the latest
+     * information from the player's light equipment.
+     * @param player The player we want to update the light for, if not specified
+     * then we assume it's our own player.
+     */
+
+    public updatePlayerLight(player: Player = this.game.player): void {
+        let light = player.getLight(),
+            outer = this.lightings[player.instance],
+            inner = this.lightings[`${player.instance}inner`];
+
+        // No light exists for the player, so we add it.
+        if (player.hasLight() && (!outer || !inner)) this.addPlayerLight(player);
+
+        // Update the outer light if it exists.
+        if (outer && light.outer) {
+            outer.light.distance = light.outer.distance;
+            outer.light.originalDistance = light.outer.distance;
+
+            outer.light.color = light.outer.colour;
+
+            outer.light.flickerSpeed = light.outer.flickerSpeed;
+            outer.light.flickerIntensity = light.outer.flickerIntensity;
+        }
+
+        // Update the inner light if it exists.
+        if (inner && light.inner) {
+            inner.light.distance = light.inner.distance;
+            inner.light.originalDistance = light.inner.distance;
+
+            inner.light.color = light.inner.colour;
+
+            inner.light.flickerSpeed = light.inner.flickerSpeed;
+            inner.light.flickerIntensity = light.inner.flickerIntensity;
+        }
+
+        this.resizeLights();
+    }
+
+    /**
+     * Goes through every light in the renderer and resizes it relative
+     * to the proportion of the zoom factor versus the default zoom.
+     */
+
+    public resizeLights(): void {
+        let scale = this.camera.zoomFactor / DEFAULT_ZOOM;
+
+        this.forEachLighting((lighting: RendererLighting) => {
+            lighting.light.distance = lighting.light.originalDistance * scale;
+
+            // Store the scaled distance as a reference.
+            lighting.light.scaledDistance = lighting.light.distance;
+
+            // Store the scaled flicker intensity as a reference for calculating scaled flicker.
+            lighting.light.scaledFlickerIntensity = lighting.light.flickerIntensity * scale;
+        });
+    }
+
+    /**
+     * Removes all the lightings and lamps from the renderer and recomputes the dark mask.
+     * We re-add the player light since it gets toggled depending on the player has a torch
+     * or not.
+     */
 
     public removeAllLights(): void {
-        this.lightings = [];
+        this.lightings = {};
         this.darkMask.lights = [];
 
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-    }
-
-    public removeNonRelativeLights(): void {
-        for (let i in this.lightings)
-            if (!this.lightings[i].light.relative) {
-                let index = parseInt(i);
-
-                this.lightings.splice(index, 1);
-                this.darkMask.lights.splice(index, 1);
-            }
-
-        this.darkMask.compute(this.canvasWidth, this.canvasHeight);
-    }
-
-    private hasLighting(lighting: RendererLighting): boolean {
-        for (let { light } of this.lightings)
-            if (
-                lighting.light.origX === light.origX &&
-                lighting.light.origY === light.origY &&
-                lighting.light.distance === light.distance
-            )
-                return true;
-
-        return false;
+        this.addPlayerLight();
     }
 
     /**
@@ -1133,9 +1533,7 @@ export default class Renderer {
      */
 
     protected hasRenderedFrame(): boolean {
-        if (this.forceRendering || !this.isLowPowerMode()) return false;
-
-        if (this.stopRendering) return true;
+        if (this.forceRendering) return false;
 
         return this.renderedFrame[0] === this.camera.x && this.renderedFrame[1] === this.camera.y;
     }
@@ -1186,8 +1584,6 @@ export default class Renderer {
      */
 
     protected saveFrame(): void {
-        if (!this.isLowPowerMode()) return;
-
         this.renderedFrame[0] = this.camera.x;
         this.renderedFrame[1] = this.camera.y;
 
@@ -1228,8 +1624,8 @@ export default class Renderer {
         if (!this.camera || this.stopRendering) return;
 
         context.translate(
-            -this.camera.x * this.camera.zoomFactor,
-            -this.camera.y * this.camera.zoomFactor
+            ~~(-this.camera.x * this.camera.zoomFactor),
+            ~~(-this.camera.y * this.camera.zoomFactor)
         );
     }
 
@@ -1242,119 +1638,18 @@ export default class Renderer {
     }
 
     /**
-     * Checks whether a light source is in the radius of the camera.
-     * @param lighting The light source we are checking for.
-     * @returns Whether or not the light source is in the camera radius.
+     * Calculates the light's position on the screen given an entity's position. This
+     * is used when our player character moves or when the light belongs to another entity.
+     * @param x The absolute x position of the entity.
+     * @param y The absolute y position of the entity.
+     * @returns A position object of where the light should be on the screen.
      */
 
-    private inRadius(lighting: RendererLighting): boolean {
-        let position = {
-            x: lighting.light.origX,
-            y: lighting.light.origY,
-            diff: lighting.light.diff
-        };
-
-        return (
-            position.x > this.camera.gridX - position.diff &&
-            position.x < this.camera.gridX + this.camera.gridWidth + position.diff &&
-            position.y > this.camera.gridY - position.diff &&
-            position.y < this.camera.gridY + this.camera.gridHeight + position.diff
+    private getLightPosition(x: number, y: number): Vec2 {
+        return new Vec2(
+            (x - this.camera.x) * this.camera.zoomFactor + this.actualTileSize / 2,
+            (y - this.camera.y) * this.camera.zoomFactor
         );
-    }
-
-    /**
-     * A flipped tile is any tile that contains a flip
-     * flag or transpose flag.
-     * @param tileInfo Tile data received from the server.
-     * @returns Whether or not the tile contains and flip flags.
-     */
-
-    protected isFlipped(tileInfo: RotatedTile): boolean {
-        if (!tileInfo) return false;
-
-        return tileInfo.v || tileInfo.h || tileInfo.d;
-    }
-
-    /**
-     * Low power mode is activated when both the camera centration and
-     * animated tiles are turned off. This is for devices that cannot
-     * sustain the constant re-drawing of the frame every second.
-     */
-
-    protected isLowPowerMode(): boolean {
-        return !this.camera.isCentered() && !this.animateTiles;
-    }
-
-    /**
-     * Checks if the currently request coordinates are that of a cell
-     * that was already selected (has the animation onto it). We want
-     * to prevent drawing a target cell onto a cell that's being selected.
-     * @param x The x grid coordinate we are checking.
-     * @param y The y grid coordinate we are checking.
-     * @returns Whether the x and y coordinates are the same as the input
-     * selected x and y coordinates.
-     */
-
-    private isSelectedCell(x: number, y: number): boolean {
-        return this.game.input.selectedX === x && this.game.input.selectedY === y;
-    }
-
-    /**
-     * @returns Whether the current rendering engine is WebGL.
-     */
-
-    public isWebGl(): boolean {
-        return this.type === 'webgl';
-    }
-
-    /**
-     * Given a key we return the sprite associated with the medal.
-     * @param key The key of the medal.
-     * @returns A sprite element or undefined if the key is invalid.
-     */
-
-    protected getMedal(key: string): Sprite | undefined {
-        switch (key) {
-            case 'goldmedal': {
-                return this.goldMedal;
-            }
-
-            case 'silvermedal': {
-                return this.silverMedal;
-            }
-
-            case 'crown-artist': {
-                return this.crownArtist;
-            }
-
-            case 'crown-tier1': {
-                return this.crownTier1;
-            }
-
-            case 'crown-tier2': {
-                return this.crownTier2;
-            }
-
-            case 'crown-tier3': {
-                return this.crownTier3;
-            }
-
-            case 'crown-tier4': {
-                return this.crownTier4;
-            }
-
-            case 'crown-tier5': {
-                return this.crownTier5;
-            }
-
-            case 'crown-tier6': {
-                return this.crownTier6;
-            }
-
-            case 'crown-tier7': {
-                return this.crownTier7;
-            }
-        }
     }
 
     /**
@@ -1375,7 +1670,10 @@ export default class Renderer {
         color: string
     ): Partial<Lamp> {
         return {
-            position: new Vec2(x, y),
+            position: new Vec2(
+                x * this.tileSize + this.tileSize / 2,
+                y * this.tileSize + this.tileSize / 2
+            ),
             distance,
             diffuse,
             color,
@@ -1386,25 +1684,117 @@ export default class Renderer {
         };
     }
 
+    /**
+     * Given a lamp data object (generally from a player's weapon), we generate
+     * a serialized light object that can be used to render the light onto the
+     * screen.
+     * @param instance Who this light source belongs to.
+     * @param x The x grid position of the light.
+     * @param y The y grid position of the light.
+     * @param lamp Contains the lamp data from which we generate the light.
+     * @returns A serialized light object.
+     */
+
+    private getSerializedLight(
+        instance: string,
+        x: number,
+        y: number,
+        lamp: LampData
+    ): SerializedLight {
+        return {
+            instance,
+            x,
+            y,
+            distance: lamp.distance,
+            diffuse: 0.2,
+            colour: lamp.colour,
+            entity: instance.includes('inner') ? instance.split('inner')[0] : instance,
+            flickerSpeed: lamp.flickerSpeed,
+            flickerIntensity: lamp.flickerIntensity
+        };
+    }
+
+    /**
+     * Checks if the currently request coordinates are that of a cell
+     * that was already selected (has the animation onto it). We want
+     * to prevent drawing a target cell onto a cell that's being selected.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @returns Whether the x and y coordinates are the same as the input
+     * selected x and y coordinates.
+     */
+
+    private isSelectedCell(x: number, y: number): boolean {
+        return this.game.input.selectedX === x && this.game.input.selectedY === y;
+    }
+
+    /**
+     * @returns Whether the current rendering engine is WebGL.
+     */
+
+    public isWebGl(): this is WebGL {
+        return this.type === 'webgl';
+    }
+
+    /**
+     * @returns Whether or not the current rendering engine is Canvas.
+     */
+
+    public isCanvas(): this is Canvas {
+        return this.type === 'canvas';
+    }
+
+    /**
+     * Given a key we return the sprite associated with the crown.
+     * @param key The key of the crown.
+     * @returns A sprite element or undefined if the key is invalid.
+     */
+
+    protected getCrown(key: string): Sprite | undefined {
+        switch (key) {
+            case 'goldmedal': {
+                return this.game.sprites.get('crowns/goldmedal');
+            }
+
+            case 'silvermedal': {
+                return this.game.sprites.get('crowns/silvermedal');
+            }
+
+            case 'crown-artist': {
+                return this.game.sprites.get('crowns/artist');
+            }
+
+            case 'crown-tier1': {
+                return this.game.sprites.get('crowns/tier1');
+            }
+
+            case 'crown-tier2': {
+                return this.game.sprites.get('crowns/tier2');
+            }
+
+            case 'crown-tier3': {
+                return this.game.sprites.get('crowns/tier3');
+            }
+
+            case 'crown-tier4': {
+                return this.game.sprites.get('crowns/tier4');
+            }
+
+            case 'crown-tier5': {
+                return this.game.sprites.get('crowns/tier5');
+            }
+
+            case 'crown-tier6': {
+                return this.game.sprites.get('crowns/tier6');
+            }
+
+            case 'crown-tier7': {
+                return this.game.sprites.get('crowns/tier7');
+            }
+        }
+    }
+
     // -------------- Update functions --------------
-
-    /**
-     * Superclass implementation for updating animated tiles. These are
-     * implemented by the Canvas2D rendering engine to update the
-     * animated tiles currently within the player's field of vision.
-     */
-
-    public updateAnimatedTiles(): void {
-        //
-    }
-
-    /**
-     * Superclass implementation for resetting the animated tiles.
-     */
-
-    public resetAnimatedTiles(): void {
-        //
-    }
 
     /**
      * Superclass implementation for updating the tile at a specified
@@ -1414,7 +1804,7 @@ export default class Renderer {
      * @param data The data with which to update the tile.
      */
 
-    public setTile(_index: number, _data: RegionTile): void {
+    public setTile(_index: number, _data: ClientTile): void {
         // unimplemented
     }
 
@@ -1435,32 +1825,9 @@ export default class Renderer {
      * @param offset How much to look outside the boundaries of the map.
      */
 
-    protected forEachVisibleIndex(callback: (index: number) => void, offset?: number): void {
+    protected forEachVisibleIndex(callback: (index: number) => void, offset = 0): void {
         this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y)) callback(this.map.coordToIndex(x, y));
-        }, offset);
-    }
-
-    /**
-     * Iterates through all the indexes and extracts the tile data at that
-     * specified index by iterating through each tile array (if present) or
-     * returning the tile data from the map.
-     * @param callback Returns a region tile object containing rendering information
-     * such as tileId, x, y, and flip flags. The index is the positioning in the map.
-     * @param offset How much to look outside the visible camera proportions.
-     */
-
-    protected forEachVisibleTile(
-        callback: (data: RegionTile, index: number) => void,
-        offset?: number
-    ): void {
-        if (!this.map?.mapLoaded) return;
-
-        this.forEachVisibleIndex((index) => {
-            let indexData = this.map.data[index];
-
-            if (Array.isArray(indexData)) for (let data of indexData) callback(data, index);
-            else if (this.map.data[index]) callback(this.map.data[index], index);
+            callback(this.map.coordToIndex(x, y));
         }, offset);
     }
 
@@ -1471,12 +1838,14 @@ export default class Renderer {
      */
 
     protected forEachVisibleEntity(callback: (entity: Entity) => void): void {
-        let { grids } = this.game.entities;
-
-        this.camera.forEachVisiblePosition((x, y) => {
-            if (!this.map.isOutOfBounds(x, y) && grids.renderingGrid[y][x])
-                for (let entity of Object.values(grids.renderingGrid[y][x])) callback(entity);
-        });
+        this.camera.forEachVisiblePosition(
+            (x, y) => {
+                for (let entity in this.grids.renderingGrid[y][x])
+                    callback(this.grids.renderingGrid[y][x][entity]);
+            },
+            3,
+            6
+        );
     }
 
     /**
@@ -1484,7 +1853,7 @@ export default class Renderer {
      * @param callback The light currently being iterated.
      */
 
-    private forEachLighting(callback: (lighting: RendererLighting) => void): void {
+    public forEachLighting(callback: (lighting: RendererLighting) => void): void {
         for (let lighting in this.lightings) callback(this.lightings[lighting]);
     }
 

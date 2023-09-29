@@ -22,16 +22,17 @@ export default class InfoController {
         y: number,
         isTarget = false,
         skill = -1,
-        randomize = false
+        randomize = false,
+        skills: string[] = []
     ): void {
         if (randomize) {
-            x += Utils.randomInt(-16, 16);
-            y += Utils.randomInt(-10, 10);
+            x += Utils.randomInt(-8, 8);
+            y += Utils.randomInt(-6, 6);
         }
 
         let id = Utils.createId(Date.now(), x, y);
 
-        this.addInfo(new Splat(id, type, amount, x, y, isTarget, skill));
+        this.addInfo(new Splat(id, type, amount, x, y, isTarget, skill, skills));
     }
 
     /**

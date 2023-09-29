@@ -2,13 +2,21 @@
 
 #attack-info {
     position: absolute;
-    left: 40%;
+    top: 0;
+    left: calc(50% - 5em);
+
     display: none;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    width: 10em;
+    padding: 0.5em 1em;
+
+    border-image-width: 0 1em 1em 1em;
 
     .name,
     .health {
-        position: absolute;
-        font-family: AdvoCut, sans-serif;
+        margin-bottom: 0.25em;
         color: white;
         text-align: center;
     }
@@ -20,53 +28,21 @@
 
     .details {
         overflow: hidden;
-
-        width: 100%;
-
-        font-family: AdvoCut, sans-serif;
+        font-size: 0.75em;
         color: white;
         text-align: center;
     }
 
     .health {
-        left: 5%;
         overflow: hidden;
-        width: 90%;
-    }
-}
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #attack-info {
-            top: 0;
+        width: 100%;
+        height: 0.75em;
 
-            width: 100px * $i;
-            height: 32px * $i;
+        background-color: red;
+        border: 1px solid #373737;
+        border-radius: 0.125em;
 
-            // border: 2px * $i solid #373737;
-            // border-bottom-right-radius: 8px * $i;
-            // border-bottom-left-radius: 8px * $i;
-
-            background: url('/img/interface/main.png') -32px * $i -464px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-
-            .name {
-                margin-top: 3px * $i;
-            }
-
-            .details {
-                margin-top: 12px * $i;
-            }
-
-            .health {
-                height: 6px * $i;
-
-                background-color: red;
-                border: 1px * $i solid #373737;
-                border-radius: 2px * $i;
-
-                transition: 0.5s width ease;
-            }
-        }
+        transition: 0.5s width ease;
     }
 }

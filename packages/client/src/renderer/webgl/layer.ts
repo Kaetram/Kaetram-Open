@@ -1,7 +1,8 @@
-import Tile from '../tile';
+import Tile from '../../map/tile';
 
+import type WebGL from './webgl';
 import type Map from '../../map/map';
-import type { RotatedTile } from '@kaetram/common/types/map';
+import type { TransformedTile } from '@kaetram/common/types/map';
 
 /**
  * A layer is a class object that corresponds with a layer in the map data. This is used to
@@ -22,6 +23,8 @@ interface AnimatedTiles {
 }
 
 export default class Layer {
+    private map: Map;
+
     /**
      * The background texture is for the normal tiles that are rendered on top of each other.
      * The foreground layer are tiles that are rendered on top of the background layer and that
@@ -40,7 +43,9 @@ export default class Layer {
     // Animated tiles pertaining to this layer.
     private animatedTiles: AnimatedTiles = {};
 
-    public constructor(private map: Map) {
+    public constructor(private renderer: WebGL) {
+        this.map = renderer.map;
+
         this.backgroundData = new Uint8Array(this.map.width * this.map.height * 4);
         this.foregroundData = new Uint8Array(this.map.width * this.map.height * 4);
 
@@ -145,9 +150,9 @@ export default class Layer {
      * @param foreground Whether we want to add the tile to the foreground or background texture data.
      */
 
-    public addTile(index: number, tile: number | RotatedTile, flipped = false): void {
+    public addTile(index: number, tile: number | TransformedTile, flipped = false): void {
         // Grab the index in the respective texture data array.
-        let tileId = flipped ? (tile as RotatedTile).tileId : (tile as number),
+        let tileId = flipped ? (tile as TransformedTile).tileId : (tile as number),
             isHighTile = this.map.isHighTile(tileId),
             textureData = isHighTile ? this.foregroundData : this.backgroundData,
             dataIndex = index * 4;
@@ -168,14 +173,14 @@ export default class Layer {
         // If the tileset is invalid, then we just return.
         if (!tileset) return;
 
-        let relativeId = tileId - tileset.firstGid - 1,
+        let relativeId = tileId - tileset.firstGid,
             tilesWidth = tileset.width / this.map.tileSize;
 
         // Write the texture information to the texture data array.
         textureData[dataIndex] = relativeId % tilesWidth; // tile's x coordinate in the tileset
-        textureData[dataIndex + 1] = Math.floor(relativeId / tilesWidth); // tile's y coordinate in the tileset
+        textureData[dataIndex + 1] = ~~(relativeId / tilesWidth); // tile's y coordinate in the tileset
         textureData[dataIndex + 2] = tileset.index; // tileset index
-        textureData[dataIndex + 3] = flipped ? this.getFlippedFlag(tile as RotatedTile) : 0; // tile flags
+        textureData[dataIndex + 3] = flipped ? this.getFlippedFlag(tile as TransformedTile) : 0; // tile flags
 
         // Skip if the tile is already animated.
         if (index in this.animatedTiles) return;
@@ -187,7 +192,8 @@ export default class Layer {
                 index,
                 this.map.getTileAnimation(tileId),
                 flipped,
-                isHighTile
+                isHighTile,
+                this.map.dynamicAnimatedTiles[index]
             );
     }
 
@@ -230,6 +236,17 @@ export default class Layer {
             // Update using the current game tick.
             tile.animate(time);
 
+            // An expired tile is replaced with the post animation tile.
+            if (tile.expired) {
+                // We ask the renderer to re-set the tile with the post animation data.
+                this.renderer.setTile(tile.index, tile.postAnimationData!);
+
+                delete this.animatedTiles[index];
+
+                continue;
+            }
+
+            // Upload indicates that the tile is ready to be reloaded into the texture data.
             if (!tile.uploaded) {
                 // We update the tile in the texture data.
                 this.addTile(tile.index, tile.id + 1, tile.isFlipped);
@@ -252,11 +269,11 @@ export default class Layer {
      * @returns The bit flag after applying all transformations.
      */
 
-    private getFlippedFlag(tile: RotatedTile): number {
+    private getFlippedFlag(tile: TransformedTile): number {
         return (
-            (tile.h ? FlipFlags.FlippedHorizontal >> 28 : 0) |
-            (tile.v ? FlipFlags.FlippedVertical >> 28 : 0) |
-            (tile.d ? FlipFlags.FlippedAntiDiagonal >> 28 : 0)
+            (tile.h ? (FlipFlags.FlippedHorizontal as number) >> 28 : 0) |
+            (tile.v ? (FlipFlags.FlippedVertical as number) >> 28 : 0) |
+            (tile.d ? (FlipFlags.FlippedAntiDiagonal as number) >> 28 : 0)
         );
     }
 }

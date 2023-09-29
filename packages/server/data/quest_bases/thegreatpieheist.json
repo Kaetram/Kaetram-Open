@@ -1,0 +1,51 @@
+{
+    "name": "The Great Pie Heist",
+    "description": "Pie's gone missing!|Someone in town has taken Mrs. Berry's award-winning blueberry pie. It's up to you to follow the crumbs and solve this tasty mystery!",
+    "rewards": ["sliceofpie"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "mrsberry",
+            "text": [
+                "Adventurer! My blueberry pie is gone!",
+                "I was going to enter it in the competition tomorrow!",
+                "Find it and there's a slice in it for you."
+            ],
+            "completedText": ["Sniff out the pie thief!"]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "piecrumbs",
+            "text": [
+                "Following the trail of pie crumbs, you stumble upon a suspicious-looking squirrel.",
+                "It seems to be enjoying... a blueberry?"
+            ],
+            "completedText": ["Confront the squirrel."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "squirrelnapper",
+            "text": [
+                "Okay, okay! I took the pie! But it was for a good cause!",
+                "There's a party in the tree tonight. Want to join?"
+            ],
+            "completedText": ["Return the pie... or party first?"]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "mrsberry",
+            "text": ["You brought it back! Thank you, dear!", "Now, about that slice I promised..."],
+            "itemRewards": [
+                {
+                    "key": "sliceofpie",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have cracked @crimson@The Great Pie Heist@green@. Enjoy your well-deserved slice of pie!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

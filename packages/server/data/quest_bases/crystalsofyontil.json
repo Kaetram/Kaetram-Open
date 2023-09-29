@@ -1,0 +1,38 @@
+{
+    "name": "Crystals of Yontil",
+    "description": "Mystic ores have been discovered deep within the Yontil Mines. Excavate and learn their secrets.",
+    "rewards": ["Access to Mystic Ore", "3500 Mining experience"],
+    "skillRequirements": {
+        "mining": 40
+    },
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "oldminer",
+            "text": ["Adventurer! The Yontil Mines hold mystic ores.", "I'll guide you if you can fetch them for me."],
+            "completedText": ["Descend into Yontil Mines."]
+        },
+        "1": {
+            "task": "collect",
+            "itemRequirements": [{ "key": "mysticore", "count": 5 }],
+            "completedText": ["Bring the Mystic Ores to the old miner."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "oldminer",
+            "hasItemText": ["You've done it! This ore is precious. Here's how you can best utilize it."],
+
+            "skillRewards": [
+                {
+                    "key": "mining",
+                    "experience": 3500
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You've gained @crimson@Mystic Ore Knowledge@green@ and @crimson@3500 Mining experience@green@.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

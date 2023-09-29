@@ -1,100 +1,56 @@
-@use '../../abstracts/media';
-
 #enchant {
-    cursor: url('/img/hand.png'), auto;
-
-    position: absolute;
-    inset: 0;
-
     display: none;
+    flex-direction: column;
+    width: 16em;
+    height: 16em;
 
-    margin: auto;
-}
-
-#enchant-inventory-slots {
-    position: absolute;
-
-    overflow: hidden;
-    overflow-y: scroll;
-
-    margin: 0;
-    padding: 0;
-
-    list-style-type: none;
-
-    li {
-        float: left;
+    &-content {
+        display: flex;
+        gap: 1em;
+        height: 100%;
     }
-}
 
-#enchant-selected-item,
-#enchant-shards {
-    position: absolute;
-    top: 80%;
-    background-size: cover;
-}
+    &-inventory {
+        flex: 1;
 
-#enchant-selected-item {
-    left: 11%;
-}
+        &-slots {
+            overflow: auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.25em;
+            justify-items: center;
 
-#enchant-shards {
-    left: 34%;
-}
-
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #enchant {
-            width: 129px * $i;
-            height: 155px * $i;
-            background: url('/img/interface/containers.png') 0 0;
-            background-size: calc(width('containers.png') * $i);
-        }
-
-        #enchant-selected-item,
-        #enchant-shards {
-            width: 16px * $i;
-            height: 15px * $i;
-        }
-
-        #enchant-container {
-            background-image: url('/img/interface/containers.png');
-            background-size: calc(width('containers.png') * $i);
-        }
-
-        .inventory-slots {
-            width: 96px * $i;
-            height: 80px * $i;
-        }
-
-        #shards-count {
-            width: 16px * $i;
-        }
-
-        #enchant-inventory-slots {
-            top: 16px * $i;
-            left: 20px * $i;
-            width: 96px * $i;
-            height: 92px * $i;
-
-            li {
-                .item-slot {
-                    margin-bottom: 4px * $i;
-                }
-            }
+            height: 100%;
+            padding-right: 0.25em;
         }
     }
 
-    @media (--sm) {
-        #enchant-inventory-slots {
-            left: 11px;
-            width: 106px;
+    &-item {
+        display: flex;
+        flex-direction: row;
+        gap: 1em;
+        align-items: center;
+        justify-content: center;
 
-            li {
-                .item-slot {
-                    margin-bottom: 8px;
-                }
+        &-selected {
+            margin-bottom: 1em;
+        }
+
+        &-selected,
+        &-shards {
+            width: 2em;
+            height: 2em;
+
+            div {
+                width: 100%;
+                height: 100%;
+                background-size: 100%;
             }
+        }
+
+        &-count {
+            height: 1em;
+            text-align: center;
         }
     }
 }

@@ -1,7 +1,7 @@
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import { Opcodes } from '@kaetram/common/network';
-import { Trade as TradePacket } from '@kaetram/common/network/impl';
+import { TradePacketPacket } from '@kaetram/common/network/impl';
 
 import type Player from './player';
 import type Item from '../../objects/item';
@@ -60,7 +60,7 @@ export default class Trade {
         let offerIndex = this.getEmptySlot();
 
         if (offerIndex === -1)
-            return this.player.notify(`You cannot add any more items to the trade.`, '', 'TRADE');
+            return this.player.notify('misc:CANNOT_ADD_ITEMS_TRADE', '', 'TRADE');
 
         // Grab the slot from the inventory.
         let slot = this.player.inventory.get(index);
@@ -75,7 +75,7 @@ export default class Trade {
         if (!item) return;
 
         // Undroppable items are special items that cannot be traded.
-        if (item.undroppable) return this.player.notify(`You cannot trade this item.`, '', 'TRADE');
+        if (item.undroppable) return this.player.notify('misc:CANNOT_TRADE_ITEM', '', 'TRADE');
 
         // Handle existing items in the trade.
         let existingIndex = this.hasItem(slot.key);
@@ -202,8 +202,8 @@ export default class Trade {
         this.accepted = true;
 
         // Relay to the client that one of the parties accepted the trade.
-        this.acceptCallback?.('You have accepted the trade.');
-        this.getActiveTrade()?.acceptCallback?.('The other player has accepted the trade.');
+        this.acceptCallback?.('misc:ACCEPTED_TRADE');
+        this.getActiveTrade()?.acceptCallback?.('misc:ACCEPTED_TRADE_OTHER');
     }
 
     /**
@@ -218,31 +218,27 @@ export default class Trade {
         if (this.player.getDistance(target) > 1) return;
 
         // Prevent hollow admins from trading.
-        if (this.player.isHollowAdmin())
-            return this.player.notify(`As an administrator you cannot influence the economy.`);
+        if (this.player.isHollowAdmin()) return this.player.notify('misc:CANNOT_TRADE_ADMIN');
 
-        if (target.isHollowAdmin())
-            return this.player.notify(`That player is an administrator and cannot be traded with.`);
+        if (target.isHollowAdmin()) return this.player.notify('misc:CANNOT_TRADE_ADMIN_OTHER');
 
         // Prevent cheaters from trading.
-        if (this.player.isCheater())
-            return this.player.notify('Sorry but cheaters are not allowed to trade.');
+        if (this.player.isCheater()) return this.player.notify('misc:CANNOT_TRADE_CHEATER');
 
-        if (target.isCheater())
-            return this.player.notify('That player is a cheater, he might sell you contraband!');
+        if (target.isCheater()) return this.player.notify('misc:CANNOT_TRADE_CHEATER_OTHER');
 
         if (target.trade.lastRequest === this.player.instance) return this.open(target);
 
         this.lastRequest = target.instance;
 
         target.notify(
-            `${Utils.formatName(this.player.username)} has requested to trade with you.`,
+            `misc:TRADE_REQUEST_OTHER;username=${Utils.formatName(this.player.username)}`,
             'rgb(84, 224, 255)',
             'TRADE'
         );
 
         this.player.notify(
-            `You have requested to trade with ${Utils.formatName(target.username)}.`,
+            `misc:TRADE_REQUEST;username=${Utils.formatName(target.username)}`,
             '',
             'TRADE'
         );
@@ -286,10 +282,10 @@ export default class Trade {
         );
 
         // Close the trade for the player.
-        this.player.send(new TradePacket(Opcodes.Trade.Close, {}));
+        this.player.send(new TradePacketPacket(Opcodes.Trade.Close, {}));
 
         // Close the trade for the other party if they are still trading.
-        this.activeTrade?.send(new TradePacket(Opcodes.Trade.Close, {}));
+        this.activeTrade?.send(new TradePacketPacket(Opcodes.Trade.Close, {}));
 
         // Clear the active trade for both players.
         this.getActiveTrade()?.clear(); // Clear first so it's not undefined.
@@ -309,12 +305,8 @@ export default class Trade {
         this.acceptCallback?.();
         this.getActiveTrade()?.acceptCallback?.();
 
-        this.activeTrade?.notify(
-            `The other player does not have enough space in their inventory.`,
-            '',
-            'TRADE'
-        );
-        return this.player.notify(`You do not have enough space in your inventory.`, '', 'TRADE');
+        this.activeTrade?.notify('misc:NO_SPACE_OTHER', '', 'TRADE');
+        return this.player.notify('misc:NO_SPACE', '', 'TRADE');
     }
 
     /**
@@ -330,7 +322,7 @@ export default class Trade {
         let flagged = this.removeItemsBeforeTrade();
 
         if (flagged) {
-            this.player.notify(`Please report a bug error, an error has occurred.`, '', 'TRADE');
+            this.player.notify('misc:PLEASE_REPORT_BUG', '', 'TRADE');
             log.warning(
                 `Trade exchange failed for ${this.player.username} and ${this.activeTrade?.username}.`
             );
@@ -342,12 +334,12 @@ export default class Trade {
 
         // This is just a mini easter egg I like to include with basically everything at this point.
         if (totalItems === 0) {
-            this.player.notify(`Yo why are y'all trading nothing?`, '', 'TRADE');
-            this.activeTrade?.notify(`Yo why are y'all trading nothing?`, '', 'TRADE');
+            this.player.notify('misc:TRADE_EMPTY', '', 'TRADE');
+            this.activeTrade?.notify('misc:TRADE_EMPTY', '', 'TRADE');
         } else {
             // Notify both that the trade is complete.
-            this.player.notify(`Thank you for using Kaetram trading system!`, '', 'TRADE');
-            this.activeTrade?.notify(`Thank you for using Kaetram trading system!`, '', 'TRADE');
+            this.player.notify('misc:TRADE_COMPLETE', '', 'TRADE');
+            this.activeTrade?.notify('misc:TRADE_COMPLETE', '', 'TRADE');
 
             log.trade(this.produceTradeLog());
         }

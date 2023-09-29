@@ -1,36 +1,89 @@
 {
-    "blueberry": {
+    "blueberrybush": {
+        "name": "Blueberry Bush",
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 1,
         "item": "blueberry"
     },
 
-    "corn": {
+    "cornbush": {
+        "name": "Corn",
         "levelRequirement": 5,
         "experience": 15,
         "difficulty": 1,
         "item": "corn"
     },
 
-    "bluelily": {
+    "bluelilybush": {
+        "name": "Blue Lily Bush",
         "levelRequirement": 10,
         "experience": 20,
         "difficulty": 1,
         "item": "bluelily"
     },
 
-    "tomato": {
+    "tomatobush": {
+        "name": "Tomato Plant Thingy",
         "levelRequirement": 15,
         "experience": 25,
         "difficulty": 1,
         "item": "tomato"
     },
 
-    "peach": {
+    "peachbush": {
+        "name": "Peach Bush",
         "levelRequirement": 5,
         "experience": 30,
         "difficulty": 1,
         "item": "peach"
+    },
+
+    "raspberrybush": {
+        "name": "Raspberry Bush",
+        "levelRequirement": 15,
+        "experience": 35,
+        "difficulty": 1,
+        "item": "raspberry"
+    },
+
+    "blackberrybush": {
+        "name": "Blackberry Bush",
+        "levelRequirement": 20,
+        "experience": 40,
+        "difficulty": 1,
+        "item": "blackberry"
+    },
+
+    "mustardbush": {
+        "name": "Mustard Bush",
+        "levelRequirement": 20,
+        "experience": 45,
+        "difficulty": 1,
+        "item": "mustardplant"
+    },
+
+    "paprikabush": {
+        "name": "Paprika Bush",
+        "levelRequirement": 25,
+        "experience": 50,
+        "difficulty": 1,
+        "item": "paprika"
+    },
+
+    "cuminbush": {
+        "name": "Cumin Bush",
+        "levelRequirement": 25,
+        "experience": 50,
+        "difficulty": 1,
+        "item": "cuminplant"
+    },
+
+    "treestump1": {
+        "name": "Tree Stump",
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 1,
+        "item": "dandelion"
     }
 }

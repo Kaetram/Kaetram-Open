@@ -1,12 +1,16 @@
 import { Opcodes } from '@kaetram/common/network';
-import { Bubble } from '@kaetram/common/network/impl';
+import { BubblePacket } from '@kaetram/common/network/impl';
 
 import type Player from '../../entity/character/player/player';
 
 export default class Sign {
     public instance; // Instance in this case are the object's coordinates.
 
-    public constructor(public x: number, public y: number, public text: string[]) {
+    public constructor(
+        public x: number,
+        public y: number,
+        public text: string[]
+    ) {
         this.instance = `${x}-${y}`;
     }
 
@@ -36,8 +40,9 @@ export default class Sign {
 
         // Send bubble packet to the player.
         player.send(
-            new Bubble(
+            new BubblePacket(
                 {
+                    instance: `${this.x}-${this.y}`,
                     x: this.x,
                     y: this.y,
                     text: message

@@ -4,5 +4,6 @@
     "tabWidth": 4,
     "singleQuote": true,
     "trailingComma": "none",
-    "endOfLine": "auto"
+    "endOfLine": "auto",
+    "overrides": [{ "files": "*.json", "options": { "printWidth": 120 } }]
 }

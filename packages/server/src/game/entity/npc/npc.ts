@@ -3,15 +3,15 @@ import Entity from '../entity';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
-import { NPC as NPCPacket } from '@kaetram/common/network/impl';
+import { NPCPacket } from '@kaetram/common/network/impl';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { SpecialEntityTypes } from '@kaetram/common/network/modules';
 
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type { NPCData } from '@kaetram/common/types/npc';
 import type Player from '../character/player/player';
+import type { NPCData } from '@kaetram/common/network/impl/npc';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
-interface RawData {
+interface RawNPCData {
     [key: string]: NPCData;
 }
 
@@ -28,7 +28,7 @@ export default class NPC extends Entity {
     public constructor(key: string, x: number, y: number) {
         super(Utils.createInstance(Modules.EntityType.NPC), key, x, y);
 
-        this.data = (rawData as RawData)[key];
+        this.data = (rawData as RawNPCData)[key];
 
         if (!this.data) {
             log.error(`[NPC] Could not find data for ${key}.`);
@@ -104,6 +104,23 @@ export default class NPC extends Entity {
     }
 
     /**
+     * Gets the exclamation sign that should be displayed above the NPC.
+     * @param player The player for which we are checking the NPC's status.
+     * @returns The string of the exclamation sign.
+     */
+
+    private getExclamation(player?: Player): string {
+        if (player) {
+            let quest = player.quests.getQuestFromNPC(this);
+
+            if (quest?.isNPCForStage(player, this)) return 'blue';
+            if (player?.achievements.getAchievementFromEntity(this)) return 'achievement';
+        }
+
+        return '';
+    }
+
+    /**
      * Grabs the display info for the NPC.
      * @param player Optional paramater to grab the display based on the player.
      * @returns An object containing display info data.
@@ -112,7 +129,8 @@ export default class NPC extends Entity {
     public override getDisplayInfo(player?: Player): EntityDisplayInfo {
         return {
             instance: this.instance,
-            colour: this.getNameColour(player)
+            colour: this.getNameColour(player),
+            exclamation: this.getExclamation(player)
         };
     }
 

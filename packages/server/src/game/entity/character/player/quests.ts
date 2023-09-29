@@ -1,13 +1,11 @@
 import QuestIndex from './quest/impl';
 
-import quests from '../../../../../data/quests.json';
-
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Quest as QuestPacket } from '@kaetram/common/network/impl';
+import { QuestPacket } from '@kaetram/common/network/impl';
 
-import type { PointerData } from '@kaetram/common/types/pointer';
+import type { PointerData } from '@kaetram/common/network/impl/pointer';
 import type { PopupData } from '@kaetram/common/types/popup';
-import type { QuestData, SerializedQuest } from '@kaetram/common/types/quest';
+import type { QuestData, SerializedQuest } from '@kaetram/common/network/impl/quest';
 import type Player from './player';
 import type Quest from './quest/quest';
 import type NPC from '../../npc/npc';
@@ -26,22 +24,16 @@ export default class Quests {
     private loadCallback?: () => void;
 
     public constructor(private player: Player) {
-        // Iterates through the raw quests in the JSON and creates an instance of them
-        for (let key in quests) {
-            // Checks if the JSON quest exists in our implementation.
-            if (!(key in QuestIndex)) continue;
-
-            // Create an instance and pass the quest data along.
-            let quest = new QuestIndex[key as keyof typeof QuestIndex](
-                key,
-                quests[key as keyof typeof quests]
-            );
+        // Iterates through the quest indices and initializes them.
+        for (let key in QuestIndex) {
+            let quest = new QuestIndex[key as keyof typeof QuestIndex](key);
 
             this.quests[key] = quest;
 
             quest.onProgress(this.handleProgress.bind(this));
             quest.onPointer(this.handlePointer.bind(this));
             quest.onPopup(this.handlePopup.bind(this));
+            quest.onStart((key: string) => this.handleInterface(key));
         }
     }
 
@@ -55,8 +47,15 @@ export default class Quests {
         for (let info of questInfo) {
             let quest = this.get(info.key);
 
-            // Set quest stage data without making a progress callback if it exists.
-            if (quest) quest.setStage(info.stage, info.subStage, false);
+            /**
+             * If the quest exists we set the stage without creating a callback (so we don't send anything
+             * to the player upon logging in). We also load the completed sub stages into the quest.
+             */
+
+            if (quest) {
+                quest.setStage(info.stage, info.subStage, false);
+                quest.setCompletedSubStages(info.completedSubStages);
+            }
         }
 
         // Trigger `loaded()` when we have no database information.
@@ -84,6 +83,9 @@ export default class Quests {
         // Update region when quest is completed.
         if (this.get(key).isFinished()) this.player.updateRegion();
 
+        // Stop skills when quest progress is made.
+        this.player.skills.stop();
+
         this.player.updateEntities();
         this.player.save();
     }
@@ -96,7 +98,7 @@ export default class Quests {
      */
 
     private handlePointer(pointer: PointerData): void {
-        this.player.pointer(pointer.type, pointer);
+        this.player.pointer(pointer);
     }
 
     /**
@@ -106,6 +108,17 @@ export default class Quests {
 
     private handlePopup(popup: PopupData): void {
         this.player.popup(popup.title, popup.text, popup.colour);
+    }
+
+    /**
+     * Handles displaying an interface with the quest start. This is an interface
+     * that the player must manually accept before starting the quest.
+     * @param key The key for which we want to display the interface for (used to extract the quest information
+     * on the client side (i.e. name, description, rewards, etc.))
+     */
+
+    private handleInterface(key: string): void {
+        this.player.send(new QuestPacket(Opcodes.Quest.Start, { key }));
     }
 
     /**
@@ -213,6 +226,18 @@ export default class Quests {
         if (this.isTutorialFinished()) return true;
 
         return !!this.get(Modules.Constants.TUTORIAL_QUEST_KEY)?.isCutTreeTask();
+    }
+
+    /**
+     * Similar to `canAttackInTutorial` but for fishing. We want to prevent
+     * people from sitting in the tutorial area and continuously fishing.
+     * @returns Whether or not the tutorial task is that of a fish task.
+     */
+
+    public canFishInTutorial(): boolean {
+        if (this.isTutorialFinished()) return true;
+
+        return !!this.get(Modules.Constants.TUTORIAL_QUEST_KEY)?.isFishingTask();
     }
 
     /**

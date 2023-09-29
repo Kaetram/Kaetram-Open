@@ -1,0 +1,25 @@
+name: Deploy to Development Server
+
+on:
+    push:
+        branches: [game-content, beta]
+
+jobs:
+    deploy:
+        defaults:
+            run:
+                shell: bash
+
+        runs-on: ubuntu-latest
+
+        environment: development
+
+        steps:
+            - name: Deploy to the development server
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.DEV_SERVER_HOST }}
+                  port: 22
+                  username: ${{ secrets.DEV_SERVER_USERNAME }}
+                  key: ${{ secrets.DEV_SERVER_KEY }}
+                  script: ${{ secrets.DEV_SERVER_SCRIPT }}

@@ -1,0 +1,76 @@
+{
+    "name": "Culinary Mysteries",
+    "description": "Chef Gustavo is known across the land for his delicious dishes. However, he's hit a roadblock trying to recreate a historic recipe. Can you help him solve this culinary conundrum?",
+    "rewards": ["Chef's Special Apron", "2500 Cooking experience"],
+    "skillRequirements": {
+        "cooking": 20
+    },
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "chefgustavo",
+            "text": [
+                "Ah, a fellow cooking enthusiast! I've recently discovered an ancient recipe",
+                "that I've been trying to recreate. But it's missing some ingredients.",
+                "The recipe calls for a rare Moonlit Mushroom. Would you be able to fetch it for me?"
+            ],
+            "completedText": [
+                "Have you found the Moonlit Mushroom?",
+                "It's crucial to the dish I'm trying to recreate."
+            ]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "chefgustavo",
+            "hasItemText": [
+                "Ah, the Moonlit Mushroom! Fantastic! But there's one more thing...",
+                "The recipe mentions a 'secret spice'. No one seems to know what it is.",
+                "However, old tales speak of a hermit living atop the snowy peaks who",
+                "might have knowledge about this. Could you consult him?"
+            ],
+            "itemRequirements": [
+                {
+                    "key": "moonlitmushroom",
+                    "count": 1
+                }
+            ]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "snowyhermit",
+            "text": [
+                "Ah, Chef Gustavo's 'secret spice'. It's not a spice at all!",
+                "It's the dried petal of a Frozen Rose, found deep within these mountains.",
+                "Retrieve it, and the recipe will be complete."
+            ],
+            "completedText": ["The Frozen Rose is a rare flower.", "Take care when searching for it."]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "chefgustavo",
+            "hasItemText": [
+                "The Frozen Rose petal! The final ingredient!",
+                "Now, watch as I create culinary history...",
+                "Thank you, dear adventurer. For your help, I bestow upon you",
+                "the Chef's Special Apron. May it aid you in all your culinary endeavors!"
+            ],
+            "itemRequirements": [
+                {
+                    "key": "frozenrosepetal",
+                    "count": 1
+                }
+            ],
+            "skillRewards": [
+                {
+                    "key": "cooking",
+                    "experience": 2500
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Culinary Mysteries@green@. You've been awarded @crimson@2500@green@ Cooking experience and a @crimson@Chef's Special Apron@green@!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+@use '../../abstracts/media';
+
+#lootbag {
+    display: none;
+}
+
+#lootbag-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    height: 100%;
+}
+
+#lootbag-items,
+#lootbag-inventory {
+    flex: 1;
+
+    ul {
+        overflow: hidden auto;
+        display: flex;
+        flex-flow: row wrap;
+        gap: 0.25em;
+        justify-content: space-between;
+
+        height: 100%;
+        padding-right: 0.25em;
+
+        list-style-type: none;
+    }
+}

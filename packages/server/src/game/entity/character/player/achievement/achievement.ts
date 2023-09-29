@@ -2,7 +2,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 
 import type { Modules } from '@kaetram/common/network';
-import type { AchievementData, RawAchievement } from '@kaetram/common/types/achievement';
+import type { AchievementData, RawAchievement } from '@kaetram/common/network/impl/achievement';
 import type { PopupData } from '@kaetram/common/types/popup';
 import type NPC from '../../../npc/npc';
 import type Mob from '../../mob/mob';
@@ -31,6 +31,7 @@ type KillCallback = (mob: Mob) => void;
 export default class Achievement {
     public name = '';
     private description = '';
+    private region = '';
     private hidden = false;
     public secret = false;
     private stage = 0; // Current stage of the achievement.
@@ -55,10 +56,14 @@ export default class Achievement {
     public talkCallback?: TalkCallback;
     public killCallback?: KillCallback;
 
-    public constructor(private key: string, rawData: RawAchievement) {
+    public constructor(
+        private key: string,
+        rawData: RawAchievement
+    ) {
         // Load all the data from the raw information.
         this.name = rawData.name;
         this.description = rawData.description || '';
+        this.region = rawData.region || '';
         this.hidden = !!rawData.hidden;
         this.secret = !!rawData.secret;
         this.npc = rawData.npc || '';
@@ -298,7 +303,8 @@ export default class Achievement {
         return {
             title: 'Achievement Completed!',
             text,
-            colour: '#33cc33'
+            colour: '#33cc33',
+            soundEffect: 'achievement'
         };
     }
 
@@ -319,9 +325,10 @@ export default class Achievement {
         if (withInfo) {
             data.name = this.getName();
             data.description = this.getDescription();
+            data.region = this.region;
             data.stageCount = this.stageCount;
 
-            // Only send secret achievement information if the achievemnet is secret.
+            // Only send secret achievement information if the achievement is secret.
             if (this.secret) data.secret = this.secret;
         }
 

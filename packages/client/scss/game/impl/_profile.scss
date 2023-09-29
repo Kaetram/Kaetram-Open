@@ -1,859 +1,215 @@
 @use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
-.page {
-    cursor: url('/img/hand.png'), auto;
-    user-select: none;
-}
+#profile-container {
+    right: 0.5em;
 
-#quest-list {
-    position: absolute;
-    top: 50%;
-    left: 8%;
-    overflow: auto;
-}
-
-#skills-list {
-    position: absolute;
-    overflow: auto;
-}
-
-#armour-slot-info {
-    text-align: right;
-}
-
-#arrows-count {
-    position: absolute;
-    font-family: AdvoCut, sans-serif;
-    color: white;
-    text-align: center;
-}
-
-#profile-info {
-    position: absolute;
-    display: none;
+    @media (--portrait) {
+        font-size: 0.875em;
+    }
 }
 
 #attack-style-list {
     display: flex;
-    gap: 6px;
+    flex-direction: row;
+    gap: 0.75em;
+    justify-content: space-evenly;
+
+    height: 3em;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+}
+
+#state-page,
+#skills-page,
+#abilities-page {
+    position: absolute;
+    inset: 0;
+
+    display: none;
+    flex-direction: row;
+    gap: 0.5em;
     align-items: center;
+
+    box-sizing: border-box;
+    height: 12em;
+    padding: 1.5em 1em 0.5em;
+}
+
+#profile-stats {
+    display: flex;
+    flex: 1;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: space-between;
+
+    #profile-level,
+    #profile-experience,
+    span {
+        font-size: 1.1em;
+    }
+
+    .button-row {
+        display: flex;
+        flex-direction: row;
+        gap: 0.55em;
+        justify-content: space-evenly;
+
+        width: 12em;
+    }
+}
+
+#profile-equipment-slots {
+    position: relative;
+    width: 10em;
+    height: 9.5em;
+
+    .equipment-slot {
+        position: absolute;
+        width: 2em;
+        height: 2em;
+        padding: 0.25em;
+
+        &-image {
+            width: 100%;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+    }
+
+    .equipment-slot-helmet {
+        left: 4em;
+    }
+
+    .equipment-slot-pendant {
+        top: 1.25em;
+        left: 0.25em;
+    }
+
+    .equipment-slot-arrows {
+        top: 1.25em;
+        left: 7.75em;
+    }
+
+    .equipment-slot-arrows-count {
+        position: absolute;
+        top: -1em;
+        left: 0;
+
+        width: 2em;
+
+        text-align: center;
+    }
+
+    .equipment-slot-chestplate {
+        top: 2.5em;
+        left: 2.75em;
+    }
+
+    .equipment-slot-weapon {
+        top: 2.5em;
+        left: 5.25em;
+    }
+
+    .equipment-slot-shield {
+        top: 3.75em;
+        left: 8em;
+    }
+
+    .equipment-slot-armour-skin {
+        top: 5em;
+        left: 2.75em;
+    }
+
+    .equipment-slot-weapon-skin {
+        top: 5em;
+        left: 5.25em;
+    }
+
+    .equipment-slot-ring {
+        top: 3.75em;
+    }
+
+    .equipment-slot-legplates {
+        top: 6.25em;
+        left: 0.25em;
+    }
+
+    .equipment-slot-cape {
+        top: 6.25em;
+        left: 7.75em;
+    }
+
+    .equipment-slot-boots {
+        top: 7.5em;
+        left: 4em;
+    }
+}
+
+#profile-navigator {
+    position: absolute;
+    bottom: 1em;
+    left: 0;
+
+    display: flex;
+    flex-direction: row;
     justify-content: center;
-}
 
-#guilds-button, #leaderboards-button {
-    position: absolute;
-}
-
-.profession-item {
     width: 100%;
-    height: 10%;
-    font-family: AdvoCut, sans-serif;
 }
 
-.profession-name {
-    z-index: 1;
-
-    float: left;
-
-    width: 98%;
-    margin-top: 3px;
-
-    font-size: 22px;
-    color: white;
-    text-align: center;
-
-    background-color: rgb(51 153 255 / 40%);
-    border: 2px solid #373737;
+@include sprite.sheet(
+    $image: 'characterdialogsheet',
+    $x: 384,
+    $y: 256,
+    $width: 23,
+    $height: 23,
+    $scale: 1.5,
+    $gap: 2,
+    $hover: 1,
+    $active: 2,
+    $selectors: '.attack-style-box'
+) {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 0.875em;
 }
 
-.profile-info {
-    position: absolute;
-    left: 24px;
-
-    width: 92px;
-    height: 12px;
-
-    font-family: AdvoCut, sans-serif;
-    font-size: 6px;
-    font-weight: bold;
-    line-height: 12px;
-    text-align: center;
-    text-shadow: 1px 1px #808080;
-}
-
-.profile-item-info {
-    pointer-events: none;
-
-    position: absolute;
-
-    font-family: AdvoCut, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.navigator {
-    position: absolute;
-    top: 89%;
-    left: 37%;
-}
-
-.skill-level,
-.skill-experience {
-    position: absolute;
-}
-
-.skill-level {
-    font-family: AdvoCut, sans-serif;
-    color: white;
-}
-
-.skill-experience {
-    background: linear-gradient(to left, #4f4, #080);
-    transition: 0.5s width ease;
-}
-
-.profile-info-title,
-.profile-info-details {
-    position: absolute;
-    font-family: AdvoCut, sans-serif;
-    color: #fff;
-}
-
-.attack-style {
-    position: absolute;
-}
-
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #state-page,
-        .state-page {
-            display: block;
-            background: url('/img/interface/characterdialogsheet.png') 0 0;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        #abilities-page {
-            display: none;
-            background: url('/img/interface/characterdialogsheet.png') -124px * $i 0;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        #settings-page {
-            display: none;
-            background: url('/img/interface/characterdialogsheet.png') -248px * $i 0;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        #quest-page {
-            display: none;
-            background: url('/img/interface/characterdialogsheet.png') -372px * $i 0;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        #guild-page {
-            display: none;
-            background: url('/img/interface/characterdialogsheet.png') -496px * $i 0;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        #skills-page {
-            display: none;
-            background: url('/img/interface/characterdialogsheet.png') -248px * $i -217px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        #profile-dialog,
-        .page {
-            position: absolute;
-            width: 124px * $i;
-            height: 217px * $i;
-        }
-
-        .profile-slot {
-            position: absolute;
-
-            width: 16px * $i;
-            height: 15px * $i;
-            margin-top: -2px * $i;
-
-            background-position: 0 0;
-            background-size: cover;
-        }
-
-        .profile-info {
-            position: absolute;
-            left: 24px * $i;
-
-            width: 92px * $i;
-            height: 12px * $i;
-
-            font-family: AdvoCut, sans-serif;
-            font-size: 6px * $i;
-            font-weight: bold;
-            line-height: 12px * $i;
-            text-align: center;
-            text-shadow: 1px 1px #808080;
-        }
-
-        #equipment-button {
-            position: absolute;
-            top: 59%;
-            right: 51px * $i;
-
-            width: 21px * $i;
-            height: 17px * $i;
-
-            background: url('/img/interface/characterdialogsheet.png') 0 -257px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        #equipment-button:hover {
-            background: url('/img/interface/characterdialogsheet.png') -42px * $i -257px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        #equipment-button:active,
-        #equipment-button.active {
-            background: url('/img/interface/characterdialogsheet.png') -21px * $i -257px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        #arrows-count {
-            top: 19px * $i;
-            left: 2px * $i;
-        }
-
-        #profile-level {
-            top: 8px * $i;
-        }
-
-        #profile-experience {
-            top: 29px * $i;
-        }
-
-        #guilds-button,
-        #leaderboards-button {
-            bottom: 8px * $i;
-        }
-
-        #guilds-button {
-            left: 6px * $i;
-        }
-
-        #leaderboards-button {
-            right: 6px * $i;
-        }
-
-        #guilds-button,
-        #leaderboards-button {
-            width: 14px * $i;
-            height: 15px * $i;
-
-            background: url('/img/interface/main.png') no-repeat;
-            background-position-y: -314px * $i;
-            background-size: calc(width('main.png') * $i);
-        }
-
-                #guilds-button {
-            background-position: -280px * $i -329px * $i;
-
-            &:hover {
-                background-position-x: -294px * $i;
-            }
-
-            &.active,
-            &:active {
-                background-position-x: -308px * $i;
-            }
-        }
-
-        #leaderboards-button {
-            background-position: -238px * $i -329px * $i;
-
-            &:hover {
-                background-position-x: -252px * $i;
-            }
-
-            &.active,
-            &:active {
-                background-position-x: -266px * $i;
-            }
-        }
-
-        .slot-background {
-            z-index: -1;
-            background: url('/img/interface/characterdialogsheet.png') -464px * $i -256px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .weapon-slot {
-            top: 128px * $i;
-            left: 4px * $i;
-        }
-
-        .weapon-skin-slot {
-            top: 128px * $i;
-            left: 28px * $i;
-        }
-
-        .armour-slot {
-            top: 128px * $i;
-            left: 104px * $i;
-        }
-
-        .armour-skin-slot {
-            top: 128px * $i;
-            left: 81px * $i;
-        }
-
-        .pendant-slot {
-            top: 86px * $i;
-            left: 28px * $i;
-        }
-
-        .ring-slot {
-            top: 174px * $i;
-            left: 27px * $i;
-        }
-
-        .boots-slot {
-            top: 174px * $i;
-            left: 80px * $i;
-        }
-
-        .arrows-slot {
-            top: 86px * $i;
-            left: 79px * $i;
-        }
-
-        .navigator {
-            width: 42px * $i;
-            height: 17px * $i;
-        }
-
-        .previous,
-        .next {
-            position: absolute;
-            top: 0;
-            left: initial;
-
-            width: 21px * $i;
-            height: 17px * $i;
-
-            background-image: url('/img/interface/characterdialogsheet.png');
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .previous {
-            cursor: pointer;
-            left: 0;
-            background-position: 0 -240px * $i;
-
-            &.disabled {
-                cursor: url('/img/hand.png'), auto;
-                background-position: 0 -223px * $i;
-            }
-        }
-
-        .next {
-            cursor: pointer;
-            left: 21px * $i;
-            background-position: -21px * $i -223px * $i;
-
-            &.disabled {
-                cursor: url('/img/hand.png'), auto;
-                background-position: -21px * $i -240px * $i;
-            }
-        }
-
-        #skills-list {
-            top: 16px * $i;
-            left: 12px * $i;
-            width: 106px * $i;
-            height: 170px * $i;
-        }
-
-        .skill {
-            width: 102px * $i;
-            height: 31px * $i;
-            padding-top: 3px * $i;
-
-            background: url('/img/interface/characterdialogsheet.png') -32px * $i -353px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-
-            &:hover {
-                background-position: -144px * $i -353px * $i;
-            }
-
-            &:active {
-                background-position: -144px * $i -400px * $i;
-            }
-        }
-
-        .skill-experience {
-            width: 64px * $i;
-            height: 1px * $i;
-            margin-top: 20px * $i;
-            margin-left: 28px * $i;
-        }
-
-        .skill-level {
-            margin-top: 6px * $i;
-            margin-left: 48px * $i;
-            font-size: 10px * $i;
-        }
-
-        .skill-image {
-            width: 16px * $i;
-            height: 16px * $i;
-            margin-top: 5px * $i;
-            margin-left: 8px * $i;
-        }
-
-        .skill-image-accuracy {
-            background: url('/img/interface/skills/accuracy.png');
-            background-size: calc(width('skills/accuracy.png') * $i);
-        }
-
-        .skill-image-archery {
-            background: url('/img/interface/skills/archery.png');
-            background-size: calc(width('skills/archery.png') * $i);
-        }
-
-        .skill-image-health {
-            background: url('/img/interface/skills/health.png');
-            background-size: calc(width('skills/health.png') * $i);
-        }
-
-        .skill-image-lumberjacking {
-            background: url('/img/interface/skills/lumberjacking.png');
-            background-size: calc(width('skills/lumberjacking.png') * $i);
-        }
-
-        .skill-image-magic {
-            background: url('/img/interface/skills/magic.png');
-            background-size: calc(width('skills/magic.png') * $i);
-        }
-
-        .skill-image-mining {
-            background: url('/img/interface/skills/mining.png');
-            background-size: calc(width('skills/mining.png') * $i);
-        }
-
-        .skill-image-strength {
-            background: url('/img/interface/skills/strength.png');
-            background-size: calc(width('skills/strength.png') * $i);
-        }
-
-        .skill-image-defense {
-            background: url('/img/interface/skills/defense.png');
-            background-size: calc(width('skills/defense.png') * $i);
-        }
-
-        .skill-image-fishing {
-            background: url('/img/interface/skills/fishing.png');
-            background-size: calc(width('skills/fishing.png') * $i);
-        }
-
-        .skill-image-smithing {
-            background: url('/img/interface/skills/smithing.png');
-            background-size: calc(width('skills/smithing.png') * $i);
-        }
-
-        .skill-image-cooking {
-            background: url('/img/interface/skills/cooking.png');
-            background-size: calc(width('skills/cooking.png') * $i);
-        }
-
-        .skill-image-fletching {
-            background: url('/img/interface/skills/fletching.png');
-            background-size: calc(width('skills/fletching.png') * $i);
-        }
-
-        .skill-image-crafting {
-            background: url('/img/interface/skills/crafting.png');
-            background-size: calc(width('skills/crafting.png') * $i);
-        }
-
-        .skill-image-foraging {
-            background: url('/img/interface/skills/foraging.png');
-            background-size: calc(width('skills/foraging.png') * $i);
-        }
-
-        .skill-image-eating {
-            background: url('/img/interface/skills/eating.png');
-            background-size: calc(width('skills/eating.png') * $i);
-        }
-
-        .skill-image-loitering {
-            background: url('/img/interface/skills/loitering.png');
-            background-size: calc(width('skills/loitering.png') * $i);
-        }
-
-        #achievement-count,
-        #quest-count {
-            width: 30px * $i;
-            height: 8px * $i;
-            font-size: 8px * $i;
-        }
-
-        .ability,
-        .ability-icon {
-            position: absolute;
-            display: none;
-            width: 16px * $i;
-            height: 16px * $i;
-        }
-
-        .ability-icon {
-            display: block;
-        }
-
-        .ability-icon-intimidate {
-            background-image: url('/img/interface/abilityicons.png');
-            background-position: 0 1px;
-            background-size: calc(width('abilityicons.png') * $i);
-        }
-
-        .ability-icon-run {
-            background-image: url('/img/interface/abilityicons.png');
-            background-position: -16px * $i 1px;
-            background-size: calc(width('abilityicons.png') * $i);
-        }
-
-        .ability-icon-awareness {
-            background-image: url('/img/interface/abilityicons.png');
-            background-position: -32px * $i 1px;
-            background-size: calc(width('abilityicons.png') * $i);
-        }
-
-        .ability-icon-dualistsmark {
-            background-image: url('/img/interface/abilityicons.png');
-            background-position: -48px * $i 1px;
-            background-size: calc(width('abilityicons.png') * $i);
-        }
-
-        .ability-icon-hotshot {
-            background-image: url('/img/interface/abilityicons.png');
-            background-position: -64px * $i 1px;
-            background-size: calc(width('abilityicons.png') * $i);
-        }
-
-        .ability-icon-thickskin {
-            background-image: url('/img/interface/abilityicons.png');
-            background-position: -80px * $i 1px;
-            background-size: calc(width('abilityicons.png') * $i);
-        }
-
-        .ability-icon-precognition {
-            background-image: url('/img/interface/abilityicons.png');
-            background-position: -96px * $i 1px;
-            background-size: calc(width('abilityicons.png') * $i);
-        }
-
-        .ability-icon-secretcalling {
-            background-image: url('/img/interface/abilityicons.png');
-            background-position: -112px * $i 1px;
-            background-size: calc(width('abilityicons.png') * $i);
-        }
-
-        .ability-icon-run,
-        .ability-icon-awareness,
-        .ability-icon-dualistsmark,
-        .ability-icon-hotshot,
-        .ability-icon-thickskin,
-        .ability-icon-precognition,
-        .ability-icon-secretcalling {
-            &:hover {
-                background-position-y: -15px * $i;
-            }
-
-            &:active,
-            &.active {
-                background-position-y: -30px * $i;
-            }
-        }
-
-        .ability-level {
-            position: absolute;
-
-            width: 5px * $i;
-            height: 6px * $i;
-            margin-top: 10px * $i;
-
-            background-image: url('/img/interface/characterdialogsheet.png');
-            background-position: -97px * $i -242px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .ability-level1 {
-            margin-left: 19px * $i;
-        }
-
-        .ability-level2 {
-            margin-left: 25px * $i;
-        }
-
-        .ability-level3 {
-            margin-left: 31px * $i;
-        }
-
-        .ability-level4 {
-            margin-left: 37px * $i;
-        }
-
-        // Active abilities
-
-        #activeability1 {
-            top: 16px * $i;
-            left: 14px * $i;
-        }
-
-        #activeability2 {
-            top: 16px * $i;
-            left: 70px * $i;
-        }
-
-        #activeability3 {
-            top: 36px * $i;
-            left: 14px * $i;
-        }
-
-        #activeability4 {
-            top: 36px * $i;
-            left: 70px * $i;
-        }
-
-        #activeability5 {
-            top: 56px * $i;
-            left: 14px * $i;
-        }
-
-        #activeability6 {
-            top: 56px * $i;
-            left: 70px * $i;
-        }
-
-        #activeability7 {
-            top: 76px * $i;
-            left: 14px * $i;
-        }
-
-        #activeability8 {
-            top: 76px * $i;
-            left: 70px * $i;
-        }
-
-        // Passive abilities
-
-        #passiveability1 {
-            top: 112px * $i;
-            left: 14px * $i;
-        }
-
-        #passiveability2 {
-            top: 112px * $i;
-            left: 70px * $i;
-        }
-
-        #passiveability3 {
-            top: 132px * $i;
-            left: 14px * $i;
-        }
-
-        #passiveability4 {
-            top: 132px * $i;
-            left: 70px * $i;
-        }
-
-        #passiveability5 {
-            top: 152px * $i;
-            left: 14px * $i;
-        }
-
-        #passiveability6 {
-            top: 152px * $i;
-            left: 70px * $i;
-        }
-
-        #passiveability7 {
-            top: 172px * $i;
-            left: 14px * $i;
-        }
-
-        #passiveability8 {
-            top: 172px * $i;
-            left: 70px * $i;
-        }
-
-        #profile-info {
-            top: 20px * $i;
-            right: 124px * $i;
-
-            width: 92px * $i;
-            height: 130px * $i;
-
-            background: url('/img/interface/characterdialogsheet.png') -528px * $i -304px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .profile-info-skill-image {
-            width: 16px * $i;
-            height: 16px * $i;
-            margin-top: 10px * $i;
-            margin-left: 9px * $i;
-        }
-
-        .profile-info-title {
-            top: 14px * $i;
-            left: 32px * $i;
-            font-size: 10px * $i;
-        }
-
-        .profile-info-details {
-            bottom: 6px * $i;
-            left: 6px * $i;
-
-            width: 84px * $i;
-            height: 72px * $i;
-
-            font-size: 10px * $i;
-            text-align: center;
-        }
-
-        #attack-style-list {
-            margin-top: 46px * $i;
-        }
-
-        .attack-style-box {
-            width: 23px * $i;
-            height: 31px * $i;
-            background: url('/img/interface/characterdialogsheet.png') -409px * $i -256px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-
-            &:hover {
-                background-position-x: -384px * $i;
-            }
-
-            &:active,
-            &.active {
-                background-position-x: -434px * $i;
-            }
-        }
-
-        .attack-style {
-            width: 17px * $i;
-            height: 17px * $i;
-            margin-top: 9px * $i;
-            margin-left: 3px * $i;
-        }
-
-        .attack-style-stab {
-            background: url('/img/interface/characterdialogsheet.png') -384px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .attack-style-slash {
-            background: url('/img/interface/characterdialogsheet.png') -403px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .attack-style-defensive {
-            background: url('/img/interface/characterdialogsheet.png') -422px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .attack-style-crush {
-            background: url('/img/interface/characterdialogsheet.png') -441px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .attack-style-shared {
-            background: url('/img/interface/characterdialogsheet.png') -460px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .attack-style-hack {
-            background: url('/img/interface/characterdialogsheet.png') -479px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .attack-style-chop {
-            background: url('/img/interface/characterdialogsheet.png') -498px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .attack-style-accurate {
-            background: url('/img/interface/characterdialogsheet.png') -517px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .attack-style-fast {
-            background: url('/img/interface/characterdialogsheet.png') -536px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .attack-style-focused {
-            background: url('/img/interface/characterdialogsheet.png') -555px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-
-        .attack-style-longrange {
-            background: url('/img/interface/characterdialogsheet.png') -574px * $i -224px * $i;
-            background-size: calc(width('characterdialogsheet.png') * $i);
-        }
-    }
-}
-
-@media (--lg) {
-    #profile-dialog {
-        right: 118px;
-        bottom: 68px;
-    }
-
-    .profile-item-info {
-        font-size: 24px;
-    }
-
-    .profession-name {
-        border-radius: 12px;
-    }
-}
-
-@media (--md) {
-    #profile-dialog {
-        right: 78px;
-        bottom: 48px;
-    }
-
-    .profile-item-info {
-        font-size: 18px;
-    }
-
-    .profession-name {
-        font-size: 20px;
-        border-radius: 8px;
-    }
-}
-
-@media (--sm) {
-    #profile-dialog {
-        right: 128px;
-        bottom: 99px;
-        transform: scale(1.5);
-    }
-
-    .profile-item-info {
-        font-size: 8px;
-    }
-
-    .profession-name {
-        font-size: 10px;
-        border: 1px solid #373737;
-        border-radius: 4px;
-    }
-
-    #arrows-count {
-        font-size: 8px;
-    }
-}
+@include sprite.sheet(
+    $image: 'characterdialogsheet',
+    $x: 384,
+    $y: 224,
+    $width: 17,
+    $height: 17,
+    $gap: 2,
+    $scale: 1.5,
+    $rows: false,
+    $selectors: (
+        '.attack-style-stab',
+        '.attack-style-slash',
+        '.attack-style-defensive',
+        '.attack-style-crush',
+        '.attack-style-shared',
+        '.attack-style-hack',
+        '.attack-style-chop',
+        '.attack-style-accurate',
+        '.attack-style-fast',
+        '.attack-style-focused',
+        '.attack-style-longrange'
+    )
+);
+
+@include sprite.sheet(
+    $image: 'characterdialogsheet',
+    $y: 223,
+    $width: 21,
+    $height: 17,
+    $rows: false,
+    $disabled: 1,
+    $selectors: (
+        '.previous',
+        '.next'
+    )
+);

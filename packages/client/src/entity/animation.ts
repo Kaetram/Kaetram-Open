@@ -1,4 +1,4 @@
-interface Frame {
+export interface Frame {
     index: number;
     x: number;
     y: number;
@@ -12,6 +12,7 @@ export default class Animation {
     public bopIndex = 0;
     public bopCount = 4; // Used for items bopping up and down.
     public decreaseBop = false;
+    public stopped = false;
 
     private lastTime = Date.now();
     private speed = 100;
@@ -24,7 +25,8 @@ export default class Animation {
         public length: number,
         public row: number,
         public width: number,
-        public height: number
+        public height: number,
+        private withStop = false
     ) {
         this.reset();
     }
@@ -58,6 +60,12 @@ export default class Animation {
 
             // Invoke the callback if we have finished playing the animation.
             if (this.count <= 0) this.endCallback?.();
+
+            // If stopped we pause on the last animation frame.
+            if (this.withStop) {
+                this.stopped = true;
+                return;
+            }
 
             return this.reset();
         }
@@ -108,7 +116,21 @@ export default class Animation {
      */
 
     private canAnimate(): boolean {
-        return Date.now() - this.lastTime > this.speed;
+        return Date.now() - this.lastTime > this.speed && !this.stopped;
+    }
+
+    /**
+     * Used by tree objects to select the correct animation frame when trying to use the
+     * base of the tree or the cut stump.
+     * @returns The second animation in the row.
+     */
+
+    public getSecondFrame(): Frame {
+        return {
+            index: 1,
+            x: this.width,
+            y: this.row * this.height
+        };
     }
 
     /**

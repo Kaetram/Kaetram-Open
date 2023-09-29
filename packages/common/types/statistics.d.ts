@@ -4,6 +4,7 @@ export interface StatisticsData {
     mobKills: { [key: string]: number };
     mobExamines: string[];
     resources: { [key: string]: number };
+    drops: { [key: string]: number };
 
     creationTime: number;
     totalTimePlayed: number;

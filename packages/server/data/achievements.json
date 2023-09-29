@@ -1,105 +1,88 @@
 {
-    
-
     "firstrock": {
         "name": "First Rock",
         "description": "Mine your first rock!"
     },
-
     "firstfish": {
         "name": "First Fish",
         "description": "Catch your first fish!"
     },
-
     "ratinfestation": {
         "name": "Generic Task 1",
         "description": "Bulk Bogan needs you to defeat 20 rats!",
-        "npc": "villager",
+        "region": "Mudwich",
+        "npc": "forestnpc",
         "dialogueHidden": [
-            "Hello there fellow adventurer!", 
-            "Please...", "Please help me with these rats!", 
+            "Hello there fellow adventurer!",
+            "Please...",
+            "Please help me with these rats!",
             "If you slay 20 of them, I'll su-",
-            "Reward you with something special!"],
-        "dialogueStarted": [
-            "Please, those rats are really annoying!",
-            "They won't let me be."
+            "Reward you with something special!"
         ],
-
+        "dialogueStarted": ["Please, those rats are really annoying!", "They won't let me be."],
         "mob": ["rat", "icerat"],
         "mobCount": 20,
-
         "rewardSkill": "strength",
         "rewardExperience": 369
     },
-
     "examiner10": {
         "name": "Examiner",
         "description": "Inspect 10 random things around the world."
     },
-
     "lumberjacking10": {
         "name": "Lumberjacker",
         "description": "Chop down 10 trees."
     },
-
     "mining10": {
         "name": "Miner Man",
         "description": "Acquire 10 rocks."
     },
-
     "fishing10": {
         "name": "Fisherman",
         "description": "Catch 10 fishies."
     },
-
     "boxingman": {
         "name": "Generic Task 2",
-        "description": "Talk to Mike Tyson in Mudwich about beating stuff up",
+        "description": "Talk to Bike Lyson in Mudwich about beating stuff up",
+        "region": "Mudwich",
         "npc": "boxingman",
         "dialogueHidden": [
             "Hey there, you look like you can take a punch!",
             "I'm looking for someone to beat up some stuff for me.",
             "If you go and beat up 25 snakes, I have a special reward for you!"
         ],
-
-        "dialogueStarted": [
-            "Beat up 25 sneks for me!",
-            "I'll show you something special if you do!"
-        ],
-
+        "dialogueStarted": ["Beat up 25 sneks for me!", "I'll show you something special if you do!"],
         "mob": ["snek"],
         "mobCount": 25,
-
         "rewardAbility": "run",
         "rewardSkill": "strength",
         "rewardExperience": 2000
     },
-
     "ahiddenpath": {
         "name": "Hidden Path",
-        "description": "Discover the hidden path in Mudwich."
+        "description": "Discover the hidden path.",
+        "region": "Mudwich"
     },
-
     "hiddenreward": {
         "name": "Hidden Reward",
-        "description": "Kill some secret spooky skeletons somewhere."
+        "description": "Kill some secret spooky skeletons somewhere.",
+        "region": "Mudwich"
     },
-
     "wormholes": {
         "name": "Wormholes",
         "description": "Investigate the spooky occurrence in Mudwich.",
+        "region": "Mudwich",
         "hidden": true,
         "rewardAbility": "precognition"
     },
-
     "ancientwizard": {
         "name": "Ancient Wizard",
         "description": "Defeat the ancient wizard in Mudwich!"
     },
-
     "crabproblem": {
-        "name": "Crab Problem",
+        "name": "Oh Crab!",
         "description": "Help Bubba by defeating 10 crabs!",
+        "region": "Mudwich",
         "hidden": true,
         "npc": "beachnpc",
         "dialogueHidden": [
@@ -108,53 +91,49 @@
             "I see you're pretty good with the killing stuff.",
             "Mind killing 10 crabs for me?"
         ],
-        "dialogueStarted": [
-            "C'mon man, please kill me 10 crabs."
-        ],
-
+        "dialogueStarted": ["C'mon man, please kill me 10 crabs."],
         "mob": ["crab", "hermitcrab"],
         "mobCount": 10,
-
         "rewardSkill": "accuracy",
         "rewardExperience": 696
     },
-
     "warriorcrab": {
         "name": "Warrior Crab",
-        "description": "Defeat the Hermit Crab Warrior hidden on the beach."
+        "description": "Defeat the Hermit Crab Warrior hidden on the beach.",
+        "region": "Mudwich"
     },
-
     "sandtreasure": {
         "name": "Sand Treasure",
-        "description": "Find the treasure hidden somewhere on the beach."
+        "description": "Find the treasure hidden somewhere on the beach.",
+        "region": "Mudwich"
     },
-
     "waterguardian": {
         "name": "Water Guardian",
         "description": "Defeat the Water Guardian!",
+        "region": "Mudwich",
         "hidden": true
     },
-
     "mermaidguard": {
         "name": "Mermaid Guard",
         "description": "Defeat the mermaid guarding the Sea Cucumber!",
+        "region": "Under the Sea",
         "hidden": true
     },
-
     "pirates": {
         "name": "Pirates",
-        "description": "There's skeleton pirates under the sea?"
+        "description": "There's skeleton pirates under the sea?",
+        "region": "Under the Sea"
     },
-
     "piratestreasure": {
         "name": "Pirate's Treasure",
         "description": "Find the treasure hidden in the pirate's ship.",
+        "region": "Under the Sea",
         "hidden": true
     },
-
     "zombielovers": {
         "name": "Zombie Lovers",
         "description": "The worried zombie girlfriend needs your help!",
+        "region": "Under the Sea",
         "npc": "zombiegf",
         "dialogueHidden": [
             "You! Please, you need to help me!",
@@ -163,285 +142,353 @@
             "Slay 20 of them just to make sure they're not my boyfriend.",
             "What? I gotta give you a task, isn't that why you talked to me?"
         ],
-        "dialogueStarted": [
-            "Please, slay 20 zombies for me!"
-        ],
-
+        "dialogueStarted": ["Please, slay 20 zombies for me!"],
         "mob": ["zombie"],
         "mobCount": 20,
-
         "rewardSkill": "strength",
         "rewardExperience": 4269
     },
-
     "babyseadragon": {
         "name": "Baby Sea Dragon",
-        "description": "Defeat the baby sea dragon guardian!"  
+        "description": "Defeat the baby sea dragon guardian!",
+        "region": "Under the Sea"
     },
-
     "underwatertreasure": {
         "name": "Water Chest",
-        "description": "Find the treasure hidden underwater."
+        "description": "Find the treasure hidden underwater.",
+        "region": "Under the Sea"
     },
-
     "patsow": {
         "name": "Patsow Pleateau",
         "description": "Arrive at Patsow plateau!",
+        "region": "Patsow",
         "hidden": true
     },
-
     "ogreguardian": {
         "name": "Ogre Guardian",
         "description": "Defeat the Ogre Guardian!",
+        "region": "Patsow",
         "rewardExperience": 1420
     },
-
     "pathofdeath": {
         "name": "Path of Death",
-        "description": "Defeat the ogre defending the ogre lord." ,
+        "description": "Defeat the ogre defending the ogre lord.",
+        "region": "Patsow",
         "hidden": true
     },
-
     "treadcarefully": {
         "name": "Tread Carefully",
         "description": "I literally said to tread carefully.",
+        "region": "Patsow",
         "hidden": true
     },
-
     "goldengolem": {
         "name": "Golden Golem",
-        "description": "Defeat the Golden Golem!"
+        "description": "Defeat the Golden Golem!",
+        "region": "Patsow"
     },
-
     "skeletonking": {
         "name": "Skeleton King",
         "description": "Defeat the Skeleton King!",
+        "region": "Patsow",
         "hidden": true,
-
         "rewardSkill": "strength",
         "rewardExperience": 12560
     },
-
     "ogrelord": {
         "name": "Ogre Lord",
         "description": "Defeat the Ogre Lord!",
+        "region": "Patsow",
         "hidden": true,
-
         "rewardSkill": "strength",
         "rewardExperience": 12560
     },
-
     "queenant": {
         "name": "Queen Ant",
         "description": "Defeat the Queen Ant!",
+        "region": "Crullfeld",
         "hidden": true,
-
         "rewardSkill": "health",
         "rewardExperience": 33560
     },
-
     "notwhatitseems": {
         "name": "Spooky Look-alike",
         "description": "Discover a mimic.",
         "hidden": true,
-
-        "rewardSkill": "magic",
-        "rewardExperience": 85
+        "rewardSkill": "health",
+        "rewardExperience": 240
     },
-
     "webdeveloper": {
         "name": "Web Developer",
-        "description": "Spiders are developing webs left and right!"
+        "description": "Spiders are developing webs left and right!",
+        "region": "Lakesworld"
     },
-
     "vulture": {
         "name": "Vulture",
         "description": "Defeat a vulture!",
+        "region": "Crullfeld",
         "hidden": true
     },
-
     "ogresgateway": {
         "name": "Ogre's Gateway",
-        "description": "Discover the secret portal after defeating ogres."
+        "description": "Discover the secret portal after defeating ogres.",
+        "region": "Crullfeld"
     },
-
     "frozentundra": {
         "name": "Frozen Tundra",
         "description": "Gain access to icelands by defeating the guardians.",
+        "region": "Lakesworld",
         "hidden": true
     },
-
     "iceworld": {
         "name": "Ice World",
         "description": "Gain access into the ice world!",
+        "region": "Yontil Pass",
         "hidden": true
     },
-
     "forestdragon": {
         "name": "Forest Dragon",
         "description": "Defeat the dragon laying dormant under Mudwich.",
+        "region": "Mudwich",
         "hidden": true,
-
         "rewardSkill": "health",
         "rewardExperience": 52600
     },
-
+    "getmaxlevel": {
+        "name": "Get Max Level!",
+        "description": "Receive max amount of experience if you talk to this inhabitant in hell.",
+        "region": "Kingdom of Kaetram",
+        "npc": "rick"
+    },
     "roadtohell": {
         "name": "Road to Hell",
         "description": "Defeat the Dark Wolf guarding the entrance to the Hellhound.",
+        "region": "Kingdom of Kaetram",
         "hidden": true,
-
         "rewardSkill": "health",
         "rewardExperience": 4000
     },
-
     "hellhound": {
         "name": "Hellhound",
         "description": "Defeat the hellhound in the hell dungeon!",
+        "region": "Kingdom of Kaetram",
         "hidden": true,
-
         "rewardSkill": "strength",
         "rewardExperience": 25600
     },
-
     "miniemperor": {
         "name": "Mini Emperor",
         "description": "Defeat the mini emperor in the mini knight's land!",
+        "region": "Chymos",
         "hidden": true,
-
         "rewardSkill": "loitering",
         "rewardExperience": 3000
     },
-
     "examiner25": {
         "name": "Examiner",
         "description": "Inspect 25 random things around the world.",
         "secret": true
     },
-
     "examiner50": {
         "name": "Examiner",
         "description": "Inspect 50 random things around the world.",
         "secret": true
     },
-
     "lumberjacking50": {
         "name": "Lumberjacker",
         "description": "Cut down 50 trees.",
         "secret": true
     },
-
     "lumberjacking100": {
         "name": "Lumberjacker",
         "description": "Cut down 100 trees.",
         "secret": true
     },
-
     "lumberjacking500": {
         "name": "Lumberjacker",
         "description": "Cut down 500 trees.",
         "secret": true
     },
-
     "lumberjacking1000": {
         "name": "Lumberjacker",
         "description": "Cut down 1000 trees.",
         "secret": true
     },
-
     "lumberjacking5000": {
         "name": "Lumberjacker",
         "description": "Cut down 5000 trees.",
         "secret": true
     },
-
     "lumberjacking10000": {
         "name": "Lumberjacker",
         "description": "Cut down 10000 trees.",
         "secret": true
     },
-
     "mining50": {
         "name": "Miner Man",
         "description": "Acquire 50 ores.",
         "secret": true
     },
-
     "mining100": {
         "name": "Miner Man",
         "description": "Acquire 100 ores.",
         "secret": true
     },
-
     "mining500": {
         "name": "Miner Man",
         "description": "Acquire 500 ores.",
         "secret": true
     },
-
     "mining1000": {
         "name": "Miner Man",
         "description": "Acquire 1000 ores.",
         "secret": true
     },
-
     "mining5000": {
         "name": "Miner Man",
         "description": "Acquire 5000 ores.",
         "secret": true
     },
-
     "mining10000": {
         "name": "Miner Man",
         "description": "Acquire 10000 ores.",
         "secret": true
     },
-
     "fishing50": {
         "name": "Fisherman",
         "description": "Catch 50 fishies.",
         "secret": true
     },
-
     "fishing100": {
         "name": "Fisherman",
         "description": "Catch 100 fishies.",
         "secret": true
     },
-
     "fishing500": {
         "name": "Fisherman",
         "description": "Catch 500 fishies.",
         "secret": true
     },
-
     "fishing1000": {
         "name": "Fisherman",
         "description": "Catch 1000 fishies.",
         "secret": true
     },
-
     "fishing5000": {
         "name": "Fisherman",
         "description": "Catch 5000 fishies.",
         "secret": true
     },
-
     "fishing10000": {
         "name": "Fisherman",
         "description": "Catch 10000 fishies.",
         "secret": true
     },
-
     "gravemystery": {
         "name": "Grave Mystery",
         "description": "Discovered a cryptic set of gravestones.",
         "secret": true
     },
-
     "kaetramdungeon": {
         "name": "Kaetram's Dungeon",
         "description": "Discovered the secret ladder to enter Kaetram's dungeon!",
+        "secret": true
+    },
+
+    "masterofcrafts": {
+        "name": "Master of Crafts",
+        "description": "Craft 100 items.",
+        "secret": true
+    },
+    "gildedhands": {
+        "name": "Gilded Hands",
+        "description": "Craft 500 gold items.",
+        "secret": true
+    },
+    "traveller15": {
+        "name": "Globe Trotter",
+        "description": "Travel to 15 different locations.",
+        "secret": true
+    },
+    "traveller50": {
+        "name": "Seasoned Explorer",
+        "description": "Travel to 50 different locations.",
+        "secret": true
+    },
+    "treasurehunter": {
+        "name": "Treasure Hunter",
+        "description": "Find 50 hidden treasures.",
+        "secret": true
+    },
+    "cultbuster": {
+        "name": "Cult Buster",
+        "description": "Disband 5 dark cults.",
+        "region": "Hellgate Marsh"
+    },
+    "darkruins": {
+        "name": "Ruins Explorer",
+        "description": "Discover the ancient ruins of Zanrik.",
+        "region": "Zanrik Plains"
+    },
+    "arenamaster": {
+        "name": "Arena Master",
+        "description": "Win 20 arena battles.",
+        "secret": true
+    },
+    "potionmaster": {
+        "name": "Potion Master",
+        "description": "Craft 1000 potions.",
+        "secret": true
+    },
+    "bookworm": {
+        "name": "Bookworm",
+        "description": "Read 100 books in the world.",
+        "secret": true
+    },
+    "ancientsecrets": {
+        "name": "Ancient Secrets",
+        "description": "Decipher 5 ancient scrolls.",
+        "region": "Valus Temples",
+        "hidden": true
+    },
+    "darkhorse": {
+        "name": "Dark Horse",
+        "description": "Tame the elusive Shadowmare.",
+        "region": "Mystic Woods"
+    },
+    "merchantprince": {
+        "name": "Merchant Prince",
+        "description": "Trade goods worth 100,000 gold coins.",
+        "secret": true
+    },
+    "merchantlord": {
+        "name": "Merchant Lord",
+        "description": "Trade goods worth 1,000,000 gold coins.",
+        "secret": true
+    },
+    "craigslist": {
+        "name": "Craigslist",
+        "description": "Trade with 10 different players.",
+        "secret": true
+    },
+    "socialite": {
+        "name": "Socialite",
+        "description": "Interact with 500 different players.",
+        "secret": true
+    },
+    "errandboy": {
+        "name": "Errand Boy",
+        "description": "Complete 10 quests.",
+        "secret": true
+    },
+    "questmaster": {
+        "name": "Quest Master",
+        "description": "Complete all quests in Kaetram.",
+        "secret": true
+    },
+    "dungeoncrawler": {
+        "name": "Dungeon Crawler",
+        "description": "Complete 50 different dungeons.",
         "secret": true
     }
 }

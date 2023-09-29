@@ -8,6 +8,8 @@ import type Player from './character/player/player';
 import type Item from './objects/item';
 import type Sprite from './sprite';
 import type Pet from './character/pet/pet';
+import type Projectile from './objects/projectile';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 export default abstract class Entity {
     public x = 0;
@@ -38,15 +40,21 @@ export default abstract class Entity {
 
     public animation!: Animation | null;
 
+    public offsetY = 0; // Used for manually offsetting the entity itself.
     public shadowOffsetY = 0;
     public hidden = false;
 
     private visible = true;
 
+    // Exclamation points display above.
+    public exclamation = false;
+    public blueExclamation = false;
+
     public fading = false;
+    public hurt = false;
+    public silhouette = false;
 
     public angle = 0;
-    public angled = false;
 
     // Counter variables
     public counter = 0;
@@ -58,10 +66,6 @@ export default abstract class Entity {
     public fadingTime!: number;
     private blinking!: number;
 
-    public normalSprite!: Sprite;
-    public hurtSprite!: Sprite;
-    public silhouetteSprite!: Sprite;
-
     public ready = false;
 
     public hitPoints = 0;
@@ -72,14 +76,17 @@ export default abstract class Entity {
     public experience = 0;
     public teleporting = false;
     public pvp = false;
-    public nameColour!: string;
+    public nameColour = '';
     public customScale!: number;
-    public fadingAlpha!: number;
+    public fadingAlpha = 0;
     public lastUpdate = Date.now();
 
     public counterInterval!: NodeJS.Timeout | undefined;
 
-    public constructor(public instance = '', public type: Modules.EntityType) {}
+    public constructor(
+        public instance = '',
+        public type: Modules.EntityType
+    ) {}
 
     /**
      * Fades in the entity when spawning in.
@@ -130,14 +137,54 @@ export default abstract class Entity {
     }
 
     /**
-     * Updates the entity's silhouette sprite.
-     * @param active Whether or not to show the silhouette.
+     * Updates the current state of the silhouette sprite. If the silhouette sprite doesn't exist
+     * we attempt to load it.
+     * @param state The new state to set the silhouette sprite to, defaults to false.
      */
 
-    public updateSilhouette(active = false): void {
-        if (!this.silhouetteSprite) return;
+    public updateSilhouette(state = false): void {
+        if (this.dead || this.teleporting) {
+            this.silhouette = false;
+            return;
+        }
 
-        this.sprite = active ? this.silhouetteSprite : this.normalSprite;
+        // Attempt to load the silhouette if it doesn't exist.
+        if (state && this.sprite.hasSilhouette() && !this.sprite.silhouetteSprite)
+            this.sprite.loadSilhouetteSprite();
+
+        this.silhouette = state;
+    }
+
+    /**
+     * Updates the display info for the entity. This essentially adds minor
+     * decorations to the entity's name colour, scaling, and whether or not
+     * they have additional markings above their head.
+     * @param displayInfo Contains the display info data to update.
+     */
+
+    public updateDisplayInfo(displayInfo: EntityDisplayInfo): void {
+        if (displayInfo.colour) this.nameColour = displayInfo.colour;
+        if (displayInfo.scale) this.customScale = displayInfo.scale;
+
+        // Display the exclamations if they're set onto the entity.
+        if (displayInfo.exclamation === 'achievement') this.exclamation = true;
+        else if (displayInfo.exclamation === 'blue') this.blueExclamation = true;
+    }
+
+    /**
+     * Grabs the currently active sprite based on the effects. This is used
+     * for when we want to display a silhouette or a hurt sprite.
+     * @returns The currently active
+     */
+
+    public getSprite(): Sprite {
+        // Display the hurt sprite if the entity has one.
+        if (this.hurt && this.sprite.hurtSprite) return this.sprite.hurtSprite;
+
+        // Display the silhouette sprite if the entity has one.
+        if (this.silhouette && this.sprite.silhouetteSprite) return this.sprite.silhouetteSprite;
+
+        return this.sprite;
     }
 
     /**
@@ -146,6 +193,8 @@ export default abstract class Entity {
      */
 
     public setSprite(sprite: Sprite): void {
+        if (this.teleporting) return;
+
         // Load the sprite if it hasn't been loaded yet.
         if (!sprite.loaded) {
             sprite.load();
@@ -155,30 +204,8 @@ export default abstract class Entity {
         }
 
         this.sprite = sprite;
-        this.normalSprite = sprite;
-
-        /**
-         * Attempt to reload the sprite if it's still loading, we do this
-         * because we want all elements of the sprite (hurt sprite, silhouette)
-         * to be fully loaded and then apply them to the entity.
-         */
-
-        if (sprite.loading) {
-            setTimeout(() => this.setSprite(sprite), 100);
-            return;
-        }
-
-        // Load the hurt and silhouette sprites if they exist.
-        if (sprite.hurtSprite) this.hurtSprite = sprite.hurtSprite;
-        if (sprite.silhouetteSprite) this.silhouetteSprite = sprite.silhouetteSprite;
 
         sprite.onLoad(() => {
-            this.normalSprite = sprite;
-
-            // Load the hurt and silhouette sprites if they exist.
-            if (sprite.hurtSprite) this.hurtSprite = sprite.hurtSprite;
-            if (sprite.silhouetteSprite) this.silhouetteSprite = sprite.silhouetteSprite;
-
             // Custom scales can be applied to certain entities.
             if (!this.customScale) return;
 
@@ -199,7 +226,8 @@ export default abstract class Entity {
         name: string,
         speed = this.sprite.idleSpeed,
         count = 1,
-        onEndCount?: () => void
+        onEndCount?: () => void,
+        withStop = false
     ): void {
         // Prevent setting animation if no sprite or it's the same animation.
         if (this.animation?.name === name) return;
@@ -208,7 +236,7 @@ export default abstract class Entity {
         let { length, row, width, height } = this.sprite.animations[name];
 
         // Create a new animation instance to prevent pointer issues.
-        this.animation = new Animation(name, length, row, width, height);
+        this.animation = new Animation(name, length, row, width, height, withStop);
 
         // Restart the attack animation if it's already playing.
         if (name.startsWith('atk')) this.animation.reset();
@@ -271,7 +299,7 @@ export default abstract class Entity {
      * @param visible New visibility value.
      */
 
-    private setVisible(visible: boolean): void {
+    public setVisible(visible: boolean): void {
         this.visible = visible;
     }
 
@@ -288,12 +316,18 @@ export default abstract class Entity {
     }
 
     /**
-     * Returns the angle of the entity in radians.
-     * @returns Angle number value.
+     * Extracts the bounding rectangle box for the entity. We use this to determine the centre
+     * point for the sprite for either debugging or when detecting mouse interaction.
+     * @returns A rectangle that contains the bounding box of the entity.
      */
 
-    public getAngle(): number {
-        return this.angle;
+    public getBoundingBox(): Rectangle {
+        return {
+            x: this.x + this.sprite.offsetX / 2,
+            y: this.y + this.sprite.offsetY / 2,
+            width: this.sprite.width + this.sprite.offsetX,
+            height: this.sprite.height + this.sprite.offsetY
+        };
     }
 
     /**
@@ -334,11 +368,11 @@ export default abstract class Entity {
     }
 
     /**
-     * Default implementation for medal.
+     * Default implementation for crown.
      * @returns Defaults to false.
      */
 
-    public hasMedal(): boolean {
+    public hasCrown(): boolean {
         return false;
     }
 
@@ -395,7 +429,7 @@ export default abstract class Entity {
      * @returns Whether or not the entity is a projectile type.
      */
 
-    public isProjectile(): boolean {
+    public isProjectile(): this is Projectile {
         return this.type === Modules.EntityType.Projectile;
     }
 
@@ -413,6 +447,58 @@ export default abstract class Entity {
 
     public isObject(): boolean {
         return this.type === Modules.EntityType.Object;
+    }
+
+    /**
+     * @returns Whether or not the entity is a tree type.
+     */
+
+    public isTree(): boolean {
+        return this.type === Modules.EntityType.Tree;
+    }
+
+    /**
+     * @returns Whether or not the entity is a rock type.
+     */
+
+    public isRock(): boolean {
+        return this.type === Modules.EntityType.Rock;
+    }
+
+    /**
+     * @returns Whether or not the entity is a fish spot type.
+     */
+
+    public isFishSpot(): boolean {
+        return this.type === Modules.EntityType.FishSpot;
+    }
+
+    /**
+     * @returns Whether or not the entity is a foraging type.
+     */
+
+    public isForaging(): boolean {
+        return this.type === Modules.EntityType.Foraging;
+    }
+
+    /**
+     * We use this to determine the drawing context for rocks and foraging spots since
+     * they may be taking up more than a tile vertically.
+     * @returns Whether the entity is a rock, a fishing spot or a foraging spot.
+     */
+
+    public isNonTreeResource(): boolean {
+        return this.isRock() || this.isForaging();
+    }
+
+    /**
+     * Used for unifying multiple resources into one function. Things
+     * like trees, rocks, and bushes are all considered resources.
+     * @returns Whether or not the entity is a tree, a rock, or a bush.
+     */
+
+    public isResource(): boolean {
+        return this.isTree() || this.isRock() || this.isFishSpot() || this.isForaging();
     }
 
     /**

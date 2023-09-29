@@ -1,8 +1,7 @@
-@use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
-#map-frame {
+@include sprite.sheet($image: 'mapframe', $scale: 1.5, $selectors: #map-frame) {
     pointer-events: auto;
-    cursor: url('/img/hand.png'), auto;
 
     position: absolute;
     z-index: 100;
@@ -20,103 +19,65 @@
     background-position-y: 0;
 }
 
-#close-map-frame {
-    top: 0;
-    left: 95%;
-}
-
 .warp-button {
     position: absolute;
 }
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #warp0 {
-            top: 40px * $i;
-            left: 120px * $i;
-            background: url('/img/interface/mapicons.png') 0 0;
-            background-size: calc(width('mapicons.png') * $i);
-        }
-
-        #warp1 {
-            top: 55px * $i;
-            left: 25px * $i;
-            background: url('/img/interface/mapicons.png') -75px * $i 0;
-            background-size: calc(width('mapicons.png') * $i);
-        }
-
-        #warp2 {
-            top: 70px * $i;
-            left: 175px * $i;
-            background: url('/img/interface/mapicons.png') -60px * $i 0;
-            background-size: calc(width('mapicons.png') * $i);
-        }
-
-        #warp3 {
-            top: 120px * $i;
-            left: 135px * $i;
-            background: url('/img/interface/mapicons.png') -45px * $i 0;
-            background-size: calc(width('mapicons.png') * $i);
-        }
-
-        #warp4 {
-            top: 120px * $i;
-            left: 75px * $i;
-            background: url('/img/interface/mapicons.png') -30px * $i 0;
-            background-size: calc(width('mapicons.png') * $i);
-        }
-
-        #warp5 {
-            top: 140px * $i;
-            left: 20px * $i;
-            background: url('/img/interface/mapicons.png') -90px * $i 0;
-            background-size: calc(width('mapicons.png') * $i);
-        }
-
-        #warp6 {
-            top: 80px * $i;
-            left: 90px * $i;
-            background: url('/img/interface/mapicons.png') 77px * $i 0;
-            background-size: calc(width('mapicons.png') * $i);
-        }
-
+@include sprite.sheet(
+    $image: 'mapicons',
+    $width: 16,
+    $height: 16,
+    $hover: 1,
+    $active: 2,
+    $rows: false,
+    $selectors: (
         #warp0,
         #warp1,
         #warp2,
         #warp3,
         #warp4,
         #warp5,
-        #warp6 {
-            &:hover {
-                background-position-y: -20px * $i;
-            }
+        #warp6
+    )
+);
 
-            &:active {
-                background-position-y: -40px * $i;
-            }
-        }
-
-        #map-frame {
-            width: 270px * $i;
-            height: 180px * $i;
-            background-image: url('/img/interface/mapframe.png');
-            background-size: calc(width('mapframe.png') * $i);
-        }
-
-        .map-button {
-            width: 15px * $i;
-            height: 16px * $i;
-        }
-    }
+#warp0 {
+    top: 3.75em;
+    left: 11.25em;
 }
 
-@media (--sm) {
-    #map-frame {
-        transform: scale(1.6);
-    }
+#warp1 {
+    top: 5.15625em;
+    left: 2.34375em;
+}
 
-    #close-map-frame {
-        top: -6px;
-        left: 90%;
+#warp2 {
+    top: 6.5625em;
+    left: 16.40625em;
+}
+
+#warp3 {
+    top: 11.25em;
+    left: 12.65625em;
+}
+
+#warp4 {
+    top: 11.25em;
+    left: 7.03125em;
+}
+
+#warp5 {
+    top: 13.125em;
+    left: 1.875em;
+}
+
+#warp6 {
+    top: 7.5em;
+    left: 8.4375em;
+}
+
+@media (--portrait) {
+    #map-frame {
+        font-size: 0.875em;
     }
 }

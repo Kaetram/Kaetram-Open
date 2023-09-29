@@ -3,8 +3,8 @@ import HUDController from './hud';
 
 import Animation from '../entity/animation';
 import log from '../lib/log';
-import { isMobile } from '../utils/detect';
 import Character from '../entity/character/character';
+import { isMobile } from '../utils/detect';
 
 import { Modules, Packets, Opcodes } from '@kaetram/common/network';
 
@@ -21,6 +21,11 @@ import type Map from '../map/map';
 import type Trade from '../menu/trade';
 import type Leaderboards from '../menu/leaderboards';
 import type Guilds from '../menu/guilds';
+import type Tree from '../entity/objects/resource/impl/tree';
+import type Rock from '../entity/objects/resource/impl/rock';
+import type FishSpot from '../entity/objects/resource/impl/fishspot';
+import type Foraging from '../entity/objects/resource/impl/foraging';
+import type Store from '../menu/store';
 
 interface TargetData {
     sprite: Sprite;
@@ -45,10 +50,12 @@ export default class InputController {
     private trade: Trade;
     private leaderboards: Leaderboards;
     private guilds: Guilds;
+    private store: Store;
 
     public selectedCellVisible = false;
     public keyMovement = false;
     public targetVisible = true;
+    public isOnCanvas = false;
     public selectedX = -1;
     public selectedY = -1;
 
@@ -69,7 +76,7 @@ export default class InputController {
      */
     public chatHandler: Chat;
     public hud: HUDController;
-    public targetAnimation: Animation = new Animation('move', 4, 0, 16, 16);
+    public targetAnimation: Animation = new Animation('move', 2, 0, 16, 16);
 
     public entity: Entity | undefined;
     public interactEntity: Entity | undefined; // Used to store entity while the interact menu is active.
@@ -85,6 +92,7 @@ export default class InputController {
         this.trade = game.menu.getTrade();
         this.leaderboards = game.menu.getLeaderboards();
         this.guilds = game.menu.getGuilds();
+        this.store = game.menu.getStore();
 
         this.chatHandler = new Chat(game);
         this.hud = new HUDController(this);
@@ -98,6 +106,8 @@ export default class InputController {
         //this.app.onKeyDown(this.handle.bind(this));
         this.app.onMouseMove((event: MouseEvent) => {
             if (!this.game.started) return;
+
+            this.isOnCanvas = event.target instanceof HTMLCanvasElement;
 
             this.setCoords(event);
             this.moveCursor();
@@ -130,6 +140,8 @@ export default class InputController {
         this.cursors.cooking = this.game.sprites.get('cursors/cooking');
         this.cursors.fishing = this.game.sprites.get('cursors/fishing');
         this.cursors.smithing = this.game.sprites.get('cursors/smithing');
+        this.cursors.smelting = this.game.sprites.get('cursors/smelting');
+        this.cursors.chiseling = this.game.sprites.get('cursors/chiseling');
         this.cursors.crafting = this.game.sprites.get('cursors/crafting');
         this.cursors.foraging = this.game.sprites.get('cursors/foraging');
 
@@ -147,6 +159,7 @@ export default class InputController {
 
         this.keyMovement = false;
         this.player.disableAction = false;
+        this.player.joystickMovement = false;
 
         // Admin command for teleporting to a location.
         if (this.isCtrlKey())
@@ -187,6 +200,10 @@ export default class InputController {
      */
 
     private handleKeyDown(event: KeyboardEvent): void {
+        // Redirect input to the store handler if the store is visible.
+        if (this.store.isVisible()) return this.store.keyDown(event.key);
+
+        // Redirect input to the guilds handler if the guilds are visible.
         if (this.guilds.isVisible()) return this.guilds.keyDown(event.key);
 
         // Redirect input to the leaderboards handler if the leaderboards are visible.
@@ -208,6 +225,7 @@ export default class InputController {
 
         switch (event.key) {
             case 'w':
+            case 'W':
             case 'ц':
             case 'ArrowUp': {
                 this.player.moveUp = true;
@@ -215,6 +233,7 @@ export default class InputController {
             }
 
             case 'a':
+            case 'A':
             case 'ф':
             case 'ArrowLeft': {
                 this.player.moveLeft = true;
@@ -222,6 +241,7 @@ export default class InputController {
             }
 
             case 's':
+            case 'S':
             case 'ы':
             case 'ArrowDown': {
                 this.player.moveDown = true;
@@ -229,6 +249,7 @@ export default class InputController {
             }
 
             case 'd':
+            case 'D':
             case 'в':
             case 'ArrowRight': {
                 this.player.moveRight = true;
@@ -265,7 +286,7 @@ export default class InputController {
 
                 if (!target) return;
 
-                this.setAttackTarget();
+                this.setInteractionTarget();
                 this.setPosition(target.gridX, target.gridY);
 
                 this.player.follow(target);
@@ -399,6 +420,7 @@ export default class InputController {
         if (this.player.hasPath()) return;
 
         this.keyMovement = true;
+        this.player.joystickMovement = false;
 
         this.move(position);
     }
@@ -411,7 +433,7 @@ export default class InputController {
      * @param position The grid coordinates of the position we're requesting.
      */
 
-    private move(position: Coordinate, useSearch = !this.keyMovement): void {
+    public move(position: Coordinate, useSearch = !this.keyMovement): void {
         if (this.player.stunned || this.player.teleporting) return;
 
         // Default the target to the passive one.
@@ -430,8 +452,11 @@ export default class InputController {
         this.game.menu.hide();
 
         // Handle object interaction.
-        if (this.game.map.isObject(position.gridX, position.gridY))
+        if (this.game.map.isObject(position.gridX, position.gridY)) {
+            this.setInteractionTarget();
+
             return this.player.setObjectTarget(position);
+        }
 
         // Remove player's targets prior to an action.
         this.player.removeTarget();
@@ -439,21 +464,32 @@ export default class InputController {
         // Handle NPC interaction.
         this.entity = this.getEntity(position, useSearch);
 
-        if (this.entity && this.entity.instance !== this.player.instance) {
-            this.setAttackTarget();
+        // Check that the entity exists and we're not targeting ourselves.
+        if (this.entity && this.entity?.instance !== this.player.instance) {
+            // Attack target if we're interacting with a mob or a player in a PVP area.
+            if (this.entity.isMob() || (this.entity.isPlayer() && !this.entity.pvp))
+                this.setAttackTarget();
+            else this.setInteractionTarget();
 
             // Set target and follow a targetable entity.
             if (this.isTargetable(this.entity)) {
                 this.player.follow(this.entity);
 
-                if (this.isAttackable(this.entity))
+                // This is to initiate the attack if we're within the range of the target.
+                if (this.isAttackable(this.entity)) {
                     (this.entity as Character).addAttacker(this.player);
 
-                if (this.player.isRanged())
-                    this.game.socket.send(Packets.Target, [
-                        Opcodes.Target.Attack,
-                        this.entity.instance
-                    ]);
+                    // Update the last target to the last clicked attackable entity.
+                    this.player.lastTarget = this.entity.instance;
+
+                    if (this.player.canAttackTarget())
+                        this.game.socket.send(Packets.Target, [
+                            Opcodes.Target.Attack,
+                            this.entity.instance,
+                            this.entity.gridX,
+                            this.entity.gridY
+                        ]);
+                }
                 return;
             }
         }
@@ -474,6 +510,9 @@ export default class InputController {
 
     public moveCursor(): void {
         if (isMobile()) return;
+
+        // If the cursor is not on the canvas, we default to the hand cursor.
+        if (!this.isOnCanvas) return this.setCursor(this.cursors.hand);
 
         let position = this.getCoords(),
             entity = this.game.searchForEntityAt(position);
@@ -532,6 +571,41 @@ export default class InputController {
                 break;
             }
 
+            case Modules.EntityType.Tree: {
+                if ((entity as Tree).exhausted) return;
+
+                this.setCursor(this.cursors.axe);
+                this.hovering = Modules.Hovering.Tree;
+                break;
+            }
+
+            case Modules.EntityType.Rock: {
+                if ((entity as Rock).exhausted) return;
+
+                this.setCursor(this.cursors.pickaxe);
+                this.hovering = Modules.Hovering.Rock;
+
+                break;
+            }
+
+            case Modules.EntityType.FishSpot: {
+                if ((entity as FishSpot).exhausted) return;
+
+                this.setCursor(this.cursors.fishing);
+                this.hovering = Modules.Hovering.FishSpot;
+
+                break;
+            }
+
+            case Modules.EntityType.Foraging: {
+                if ((entity as Foraging).exhausted) return;
+
+                this.setCursor(this.cursors.foraging);
+                this.hovering = Modules.Hovering.Foraging;
+
+                break;
+            }
+
             case Modules.EntityType.Player: {
                 if (this.game.pvp) {
                     this.setCursor(this.getAttackCursor());
@@ -555,7 +629,7 @@ export default class InputController {
 
         // Remove the silhouette from the previous entity.
         if (this.entity && (!entity || entity.instance !== this.entity.instance))
-            this.entity.updateSilhouette(false);
+            this.entity.updateSilhouette();
 
         return entity;
     }
@@ -588,7 +662,7 @@ export default class InputController {
      */
 
     private setCursor(cursor: Sprite): void {
-        if (cursor) this.cursor = cursor;
+        this.cursor = cursor;
     }
 
     /**
@@ -601,13 +675,23 @@ export default class InputController {
     }
 
     /**
+     * Sets the animation for the target to the question
+     * mark sprite indicating a target-based interaction
+     * is occurring.
+     */
+
+    private setInteractionTarget(): void {
+        this.targetAnimation.setRow(1);
+    }
+
+    /**
      * Sets the animation for the target to the red
      * spinning sprite indicating a target-based
      * movement is occurring.
      */
 
     private setAttackTarget(): void {
-        this.targetAnimation.setRow(1);
+        this.targetAnimation.setRow(2);
     }
 
     /**
@@ -657,8 +741,8 @@ export default class InputController {
             offsetY = this.mouse.y % this.camera.zoomFactor,
             x = (this.mouse.x - offsetX) / this.camera.zoomFactor + this.camera.x,
             y = (this.mouse.y - offsetY) / this.camera.zoomFactor + this.camera.y,
-            gridX = Math.floor(x / this.map.tileSize),
-            gridY = Math.floor(y / this.map.tileSize);
+            gridX = ~~(x / this.map.tileSize),
+            gridY = ~~(y / this.map.tileSize);
 
         return { x, y, gridX, gridY };
     }
@@ -712,7 +796,9 @@ export default class InputController {
      */
 
     private isTargetable(entity: Entity): boolean {
-        return this.isAttackable(entity) || entity.isNPC() || entity.isChest();
+        return (
+            this.isAttackable(entity) || entity.isNPC() || entity.isChest() || entity.isResource()
+        );
     }
 
     /**

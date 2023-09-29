@@ -1,17 +1,15 @@
-import spriteData from '../../data/sprites.json';
-import Animation from '../entity/animation';
-import Sprite from '../entity/sprite';
 import log from '../lib/log';
+import Sprite from '../entity/sprite';
+import spriteData from '../../data/sprites.json';
 
+import type Animation from '../entity/animation';
 import type { SpriteData } from '../entity/sprite';
 
 export default class SpritesController {
     public sprites: { [id: string]: Sprite } = {};
-    public sparksAnimation: Animation = new Animation('idle_down', 6, 0, 16, 16);
+    public preloadedAnimations: Animation[] = []; // Used for updating.
 
     public constructor() {
-        this.sparksAnimation.setSpeed(120);
-
         this.load();
     }
 
@@ -21,25 +19,27 @@ export default class SpritesController {
      */
 
     public load(): void {
-        // TS doesn't like this for some reason.
         for (let data of spriteData as SpriteData[]) {
             let sprite = new Sprite(data);
 
-            this.sprites[data.id] = sprite;
+            this.sprites[sprite.key] = sprite;
+
+            // Some sprites are required to be preloaded.
+            if (sprite.preload) {
+                sprite.load();
+
+                let idleDown = sprite.animations.idle_down;
+
+                // Some of the preloaded sprites have animations that we can use.
+                if (idleDown?.length > 1) {
+                    this.preloadedAnimations.push(idleDown);
+
+                    idleDown.setSpeed(sprite.idleSpeed || 200);
+                }
+            }
         }
 
         log.debug('Finished loading sprite data...');
-
-        this.preloadSprites();
-    }
-
-    /**
-     * Hardcoded function that preloads necessary sprites off the bat.
-     * Things like the death animation has to be loaded as soon as possible.
-     */
-
-    public preloadSprites(): void {
-        this.get('death').load();
     }
 
     /**

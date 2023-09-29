@@ -1,5 +1,3 @@
-import Handler from './handler';
-
 import Character from '../character';
 
 import Utils from '@kaetram/common/util/utils';
@@ -9,12 +7,13 @@ import type Player from '../player/player';
 import type { PetData } from '@kaetram/common/types/pet';
 
 export default class Pet extends Character {
-    private handler: Handler;
-
-    public constructor(public owner: Player, key: string, x = owner.x, y = owner.y) {
+    public constructor(
+        public owner: Player,
+        key: string,
+        x = owner.x,
+        y = owner.y
+    ) {
         super(Utils.createInstance(Modules.EntityType.Pet), owner.world, key, x, y);
-
-        this.handler = new Handler(this);
     }
 
     /**

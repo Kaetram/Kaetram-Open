@@ -1,40 +1,92 @@
 {
     "oak": {
+        "name": "Oak",
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 10,
+        "item": "logs",
+        "randomItems": [
+            {
+                "key": "apple",
+                "chance": 800
+            }
+        ]
+    },
+    "tutorialoak": {
+        "name": "Oak",
+        "levelRequirement": 1,
+        "experience": 10,
+        "difficulty": 2,
+        "item": "logs",
+        "quest": "tutorial"
+    },
+
+    "spruce": {
+        "name": "Spruce",
+        "levelRequirement": 10,
+        "experience": 24,
+        "difficulty": 30,
         "item": "logs"
     },
 
     "oak2": {
+        "name": "Oak",
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 10,
-        "item": "logs"
+        "item": "logs",
+        "randomItems": [
+            {
+                "key": "apple",
+                "chance": 800
+            }
+        ]
     },
 
     "oak3": {
+        "name": "Oak",
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 10,
-        "item": "logs"
+        "item": "logs",
+        "randomItems": [
+            {
+                "key": "apple",
+                "chance": 800
+            }
+        ]
     },
 
     "oak4": {
+        "name": "Oak",
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 10,
-        "item": "logs"
+        "item": "logs",
+        "randomItems": [
+            {
+                "key": "apple",
+                "chance": 800
+            }
+        ]
     },
 
     "oak5": {
+        "name": "Oak",
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 10,
-        "item": "logs"
+        "item": "logs",
+        "randomItems": [
+            {
+                "key": "apple",
+                "chance": 800
+            }
+        ]
     },
 
     "snowoak": {
+        "name": "Snow Oak",
         "levelRequirement": 20,
         "experience": 75,
         "difficulty": 90,
@@ -42,6 +94,7 @@
     },
 
     "tutorialsnowoak": {
+        "name": "Snow Oak",
         "levelRequirement": 1,
         "experience": 10,
         "difficulty": 5,
@@ -50,13 +103,21 @@
     },
 
     "palm": {
+        "name": "Palm",
         "levelRequirement": 5,
         "experience": 15,
         "difficulty": 25,
-        "item": "palmlogs"
+        "item": "palmlogs",
+        "randomItems": [
+            {
+                "key": "banana",
+                "chance": 10000
+            }
+        ]
     },
 
     "iceoak": {
+        "name": "Ice Oak",
         "levelRequirement": 10,
         "experience": 30,
         "difficulty": 50,
@@ -64,6 +125,7 @@
     },
 
     "iceoak2": {
+        "name": "Ice Oak",
         "levelRequirement": 10,
         "experience": 30,
         "difficulty": 50,
@@ -71,6 +133,7 @@
     },
 
     "iceoak3": {
+        "name": "Ice Oak",
         "levelRequirement": 10,
         "experience": 30,
         "difficulty": 50,
@@ -78,6 +141,23 @@
     },
 
     "iceoak4": {
+        "name": "Ice Oak",
+        "levelRequirement": 10,
+        "experience": 30,
+        "difficulty": 50,
+        "item": "icelogs"
+    },
+
+    "iceoak5": {
+        "name": "Ice Oak",
+        "levelRequirement": 10,
+        "experience": 30,
+        "difficulty": 50,
+        "item": "icelogs"
+    },
+
+    "iceoak6": {
+        "name": "Ice Oak",
         "levelRequirement": 10,
         "experience": 30,
         "difficulty": 50,
@@ -85,6 +165,7 @@
     },
 
     "icepalm": {
+        "name": "Ice Palm",
         "levelRequirement": 15,
         "experience": 55,
         "difficulty": 65,
@@ -92,23 +173,74 @@
     },
 
     "pine": {
+        "name": "Pine",
         "levelRequirement": 20,
         "experience": 75,
         "difficulty": 80,
         "item": "icepinelogs"
     },
 
-    "willow": {
+    "alkythn": {
+        "name": "Alkythn",
+        "levelRequirement": 25,
+        "experience": 105,
+        "difficulty": 90,
+        "item": "alkythnlogs"
+    },
+
+    "heliphatit": {
+        "name": "Heliphatit",
         "levelRequirement": 30,
-        "experience": 150,
-        "difficulty": 160,
-        "item": "willowlogs"
+        "experience": 125,
+        "difficulty": 100,
+        "item": "heliphatitlogs"
+    },
+
+    "aquasillius": {
+        "name": "Aquasillius",
+        "levelRequirement": 35,
+        "experience": 160,
+        "difficulty": 115,
+        "item": "aquasilliuslogs"
+    },
+
+    "zoncil": {
+        "name": "Zoncil",
+        "levelRequirement": 35,
+        "experience": 160,
+        "difficulty": 115,
+        "item": "zoncillogs"
+    },
+
+    "zondul": {
+        "name": "Zondul",
+        "levelRequirement": 35,
+        "experience": 160,
+        "difficulty": 115,
+        "item": "zondullogs"
     },
 
     "bloodwood": {
+        "name": "Bloodwood",
         "levelRequirement": 40,
         "experience": 350,
         "difficulty": 240,
+        "item": "bloodwoodlogs"
+    },
+
+    "flastel": {
+        "name": "Flastel",
+        "levelRequirement": 50,
+        "experience": 400,
+        "difficulty": 320,
+        "item": "bloodwoodlogs"
+    },
+
+    "puhrix": {
+        "name": "Puhrix",
+        "levelRequirement": 50,
+        "experience": 400,
+        "difficulty": 320,
         "item": "bloodwoodlogs"
     }
 }

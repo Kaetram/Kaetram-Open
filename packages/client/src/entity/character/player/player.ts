@@ -8,24 +8,23 @@ import Character from '../character';
 
 import { Modules } from '@kaetram/common/network';
 
-import type { GuildPacket } from '@kaetram/common/types/messages/outgoing';
 import type Game from '../../../game';
-import type { AchievementData } from '@kaetram/common/types/achievement';
-import type { EquipmentData } from '@kaetram/common/types/equipment';
-import type { PlayerData } from '@kaetram/common/types/player';
-import type { SkillData } from '@kaetram/common/types/skills';
-import type { QuestData } from '@kaetram/common/types/quest';
-import type { AbilityData } from '@kaetram/common/types/ability';
-import type { Friend as FriendType } from '@kaetram/common/types/friends';
-import type { GuildData } from '@kaetram/common/types/guild';
+import type { Light } from '@kaetram/common/types/item';
+import type { GuildPacketData } from '@kaetram/common/types/messages/outgoing';
+import type { AchievementData } from '@kaetram/common/network/impl/achievement';
+import type { PlayerData } from '@kaetram/common/network/impl/player';
+import type { SkillData } from '@kaetram/common/network/impl/skill';
+import type { QuestData } from '@kaetram/common/network/impl/quest';
+import type { AbilityData } from '@kaetram/common/network/impl/ability';
+import type { Friend as FriendType } from '@kaetram/common/network/impl/friends';
+import type { GuildData, Member } from '@kaetram/common/network/impl/guild';
+import type { EquipmentData } from '@kaetram/common/network/impl/equipment';
 
 type AbilityCallback = (key: string, level: number, quickSlot: number) => void;
 type PoisonCallback = (status: boolean) => void;
 type ManaCallback = (mana: number, maxMana: number) => void;
 
 export default class Player extends Character {
-    public rank: Modules.Ranks = Modules.Ranks.None;
-
     public serverId = -1;
 
     public pvpKills = -1;
@@ -38,10 +37,15 @@ export default class Player extends Character {
 
     public poison = false;
     public disableAction = false;
+    public joystickMovement = false;
+    public hasPet = false;
 
-    public medal: Modules.Medals = Modules.Medals.None;
+    public rank: Modules.Ranks = Modules.Ranks.None;
+    public crown: Modules.Crowns = Modules.Crowns.None;
 
     public guild!: Partial<GuildData> | undefined;
+
+    private equipmentOrder = Modules.EquipmentRenderOrder;
 
     public override hitPoints = 0;
     public override maxHitPoints = 0;
@@ -88,6 +92,8 @@ export default class Player extends Character {
         }
 
         this.equipments[Modules.Equipment.Weapon].drawable = true;
+        this.equipments[Modules.Equipment.Shield].drawable = true;
+        this.equipments[Modules.Equipment.Cape].drawable = true;
     }
 
     /**
@@ -170,6 +176,9 @@ export default class Player extends Character {
             // Secret tasks are displayed slightly different.
             if (achievement.secret) task.secret = true;
 
+            // Achievements may have a region specified.
+            if (achievement.region) task.region = achievement.region;
+
             this.achievements[achievement.key] = task;
         }
     }
@@ -219,12 +228,15 @@ export default class Player extends Character {
             defenseStats,
             bonuses,
             attackStyle,
-            attackStyles
+            attackStyles,
+            bow,
+            light
         } = equipment;
 
         if (!key) return this.unequip(type);
 
-        let prefix = this.getType(type);
+        // Weapon skin uses the weapon folder instead of a separate one.
+        let prefix = type === Modules.Equipment.WeaponSkin ? 'weapon' : this.getType(type);
 
         this.equipments[type].update(
             prefix ? `player/${prefix}/${key}` : `items/${key}`,
@@ -240,10 +252,14 @@ export default class Player extends Character {
         if (type === Modules.Equipment.Weapon) {
             this.attackRange = attackRange || 1;
             this.setAttackStyle(attackStyle!, attackStyles!);
+
+            this.equipments[type].bow = !!bow;
         }
 
-        // Disable drawing for the other equipment slots if we're wearing a skin.
-        if (type === Modules.Equipment.Skin) this.toggleDrawableEquipments(false);
+        // If a light is present on the equipment just apply it.
+        if (light) this.equipments[type].light = light;
+
+        this.updateEquipmentAppearance();
     }
 
     /**
@@ -262,6 +278,22 @@ export default class Player extends Character {
     }
 
     /**
+     * Handles adding a guild member to the guild list.
+     * @param username The username of the guild member.
+     * @param serverId The server id of the guild member.
+     */
+
+    public addGuildMember(username: string, serverId: number): void {
+        if (!this.hasMember(username)) return;
+
+        // Add the member to the guild list.
+        this.guild!.members!.push({
+            username,
+            serverId
+        });
+    }
+
+    /**
      * Calls an empty update() function onto the equipment slot
      * and resets it.
      * @param type Which equipment slot we are resetting.
@@ -273,8 +305,20 @@ export default class Player extends Character {
         if (count > 0) this.equipments[type].count = count;
         else this.equipments[type].update();
 
-        // Make the normal equipments drawable again.
-        if (type === Modules.Equipment.Skin) this.toggleDrawableEquipments(true);
+        this.updateEquipmentAppearance();
+    }
+
+    /**
+     * Removes a guild member given their username.
+     * @param username The username of the guild member we are removing.
+     */
+
+    public removeGuildMember(username: string): void {
+        if (!this.hasMember(username)) return;
+
+        let index = this.guild!.members!.findIndex((member) => member.username === username);
+
+        this.guild!.members!.splice(index, 1);
     }
 
     /**
@@ -287,6 +331,27 @@ export default class Player extends Character {
     }
 
     /**
+     * Synchronizes the player's appearance with its weapon/armour skin and depending on
+     * in-game properties like a PVP flag. This is called when the player equips or unequips
+     * an equipment or when the player's PVP flag is toggled.
+     */
+
+    public updateEquipmentAppearance(): void {
+        // Skins are not drawable in PVP.
+        this.getArmourSkin().drawable = !this.game.pvp;
+        this.getWeaponSkin().drawable = !this.game.pvp;
+
+        let weaponHidden = !!this.getWeaponSkin().key && this.getWeaponSkin().drawable,
+            armourHidden = !!this.getArmourSkin().key && this.getArmourSkin().drawable;
+
+        // Check if we have a weapon skin equipped and update the weapon appearance.
+        this.getWeapon().drawable = !weaponHidden;
+
+        // Check if we have an armour skin equipped and update the armour appearance.
+        this.toggleDrawableEquipments(!armourHidden);
+    }
+
+    /**
      * Override for the idling function which also adds checking for keyboard
      * movement and prevents setting idle during keyboard movement.
      * @param o Optional parameter if we want to update the orientation.
@@ -295,7 +360,11 @@ export default class Player extends Character {
 
     public override idle(o?: Modules.Orientation, force = false): void {
         // Check for moving instead of path if keyboard movement is enabled.
-        if (this.hasKeyboardMovement() && this.moving) return;
+        if ((this.hasKeyboardMovement() || this.hasAttackers() || this.hasTarget()) && this.moving)
+            return;
+
+        // ?? this shouldn't affect anything but it does so just leave it for now.
+        if (this.hasPath()) return;
 
         super.idle(o, force);
     }
@@ -305,23 +374,12 @@ export default class Player extends Character {
      */
 
     public getSpriteName(): string {
+        let armourSkin = this.getArmourSkin();
+
         // Use the armour skin if it exists.
-        if (this.equipments[Modules.Equipment.Skin].key)
-            return this.equipments[Modules.Equipment.Skin].key;
+        if (armourSkin.key && armourSkin.drawable) return armourSkin.key;
 
         return 'player/base';
-    }
-
-    /**
-     * @returns The key of the currently equipped weapon.
-     */
-
-    public getWeaponSpriteName(): string {
-        // Use the weapon skin if it exists.
-        if (this.equipments[Modules.Equipment.WeaponSkin].key)
-            return this.equipments[Modules.Equipment.WeaponSkin].key;
-
-        return this.equipments[Modules.Equipment.Weapon].key;
     }
 
     //// Shortcut functions for getting equipment objects. ////
@@ -335,35 +393,11 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns The chestplate object of the player.
+     * @returns The pendant object of the player.
      */
 
-    public getChestplate(): Equipment {
-        return this.equipments[Modules.Equipment.Chestplate];
-    }
-
-    /**
-     * @returns The legs equipment object.
-     */
-
-    public getLegs(): Equipment {
-        return this.equipments[Modules.Equipment.Legs];
-    }
-
-    /**
-     * @returns The armour skin object of the player.
-     */
-
-    public getArmourSkin(): Equipment {
-        return this.equipments[Modules.Equipment.Skin];
-    }
-
-    /**
-     * @returns The boots object of the player.
-     */
-
-    public getBoots(): Equipment {
-        return this.equipments[Modules.Equipment.Boots];
+    public getPendant(): Equipment {
+        return this.equipments[Modules.Equipment.Pendant];
     }
 
     /**
@@ -375,19 +409,11 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns The pendant object of the player.
+     * @returns The chestplate object of the player.
      */
 
-    public getPendant(): Equipment {
-        return this.equipments[Modules.Equipment.Pendant];
-    }
-
-    /**
-     * @returns The ring object of the player.
-     */
-
-    public getRing(): Equipment {
-        return this.equipments[Modules.Equipment.Ring];
+    public getChestplate(): Equipment {
+        return this.equipments[Modules.Equipment.Chestplate];
     }
 
     /**
@@ -399,11 +425,59 @@ export default class Player extends Character {
     }
 
     /**
+     * @returns The shield object of the player.
+     */
+
+    public getShield(): Equipment {
+        return this.equipments[Modules.Equipment.Shield];
+    }
+
+    /**
+     * @returns The ring object of the player.
+     */
+
+    public getRing(): Equipment {
+        return this.equipments[Modules.Equipment.Ring];
+    }
+
+    /**
      * @returns The weapon skin object of the player.
      */
 
     public getWeaponSkin(): Equipment {
         return this.equipments[Modules.Equipment.WeaponSkin];
+    }
+
+    /**
+     * @returns The armour skin object of the player.
+     */
+
+    public getArmourSkin(): Equipment {
+        return this.equipments[Modules.Equipment.ArmourSkin];
+    }
+
+    /**
+     * @returns The legplate equipment object.
+     */
+
+    public getLegplate(): Equipment {
+        return this.equipments[Modules.Equipment.Legplates];
+    }
+
+    /**
+     * @returns The cape equipment object.
+     */
+
+    public getCape(): Equipment {
+        return this.equipments[Modules.Equipment.Cape];
+    }
+
+    /**
+     * @returns The boots object of the player.
+     */
+
+    public getBoots(): Equipment {
+        return this.equipments[Modules.Equipment.Boots];
     }
 
     /**
@@ -436,48 +510,48 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns The key of the medal based on the player's medal type.
+     * @returns The key of the crown based on the player's crown type.
      */
 
-    public getMedalKey(): string {
-        switch (this.medal) {
-            case Modules.Medals.Silver: {
+    public getCrownKey(): string {
+        switch (this.crown) {
+            case Modules.Crowns.Silver: {
                 return 'silvermedal';
             }
 
-            case Modules.Medals.Gold: {
+            case Modules.Crowns.Gold: {
                 return 'goldmedal';
             }
 
-            case Modules.Medals.Artist: {
+            case Modules.Crowns.Artist: {
                 return 'crown-artist';
             }
 
-            case Modules.Medals.Tier1: {
+            case Modules.Crowns.Tier1: {
                 return 'crown-tier1';
             }
 
-            case Modules.Medals.Tier2: {
+            case Modules.Crowns.Tier2: {
                 return 'crown-tier2';
             }
 
-            case Modules.Medals.Tier3: {
+            case Modules.Crowns.Tier3: {
                 return 'crown-tier3';
             }
 
-            case Modules.Medals.Tier4: {
+            case Modules.Crowns.Tier4: {
                 return 'crown-tier4';
             }
 
-            case Modules.Medals.Tier5: {
+            case Modules.Crowns.Tier5: {
                 return 'crown-tier5';
             }
 
-            case Modules.Medals.Tier6: {
+            case Modules.Crowns.Tier6: {
                 return 'crown-tier6';
             }
 
-            case Modules.Medals.Tier7: {
+            case Modules.Crowns.Tier7: {
                 return 'crown-tier7';
             }
 
@@ -488,46 +562,46 @@ export default class Player extends Character {
     }
 
     /**
-     * Returns a medal based on the player's rank.
-     * @returns The medal type for the player's rank.
+     * Returns a crown based on the player's rank.
+     * @returns The crown type for the player's rank.
      */
 
-    private getRankMedal(): Modules.Medals {
+    private getRankCrown(): Modules.Crowns {
         switch (this.rank) {
             case Modules.Ranks.Artist: {
-                return Modules.Medals.Artist;
+                return Modules.Crowns.Artist;
             }
 
             case Modules.Ranks.TierOne: {
-                return Modules.Medals.Tier1;
+                return Modules.Crowns.Tier1;
             }
 
             case Modules.Ranks.TierTwo: {
-                return Modules.Medals.Tier2;
+                return Modules.Crowns.Tier2;
             }
 
             case Modules.Ranks.TierThree: {
-                return Modules.Medals.Tier3;
+                return Modules.Crowns.Tier3;
             }
 
             case Modules.Ranks.TierFour: {
-                return Modules.Medals.Tier4;
+                return Modules.Crowns.Tier4;
             }
 
             case Modules.Ranks.TierFive: {
-                return Modules.Medals.Tier5;
+                return Modules.Crowns.Tier5;
             }
 
             case Modules.Ranks.TierSix: {
-                return Modules.Medals.Tier6;
+                return Modules.Crowns.Tier6;
             }
 
             case Modules.Ranks.TierSeven: {
-                return Modules.Medals.Tier7;
+                return Modules.Crowns.Tier7;
             }
 
             default: {
-                return Modules.Medals.None;
+                return Modules.Crowns.None;
             }
         }
     }
@@ -547,8 +621,8 @@ export default class Player extends Character {
                 return 'chestplate';
             }
 
-            case Modules.Equipment.Legs: {
-                return 'legs';
+            case Modules.Equipment.Legplates: {
+                return 'legplates';
             }
 
             case Modules.Equipment.Weapon: {
@@ -559,14 +633,43 @@ export default class Player extends Character {
                 return 'weaponskin';
             }
 
-            case Modules.Equipment.Skin: {
+            case Modules.Equipment.ArmourSkin: {
                 return 'skin';
+            }
+
+            case Modules.Equipment.Shield: {
+                return 'shield';
+            }
+
+            case Modules.Equipment.Cape: {
+                return 'cape';
             }
 
             default: {
                 return '';
             }
         }
+    }
+
+    /**
+     * Grabs the light object from the weapon.
+     * @returns The light object of the weapon.
+     */
+
+    public getLight(): Light {
+        return this.getShield().light;
+    }
+
+    /**
+     * Attempts to find a guild member based on their username.
+     * @param username The username of the guild member we are looking for.
+     * @returns The guild member object if found, otherwise undefined.
+     */
+
+    public getGuildMember(username: string): Member | undefined {
+        if (!this.guild) return;
+
+        return this.guild.members?.find((member) => member.username === username);
     }
 
     /**
@@ -696,13 +799,13 @@ export default class Player extends Character {
     }
 
     /**
-     * Updates the player's rank and synchronizes the medals.
+     * Updates the player's rank and synchronizes the Crowns.
      * @param rank The new rank of the player.
      */
 
     public setRank(rank: Modules.Ranks): void {
         this.rank = rank;
-        this.medal = this.getRankMedal();
+        this.crown = this.getRankCrown();
     }
 
     /**
@@ -710,7 +813,7 @@ export default class Player extends Character {
      * @param packet Contains information about the guild we are updating.
      */
 
-    public setGuild(packet?: GuildPacket): void {
+    public setGuild(packet?: GuildPacketData): void {
         if (!packet) {
             this.guild = undefined;
             return;
@@ -720,6 +823,77 @@ export default class Player extends Character {
             name: packet.name,
             members: packet.members
         };
+    }
+
+    /**
+     * An override function for the superclass `setAnimation` where we adjust the animation
+     * currently performed by the player depending on the weapon they are equipping. Bows use
+     * a different animation than normal melee weapons.
+     * @param name The name of the animation that we are setting.
+     * @param speed The speed at which to animate the player.
+     * @param count The amount of times to play the animation.
+     * @param onEndCount The callback to execute when the animation has finished playing.
+     */
+
+    public override setAnimation(
+        name: string,
+        speed = 120,
+        count = 0,
+        onEndCount?: () => void
+    ): void {
+        // Update the animation name if we're using a bow.
+        if (name === 'atk' && this.getWeapon().bow) name = 'bow_atk';
+
+        super.setAnimation(name, speed, count, onEndCount);
+    }
+
+    /**
+     * Attempts to update the values of a guild member based on their username.
+     * @param username The username of the guild member we are updating.
+     * @param rank The rank we want to update, defaults to the lowest
+     */
+
+    public setGuildMember(
+        username: string,
+        rank: Modules.GuildRank = Modules.GuildRank.Fledgling
+    ): void {
+        if (!this.guild) return;
+
+        // Attempt to find the guild member.
+        let member = this.guild.members?.find((member) => member.username === username);
+
+        if (!member) return;
+
+        member.rank = rank;
+    }
+
+    /**
+     * Override for the `setOrientation` function to also update the positioning
+     * of the cape and weapon relative to the player.
+     * @param orientation The new orientation that we are setting.
+     */
+
+    public override setOrientation(orientation: Modules.Orientation): void {
+        super.setOrientation(orientation);
+
+        // Reset the equipment order to the default.
+        this.equipmentOrder = Modules.EquipmentRenderOrder;
+
+        switch (orientation) {
+            case Modules.Orientation.Up: {
+                this.equipmentOrder = [
+                    Modules.Equipment.Legplates,
+                    Modules.Equipment.Chestplate,
+                    Modules.Equipment.Helmet,
+                    Modules.Equipment.ArmourSkin,
+                    Modules.Equipment.Shield,
+                    Modules.Equipment.Weapon,
+                    Modules.Equipment.WeaponSkin,
+                    Modules.Equipment.Cape
+                ];
+                break;
+            }
+        }
     }
 
     /**
@@ -740,7 +914,7 @@ export default class Player extends Character {
     private toggleDrawableEquipments(state = false): void {
         this.getHelmet().drawable = state;
         this.getChestplate().drawable = state;
-        this.getLegs().drawable = state;
+        this.getLegplate().drawable = state;
     }
 
     /**
@@ -768,11 +942,19 @@ export default class Player extends Character {
     }
 
     /**
-     * @returns Whether or not the player has a medal.
+     * @returns Whether or not the player has a rank.
      */
 
-    public override hasMedal(): boolean {
-        return this.medal !== Modules.Medals.None;
+    public hasRank(): boolean {
+        return this.rank !== Modules.Ranks.None;
+    }
+
+    /**
+     * @returns Whether or not the player has a crown.
+     */
+
+    public override hasCrown(): boolean {
+        return this.crown !== Modules.Crowns.None;
     }
 
     /**
@@ -794,20 +976,57 @@ export default class Player extends Character {
     }
 
     /**
+     * Checks if the current player has a light source equipped.
+     * @returns Whether the light contains an inner or outer light source.
+     */
+
+    public hasLight(): boolean {
+        let light = this.getLight();
+
+        return !!(light?.outer || light?.inner);
+    }
+
+    /**
+     * Whether or not the guild has a member with the given username.
+     * @param username The username of the guild member we are checking.
+     * @returns Whether or not the guild has a member with the given username.
+     */
+
+    public hasMember(username: string): boolean {
+        if (!this.guild) return false;
+
+        let exists = false;
+
+        for (let i in this.guild.members) {
+            let member = this.guild.members[i as never] as Member;
+
+            if (member.username === username) {
+                exists = true;
+                break;
+            }
+        }
+
+        return exists;
+    }
+
+    /**
      * Iterates through the renderable equipments and executes the callback. This function
      * is used by the rendering system to draw the paperdoll equipments.
-     * @param callback Contains the equipment currently being iterated.
+     * @param callback Contains the equipment currently being iterated and its type.
      * @param ignoreEmpty Whether or not we want to iterate through all equipment or just the ones that exist.
      */
 
-    public forEachEquipment(callback: (equipment: Equipment) => void, ignoreEmpty = false): void {
-        for (let type of Modules.EquipmentRenderOrder) {
+    public forEachEquipment(
+        callback: (equipment: Equipment, type?: number) => void,
+        ignoreEmpty = false
+    ): void {
+        for (let type of this.equipmentOrder) {
             let equipment = this.equipments[type as never] as Equipment;
 
             if (!equipment.drawable) continue;
             if (ignoreEmpty && !equipment.exists()) continue;
 
-            callback(equipment);
+            callback(equipment, ~~type);
         }
     }
 

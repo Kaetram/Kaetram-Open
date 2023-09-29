@@ -17,7 +17,7 @@ export default class Skills extends Menu {
     private list: HTMLUListElement = document.querySelector('#skills-list > ul')!;
 
     // Skill info side-menu
-    private info: HTMLElement = document.querySelector('#profile-info')!;
+    private info: HTMLElement = document.querySelector('#skill-info')!;
 
     // Skill we have info menu open for.
     private selectedSkill!: Skill;
@@ -39,8 +39,11 @@ export default class Skills extends Menu {
         if (resize) this.list.innerHTML = '';
 
         for (let id of Modules.SkillsOrder) {
-            let skill = this.player.skills[id],
-                element = this.get(skill.name);
+            let skill = this.player.skills[id];
+
+            if (!skill) continue;
+
+            let element = this.get(skill.name);
 
             // Update the element if found.
             if (element) this.update(element, skill);
@@ -106,24 +109,45 @@ export default class Skills extends Menu {
 
     private createElement(skill: Skill): HTMLLIElement {
         let element: SkillElement = document.createElement('li'),
-            level = document.createElement('div'),
+            slot = document.createElement('div'),
             image = document.createElement('div'),
-            experience = document.createElement('div');
+            content = document.createElement('div'),
+            level = document.createElement('div'),
+            experience = document.createElement('div'),
+            expProgress = document.createElement('div');
 
         // Add the skill class to the base element.
-        element.classList.add('skill');
+        element.classList.add('slice-list-item');
 
-        // Update the skill level
-        level.classList.add('skill-level', 'stroke');
+        // Add the item slot slice to the element.
+        slot.classList.add('slice-item-slot');
 
         // Load the image based on the skill name.
         image.classList.add('skill-image', `skill-image-${skill.name.toLowerCase()}`);
 
-        // Load up the experience bar.
+        // Load up the content.
+        content.classList.add('skill-content');
+
+        // Update the skill level
+        level.classList.add('skill-level', 'stroke');
+
+        // Update the experience bar container.
         experience.classList.add('skill-experience');
 
-        // Add the image to the element.
-        element.append(level, experience, image);
+        // Load up the experience bar.
+        expProgress.classList.add('skill-experience-progress');
+
+        // Add the image to the item slot.
+        slot.append(image);
+
+        // Add the experience bar to the experience container.
+        experience.append(expProgress);
+
+        // Add the level and experience bar to the content.
+        content.append(level, experience);
+
+        // Add the slot and content to the element.
+        element.append(slot, content);
 
         // Store information about the skill in the element.
         element.name = skill.name;
@@ -144,23 +168,20 @@ export default class Skills extends Menu {
     private showInfo(skill = this.selectedSkill): void {
         Util.fadeIn(this.info);
 
-        let image = this.info.querySelector('.profile-info-skill-image')!,
-            title = this.info.querySelector('.profile-info-title')!,
-            details = this.info.querySelector('.profile-info-details')!;
+        let image = this.info.querySelector('.skill-info-image')!,
+            title = this.info.querySelector('.skill-info-title')!,
+            details = this.info.querySelector('.skill-info-details')!;
 
         // Update the image and title of the skill.
-        image.className = `profile-info-skill-image skill-image-${skill.name.toLowerCase()}`;
+        image.className = `skill-info-image skill-image-${skill.name.toLowerCase()}`;
         title.innerHTML = skill.name;
 
         // Update the details of the skill.
         details.innerHTML = `
-            <p><span>Level:</span> ${skill.level}</p>
-            <br>
-            <p><span>Exp:</span> ${skill.experience}</p>
-            <br>
-            <p><span>Next Exp:</span> ${skill.nextExperience}</p>
-            <br>
-            <p><span>Percent:</span> ${(skill.percentage * 100).toFixed(3)}%</p>
+            <span><strong>Level:</strong> ${skill.level}</span>
+            <span><strong>Exp:</strong> ${skill.experience}</span>
+            <span><strong>Next Exp:</strong> ${skill.nextExperience}</span>
+            <span><strong>Percent:</strong> ${(skill.percentage * 100).toFixed(3)}%</span>
         `;
 
         this.selectedSkill = skill;
@@ -175,19 +196,13 @@ export default class Skills extends Menu {
     private update(element: SkillElement, skill: Skill): void {
         // Update the level and experience bar of the skill.
         let level: HTMLElement = element.querySelector('.skill-level')!,
-            experience: HTMLElement = element.querySelector('.skill-experience')!;
+            expProgress: HTMLElement = element.querySelector('.skill-experience-progress')!;
 
         // Update the skill level
         level.innerHTML = `${skill.level}/${Modules.Constants.MAX_LEVEL}`;
 
-        // Store the original width of the experience bar.
-        if (!element.originalWidth && experience.offsetWidth !== 0)
-            element.originalWidth = experience.offsetWidth;
-
-        if (!element.originalWidth) return;
-
         // Set the experience bar's width.
-        experience.style.width = `${element.originalWidth * skill.percentage}px`;
+        expProgress.style.width = `${skill.percentage * 100}%`;
 
         // Update the properties of the element.
         element.level = skill.level;
@@ -212,6 +227,6 @@ export default class Skills extends Menu {
      */
 
     public isInfoVisible(): boolean {
-        return this.info.style.display === 'block';
+        return this.info.style.display === 'flex';
     }
 }

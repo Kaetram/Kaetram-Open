@@ -3,8 +3,8 @@ import Equipment from '../equipment';
 import { Modules } from '@kaetram/common/network';
 
 import type Item from '../../../../objects/item';
-import type { EquipmentData } from '@kaetram/common/types/equipment';
 import type { Enchantments } from '@kaetram/common/types/item';
+import type { EquipmentData } from '@kaetram/common/network/impl/equipment';
 
 export default class Weapon extends Equipment {
     public attackRate: number = Modules.Defaults.ATTACK_RATE;
@@ -21,8 +21,10 @@ export default class Weapon extends Equipment {
     public defaultAttackRate: number = Modules.Defaults.ATTACK_RATE;
 
     // Weapon type
+    private bow = false;
     private archer = false;
     private magic = false;
+    private twoHanded = false;
     private attackStyles: Modules.AttackStyle[] = [];
 
     public constructor(key = '', count = -1, enchantments: Enchantments = {}) {
@@ -51,8 +53,10 @@ export default class Weapon extends Equipment {
         this.projectileName = item.projectileName;
         this.manaCost = item.manaCost;
 
+        this.bow = item.isBow();
         this.archer = item.isArcherWeapon();
         this.magic = item.isMagicWeapon();
+        this.twoHanded = item.isTwoHanded();
 
         /**
          * If a parameter is provided (generally the last used attack style for the weapon type)
@@ -76,8 +80,10 @@ export default class Weapon extends Equipment {
         this.lumberjacking = -1;
         this.mining = -1;
         this.fishing = -1;
+        this.bow = false;
         this.archer = false;
         this.magic = false;
+        this.twoHanded = false;
 
         // Attack styles
         this.updateAttackStyle(Modules.AttackStyle.None);
@@ -211,6 +217,14 @@ export default class Weapon extends Equipment {
     }
 
     /**
+     * @returns Whether or not the current weapon is two-handed.
+     */
+
+    public isTwoHanded(): boolean {
+        return this.twoHanded;
+    }
+
+    /**
      * Checks whether the weapon contains the attack style.
      * @param attackStyle The attack style to check for.
      * @returns Whether or not the attack style is included in the weapon's attack styles.
@@ -223,6 +237,7 @@ export default class Weapon extends Equipment {
     /**
      * Override for the superclass where we add the attack styles.
      * @param clientInfo Whether or not to send the client information.
+     * @returns An object containing the equipment data.
      */
 
     public override serialize(clientInfo = false): EquipmentData {
@@ -234,6 +249,8 @@ export default class Weapon extends Equipment {
         if (clientInfo) {
             data.attackRange = this.attackRange;
             data.attackStyles = this.attackStyles;
+            data.bow = this.bow;
+            data.archer = this.archer;
         }
 
         return data;

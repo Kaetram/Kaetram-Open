@@ -1,0 +1,185 @@
+{
+    "cookedshrimp": {
+        "level": 1,
+        "experience": 20,
+        "requirements": [
+            {
+                "key": "rawshrimp",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "stew": {
+        "level": 1,
+        "experience": 50,
+        "requirements": [
+            {
+                "key": "bowlmedium",
+                "count": 1
+            },
+            {
+                "key": "mushroom1",
+                "count": 1
+            },
+            {
+                "key": "tomato",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "stew2": {
+        "level": 1,
+        "experience": 65,
+        "requirements": [
+            {
+                "key": "bowlmedium",
+                "count": 1
+            },
+            {
+                "key": "mushroom2",
+                "count": 1
+            },
+            {
+                "key": "corn",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "jellyfishsmoothie": {
+        "level": 10,
+        "experience": 45,
+        "requirements": [
+            {
+                "key": "jellyfish",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "clamchowder": {
+        "level": 15,
+        "experience": 85,
+        "requirements": [
+            {
+                "key": "clamobject",
+                "count": 1
+            },
+
+            {
+                "key": "potato",
+                "count": 1
+            },
+
+            {
+                "key": "bowlsmall",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "rawsausage": {
+        "level": 15,
+        "experience": 100,
+        "requirements": [
+            {
+                "key": "rawbeef",
+                "count": 1
+            },
+            {
+                "key": "rawchicken",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "cookedchicken": {
+        "level": 15,
+        "experience": 100,
+        "requirements": [
+            {
+                "key": "rawchicken",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "cookedbeef": {
+        "level": 15,
+        "experience": 100,
+        "requirements": [
+            {
+                "key": "rawbeef",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "cookedsausage": {
+        "level": 15,
+        "experience": 100,
+        "requirements": [
+            {
+                "key": "rawsausage",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    },
+
+    "tunasushi": {
+        "level": 20,
+        "experience": 130,
+        "requirements": [
+            {
+                "key": "rawtuna",
+                "count": 1
+            },
+            {
+                "key": "kelp",
+                "count": 1
+            }
+        ],
+
+        "result": {
+            "count": 1
+        }
+    }
+}

@@ -1,4 +1,5 @@
 import Util from '../utils/util';
+import { isMobile } from '../utils/detect';
 
 import { Packets } from '@kaetram/common/network';
 
@@ -6,6 +7,7 @@ import type Game from '../game';
 
 export default class ChatController {
     private chatBox: HTMLElement = document.querySelector('#chat')!;
+    private chatFrame: HTMLElement = document.querySelector('#chat-frame')!;
     private log: HTMLElement = document.querySelector('#chat-log')!;
     private input: HTMLInputElement = document.querySelector('#chat-input')!;
     private button = document.querySelector('#chat-button')!;
@@ -17,6 +19,8 @@ export default class ChatController {
         this.button.addEventListener('click', () => this.toggle());
 
         this.input.addEventListener('blur', () => this.hide());
+
+        if (isMobile()) this.input.addEventListener('click', () => this.input.focus());
     }
 
     /**
@@ -60,7 +64,7 @@ export default class ChatController {
         element.style.color = colour || 'white';
         if (notify) element.style.fontWeight = 'bold';
 
-        this.displayChatBox();
+        this.display();
 
         // Start the timeout for hiding the chatbox.
         this.hideChatBox();
@@ -103,30 +107,33 @@ export default class ChatController {
         this.clearTimeout();
 
         if (this.inputVisible()) this.hide();
-        else this.display();
+        else this.display(true);
     }
 
     /**
      * Makes the input field for the chat visible.
      * It also updates the state of the chat button.
-     * @param text Optional parameter for the text to display in the input field.
+     * @param withInput Whether to display the input field with text.
      */
 
-    private display(): void {
+    private display(withInput = false): void {
         this.button.classList.add('active');
-
-        if (this.inputVisible()) this.input.style.display = 'block';
-        else Util.fadeIn(this.input);
 
         this.displayChatBox();
 
-        // Fade input in, clear the input field, and focus it.
-        this.input.focus();
-        this.input.value = '';
+        // Display the chat frame and input field.
+        if (withInput) {
+            this.displayChatFrame();
+
+            if (this.inputVisible()) this.input.style.display = 'flex';
+            else Util.fadeIn(this.input);
+
+            // Fade input in, clear the input field, and focus it.
+            if (!isMobile()) this.input.focus();
+            this.input.value = '';
+        } else this.hideChatFrame();
 
         this.log.scrollTop = this.log.scrollHeight;
-
-        Util.fadeIn(this.input);
     }
 
     /**
@@ -135,6 +142,16 @@ export default class ChatController {
 
     private displayChatBox(): void {
         Util.fadeIn(this.chatBox);
+    }
+
+    /**
+     * Fades in the chat frame.
+     */
+
+    private displayChatFrame(): void {
+        Util.fadeIn(this.chatFrame);
+
+        this.chatBox.style.pointerEvents = 'auto';
     }
 
     /**
@@ -155,6 +172,8 @@ export default class ChatController {
         this.log.scrollTop = this.log.scrollHeight;
 
         Util.fadeOut(this.input);
+
+        this.hideChatFrame();
     }
 
     /**
@@ -171,12 +190,22 @@ export default class ChatController {
     }
 
     /**
+     * Hides the chat frame after fading it out.
+     */
+
+    private hideChatFrame(): void {
+        Util.fadeOut(this.chatFrame);
+
+        this.chatBox.style.pointerEvents = 'none';
+    }
+
+    /**
      * Checks if the input element has a visible value.
      * @returns Whether `:visible` flag is in the HTML element.
      */
 
     public inputVisible(): boolean {
-        return this.input.style.display === 'block';
+        return this.input.style.display === 'flex';
     }
 
     /**
