@@ -8,6 +8,8 @@ export let isSafari = (): boolean => agent.includes('safari') && !agent.includes
 
 export let isEdge = (): boolean => agent.includes('edge/');
 
+export let isIos = (): boolean => agent.includes('iphone') || agent.includes('ipad');
+
 export let isMobile = (): boolean =>
     agent.includes('android') || agent.includes('iphone') || agent.includes('ipad');
 

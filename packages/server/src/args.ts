@@ -15,8 +15,6 @@ export default class Args {
 
             this.override(paramIdentifier, paramValue);
         }
-
-        console.log(config);
     }
 
     /**
