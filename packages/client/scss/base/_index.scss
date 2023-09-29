@@ -21,6 +21,17 @@ h3 {
     font-family: Fibberish, Monogram, AdvoCut, arial, sans-serif;
 }
 
+select {
+    padding: 0.25em;
+
+    font-size: 1em;
+    color: #c6c0a3;
+
+    background-color: #000;
+    border: none;
+    border-radius: 0.25em;
+}
+
 @each $size, $scale in media.$sizes {
     @media ($size) {
         body {
