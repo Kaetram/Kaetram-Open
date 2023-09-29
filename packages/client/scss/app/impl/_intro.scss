@@ -16,6 +16,21 @@
     height: 100%;
 }
 
+#lang-select {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+
+    padding: 0.25em;
+
+    font-size: 1em;
+    color: #c6c0a3;
+
+    background-color: #000;
+    border: none;
+    border-radius: 0.25em;
+}
+
 body.intro {
     #intro-container {
         transition: 0.4s opacity linear;
