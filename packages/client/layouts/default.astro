@@ -1,13 +1,14 @@
 ---
 import { Schema } from 'astro-seo-schema';
 import { GoogleAnalytics } from '@astrolib/analytics';
-import { t, dir, language } from '@kaetram/common/i18n';
+import { t, dir, getLanguage } from '@kaetram/common/i18n';
 
 export interface Props {
     title?: string;
 }
 
-let { title } = Astro.props;
+let { title } = Astro.props,
+    currentLanguage = getLanguage();
 
 function site(path = '') {
     return new URL(path, Astro.site).toString();
@@ -17,7 +18,7 @@ let name = t('game:NAME'),
     description = t('game:DESCRIPTION');
 ---
 
-<html dir={dir(language)} lang={language}>
+<html dir={dir(currentLanguage)} lang={currentLanguage}>
     <head>
         <meta charset="utf-8" />
         <meta

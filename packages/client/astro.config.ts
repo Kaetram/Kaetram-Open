@@ -101,11 +101,11 @@ if (import.meta.env.PROD)
         }),
         sitemap({
             i18n: { locales, defaultLocale }
-            //filter: filterSitemapByDefaultLocale({ defaultLocale })
+            // filter: filterSitemapByDefaultLocale({ defaultLocale })
         }),
         partytown({ config: { debug: false } }),
         robotsTxt({ host: true }),
-        compress({ logger: 1, Image: false }),
+        compress({ Logger: 1, Image: false }),
         compressor({ gzip: true, brotli: true })
     );
 
