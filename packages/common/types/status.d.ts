@@ -6,8 +6,7 @@ export interface Duration {
 }
 
 export interface SerializedDuration {
-    startTime: number;
-    duration: number;
+    remainingTime: number;
 }
 
 export interface SerializedEffects {

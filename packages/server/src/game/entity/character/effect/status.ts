@@ -12,27 +12,22 @@ export default class {
 
     /**
      * Loads the serialized status effects from the database and uses the start time
-     * relative to the duration of the effect to reinstantiate it if applicable. If
-     * the effect's duration + start time exceeds the current epoch then we just skip.
+     * relative to the duration of the effect to reinstantiate it if applicable. We use
+     * the calculated remaining time upon logging out to determine how long to set the
+     * timeout for.
      * @param effects The list of serialized status effects from the database.
      */
 
     public load(effects: SerializedEffects): void {
-        let now = Date.now();
+        console.log(effects);
 
         for (let type in effects) {
-            let effect = effects[type],
-                remainingTime = effect.startTime + effect.duration - now;
+            let effect = effects[type];
 
             // Effect has already passed our current time, just ignore it.
-            if (remainingTime < 100) continue;
+            if (effect.remainingTime < 100) continue;
 
-            /**
-             * Subtract the current time from the sum of the start time and duration to obtain
-             * the remaining time left on the effect. We then create a new timeout effect.
-             */
-
-            this.addWithTimeout(parseInt(type), remainingTime);
+            this.addWithTimeout(parseInt(type), effect.remainingTime);
         }
     }
 
@@ -86,7 +81,7 @@ export default class {
 
                 callback?.();
             }, duration),
-            startTime: Date.now(),
+            startTime: Date.now() - 1000,
             duration
         };
     }
@@ -166,8 +161,7 @@ export default class {
             let duration = this.durations[status];
 
             effects[status] = {
-                startTime: duration.startTime,
-                duration: duration.duration
+                remainingTime: duration.startTime + duration.duration - Date.now()
             } as SerializedDuration;
         }
 
