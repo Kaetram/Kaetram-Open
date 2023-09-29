@@ -55,8 +55,12 @@
                     "count": 2
                 }
             ],
-            "skill": "foraging",
-            "experience": 1500,
+            "skillRewards": [
+                {
+                    "key": "foraging",
+                    "experience": 1500
+                }
+            ],
             "itemRewards": [
                 {
                     "key": "hotsauce",

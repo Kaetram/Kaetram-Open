@@ -16,6 +16,9 @@ import scientistspotion from './scientistspotion';
 import anvilsechoes from './anvilsechoes.ts';
 import herbalistdesperation from './herbalistdesperation';
 import ricksroll from './ricksroll';
+import codersglitch from './codersglitch';
+import codersglitch2 from './codersglitch2';
+import codersfallacy from './codersfallacy';
 
 export default {
     tutorial,
@@ -35,5 +38,8 @@ export default {
     scientistspotion,
     anvilsechoes,
     herbalistdesperation,
-    ricksroll
+    ricksroll,
+    codersglitch,
+    codersglitch2,
+    codersfallacy
 };

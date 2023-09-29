@@ -27,8 +27,12 @@
                 "You've done it! Now, observe as I craft the Elixir.",
                 "I shall share its secret with you."
             ],
-            "skill": "alchemy",
-            "experience": 3200,
+            "skillRewards": [
+                {
+                    "key": "alchemy",
+                    "experience": 3200
+                }
+            ],
             "popup": {
                 "title": "Quest completed!",
                 "text": "@green@You've unlocked the @crimson@Elixir of Luminance Recipe@green@ and gained @crimson@3200 Alchemy experience@green@.",

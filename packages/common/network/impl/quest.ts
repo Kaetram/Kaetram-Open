@@ -11,6 +11,11 @@ export interface QuestItem {
     count: number;
 }
 
+export interface SkillReward {
+    key: string;
+    experience: number;
+}
+
 export interface RawStage {
     task: string;
     npc?: string;
@@ -57,8 +62,7 @@ export interface RawStage {
     rockCount?: number;
 
     /** Skill experience rewards */
-    skill?: string;
-    experience?: number;
+    skillRewards?: SkillReward[];
 
     /** Timer information for the stage */
     timer?: number;
@@ -95,8 +99,7 @@ export interface StageData {
     fishCount?: number;
     rock?: string;
     rockCount?: number;
-    skill?: string;
-    experience?: number;
+    skillRewards?: SkillReward[];
     timer?: number;
 }
 

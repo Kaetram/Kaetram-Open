@@ -32,8 +32,12 @@
                     "count": 15
                 }
             ],
-            "skill": "mining",
-            "experience": 2000,
+            "skillRewards": [
+                {
+                    "key": "mining",
+                    "experience": 2000
+                }
+            ],
             "popup": {
                 "title": "Quest completed!",
                 "text": "@green@You have just finished @crimson@Miner's Quest@green@. You've been awarded @crimson@2000@green@ Mining experience!",

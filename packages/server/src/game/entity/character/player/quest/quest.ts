@@ -350,14 +350,17 @@ export default abstract class Quest {
     }
 
     /**
-     * Verifies the integrity of the skill and grants the player experience in that skill.
+     * Iterates through the list of skill rewards and grants the player experience
+     * for each skill specified.
      * @param player The player we are granting experience to.
      */
 
     private givePlayerExperience(player: Player): void {
-        let skill = player.skills.get(Utils.getSkill(this.stageData.skill!)!);
+        for (let skillReward of this.stageData.skillRewards!) {
+            let skill = player.skills.get(Utils.getSkill(skillReward.key)!);
 
-        skill?.addExperience(this.stageData.experience!);
+            skill?.addExperience(skillReward.experience);
+        }
     }
 
     /**
@@ -420,7 +423,7 @@ export default abstract class Quest {
      */
 
     private hasExperience(stageData: StageData | RawStage): boolean {
-        return !!stageData.experience && !!stageData.skill;
+        return (stageData.skillRewards?.length || 0) > 0;
     }
 
     /**
@@ -598,8 +601,7 @@ export default abstract class Quest {
             fishCount: stage.fishCount || 0,
             rock: stage.rock || '',
             rockCount: stage.rockCount || 0,
-            skill: stage.skill || '',
-            experience: stage.experience || 0,
+            skillRewards: stage.skillRewards || [],
             timer: stage.timer || 0
         };
     }

@@ -31,8 +31,12 @@
                     "count": 1
                 }
             ],
-            "skill": "fishing",
-            "experience": 1500,
+            "skillRewards": [
+                {
+                    "key": "fishing",
+                    "experience": 1500
+                }
+            ],
             "popup": {
                 "title": "Quest completed!",
                 "text": "@green@You have just finished @crimson@Fisherman's Despair@green@. You've been awarded @crimson@1500@green@ Fishing experience and a @crimson@Golden Fishing Rod@green@!",

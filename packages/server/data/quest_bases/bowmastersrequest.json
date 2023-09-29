@@ -24,8 +24,13 @@
             "task": "talk",
             "npc": "bowmaster",
             "hasItemText": ["Ah, perfect! With this, I can teach you to craft the Moonlit Bow."],
-            "skill": "fletching",
-            "experience": 2500,
+
+            "skillRewards": [
+                {
+                    "key": "fletching",
+                    "experience": 2500
+                }
+            ],
             "popup": {
                 "title": "Quest completed!",
                 "text": "@green@You've been awarded @crimson@2500 Fletching experience@green@ and the @crimson@Moonlit Bow Blueprint@green@.",
