@@ -99,7 +99,7 @@ export default class Storage {
                 showLevels: true,
                 disableCaching: false,
                 webgl: false,
-                fpsThrottle: 1
+                fpsThrottle: isIos() ? 1 : 0 // default to 50fps throttle on iOS.
             }
         };
     }
