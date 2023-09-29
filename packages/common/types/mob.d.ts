@@ -5,11 +5,11 @@ export interface MobDrop {
     key: string;
     count?: number; // Defaults to 1 if undefined.
     chance: number;
-    variable?: number; // Whether or not the drop amount is randomized.
+    variable?: boolean; // Whether or not the drop amount is randomized.
     // Quest and achievement requirements.
     quest?: string;
     achievement?: string;
-    status?: 'started' | 'notstarted' | 'finished'; // Optional parameter for when to drop item given quest/achievement.
+    status?: 'started' | 'notstarted'; // Optional parameter for when to drop item given quest/achievement.
 }
 
 export interface MobDropTable {

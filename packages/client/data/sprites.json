@@ -1304,7 +1304,7 @@
     { "id": "bushes/raspberrybush", "width": 24, "height": 24, "offsetX": -4, "offsetY": -4 },
     { "id": "bushes/blackberrybush", "width": 24, "height": 24, "offsetX": -4, "offsetY": -4 },
     { "id": "bushes/bluelilybush", "width": 32, "height": 48, "offsetX": -6, "offsetY": -24 },
-    { "id": "bushes/cornbush", "width": 24, "height": 36, "offsetX": -2, "offsetY": -6 },
+    { "id": "bushes/cornbush", "width": 24, "height": 36, "offsetX": -2, "offsetY": -20 },
     { "id": "bushes/cuminbush", "width": 32, "height": 32, "offsetX": -6, "offsetY": -6 },
     { "id": "bushes/treestump1", "width": 32, "height": 32, "offsetX": -8, "offsetY": -8 },
     { "id": "bushes/mustardbush", "width": 24, "height": 24, "offsetX": -4, "offsetY": -4 },

@@ -247,6 +247,12 @@
             {
                 "key": "bronzesword",
                 "chance": 10000
+            },
+            {
+                "key": "skeletonkingtalisman",
+                "chance": 100000,
+                "quest": "codersglitch",
+                "status": "started"
             }
         ],
         "dropTables": ["ordinary", "arrows"],
