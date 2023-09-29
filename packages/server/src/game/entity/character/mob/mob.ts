@@ -358,7 +358,7 @@ export default class Mob extends Character {
 
     public getDrops(player: Player): ItemDrop[] {
         let drops: ItemDrop[] = [], // The items that the mob will drop
-            randomItem = this.getRandomItem(this.drops);
+            randomItem = this.getRandomItem(this.drops, player);
 
         // Add a random item from the mob's personal list of drops.
         if (randomItem) drops.push(randomItem);
@@ -391,7 +391,7 @@ export default class Mob extends Character {
 
             // Something went wrong.
             if (table) {
-                let randomItem = this.getRandomItem(table.drops);
+                let randomItem = this.getRandomItem(table.drops, player);
 
                 // Add a random item from the table.
                 if (randomItem) drops.push(randomItem);
@@ -406,15 +406,16 @@ export default class Mob extends Character {
      * a random item then roll that item's chance against the overall drop chance. We return
      * the item if the roll is successful, otherwise undefined.
      * @param items The list of items to pick from.
+     * @param player The player we are trying to get the item drop for.
      * @returns Returns an `ItemDrop` object containing the key and the count.
      */
 
-    private getRandomItem(items: MobDrop[]): ItemDrop | undefined {
+    private getRandomItem(items: MobDrop[], player: Player): ItemDrop | undefined {
         // No items to pick from.
         if (items.length === 0) return undefined;
 
         let drop = items[Utils.randomInt(0, items.length - 1)],
-            count = drop.count || 1; // 1 if not specified.
+            count = drop.count || 1;
 
         switch (drop.key) {
             case 'gold': {
@@ -442,6 +443,14 @@ export default class Mob extends Character {
                 break;
             }
         }
+
+        // Drop a varying amount depending on the variable property.
+        if (drop.variable) count = Utils.randomInt(1, count!);
+
+        // Check for quest/achievement requirements.
+        if (drop.quest && !this.fullfillsQuest(player, drop)) return undefined;
+        if (drop.achievement && !player.achievements.get(drop.achievement)?.isFinished())
+            return undefined;
 
         // Something went wrong when trying to get the item drop.
         if (!drop) {
@@ -622,6 +631,34 @@ export default class Mob extends Character {
         }
 
         return false;
+    }
+
+    /**
+     * Checks whether or not the player fullfills the quest requirements
+     * and the status provided by the mob drop.
+     * @param player The player entity that we are checking.
+     * @param drop The mob drop that we are checking.
+     */
+
+    private fullfillsQuest(player: Player, drop: MobDrop): boolean {
+        if (drop.status)
+            switch (drop.status) {
+                // Drop only available before the quest.
+                case 'notstarted': {
+                    return !player.quests.get(drop.quest!)?.isStarted();
+                }
+
+                // Started but hasn't finished (during the quest).
+                case 'started': {
+                    return (
+                        player.quests.get(drop.quest!)?.isStarted() &&
+                        !player.quests.get(drop.quest!)?.isFinished()
+                    );
+                }
+            }
+
+        // Just check if quest is finished by default. Drop is only available after the quest.
+        return player.quests.get(drop.quest!)?.isFinished();
     }
 
     /**
