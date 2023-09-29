@@ -68,8 +68,12 @@
                     "count": 1
                 }
             ],
-            "skill": "archery",
-            "experience": 3000,
+            "skillRewards": [
+                {
+                    "key": "archery",
+                    "experience": 3000
+                }
+            ],
             "popup": {
                 "title": "Quest completed!",
                 "text": "@green@You have just finished @crimson@Elemental Archery@green@. You've been awarded @crimson@3000@green@ Archery experience and the @crimson@Ability to craft Elemental Arrows@green@!",

@@ -60,8 +60,12 @@
                     "count": 1
                 }
             ],
-            "skill": "cooking",
-            "experience": 2500,
+            "skillRewards": [
+                {
+                    "key": "cooking",
+                    "experience": 2500
+                }
+            ],
             "popup": {
                 "title": "Quest completed!",
                 "text": "@green@You have just finished @crimson@Culinary Mysteries@green@. You've been awarded @crimson@2500@green@ Cooking experience and a @crimson@Chef's Special Apron@green@!",

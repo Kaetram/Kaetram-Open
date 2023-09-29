@@ -21,8 +21,13 @@
             "task": "talk",
             "npc": "oldminer",
             "hasItemText": ["You've done it! This ore is precious. Here's how you can best utilize it."],
-            "skill": "mining",
-            "experience": 3500,
+
+            "skillRewards": [
+                {
+                    "key": "mining",
+                    "experience": 3500
+                }
+            ],
             "popup": {
                 "title": "Quest completed!",
                 "text": "@green@You've gained @crimson@Mystic Ore Knowledge@green@ and @crimson@3500 Mining experience@green@.",

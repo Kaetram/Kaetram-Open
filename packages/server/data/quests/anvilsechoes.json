@@ -31,8 +31,12 @@
                 "You can also use my anvil to smith anything you want.",
                 "I'm sure you'll find it useful."
             ],
-            "skill": "smithing",
-            "experience": 420,
+            "skillRewards": [
+                {
+                    "key": "smithing",
+                    "experience": 420
+                }
+            ],
             "itemRequirements": [
                 {
                     "key": "hammer",
