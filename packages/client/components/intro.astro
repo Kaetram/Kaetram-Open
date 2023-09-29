@@ -1,5 +1,16 @@
 ---
-import { t } from '@kaetram/common/i18n';
+import { t, getLanguage } from '@kaetram/common/i18n';
+
+let currentLanguage = getLanguage(),
+    languages = [
+        { locale: 'en', name: 'English' },
+        { locale: 'de', name: 'Deutsch' },
+        { locale: 'es', name: 'Español' },
+        { locale: 'fr', name: 'Français' },
+        { locale: 'pt', name: 'Português' },
+        { locale: 'ro', name: 'Română' },
+        { locale: 'ru', name: 'Русский' }
+    ];
 ---
 
 <div id="intro">
@@ -143,7 +154,7 @@ import { t } from '@kaetram/common/i18n';
         <article id="reset-password">
             <h1>
                 <span class="left-ornament"></span>
-                Reset Password
+                 Reset Password
                 <span class="right-ornament"></span>
             </h1>
 
@@ -187,7 +198,7 @@ import { t } from '@kaetram/common/i18n';
         <article id="world-select">
             <h1>
                 <span class="left-ornament"></span>
-                World Select
+                 World Select
                 <span class="right-ornament"></span>
             </h1>
 
@@ -222,20 +233,20 @@ import { t } from '@kaetram/common/i18n';
 
             <p>
                 <br />
-                Special thanks to
+                 Special thanks to
                 <a
                     rel="noopener noreferrer"
                     class="clickable"
                     target="_blank"
                     href="https://www.littleworkshop.fr/">Little Workshop</a
                 >
-                for the pixel art,
+                 for the pixel art,
                 <br />
                 <br />
-                and the Asky Team.
+                 and the Asky Team.
                 <br />
                 <br />
-                More pixel assets by
+                 More pixel assets by
                 <a
                     rel="noopener noreferrer"
                     class="clickable"
@@ -263,7 +274,7 @@ import { t } from '@kaetram/common/i18n';
                 >, &amp; Boo
                 <br />
                 <br />
-                Music by
+                 Music by
                 <a
                     rel="noopener noreferrer"
                     class="clickable"
@@ -336,6 +347,16 @@ import { t } from '@kaetram/common/i18n';
             >
         </span>
     </section>
+
+    <select id="lang-select" oninput={'location = "/" + this.value + "/"'}>
+        {
+            languages.map(({ locale, name }) => (
+                <option value={locale} selected={locale === currentLanguage}>
+                    {name}
+                </option>
+            ))
+        }
+    </select>
 
     <button id="world-select-button" class="slice-button" hidden>
         <strong class="stroke"></strong>

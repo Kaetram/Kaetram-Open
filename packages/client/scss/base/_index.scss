@@ -10,14 +10,15 @@
 
 body,
 button,
-input {
+input,
+select {
     font-family: Monogram, 'AdvoCut Fallback', arial, sans-serif;
+}
 
-    h1,
-    h2,
-    h3 {
-        font-family: Fibberish, Monogram, AdvoCut, arial, sans-serif;
-    }
+h1,
+h2,
+h3 {
+    font-family: Fibberish, Monogram, AdvoCut, arial, sans-serif;
 }
 
 @each $size, $scale in media.$sizes {
