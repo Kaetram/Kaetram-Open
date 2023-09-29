@@ -1,14 +1,26 @@
 import Blob from '../renderer/bubbles/blob';
+import { DEFAULT_ZOOM } from '../renderer/camera';
 
-import type Game from '../game';
+import type Camera from '../renderer/camera';
+import type Renderer from '../renderer/renderer';
+import type EntitiesController from './entities';
 
 export default class BubbleController {
+    private camera: Camera;
+
     private container: HTMLElement = document.querySelector('#bubbles')!;
 
     // Each entity's instance is associated with a bubble for the duration of a bubble.
     private bubbles: { [instance: string]: Blob } = {};
 
-    public constructor(private game: Game) {}
+    private scale = 1;
+
+    public constructor(
+        private renderer: Renderer,
+        private entities: EntitiesController
+    ) {
+        this.camera = this.renderer.camera;
+    }
 
     /**
      * This creates the blob that will be used to display text. The bubble
@@ -43,18 +55,24 @@ export default class BubbleController {
      */
 
     public setTo(instance: string, x: number, y: number): void {
-        let bubble = this.bubbles[instance],
-            { zoomFactor } = this.game.camera,
-            tileSize = this.game.renderer.tileSize * zoomFactor,
-            width = bubble.element.offsetWidth,
-            offset = width / 2 - tileSize / 2,
-            offsetY = -20;
+        let bubble = this.bubbles[instance];
 
-        x = (x - this.game.camera.x) * zoomFactor;
-        y = (y - this.game.camera.y) * zoomFactor - tileSize * 2 - offsetY;
+        // Update the position of the bubble.
+        bubble.setPosition(x, y);
 
-        bubble.element.style.left = `${x - offset + 3}px`;
-        bubble.element.style.top = `${y}px`;
+        let { offsetWidth, offsetHeight, style } = bubble.element,
+            relativeX = (x - this.camera.x) * this.camera.zoomFactor,
+            relativeY = (y - this.camera.y) * this.camera.zoomFactor - this.renderer.actualTileSize,
+            offsetX = offsetWidth / 2 - this.renderer.actualTileSize / 2 - 6,
+            offsetY = offsetHeight * this.scale,
+            boundaryY = relativeY / this.renderer.canvasHeight;
+
+        // Assign the CSS values based on our calculations.
+        style.left = `${relativeX - offsetX}px`;
+        style.top = `${relativeY - offsetY}px`;
+
+        // Clip the bubble blob if it is outside of the screen.
+        if (boundaryY < 0.1) style.top = '0';
     }
 
     /**
@@ -67,7 +85,7 @@ export default class BubbleController {
 
     public update(time: number): void {
         for (let bubble of Object.values(this.bubbles)) {
-            let entity = this.game.entities.get(bubble.instance);
+            let entity = this.entities.get(bubble.instance);
 
             // If there is an entity, we set the bubble to its position.
             if (entity) this.setTo(entity.instance, entity.x, entity.y);
@@ -78,6 +96,15 @@ export default class BubbleController {
             // Destroy once the timer runs out.
             if (bubble.isOver(time)) this.destroy(bubble);
         }
+    }
+
+    /**
+     * Handles resizing the bubbles currently visible and updating the zoom scaling relative
+     * to the default scale.
+     */
+
+    public resize(): void {
+        this.scale = DEFAULT_ZOOM / this.camera.zoomFactor;
     }
 
     /**

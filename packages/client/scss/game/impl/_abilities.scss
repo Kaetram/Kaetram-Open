@@ -5,328 +5,129 @@
     margin-left: 40%;
     opacity: 0;
     transition: opacity 2s;
-}
 
-#ability-shortcut ul {
-    overflow: hidden;
+    ul {
+        overflow: hidden;
 
-    width: 128%;
-    margin-left: 7%;
-    padding: 0;
+        width: 128%;
+        margin-left: 7%;
+        padding: 0;
 
-    list-style-type: none;
+        list-style-type: none;
 
-    li {
-        float: left;
-        margin-top: 1%;
-        margin-right: 4%;
-    }
-}
-
-@each $size, $i in media.$b-sizes {
-    @media ($size) {
-        .ability-quickslot {
-            cursor: url('/img/hand.png'), auto;
-            position: absolute;
-            width: 16px * $i;
-            height: 16px * $i;
-        }
-
-        #ability-quickslot1 {
-            top: 2px * $i;
-            left: 9px * $i;
-        }
-
-        #ability-quickslot2 {
-            top: 2px * $i;
-            left: 31px * $i;
-        }
-
-        #ability-quickslot3 {
-            top: 2px * $i;
-            left: 53px * $i;
-        }
-
-        #ability-quickslot4 {
-            top: 2px * $i;
-            left: 75px * $i;
+        li {
+            float: left;
+            margin-top: 1%;
+            margin-right: 4%;
         }
     }
 }
 
-@each $size, $i in media.$s-sizes {
-    @media ($size) {
-        #ability-shortcut {
-            cursor: url('/img/hand.png'), auto;
-
-            bottom: 5px;
-
-            width: 200px * $i;
-            height: 40px * $i;
-
-            background-image: url('/img/interface/skillslots.png');
-            background-size: calc(width('skillslots.png') * $i);
-        }
-    }
-
-    .ability-quickslot {
-        cursor: url('/img/hand.png'), auto;
-
-        position: absolute;
-
-        width: 64px;
-        height: 64px;
-        margin-top: 2px;
-    }
-
-    .quickslot-icon-intimidate {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: 0 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-run {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -64px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-awareness {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -128px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-dualistsmark {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -192px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-hotshot {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -256px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-thickskin {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -320px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-precognition {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -384px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-secretcalling {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -448px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-intimidate,
-    .quickslot-icon-run,
-    .quickslot-icon-awareness,
-    .quickslot-icon-dualistsmark,
-    .quickslot-icon-hotshot,
-    .quickslot-icon-thickskin,
-    .quickslot-icon-precognition,
-    .quickslot-icon-secretcalling {
-        &:hover {
-            background-position-y: -60px;
-        }
-
-        &:active,
-        &.active {
-            background-position-y: -120px;
-        }
-    }
+.ability-quickslot {
+    position: absolute;
+    width: 1em;
+    height: 1em;
 }
 
-@media (--lg) {
-    #ability-quickslot1 {
-        left: 36px;
-    }
-
-    #ability-quickslot2 {
-        left: 124px;
-    }
-
-    #ability-quickslot3 {
-        left: 212px;
-    }
-
-    #ability-quickslot4 {
-        left: 300px;
-    }
+#ability-quickslot1 {
+    top: 0.125em;
+    left: 0.5625em;
 }
 
-@media (--md) {
-    #ability-shortcut {
-        margin-left: 25%;
-    }
-
-    .ability-quickslot {
-        cursor: url('/img/hand.png'), auto;
-
-        position: absolute;
-
-        width: 64px;
-        height: 64px;
-        margin-top: 4px;
-        margin-left: 18px;
-    }
-
-    .quickslot-icon-intimidate {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: 0 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-run {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -64px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-awareness {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -128px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-dualistsmark {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -192px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-hotshot {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -256px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-thickskin {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -320px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-precognition {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -384px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-secretcalling {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -448px 1px;
-        background-size: calc(width('abilityicons.png') * 4);
-    }
-
-    .quickslot-icon-intimidate,
-    .quickslot-icon-run,
-    .quickslot-icon-awareness,
-    .quickslot-icon-dualistsmark,
-    .quickslot-icon-hotshot,
-    .quickslot-icon-thickskin,
-    .quickslot-icon-precognition,
-    .quickslot-icon-secretcalling {
-        &:hover {
-            background-position-y: -60px;
-        }
-
-        &:active,
-        &.active {
-            background-position-y: -120px;
-        }
-    }
+#ability-quickslot2 {
+    top: 0.125em;
+    left: 1.9375em;
 }
 
-@media (--sm) {
-    #ability-shortcut {
-        right: 0;
-        margin-bottom: 50px;
+#ability-quickslot3 {
+    top: 0.125em;
+    left: 3.3125em;
+}
+
+#ability-quickslot4 {
+    top: 0.125em;
+    left: 4.6875em;
+}
+
+#ability-shortcut {
+    bottom: 0.3125em;
+
+    width: 12.5em;
+    height: 2.5em;
+
+    background-image: url('/img/interface/skillslots.png');
+    background-size: calc(width('skillslots'));
+}
+
+.ability-quickslot {
+    position: absolute;
+    width: 4em;
+    height: 4em;
+    margin-top: 0.125em;
+}
+
+.quickslot-icon-intimidate {
+    background-image: url('/img/interface/abilityicons.png');
+    background-position: 0 0.0625em;
+    background-size: calc(width('abilityicons') * 0.25rem);
+}
+
+.quickslot-icon-run {
+    background-image: url('/img/interface/abilityicons.png');
+    background-position: -4em 0.0625em;
+    background-size: calc(width('abilityicons') * 0.25rem);
+}
+
+.quickslot-icon-awareness {
+    background-image: url('/img/interface/abilityicons.png');
+    background-position: -8em 0.0625em;
+    background-size: calc(width('abilityicons') * 0.25rem);
+}
+
+.quickslot-icon-dualistsmark {
+    background-image: url('/img/interface/abilityicons.png');
+    background-position: -12em 0.0625em;
+    background-size: calc(width('abilityicons') * 0.25rem);
+}
+
+.quickslot-icon-hotshot {
+    background-image: url('/img/interface/abilityicons.png');
+    background-position: -16em 0.0625em;
+    background-size: calc(width('abilityicons') * 0.25rem);
+}
+
+.quickslot-icon-thickskin {
+    background-image: url('/img/interface/abilityicons.png');
+    background-position: -20em 0.0625em;
+    background-size: calc(width('abilityicons') * 0.25rem);
+}
+
+.quickslot-icon-precognition {
+    background-image: url('/img/interface/abilityicons.png');
+    background-position: -24em 0.0625em;
+    background-size: calc(width('abilityicons') * 0.25rem);
+}
+
+.quickslot-icon-secretcalling {
+    background-image: url('/img/interface/abilityicons.png');
+    background-position: -28em 0.0625em;
+    background-size: calc(width('abilityicons') * 0.25rem);
+}
+
+.quickslot-icon-intimidate,
+.quickslot-icon-run,
+.quickslot-icon-awareness,
+.quickslot-icon-dualistsmark,
+.quickslot-icon-hotshot,
+.quickslot-icon-thickskin,
+.quickslot-icon-precognition,
+.quickslot-icon-secretcalling {
+    &:hover {
+        background-position-y: -3.75em;
     }
 
-    .ability-quickslot {
-        cursor: url('/img/hand.png'), auto;
-
-        position: absolute;
-
-        width: 32px;
-        height: 32px;
-        margin-top: 0;
-        margin-left: 0;
-    }
-
-    .quickslot-icon-intimidate {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: 0 1px;
-        background-size: calc(width('abilityicons.png') * 2);
-    }
-
-    .quickslot-icon-run {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -32px 1px;
-        background-size: calc(width('abilityicons.png') * 2);
-    }
-
-    .quickslot-icon-awareness {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -64px 1px;
-        background-size: calc(width('abilityicons.png') * 2);
-    }
-
-    .quickslot-icon-dualistsmark {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -96px 1px;
-        background-size: calc(width('abilityicons.png') * 2);
-    }
-
-    .quickslot-icon-hotshot {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -128px 1px;
-        background-size: calc(width('abilityicons.png') * 2);
-    }
-
-    .quickslot-icon-thickskin {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -160px 1px;
-        background-size: calc(width('abilityicons.png') * 2);
-    }
-
-    .quickslot-icon-precognition {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -192px 1px;
-        background-size: calc(width('abilityicons.png') * 2);
-    }
-
-    .quickslot-icon-secretcalling {
-        background-image: url('/img/interface/abilityicons.png');
-        background-position: -224px 1px;
-        background-size: calc(width('abilityicons.png') * 2);
-    }
-
-    .quickslot-icon-intimidate,
-    .quickslot-icon-run,
-    .quickslot-icon-awareness,
-    .quickslot-icon-dualistsmark,
-    .quickslot-icon-hotshot,
-    .quickslot-icon-thickskin,
-    .quickslot-icon-precognition,
-    .quickslot-icon-secretcalling {
-        &:hover {
-            background-position-y: -30px;
-        }
-
-        &:active,
-        &.active {
-            background-position-y: -60px;
-        }
+    &:active,
+    &.active {
+        background-position-y: -7.5em;
     }
 }

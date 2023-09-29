@@ -15,9 +15,8 @@ import Events from '../controllers/events';
 
 import config from '@kaetram/common/config';
 import log from '@kaetram/common/util/log';
-import Utils from '@kaetram/common/util/utils';
 import Discord from '@kaetram/common/api/discord';
-import { Chat, Guild } from '@kaetram/common/network/impl';
+import { ChatPacket, GuildPacket } from '@kaetram/common/network/impl';
 import { Modules, Opcodes } from '@kaetram/common/network';
 import { PacketType } from '@kaetram/common/network/modules';
 
@@ -28,7 +27,6 @@ import type SocketHandler from '../network/sockethandler';
 import type Player from './entity/character/player/player';
 import type Packet from '@kaetram/common/network/packet';
 import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
-import type { GuildData } from '@kaetram/common/types/guild';
 
 export interface PacketData {
     packet: Packet;
@@ -64,7 +62,10 @@ export default class World {
 
     public connectionCallback?: ConnectionCallback;
 
-    public constructor(public socketHandler: SocketHandler, public database: MongoDB) {
+    public constructor(
+        public socketHandler: SocketHandler,
+        public database: MongoDB
+    ) {
         this.map = new Map(this);
         this.api = new API(this);
         this.stores = new Stores(this);
@@ -149,9 +150,9 @@ export default class World {
 
     public globalMessage(source: string, message: string, colour = '', noPrefix = false): void {
         this.push(Modules.PacketType.Broadcast, {
-            packet: new Chat({
+            packet: new ChatPacket({
                 source: noPrefix ? source : `[Global]: ${source}`,
-                message: Utils.parseMessage(message),
+                message,
                 colour
             })
         });
@@ -200,40 +201,40 @@ export default class World {
      * @param serverId The server id that the player is currently logged in to.
      */
 
-    public syncGuildMembers(
+    public async syncGuildMembers(
         identifier: string,
         username: string,
         logout = false,
         serverId = config.serverId
-    ): void {
+    ): Promise<void> {
         if (!identifier) return;
 
-        this.database.loader.loadGuild(identifier, (guild?: GuildData) => {
-            if (!guild) return;
+        let guild = await this.database.loader.loadGuild(identifier);
 
-            // Iterate through the members in the guild.
-            for (let member of guild.members) {
-                // Skip if the member is the player we are updating.
-                if (member.username === username) continue;
+        if (!guild) return;
 
-                let player = this.getPlayerByName(member.username);
+        // Iterate through the members in the guild.
+        for (let member of guild.members) {
+            // Skip if the member is the player we are updating.
+            if (member.username === username) continue;
 
-                // Skip if player doesn't exist.
-                if (!player) continue;
+            let player = this.getPlayerByName(member.username);
 
-                // If the player is online, send a packet with a new status.
-                player.send(
-                    new Guild(Opcodes.Guild.Update, {
-                        members: [
-                            {
-                                username,
-                                serverId: logout ? -1 : serverId
-                            }
-                        ]
-                    })
-                );
-            }
-        });
+            // Skip if player doesn't exist.
+            if (!player) continue;
+
+            // If the player is online, send a packet with a new status.
+            player.send(
+                new GuildPacket(Opcodes.Guild.Update, {
+                    members: [
+                        {
+                            username,
+                            serverId: logout ? -1 : serverId
+                        }
+                    ]
+                })
+            );
+        }
     }
 
     /**

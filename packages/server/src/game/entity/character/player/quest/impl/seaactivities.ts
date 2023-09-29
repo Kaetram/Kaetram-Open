@@ -1,9 +1,8 @@
 import Quest from '../quest';
-
-import type { RawQuest } from '@kaetram/common/types/quest';
+import Data from '../../../../../../../data/quests/seaactivities.json';
 
 export default class SeaActivities extends Quest {
-    public constructor(key: string, rawData: RawQuest) {
-        super(key, rawData);
+    public constructor(key: string) {
+        super(key, Data);
     }
 }

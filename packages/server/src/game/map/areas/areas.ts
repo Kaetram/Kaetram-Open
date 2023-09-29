@@ -2,13 +2,16 @@ import Area from './area';
 
 import log from '@kaetram/common/util/log';
 
-import type { ProcessedArea } from '@kaetram/common/types/map';
 import type World from '../../world';
+import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default abstract class Areas {
     public areas: Area[] = [];
 
-    protected constructor(public data: ProcessedArea[], public world: World) {}
+    protected constructor(
+        public data: ProcessedArea[],
+        public world: World
+    ) {}
 
     /**
      * Parses through the mapAreas and sets their base properties (id, x, y, width, height).

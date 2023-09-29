@@ -7,6 +7,7 @@ import MenuController from './controllers/menu';
 import Pointer from './controllers/pointer';
 import SpritesController from './controllers/sprites';
 import Zoning from './controllers/zoning';
+import JoystickController from './controllers/joystick';
 import Player from './entity/character/player/player';
 import Handler from './entity/character/player/handler';
 import Map from './map/map';
@@ -29,6 +30,7 @@ import type Entity from './entity/entity';
 import type Storage from './utils/storage';
 import type Character from './entity/character/character';
 import type { TileIgnore } from './utils/pathfinder';
+import type Resource from './entity/objects/resource/resource';
 
 export default class Game {
     public player: Player;
@@ -55,16 +57,20 @@ export default class Game {
     public audio: AudioController;
     public entities: EntitiesController;
     public bubble: BubbleController;
+    public joystick: JoystickController;
     public menu: MenuController;
 
     public connection: Connection;
 
     public time = Date.now();
-    public lastTime = Date.now();
+    public timeDiff = Date.now(); // Used for FPS calculation.
+    public timeLast = Date.now();
+    public targetFPS = 1000 / 50;
 
     public started = false;
     public ready = false;
     public pvp = false;
+    public throttle = false;
     public useWebGl = false;
 
     public constructor(public app: App) {
@@ -78,17 +84,16 @@ export default class Game {
         this.sprites = new SpritesController();
 
         this.renderer = this.useWebGl ? new WebGL(this) : new Canvas(this);
+        this.joystick = new JoystickController(this);
         this.menu = new MenuController(this);
         this.input = new InputController(this);
         this.socket = new Socket(this);
-        this.pointer = new Pointer(this);
         this.updater = new Updater(this);
         this.audio = new AudioController(this);
         this.entities = new EntitiesController(this);
-        this.bubble = new BubbleController(this);
+        this.bubble = new BubbleController(this.renderer, this.entities);
+        this.pointer = new Pointer(this.renderer, this.entities);
         this.connection = new Connection(this);
-
-        app.sendStatus('Loading game');
 
         this.map.onReady(() => {
             app.ready();
@@ -124,12 +129,21 @@ export default class Game {
      */
 
     private tick(): void {
+        if (this.started) requestAnimationFrame(() => this.tick());
+
         this.time = Date.now();
 
-        this.renderer.render();
-        this.updater.update();
+        // Only calculate throttling when we enable it.
+        if (this.throttle) {
+            this.timeDiff = this.time - this.timeLast;
 
-        if (this.started) requestAnimationFrame(() => this.tick());
+            if (this.timeDiff < this.targetFPS) return;
+
+            this.timeLast = this.time - (this.timeDiff % this.targetFPS);
+        }
+
+        this.updater.update();
+        this.renderer.render();
     }
 
     /**
@@ -176,18 +190,20 @@ export default class Game {
             this.camera.setZoom(this.storage.data.player.zoom);
 
             this.renderer.resize();
+            this.pointer.resize();
+            this.bubble.resize();
         }
 
         this.camera.centreOn(this.player);
 
         this.player.handler = new Handler(this.player);
 
-        this.renderer.updateAnimatedTiles();
-
         this.socket.send(Packets.Ready, {
             regionsLoaded: this.map.regionsLoaded,
             userAgent: agent
         });
+
+        if (this.storage.isNew()) this.menu.getWelcome().show();
 
         if (this.storage.data.new) {
             this.storage.data.new = false;
@@ -195,6 +211,10 @@ export default class Game {
         }
 
         if (this.map.hasCachedDate()) this.app.fadeMenu();
+
+        this.menu.synchronize();
+
+        this.forceRendering();
     }
 
     /**
@@ -223,13 +243,29 @@ export default class Game {
 
         // Special case for fishing where we remove the last path if it is colliding.
         if (cursor === 'fishing') {
-            let last = path[path.length - 2];
+            let last = path.at(-2)!;
 
             // Remove if there is a collision  at the last path only (to allow fishing from a distance).
             if (this.map.isColliding(last[0], last[1])) path.pop();
         }
 
         return path;
+    }
+
+    /**
+     * Finds the closest non-colliding tile around the character entity.
+     * @param character The character we are finding the closest tile for.
+     */
+
+    public findAdjacentTile(character: Character): void {
+        if (!this.map.isColliding(character.gridX + 1, character.gridY))
+            character.go(character.gridX + 1, character.gridY);
+        else if (!this.map.isColliding(character.gridX - 1, character.gridY))
+            character.go(character.gridX - 1, character.gridY);
+        else if (!this.map.isColliding(character.gridX, character.gridY + 1))
+            character.go(character.gridX, character.gridY + 1);
+        else if (!this.map.isColliding(character.gridX, character.gridY - 1))
+            character.go(character.gridX, character.gridY - 1);
     }
 
     /**
@@ -262,9 +298,6 @@ export default class Game {
         // Synchronize the camera and reset the zoning directions.
         this.camera.zone(this.zoning.getDirection());
 
-        // Update the animated tiles.
-        this.renderer.updateAnimatedTiles();
-
         // Reset the zoning directions.
         this.zoning.reset();
     }
@@ -290,6 +323,7 @@ export default class Game {
         this.renderer.resize();
 
         this.pointer.resize();
+        this.bubble.resize();
 
         this.menu.resize();
     }
@@ -323,33 +357,46 @@ export default class Game {
      * @returns An entity if found, otherwise undefined.
      */
 
-    public searchForEntityAt(position: Position, radius = 2): Entity | undefined {
+    public searchForEntityAt(position: Position, radius = 3): Entity | undefined {
         let entities = this.entities.grids.getEntitiesAround(
                 position.gridX!,
                 position.gridY!,
                 radius
             ),
-            closest: Entity | undefined,
-            boundary = this.map.tileSize * 1.5;
+            closest: Entity | undefined;
 
         /**
-         * The `position` parameter contains the absolute x and y coordinates
-         * of the cursor. We iterate through the entities and try to find
-         * the distance between the cursor and the entity. We then compare
-         * the distance to the previous entity and if it is smaller, we
-         * replace the previous entity with the current one.
+         * We iterate through every entity that we find near the mouse position. We
+         * check if the entity can be interacted with, and then we do some magical
+         * math to determine if the mouse position is within the entity's boundaries.
+         * We take the entity's bounding box, find the centre of it, and then we
+         * calculate the distance between the mouse position and the centre of the
+         * bounding box. Think of it as a circle, actually, turn on debug mode so
+         * you can see the entity bounding box better.
          */
 
         for (let entity of entities) {
-            // Skip pets from the search.
-            if (entity.isPet()) continue;
+            // Exclude unnecessary entities.
+            if (entity.isProjectile() || entity.isPet() || this.isMainPlayer(entity.instance))
+                continue;
 
-            let entityX = entity.x - entity.sprite.offsetX / 2,
-                entityY = entity.y - entity.sprite.offsetY / 2,
-                distance = Utils.distance(position.x, position.y, entityX, entityY);
+            // Skip if the entity is a resource and is exhausted.
+            if (entity.isResource() && (entity as Resource).exhausted) continue;
 
-            if (distance > boundary) continue;
+            // Get the bounding box, determine the centre, calculate distance between mouse and centre.
+            let boundingBox = entity.getBoundingBox(),
+                centreX = boundingBox.x + boundingBox.width / 2,
+                centreY = boundingBox.y + boundingBox.height / 2,
+                distance = Utils.distance(position.x, position.y, centreX, centreY),
+                threshold =
+                    (entity.sprite.width < entity.sprite.height
+                        ? entity.sprite.width
+                        : entity.sprite.height) / 2;
 
+            // Skip if the distance is greater than the boundary.
+            if (distance > threshold) continue;
+
+            // Find the closest entity to the mouse position.
             if (!closest || distance < closest.distance) {
                 closest = entity;
                 closest.distance = distance;
@@ -385,8 +432,9 @@ export default class Game {
             this.player.moving = false;
             this.player.disableAction = false;
             this.camera.centreOn(this.player);
-            this.renderer.updateAnimatedTiles();
         }
+
+        this.forceRendering();
     }
 
     /**
@@ -397,7 +445,45 @@ export default class Game {
     public zoom(amount: number): void {
         this.camera.zoom(amount);
         this.storage.setZoom(this.camera.zoomFactor);
+        this.pointer.resize();
 
         this.renderer.resize();
+    }
+
+    /**
+     * Whether or not the game is in low power mode. This prevents the camera
+     * from following the player and disables animated tiles.
+     */
+
+    public isLowPowerMode(): boolean {
+        return !this.camera.isCentered() && !this.renderer.animateTiles;
+    }
+
+    /**
+     * Function to consolidate all calls to check whether or not the current
+     * entity we're dealing with is the main player.
+     * @param instance The instance we want to check.
+     * @returns Whether the main player's instance matches the instance provided.
+     */
+
+    public isMainPlayer(instance: string): boolean {
+        return this.player.instance === instance;
+    }
+
+    /**
+     * Forcibly makes the renderer render a couple frames to
+     * ensure animated tiles are rendered.
+     */
+
+    public forceRendering(): void {
+        // Forcibly render the game for a few frames to ensure animated tiles are rendered.
+        let count = 0,
+            interval = setInterval(() => {
+                this.renderer.forceRendering = true;
+
+                count++;
+
+                if (count > 10) clearInterval(interval);
+            }, 100);
     }
 }

@@ -1,12 +1,10 @@
 import install from './lib/pwa';
-import { isMobile } from './utils/detect';
 import Storage from './utils/storage';
 import Util from './utils/util';
+import { isMobile } from './utils/detect';
 import { onSecondaryPress } from './utils/press';
 
-import Updates from '@kaetram/common/text/en/updates.json';
-
-import type { SerializedServer } from '@kaetram/common/types/api';
+import type { SerializedServer } from '@kaetram/common/types/network';
 
 type EmptyCallback = () => void;
 type KeyDownCallback = (e: KeyboardEvent) => void;
@@ -19,7 +17,7 @@ type MouseMoveCallback = (e: MouseEvent) => void;
 type ValidationType = 'status' | 'validation-error' | 'validation-warning';
 
 export default class App {
-    public config = window.config;
+    public config = globalConfig;
 
     public storage: Storage = new Storage();
 
@@ -59,11 +57,11 @@ export default class App {
 
     private validation: NodeListOf<HTMLElement> = document.querySelectorAll('.validation-summary')!;
     private loading: HTMLElement = document.querySelector('.loader')!;
+    private langSelect: HTMLElement = document.querySelector('#lang-select')!;
     private worldSelectButton: HTMLElement = document.querySelector('#world-select-button')!;
     private gameVersion: HTMLElement = document.querySelector('#game-version')!;
 
     private currentScroll = 'load-character';
-    private parchmentAnimating = false;
     private loggingIn = false; // Used to prevent interactions when trying to log in.
     private menuHidden = false; // Used to reroute key input to the callback.
 
@@ -95,6 +93,14 @@ export default class App {
      */
 
     private load(): void {
+        if (!this.config.acceptLicense) {
+            this.sendError(
+                'You must read and accept both MPL2.0 and OPL licensing agreements. Once you have done so, toggle ACCEPT_LICENSE in your environment variables.'
+            );
+
+            return;
+        }
+
         this.loginForm.addEventListener('submit', this.login.bind(this));
         this.registerForm.addEventListener('submit', this.login.bind(this));
 
@@ -136,9 +142,13 @@ export default class App {
         window.addEventListener('focus', () => this.focusCallback?.());
 
         // Body callbacks
-        onSecondaryPress(document.querySelector('#canvas')!, (position) =>
-            this.rightClickCallback?.(position)
+        onSecondaryPress(
+            document.querySelector('#canvas')!,
+            (position) => this.rightClickCallback?.(position)
         );
+
+        for (let input of document.querySelectorAll<HTMLInputElement>("input[type='number']"))
+            input.addEventListener('input', () => this.validateNumberInput(input));
     }
 
     /**
@@ -189,6 +199,8 @@ export default class App {
      */
 
     public ready(): void {
+        if (!this.config.acceptLicense) return;
+
         this.sendStatus();
 
         this.loginButton.disabled = false;
@@ -227,6 +239,9 @@ export default class App {
      */
 
     private saveLogin(): void {
+        // Prevent saving login if logging in as guest.
+        if (this.isGuest()) return;
+
         // Always save the state of the remember me button.
         this.storage.setRemember(this.isRememberMe());
 
@@ -249,6 +264,7 @@ export default class App {
         this.body.className = 'intro';
 
         this.menuHidden = false;
+        this.langSelect.hidden = false;
         this.worldSelectButton.hidden = false;
         this.gameVersion.hidden = false;
     }
@@ -264,13 +280,12 @@ export default class App {
         this.body.className = 'game';
 
         this.menuHidden = true;
+        this.langSelect.hidden = true;
         this.worldSelectButton.hidden = true;
         this.gameVersion.hidden = true;
 
         this.updateLoader();
         this.saveLogin();
-
-        setTimeout(() => this.displayNews(), 1000);
     }
 
     /**
@@ -281,7 +296,7 @@ export default class App {
      */
 
     public openScroll(destination: string): void {
-        if (this.loggingIn || this.parchmentAnimating) return;
+        if (this.loggingIn) return;
 
         // Clears all errors that may have been displayed.
         this.clearErrors();
@@ -298,24 +313,16 @@ export default class App {
 
     public changeScroll(destination: string, withAnimation = false): void {
         if (withAnimation) {
-            this.parchmentAnimating = true;
-
             // Toggle animation and remove the current scroll class from parchment.
             this.parchment.classList.toggle('animate');
             this.parchment.classList.remove(this.currentScroll);
 
-            // Set a timeout for the animation before displaying data.
-            window.setTimeout(() => {
-                // Toggle so that we can allow changing scrolls again.
-                this.parchmentAnimating = false;
+            // Animate again and add the new destination scroll.
+            this.parchment.classList.toggle('animate');
+            this.parchment.classList.add(destination);
 
-                // Animate again and add the new destination scroll.
-                this.parchment.classList.toggle('animate');
-                this.parchment.classList.add(destination);
-
-                // Focus on the first text field in the new scroll.
-                document.querySelector<HTMLInputElement>(`#${destination} input`)?.focus();
-            }, 1000);
+            // Focus on the first text field in the new scroll.
+            document.querySelector<HTMLInputElement>(`#${destination} input`)?.focus();
         } else {
             this.parchment.classList.remove(this.currentScroll);
             this.parchment.classList.add(destination);
@@ -404,37 +411,6 @@ export default class App {
     }
 
     /**
-     * When a new player or an update to the game has occurred we send a scroll
-     * notification. In the case of a new player we welcome them to the game,
-     * in the case of an update, we show the update changelog using the JSON in `common`.
-     */
-
-    public displayNews(): void {
-        let title = document.querySelector('#news-title')!,
-            content = document.querySelector('#news-content')!;
-
-        if (!title || !content) return;
-
-        // Show the default welcome screen when there is a new player.
-        if (this.storage.isNew()) return this.body.classList.add('news');
-
-        // Display new version changelogs.
-        if (this.storage.newVersion) {
-            title.textContent = `Kaetram ${this.config.version} Changelog`;
-
-            let changes = Updates[this.config.version as keyof typeof Updates];
-
-            if (!changes) return;
-
-            content.textContent = '';
-
-            for (let cc of changes.content) content.innerHTML += `${cc}<br>`;
-
-            this.body.classList.add('news');
-        }
-    }
-
-    /**
      * An error is a red message displayed on the login
      * or registration page. This is generally when something
      * goes wrong, like an invalid input, server responding
@@ -505,10 +481,11 @@ export default class App {
 
         this.loggingIn = toggle;
 
-        this.loading.hidden = !toggle;
-
         this.loginButton.disabled = toggle;
         this.registerButton.disabled = toggle;
+
+        document.querySelector(`#${this.currentScroll} .validation-summary`)?.append(this.loading);
+        this.loading.hidden = !toggle;
     }
 
     /**
@@ -794,6 +771,14 @@ export default class App {
             // Add the <li> element to the list of worlds
             this.worldsList.append(li);
         }
+    }
+
+    /**
+     * Validates number inputs from negative and decimal values.
+     */
+
+    private validateNumberInput(input: HTMLInputElement) {
+        input.value = input.value.replaceAll(/\D/g, '');
     }
 
     /**

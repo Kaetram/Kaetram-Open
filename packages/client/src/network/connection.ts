@@ -1,3 +1,5 @@
+import Util from '../utils/util';
+
 import { inflate } from 'pako';
 import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
@@ -21,48 +23,52 @@ import type SpritesController from '../controllers/sprites';
 import type Player from '../entity/character/player/player';
 import type PointerController from '../controllers/pointer';
 import type EntitiesController from '../controllers/entities';
-import type { PlayerData } from '@kaetram/common/types/player';
+import type { PlayerData } from '@kaetram/common/network/impl/player';
 import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type { SerializedSkills, SkillData } from '@kaetram/common/types/skills';
-import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import type { SerializedAbility, AbilityData } from '@kaetram/common/types/ability';
+import type { SerializedSkills, SkillData } from '@kaetram/common/network/impl/skill';
+import type { SerializedAbility, AbilityData } from '@kaetram/common/network/impl/ability';
 import type {
-    AbilityPacket,
-    AchievementPacket,
-    AnimationPacket,
-    BubblePacket,
-    ChatPacket,
-    CombatPacket,
-    CommandPacket,
-    ContainerPacket,
-    DespawnPacket,
-    EnchantPacket,
-    EquipmentPacket,
-    ExperiencePacket,
-    HealPacket,
-    MovementPacket,
-    NotificationPacket,
-    NPCPacket,
-    OverlayPacket,
-    PointerPacket,
-    PointsPacket,
-    PVPPacket,
-    QuestPacket,
-    RespawnPacket,
-    StorePacket,
-    TeleportPacket,
-    SkillPacket,
-    MinigamePacket,
-    EffectPacket,
-    FriendsPacket,
-    ListPacket,
-    TradePacket,
-    HandshakePacket,
-    GuildPacket,
-    CraftingPacket,
-    LootBagPacket,
-    CountdownPacket
+    AbilityPacketData,
+    AchievementPacketData,
+    AnimationPacketData,
+    BubblePacketData,
+    ChatPacketData,
+    CombatPacketData,
+    CommandPacketData,
+    ContainerPacketData,
+    DespawnPacketData,
+    EnchantPacketData,
+    EquipmentPacketData,
+    ExperiencePacketData,
+    HealPacketData,
+    MovementPacketData,
+    NotificationPacketData,
+    NPCPacketData,
+    OverlayPacketData,
+    PointerPacketData,
+    PointsPacketData,
+    PVPPacketData,
+    QuestPacketData,
+    RespawnPacketData,
+    StorePacketData,
+    TeleportPacketData,
+    SkillPacketData,
+    MinigamePacketData,
+    EffectPacketData,
+    FriendsPacketData,
+    EntityListPacketData,
+    TradePacketData,
+    HandshakePacketData,
+    GuildPacketData,
+    CraftingPacketData,
+    LootBagPacketData,
+    CountdownPacketData,
+    InterfacePacketData
 } from '@kaetram/common/types/messages/outgoing';
+import type { TradePacketValues } from '@kaetram/common/network/impl/trade';
+import type { EquipmentPacketValues } from '@kaetram/common/network/impl/equipment';
+import type Resource from '../entity/objects/resource/resource';
+import type { ResourcePacketData } from '@kaetram/common/network/impl/resource';
 
 export default class Connection {
     /**
@@ -111,7 +117,13 @@ export default class Connection {
         this.sprites = game.sprites;
         this.messages = this.socket.messages;
 
-        this.app.onFocus(() => this.socket.send(Packets.Focus));
+        this.app.onFocus(() => {
+            if (Date.now() - this.lastEntityListRequest < 4000) return;
+
+            this.socket.send(Packets.Focus);
+
+            this.lastEntityListRequest = Date.now();
+        });
 
         this.messages.onHandshake(this.handleHandshake.bind(this));
         this.messages.onWelcome(this.handleWelcome.bind(this));
@@ -158,8 +170,10 @@ export default class Connection {
         this.messages.onFriends(this.handleFriends.bind(this));
         this.messages.onRank(this.handleRank.bind(this));
         this.messages.onCrafting(this.handleCrafting.bind(this));
+        this.messages.onInterface(this.handleInterface.bind(this));
         this.messages.onLootBag(this.handleLootBag.bind(this));
         this.messages.onCountdown(this.handleCountdown.bind(this));
+        this.messages.onResource(this.handleResource.bind(this));
     }
 
     /**
@@ -168,7 +182,13 @@ export default class Connection {
      * must send the login packet (guest, registering, or login).
      */
 
-    private handleHandshake(data: HandshakePacket): void {
+    private handleHandshake(data: HandshakePacketData): void {
+        if (data.type !== 'client') {
+            this.app.updateLoader('Invalid client');
+
+            return;
+        }
+
         this.app.updateLoader('Connecting to server');
 
         // Set the server id and instance
@@ -239,9 +259,6 @@ export default class Connection {
         // Used if the client uses low-power mode, forces redrawing of trees.
         this.renderer.forceRendering = true;
 
-        // Update the animated tiles when we receive new map data.
-        this.renderer.updateAnimatedTiles();
-
         if (!this.map.hasCachedDate()) this.app.fadeMenu();
     }
 
@@ -253,33 +270,44 @@ export default class Connection {
      * @param info Data containing equipment(s) information.
      */
 
-    private handleEquipment(opcode: Opcodes.Equipment, info: EquipmentPacket): void {
+    private handleEquipment(opcode: Opcodes.Equipment, info: EquipmentPacketValues): void {
         switch (opcode) {
             case Opcodes.Equipment.Batch: {
-                for (let equipment of (info.data as SerializedEquipment).equipments)
-                    this.game.player.equip(equipment);
+                let { data } = info as EquipmentPacketData[typeof opcode];
+
+                for (let equipment of data.equipments) this.game.player.equip(equipment);
 
                 break;
             }
 
             case Opcodes.Equipment.Equip: {
-                this.game.player.equip(info.data as EquipmentData);
+                let { data } = info as EquipmentPacketData[typeof opcode];
+
+                this.game.player.equip(data);
                 break;
             }
 
             case Opcodes.Equipment.Unequip: {
-                this.game.player.unequip(info.type!, info.count);
+                let { type, count } = info as EquipmentPacketData[typeof opcode];
+
+                this.game.player.unequip(type, count);
                 break;
             }
 
             case Opcodes.Equipment.Style: {
-                this.game.player.setAttackStyle(info.attackStyle!);
-                this.game.player.attackRange = info.attackRange!;
+                let { attackRange, attackStyle } = info as EquipmentPacketData[typeof opcode];
+
+                this.game.player.setAttackStyle(attackStyle);
+                this.game.player.attackRange = attackRange;
+
                 break;
             }
         }
 
         this.game.player.sync();
+
+        // Update the lighting for the player.
+        this.renderer.updatePlayerLight();
     }
 
     /**
@@ -289,7 +317,7 @@ export default class Connection {
      * @param entities A list of strings that contains the instances of the entities in the region.
      */
 
-    private handleEntityList(opcode: Opcodes.List, info: ListPacket): void {
+    private handleEntityList(opcode: Opcodes.List, info: EntityListPacketData): void {
         switch (opcode) {
             case Opcodes.List.Spawns: {
                 let ids = new Set(
@@ -319,7 +347,7 @@ export default class Connection {
                         entity = this.entities.get<Character>(instance);
 
                     // No entity found, just skip.
-                    if (!entity || entity.moving || entity.hasPath()) return;
+                    if (!entity || entity.hasPath()) return;
 
                     /**
                      * When we detect a mismatch in client-sided and server-sided
@@ -349,6 +377,8 @@ export default class Connection {
         player.load(data, true);
 
         player.setSprite(this.game.sprites.get(player.getSpriteName()));
+
+        this.renderer.updatePlayerLight(player);
     }
 
     /**
@@ -359,7 +389,7 @@ export default class Connection {
      * @param info Information such as instance and coordinates of the entity that is moving.
      */
 
-    private handleMovement(opcode: Opcodes.Movement, info: MovementPacket): void {
+    private handleMovement(opcode: Opcodes.Movement, info: MovementPacketData): void {
         let entity = this.entities.get<Character>(info.instance) as Character,
             target: Character;
 
@@ -380,9 +410,14 @@ export default class Connection {
 
         switch (opcode) {
             case Opcodes.Movement.Move: {
-                if (info.forced) entity.stop(true);
+                if (info.target === this.game.player.instance && entity.following) return;
 
-                entity.go(info.x!, info.y!, false, info.instance !== this.game.player.instance);
+                entity.go(
+                    info.x!,
+                    info.y!,
+                    info.forced,
+                    info.instance !== this.game.player.instance
+                );
                 break;
             }
 
@@ -407,8 +442,7 @@ export default class Connection {
             }
 
             case Opcodes.Movement.Stop: {
-                if (info.forced) entity.stop(true);
-                break;
+                return entity.stop();
             }
 
             case Opcodes.Movement.Speed: {
@@ -424,7 +458,7 @@ export default class Connection {
      * @param info Instance of the entity, x and y coordinates, and whether to animate.
      */
 
-    private handleTeleport(info: TeleportPacket): void {
+    private handleTeleport(info: TeleportPacketData): void {
         let entity = this.entities.get<Character>(info.instance);
 
         if (!entity?.isMob() && !entity?.isPlayer()) return;
@@ -452,11 +486,11 @@ export default class Connection {
         // Copy the entity's sprite temporarily.
         let entitySprite = entity.sprite.key;
 
-        // Prevent rendering of the sword.
-        entity.teleporting = true;
-
         // Set the entity's sprite to the death animation sprite.
         entity.setSprite(this.sprites.getDeath());
+
+        // Prevent rendering of the sword.
+        entity.teleporting = true;
 
         entity.animateDeath(() => {
             this.game.teleport(entity, info.x, info.y);
@@ -475,7 +509,7 @@ export default class Connection {
      * @param info Contains despawn packet information such as instance and list of regions to ignore.
      */
 
-    private handleDespawn(info: DespawnPacket): void {
+    private handleDespawn(info: DespawnPacketData): void {
         let entity = this.entities.get<Character>(info.instance);
 
         // Could not find the entity.
@@ -519,7 +553,7 @@ export default class Connection {
      * @param info Contains attacker, target, and damage information.
      */
 
-    private handleCombat(opcode: Opcodes.Combat, info: CombatPacket): void {
+    private handleCombat(opcode: Opcodes.Combat, info: CombatPacketData): void {
         let attacker = this.entities.get<Character>(info.instance),
             target = this.entities.get<Character>(info.target);
 
@@ -554,7 +588,16 @@ export default class Connection {
         if (currentPlayerTarget && info.hit.damage > 0) this.audio.playSound('hurt');
 
         // Create the hit info to be displayed above the entity.
-        this.info.create(info.hit.type, info.hit.damage, target.x, target.y, currentPlayerTarget);
+        this.info.create(
+            info.hit.type,
+            info.hit.damage,
+            target.x,
+            target.y,
+            currentPlayerTarget,
+            -1,
+            true,
+            info.hit.skills
+        );
 
         // Flash the target character when a hit occurs.
         if (info.hit.damage > 0) target.toggleHurt();
@@ -562,6 +605,14 @@ export default class Connection {
         // Show the health bar for both entities.
         attacker.triggerHealthBar();
         target.triggerHealthBar();
+
+        // Add the attacker to the target's list of attackers.
+        target.addAttacker(attacker);
+        //attacker.setTarget(target);
+
+        // Ensure the attacker and the target are not on the same tile and just move them.
+        if (attacker.isMob() && attacker.gridX === target.gridX && attacker.gridY === target.gridY)
+            this.game.findAdjacentTile(attacker);
     }
 
     /**
@@ -569,12 +620,21 @@ export default class Connection {
      * @param info Contains instance and what animation to perform.
      */
 
-    private handleAnimation(info: AnimationPacket): void {
+    private handleAnimation(info: AnimationPacketData): void {
         let character = this.entities.get<Character>(info.instance);
 
-        if (!character) return;
+        character?.performAction(character.orientation, info.action);
 
-        character.performAction(character.orientation, info.action);
+        if (info.resourceInstance) {
+            let resource = this.entities.get<Resource>(info.resourceInstance);
+
+            resource?.shake();
+
+            // Play the tree chopping sound effect with every animation.
+            if (resource?.isTree()) this.audio.playChoppingSound(this.game.player);
+            // Play the mining sound effect with every animation.
+            else if (resource?.isRock()) this.audio.playMiningSound(this.game.player);
+        }
     }
 
     /**
@@ -583,7 +643,7 @@ export default class Connection {
      * @param info Contains the player instance, hit points, and mana.
      */
 
-    private handlePoints(info: PointsPacket): void {
+    private handlePoints(info: PointsPacketData): void {
         let character = this.entities.get<Player>(info.instance);
 
         if (!character || character.dead) return;
@@ -615,7 +675,10 @@ export default class Connection {
      * when a player sends a chat.
      */
 
-    private handleChat(info: ChatPacket): void {
+    private handleChat(info: ChatPacketData): void {
+        // Parse the message for special characters.
+        info.message = Util.parseMessage(info.message);
+
         // Messages with source are static, we add them directly to the chatbox.
         if (info.source)
             return this.input.chatHandler.add(info.source, info.message, info.colour, true);
@@ -647,7 +710,7 @@ export default class Connection {
      * @param info Packet contains the command string.
      */
 
-    private handleCommand(info: CommandPacket): void {
+    private handleCommand(info: CommandPacketData): void {
         if (info.command.includes('toggle') && this.game.player.hasActiveEffect())
             return this.game.player.removeAllEffects();
 
@@ -655,6 +718,10 @@ export default class Connection {
             case 'debug': {
                 this.renderer.debugging = !this.renderer.debugging;
                 return;
+            }
+
+            case 'hide': {
+                return this.game.player.setVisible(!this.game.player.isVisible());
             }
         }
     }
@@ -665,7 +732,7 @@ export default class Connection {
      * @param info Contains array of serialized slots, a single slot, and type of container.
      */
 
-    private handleContainer(opcode: Opcodes.Container, info: ContainerPacket): void {
+    private handleContainer(opcode: Opcodes.Container, info: ContainerPacketData): void {
         let container =
             info.type === Modules.ContainerType.Inventory
                 ? this.menu.getInventory()
@@ -699,7 +766,7 @@ export default class Connection {
      * @param info Contains information in batch about abilities or a single ability serialized information.
      */
 
-    private handleAbility(opcode: Opcodes.Ability, info: AbilityPacket): void {
+    private handleAbility(opcode: Opcodes.Ability, info: AbilityPacketData): void {
         switch (opcode) {
             case Opcodes.Ability.Batch: {
                 this.game.player.loadAbilities((info as SerializedAbility).abilities);
@@ -733,7 +800,7 @@ export default class Connection {
      * @param info Contains quest batch data or individual quest data.
      */
 
-    private handleQuest(opcode: Opcodes.Quest, info: QuestPacket): void {
+    private handleQuest(opcode: Opcodes.Quest, info: QuestPacketData): void {
         switch (opcode) {
             case Opcodes.Quest.Batch: {
                 this.game.player.loadQuests(info.quests!);
@@ -743,6 +810,10 @@ export default class Connection {
             case Opcodes.Quest.Progress: {
                 this.game.player.setQuest(info.key!, info.stage!, info.subStage!);
                 break;
+            }
+
+            case Opcodes.Quest.Start: {
+                return this.menu.getQuest().handle(info);
             }
         }
 
@@ -758,7 +829,7 @@ export default class Connection {
      * @param info Contains individual achievement data or batch data.
      */
 
-    private handleAchievement(opcode: Opcodes.Achievement, info: AchievementPacket): void {
+    private handleAchievement(opcode: Opcodes.Achievement, info: AchievementPacketData): void {
         switch (opcode) {
             case Opcodes.Achievement.Batch: {
                 this.game.player.loadAchievements(info.achievements!);
@@ -786,19 +857,31 @@ export default class Connection {
      * @param info Contains message, title, and colour information.
      */
 
-    private handleNotification(opcode: Opcodes.Notification, info: NotificationPacket): void {
+    private handleNotification(opcode: Opcodes.Notification, info: NotificationPacketData): void {
         switch (opcode) {
             case Opcodes.Notification.Text: {
+                let message = info.source ? info.message : Util.formatNotification(info.message);
+
+                if (info.source === 'TRADE') message = Util.formatNotification(message);
+
                 return this.input.chatHandler.add(
                     info.source || 'WORLD',
-                    info.message,
+                    Util.parseMessage(message),
                     info.colour,
                     true
                 );
             }
 
             case Opcodes.Notification.Popup: {
-                return this.menu.getNotification().show(info.title!, info.message, info.colour!);
+                if (info.soundEffect) this.audio.playSound(info.soundEffect);
+
+                return this.menu
+                    .getNotification()
+                    .show(
+                        Util.parseMessage(Util.formatNotification(info.title!)),
+                        Util.parseMessage(Util.formatNotification(info.message)),
+                        info.colour!
+                    );
             }
         }
     }
@@ -822,7 +905,7 @@ export default class Connection {
      * @param info Contains the instance, type of healing (mana or health), and amount.
      */
 
-    private handleHeal(info: HealPacket): void {
+    private handleHeal(info: HealPacketData): void {
         let character = this.entities.get<Character>(info.instance);
 
         if (!character) return;
@@ -832,6 +915,9 @@ export default class Connection {
                 this.info.create(Modules.Hits.Heal, info.amount, character.x, character.y);
 
                 character.addEffect(Modules.Effects.Healing);
+
+                if (this.game.player.instance === character.instance) this.audio.playSound('heal');
+
                 break;
             }
 
@@ -854,7 +940,7 @@ export default class Connection {
      * much experience they will require and calculate percentages.
      */
 
-    private handleExperience(opcode: Opcodes.Experience, info: ExperiencePacket): void {
+    private handleExperience(opcode: Opcodes.Experience, info: ExperiencePacketData): void {
         let player = this.entities.get<Player>(info.instance);
 
         if (!player) return;
@@ -892,6 +978,8 @@ export default class Connection {
      */
 
     private handleDeath(): void {
+        this.audio.playSound('death');
+
         // Stop player movement
         this.game.player.stop(true);
 
@@ -901,11 +989,11 @@ export default class Connection {
         // Remove the minigame interfaces.
         this.game.minigame.reset();
 
-        // Stops the player from performing actions.
-        this.game.player.teleporting = true;
-
         // Set the player's sprite to the death animation sprite.
         this.game.player.setSprite(this.sprites.getDeath());
+
+        // Stops the player from performing actions.
+        this.game.player.teleporting = true;
 
         // Set health and mana to 0
         this.game.player.setHitPoints(0);
@@ -942,7 +1030,7 @@ export default class Connection {
      * @param info Contains information about the NPC interaction.
      */
 
-    private handleNPC(opcode: Opcodes.NPC, info: NPCPacket): void {
+    private handleNPC(opcode: Opcodes.NPC, info: NPCPacketData): void {
         let npc, soundEffect;
 
         switch (opcode) {
@@ -986,7 +1074,9 @@ export default class Connection {
      * the player to following the respawn.
      */
 
-    private handleRespawn(info: RespawnPacket): void {
+    private handleRespawn(info: RespawnPacketData): void {
+        this.game.audio.playSound('revive');
+
         this.game.player.setGridPosition(info.x, info.y);
 
         this.camera.centreOn(this.game.player);
@@ -1008,10 +1098,11 @@ export default class Connection {
      * @param info Information about the trade.
      */
 
-    private handleTrade(opcode: Opcodes.Trade, info: TradePacket): void {
+    private handleTrade(opcode: Opcodes.Trade, info: TradePacketValues): void {
         switch (opcode) {
             case Opcodes.Trade.Open: {
-                let otherPlayer = this.entities.get<Player>(info.instance!);
+                let { instance } = info as TradePacketData[typeof opcode],
+                    otherPlayer = this.entities.get<Player>(instance);
 
                 if (!otherPlayer) return;
 
@@ -1023,24 +1114,25 @@ export default class Connection {
             }
 
             case Opcodes.Trade.Add: {
+                let { index, count, key, instance } = info as TradePacketData[typeof opcode];
+
                 return this.menu
                     .getTrade()
-                    .add(
-                        info.index!,
-                        info.count!,
-                        info.key!,
-                        info.instance !== this.game.player.instance
-                    );
+                    .add(index, count || 0, key, instance !== this.game.player.instance);
             }
 
             case Opcodes.Trade.Remove: {
-                return this.menu
-                    .getTrade()
-                    .remove(info.index!, info.instance !== this.game.player.instance);
+                let { index, instance } = info as TradePacketData[typeof opcode];
+
+                return this.menu.getTrade().remove(index, instance !== this.game.player.instance);
             }
 
             case Opcodes.Trade.Accept: {
-                return this.menu.getTrade().accept(info.message);
+                let { message } = info as TradePacketData[typeof opcode];
+
+                return this.menu
+                    .getTrade()
+                    .accept(Util.parseMessage(Util.formatNotification(message!)));
             }
         }
     }
@@ -1051,7 +1143,7 @@ export default class Connection {
      * @param info Contains index and type of item.
      */
 
-    private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacket): void {
+    private handleEnchant(opcode: Opcodes.Enchant, info: EnchantPacketData): void {
         switch (opcode) {
             case Opcodes.Enchant.Select: {
                 return this.menu.getEnchant().move(info.index, info.isShard);
@@ -1063,15 +1155,20 @@ export default class Connection {
      * Unimplemented guild packet.
      */
 
-    private handleGuild(opcode: Opcodes.Guild, info: GuildPacket): void {
+    private handleGuild(opcode: Opcodes.Guild, info: GuildPacketData): void {
         switch (opcode) {
             case Opcodes.Guild.Login: {
                 this.game.player.setGuild(info);
                 break;
             }
 
-            case Opcodes.Guild.Leave: {
-                this.game.player.setGuild();
+            case Opcodes.Guild.Join: {
+                this.game.player.addGuildMember(info.username!, info.serverId!);
+                break;
+            }
+
+            case Opcodes.Guild.Rank: {
+                this.game.player.setGuildMember(info.username!, info.rank!);
                 break;
             }
         }
@@ -1086,7 +1183,7 @@ export default class Connection {
      * @param info Information such as location and instance of the pointer.
      */
 
-    private handlePointer(opcode: Opcodes.Pointer, info: PointerPacket): void {
+    private handlePointer(opcode: Opcodes.Pointer, info: PointerPacketData): void {
         let entity;
 
         switch (opcode) {
@@ -1095,36 +1192,24 @@ export default class Connection {
 
                 if (!entity) return;
 
-                this.pointer.create(entity.instance, opcode);
-                this.pointer.setToEntity(entity);
+                this.pointer.create(opcode, info.instance);
 
                 break;
             }
 
+            // Location based pointers stick to one point on the map.
             case Opcodes.Pointer.Location: {
-                this.pointer.create(info.instance, opcode);
-                this.pointer.setToPosition(
+                this.pointer.create(
+                    opcode,
                     info.instance,
                     info.x! * this.map.tileSize,
                     info.y! * this.map.tileSize
                 );
-
-                break;
-            }
-
-            case Opcodes.Pointer.Relative: {
-                this.pointer.create(info.instance, opcode);
-                this.pointer.setRelative(info.instance, info.x!, info.y!);
                 break;
             }
 
             case Opcodes.Pointer.Remove: {
                 this.pointer.clean();
-                break;
-            }
-
-            case Opcodes.Pointer.Button: {
-                this.pointer.create(info.instance, opcode, info.button);
                 break;
             }
         }
@@ -1136,8 +1221,11 @@ export default class Connection {
      * @param info Contains the instance and pvp status of an entity.
      */
 
-    private handlePVP(info: PVPPacket): void {
+    private handlePVP(info: PVPPacketData): void {
         this.game.pvp = info.state;
+
+        // Update the viewing for the player's skin and weapon skin.
+        this.game.player.updateEquipmentAppearance();
     }
 
     /**
@@ -1157,7 +1245,7 @@ export default class Connection {
      * @param info Contains information such as store key and items to update.
      */
 
-    private handleStore(opcode: Opcodes.Store, info: StorePacket): void {
+    private handleStore(opcode: Opcodes.Store, info: StorePacketData): void {
         switch (opcode) {
             case Opcodes.Store.Open: {
                 return this.menu.getStore().show(info);
@@ -1174,16 +1262,21 @@ export default class Connection {
     }
 
     /**
-     *
-     * @param opcode
-     * @param info
+     * Handles the logic for the overlay system. Overlay is generally a mask applied on top
+     * of the current viewport to darken the screen. Using that mask we can calculate things
+     * such as the lighting effect from a torch for example.
+     * @param opcode Contains information about the type of overlay action to perform.
+     * @param info Information about the overlay such as the image and colour (or lighting).
      */
 
-    private handleOverlay(opcode: Opcodes.Overlay, info: OverlayPacket): void {
+    private handleOverlay(opcode: Opcodes.Overlay, info: OverlayPacketData): void {
         switch (opcode) {
             case Opcodes.Overlay.Set: {
                 this.overlays.update(info.image);
                 this.renderer.updateDarkMask(info.colour);
+
+                this.renderer.addPlayerLight();
+                this.renderer.resizeLights();
                 break;
             }
 
@@ -1194,7 +1287,8 @@ export default class Connection {
             }
 
             case Opcodes.Overlay.Lamp: {
-                return this.renderer.addLight(info.light!);
+                this.renderer.addLight(info.light!);
+                return;
             }
         }
     }
@@ -1217,10 +1311,11 @@ export default class Connection {
      * @param info Contains information such as the text and position of the bubble.
      */
 
-    private handleBubble(opcode: Opcodes.Bubble, info: BubblePacket): void {
+    private handleBubble(opcode: Opcodes.Bubble, info: BubblePacketData): void {
         if (!info.text) return this.bubble.clear(info.instance);
 
         let entity = this.entities.get(info.instance);
+
         // Check validity of the entity only when the bubble is attached to an entity.
         if (opcode === Opcodes.Bubble.Entity && !entity) return;
 
@@ -1251,7 +1346,7 @@ export default class Connection {
      * @param info Contains the skill batch data or a specific skill data.
      */
 
-    private handleSkill(opcode: Opcodes.Skill, info: SkillPacket): void {
+    private handleSkill(opcode: Opcodes.Skill, info: SkillPacketData): void {
         switch (opcode) {
             case Opcodes.Skill.Batch: {
                 this.game.player.loadSkills((info as SerializedSkills).skills);
@@ -1279,10 +1374,13 @@ export default class Connection {
         for (let update of info) {
             let entity = this.entities.get(update.instance);
 
-            if (!entity) continue;
+            // If the entity doesn't exist, we add it to the update queue.
+            if (!entity) {
+                this.entities.entityUpdateQueue[update.instance] = update;
+                continue;
+            }
 
-            if (update.colour) entity.nameColour = update.colour;
-            if (update.scale) entity.customScale = update.scale;
+            entity.updateDisplayInfo(update);
         }
     }
 
@@ -1295,7 +1393,7 @@ export default class Connection {
      * @param info Contains information about the minigame status.
      */
 
-    private handleMinigame(opcode: Opcodes.Minigame, info: MinigamePacket): void {
+    private handleMinigame(opcode: Opcodes.Minigame, info: MinigamePacketData): void {
         let { minigame, player } = this.game;
 
         minigame.type = opcode;
@@ -1305,22 +1403,23 @@ export default class Connection {
 
         switch (info.action) {
             // Game starting packet.
-            case Opcodes.TeamWar.Score: {
-                if (!isNaN(info.redTeamKills!) && !isNaN(info.blueTeamKills!))
-                    minigame.setScore(info.redTeamKills!, info.blueTeamKills!);
+            case Opcodes.MinigameActions.Score: {
+                minigame.setScore(info);
 
                 return minigame.setStatus('ingame');
             }
 
             // Entering lobby packets
-            case Opcodes.TeamWar.End:
-            case Opcodes.TeamWar.Lobby: {
+            case Opcodes.MinigameActions.End:
+            case Opcodes.MinigameActions.Lobby: {
                 player.nameColour = '';
+                this.pointer.clean();
+
                 return minigame.setStatus('lobby');
             }
 
             // Exiting the entire minigame
-            case Opcodes.TeamWar.Exit: {
+            case Opcodes.MinigameActions.Exit: {
                 return minigame.reset();
             }
         }
@@ -1334,7 +1433,7 @@ export default class Connection {
      * @param info Information about the entity we are applying the effect to.
      */
 
-    private handleEffect(opcode: Opcodes.Effect, info: EffectPacket): void {
+    private handleEffect(opcode: Opcodes.Effect, info: EffectPacketData): void {
         let entity =
             info.instance === this.game.player.instance
                 ? this.game.player
@@ -1360,7 +1459,7 @@ export default class Connection {
      * @param info Contains information about the packet we are handling.
      */
 
-    private handleFriends(opcode: Opcodes.Friends, info: FriendsPacket): void {
+    private handleFriends(opcode: Opcodes.Friends, info: FriendsPacketData): void {
         switch (opcode) {
             case Opcodes.Friends.List: {
                 this.game.player.loadFriends(info.list!);
@@ -1397,8 +1496,31 @@ export default class Connection {
      * @param info Contains the information about the crafting action.
      */
 
-    private handleCrafting(opcode: Opcodes.Crafting, info: CraftingPacket): void {
+    private handleCrafting(opcode: Opcodes.Crafting, info: CraftingPacketData): void {
         this.menu.getCrafting().handle(opcode, info);
+    }
+
+    /**
+     * Generic packet for receiving interface information. These can be used for a wide
+     * variety of interfaces that we want to display to the player (with dynamic information).
+     * @param opcode What type of action to perform (open or close the interface).
+     * @param info Contains what interface we are acting upon and information about it.
+     */
+
+    private handleInterface(opcode: Opcodes.Interface, info: InterfacePacketData): void {
+        let menu = this.menu.get(info.identifier);
+
+        // If the interface doesn't exist, we create it.
+        if (!menu) return;
+
+        switch (opcode) {
+            case Opcodes.Interface.Open: {
+                return menu.show(info);
+            }
+            case Opcodes.Interface.Close: {
+                return menu.hide();
+            }
+        }
     }
 
     /**
@@ -1407,8 +1529,8 @@ export default class Connection {
      * @param slots
      */
 
-    private handleLootBag(info: LootBagPacket): void {
-        console.log(info);
+    private handleLootBag(opcode: Opcodes.LootBag, info: LootBagPacketData): void {
+        this.menu.getLootBag().handle(opcode, info);
     }
 
     /**
@@ -1416,12 +1538,34 @@ export default class Connection {
      * @param info Contains the instance and the counter information.
      */
 
-    private handleCountdown(info: CountdownPacket): void {
+    private handleCountdown(info: CountdownPacketData): void {
         let entity = this.entities.get(info.instance);
 
         if (!entity) return;
 
         entity.setCountdown(info.time);
+    }
+
+    /**
+     * Handles the incoming resource packet. We essentially update the exhausted status
+     * of the resource based on what the server is telling us.
+     * @param info Contains the instance and the state of the resource.
+     */
+
+    private handleResource(info: ResourcePacketData): void {
+        let entity = this.entities.get(info.instance);
+
+        // Entity either doesn't exist or it's not a resource.
+        if (!entity?.isResource()) return;
+
+        let depleted = info.state === Modules.ResourceState.Depleted;
+
+        (entity as Resource).setExhausted(depleted);
+
+        // Update the cursor and silhouette
+        this.input.moveCursor();
+
+        if (depleted) entity.updateSilhouette(false);
     }
 
     /**

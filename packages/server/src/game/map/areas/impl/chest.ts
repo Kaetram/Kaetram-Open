@@ -2,11 +2,11 @@ import Areas from '../areas';
 
 import Utils from '@kaetram/common/util/utils';
 
-import type { ProcessedArea } from '@kaetram/common/types/map';
+import type Area from '../area';
+import type World from '../../../world';
 import type Character from '../../../entity/character/character';
 import type Player from '../../../entity/character/player/player';
-import type World from '../../../world';
-import type Area from '../area';
+import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Chest extends Areas {
     public constructor(data: ProcessedArea[], world: World) {

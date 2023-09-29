@@ -27,7 +27,7 @@ export default class Notification extends Menu {
 
         // Displays the notification.
         this.container.classList.add('active');
-        this.setPosition();
+        this.container.style.bottom = '0';
 
         // Updates the title's colour.
         this.title.style.color = colour;
@@ -53,18 +53,7 @@ export default class Notification extends Menu {
 
         // Hides the notification.
         this.container.classList.remove('active');
-        this.container.style.top = '100%';
-    }
-
-    /**
-     * Updates the position of the notification.
-     */
-
-    public override resize(): void {
-        // Don't update unless visible.
-        if (!this.isVisible()) return;
-
-        this.setPosition();
+        this.container.style.bottom = '-6em';
     }
 
     /**
@@ -89,13 +78,5 @@ export default class Notification extends Menu {
 
     private getPosition(): number {
         return window.innerHeight - this.container.offsetHeight;
-    }
-
-    /**
-     * Updates the notification's body positioning relative to the screen.
-     */
-
-    private setPosition(): void {
-        this.container.style.top = `${this.getPosition()}px`;
     }
 }

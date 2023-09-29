@@ -10,7 +10,7 @@ import type Actions from './actions';
 import type { SlotData } from '@kaetram/common/types/slot';
 import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
 
-type SelectCallback = (index: number, action: Opcodes.Container, value?: number) => void;
+type SelectCallback = (opcode: Opcodes.Container, fromIndex: number, value?: number) => void;
 type BatchCallback = () => void;
 
 interface SlotElement extends HTMLElement {
@@ -28,6 +28,8 @@ interface SlotElement extends HTMLElement {
 }
 
 export default class Inventory extends Menu {
+    public override identifier: number = Modules.Interfaces.Inventory;
+
     private list: HTMLUListElement = document.querySelector('#inventory-container > ul')!;
 
     // Used for when we open the action menu interface.
@@ -176,7 +178,7 @@ export default class Inventory extends Menu {
         let actions: Modules.MenuActions[] = [];
 
         if (element.edible) actions.push(Modules.MenuActions.Eat);
-        if (element.interactable) actions.push(Modules.MenuActions.Eat2);
+        if (element.interactable) actions.push(Modules.MenuActions.Interact);
         if (element.equippable) actions.push(Modules.MenuActions.Equip);
 
         // Push drop option as the last one.
@@ -290,11 +292,8 @@ export default class Inventory extends Menu {
         // Append the image onto the item slot.
         item.append(image);
 
-        // Append the count onto the item slot.
-        item.append(count);
-
-        // Append the item onto the slot list element.
-        slot.append(item);
+        // Append the item and count onto the slot.
+        slot.append(item, count);
 
         // Add the click event listeners to the slot.
         slot.addEventListener('click', () => this.select(index));
@@ -315,7 +314,7 @@ export default class Inventory extends Menu {
         let fromIndex = clone?.dataset?.index,
             toIndex = target?.dataset?.index;
 
-        if (!fromIndex || !toIndex) return;
+        if (!fromIndex || !toIndex || fromIndex === toIndex) return;
 
         this.swap(parseInt(fromIndex), parseInt(toIndex));
     }
@@ -369,7 +368,7 @@ export default class Inventory extends Menu {
      */
 
     public isDropDialogVisible(): boolean {
-        return this.actions.dropDialog.style.display === 'block';
+        return this.actions.dropDialog.style.display === 'flex';
     }
 
     /**
@@ -379,7 +378,7 @@ export default class Inventory extends Menu {
      */
 
     public getElement(index: number): SlotElement {
-        return this.list.children[index].querySelector('div') as HTMLElement;
+        return this.list.children[index] as HTMLElement;
     }
 
     /**

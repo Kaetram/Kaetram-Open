@@ -2,10 +2,11 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import config from '@kaetram/common/config';
 
-import type { GuildData } from '@kaetram/common/types/guild';
-import type { Modules } from '@kaetram/common/network';
-import type { Collection, Db } from 'mongodb';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
+import type { Collection, Db } from 'mongodb';
+import type { Modules } from '@kaetram/common/network';
+import type { GuildData } from '@kaetram/common/network/impl/guild';
+import type { SerializedEffects } from '@kaetram/common/types/status';
 
 // Used for password reset
 export interface ResetToken {
@@ -27,10 +28,12 @@ export interface PlayerInfo {
     userAgent: string;
     rank: Modules.Ranks;
     poison: PoisonInfo;
+    effects: SerializedEffects;
     hitPoints: number;
     mana: number;
     orientation: Modules.Orientation;
     ban: number;
+    jail: number;
     mute: number;
     lastWarp: number;
     mapVersion: number;
@@ -38,6 +41,7 @@ export interface PlayerInfo {
     friends: string[];
     lastServerId: number;
     lastAddress: string;
+    lastGlobalChat: number;
     guild: string;
     pet: string;
     resetToken?: ResetToken;
@@ -184,18 +188,17 @@ export default class Creator {
     public saveGuild(guild: GuildData, callback?: () => void): void {
         let collection = this.database.collection('guilds');
 
-        collection.updateOne(
-            { identifier: guild.identifier },
-            { $set: guild },
-            { upsert: true },
-            (error, result) => {
-                if (error) log.error(`An error occurred while saving guild ${guild.name}.`);
-
+        collection
+            .updateOne({ identifier: guild.identifier }, { $set: guild }, { upsert: true })
+            .then((result) => {
                 if (!result) log.error(`Unable to save guild ${guild.name}.`);
 
                 callback?.();
-            }
-        );
+            })
+            .catch((error) => {
+                log.error(`An error occurred while saving guild ${guild.name}.`);
+                log.error(error);
+            });
     }
 
     /**
@@ -208,14 +211,18 @@ export default class Creator {
      */
 
     private updateCollection<S>(collection: Collection, username: string, data: S) {
-        collection.updateOne({ username }, { $set: data }, { upsert: true }, (error, result) => {
-            if (error)
+        collection
+            .updateOne({ username }, { $set: data }, { upsert: true })
+            .then((result) => {
+                if (!result)
+                    log.error(`Unable to save ${collection.collectionName} for ${username}.`);
+            })
+            .catch((error) => {
                 log.error(
                     `An error occurred while saving ${collection.collectionName} for ${username}.`
                 );
-
-            if (!result) log.error(`Unable to save ${collection.collectionName} for ${username}.`);
-        });
+                log.error(error);
+            });
     }
 
     /**
@@ -279,17 +286,20 @@ export default class Creator {
                 type: player.poison ? player.poison.type : -1,
                 remaining: player.poison ? player.poison.getRemainingTime() : -1
             },
+            effects: player.status.serialize(),
             hitPoints: player.hitPoints.getHitPoints(),
             mana: player.mana.getMana(),
             orientation: player.orientation,
             ban: player.ban,
             mute: player.mute,
+            jail: player.jail,
             lastWarp: player.lastWarp,
             mapVersion: player.mapVersion,
             regionsLoaded: player.regionsLoaded,
             friends: player.friends.serialize(),
             lastServerId: config.serverId,
             lastAddress: player.connection.address,
+            lastGlobalChat: player.lastGlobalChat,
             guild: player.guild,
             pet: player.pet ? player.pet.key : '',
             resetToken: undefined // Save token as undefined to prevent it from being saved.

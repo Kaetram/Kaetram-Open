@@ -1,204 +1,176 @@
 import Arrow from '../renderer/pointers/arrow';
+import { DEFAULT_ZOOM } from '../renderer/camera';
 
 import { Opcodes } from '@kaetram/common/network';
 
-import type Entity from '../entity/entity';
-import type Game from '../game';
+import type Renderer from '../renderer/renderer';
 import type Camera from '../renderer/camera';
+import type EntitiesController from './entities';
 
 export default class PointerController {
     private camera: Camera;
 
-    private pointers: { [id: string]: Arrow } = {};
+    private pointers: { [instance: string]: Arrow } = {};
 
-    private container: HTMLElement = document.querySelector('#bubbles')!;
+    private bubbles: HTMLElement = document.querySelector('#bubbles')!;
 
-    public constructor(private game: Game) {
-        this.camera = this.game.camera;
+    private scale = 1;
+
+    public constructor(
+        private renderer: Renderer,
+        private entities: EntitiesController
+    ) {
+        this.camera = this.renderer.camera;
     }
 
-    public create(id: string, type: Opcodes.Pointer, name?: string): void {
-        let { pointers, container } = this;
+    /**
+     * Creates a pointer given the type specified. Some pointers are static and
+     * bind to a tile on the map. Others are bounded to an entity. Lastly, some
+     * are static pointers relative to the screen.
+     * @param type The type of pointer we are creating (one that binds to an entity,
+     * one that binds to a tile, and so on.)
+     * @param instance The instance of the pointer (used as an identifier).
+     * @param x (Optional) The x position of the pointer (relative or absolute).
+     * @param y (Optional) The y position of the pointer (relative or absolute).
+     */
 
-        if (id in pointers) return;
+    public create(type: Opcodes.Pointer, instance: string, x = -1, y = -1): void {
+        // Pointer already exists for a specified instance, stop here.
+        if (instance in this.pointers) return;
 
-        switch (type) {
-            case Opcodes.Pointer.Button: {
-                let element = document.createElement('div');
+        // Create a new pointer.
+        let pointer = new Arrow(type, instance);
 
-                element.id = name!;
+        // Set the position for the pointer.
+        pointer.setPosition(x, y);
 
-                pointers[id] = new Arrow(id, element, type);
+        // Add the pointer to the list of pointers.
+        this.pointers[instance] = pointer;
 
-                break;
-            }
+        // Append the pointer to the bubbles container.
+        this.bubbles.append(pointer.element);
+    }
 
-            default: {
-                let element = document.createElement('div');
+    /**
+     * Calculates the position of the pointer on the screen based on its position
+     * in the game. We do some magic camera calculations here.
+     * @param pointer The pointer that we are calculating the position for.
+     * @param x The x position of the pointer in the game.
+     * @param y The y position of the pointer in the game.
+     */
 
-                element.id = id;
-                element.className = 'pointer';
+    private set(pointer: Arrow, x: number, y: number): void {
+        pointer.setPosition(x, y);
 
-                this.setSize(element);
+        let relativeX = (x - this.camera.x) * this.camera.zoomFactor,
+            relativeY = (y - this.camera.y) * this.camera.zoomFactor - this.renderer.actualTileSize,
+            boundaryX = relativeX / this.renderer.canvasWidth,
+            boundaryY = relativeY / this.renderer.canvasHeight;
 
-                container.append(element);
+        // Reset all the styles.
+        pointer.reset();
 
-                pointers[id] = new Arrow(id, element, type);
+        // Store for later when we want to stack transformations.
+        let transform = `scale(${this.scale})`;
 
-                break;
-            }
+        // Handle the pointer being within the boundaries of the screen.
+        if (boundaryX >= 0 && boundaryX <= 1 && boundaryY >= 0 && boundaryY <= 1) {
+            let offsetX = pointer.offsetWidth - this.renderer.actualTileSize / 2;
+
+            pointer.element.style.left = `${relativeX - offsetX}px`;
+            pointer.element.style.top = `${relativeY}px`;
+
+            // Apply the transformation.
+            pointer.element.style.transform = transform;
+
+            return;
+        }
+
+        // Handle pointers outside the boundaries of the screen.
+        if (boundaryX > 1) {
+            // Pointer is to the right of the screen.
+            pointer.element.style.right = '0';
+            pointer.element.style.top = boundaryY > 1 ? '' : boundaryY < 0 ? '0' : `${relativeY}px`;
+            pointer.element.style.bottom = boundaryY > 1 ? '0' : '';
+            pointer.element.style.transform = `${transform} rotate(-90deg)`;
+        } else if (boundaryX < 0) {
+            // Pointer is to the left of the screen.
+            pointer.element.style.left = '0';
+            pointer.element.style.top = boundaryY > 1 ? '' : boundaryY < 0 ? '0' : `${relativeY}px`;
+            pointer.element.style.bottom = boundaryY > 1 ? '0' : '';
+            pointer.element.style.transform = `${transform} rotate(90deg)`;
+        } else if (boundaryY > 1) {
+            // Pointer is above the screen.
+            pointer.element.style.bottom = '0';
+            pointer.element.style.left =
+                boundaryX > 1 ? '' : boundaryX < 0 ? '0' : `${relativeX}px`;
+            pointer.element.style.right = boundaryX > 1 ? '0' : '';
+            pointer.element.style.transform = transform;
+        } else if (boundaryY < 0) {
+            // Pointer is below the screen.
+            pointer.element.style.top = '0';
+            pointer.element.style.left =
+                boundaryX > 1 ? '' : boundaryX < 0 ? '0' : `${relativeX}px`;
+            pointer.element.style.right = boundaryX > 1 ? '0' : '';
+            pointer.element.style.transform = `${transform} rotate(180deg)`;
         }
     }
 
-    public resize(): void {
-        for (let { type, x, y, element } of Object.values(this.pointers))
-            switch (type) {
-                case Opcodes.Pointer.Relative: {
-                    let scale = this.getZoom(),
-                        offsetX = 0,
-                        offsetY = 0;
-
-                    element.style.left = `${x * scale - offsetX}px`;
-                    element.style.top = `${y * scale - offsetY}px`;
-
-                    break;
-                }
-            }
-    }
-
-    private setSize(element: HTMLElement): void {
-        let pointer = '/img/pointer.png';
-
-        element.style.top = '30px';
-        element.style.width = '64px';
-        element.style.height = '64px';
-        element.style.margin = 'inherit';
-        element.style.marginTop = '-18px';
-        element.style.background = `url("${pointer}") no-repeat -4px`;
-    }
-
-    public clean(): void {
-        for (let pointer of Object.values(this.pointers)) pointer.destroy();
-
-        this.pointers = {};
-    }
-
-    private destroy(pointer: Arrow): void {
-        delete this.pointers[pointer.id];
-        pointer.destroy();
-    }
-
-    private set(pointer: Arrow, posX: number, posY: number): void {
-        let { camera, game } = this;
-
-        if (!camera) return;
-
-        let { element } = pointer,
-            { canvasWidth, canvasHeight } = game.renderer,
-            tileSize = game.map.tileSize * this.getZoom(), // 16 * scale
-            x = (posX - camera.x) * this.getZoom(),
-            width = parseInt(element.style.width),
-            offset = width / 2 - tileSize / 2,
-            y = (posY - camera.y) * this.getZoom() - tileSize,
-            outX = x / canvasWidth,
-            outY = y / canvasHeight;
-
-        if (outX >= 1.5) {
-            element.style.left = '';
-            element.style.right = '0';
-            element.style.top = '50%';
-            element.style.bottom = '';
-            element.style.transform = 'rotate(-90deg)';
-        } else if (outY >= 1.5) {
-            element.style.left = '';
-            element.style.right = '0';
-            element.style.top = '50%';
-            element.style.bottom = '';
-            element.style.transform = 'rotate(-90deg)';
-        } else if (outX <= 0) {
-            element.style.left = '0';
-            element.style.right = '';
-            element.style.top = '50%';
-            element.style.bottom = '';
-            element.style.transform = 'rotate(90deg)';
-        } else if (outY <= 0) {
-            element.style.left = '';
-            element.style.right = '50%';
-            element.style.top = '0';
-            element.style.bottom = '';
-            element.style.transform = 'rotate(180deg)';
-        } else {
-            element.style.left = `${x - offset}px`;
-            element.style.right = '';
-            element.style.top = `${y}px`;
-            element.style.bottom = '';
-            element.style.transform = '';
-        }
-    }
-
-    public setToEntity(entity: Entity): void {
-        let pointer = this.get(entity.instance);
-
-        if (!pointer) return;
-
-        this.set(pointer, entity.x, entity.y);
-    }
-
-    public setToPosition(id: string, x: number, y: number): void {
-        let pointer = this.get(id);
-
-        if (!pointer) return;
-
-        pointer.setPosition(x, y);
-
-        this.set(pointer, x, y);
-    }
-
-    public setRelative(id: string, x: number, y: number): void {
-        let pointer = this.get(id);
-
-        if (!pointer) return;
-
-        let scale = this.getZoom(),
-            offsetX = 0,
-            offsetY = 0;
-
-        pointer.setPosition(x, y);
-
-        pointer.element.style.left = `${x * scale - offsetX}px`;
-        pointer.element.style.top = `${y * scale - offsetY}px`;
-    }
+    /**
+     * Handles updating of a pointer. This is called every frame and
+     * ensures that a pointer is always in the correct position. If it's
+     * bound to an entity, it will always follow it. If it's bound to a location
+     * it will always be in the same position regardless of how the player moves.
+     */
 
     public update(): void {
-        for (let pointer of Object.values(this.pointers))
-            switch (pointer.type) {
-                case Opcodes.Pointer.Entity: {
-                    let entity = this.game.entities.get(pointer.id);
+        for (let instance in this.pointers) {
+            let pointer = this.pointers[instance];
 
-                    if (entity) this.setToEntity(entity);
-                    else this.destroy(pointer);
-
-                    break;
-                }
-
-                case Opcodes.Pointer.Location: {
-                    if (pointer.x !== -1 && pointer.y !== -1)
-                        this.set(pointer, pointer.x, pointer.y);
-
-                    break;
-                }
+            // Location pointers just use the x and y coordinates that were given to them.
+            if (pointer.type === Opcodes.Pointer.Location) {
+                this.set(pointer, pointer.x, pointer.y);
+                continue;
             }
+
+            // Entity pointers use the instance that pertains to the entity.
+            if (pointer.type === Opcodes.Pointer.Entity) {
+                let entity = this.entities.get(instance);
+
+                if (entity) this.set(pointer, entity.x, entity.y);
+                else this.remove(instance);
+
+                continue;
+            }
+        }
     }
 
-    private get(id: string): Arrow | null {
-        let { pointers } = this;
+    /**
+     * Handles resizing of relative pointers (those which have a fixed position on the screen).
+     */
 
-        if (id in pointers) return pointers[id];
-
-        return null;
+    public resize(): void {
+        this.scale = this.camera.zoomFactor / DEFAULT_ZOOM;
     }
 
-    private getZoom(): number {
-        return this.game.camera.zoomFactor;
+    /**
+     * Iterates through all pointers and removes them.
+     */
+
+    public clean(): void {
+        for (let instance in this.pointers) this.remove(instance);
+    }
+
+    /**
+     * Removes a pointer from the list of pointers and destroys it.
+     * @param instance The instance of the pointer we are removing.
+     */
+
+    private remove(instance: string): void {
+        let pointer = this.pointers[instance];
+
+        pointer?.destroy();
+
+        delete this.pointers[instance];
     }
 }

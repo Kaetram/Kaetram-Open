@@ -3,9 +3,8 @@ import Connection from './connection';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import Utils from '@kaetram/common/util/utils';
-import { App, DEDICATED_COMPRESSOR_3KB } from 'uws';
+import { App, DEDICATED_COMPRESSOR_3KB, type WebSocket } from 'uws';
 
-import type { WebSocket } from 'uws';
 import type { ConnectionInfo } from '@kaetram/common/types/network';
 
 /**

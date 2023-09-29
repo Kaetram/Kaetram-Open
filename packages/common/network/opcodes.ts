@@ -74,7 +74,8 @@ export enum Ability {
 export enum Quest {
     Batch,
     Progress,
-    Finish
+    Finish,
+    Start
 }
 
 export enum Achievement {
@@ -102,7 +103,7 @@ export enum NPC {
     Countdown
 }
 
-export enum Trade {
+export const enum Trade {
     Request,
     Add,
     Remove,
@@ -128,15 +129,17 @@ export enum Guild {
     Banner,
     List,
     Error,
-    Chat
+    Chat,
+    Promote,
+    Demote,
+    Kick
 }
 
 export enum Pointer {
     Location, // Pointer on the map
-    Relative, // Pointer relative to the screen
     Entity, // Pointer following an entity
-    Remove,
-    Button // Pointer for a button
+    Relative,
+    Remove
 }
 
 export enum Store {
@@ -146,18 +149,6 @@ export enum Store {
     Sell,
     Update,
     Select
-}
-
-export enum TeamWar {
-    Score,
-    End,
-    Lobby,
-    Exit
-}
-
-export enum Coursing {
-    Lobby,
-    Exit
 }
 
 export enum Overlay {
@@ -195,6 +186,14 @@ export enum MinigameState {
     Exit
 }
 
+// Generic actions for when in a minigame.
+export enum MinigameActions {
+    Score,
+    End,
+    Lobby,
+    Exit
+}
+
 export enum Bubble {
     Entity,
     Position
@@ -222,4 +221,19 @@ export enum Crafting {
     Open,
     Select,
     Craft
+}
+
+export enum LootBag {
+    Open,
+    Take,
+    Close
+}
+
+export enum Pet {
+    Pickup
+}
+
+export enum Interface {
+    Open,
+    Close
 }

@@ -79,12 +79,11 @@ export default class Handler {
         // Essentially the same as the above, but for followers.
         this.handleFollowers();
 
-        /**
-         * We temporarily rely on a consensus between multiple clients to establish
-         * the position of a character (the server is only involved in telling the mob where to go).
-         */
-
-        if (this.character.hasTarget() || this.character.hasAttackers())
+        // Update position of the character to the server if they have a target or attackers.
+        if (
+            (this.character.isMob() || this.character.isPet()) &&
+            (this.character.hasTarget() || this.character.hasAttackers())
+        )
             this.game.socket.send(Packets.Movement, {
                 opcode: Opcodes.Movement.Entity,
                 targetInstance: this.character.instance,
@@ -97,7 +96,8 @@ export default class Handler {
          * and it's within attack range distance we stop the movement.
          */
 
-        if (this.character.canAttackTarget()) this.character.stop(true);
+        // Check if we can initiate combat.
+        if (this.character.moving && this.character.canAttackTarget()) this.character.stop();
     }
 
     /**
@@ -118,6 +118,7 @@ export default class Handler {
      */
 
     protected handleStopPathing(_x: number, _y: number): void {
+        this.entities.registerPosition(this.character);
         this.character.moving = false;
     }
 
@@ -150,7 +151,7 @@ export default class Handler {
     protected handleAttackers(): void {
         this.character.forEachAttacker((attacker) => {
             // Clear the attackers if their target doesn't match this character (or it doesn't exist).
-            if (!attacker.target || attacker.target.instance !== this.character.instance)
+            if (attacker.target?.instance !== this.character.instance)
                 return this.character.removeAttacker(attacker);
 
             // If the attacker is too far away from the target, make them follow their target.
@@ -166,6 +167,7 @@ export default class Handler {
 
     protected handleFollowers(): void {
         this.character.forEachFollower((follower: Character) => {
+            // Clear the followers if their target doesn't match this character (or it doesn't exist).
             if (!follower.target || follower.target.instance !== this.character.instance)
                 return this.character.removeFollower(follower);
 

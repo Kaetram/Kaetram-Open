@@ -10,7 +10,10 @@ import type Map from '../../map/map';
 export default class Tileset {
     public textures: WebGLTexture[] = [];
 
-    public constructor(private map: Map, private context: WebGLRenderingContext) {
+    public constructor(
+        private map: Map,
+        private context: WebGLRenderingContext
+    ) {
         // Create the textures for each tileset.
         for (let tileset of this.map.tilesets) this.createTexture(tileset);
     }

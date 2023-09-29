@@ -7,23 +7,16 @@ import Character from '../entity/character/character';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { List, Map as MapPacket, Spawn, Update } from '@kaetram/common/network/impl';
+import { ListPacket, MapPacket, SpawnPacket, UpdatePacket } from '@kaetram/common/network/impl';
 
-import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
-import type {
-    RegionCache,
-    RegionData,
-    RegionTile,
-    RegionTileData,
-    Tile
-} from '@kaetram/common/types/map';
-import type Player from '../entity/character/player/player';
-import type Entity from '../entity/entity';
-import type Resource from '../globals/impl/resource';
+import type Map from './map';
 import type World from '../world';
 import type Area from './areas/area';
+import type Entity from '../entity/entity';
 import type Dynamic from './areas/impl/dynamic';
-import type Map from './map';
+import type Player from '../entity/character/player/player';
+import type { EntityDisplayInfo } from '@kaetram/common/types/entity';
+import type { RegionCache, RegionData, RegionTileData, Tile } from '@kaetram/common/types/map';
 
 /**
  * Class responsible for chunking up the map.
@@ -168,10 +161,14 @@ export default class Regions {
          * that data to both the `data` local variable and assign it to the region itself.
          */
 
-        this.forEachRegion(
-            (region: Region, index: number) =>
-                (cache.data[index] = region.data = this.getRegionTileData(region))
-        );
+        log.debug(`There are currently ${this.regions.length} regions in the world.`);
+
+        let start = Date.now();
+
+        this.forEachRegion((region: Region, index: number) => {
+            log.debug(`Generating region data for region: ${index}`);
+            cache.data[index] = region.data = this.getRegionTileData(region);
+        });
 
         // Create the directory first.
         fs.mkdir('./cache', { recursive: true }, (error) => {
@@ -182,6 +179,8 @@ export default class Regions {
                 if (error) throw error;
             });
         });
+
+        log.debug(`Region cache generation took ${Date.now() - start}ms.`);
 
         log.notice(`Region cache has been successfully created.`);
     }
@@ -340,7 +339,7 @@ export default class Regions {
 
         let entities: string[] = this.regions[player.region].getEntities(player, player as Entity);
 
-        player.send(new List(Opcodes.List.Spawns, { entities }));
+        player.send(new ListPacket(Opcodes.List.Spawns, { entities }));
     }
 
     /**
@@ -372,7 +371,7 @@ export default class Regions {
         });
 
         // Send the positions to the client.
-        player.send(new List(Opcodes.List.Positions, { positions }));
+        player.send(new ListPacket(Opcodes.List.Positions, { positions }));
     }
 
     /**
@@ -386,7 +385,7 @@ export default class Regions {
             this.world.push(Modules.PacketType.Regions, {
                 region,
                 ignore: entity.isPlayer() ? entity.instance : '',
-                packet: new Spawn(entity)
+                packet: new SpawnPacket(entity)
             });
         });
 
@@ -432,7 +431,7 @@ export default class Regions {
         // Don't send empty data.
         if (displayInfos.length === 0) return;
 
-        player.send(new Update(displayInfos));
+        player.send(new UpdatePacket(displayInfos));
     }
 
     /**
@@ -442,7 +441,11 @@ export default class Regions {
      */
 
     public sendRegion(player: Player): void {
+        let start = Date.now();
+
         player.send(new MapPacket(this.getRegionData(player)));
+
+        log.debug(`Sent region data to ${player.username} in ${Date.now() - start}ms`);
     }
 
     /**
@@ -477,11 +480,9 @@ export default class Regions {
      */
 
     public getRegion(x: number, y: number): number {
-        let region = this.regions.findIndex((region: Region) => {
+        return this.regions.findIndex((region: Region) => {
             return region.inRegion(x, y);
         });
-
-        return region;
     }
 
     /**
@@ -507,26 +508,15 @@ export default class Regions {
             // Initialize empty array for the region tile data.
             data[surroundingRegion] = [];
 
-            // Parse and send resource data.
-            if (region.hasResources())
-                data[surroundingRegion] = [
-                    ...data[surroundingRegion],
-                    ...this.getRegionResourceData(region, player)
-                ];
-
             // Parse and send dynamic areas.
             if (region.hasDynamicAreas())
-                data[surroundingRegion] = [
-                    ...data[surroundingRegion],
-                    ...this.getRegionTileData(region, true, player)
-                ];
+                data[surroundingRegion].push(...this.getRegionTileData(region, true, player));
 
             // We skip if the region is loaded and we are not forcing static data.
             if (!player.hasLoadedRegion(surroundingRegion) || force) {
-                data[surroundingRegion] = [
-                    ...data[surroundingRegion],
+                data[surroundingRegion].push(
                     ...(config.regionCache ? region.data : this.getRegionTileData(region))
-                ];
+                );
 
                 player.loadRegion(surroundingRegion);
             }
@@ -573,49 +563,6 @@ export default class Regions {
     }
 
     /**
-     * Parses through all the resources within the region specified and
-     * grabs tile data from them. It returns a RegionTileData array.
-     * @param region The region we are looking for resources in.
-     * @returns RegionTileData containing resource information.
-     */
-
-    private getRegionResourceData(region: Region, player: Player): RegionTileData[] {
-        let tileData: RegionTileData[] = [];
-
-        // Iterate through all the resources in the region.
-        region.forEachResource((resource: Resource) => {
-            // No need to reload resources that haven't changed.
-            if (player.hasLoadedResource(resource)) return;
-
-            // Parse resource tiles.
-            tileData = [...tileData, ...this.getResourceData(resource)];
-
-            player.loadResource(resource);
-        });
-
-        return tileData;
-    }
-
-    /**
-     * Grabs individual resource data from a specified resource.
-     * @param resource The resource we are grabbing data for.
-     * @returns RegionTileData array containing resource information.
-     */
-
-    private getResourceData(resource: Resource): RegionTileData[] {
-        let tileData: RegionTileData[] = [];
-
-        resource.forEachTile((data: RegionTile, index: number) => {
-            // Perhaps we can optimize further by storing this directly in the resource?
-            let coord = this.map.indexToCoord(index);
-
-            tileData.push(this.buildTile(coord.x, coord.y, index, data));
-        });
-
-        return tileData;
-    }
-
-    /**
      * Iterates through the surrounding regions and updates all the entities
      * with their custom data (if any).
      * @param player Player we are using to update the entity instances of.
@@ -623,7 +570,8 @@ export default class Regions {
      */
 
     private getDisplayInfo(player: Player): EntityDisplayInfo[] {
-        let entityData: EntityDisplayInfo[] = [];
+        let entityData: EntityDisplayInfo[] = [],
+            instances: string[] = []; // Used for preventing duplicates.
 
         this.forEachSurroundingRegion(player.region, (surroundingRegion: number) => {
             let region = this.get(surroundingRegion);
@@ -636,7 +584,12 @@ export default class Regions {
             region.forEachEntity((entity: Entity) => {
                 if (!entity.hasDisplayInfo(player)) return;
 
+                // Prevents duplicate entity data.
+                if (instances.includes(entity.instance)) return;
+
                 entityData.push(entity.getDisplayInfo(player));
+
+                instances.push(entity.instance);
             });
         });
 
@@ -644,42 +597,50 @@ export default class Regions {
     }
 
     /**
-     * Takes the tile's position and builds a TileInfo object.
-     * This is where all the fancy stuff with dynamic objects
-     * will be happening.
-     * @param x The x position of the tile in the grid space.
-     * @param y The y position of the tile in the grid space.
+     * Given the x and y grid coordinates, we build a TileInfo object containing all
+     * the information pertaining to that tile. This includes the position, the tile data,
+     * whether it's colliding, an object, or has any cursor data.
+     * @param x The x grid position of the tile in the grid space.
+     * @param y The y grid position of the tile in the grid space.
      * @param index Optional parameter if we want to skip calculating the index ourselves.
      * @param data Optional tile data parameter used to skip grabbing the tile data if we already have it.
      * @returns Returns a `TileInfo` object based on the coordinates.
      */
 
-    private buildTile(x: number, y: number, index?: number, data?: RegionTile): RegionTileData {
+    private buildTile(x: number, y: number, index?: number, data?: Tile): RegionTileData {
         // Use the specified index if not undefined or calculate it.
         index ||= this.map.coordToIndex(x, y);
 
-        /**
-         * Calculate the tile data if it's not specified as a parameter and
-         * attempt to grab the cursor based on the
-         */
+        // Use the provided data parameter or obtain it from the map file if not specified.
+        data ||= this.map.data[index];
+
+        if (!data || (data as number[])?.length === 0) return { x, y, data: 0 };
 
         let tile: RegionTileData = {
-                x,
-                y,
-                data: data || this.map.getTileData(index)
-            },
-            cursor = this.map.getCursor(tile.data as Tile);
+            x,
+            y,
+            data
+        };
 
         /**
-         * A tile is colliding if it exists in our array of collisions (See
-         * `parseTileLayerData()` in `processmap.ts`). If there is no tile data
-         * (i.e. the tile is blank) it is automatically colliding.
-         * We check if a tile is an object by verifying the data extracted.
-         * If we find a cursor we set the `cursor` property to the cursor.
+         * We use this function to prevent iterating through the tile array
+         * multiple times. Since collisions, objects, and cursors all call
+         * the `forEachTile` function, we can just do it in a batch here.
          */
-        if (this.map.isCollisionIndex(index)) tile.c = true;
-        if (this.map.isObject(tile.data as Tile)) tile.o = true;
-        if (cursor) tile.cur = cursor;
+
+        this.map.forEachTile(data as Tile, (tileId: number) => {
+            // Remove the tile bitmasks to get the actual tile id.
+            if (this.map.isFlippedTileId(tileId)) tileId = this.map.getFlippedTileId(tileId);
+
+            if (this.map.objects.includes(tileId)) {
+                tile.o = true;
+                tile.c = true;
+            } else if (this.map.collisions.includes(tileId)) tile.c = true;
+
+            let cursor = this.map.cursors[tileId];
+
+            if (cursor) tile.cur = cursor;
+        });
 
         return tile;
     }
@@ -707,10 +668,20 @@ export default class Regions {
         if (!mappedTile) return original;
 
         // Gets the index of the mapped tile coordinates.
-        let index = this.map.coordToIndex(mappedTile.x, mappedTile.y);
+        let index = this.map.coordToIndex(mappedTile.x, mappedTile.y),
+            tile = this.buildTile(x, y, index), // Build tile using the mapped tile's index
+            mappedAnimationTile = area.getMappedAnimationTile(x, y);
 
-        // We build a tile using our mapped tile's index, hence why we specify the index as a parameter
-        return this.buildTile(x, y, index);
+        /**
+         * If we have a mapped animation tile we add it to the tile data. Note
+         * that this animation is purely cosmetic and does not affect the tile
+         * in any way.
+         */
+        if (mappedAnimationTile)
+            tile.animation =
+                this.map.data[this.map.coordToIndex(mappedAnimationTile.x, mappedAnimationTile.y)];
+
+        return tile;
     }
 
     /**

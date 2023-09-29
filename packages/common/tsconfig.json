@@ -1,6 +1,1 @@
-{
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "types": ["@types/node"]
-    }
-}
+{ "extends": "../../tsconfig.json" }

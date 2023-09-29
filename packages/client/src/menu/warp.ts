@@ -2,14 +2,16 @@ import Menu from './menu';
 
 import log from '../lib/log';
 
-import type Socket from '../network/socket';
+import { Modules } from '@kaetram/common/network';
 
 export default class Warp extends Menu {
+    public override identifier: number = Modules.Interfaces.Warp;
+
     private list: NodeListOf<HTMLElement> = document.querySelectorAll('.map-button')!;
 
     private selectCallback?: (id: number) => void;
 
-    public constructor(private socket: Socket) {
+    public constructor() {
         super('#map-frame', '#close-map-frame', '#warp-button');
 
         for (let element of this.list)

@@ -1,0 +1,59 @@
+{
+    "name": "Anvil's Echoes",
+    "description": "The local blacksmith has lost his hammer and needs your help.|Seriously, he was just using it and now it's gone. I'm sure he'll be offering you a very nice reward for it if you help him out. Just go talk to him, he should be located somewhere in Mudwich, like right in the centre or something.",
+    "rewards": ["Blacksmith's Boots", "420 Smithing experience", "Access to the Smithing skill"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "blacksmith",
+            "text": [
+                "Dear adventurer, I have a huge problem.",
+                "My ancestral hammer has been stolen by a thief.",
+                "Without it I cannot produce some of my finest work.",
+                "I'm now stuck having to use this old hammer.",
+                "Listen, if you help me out I will give you something cool.",
+                "How about some smithing boots? They will help you smith faster.",
+                "It's definitely not some voodoo magic, I promise.",
+                "I last seen it when I was trying to smith on the beach.",
+                "I looked away for a second and it was gone.",
+                "I think you should start there and see if you can find any clues."
+            ],
+            "completedText": ["Please, go check out the beach for any clues."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "blacksmith",
+            "text": ["Please, go check out the beach for any clues."],
+            "hasItemText": [
+                "Oh! My wonderful hammer!",
+                "I can finally get back to break- I mean smithing.",
+                "Here, take these smithing boots as a reward.",
+                "You can also use my anvil to smith anything you want.",
+                "I'm sure you'll find it useful."
+            ],
+            "skillRewards": [
+                {
+                    "key": "smithing",
+                    "experience": 420
+                }
+            ],
+            "itemRequirements": [
+                {
+                    "key": "hammer",
+                    "count": 1
+                }
+            ],
+            "itemRewards": [
+                {
+                    "key": "smithingboots",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You've been awarded @crimson@3000 Smithing experience@green@ and @crimson@Smithing Gloves@green@.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

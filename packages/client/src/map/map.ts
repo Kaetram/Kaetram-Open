@@ -1,17 +1,21 @@
-import mapData from '../../data/maps/map.json';
+import Grids from './grids';
+
 import log from '../lib/log';
+import mapData from '../../data/maps/map.json';
 import Utils, { isInt } from '../utils/util';
 
 import { Modules } from '@kaetram/common/network';
 
+import type Game from '../game';
 import type {
+    ClientTile,
     ProcessedAnimation,
     ProcessedTileset,
     RegionData,
-    RegionTile,
-    RegionTileData
+    RegionTileData,
+    Tile,
+    TransformedTile
 } from '@kaetram/common/types/map';
-import type Game from '../game';
 
 export interface CursorTiles {
     [tileId: number]: string;
@@ -32,17 +36,22 @@ export default class Map {
     public tileSize = mapData.tileSize;
 
     // Map data
-    public data: RegionTile[] = [];
+    public data: ClientTile[] = [];
     public grid: number[][] = []; // Two dimensional grid array for collisions/pathing
 
     private high: number[] = mapData.high;
+    private cachedHighTiles: { [index: number]: 0 } = {};
     private objects: number[] = [];
     private lights: number[] = [];
 
     public tilesets: TilesetInfo[] = [];
     private rawTilesets: ProcessedTileset[] = mapData.tilesets; // Key is tileset id, value is the firstGID
     private cursorTiles: CursorTiles = {};
+
     private animatedTiles: { [tileId: number]: ProcessedAnimation[] } = mapData.animations;
+    public dynamicAnimatedTiles: { [index: number]: ClientTile } = {};
+
+    public grids: Grids;
 
     public mapLoaded = false;
     public regionsLoaded = 0;
@@ -51,7 +60,21 @@ export default class Map {
     private readyCallback?(): void;
 
     public constructor(private game: Game) {
-        this.load();
+        this.grids = new Grids(this);
+
+        // Load the empty grid data without webworkers if we're on iOS.
+        this.loadGrid();
+
+        this.loadTilesets();
+        this.loadRegionData();
+
+        this.ready();
+
+        // Store tile size globally into the utils.
+        Utils.tileSize = this.tileSize;
+        Utils.sideLength = this.width / Modules.Constants.MAP_DIVISION_SIZE;
+        Utils.halfTile = this.tileSize / 2;
+        Utils.tileAndAQuarter = this.tileSize * 1.25;
     }
 
     /**
@@ -65,38 +88,29 @@ export default class Map {
     }
 
     /**
-     * Uses webworkers to create an empty data and collision
-     * grid based on the map's dimensions. This can be quite
-     * time consuming so we relay it to an external worker
-     * to speed up the task.
+     * Initializes the collision, map data, and rendering grid. The data grid is used
+     * for rendering tiles, and the collision grid for determining which
+     * tile is a collision.
      */
 
-    private load(): void {
-        log.debug('Parsing map with Web Workers...');
+    private loadGrid(): void {
+        let time = Date.now();
 
-        // Store tile size globally into the utils.
-        Utils.tileSize = this.tileSize;
-        Utils.sideLength = this.width / Modules.Constants.MAP_DIVISION_SIZE;
-        Utils.thirdTile = this.tileSize / 3;
-        Utils.tileAndAQuarter = this.tileSize * 1.25;
+        for (let y = 0; y < this.height; y++) {
+            this.grid[y] = [];
+            this.grids.renderingGrid[y] = [];
 
-        let worker = new Worker(new URL('mapworker.ts', import.meta.url), { type: 'classic' });
+            // Initialize collision grid.
+            for (let x = 0; x < this.width; x++) {
+                this.data.push(0);
+                this.grid[y][x] = 1;
+                this.grids.renderingGrid[y][x] = {};
+            }
+        }
 
-        // Send the map's width and height to the webworker.
-        worker.postMessage([this.width, this.height]);
+        log.debug(`Loaded empty grid in ${Date.now() - time}ms.`);
 
-        worker.addEventListener('message', (event) => {
-            if (event.data.data) this.data = event.data.data;
-            if (event.data.grid) this.grid = event.data.grid;
-
-            this.loadRegionData();
-
-            this.mapLoaded = true;
-        });
-
-        this.loadTilesets();
-
-        this.ready();
+        this.mapLoaded = true;
     }
 
     /**
@@ -123,37 +137,54 @@ export default class Map {
      */
 
     public loadRegion(data: RegionTileData[], region: number): void {
-        for (let tile of data) {
-            let index = this.coordToIndex(tile.x, tile.y),
-                objectIndex = this.objects.indexOf(index);
-
-            // Store the tile data so that we can render it later.
-            this.data[index] = tile.data;
-
-            // Add collision if the tile is colliding and there's no collision.
-            if (tile.c && !this.isColliding(tile.x, tile.y)) this.grid[tile.y][tile.x] = 1;
-
-            // Remove collision if the tile is not colliding and there's a collision.
-            if (!tile.c && this.isColliding(tile.x, tile.y)) this.grid[tile.y][tile.x] = 0;
-
-            // If the tile has a cursor, we store it in our cursorTiles dictionary.
-            if (tile.cur) this.cursorTiles[index] = tile.cur;
-
-            // If the tile doesn't have a cursor but the index is in our cursorTiles dictionary, we remove it.
-            if (!tile.cur && index in this.cursorTiles) this.cursorTiles[index] = '';
-
-            // If the tile has an object, we store it in our objects array.
-            if (tile.o && objectIndex < 0) this.objects.push(index);
-
-            // If the tile doesn't have an object but the index is in our objects array, we remove it.
-            if (!tile.o && objectIndex > -1) this.objects.splice(objectIndex, 1);
-
-            // Add the tile information to the WebGL renderer if it's active.
-            if (this.game.useWebGl) this.game.renderer.setTile(index, tile.data);
-        }
+        for (let tile of data) this.loadRegionTileData(tile);
 
         // Store the region we just saved into our local storage.
         this.game.storage.setRegionData(data, region);
+    }
+
+    /**
+     * Parses through a specified tile within the region information and extracts all
+     * the necessary information into its respective array/dictionary.
+     * @param tile The tile that we want to parse.
+     */
+
+    private loadRegionTileData(tile: RegionTileData): void {
+        let index = this.coordToIndex(tile.x, tile.y),
+            objectIndex = this.objects.indexOf(index),
+            useAnimationData = !(index in this.dynamicAnimatedTiles) && !this.game.isLowPowerMode(),
+            tileData = this.parseTileData(tile.data),
+            animationData = tile.animation ? this.parseTileData(tile.animation) : undefined;
+
+        /**
+         * If we're in low power mode just store the tile data as is. Otherwise we store
+         * the animated data if specified and default to the data if not.
+         */
+        this.data[index] = useAnimationData ? animationData || tileData : tileData;
+
+        // If the tile contains an animation flag, we store it in the dynamic animated tiles dictionary.
+        if (animationData) this.dynamicAnimatedTiles[index] = tileData;
+
+        // Add collision if the tile is colliding and there's no collision.
+        if (tile.c && !this.isColliding(tile.x, tile.y)) this.grid[tile.y][tile.x] = 1;
+
+        // Remove collision if the tile is not colliding and there's a collision.
+        if (!tile.c && this.isColliding(tile.x, tile.y)) this.grid[tile.y][tile.x] = 0;
+
+        // If the tile has a cursor, we store it in our cursorTiles dictionary.
+        if (tile.cur) this.cursorTiles[index] = tile.cur;
+
+        // If the tile doesn't have a cursor but the index is in our cursorTiles dictionary, we remove it.
+        if (!tile.cur && index in this.cursorTiles) this.cursorTiles[index] = '';
+
+        // If the tile has an object, we store it in our objects array.
+        if (tile.o && objectIndex < 0) this.objects.push(index);
+
+        // If the tile doesn't have an object but the index is in our objects array, we remove it.
+        if (!tile.o && objectIndex > -1) this.objects.splice(objectIndex, 1);
+
+        // Add the tile information to the WebGL renderer if it's active.
+        if (this.game.useWebGl) this.game.renderer.setTile(index, this.data[index]);
     }
 
     /**
@@ -208,7 +239,7 @@ export default class Map {
         tilesetInfo.addEventListener('load', () => {
             // Prevent uneven tilemaps from loading.
             if (tilesetInfo.width % this.tileSize > 0)
-                throw new Error(`The tile size is malformed in the tile set: ${tileset.path}`);
+                log.error(`The tile size is malformed in the tile set: ${tileset.path}`);
 
             // Mark tileset as loaded.
             tilesetInfo.loaded = true;
@@ -217,7 +248,7 @@ export default class Map {
         });
 
         tilesetInfo.addEventListener('error', () => {
-            throw new Error(`Could not find tile set: ${tileset.path}`);
+            log.error(`Could not find tile set: ${tileset.path}`);
         });
 
         /**
@@ -254,6 +285,7 @@ export default class Map {
                     this.loadRegions(data.regionData);
                 } catch {
                     this.game.storage.clear();
+                    this.game.storage.clearIndexedDB();
                 }
 
                 this.objects = data.objects;
@@ -261,9 +293,63 @@ export default class Map {
 
                 this.regionsLoaded = keys.length;
 
-                log.info(`Preloaded map data with ${keys.length} regions.`);
+                log.debug(`Preloaded map data with ${keys.length} regions.`);
             }
         });
+    }
+
+    /**
+     * Given a raw tile received from a server at an index, we try to extract the information
+     * from it and determine if it contains and flipped flags. We create a new array (or single
+     * variable if the original data is not an array).
+     * @param data The raw tile data, may be a single number or an array of numbers.
+     * @returns A processed client tile object.
+     */
+
+    public parseTileData(data: Tile): ClientTile {
+        let isArray = Array.isArray(data),
+            parsedData: ClientTile = isArray ? [] : 0;
+
+        this.forEachTile(data, (tileId: number) => {
+            let tile: number | TransformedTile = tileId;
+
+            if (this.isFlippedTileId(tileId)) tile = this.getFlippedTile(tileId);
+
+            if (isArray) (parsedData as unknown[]).push(tile);
+            else parsedData = tile;
+        });
+
+        return parsedData;
+    }
+
+    /**
+     * Uses a rotated tile which contains the flip flags bitshifted onto it and undoes
+     * the bitshift to retrieve the original tileId. This is used for retrieving the
+     * original tileId from a flipped tile. We also store each flag of the transformations
+     * and apply them onto a TransformedTile object.
+     * For more information refer to the following
+     * https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#tmx-tile-flipping
+     * @param tileId The tileId of the flipped tile.
+     * @returns A parsed tile of type `RotatedTile`.
+     */
+
+    public getFlippedTile(tileId: number): TransformedTile {
+        let h = !!(tileId & Modules.MapFlags.HORIZONTAL_FLAG),
+            v = !!(tileId & Modules.MapFlags.VERTICAL_FLAG),
+            d = !!(tileId & Modules.MapFlags.DIAGONAL_FLAG);
+
+        tileId &= ~(
+            Modules.MapFlags.DIAGONAL_FLAG |
+            Modules.MapFlags.VERTICAL_FLAG |
+            Modules.MapFlags.HORIZONTAL_FLAG
+        );
+
+        return {
+            tileId,
+            h,
+            v,
+            d
+        };
     }
 
     /**
@@ -293,7 +379,7 @@ export default class Map {
     public indexToCoord(index: number): Position {
         return {
             x: index % this.width,
-            y: Math.floor(index / this.width)
+            y: ~~(index / this.width)
         };
     }
 
@@ -302,14 +388,15 @@ export default class Map {
      * marked as a collision.
      * @param x The x grid coordinate.
      * @param y The y grid coordinate.
+     * @param all Whether to include additional collisions.
      * @returns Whether the x and y coordinates in the 2D grid are colliding.
      */
 
-    public isColliding(x: number, y: number): boolean {
+    public isColliding(x: number, y: number, all = false): boolean {
         if (this.isOutOfBounds(x, y)) return true;
         if ((this.data[this.coordToIndex(x, y)] as number) < 1) return true;
 
-        return this.grid[y][x] === 1;
+        return this.grid[y][x] === 1 || (all && this.grid[y][x] === 2);
     }
 
     /**
@@ -327,28 +414,23 @@ export default class Map {
     }
 
     /**
-     * Converts the x and y grid coordinate into an index and checks
-     * our cursor tiles dictionary for an entry of the index. If it's not
-     * found, it returns undefined by default.
-     * @param x The x grid coordinate we are checking.
-     * @param y The y grid coordinate we are checking.
-     * @returns The name of the cursor at the tile index if exists, otherwise undefined.
-     */
-
-    public getTileCursor(x: number, y: number): string {
-        let index = this.coordToIndex(x, y);
-
-        return this.cursorTiles[index];
-    }
-
-    /**
      * Checks if the tileId parameter is part of our high tiles array.
      * @param tileId The tileId we are checking.
      * @returns Whether the tileId is contained in our high tiles array.
      */
 
     public isHighTile(tileId: number): boolean {
-        return this.high.includes(tileId);
+        // Check if the tileId is cached.
+        if (this.cachedHighTiles[tileId]) return true;
+
+        // Cache the tileId if it's in our high tiles hashmap
+        if (this.high.includes(tileId)) {
+            this.cachedHighTiles[tileId] = 0;
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -390,7 +472,31 @@ export default class Map {
      */
 
     public isOutOfBounds(x: number, y: number): boolean {
-        return isInt(x) && isInt(y) && (x < 0 || x >= this.width || y < 0 || y >= this.height);
+        return x < 0 || x >= this.width || y < 0 || y >= this.height;
+    }
+
+    /**
+     * A flipped tile is any tile that contains a flip flag or transpose flag.
+     * @param tile Tile data received from the server.
+     * @returns Whether or not the tile contains and flip flags.
+     */
+
+    public isFlipped(tile: ClientTile): tile is TransformedTile {
+        return (
+            (tile as TransformedTile).v ||
+            (tile as TransformedTile).h ||
+            (tile as TransformedTile).d
+        );
+    }
+
+    /**
+     * Checks whether a tileId is flipped or not by comparing
+     * the value against the lowest flipped bitflag.
+     * @param tileId The tileId we are checking.
+     */
+
+    public isFlippedTileId(tileId: number): boolean {
+        return tileId > (Modules.MapFlags.DIAGONAL_FLAG as number);
     }
 
     /**
@@ -415,11 +521,40 @@ export default class Map {
 
         return undefined;
     }
+
+    /**
+     * Converts the x and y grid coordinate into an index and checks
+     * our cursor tiles dictionary for an entry of the index. If it's not
+     * found, it returns undefined by default.
+     * @param x The x grid coordinate we are checking.
+     * @param y The y grid coordinate we are checking.
+     * @returns The name of the cursor at the tile index if exists, otherwise undefined.
+     */
+
+    public getTileCursor(x: number, y: number): string {
+        let index = this.coordToIndex(x, y);
+
+        return this.cursorTiles[index];
+    }
+
     /**
      * Callback for when the map is ready to be used (preliminary data is loaded).
      */
 
     public onReady(callback: () => void): void {
         this.readyCallback = callback;
+    }
+
+    /**
+     * Iterates through all the tiles at a given index if it's an array, otherwise we just return
+     * the number contained at that location. This is used to speed up code when trying to handle
+     * logic for multiple tiles at a location.
+     * @param data The raw tile data (generally contained in the umodified map) at an index.
+     * @param callback The tile id and index of the tile currently being iterated.
+     */
+
+    public forEachTile(data: Tile, callback: (tileId: number, index?: number) => void): void {
+        if (Array.isArray(data)) for (let index in data) callback(data[index], parseInt(index));
+        else callback(data);
     }
 }

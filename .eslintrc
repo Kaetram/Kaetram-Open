@@ -8,12 +8,14 @@
         "plugin:import/recommended",
         "plugin:import/typescript",
         "plugin:unicorn/recommended",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:astro/recommended",
+        "plugin:astro/jsx-a11y-strict"
     ],
+    "plugins": ["prefer-let"],
     "parserOptions": {
         "project": "tsconfig.json"
     },
-    "plugins": ["prefer-let"],
     "rules": {
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-dynamic-delete": "off",
@@ -55,6 +57,7 @@
         "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
 
         "import/no-unresolved": "off",
+        "import/no-named-as-default-member": "off",
         "import/order": [
             "warn",
             {
@@ -81,6 +84,7 @@
         "unicorn/no-array-reduce": "off",
         "unicorn/prefer-number-properties": "off",
         "unicorn/prevent-abbreviations": "off",
+        "unicorn/prefer-math-trunc": "off",
 
         // TODO: Enable on ES2022
         "unicorn/prefer-string-replace-all": "off",

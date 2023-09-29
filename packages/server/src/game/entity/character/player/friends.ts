@@ -1,9 +1,9 @@
 import config from '@kaetram/common/config';
-import { Friends as FriendsPacket } from '@kaetram/common/network/impl';
 import { Opcodes } from '@kaetram/common/network';
+import { FriendsPacket } from '@kaetram/common/network/impl';
 
 import type Player from './player';
-import type { Friend } from '@kaetram/common/types/friends';
+import type { Friend } from '@kaetram/common/network/impl/friends';
 
 type SyncCallback = (username: string, status: boolean, serverId: number) => void;
 
@@ -48,20 +48,16 @@ export default class Friends {
         let username = (typeof player === 'string' ? player : player.username).toLowerCase();
 
         // Check that someone isn't messing with the client input :)
-        if (username.length > 32) return this.player.notify('That username is too long.');
+        if (username.length > 32) return this.player.notify('misc:FRIENDS_USERNAME_TOO_LONG');
 
-        if (username === this.player.username)
-            return this.player.notify(
-                `Listen man I get it, you're lonely, but you can't add yourself to your friends list.`
-            );
+        if (username === this.player.username) return this.player.notify('misc:FRIENDS_ADD_SELF');
 
         // Ensure the player is not already on the list.
-        if (this.hasFriend(username))
-            return this.player.notify('That player is already on your friends list.');
+        if (this.hasFriend(username)) return this.player.notify('misc:FRIENDS_ALREADY_ADDED');
 
         // Ensure the player exists.
         this.player.database.exists(username, (exists: boolean) => {
-            if (!exists) return this.player.notify('No player with that username exists.');
+            if (!exists) return this.player.notify('misc:FRIENDS_USER_DOES_NOT_EXIST');
 
             // Add the friend and check if they are online.
             let online = this.player.world.isOnline(username);
@@ -88,8 +84,7 @@ export default class Friends {
         let username = (typeof player === 'string' ? player : player.username).toLowerCase();
 
         // No username was found in the list.
-        if (!this.hasFriend(username))
-            return this.player.notify('That player is not in your friends list.');
+        if (!this.hasFriend(username)) return this.player.notify('misc:FRIENDS_NOT_IN_LIST');
 
         delete this.list[username];
 

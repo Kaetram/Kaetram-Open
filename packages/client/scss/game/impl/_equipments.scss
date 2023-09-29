@@ -1,138 +1,149 @@
 @use '../../abstracts/media';
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #equipment-slots {
-            top: 20px * $i;
-            left: 55px * $i;
+#equipments {
+    align-items: center;
+}
 
-            overflow: hidden;
+#equipment-content {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: space-between;
+}
 
-            width: 116px * $i;
-            height: 120px * $i;
+#equipments-player-visual {
+    display: grid;
+}
 
-            background-position: -4px * $i -80px * $i;
-        }
+#equipments-player-image {
+    z-index: 1;
+}
 
-        #equipment-container {
-            position: absolute;
-            top: -70px * $i;
-            left: -2px * $i;
-        }
+#equipments-player-image,
+#equipment-slots {
+    display: flex;
+    grid-area: 1 / 1;
+    place-items: center;
+    align-items: center;
+    justify-content: center;
+}
 
-        .player-image {
-            position: absolute;
-            top: 70px * $i;
-            left: 110px * $i;
-        }
+#equipments-player-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    flex: 1;
+    gap: 0.5em;
 
-        #player-image-armour,
-        #player-image-weapon {
-            transform: scale($i);
-            scale: $i;
+    font-size: 1em;
 
-            overflow: auto;
+    .title {
+        padding-bottom: 0.5em;
+        text-decoration: underline;
+    }
 
-            width: 32px;
-            height: 32px;
-        }
-
-        #player-image-navigator {
-            position: absolute;
-            top: 94px * $i;
-            left: 95px * $i;
-        }
-
-        .title {
-            font-size: 10px * $i;
-            text-decoration: underline;
-        }
-
-        #attack-stats,
-        #defense-stats,
-        #bonuses {
-            font-size: 8px * $i;
-            border-color: black;
-            border-radius: 1px;
-        }
-
-        #attack-stats,
-        #defense-stats {
-            top: 16px * $i;
-            width: 70px * $i;
-            height: 80px * $i;
-        }
-
-        #attack-stats {
-            left: 180px * $i;
-        }
-
-        #defense-stats {
-            left: 250px * $i;
-        }
-
-        #bonuses {
-            top: 90px * $i;
-            left: 180px * $i;
-        }
-
-        .equip-weapon-slot {
-            top: 118px * $i;
-            left: 2px * $i;
-        }
-
-        .equip-weapon-skin-slot {
-            top: 118px * $i;
-            left: 26px * $i;
-        }
-
-        .equip-armour-slot {
-            top: 118px * $i;
-            left: 102px * $i;
-        }
-
-        .equip-armour-skin-slot {
-            top: 118px * $i;
-            left: 79px * $i;
-        }
-
-        .equip-pendant-slot {
-            top: 76px * $i;
-            left: 26px * $i;
-        }
-
-        .equip-ring-slot {
-            top: 164px * $i;
-            left: 26px * $i;
-        }
-
-        .equip-boots-slot {
-            top: 164px * $i;
-            left: 78px * $i;
-        }
-        
-        .equip-arrows-slot {
-            top: 76px * $i;
-            left: 77px * $i;
-        }
+    p {
+        margin-bottom: 0.125em;
     }
 }
 
-@media (--sm) {
-    .player-image {
-        top: 60px;
-        left: 100px;
+#equipments-player-image-canvas {
+    width: 8em;
+    height: 4em;
+}
+
+#equipments-player-image-navigator {
+    display: flex;
+    flex-direction: row;
+    font-size: 0.75em;
+}
+
+#equipment-slots {
+    position: relative;
+    width: 14em;
+    height: 14em;
+
+    .equipment-slot {
+        position: absolute;
+        z-index: 2;
+
+        width: 2em;
+        height: 2em;
+        padding: 0.25em;
+
+        &-image {
+            width: 100%;
+            height: 100%;
+            background-size: 100%;
+        }
     }
-}
 
-#attack-stats,
-#defense-stats,
-#bonuses {
-    position: absolute;
-    font-family: AdvoCut, sans-serif;
-}
+    .equipment-slot-helmet {
+        top: 0;
+        left: 6em;
+    }
 
-#close-equipments {
-    top: -2%;
-    left: 96%;
+    .equipment-slot-pendant {
+        top: 1.25em;
+        left: 0.25em;
+    }
+
+    .equipment-slot-arrows {
+        top: 1.25em;
+        left: 11.75em;
+    }
+
+    .equipment-slot-arrows-count {
+        position: absolute;
+        top: -1em;
+        left: 0;
+
+        width: 2em;
+
+        text-align: center;
+    }
+
+    .equipment-slot-chestplate {
+        top: 2.5em;
+        left: 2.75em;
+    }
+
+    .equipment-slot-weapon {
+        top: 2.5em;
+        left: 9.25em;
+    }
+
+    .equipment-slot-shield {
+        top: 6em;
+        left: 11em;
+    }
+
+    .equipment-slot-armour-skin {
+        top: 9.5em;
+        left: 2.75em;
+    }
+
+    .equipment-slot-weapon-skin {
+        top: 9.5em;
+        left: 9.25em;
+    }
+
+    .equipment-slot-ring {
+        top: 6em;
+        left: 1em;
+    }
+
+    .equipment-slot-legplates {
+        top: 10.75em;
+        left: 0.25em;
+    }
+
+    .equipment-slot-cape {
+        top: 10.75em;
+        left: 11.75em;
+    }
+
+    .equipment-slot-boots {
+        top: 12em;
+        left: 6em;
+    }
 }

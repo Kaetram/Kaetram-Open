@@ -1,4 +1,4 @@
-import { isMobile } from './detect';
+import { isIos, isMobile } from './detect';
 
 import log from '../lib/log';
 
@@ -22,11 +22,13 @@ interface Settings {
     brightness: number;
     audioEnabled: boolean;
     lowPowerMode: boolean;
+    joyStickEnabled: boolean;
     debugMode: boolean;
     showNames: boolean;
     showLevels: boolean;
     disableCaching: boolean;
     webgl: boolean;
+    fpsThrottle: number;
 }
 
 interface RegionMapData {
@@ -72,8 +74,8 @@ export default class Storage {
     private create(): StorageData {
         return {
             new: true,
-            world: window.config.serverId,
-            clientVersion: window.config.version,
+            world: globalConfig.serverId,
+            clientVersion: globalConfig.version,
             errorMessage: '',
 
             player: {
@@ -86,16 +88,18 @@ export default class Storage {
             },
 
             settings: {
-                musicVolume: 100,
-                soundVolume: 100,
+                musicVolume: 25,
+                soundVolume: 25,
                 brightness: 100,
                 audioEnabled: !isMobile(),
                 lowPowerMode: false,
+                joyStickEnabled: false,
                 debugMode: false,
                 showNames: true,
                 showLevels: true,
                 disableCaching: false,
-                webgl: false
+                webgl: false,
+                fpsThrottle: isIos() ? 1 : 0 // default to 50fps throttle on iOS.
             }
         };
     }
@@ -165,7 +169,7 @@ export default class Storage {
      * Deletes the IndexedDB database and recreates it.
      */
 
-    private clearIndexedDB(): void {
+    public clearIndexedDB(): void {
         this.mapData?.close();
 
         window.indexedDB.deleteDatabase('mapCache');
@@ -274,6 +278,17 @@ export default class Storage {
     }
 
     /**
+     * Sets the value of the joystick in the local storage.
+     * @param joyStickEnabled New value to update in the local storage.
+     */
+
+    public setJoyStickEnabled(joyStickEnabled: boolean): void {
+        this.data.settings.joyStickEnabled = joyStickEnabled;
+
+        this.save();
+    }
+
+    /**
      * Updates the debug value in the local storage.
      * @param debug New value of the debug.
      */
@@ -346,6 +361,17 @@ export default class Storage {
 
     public setZoom(zoom: number): void {
         this.data.player.zoom = zoom;
+
+        this.save();
+    }
+
+    /**
+     * Updates the fps throttle in the local storage.
+     * @param fpsThrottle New fps throttle we are saving.
+     */
+
+    public setFpsThrottle(fpsThrottle: number): void {
+        this.data.settings.fpsThrottle = fpsThrottle;
 
         this.save();
     }
@@ -462,7 +488,7 @@ export default class Storage {
      */
 
     private isNewVersion(): boolean {
-        return this.data.clientVersion !== window.config.version;
+        return this.data.clientVersion !== globalConfig.version;
     }
 
     /**

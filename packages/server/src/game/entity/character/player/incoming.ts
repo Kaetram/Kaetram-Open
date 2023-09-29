@@ -6,13 +6,19 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import Creator from '@kaetram/common/database/mongodb/creator';
-import { Spawn } from '@kaetram/common/network/impl';
+import { SpawnPacket } from '@kaetram/common/network/impl';
 import { Opcodes, Packets } from '@kaetram/common/network';
 
-import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
-import type Entities from '../../../../controllers/entities';
+import type Player from './player';
+import type NPC from '../../npc/npc';
+import type Entity from '../../entity';
 import type World from '../../../world';
+import type Character from '../character';
+import type Chest from '../../objects/chest';
+import type LootBag from '../../objects/lootbag';
+import type Entities from '../../../../controllers/entities';
 import type Connection from '../../../../network/connection';
+import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
 import type {
     AbilityPacket,
     ContainerPacket,
@@ -27,13 +33,11 @@ import type {
     HandshakePacket,
     EnchantPacket,
     GuildPacket,
-    CraftingPacket
+    CraftingPacket,
+    PetPacket,
+    LootBagPacket
 } from '@kaetram/common/types/messages/incoming';
-import type Character from '../character';
-import type Player from './player';
-import type Entity from '../../entity';
-import type NPC from '../../npc/npc';
-import type Chest from '../../objects/chest';
+import type { QuestPacketData } from '@kaetram/common/network/impl/quest';
 
 export default class Incoming {
     private world: World;
@@ -98,6 +102,9 @@ export default class Incoming {
                     case Packets.Container: {
                         return this.handleContainer(message);
                     }
+                    case Packets.Quest: {
+                        return this.handleQuest(message);
+                    }
                     case Packets.Ability: {
                         return this.handleAbility(message);
                     }
@@ -130,6 +137,12 @@ export default class Incoming {
                     }
                     case Packets.Crafting: {
                         return this.handleCrafting(message);
+                    }
+                    case Packets.LootBag: {
+                        return this.handleLootBag(message);
+                    }
+                    case Packets.Pet: {
+                        return this.handlePet(message);
                     }
                 }
             } catch (error) {
@@ -191,6 +204,8 @@ export default class Incoming {
             }
 
             case Opcodes.Login.Register: {
+                if (config.disableRegister) return this.connection.reject('disabledregister');
+
                 return this.database.register(this.player);
             }
 
@@ -252,7 +267,10 @@ export default class Incoming {
 
             /* We handle player-specific entity statuses here. */
             this.player.send(
-                new Spawn(entity, entity.hasDisplayInfo(this.player) ? this.player : undefined)
+                new SpawnPacket(
+                    entity,
+                    entity.hasDisplayInfo(this.player) ? this.player : undefined
+                )
             );
         }
     }
@@ -287,10 +305,11 @@ export default class Incoming {
                 requestY,
                 playerX,
                 playerY,
+                nextGridX,
+                nextGridY,
                 movementSpeed,
                 targetInstance,
                 orientation,
-                following,
                 timestamp
             } = data,
             entity: Entity;
@@ -302,15 +321,16 @@ export default class Incoming {
         if (requestY) requestY = Utils.sanitizeNumber(requestY);
         if (playerX) playerX = Utils.sanitizeNumber(playerX);
         if (playerY) playerY = Utils.sanitizeNumber(playerY);
+        if (nextGridX) nextGridX = Utils.sanitizeNumber(nextGridX);
+        if (nextGridY) nextGridY = Utils.sanitizeNumber(nextGridY);
+
+        // Prevent any crazy packet tampering.
+        if (this.world.map.isOutOfBounds(requestX!, requestY!)) return;
+        if (this.world.map.isOutOfBounds(playerX!, playerY!)) return;
 
         switch (opcode) {
             case Opcodes.Movement.Request: {
-                return this.player.handleMovementRequest(
-                    playerX!,
-                    playerY!,
-                    targetInstance!,
-                    following!
-                );
+                return this.player.handleMovementRequest(playerX!, playerY!, targetInstance!);
             }
 
             case Opcodes.Movement.Started: {
@@ -323,7 +343,13 @@ export default class Incoming {
             }
 
             case Opcodes.Movement.Step: {
-                return this.player.handleMovementStep(playerX!, playerY!, timestamp);
+                return this.player.handleMovementStep(
+                    playerX!,
+                    playerY!,
+                    nextGridX!,
+                    nextGridY!,
+                    timestamp
+                );
             }
 
             case Opcodes.Movement.Stop: {
@@ -338,16 +364,29 @@ export default class Incoming {
             case Opcodes.Movement.Entity: {
                 entity = this.entities.get(targetInstance!) as Character;
 
-                // Skip players or invalid entities.
-                if (!entity || entity.isPlayer()) return;
+                if (!entity) return;
 
-                return entity.setPosition(requestX!, requestY!);
+                // Pet movement is only handled by the owner.
+                if (entity.isPet() && entity.owner?.instance === this.player.instance)
+                    return entity.setPosition(requestX!, requestY!);
+
+                // Skip players or invalid entities.
+                if (!entity?.isMob() || entity.isStunned() || entity.isDead()) return;
+
+                // Do not update if it's the same value.
+                if (entity.x === requestX && entity.y === requestY) return;
+
+                // Prevent crazy position updates, add some leeway to the roaming distance.
+                if (entity.outsideRoaming(requestX!, requestY!, entity.roamDistance * 2)) return;
+
+                // For mobs update the position without a packet.
+                return entity.setPosition(requestX!, requestY!, false);
             }
         }
     }
 
-    private handleTarget(message: [Opcodes.Target, string]): void {
-        let [opcode, instance] = message;
+    private handleTarget(message: [Opcodes.Target, string, number?, number?]): void {
+        let [opcode, instance, x, y] = message;
 
         switch (opcode) {
             case Opcodes.Target.Talk: {
@@ -371,7 +410,7 @@ export default class Incoming {
             }
 
             case Opcodes.Target.Attack: {
-                return this.player.handleTargetAttack(instance);
+                return this.player.handleTargetAttack(instance, x, y);
             }
 
             case Opcodes.Target.Object: {
@@ -410,7 +449,7 @@ export default class Incoming {
         if (text.startsWith('/') || text.startsWith(';')) return this.commands.parse(text);
 
         // Check for mute before filtering the message.
-        if (this.player.isMuted()) return this.player.notify('You are currently muted.', 'crimson');
+        if (this.player.isMuted()) return this.player.notify('misc:MUTED', 'crimson');
 
         this.player.chat(Filter.clean(text));
     }
@@ -428,8 +467,7 @@ export default class Incoming {
 
         switch (opcode) {
             case Opcodes.Command.CtrlClick: {
-                this.player.teleport(position.gridX, position.gridY, true);
-                break;
+                return this.player.teleport(position.gridX, position.gridY, true, false, true);
             }
         }
     }
@@ -481,6 +519,19 @@ export default class Incoming {
     }
 
     /**
+     * Used for progressing the quest when the player accepts the start quest interface.
+     * @param packet Contains the key of the quest we are progressing.
+     */
+
+    private handleQuest(packet: QuestPacketData): void {
+        let quest = this.player.quests.get(packet.key!);
+
+        if (!quest) return log.warning(`Quest ${packet.key} does not exist.`);
+
+        quest.handlePrompt();
+    }
+
+    /**
      * Handles incoming abilities actions from the client. Things such as using
      * an ability or moving one to a quick slot.
      * @param packet Contains infomration about which ability to use and where to move it.
@@ -502,12 +553,9 @@ export default class Incoming {
     }
 
     private handleTrade(packet: TradePacket): void {
-        // Sanitize the incoming packet information.
-        if (packet.count) packet.count = Utils.sanitizeNumber(packet.count, true);
-
         switch (packet.opcode) {
             case Opcodes.Trade.Request: {
-                let oPlayer = this.entities.get(packet.instance!);
+                let oPlayer = this.entities.get(packet.instance);
 
                 if (!oPlayer?.isPlayer()) return;
 
@@ -523,11 +571,14 @@ export default class Incoming {
             }
 
             case Opcodes.Trade.Add: {
-                return this.player.trade.add(packet.index!, packet.count);
+                return this.player.trade.add(
+                    packet.index,
+                    Utils.sanitizeNumber(packet.count, true)
+                );
             }
 
             case Opcodes.Trade.Remove: {
-                return this.player.trade.remove(packet.index!);
+                return this.player.trade.remove(packet.index);
             }
         }
     }
@@ -539,8 +590,7 @@ export default class Incoming {
      */
 
     private handleEnchant(packet: EnchantPacket): void {
-        if (!this.player.canAccessContainer)
-            return this.player.notify('You cannot do that right now.');
+        if (!this.player.canAccessContainer) return this.player.notify('misc:CANNOT_DO_THAT');
 
         // Sanitize the index and the shard index.
         if (packet.index) packet.index = Utils.sanitizeNumber(packet.index);
@@ -565,7 +615,7 @@ export default class Incoming {
     private handleGuild(packet: GuildPacket): void {
         switch (packet.opcode) {
             case Opcodes.Guild.Create: {
-                return this.world.guilds.create(
+                this.world.guilds.create(
                     this.player,
                     packet.name!,
                     packet.colour!,
@@ -573,22 +623,50 @@ export default class Incoming {
                     packet.outlineColour!,
                     packet.crest!
                 );
+
+                break;
             }
 
             case Opcodes.Guild.Join: {
-                return this.world.guilds.join(this.player, packet.identifier!);
+                this.world.guilds.join(this.player, packet.identifier!);
+
+                break;
             }
 
             case Opcodes.Guild.Leave: {
-                return this.world.guilds.leave(this.player);
+                this.world.guilds.leave(this.player);
+
+                break;
             }
 
             case Opcodes.Guild.List: {
-                return this.world.guilds.get(this.player, packet.from!, packet.to!);
+                this.world.guilds.get(this.player, packet.from!, packet.to!);
+
+                break;
             }
 
             case Opcodes.Guild.Chat: {
-                return this.world.guilds.chat(this.player, packet.message!);
+                this.world.guilds.chat(this.player, packet.message!);
+
+                break;
+            }
+
+            case Opcodes.Guild.Promote: {
+                this.world.guilds.promote(this.player, packet.username!);
+
+                break;
+            }
+
+            case Opcodes.Guild.Demote: {
+                this.world.guilds.demote(this.player, packet.username!);
+
+                break;
+            }
+
+            case Opcodes.Guild.Kick: {
+                this.world.guilds.kick(this.player, packet.username!);
+
+                break;
             }
         }
     }
@@ -674,7 +752,7 @@ export default class Incoming {
 
         this.player.statistics.addMobExamine(entity.key);
 
-        if (!entity.description) return this.player.notify('I have no idea what that is.');
+        if (!entity.description) return this.player.notify('misc:NO_IDEA');
 
         this.player.notify(entity.getDescription());
     }
@@ -687,7 +765,7 @@ export default class Incoming {
     private handleCrafting(data: CraftingPacket): void {
         // Ensure the player is not maliciously trying to craft something.
         if (this.player.activeCraftingInterface === -1)
-            return this.player.notify(`You cannot do that right now.`);
+            return this.player.notify('misc:CANNOT_DO_THAT');
 
         // Sanitize the packet information to prevent any funny business.
         if (data.count) data.count = Utils.sanitizeNumber(data.count, true);
@@ -699,6 +777,43 @@ export default class Incoming {
 
             case Opcodes.Crafting.Craft: {
                 return this.world.crafting.craft(this.player, data.key!, data.count!);
+            }
+        }
+    }
+
+    /**
+     * Handles an incoming loot bag packet. This is generally for when a player
+     * attempts to take an item from the loot bag or when they close the interface.
+     * @param data Contains the opcode and optionally, the index of the item.
+     */
+
+    private handleLootBag(data: LootBagPacket): void {
+        switch (data.opcode) {
+            case Opcodes.LootBag.Take: {
+                let lootBag = this.world.entities.get(this.player.activeLootBag!) as LootBag;
+
+                if (!lootBag) return;
+
+                return lootBag.take(this.player, data.index!);
+            }
+        }
+    }
+
+    /**
+     * Handles the pet packet actions received from the client. This can include picking up the
+     * pet. Further actions will be added in the future as needed.
+     * @param data Contains the opcode for the action.
+     */
+
+    private handlePet(data: PetPacket): void {
+        switch (data.opcode) {
+            case Opcodes.Pet.Pickup: {
+                if (this.player.pickingUpPet || !this.player.hasPet()) return;
+
+                this.player.pickingUpPet = true;
+                this.player.pickingUpPet = !this.player.removePet();
+
+                return;
             }
         }
     }

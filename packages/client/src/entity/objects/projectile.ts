@@ -1,4 +1,3 @@
-import Utils from '../../utils/util';
 import Entity from '../entity';
 
 import { Modules } from '@kaetram/common/network';
@@ -6,36 +5,60 @@ import { Modules } from '@kaetram/common/network';
 import type Character from '../character/character';
 
 export default class Projectile extends Entity {
-    public override type = Modules.EntityType.Projectile;
+    public override type: number = Modules.EntityType.Projectile;
+
+    public override readonly fadingDuration: number = 100;
 
     public speed = 150;
 
-    public override readonly fadingDuration = 100;
+    public hasSpawned = false;
 
     public target!: Character;
 
-    private impactCallback?(): void;
+    // Callback created when the projectile impacts the target.
+    public impactCallback?(): void;
 
-    public constructor(instance: string, public owner: Entity, private hitType: Modules.Hits) {
+    public constructor(
+        instance: string,
+        private hitType: Modules.Hits
+    ) {
         super(instance, Modules.EntityType.Projectile);
     }
+
+    /**
+     * Override for the idle animation to use the projectile's default animation.
+     */
 
     public override idle(): void {
         this.setAnimation('travel');
     }
 
-    public impact(): void {
-        this.impactCallback?.();
-    }
-
-    public setStart(x: number, y: number): void {
-        this.setGridPosition(Math.floor(x / Utils.tileSize), Math.floor(y / Utils.tileSize));
-    }
+    /**
+     * Updates the projectile's target and calculates the new angle.
+     * @param target The character object that we are setting as the target.
+     */
 
     public setTarget(target: Character): void {
         this.target = target;
 
         this.updateAngle();
+    }
+
+    /**
+     * Override for `setGridPosition` to support projectile spawning logic. When we
+     * have an owner, we spawn it at the owner's position, otherwise we use whatever
+     * the server sent us.
+     * @param gridX The grid x coordinate to set the projectile to.
+     * @param gridY The grid y coordinate to set the projectile to.
+     */
+
+    public override setGridPosition(gridX: number, gridY: number): void {
+        // Prevent projectile from updating its position again after spawning.
+        if (this.hasSpawned) return;
+
+        super.setGridPosition(gridX, gridY);
+
+        this.hasSpawned = true;
     }
 
     /**
@@ -94,19 +117,14 @@ export default class Projectile extends Entity {
     }
 
     /**
-     * Calculates the angle between the projectile and the target.
-     * @returns Angle in radians so that the projectile faces the target.
+     * Updates the projectile's angle to face the target. We take the
+     * inverse tangent of the target's y and x coordinates.
      */
 
     public updateAngle(): void {
         if (!this.target) return;
 
-        this.angle =
-            Math.atan2(this.target.y - this.y, this.target.x - this.x) * (180 / Math.PI) - 90;
-    }
-
-    public override getAngle(): number {
-        return (this.angle * Math.PI) / 180;
+        this.angle = Math.atan2(this.target.y - this.y, this.target.x - this.x) - Math.PI / 2;
     }
 
     /**

@@ -1,0 +1,45 @@
+{
+    "name": "The Coded Message",
+    "description": "Decipher the mysterious scroll.",
+    "rewards": ["500 Gold", "Scholar's Ring"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "oldscholar",
+            "text": [
+                "Ah, young traveler! I've found this old scroll, but I can't seem to decode its message.",
+                "It might lead to an ancient treasure. Will you assist me?"
+            ],
+            "completedText": ["Please decipher the coded scroll.", "I believe it hides a clue."]
+        },
+        "1": {
+            "task": "decode",
+            "item": "mysteriousscroll",
+            "completedText": ["Once decoded, return to me with the message."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "oldscholar",
+            "hasItemText": [
+                "Fascinating! This indeed is a map. Let's find this treasure together!",
+                "Follow the clues and retrieve what's hidden."
+            ],
+            "completedText": ["Return once you have found the treasure."]
+        },
+        "3": {
+            "task": "explore",
+            "location": "ancientruins",
+            "findItem": "ancientartifact",
+            "completedText": ["Return to the scholar with the artifact."]
+        },
+        "4": {
+            "task": "talk",
+            "npc": "oldscholar",
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@The Coded Message@green@ quest and received @crimson@500 Gold@green@ and a @crimson@Scholar's Ring@green@.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

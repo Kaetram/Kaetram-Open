@@ -1,160 +1,76 @@
 @use '../../abstracts/media';
 
-#trade-container {
-    cursor: url('/img/hand.png'), auto;
-
-    position: absolute;
-    inset: 0;
-
+#trade {
     display: none;
-
-    margin: auto;
+    width: 37.875em;
+    height: 21.5em;
 }
 
-#close-trade {
-    left: 98% !important;
+#trade-content {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    justify-content: space-between;
+
+    height: 100%;
+
+    .player-trade {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        align-items: center;
+        justify-content: space-between;
+
+        height: 100%;
+    }
 }
 
 #trade-inventory-slots,
 #trade-player-slots,
 #trade-oplayer-slots {
-    position: absolute;
-    overflow: hidden;
-    overflow-y: scroll;
-
     ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
+        overflow: hidden auto;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.25em;
+
+        height: 100%;
+        padding-right: 0.375em;
 
         li {
-            float: left;
+            font-size: 0.875em;
         }
     }
 }
 
-#trade-player-name,
-#trade-oplayer-name,
+#trade-inventory {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    justify-content: center;
+
+    height: 100%;
+}
+
+#trade-player {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    align-items: center;
+}
+
+#trade-player-content {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    height: 100%;
+}
+
 #trade-status {
-    position: absolute;
-    font-family: AdvoCut, sans-serif;
-    color: white;
-    text-align: center;
+    height: 1em;
+    font-size: 0.75em;
 }
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #trade-container {
-            width: 379px * $i;
-            height: 170px * $i;
-            background: url('/img/interface/trade.png') 0 0 no-repeat;
-            background-size: calc(width('trade.png') * $i);
-        }
-
-        #trade-inventory-slots {
-            top: 16px * $i;
-            left: 20px * $i;
-            width: 96px * $i;
-            height: 90px * $i;
-        }
-
-        #trade-player-slots {
-            top: 40px * $i;
-            left: 148px * $i;
-        }
-
-        #trade-oplayer-slots {
-            top: 40px * $i;
-            left: 268px * $i;
-
-            ul {
-                li {
-                    .item-slot {
-                        pointer-events: none;
-                    }
-                }
-            }
-        }
-
-        #trade-player-slots,
-        #trade-oplayer-slots {
-            width: 102px * $i;
-            height: 92px * $i;
-
-            ul {
-                li {
-                    .item-slot {
-                        margin-bottom: 4px * $i;
-                    }
-                }
-            }
-        }
-
-        #trade-inventory-slots,
-        #trade-player-slots,
-        #trade-oplayer-slots {
-            ul {
-                li {
-                    .item-slot {
-                        margin-bottom: 4px * $i;
-                    }
-                }
-            }
-        }
-
-        #trade-player-name,
-        #trade-oplayer-name {
-            top: 13px * $i;
-            width: 104px * $i;
-            height: 10px * $i;
-            font-size: 10px * $i;
-        }
-
-        #trade-status {
-            top: 27px * $i;
-            right: 22px * $i;
-
-            width: 208px * $i;
-            height: 10px * $i;
-
-            font-size: 6px * $i;
-        }
-
-        #trade-player-name {
-            left: 140px * $i;
-        }
-
-        #trade-oplayer-name {
-            left: 263px * $i;
-        }
-
-        #trade-accept {
-            right: 77px * $i;
-            bottom: 7px * $i;
-        }
-    }
-}
-
-@media (--sm) {
-    #trade-inventory-slots {
-        top: 16px;
-        left: 10px;
-        width: 106px;
-        height: 90px;
-    }
-
-    #trade-player-slots,
-    #trade-oplayer-slots {
-        top: 40px;
-        width: 106px;
-        height: 92px;
-    }
-
-    #trade-player-slots {
-        left: 140px;
-    }
-
-    #trade-oplayer-slots {
-        left: 260px;
-    }
+#trade-accept {
+    width: 10em;
 }

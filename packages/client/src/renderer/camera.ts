@@ -2,12 +2,10 @@ import { Modules } from '@kaetram/common/network';
 
 import type Character from '../entity/character/character';
 
-const MAXIMUM_ZOOM = 6,
-    DEFAULT_ZOOM = 3,
-    MAX_GRID_WIDTH = 52,
-    MAX_GRID_HEIGHT = 28;
-
-let MINIMUM_ZOOM = 2.6;
+export const MAXIMUM_ZOOM = 8,
+    DEFAULT_ZOOM = 4,
+    MAX_GRID_WIDTH = 64,
+    MAX_GRID_HEIGHT = 32;
 
 export default class Camera {
     // Border is used to determine the screen size of the website (not browser).
@@ -28,9 +26,15 @@ export default class Camera {
     // The maximum camera position for the bottom and right edges of the map.
     private borderX = 0;
     private borderY = 0;
+    public borderWidth = 0;
+    public borderHeight = 0;
+
+    // Border offset sizes (the actual dimension of the screen).
+    public borderOffsetWidth = 0;
+    public borderOffsetHeight = 0;
 
     // How zoomed in we are.
-    public zoomFactor = 3;
+    public zoomFactor = DEFAULT_ZOOM;
 
     // Whether to centre the camera on a specific entity.
     private centered = true;
@@ -39,7 +43,17 @@ export default class Camera {
     public lockX = false;
     public lockY = false;
 
-    public constructor(private width: number, private height: number, private tileSize: number) {
+    // The maximum and minimum zoom factors.
+    public maxZoom = MAXIMUM_ZOOM;
+    public minZoom = 2.6;
+
+    private zoomCallback?: () => void;
+
+    public constructor(
+        private width: number,
+        private height: number,
+        private tileSize: number
+    ) {
         this.update();
     }
 
@@ -51,8 +65,13 @@ export default class Camera {
      */
 
     public update(): void {
-        let borderWidth = this.border.offsetWidth,
-            borderHeight = this.border.offsetHeight;
+        // Store the true dimensions of the border.
+        this.borderOffsetWidth = this.border.offsetWidth;
+        this.borderOffsetHeight = this.border.offsetHeight;
+
+        // Calculate the actual border width using the tile size and zoom factor.
+        this.borderWidth = this.border.offsetWidth / this.tileSize / this.zoomFactor;
+        this.borderHeight = this.border.offsetHeight / this.tileSize / this.zoomFactor;
 
         /**
          * The grid width and height are defined by how many tiles we can fit into
@@ -62,8 +81,8 @@ export default class Camera {
          * and vertically after the zoom.
          */
 
-        this.gridWidth = Math.ceil(borderWidth / this.tileSize / this.zoomFactor);
-        this.gridHeight = Math.ceil(borderHeight / this.tileSize / this.zoomFactor);
+        this.gridWidth = ~~this.borderWidth + 1;
+        this.gridHeight = ~~this.borderHeight + 1;
 
         this.clamp();
 
@@ -106,7 +125,7 @@ export default class Camera {
 
     /**
      * Sets the zoom factor of the camera and clamps the limits.
-     * @param zoom The new zoom factor, defaults to DEFAULT_ZOOM value.
+     * @param zoom The new zoom factor, defaults to {@linkcode DEFAULT_ZOOM} value.
      */
 
     public setZoom(zoom = DEFAULT_ZOOM): void {
@@ -114,8 +133,10 @@ export default class Camera {
 
         if (isNaN(this.zoomFactor)) this.zoomFactor = DEFAULT_ZOOM;
 
-        if (this.zoomFactor > MAXIMUM_ZOOM) this.zoomFactor = MAXIMUM_ZOOM;
-        if (this.zoomFactor < MINIMUM_ZOOM) this.zoomFactor = MINIMUM_ZOOM;
+        if (this.zoomFactor > this.maxZoom) this.zoomFactor = this.maxZoom;
+        if (this.zoomFactor < this.minZoom) this.zoomFactor = this.minZoom;
+
+        this.zoomCallback?.();
     }
 
     /**
@@ -160,8 +181,8 @@ export default class Camera {
      */
 
     public centreOn(character: Character): void {
-        let width = Math.floor(this.gridWidth / 2),
-            height = Math.floor(this.gridHeight / 2),
+        let width = this.borderWidth / 2,
+            height = this.borderHeight / 2,
             nextX = character.x - width * this.tileSize,
             nextY = character.y - height * this.tileSize;
 
@@ -174,12 +195,12 @@ export default class Camera {
 
         if (nextX >= 0 && nextX <= this.borderX && !this.lockX) {
             this.x = nextX;
-            this.gridX = Math.round(character.x / this.tileSize) - width;
+            this.gridX = Math.round(character.x / this.tileSize - ~~width);
         } else this.offsetX(nextX); // Bind to the x edge.
 
         if (nextY >= 0 && nextY <= this.borderY && !this.lockY) {
             this.y = nextY;
-            this.gridY = Math.round(character.y / this.tileSize) - height;
+            this.gridY = Math.round(character.y / this.tileSize - ~~height);
         } else this.offsetY(nextY); // Bind to the y edge.
     }
 
@@ -296,7 +317,7 @@ export default class Camera {
 
     public updateMinimumZoom(mobile = false): void {
         // Update the minimum zoom.
-        MINIMUM_ZOOM = mobile ? 2 : 2.6;
+        this.minZoom = mobile ? 2 : 2.6;
 
         this.zoom();
     }
@@ -318,11 +339,11 @@ export default class Camera {
      * @returns Whether or not the coordinates are within the viewport.
      */
 
-    public isVisible(x: number, y: number, offsetX: number, offsetY: number): boolean {
+    public isVisible(x: number, y: number, offsetX: number, offsetY = offsetX): boolean {
         return (
             x > this.gridX - offsetX &&
-            x < this.gridX + this.gridWidth &&
-            y > this.gridY - offsetX &&
+            x < this.gridX + this.gridWidth + offsetX &&
+            y > this.gridY - offsetY &&
             y < this.gridY + this.gridHeight + offsetY
         );
     }
@@ -331,11 +352,27 @@ export default class Camera {
      * Iterates through every grid coordinate in the view port.
      * @param callback Callback contains the grid coordinates being iterated in the view.
      * @param offset How much to look outside the width and height of the viewport.
+     * @param offsetRight How much to look outside the right edge of the viewport.
      */
 
-    public forEachVisiblePosition(callback: (x: number, y: number) => void, offset = 1): void {
-        for (let y = this.gridY - offset, maxY = y + this.gridHeight + offset * 2; y < maxY; y++)
-            for (let x = this.gridX - offset, maxX = x + this.gridWidth + offset * 2; x < maxX; x++)
+    public forEachVisiblePosition(
+        callback: (x: number, y: number) => void,
+        offset = 2,
+        offsetRight = offset
+    ): void {
+        for (let y = this.gridY - offset; y < this.gridY + this.gridHeight + offsetRight; y++)
+            for (let x = this.gridX - offset; x < this.gridX + this.gridWidth + offsetRight; x++) {
+                if (x < 0 || y < 0 || x >= this.width || y >= this.height) continue;
                 callback(x, y);
+            }
+    }
+
+    /**
+     * Callback for when the zooming has changed. Used by the renderer to recalculate
+     * text dimensions and other things that are affected by the zoom.
+     */
+
+    public onZoom(callback: () => void): void {
+        this.zoomCallback = callback;
     }
 }

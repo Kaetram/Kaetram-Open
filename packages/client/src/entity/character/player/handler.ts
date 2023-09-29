@@ -1,8 +1,7 @@
 import CharacterHandler from '../handler';
 
-import { Packets, Opcodes } from '@kaetram/common/network';
+import { Packets, Opcodes, Modules } from '@kaetram/common/network';
 
-import type Character from '../character';
 import type Map from '../../../map/map';
 import type Player from './player';
 import type Game from '../../../game';
@@ -18,13 +17,13 @@ export default class Handler extends CharacterHandler {
     protected override game: Game;
     protected override entities: EntitiesController;
 
-    public constructor(player: Player) {
-        super(player);
+    public constructor(protected override character: Player) {
+        super(character);
 
-        this.map = player.game.map;
+        this.map = character.game.map;
 
-        this.game = player.game;
-        this.entities = player.game.entities;
+        this.game = character.game;
+        this.entities = character.game.entities;
     }
 
     /**
@@ -42,13 +41,19 @@ export default class Handler extends CharacterHandler {
         // Prevent calculations from being made if the player is dead.
         if (this.character.dead || this.character.frozen) return [];
 
+        // Turn the character towards the tile they clicked on.
+        if (!this.character.hasKeyboardMovement() && !this.character.target)
+            this.character.lookAtPosition(x, y);
+
         // Prevent calculating pathing when we target a mob that is within range.
         if (this.character.canAttackTarget() && !this.character.trading) return [];
 
-        let isObject = this.map.isObject(x, y);
+        let isObject = this.map.isObject(x, y),
+            isResource = this.character.target?.isResource(),
+            isNPC = this.character.target?.isNPC();
 
         // Ignore requests into colliding tiles but allow targetable objects.
-        if (this.map.isColliding(x, y) && !isObject) return [];
+        if (this.map.isColliding(x, y) && !isObject && !isResource && !isNPC) return [];
 
         // Sends the packet to the server with the request.
         this.game.socket.send(Packets.Movement, {
@@ -75,6 +80,8 @@ export default class Handler extends CharacterHandler {
                 ignores.push({ x: x + 1, y }, { x: x - 1, y }, { x, y: y + 1 }, { x, y: y - 1 });
         }
 
+        if (isResource || isNPC) ignores.push({ x, y });
+
         return this.game.findPath(this.character, x, y, ignores, cursor);
     }
 
@@ -86,7 +93,7 @@ export default class Handler extends CharacterHandler {
 
     protected override handleStartPathing(path: number[][]): void {
         // The selected tile is the last tile in the path.
-        [this.game.input.selectedX, this.game.input.selectedY] = path[path.length - 1];
+        [this.game.input.selectedX, this.game.input.selectedY] = path.at(-1)!;
 
         this.character.moving = true;
         this.game.input.selectedCellVisible = true;
@@ -115,9 +122,6 @@ export default class Handler extends CharacterHandler {
         // Once stopped, remove the selected tile animation.
         this.game.input.selectedCellVisible = false;
 
-        // Clipping the camera ensures it's always bound to the nearest tile.
-        this.game.camera.clip();
-
         // Sends the stop pathing packet to the server
         this.game.socket.send(Packets.Movement, {
             opcode: Opcodes.Movement.Stop,
@@ -128,18 +132,20 @@ export default class Handler extends CharacterHandler {
             orientation: this.character.orientation
         });
 
-        // TODO - Combine these two packets into the movement packet.
-
         if (this.character.trading)
             this.game.socket.send(Packets.Trade, {
                 opcode: Opcodes.Trade.Request,
                 instance: this.character.target?.instance
             });
 
-        this.game.socket.send(Packets.Target, [
-            this.getTargetType(),
-            this.character.target?.instance || ''
-        ]);
+        let targetType = this.getTargetType();
+
+        // Send target packet only if we have a target.
+        if (targetType !== Opcodes.Target.None)
+            this.game.socket.send(Packets.Target, [
+                this.getTargetType(),
+                this.character.target?.instance || ''
+            ]);
 
         // ---------------------------------------------------------
 
@@ -159,8 +165,9 @@ export default class Handler extends CharacterHandler {
         // Save the player's orientation.
         this.game.storage.setOrientation(this.character.orientation);
 
-        // Reset the animated tiles when we stop moving.
-        this.game.renderer.resetAnimatedTiles();
+        // Default to idling state once we stop pathing.
+        if (!this.character.hasKeyboardMovement())
+            this.character.performAction(this.character.orientation, Modules.Actions.Idle);
 
         // Reset movement and trading variables
         this.character.moving = false;
@@ -191,11 +198,21 @@ export default class Handler extends CharacterHandler {
         // Handle followers
         this.handleFollowers();
 
+        if (this.character.hasTarget())
+            this.game.socket.send(Packets.Movement, {
+                opcode: Opcodes.Movement.Entity,
+                targetInstance: this.character.target?.instance,
+                requestX: this.character.target?.gridX,
+                requestY: this.character.target?.gridY
+            });
+
         // Send the packet to the server to inform it that the player has moved.
         this.game.socket.send(Packets.Movement, {
             opcode: Opcodes.Movement.Step,
             playerX: this.character.gridX,
             playerY: this.character.gridY,
+            nextGridX: this.character.nextGridX,
+            nextGridY: this.character.nextGridY,
             timestamp: Date.now()
         });
 
@@ -204,16 +221,7 @@ export default class Handler extends CharacterHandler {
         this.lastStepY = this.character.gridY;
 
         // Check if we can initiate combat.
-        if (this.character.canAttackTarget() && !this.character.trading) this.character.stop(true);
-    }
-
-    /**
-     * Updates the animated tiles every second step to get them all
-     * synchronized with one another.
-     */
-
-    protected override handleSecondStep(): void {
-        this.game.renderer.updateAnimatedTiles();
+        if (this.character.canAttackTarget()) this.character.stop();
     }
 
     /**
@@ -241,7 +249,8 @@ export default class Handler extends CharacterHandler {
             return Opcodes.Target.Talk;
 
         // Interaction type for objects.
-        if (this.character.target.isObject()) return Opcodes.Target.Object;
+        if (this.character.target.isObject() || this.character.target.isResource())
+            return Opcodes.Target.Object;
 
         // Interaction for attacking
         if (this.character.target.isMob() || (this.character.target.isPlayer() && this.game.pvp))

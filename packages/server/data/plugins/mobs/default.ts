@@ -1,5 +1,5 @@
 import { Modules } from '@kaetram/common/network';
-import { Spawn } from '@kaetram/common/network/impl';
+import { SpawnPacket } from '@kaetram/common/network/impl';
 import Formulas from '@kaetram/server/src/info/formulas';
 import Hit from '@kaetram/server/src/game/entity/character/combat/hit';
 import Handler from '@kaetram/server/src/game/entity/character/mob/handler';
@@ -28,10 +28,10 @@ export default class Default extends Handler {
 
     protected attackAll(hitType = Modules.Hits.Normal, aoe = this.mob.aoe): void {
         this.mob.forEachAttacker((attacker: Character) => {
-            let hit = new Hit(hitType, Formulas.getDamage(this.mob, attacker), true, aoe),
+            let hit = new Hit(hitType, Formulas.getDamage(this.mob, attacker), true, aoe, true),
                 projectile = this.world.entities.spawnProjectile(this.mob, attacker, hit);
 
-            this.mob.sendToRegions(new Spawn(projectile));
+            this.mob.sendToRegions(new SpawnPacket(projectile));
         });
     }
 

@@ -5,11 +5,13 @@ import Utils from '@kaetram/common/util/utils';
 import { Team } from '@kaetram/common/api/minigame';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
-import type Player from '../../entity/character/player/player';
 import type World from '../../world';
+import type Player from '../../entity/character/player/player';
 
 export default class TeamWar extends Minigame {
-    private countdown: number = Modules.MinigameConstants.TEAM_WAR_COUNTDOWN;
+    public override name = 'TeamWar';
+
+    protected override countdown: number = Modules.MinigameConstants.TEAM_WAR_COUNTDOWN;
 
     // Areas for the minigame.
     private redSpawn: Area = new Area(0, 0, 0, 0, 0); // Spawn area for red team.
@@ -20,9 +22,6 @@ export default class TeamWar extends Minigame {
 
     public constructor(world: World) {
         super(world, Opcodes.Minigame.TeamWar);
-
-        // Begin the tick interval for the minigame.
-        setInterval(this.tick.bind(this), 1000);
     }
 
     /**
@@ -59,13 +58,13 @@ export default class TeamWar extends Minigame {
     }
 
     /**
-     * Finds a random point within the red or blue team depending on the team paramaeter.
-     * @params team The team we are grabbing the respawn point for.
-     * @returns Returns a respawn point within the minigame area depending on the team.
+     * Finds a random point within the red or blue team depending on the team parameter.
+     * @params team The team we are grabbing the spawn point for.
+     * @returns Returns a spawn point within the minigame area depending on the team.
      */
 
-    public override getRespawnPoint(team: Team): Position {
-        if (!this.started) return this.getLobbyPosition();
+    public override getSpawnPoint(team: Team): Position {
+        if (!this.started) return super.getSpawnPoint();
 
         let area = team === Team.Red ? this.redSpawn : this.blueSpawn;
 
@@ -79,7 +78,7 @@ export default class TeamWar extends Minigame {
      * Function called every 1 second interval that handles the minigame logic.
      */
 
-    private tick(): void {
+    protected override tick(): void {
         if (this.countdown <= 0) {
             this.countdown = Modules.MinigameConstants.TEAM_WAR_COUNTDOWN;
 
@@ -95,7 +94,7 @@ export default class TeamWar extends Minigame {
         // Send the score packet to the players in-game.
         if (this.playersInGame.length > 0)
             this.sendPacket(this.playersInGame, {
-                action: Opcodes.TeamWar.Score,
+                action: Opcodes.MinigameActions.Score,
                 countdown: this.countdown,
                 redTeamKills: this.redTeamKills,
                 blueTeamKills: this.blueTeamKills
@@ -104,29 +103,10 @@ export default class TeamWar extends Minigame {
         // Send the countdown packet to the players in the lobby.
         if (this.playersInLobby.length > 0)
             this.sendPacket(this.playersInLobby, {
-                action: Opcodes.TeamWar.Lobby,
+                action: Opcodes.MinigameActions.Lobby,
                 countdown: this.countdown,
                 started: this.started
             });
-    }
-
-    /**
-     * Shuffles the players in the lobby.
-     * @returns Returns the shuffled players in the lobby.
-     */
-
-    private shuffleLobby(): Player[] {
-        let lobby = this.playersInLobby;
-
-        for (let x = lobby.length - 1; x > 0; x--) {
-            let y = Math.floor(Math.random() * x),
-                temp = lobby[x];
-
-            lobby[x] = lobby[y];
-            lobby[y] = temp;
-        }
-
-        return lobby;
     }
 
     /**
@@ -138,11 +118,11 @@ export default class TeamWar extends Minigame {
         let redTeam = this.shuffleLobby();
 
         // Not enough players, we're not starting the game.
-        if (redTeam.length < Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS) {
+        if (redTeam.length < (Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS as number)) {
             // Notify all players there aren't enough players in the lobby.
             for (let player of redTeam)
                 player.notify(
-                    `There must be at least ${Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS} players to start the game.`
+                    `misc:MINIMUM_PLAYERS_MINIGAME;minimum=${Modules.MinigameConstants.TEAM_WAR_MIN_PLAYERS}`
                 );
 
             return;
@@ -163,7 +143,8 @@ export default class TeamWar extends Minigame {
         for (let player of this.playersInGame) {
             player.minigame = Opcodes.Minigame.TeamWar;
 
-            let position = this.getRespawnPoint(player.team!);
+            // Grab the spawn point for the player's team.
+            let position = this.getSpawnPoint(player.team!);
 
             player.teleport(position.x, position.y, false, true);
         }
@@ -174,10 +155,6 @@ export default class TeamWar extends Minigame {
      */
 
     public override stop(): void {
-        this.sendPacket(this.playersInGame, {
-            action: Opcodes.TeamWar.End
-        });
-
         super.stop();
 
         this.redTeamKills = 0;

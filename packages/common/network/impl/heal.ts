@@ -2,10 +2,18 @@ import Packet from '../packet';
 
 import { Packets } from '@kaetram/common/network';
 
-import type { HealPacket } from '@kaetram/common/types/messages/outgoing';
+import type { Modules } from '@kaetram/common/network';
 
-export default class Heal extends Packet {
-    public constructor(data: HealPacket) {
+export interface HealPacketData {
+    instance: string;
+    type: Modules.HealTypes;
+    amount: number;
+}
+
+export type HealPacketCallback = (info: HealPacketData) => void;
+
+export default class HealPacket extends Packet {
+    public constructor(data: HealPacketData) {
         super(Packets.Heal, undefined, data);
     }
 }

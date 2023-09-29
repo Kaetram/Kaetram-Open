@@ -1,3 +1,1 @@
-import './utils';
-
-export * from './network';
+import './global';

@@ -1,12 +1,35 @@
 import { Modules } from '@kaetram/common/network';
 
+import type { Duration, SerializedDuration, SerializedEffects } from '@kaetram/common/types/status';
+
 export default class {
     private effects: Modules.Effects[] = [];
 
-    private timeouts: { [key: number]: NodeJS.Timeout } = {};
+    private durations: { [key: number]: Duration } = {};
 
     private addCallback?: (status: Modules.Effects) => void;
     private removeCallback?: (status: Modules.Effects) => void;
+
+    /**
+     * Loads the serialized status effects from the database and uses the start time
+     * relative to the duration of the effect to reinstantiate it if applicable. We use
+     * the calculated remaining time upon logging out to determine how long to set the
+     * timeout for.
+     * @param effects The list of serialized status effects from the database.
+     */
+
+    public load(effects: SerializedEffects): void {
+        console.log(effects);
+
+        for (let type in effects) {
+            let effect = effects[type];
+
+            // Effect has already passed our current time, just ignore it.
+            if (effect.remainingTime < 100) continue;
+
+            this.addWithTimeout(parseInt(type), effect.remainingTime);
+        }
+    }
 
     /**
      * Adds a status effect to the character's list of effects if it has not
@@ -45,17 +68,22 @@ export default class {
         this.add(statusEffect);
 
         // Clear existing timeouts.
-        if (this.timeouts[statusEffect]) {
-            clearTimeout(this.timeouts[statusEffect]);
-            delete this.timeouts[statusEffect];
+        if (this.durations[statusEffect]) {
+            clearTimeout(this.durations[statusEffect].timeout);
+            delete this.durations[statusEffect];
         }
 
-        // Start a new timeout.
-        this.timeouts[statusEffect] = setTimeout(() => {
-            this.remove(statusEffect);
+        // Start a new effect duration handler.
+        this.durations[statusEffect] = {
+            // Begin the timeout and remove the status effect once it is up.
+            timeout: setTimeout(() => {
+                this.remove(statusEffect);
 
-            callback?.();
-        }, duration);
+                callback?.();
+            }, duration),
+            startTime: Date.now() - 1000,
+            duration
+        };
     }
 
     /**
@@ -66,6 +94,9 @@ export default class {
     public remove(...statusEffect: Modules.Effects[]): void {
         for (let status of statusEffect) {
             this.effects = this.effects.filter((effect) => effect !== status);
+
+            // Remove the status effect from the list of durations.
+            if (this.durations[status]) delete this.durations[status];
 
             this.removeCallback?.(status);
         }
@@ -79,9 +110,9 @@ export default class {
         this.effects = [];
 
         // Clear all the timeouts.
-        for (let status in this.timeouts) {
-            clearTimeout(this.timeouts[status]);
-            delete this.timeouts[status];
+        for (let status in this.durations) {
+            clearTimeout(this.durations[status].timeout);
+            delete this.durations[status];
         }
     }
 
@@ -102,7 +133,7 @@ export default class {
      */
 
     public hasTimeout(status: Modules.Effects): boolean {
-        return !!this.timeouts[status];
+        return !!this.durations[status]?.timeout;
     }
 
     /**
@@ -114,6 +145,27 @@ export default class {
 
     private hasPermanentFreezing(): boolean {
         return this.has(Modules.Effects.Freezing) && !this.hasTimeout(Modules.Effects.Freezing);
+    }
+
+    /**
+     * Serializes the status effects for storing them into the database.
+     * This is to prevent people from logging out and back in to remove
+     * the status effects.
+     * @returns A serialized effects object containing all the currently active durations.
+     */
+
+    public serialize(): SerializedEffects {
+        let effects: SerializedEffects = {};
+
+        for (let status in this.durations) {
+            let duration = this.durations[status];
+
+            effects[status] = {
+                remainingTime: duration.startTime + duration.duration - Date.now()
+            } as SerializedDuration;
+        }
+
+        return effects;
     }
 
     /**

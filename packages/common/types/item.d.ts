@@ -6,6 +6,11 @@ export interface Enchantments {
     [id: number]: Enchantment;
 }
 
+export interface Light {
+    outer?: LampData;
+    inner?: LampData;
+}
+
 export interface ContainerItem {
     index: number;
     key: string;
@@ -28,6 +33,15 @@ export interface Bonuses {
     magic: number;
 }
 
+// This is for items that have a lamp effect.
+export interface LampData {
+    distance: number;
+    colour: string;
+
+    flickerSpeed: number;
+    flickerIntensity: number;
+}
+
 export interface ItemData {
     type: string;
     name: string;
@@ -43,9 +57,11 @@ export interface ItemData {
     achievement?: string; // Achievement required to use the item.
     quest?: string; // Quest requirement for the item.
     attackRate?: number;
+    twoHanded?: boolean;
     poisonous?: boolean;
     freezing?: boolean;
     burning?: boolean;
+    light?: Light;
     movementModifier?: number;
     lumberjacking?: number;
     mining?: number;

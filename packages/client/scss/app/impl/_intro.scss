@@ -5,6 +5,27 @@
     text-decoration: none;
 }
 
+#intro {
+    position: absolute;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+}
+
+#lang-select {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
 body.intro {
     #intro-container {
         transition: 0.4s opacity linear;
@@ -23,13 +44,11 @@ body.intro {
 
     footer {
         position: absolute;
-        bottom: 5%;
+        bottom: 1em;
         left: 0;
 
         width: 100%;
 
-        font-family: AdvoCut, sans-serif;
-        font-size: 18px;
         color: #c6c0a3;
         text-align: center;
         text-shadow: 0 1px 0 black;
@@ -38,58 +57,35 @@ body.intro {
 
         div {
             display: inline-block;
-            padding: 0 5px;
+            padding: 0 0.3125em;
 
             span:hover {
                 cursor: pointer;
                 color: #fcda5c;
             }
         }
-
-        @media (--lg) {
-            font-size: 28px;
-        }
-    }
-
-    #load-character,
-    #create-character,
-    #reset-password,
-    #world-select {
-        form {
-            position: relative;
-        }
     }
 
     .validation-summary {
-        height: 1em;
-        margin: 0.5em auto;
+        flex-direction: row;
+        justify-content: center;
+        height: 2em;
+        font-size: 1em;
     }
 
     .validation-error {
-        font-size: 15px;
-        color: #800;
-        text-shadow: 2px 2px 2px #f66;
+        color: #e00a0a;
+        text-shadow: 0.125em 0.125em 0.125em #800;
     }
 
     .validation-warning {
-        font-size: 15px;
         color: rgb(168 162 16);
-        text-shadow: 2px 2px 2px #fc6;
+        text-shadow: 0.125em 0.125em 0.125em #fc6;
     }
 
     .status {
-        font-size: 15px;
         color: #03c;
-        text-shadow: 2px 2px 2px #39f;
-    }
-
-    .loader {
-        position: relative;
-        margin-top: 30%;
-
-        @media (--lg) {
-            font-size: 26px;
-        }
+        text-shadow: 0.125em 0.125em 0.125em #39f;
     }
 
     .loader-dot {
@@ -101,6 +97,14 @@ body.intro {
 
         &:nth-child(3) {
             animation-delay: 500ms;
+        }
+    }
+}
+
+@media (--portrait) {
+    body.intro {
+        footer {
+            // bottom: 3.5em;
         }
     }
 }

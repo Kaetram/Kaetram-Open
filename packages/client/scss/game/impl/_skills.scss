@@ -1,0 +1,98 @@
+@use '../../abstracts/sprite';
+
+#skill-info {
+    position: absolute;
+    right: 100%;
+
+    display: none;
+    flex-direction: column;
+
+    width: 8em;
+    height: 10em;
+    padding-right: 0;
+
+    border-image-width: 1em 0 1em 1em;
+
+    .skill-info-header {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5em;
+        align-items: center;
+
+        font-size: 1em;
+    }
+
+    .skill-info-details {
+        display: flex;
+        flex-direction: column;
+
+        span {
+            padding: 0.25em;
+            font-size: 1em;
+        }
+    }
+}
+
+#skills-list {
+    height: 100%;
+
+    ul {
+        overflow: hidden auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25em;
+
+        height: 100%;
+        padding-right: 0.25em;
+
+        .slice-list-item {
+            flex-shrink: 0;
+            gap: 0.25em;
+
+            .skill-content {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                justify-content: space-evenly;
+
+                text-align: center;
+
+                .skill-level {
+                    font-size: 1.3em;
+                }
+
+                .skill-experience {
+                    width: 17.25em;
+                    background: rgb(0 0 0 / 50%);
+                    border: 0.125em solid rgb(0 0 0 / 75%);
+                    border-radius: 0.25em;
+                }
+
+                .skill-experience-progress {
+                    height: 0.5em;
+                    background: linear-gradient(to left, #4f4, #080);
+                    transition: 0.5s width ease;
+                }
+            }
+        }
+    }
+}
+
+@include sprite.sheet($image: 'skills/accuracy', $selectors: '.skill-image-accuracy');
+@include sprite.sheet($image: 'skills/archery', $selectors: '.skill-image-archery');
+@include sprite.sheet($image: 'skills/health', $selectors: '.skill-image-health');
+@include sprite.sheet($image: 'skills/lumberjacking', $selectors: '.skill-image-lumberjacking');
+@include sprite.sheet($image: 'skills/magic', $selectors: '.skill-image-magic');
+@include sprite.sheet($image: 'skills/mining', $selectors: '.skill-image-mining');
+@include sprite.sheet($image: 'skills/strength', $selectors: '.skill-image-strength');
+@include sprite.sheet($image: 'skills/defense', $selectors: '.skill-image-defense');
+@include sprite.sheet($image: 'skills/fishing', $selectors: '.skill-image-fishing');
+@include sprite.sheet($image: 'skills/smithing', $selectors: '.skill-image-smithing');
+@include sprite.sheet($image: 'skills/smelting', $selectors: '.skill-image-smelting');
+@include sprite.sheet($image: 'skills/cooking', $selectors: '.skill-image-cooking');
+@include sprite.sheet($image: 'skills/fletching', $selectors: '.skill-image-fletching');
+@include sprite.sheet($image: 'skills/crafting', $selectors: '.skill-image-crafting');
+@include sprite.sheet($image: 'skills/foraging', $selectors: '.skill-image-foraging');
+@include sprite.sheet($image: 'skills/eating', $selectors: '.skill-image-eating');
+@include sprite.sheet($image: 'skills/loitering', $selectors: '.skill-image-loitering');
+@include sprite.sheet($image: 'skills/alchemy', $selectors: '.skill-image-alchemy');

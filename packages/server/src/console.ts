@@ -1,5 +1,5 @@
-import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
+import { Modules } from '@kaetram/common/network';
 
 import type World from './game/world';
 import type Player from './game/entity/character/player/player';

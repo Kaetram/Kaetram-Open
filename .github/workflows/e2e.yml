@@ -4,6 +4,14 @@ on: [push, pull_request]
 
 jobs:
     test:
+        defaults:
+            run:
+                shell: bash
+
+        strategy:
+            matrix:
+                node-version: [18.x]
+
         name: Run tests
 
         runs-on: ubuntu-latest
@@ -15,19 +23,51 @@ jobs:
             - name: Start MongoDB
               uses: supercharge/mongodb-github-action@1.7.0
 
-            - name: Setup Node
+            - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
-                  node-version: 18.5.0
-                  cache: 'yarn'
+                  node-version: ${{ matrix.node-version }}
 
             - name: Enable Corepack
               run: corepack enable
 
-            - name: Run Cypress
-              uses: cypress-io/github-action@v4
+            - name: Cache node_modules
+              uses: actions/cache@v3
               with:
-                  command: yarn workspace @kaetram/e2e test:record
+                  path: ./node_modules
+                  key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-node-${{ matrix.node-version }}
+
+            - name: Get Yarn cache directory
+              id: yarn-cache
+              run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+            - name: Cache Yarn folder
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.yarn-cache.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-yarn-${{ matrix.node-version }}
+
+            - name: Cache Yarn install state
+              uses: actions/cache@v3
+              with:
+                  path: ./.yarn/install-state.gz
+                  key: ${{ runner.os }}-yarn-install-state-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-install-state-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+                      ${{ runner.os }}-yarn-install-state-${{ matrix.node-version }}
+
+            - name: Run Cypress
+              uses: cypress-io/github-action@v5
+              with:
+                  working-directory: ./packages/e2e
+                  install-command: yarn install
+                  command: yarn test:record
               env:
                   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

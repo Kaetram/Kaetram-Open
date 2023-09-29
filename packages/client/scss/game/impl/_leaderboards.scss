@@ -1,73 +1,28 @@
-@use '../../abstracts/media';
+#leaderboards {
+    display: none;
+}
 
-#leaderboards-search-input,
 #leaderboards-search,
 #leaderboards-results {
-    position: absolute;
-    overflow: auto;
-    font-family: AdvoCut, sans-serif;
-}
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.5em;
 
-#leaderboards-search-input {
-    position: absolute;
+    height: 100%;
 
-    font-family: AdvoCut, sans-serif;
-    font-size: 24px;
-    color: #fff;
-    text-align: center;
+    ul {
+        overflow: hidden auto;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 0.25em;
 
-    background-color: transparent;
-    border: none;
-}
+        height: 100%;
+        padding-right: 0.25em;
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #leaderboards {
-            background: url('/img/interface/leaderboards.png') 0 0 no-repeat;
-            background-size: calc(width('leaderboards.png') * $i);
-        }
-        
-        #leaderboards-search-input {
-            top: 20px * $i;
-            left: 32px * $i;
-            width: 94px * $i;
-            height: 12px * $i;
-        }
-
-        #leaderboards-search {
-            top: 42px * $i;
-            left: 22px * $i;
-            width: 104px * $i;
-            height: 95px * $i;
-        }
-
-        #leaderboards-results {
-            top: 20px * $i;
-            left: 152px * $i;
-            width: 170px * $i;
-            height: 116px * $i;
-
-            li {
-                p:first-child {
-                    padding-left: 6px * $i;
-                }
-
-                p:last-child {
-                    padding-right: 6px * $i;
-                }
-            }
-        }
-    }
-}
-
-@media (--sm) {
-    #leaderboards-search-input {
-        font-size: 8px;
-    }
-
-    #leaderboards-search {
-        p {
-            font-size: 10px;
+        li {
+            flex-shrink: 0;
         }
     }
 }

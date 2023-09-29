@@ -1,0 +1,46 @@
+{
+    "name": "The Lost Laugh",
+    "description": "Comic relief.|Jester Jestin has lost his ability to laugh! Find the tickling feather that can restore his jovial spirit.",
+    "rewards": ["giggly-potion", "jester-boots"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "jesterjestin",
+            "text": [
+                "Woe is me! My laugh, my joy, it's all gone!",
+                "Legend says a mystical tickling feather can bring it back.",
+                "Would you be a dear and find it for me?"
+            ],
+            "completedText": ["Search for the legendary tickling feather."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "oldchicken",
+            "text": ["Bawk! Oh, the tickling feather? I might have it...", "But I need some worms first. Bawk!"],
+            "completedText": ["Fetch some worms for the old chicken."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "jesterjestin",
+            "text": [
+                "Ha-HA! That's the stuff! I feel giggly already!",
+                "Here's a potion to share the giggles and some jester boots."
+            ],
+            "itemRewards": [
+                {
+                    "key": "giggly-potion",
+                    "count": 1
+                },
+                {
+                    "key": "jester-boots",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@Jester Jestin's laugh is back, all thanks to you! Enjoy spreading giggles with the @crimson@giggly-potion@green@ and strut in your new jester boots.",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

@@ -1,42 +1,36 @@
 @use '../../abstracts/media';
+@use '../../abstracts/sprite';
+
+@include sprite.sheet(
+    $image: 'main',
+    $width: 21,
+    $height: 21,
+    $scale: 3,
+    $hover: 1,
+    $active: 2,
+    $selectors: (
+        #zoom-in,
+        #zoom-out
+    )
+);
 
 #zoom-buttons {
     position: absolute;
     top: 1em;
-    right: 2em;
-    transform: scale(2);
+    right: 1em;
 
     display: none;
-    flex-direction: row;
+    flex-flow: row;
 
     button {
-        width: 21px;
-        height: 21px;
-
         background-color: transparent;
-        background-image: url('/img/interface/main.png');
         border: none;
-
-        &:hover {
-            background-position-x: -22px;
-        }
-
-        &:active {
-            background-position-x: -44px;
-        }
     }
-}
-
-#zoom-in {
-    background-position-y: -336px;
-}
-
-#zoom-out {
-    background-position-y: -359px;
 }
 
 @media (--sm) {
     #zoom-buttons {
         display: flex;
+        flex-direction: row;
     }
 }

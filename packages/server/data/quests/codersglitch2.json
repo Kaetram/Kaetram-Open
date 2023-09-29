@@ -1,0 +1,101 @@
+{
+    "name": "The Coder's Glitch II",
+    "description": "The coder yet again needs your help with his silly glitches.|He's done it again, well, more like, he already has done it and is waiting on you to get strong enough so that you can actually help him out with the tasks at hand. Probably something more about slaying stuff, you know, the generic things.",
+    "rewards": ["7500 Accuracy experience", "4500 Strength experience", "3000 Defense experience", "A surprise shield"],
+    "questRequirements": ["codersglitch", "minersquest", "scavenger"],
+    "skillRequirements": {
+        "accuracy": 25,
+        "strength": 40,
+        "defense": 30
+    },
+
+    "hideNPCs": {
+        "coder": "after",
+        "villager4": "before"
+    },
+
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "coder",
+            "text": [
+                "Okay, so like, I need more of those glitchy things defeated.",
+                "Listen, they are slowly deteriorating these lands so we must hurry.",
+                "Because I want this quest to waste as much of your time as possible,",
+                "I will require you bring me three talismans in order to continue.",
+                "But here's the catch, I also want you to defeat the said bosses.",
+                "That way you can't just sneak in there and pick up the talismans.",
+                "I'm not sure how you would do that, but I'm sure you would find a way.",
+                "Anyways, I want you to defeat the following bosses:",
+                "The Ogre Lord, the Queen Ant, and the Forest Dragon.",
+                "You must defeat the bosses in order."
+            ],
+            "completedText": [
+                "Head out and defeat the Ogre Lord, the Queen Ant, and the Forest Dragon.",
+                "You must defeat the bosses in order."
+            ]
+        },
+        "1": {
+            "task": "kill",
+            "mob": ["ogrelord"],
+            "mobCountRequirement": 1
+        },
+        "2": {
+            "task": "kill",
+            "mob": ["queenant"],
+            "mobCountRequirement": 1
+        },
+        "3": {
+            "task": "kill",
+            "mob": ["forestdragon"],
+            "mobCountRequirement": 1
+        },
+        "4": {
+            "task": "talk",
+            "npc": "coder",
+            "hasItemText": [
+                "Wonderful, the anti-coder will surely be displeased- Oh sorry, amazing job man!",
+                "Your work is surely masterful and very exquisite, I must say.",
+                "No I'm not losing my mind haha, you are. I'm perfectly fine the way I am.",
+                "Regardless, thank you for your help."
+            ],
+
+            "itemRequirements": [
+                {
+                    "key": "ogrelordtalisman",
+                    "count": 1
+                },
+                {
+                    "key": "queenanttalisman",
+                    "count": 1
+                },
+                {
+                    "key": "forestdragontalisman",
+                    "count": 1
+                }
+            ],
+
+            "skillRewards": [
+                {
+                    "key": "accuracy",
+                    "experience": 7500
+                },
+                {
+                    "key": "strength",
+                    "experience": 4500
+                },
+                {
+                    "key": "defense",
+                    "experience": 3000
+                }
+            ],
+
+            "itemRewards": [
+                {
+                    "key": "ironroundshield",
+                    "count": 1
+                }
+            ]
+        }
+    }
+}

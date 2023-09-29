@@ -1,15 +1,20 @@
 import Item from '../game/entity/objects/item';
-import CraftingData from '../../data/crafting.json';
+import CraftingData from '../../data/crafting';
 import Items from '../../data/items.json';
 
 import Utils from '@kaetram/common/util/utils';
 import CraftingEn from '@kaetram/common/text/en/crafting';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Crafting as CraftingPacket } from '@kaetram/common/network/impl';
+import { CraftingPacket } from '@kaetram/common/network/impl';
 
 import type Player from '../game/entity/character/player/player';
-import type { CraftingInfo } from '@kaetram/common/types/crafting';
 import type { ItemData } from '@kaetram/common/types/item';
+import type {
+    CraftingInfo,
+    CraftingItem,
+    CraftingItemPreview,
+    CraftingRequirement
+} from '@kaetram/common/network/impl/crafting';
 
 /**
  * The crafting mechanism is shared by multiple skills and works largely the same way. We use
@@ -29,18 +34,18 @@ export default class Crafting {
 
     public open(player: Player, type: Modules.Skills): void {
         // Attempt to obtain the keys and if none are available then we cannot open the interface.
-        let keys = this.getCraftingKeys(type);
+        let previews = this.getCraftingPreviews(type);
 
-        if (!keys) return player.notify(`You cannot do that right now.`);
+        if (!previews) return player.notify('misc:CANNOT_DO_THAT');
 
         // Set the currently active crafting interface.
         player.activeCraftingInterface = type;
 
-        // Send a packet to the client to open the crafting interface and pass the keys.
+        // Send a packet to the client to open the crafting interface and pass the previews.
         player.send(
             new CraftingPacket(Opcodes.Crafting.Open, {
                 type,
-                keys
+                previews
             })
         );
     }
@@ -59,14 +64,13 @@ export default class Crafting {
             craftingData = (CraftingData as CraftingInfo)[skillName];
 
         // Another layer of checking the validity of the crafting data.
-        if (!craftingData)
-            return player.notify(`Invalid crafting data, please submit a bug report.`);
+        if (!craftingData) return player.notify('crafting:INVALID_DATA');
 
         // Get the item key from the crafting keys based on the index the player selected.
         let craftingItem = craftingData[key];
 
         // Ensure that the item exists.
-        if (!craftingItem) return player.notify(`Invalid item selected...`);
+        if (!craftingItem) return player.notify('crafting:INVALID_ITEM');
 
         // Send the requirements and result to the player.
         player.send(
@@ -75,7 +79,7 @@ export default class Crafting {
                 name: (Items as RawData)[key]?.name,
                 level: craftingItem.level,
                 result: craftingItem.result.count,
-                requirements: craftingItem.requirements
+                requirements: this.getRequirements(craftingItem)
             })
         );
     }
@@ -93,7 +97,7 @@ export default class Crafting {
         if (!player.canCraft()) return;
 
         // Ensure the index is valid.
-        if (!key) return player.notify(`You must select an item to craft.`);
+        if (!key) return player.notify('crafting:SELECT_ITEM');
 
         // Verify that the count is valid.
         if (isNaN(count) || count < 1) count = 1;
@@ -105,19 +109,14 @@ export default class Crafting {
             craftingData = (CraftingData as CraftingInfo)[skillName];
 
         // Verify the crafting data
-        if (!craftingData)
-            return player.notify(`Invalid crafting data, please submit a bug report.`);
+        if (!craftingData) return player.notify('crafting:INVALID_DATA');
 
         // The skill that is being used to craft the item.
         let craftingItem = craftingData[key],
-            skill = player.skills.get(
-                player.activeCraftingInterface === Modules.Skills.Smelting
-                    ? Modules.Skills.Smithing
-                    : player.activeCraftingInterface
-            );
+            skill = player.skills.get(this.getSkillByInterface(player.activeCraftingInterface));
 
         // Verify the crafting data
-        if (!craftingItem) return player.notify(`Invalid item selected...`);
+        if (!craftingItem) return player.notify('crafting:INVALID_ITEM');
 
         // Ensure the player has the correct level to craft the item.
         if (skill.level < craftingItem.level)
@@ -138,7 +137,7 @@ export default class Crafting {
         for (let requirement of craftingItem.requirements) {
             // Stop the loop if the player does not have one of the requirements.
             if (!player.inventory.hasItem(requirement.key, requirement.count))
-                return player.notify(`You do not have the required items to craft that.`);
+                return player.notify('crafting:INVALID_ITEMS');
 
             let itemCount = player.inventory.count(requirement.key),
                 requestedAmount = requirement.count * count;
@@ -163,7 +162,13 @@ export default class Crafting {
 
         // Notify the players of the amount of failures.
         if (failures > 0)
-            player.notify(`You have failed to craft ${failures}x ${(Items as RawData)[key].name}.`);
+            player.notify(
+                failures > 1
+                    ? `crafting:FAILED_CRAFT;failedText=${failures}x ${
+                          (Items as RawData)[key].name
+                      }.`
+                    : 'crafting:FAILED_CRAFT_ONE'
+            );
 
         // Award experience to the player.
         skill.addExperience(craftingItem.experience * actualCount);
@@ -173,15 +178,67 @@ export default class Crafting {
     }
 
     /**
-     * Returns a list of the keys of items available for crafting given a skill.
+     * Returns a list of the crafting item previews. These contain the key
+     * of the item and the level required to craft the item.
      * @param skill The skill to get the crafting keys for.
-     * @returns An array of item keys that the player can craft.
+     * @returns An array of item previews that contain the key and level required to craft the item.
      */
 
-    public getCraftingKeys(skill: Modules.Skills): string[] {
+    public getCraftingPreviews(skill: Modules.Skills): CraftingItemPreview[] {
         // Skill name based on the enum.
-        let skillName = Modules.Skills[skill].toLowerCase();
+        let skillName = Modules.Skills[skill].toLowerCase(),
+            data = (CraftingData as CraftingInfo)[skillName],
+            previews: CraftingItemPreview[] = [];
 
-        return Object.keys((CraftingData as CraftingInfo)[skillName]);
+        // Iterate through the crafting data and add the key and level to the previews.
+        for (let key in data) previews.push({ key, level: data[key].level });
+
+        return previews;
+    }
+
+    /**
+     * Gets all the requirements for an item and adds the name of the
+     * item that is requried. This is displayed on the client side in
+     * the list of requirements.
+     * @param craftingItem The crafting item we are trying to get the requirements for.
+     * @returns THe requirements for the item containing the name of each requirement.
+     */
+
+    public getRequirements(craftingItem: CraftingItem): CraftingRequirement[] {
+        let { requirements } = craftingItem;
+
+        // Iterate through the requirements and add the name of the item.
+        for (let requirement of requirements) {
+            let item = (Items as RawData)[requirement.key];
+
+            if (item?.name) requirement.name = item.name;
+        }
+
+        return requirements;
+    }
+
+    /**
+     * Certain skills are only used to differently identify crafting interfaces. So in this case they reward
+     * the same experience as their normal skill. One example is smelting and smithing, smelting does not exist
+     * as a separate skill, but is referred in-game as something separate from smithing, but they both reward
+     * experience in the same skill.
+     * @param activeCraftingInterface The currently active interface that the player is using.
+     * @returns The skills identifier.
+     */
+
+    private getSkillByInterface(activeCraftingInterface: number): Modules.Skills {
+        switch (activeCraftingInterface) {
+            case Modules.Skills.Smelting: {
+                return Modules.Skills.Smithing;
+            }
+
+            case Modules.Skills.Chiseling: {
+                return Modules.Skills.Crafting;
+            }
+
+            default: {
+                return activeCraftingInterface;
+            }
+        }
     }
 }

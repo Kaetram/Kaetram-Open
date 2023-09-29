@@ -1,0 +1,84 @@
+{
+    "name": "Elemental Archery",
+    "description": "Legends speak of arrows imbued with the essence of nature's elements. Master Archer Elandrial holds the secrets of crafting such arrows but needs assistance in gathering the components.",
+    "rewards": ["Ability to craft Elemental Arrows", "3000 Archery experience"],
+    "skillRequirements": {
+        "archery": 25
+    },
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "elandrial",
+            "text": [
+                "Ah, a fellow archer! I've been trying to recreate the legendary elemental arrows.",
+                "These arrows were once used by ancient archers to battle the forces of darkness.",
+                "To craft these, I require special elements from the land. Will you help me?"
+            ],
+            "completedText": ["The journey won't be easy.", "Are you sure you're up for the task?"]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "elandrial",
+            "text": [
+                "First, we'll need the 'Heart of Flame' from the Fire Pits deep within the Inferno Caverns.",
+                "This will be used to craft the Fire Arrows. Be cautious, the caverns are treacherous."
+            ],
+            "completedText": ["Have you retrieved the Heart of Flame?", "It's vital for crafting the Fire Arrows."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "elandrial",
+            "hasItemText": [
+                "Excellent work! Next, we need the 'Tear of Frost' from the Ice Spirit residing atop the Frosted Peaks.",
+                "With it, we can craft the Ice Arrows."
+            ],
+            "itemRequirements": [
+                {
+                    "key": "heartofflame",
+                    "count": 1
+                }
+            ]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "elandrial",
+            "hasItemText": [
+                "You've proven your dedication! Now for the final element: 'Whisper of Wind'.",
+                "This can be found in the Whispering Woods, where the trees converse with the wind.",
+                "Retrieve it, and we'll have everything to craft the Wind Arrows."
+            ],
+            "itemRequirements": [
+                {
+                    "key": "tearoffrost",
+                    "count": 1
+                }
+            ]
+        },
+        "4": {
+            "task": "talk",
+            "npc": "elandrial",
+            "hasItemText": [
+                "With the Whisper of Wind, we now have all the components.",
+                "I'll now pass on the knowledge to craft Elemental Arrows.",
+                "Use them wisely, for with great power comes great responsibility."
+            ],
+            "itemRequirements": [
+                {
+                    "key": "whisperofwind",
+                    "count": 1
+                }
+            ],
+            "skillRewards": [
+                {
+                    "key": "archery",
+                    "experience": 3000
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Elemental Archery@green@. You've been awarded @crimson@3000@green@ Archery experience and the @crimson@Ability to craft Elemental Arrows@green@!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

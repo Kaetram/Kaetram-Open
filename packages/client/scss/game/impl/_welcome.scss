@@ -1,0 +1,82 @@
+@use '../../abstracts/sprite';
+
+#welcome {
+    z-index: 100;
+    bottom: -2em;
+    flex-direction: row;
+
+    &-info {
+        flex: 1;
+        gap: 0.75em;
+        font-size: 0.8em;
+    }
+
+    &-stats {
+        gap: 0.25em;
+    }
+
+    &-changelog {
+        display: flex;
+        padding: 0.75em;
+
+        ul {
+            overflow: auto;
+            display: grid;
+            gap: 0.2em;
+        }
+    }
+
+    &-play {
+        overflow: auto;
+        flex: 1;
+        gap: 0.25em;
+        font-size: 0.95em;
+    }
+
+    &-instructions-keyboard {
+        gap: 0.375em;
+    }
+
+    .welcome-controls {
+        flex-direction: row;
+        gap: 0.25em;
+        justify-content: space-evenly;
+    }
+
+    &-daily-rewards {
+        flex: 1;
+
+        &-items {
+            flex-direction: row;
+            justify-content: space-evenly;
+
+            .slice-item-slot {
+                width: 2.5em;
+                height: 2.5em;
+            }
+        }
+    }
+}
+
+#controls-wasd,
+#controls-arrows {
+    image-rendering: pixelated;
+    animation: 2.5s animate-instructions infinite steps(2);
+}
+
+#controls-click {
+    image-rendering: pixelated;
+    animation: 2.5s animate-instructions-click infinite steps(2);
+}
+
+@media (--portrait) {
+    #welcome {
+        flex-direction: column;
+        width: 18em;
+        height: 31em;
+    }
+}
+
+@include sprite.sheet('controls/wasd', $selectors: #controls-wasd);
+@include sprite.sheet('controls/arrows', $selectors: #controls-arrows);
+@include sprite.sheet('controls/click', $selectors: #controls-click);

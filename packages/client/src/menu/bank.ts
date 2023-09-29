@@ -17,8 +17,10 @@ type SelectCallback = (
 ) => void;
 
 export default class Bank extends Menu {
-    private bankList: HTMLUListElement = document.querySelector('#bank-slot > ul')!;
-    private inventoryList: HTMLUListElement = document.querySelector('#bank-inventory-slots > ul')!;
+    public override identifier: number = Modules.Interfaces.Bank;
+
+    private bankList: HTMLUListElement = document.querySelector('#bank-slots')!;
+    private inventoryList: HTMLUListElement = document.querySelector('#bank-inventory-slots')!;
 
     private selectCallback?: SelectCallback;
 
@@ -152,6 +154,8 @@ export default class Bank extends Menu {
     public override synchronize(): void {
         if (!this.isVisible()) return;
 
+        this.inventoryList.scrollTop = 0;
+
         this.inventory.forEachSlot((index: number, slot: HTMLElement) => {
             let element = this.getInventoryElement(index),
                 image = element.querySelector<HTMLElement>('.item-image')!,
@@ -204,6 +208,8 @@ export default class Bank extends Menu {
     public override show(slots: SlotData[]): void {
         super.show();
 
+        this.bankList.scrollTop = 0;
+
         this.synchronize();
 
         // Set all slots to the new data.
@@ -231,7 +237,7 @@ export default class Bank extends Menu {
      */
 
     private getBankElement(index: number): HTMLElement {
-        return this.bankList.children[index].querySelector('div') as HTMLElement;
+        return this.bankList.children[index] as HTMLElement;
     }
 
     /**
@@ -242,7 +248,7 @@ export default class Bank extends Menu {
      */
 
     private getInventoryElement(index: number): HTMLElement {
-        return this.inventoryList.children[index].querySelector('div') as HTMLElement;
+        return this.inventoryList.children[index] as HTMLElement;
     }
 
     /**

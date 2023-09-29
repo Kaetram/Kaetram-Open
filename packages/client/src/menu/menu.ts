@@ -2,8 +2,11 @@
 import log from '../lib/log';
 import Util from '../utils/util';
 
+import type { Modules } from '@kaetram/common/network';
+
 export default abstract class Menu {
     public hideOnShow = true;
+    public identifier: Modules.Interfaces | number = -1;
 
     protected container: HTMLElement;
     protected close: HTMLElement;
@@ -35,8 +38,8 @@ export default abstract class Menu {
         this.close = document.querySelector(this.closeButton!)!;
         this.button = document.querySelector(this.toggleButton!)!;
 
-        this.close?.addEventListener('click', this.hide.bind(this));
-        this.button?.addEventListener('click', this.toggle.bind(this));
+        this.close?.addEventListener('click', () => this.hide());
+        this.button?.addEventListener('click', () => this.toggle());
     }
 
     /**
@@ -134,7 +137,9 @@ export default abstract class Menu {
      */
 
     public isVisible(): boolean {
-        return this.container.style.display === 'block';
+        return (
+            this.container.style.display === 'flex' || this.container.style.display.includes('flex')
+        );
     }
 
     /**

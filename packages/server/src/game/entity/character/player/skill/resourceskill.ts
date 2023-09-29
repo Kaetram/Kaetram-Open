@@ -3,17 +3,24 @@ import Skill from './skill';
 import Item from '../../../objects/item';
 
 import log from '@kaetram/common/util/log';
-import ResourceEn from '@kaetram/common/text/en/resource';
 import Utils from '@kaetram/common/util/utils';
+import ResourceText from '@kaetram/common/text/en/resource';
 import { Modules } from '@kaetram/common/network';
-import { Animation } from '@kaetram/common/network/impl';
+import { AnimationPacket } from '@kaetram/common/network/impl';
 
 import type Player from '../player';
-import type Resource from '../../../../globals/impl/resource';
-import type { ResourceData, ResourceInfo } from '@kaetram/common/types/resource';
+import type Resource from '../../../objects/resource/resource';
+import type { ResourceInfo } from '@kaetram/common/types/resource';
+
+type ExhaustCallback = (player: Player, resource?: Resource) => void;
 
 export default class ResourceSkill extends Skill {
     private loop?: NodeJS.Timeout | undefined;
+
+    private lastClickedResource = ''; // Instance of the last resource the player clicked on.
+    private lastClickedCount = 0; // Number of times the player has clicked on the resource.
+
+    private exhaustCallback?: ExhaustCallback;
 
     /**
      * Used to determine if the resources goes to its depleted state after a successful
@@ -22,7 +29,7 @@ export default class ResourceSkill extends Skill {
 
     public randomDepletion = false;
 
-    public constructor(type: Modules.Skills, private data: ResourceData) {
+    public constructor(type: Modules.Skills) {
         super(type);
     }
 
@@ -41,32 +48,43 @@ export default class ResourceSkill extends Skill {
                 `${player.username} attempted to interact with an exhausted resource.`
             );
 
-        let resourceInfo = this.data[resource.type];
-
         // Could not find resource interaction data for the resource.
-        if (!resourceInfo)
+        if (!resource.data)
             return log.warning(
                 `${player.username} attempted to interact with a resource with invalid data: ${resource.type}`
             );
 
         // Level required for this resource is too high for the yplayer.
-        if (resourceInfo.levelRequirement > this.level)
+        if (resource.data.levelRequirement > this.level)
             return player.notify(
-                ResourceEn.INVALID_LEVEL(this.type, resourceInfo.levelRequirement)
+                ResourceText.INVALID_LEVEL(this.type, resource.data.levelRequirement)
             );
 
         // Unable to interact with the resource if the player hasn't completed the required achievement.
         if (
-            resourceInfo.reqAchievement &&
-            !player.achievements.get(resourceInfo.reqAchievement)?.isFinished()
+            resource.data.reqAchievement &&
+            !player.achievements.get(resource.data.reqAchievement)?.isFinished()
         )
-            return player.notify(ResourceEn.UNABLE_TO_INTERACT(this.type));
+            return player.notify(ResourceText.UNABLE_TO_INTERACT(this.type));
 
         // Unable to interact with the resource if the player hasn't completed the required quest.
-        if (resourceInfo.reqQuest && !player.quests.get(resourceInfo.reqQuest)?.isFinished())
-            return player.notify(ResourceEn.UNABLE_TO_INTERACT(this.type));
+        if (resource.data.reqQuest && !player.quests.get(resource.data.reqQuest)?.isFinished())
+            return player.notify(ResourceText.UNABLE_TO_INTERACT(this.type));
 
-        if (!this.canHold(player)) return player.notify(ResourceEn.INVENTORY_FULL);
+        if (!this.canHold(player)) return player.notify('misc:NO_SPACE');
+
+        // Notification for the player to stop clicking on a resource repeatedly.
+        if (this.lastClickedResource === resource.instance) {
+            this.lastClickedCount++;
+
+            if (this.lastClickedCount >= 2) {
+                player.notify('misc:NO_NEED_CLICK_REPEATEDLY');
+
+                // Reset the counter.
+                this.lastClickedCount = 0;
+                this.lastClickedResource = '';
+            }
+        } else this.lastClickedCount = 0;
 
         /**
          * Stops the existing loop if the player is attempting to interact with the resource
@@ -75,40 +93,85 @@ export default class ResourceSkill extends Skill {
          */
         if (this.loop) this.stop();
 
+        // Set the last clicked resource to the current resource.
+        this.lastClickedResource = resource.instance;
+
         this.loop = setInterval(() => {
             // Stops the loop when the resource is depleted or the player cannot hold the resource.
             if (resource.isDepleted() || !this.canHold(player)) return this.stop();
 
             // Send the animation packet to the region player is in.
             player.sendToRegion(
-                new Animation({ instance: player.instance, action: Modules.Actions.Attack })
+                new AnimationPacket({
+                    instance: player.instance,
+                    resourceInstance: resource.instance,
+                    action: Modules.Actions.Attack
+                })
             );
 
             // Use probability to check if we can exhaust the resource.
-            if (this.canExhaustResource(weaponLevel, resourceInfo)) {
+            if (this.canExhaustResource(weaponLevel, resource.data)) {
                 // Add the logs to the inventory.
-                player.inventory.add(this.getItem(resourceInfo.item));
+                player.inventory.add(this.getItem(resource.data.item));
 
                 // Add experience to our skill.
-                this.addExperience(resourceInfo.experience);
+                this.addExperience(resource.data.experience);
 
                 // Increment the statistics for the player.
                 player.statistics.handleSkill(this.type);
 
                 // If resource has an achievement, attempt to award it if it hasn't been awarded yet.
-                if (resourceInfo.achievement)
-                    player.achievements.get(resourceInfo.achievement)?.finish();
+                if (resource.data.achievement)
+                    player.achievements.get(resource.data.achievement)?.finish();
 
                 // If the resource has a quest then we will call the resource callback.
-                if (resourceInfo.quest)
+                if (resource.data.quest)
                     player.quests
-                        .get(resourceInfo.quest)
-                        ?.resourceCallback?.(this.type, resource.type);
+                        .get(resource.data.quest)
+                        ?.resourceCallback?.(this.type, resource.key);
 
                 // Deplete the resource and send the signal to the region
                 if (this.shouldDeplete()) resource.deplete();
+
+                // Call the exhaust callback after we have successfully exhausted the resource.
+                this.exhaustCallback?.(player, resource);
             }
         }, Modules.Constants.SKILL_LOOP);
+    }
+
+    /**
+     * Handles the random item logic that can be applied to all resources. A resource can have
+     * a list of random items specified in the configuration file that will be added to the
+     * player's inventory (or dropped if they don't have space) upon exhausting the resource.
+     * For example, cutting down a tree has a chance of dropping a fruit.
+     * @param player The player who has exhausted the resource.
+     * @param resourceInfo Contains the information about the resource such as the random items.
+     */
+
+    protected handleRandomItems(player: Player, resourceInfo: ResourceInfo): void {
+        // If the resource doesn't have any random items then we can just return.
+        if (!resourceInfo?.randomItems) return;
+
+        // Grab a random item from the list of random items and calculate the probability.
+        let randomItem =
+                resourceInfo.randomItems[Utils.randomInt(0, resourceInfo.randomItems.length - 1)],
+            chance = Utils.randomInt(0, Modules.Constants.DROP_PROBABILITY) < randomItem?.chance;
+
+        // Probability didn't work out so stop here.
+        if (!chance) return;
+
+        // Use the superclass `getItem` function to create the item instance since weekend events don't apply.
+        let item = this.getItem(randomItem.key, player.username);
+
+        // If the player has space in their inventory add the item there, otherwise drop it on the ground.
+        if (this.canHold(player)) player.inventory.add(item);
+        else {
+            // Set the item's position to the player's position.
+            item.x = player.x;
+            item.y = player.y;
+
+            player.world.entities.addItem(item);
+        }
     }
 
     /**
@@ -129,11 +192,12 @@ export default class ResourceSkill extends Skill {
      * Creates an item instance of the item that the resource rewards.
      * @param key The item key we are creating.
      * @param count The amount of the item we are creating.
+     * @param owner Optional parameter to make an item belong to a player.
      * @returns The newly created item instance.
      */
 
-    protected getItem(key: string): Item {
-        return new Item(key, -1, -1, false, 1);
+    protected getItem(key: string, owner = ''): Item {
+        return new Item(key, -1, -1, false, 1, {}, owner);
     }
 
     /**
@@ -181,5 +245,14 @@ export default class ResourceSkill extends Skill {
 
         // 1 in 10 chance.
         return Utils.randomInt(0, 10) === 4;
+    }
+
+    /**
+     * Callback for when the resource has been exhausted. This can be
+     * used by subclasses to apply additional logic after obtaining a resource.
+     */
+
+    protected onExhaust(callback: ExhaustCallback): void {
+        this.exhaustCallback = callback;
     }
 }

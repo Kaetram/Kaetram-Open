@@ -2,6 +2,7 @@ import { onSecondaryPress } from './press';
 
 import Sprite from '../entity/sprite';
 
+import { t } from '@kaetram/common/i18n';
 import { Modules, Opcodes } from '@kaetram/common/network';
 
 import type { AnimationData } from '../entity/sprite';
@@ -12,7 +13,7 @@ export let isInt = (n: number): boolean => n % 1 === 0;
 export default {
     tileSize: -1,
     sideLength: -1,
-    thirdTile: -1,
+    halfTile: -1,
     tileAndAQuarter: -1,
 
     /**
@@ -35,7 +36,7 @@ export default {
      */
 
     randomInt(min: number, max: number): number {
-        return min + Math.floor(Math.random() * (max - min + 1));
+        return min + ~~(Math.random() * (max - min + 1));
     },
 
     /**
@@ -90,34 +91,45 @@ export default {
         // Bank item counts are a different colour.
         if (type === Modules.ContainerType.Bank) count.classList.add('bank-item-count');
 
-        // Appends image and count onto the bank slot.
+        // Appends the image to the slot.
         slot.append(image);
-        slot.append(count);
 
         if (primaryCallback) slot.addEventListener('click', () => primaryCallback(type, index));
         if (secondaryCallback) onSecondaryPress(slot, () => secondaryCallback(type, index));
 
-        // Appends the bank slot onto the list element.
-        listElement.append(slot);
+        // Appends the slot and count to the list element.
+        listElement.append(slot, count);
 
         return listElement;
     },
 
     /**
      * Converts an item's key into an image URL for the client.
-     * @param key The item's key, defaults to empty string.
+     * @param itemKey The item's key, defaults to empty string.
      * @returns The CSS image URL format for the item's key.
      */
 
-    getImageURL(key = ''): string {
-        if (key === '') return '';
+    getImageURL(itemKey = ''): string {
+        if (!itemKey) return '';
 
-        let blocks = key.split('/');
+        let blocks = itemKey.split('/');
 
         // Use the last block as the key if we are extracting a key path.
-        if (blocks.length > 1) key = blocks[blocks.length - 1];
+        if (blocks.length > 1) itemKey = blocks.at(-1)!;
 
-        return `url("/img/sprites/items/${key}.png")`;
+        return `url("/img/sprites/items/${itemKey}.png")`;
+    },
+
+    /**
+     * Grabs the placeholder icon for when the equipment slow is unequipped.
+     * @param type The type of equipment we are getting the icon for.
+     * @returns A string of the URL for the icon.
+     */
+
+    getEquipmentPlaceholderURL(type: Modules.Equipment): string {
+        let equipment = Modules.Equipment[type].toLowerCase();
+
+        return `url("img/interface/equipment/${equipment}.png")`;
     },
 
     /**
@@ -139,6 +151,66 @@ export default {
         if (trim > 1 && name.length > trim) name = `${name.slice(0, Math.max(0, trim))}...`;
 
         return name;
+    },
+
+    /**
+     * Responsible for handling the formatting of a string when received from a server. If this
+     * string is an i18n string, then we must handle the data passed alongside with it and extract
+     * it into the necessary format.
+     * @param message The message string that we are formatting.
+     */
+
+    formatNotification(message: string): string {
+        // Raw notification text, no need to format.
+        if (!message.includes(':')) return message;
+
+        // If there is no ; character to indicate variables then we return the i18n parsed string;
+        if (!message.includes(';')) return t(message as never);
+
+        /**
+         * Split the message string into blocks, the first block is the actual i18n string to call
+         * and each subsequent block is a variable to pass to the i18n string.
+         */
+
+        let blocks = message.split(';'),
+            data: { [key: string]: string } = {};
+
+        // Iterate through the variable blocks.
+        for (let i = 1; i < blocks.length; i++) {
+            let [key, value] = blocks[i].split('=');
+
+            // Insert the key and value into the data object.
+            data[key] = value;
+        }
+
+        return t(blocks[0] as never, data as never);
+    },
+
+    /**
+     * Responsible for extracting special characters responsible for colour codes
+     * from the message string and converting them into HTML span elements.
+     * @param message The message string that we are parsing.
+     */
+
+    parseMessage(message: string): string {
+        try {
+            let messageBlocks = message.split('@');
+
+            if (messageBlocks.length % 2 === 0) return messageBlocks.join(' ');
+
+            for (let index in messageBlocks)
+                if (parseInt(index) % 2 !== 0)
+                    // we hit a colour code.
+                    messageBlocks[index] = `<span style="color:${messageBlocks[index]};">`;
+
+            let codeCount = messageBlocks.length / 2 - 1;
+
+            for (let i = 0; i < codeCount; i++) messageBlocks.push('</span>');
+
+            return messageBlocks.join('');
+        } catch {
+            return '';
+        }
     },
 
     /**
@@ -172,19 +244,15 @@ export default {
 
     getContainerAction(menuAction: Modules.MenuActions): Opcodes.Container | undefined {
         switch (menuAction) {
-            case Modules.MenuActions.Wield:
+            case Modules.MenuActions.Interact:
             case Modules.MenuActions.Equip:
             case Modules.MenuActions.Eat:
-            case Modules.MenuActions.Eat2: {
+            case Modules.MenuActions.Potion: {
                 return Opcodes.Container.Select;
             }
 
             case Modules.MenuActions.DropOne: {
                 return Opcodes.Container.Remove;
-            }
-
-            case Modules.MenuActions.Move: {
-                return Opcodes.Container.Swap;
             }
         }
     },
@@ -254,7 +322,7 @@ export default {
 
     getHurtSprite(sprite: Sprite): Sprite {
         let canvas = document.createElement('canvas'),
-            context = canvas.getContext('2d')!,
+            context = canvas.getContext('2d', { willReadFrequently: true })!,
             hurtSprite = new Sprite(sprite.data); // Create a clone to avoid issues.
 
         canvas.width = sprite.image.width;
@@ -301,7 +369,7 @@ export default {
 
     getSilhouetteSprite(sprite: Sprite): Sprite {
         let canvas = document.createElement('canvas'),
-            context = canvas.getContext('2d')!,
+            context = canvas.getContext('2d', { willReadFrequently: true })!,
             silhouetteSprite = new Sprite(sprite.data); // Create a clone to avoid issues.
 
         canvas.width = sprite.image.width;
@@ -321,11 +389,14 @@ export default {
 
         for (let i = 0; i < cloneData.data.length; i += 4) {
             // Non-empty pixels are skipped.
-            if (cloneData.data[i + 3] !== 0) continue;
+            if (cloneData.data[i + 3] > 24) continue;
+
+            // Ignore the delimiter pixels (RGBA: x, x, x, 1);
+            if (cloneData.data[i + 3] === 1) continue;
 
             // Extract the x and y coordinates of the pixel.
             let x = (i / 4) % sprite.image.width,
-                y = Math.floor(i / 4 / sprite.image.width);
+                y = ~~(i / 4 / sprite.image.width);
 
             // Test edge cases, we don't want to draw a silhouette on the edge of the sprite.
             if (x === 0 || x === sprite.image.width - 1 || y === 0 || y === sprite.image.height - 1)
@@ -340,7 +411,8 @@ export default {
             ];
 
             // If any of the adjacent pixels are non-empty, we set the current pixel to yellow.
-            if (adjacentPixels.some((pixel) => pixel !== 0)) {
+            if (adjacentPixels.some((pixel) => pixel > 24)) {
+                // 24 to ignore semi-transparent pixels.
                 spriteData.data[i] = spriteData.data[i + 1] = 255;
                 spriteData.data[i + 2] = spriteData.data[i + 3] = 150;
             }
@@ -356,6 +428,57 @@ export default {
         silhouetteSprite.loaded = true;
 
         return silhouetteSprite;
+    },
+
+    /**
+     * Obtains the default x and y offset for a given type of entity. This is to
+     * lessen the amount of code needed when writing the JSON file for the sprites.
+     * @param type The typo of entity we are grabbing the offset for.
+     */
+
+    getDefaultOffset(type: string): { x: number; y: number } {
+        switch (type) {
+            case 'items': {
+                return { x: 0, y: 0 };
+            }
+
+            case 'npcs': {
+                return { x: -8, y: -14 };
+            }
+
+            default: {
+                return { x: -this.tileSize, y: -this.tileSize };
+            }
+        }
+    },
+
+    /**
+     * Gets the default width and height dimensions for player equipments. This is to
+     * lessen the amount of code needed when writing the JSON file for the sprites.
+     * @param type The type of equipment we are grabbing the width and height for.
+     * @returns The pixel dimensions (for both width and height).
+     */
+
+    getDefaultEquipmentDimension(type: string): number {
+        switch (type) {
+            case 'effects':
+            case 'skin':
+            case 'cape':
+            case 'legplates':
+            case 'chestplate':
+            case 'helmet': {
+                return 32;
+            }
+
+            case 'shield':
+            case 'weapon': {
+                return 48;
+            }
+
+            default: {
+                return this.tileSize;
+            }
+        }
     },
 
     /**
@@ -383,6 +506,26 @@ export default {
                     idle_down: {
                         length: 2,
                         row: 0
+                    }
+                };
+            }
+
+            case 'trees':
+            case 'rocks':
+            case 'fishspots':
+            case 'bushes': {
+                return {
+                    idle: {
+                        length: 1,
+                        row: 0
+                    },
+                    shake: {
+                        length: 1,
+                        row: 1
+                    },
+                    exhausted: {
+                        length: 1,
+                        row: 2
                     }
                 };
             }
@@ -429,7 +572,7 @@ export default {
             }
 
             default: {
-                // Default animations for a player/mob character.
+                // Default animations for a player character.
                 return {
                     idle_down: {
                         length: 4,
@@ -445,27 +588,39 @@ export default {
                     },
                     walk_down: {
                         length: 4,
-                        row: 6
+                        row: 3
                     },
                     walk_right: {
                         length: 4,
-                        row: 7
+                        row: 4
                     },
                     walk_up: {
                         length: 4,
-                        row: 8
+                        row: 5
                     },
                     atk_down: {
                         length: 4,
-                        row: 3
+                        row: 6
                     },
                     atk_right: {
                         length: 4,
-                        row: 4
+                        row: 7
                     },
                     atk_up: {
                         length: 4,
-                        row: 5
+                        row: 8
+                    },
+                    bow_atk_down: {
+                        length: 4,
+                        row: 9
+                    },
+                    bow_atk_right: {
+                        length: 4,
+                        row: 10
+                    },
+                    bow_atk_up: {
+                        length: 4,
+                        row: 11
                     }
                 };
             }
@@ -480,7 +635,7 @@ export default {
 
     fadeIn(element: HTMLElement, speed = 0.1): void {
         element.style.opacity ||= '0';
-        element.style.display = 'block';
+        element.style.display = 'flex';
 
         let fade = () => {
             let opacity = parseFloat(element.style.opacity) + speed;

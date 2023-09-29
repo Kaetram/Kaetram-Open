@@ -1,34 +1,37 @@
 @use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
 #action-container {
     position: absolute;
+    right: 13em;
+    bottom: 5em;
+
     display: none;
+
+    width: 8em;
+    height: 10em;
+    padding-right: 0;
+
+    border-image-width: 1em 0 1em 1em;
 }
 
 #action-page {
-    cursor: url('/img/hand.png'), auto;
-
-    position: absolute;
-
-    width: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     height: 100%;
 
-    font-family: AdvoCut, sans-serif;
-
     ul {
-        position: absolute;
-        display: inline-flex;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
     }
 }
 
-#action-description-attack,
-#action-description-defense,
-#action-description-bonuses,
-#action-description-enchantments {
-    position: absolute;
+.action-item-description {
     overflow: auto;
-    width: 45%;
-    height: 30%;
+    flex: 1;
+    font-size: 0.9em;
 }
 
 .action-item-name {
@@ -40,137 +43,43 @@
     color: #fff;
 }
 
-@each $size, $i in media.$b-sizes {
-    @media ($size) {
-        #action-container {
-            right: 101px * $i;
-            bottom: 34px * $i;
-            width: 64px * $i;
-            height: 89px * $i;
-        }
-
-        #action-page {
-            background: url('/img/interface/main.png') -224px * $i -392px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-
-            ul {
-                bottom: 4px * $i;
-                left: 4px * $i;
-
-                li {
-                    margin-left: 3px * $i;
-                }
-            }
-        }
-
-        .action-wield,
-        .action-equip,
-        .action-attack {
-            background: url('/img/interface/main.png') -400px * $i -384px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-drop-one {
-            background: url('/img/interface/main.png') -400px * $i -400px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-drop-many {
-            background: url('/img/interface/main.png') -400px * $i -416px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-eat {
-            background: url('/img/interface/main.png') -400px * $i -432px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-eat2 {
-            background: url('/img/interface/main.png') -400px * $i -448px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-trade {
-            background: url('/img/interface/main.png') -400px * $i -464px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-potion {
-            background: url('/img/interface/main.png') -400px * $i -480px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-follow {
-            background: url('/img/interface/main.png') -400px * $i -496px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-examine {
-            background: url('/img/interface/main.png') -400px * $i -512px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-addfriend {
-            background: url('/img/interface/main.png') -400px * $i -528px * $i no-repeat;
-            background-size: calc(width('main.png') * $i);
-        }
-
-        .action-button {
-            width: 16px * $i;
-            height: 16px * $i;
-
-            &:hover {
-                background-position-x: -432px * $i;
-            }
-
-            &:active {
-                background-position-x: -416px * $i;
-            }
-        }
-
-        .action-item-name {
-            margin-top: 3px * $i;
-            margin-bottom: 2px * $i;
-            margin-left: 4px * $i;
-            font-size: 6px * $i;
-        }
-
-        .action-item-description {
-            margin-left: 3px * $i;
-            font-size: 4px * $i;
-        }
-
-
-        #action-description-attack {
-            left: 4px * $i;
-        }
-
-        #action-description-defense {
-            right: 0
-        }
-
-        #action-description-bonuses {
-            bottom: 22px * $i;
-            left: 4px * $i;
-        }
-
-        #action-description-enchantments {
-            right: 0;
-            bottom: 22px * $i;
-        }
-    }
+#action-description-attack {
+    left: 0.25em;
 }
 
-@media (--lg) {
-    #action-container {
-        right: 298px;
-        bottom: 80px;
-    }
+#action-description-defense {
+    right: 0;
 }
 
-@media (--md) {
-    #action-container {
-        right: 202px;
-        bottom: 68px;
-    }
+#action-description-bonuses {
+    bottom: 1.375em;
+    left: 0.25em;
 }
+
+#action-description-enchantments {
+    right: 0;
+    bottom: 1.375em;
+}
+
+@include sprite.sheet(
+    $image: 'main',
+    $x: 63,
+    $width: 16,
+    $height: 16,
+    $hover: 2,
+    $active: 1,
+    $selectors: (
+        '.action-button',
+        '.action-attack',
+        '.action-equip',
+        '.action-drop-one',
+        '.action-drop-many',
+        '.action-eat',
+        '.action-interact',
+        '.action-trade',
+        '.action-potion',
+        '.action-follow',
+        '.action-examine',
+        '.action-addfriend'
+    )
+);

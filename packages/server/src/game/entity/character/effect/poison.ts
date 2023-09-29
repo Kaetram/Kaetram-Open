@@ -12,7 +12,10 @@ export default class Poison {
      * @param start Epoch time of when the poison started.
      */
 
-    public constructor(public type: Modules.PoisonTypes, public start = Date.now()) {
+    public constructor(
+        public type: Modules.PoisonTypes,
+        public start = Date.now()
+    ) {
         if (!this.start) this.start = Date.now();
 
         this.name = Modules.PoisonInfo[this.type].name;

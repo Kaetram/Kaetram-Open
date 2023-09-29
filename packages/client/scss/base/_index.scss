@@ -1,4 +1,41 @@
+@use 'sass:math';
+
+@use '../abstracts/media';
+
 @use 'impl/reset';
 @use 'impl/fonts';
 @use 'impl/animations';
 @use 'impl/utils';
+@use 'impl/defaults';
+
+body,
+button,
+input,
+select {
+    font-family: Monogram, 'AdvoCut Fallback', arial, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+    font-family: Fibberish, Monogram, AdvoCut, arial, sans-serif;
+}
+
+select {
+    padding: 0.25em;
+
+    font-size: 1em;
+    color: #c6c0a3;
+
+    background-color: #000;
+    border: none;
+    border-radius: 0.25em;
+}
+
+@each $size, $scale in media.$sizes {
+    @media ($size) {
+        body {
+            font-size: 1em * $scale;
+        }
+    }
+}

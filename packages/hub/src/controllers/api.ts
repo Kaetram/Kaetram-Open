@@ -11,7 +11,7 @@ import { Modules } from '@kaetram/common/network';
 
 import type Cache from './cache';
 import type Server from '../model/server';
-import type Servers from './servers';
+import type Models from './models';
 import type Mailer from './mailer';
 import type { ObjectId } from 'mongodb';
 import type { Integration } from '@sentry/types';
@@ -25,14 +25,18 @@ import type {
 
 // Initialize stripe
 const stripe = new Stripe(config.stripeSecretKey, {
-    apiVersion: '2022-11-15'
+    apiVersion: '2023-08-16'
 });
 
 /**
  * We use the API format from `@kaetram/server`.
  */
 export default class API {
-    public constructor(private servers: Servers, private mailer: Mailer, private cache: Cache) {
+    public constructor(
+        private models: Models,
+        private mailer: Mailer,
+        private cache: Cache
+    ) {
         let apiEnabled = config.apiEnabled || config.hubEnabled,
             app: Express | undefined,
             router: Router | undefined;
@@ -117,12 +121,12 @@ export default class API {
      */
 
     private handleServer(_request: Request, response: Response): void {
-        if (!this.servers.hasSpace()) {
+        if (!this.models.hasSpace()) {
             response.json({ status: 'error' });
             return;
         }
 
-        let server = this.servers.findEmpty();
+        let server = this.models.findEmptyServer();
 
         if (!server) {
             response.json({ status: 'error' });
@@ -139,7 +143,7 @@ export default class API {
      */
 
     private handleAll(_request: Request, response: Response): void {
-        response.json(this.servers.serialize());
+        response.json(this.models.serializeServers());
     }
 
     /**
@@ -228,7 +232,7 @@ export default class API {
             online = false;
 
         // Look through all the servers and see if the player is online.
-        this.servers.forEachServer((server: Server) => {
+        this.models.forEachServer((server: Server) => {
             if (server.id === serverId) return;
 
             if (server.players.includes(username)) online = true;

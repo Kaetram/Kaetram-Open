@@ -1,13 +1,15 @@
 import Helmet from './equipment/impl/helmet';
-import Chestplate from './equipment/impl/chestplate';
-import Legs from './equipment/impl/legs';
-import Skin from './equipment/impl/skin';
-import Boots from './equipment/impl/boots';
 import Pendant from './equipment/impl/pendant';
-import Ring from './equipment/impl/ring';
-import Weapon from './equipment/impl/weapon';
-import WeaponSkin from './equipment/impl/weaponskin';
 import Arrows from './equipment/impl/arrows';
+import Chestplate from './equipment/impl/chestplate';
+import Weapon from './equipment/impl/weapon';
+import Shield from './equipment/impl/shield';
+import Ring from './equipment/impl/ring';
+import ArmourSkin from './equipment/impl/armourskin';
+import WeaponSkin from './equipment/impl/weaponskin';
+import Legplates from './equipment/impl/legplates';
+import Cape from './equipment/impl/cape';
+import Boots from './equipment/impl/boots';
 
 import Item from '../../objects/item';
 
@@ -15,36 +17,40 @@ import Utils from '@kaetram/common/util/utils';
 import log from '@kaetram/common/util/log';
 import { Modules } from '@kaetram/common/network';
 
-import type { EquipmentData, SerializedEquipment } from '@kaetram/common/types/equipment';
-import type { Bonuses, Stats } from '@kaetram/common/types/item';
-import type Equipment from './equipment/equipment';
 import type Player from './player';
+import type Equipment from './equipment/equipment';
+import type { Bonuses, Stats } from '@kaetram/common/types/item';
+import type { EquipmentData, SerializedEquipment } from '@kaetram/common/network/impl/equipment';
 
 export default class Equipments {
     private helmet: Helmet = new Helmet();
-    private chestplate: Chestplate = new Chestplate();
-    private legs: Legs = new Legs();
-    private armourSkin: Skin = new Skin();
-    private boots: Boots = new Boots();
     private pendant: Pendant = new Pendant();
-    private ring: Ring = new Ring();
-    private weapon: Weapon = new Weapon();
-    private weaponSkin: WeaponSkin = new WeaponSkin();
     private arrows: Arrows = new Arrows();
+    private chestplate: Chestplate = new Chestplate();
+    private weapon: Weapon = new Weapon();
+    private shield: Shield = new Shield();
+    private ring: Ring = new Ring();
+    private armourSkin: ArmourSkin = new ArmourSkin();
+    private weaponSkin: WeaponSkin = new WeaponSkin();
+    private legplates: Legplates = new Legplates();
+    private cape: Cape = new Cape();
+    private boots: Boots = new Boots();
 
     // Store all equipments for parsing.
     // Make sure these are in the order of the enum.
     private equipments: Equipment[] = [
         this.helmet,
-        this.chestplate,
-        this.legs,
-        this.armourSkin,
-        this.boots,
         this.pendant,
-        this.ring,
         this.arrows,
+        this.chestplate,
         this.weapon,
-        this.weaponSkin
+        this.shield,
+        this.ring,
+        this.armourSkin,
+        this.weaponSkin,
+        this.legplates,
+        this.cape,
+        this.boots
     ];
 
     public totalAttackStats: Stats = Utils.getEmptyStats();
@@ -87,9 +93,11 @@ export default class Equipments {
     /**
      * Takes information about an item and equips it onto the player. It figures
      * out what equipment type it is, and updates that equipment's information.
+     * @param item The item to equip.
+     * @param fromIndex The index of the item in the inventory.
      */
 
-    public equip(item: Item): void {
+    public equip(item: Item, fromIndex: number): void {
         if (!item)
             return log.warning(
                 `[${this.player.username}] Attempted to equip something mysterious.`
@@ -100,11 +108,39 @@ export default class Equipments {
 
         if (!equipment) return;
 
+        /**
+         * If the player is equipping a two-handed weapon and they have a shield currently equipped, then we
+         * need to ensure that they have enough space in their inventory before removing the shield.
+         */
+
+        if (item.isTwoHanded() && !this.getShield().isEmpty()) {
+            if (!this.player.inventory.hasSpace()) return this.player.notify('misc:NO_SPACE');
+
+            this.unequip(Modules.Equipment.Shield);
+        }
+
+        /**
+         * Similarly to handling the two-handed weapon, we must also cover the case when the player tries
+         * to equip a shield while wielding a two-handed weapon. We must ensure that they have enough space
+         * in their inventory before removing the weapon.
+         */
+
+        if (type === Modules.Equipment.Shield && this.getWeapon().isTwoHanded()) {
+            if (!this.player.inventory.hasSpace()) return this.player.notify('misc:NO_SPACE');
+
+            this.unequip(Modules.Equipment.Weapon);
+        }
+
+        // Remove the item from the inventory.
+        this.player.inventory.remove(fromIndex, item.count);
+
+        // If there is already an item equipped, we unequip it.
         if (!equipment.isEmpty())
             this.player.inventory.add(
                 new Item(equipment.key, -1, -1, false, equipment.count, equipment.enchantments)
             );
 
+        // Include the last attack style when we're equipping a weapon.
         if (equipment instanceof Weapon)
             equipment.update(item, this.player.getLastAttackStyle(item.weaponType));
         else equipment.update(item);
@@ -257,12 +293,12 @@ export default class Equipments {
     }
 
     /**
-     * Grabs the legs equipment of the player.
-     * @returns Legs equipment object.
+     * Grabs the legplates equipment of the player.
+     * @returns Legplates equipment object.
      */
 
-    public getLegs(): Legs {
-        return this.get(Modules.Equipment.Legs) as Legs;
+    public getLegplates(): Legplates {
+        return this.get(Modules.Equipment.Legplates) as Legplates;
     }
 
     /**
@@ -270,8 +306,8 @@ export default class Equipments {
      * @returns The armour skin equipment type.
      */
 
-    public getSkin(): Skin {
-        return this.get(Modules.Equipment.Skin) as Skin;
+    public getSkin(): ArmourSkin {
+        return this.get(Modules.Equipment.ArmourSkin) as ArmourSkin;
     }
 
     /**
@@ -317,6 +353,15 @@ export default class Equipments {
 
     public getArrows(): Arrows {
         return this.get(Modules.Equipment.Arrows) as Arrows;
+    }
+
+    /**
+     * Grabs the shield equipment of the player.
+     * @returns Shield equipment object.
+     */
+
+    public getShield(): Shield {
+        return this.get(Modules.Equipment.Shield) as Shield;
     }
 
     /**

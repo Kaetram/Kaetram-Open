@@ -8,8 +8,8 @@ import Utils from '@kaetram/common/util/utils';
 
 import type Item from '../../../objects/item';
 import type { Modules } from '@kaetram/common/network';
-import type { EquipmentData } from '@kaetram/common/types/equipment';
-import type { Bonuses, Enchantments, Stats } from '@kaetram/common/types/item';
+import type { Bonuses, Enchantments, Light, Stats } from '@kaetram/common/types/item';
+import type { EquipmentData } from '@kaetram/common/network/impl/equipment';
 
 export default class Equipment {
     // Properties
@@ -18,6 +18,8 @@ export default class Equipment {
     public freezing = false;
     public burning = false;
     public movementModifier = -1;
+
+    public light: Light = {};
 
     // Stats
     public attackStats: Stats = Utils.getEmptyStats();
@@ -68,6 +70,8 @@ export default class Equipment {
         this.freezing = false;
         this.burning = false;
         this.movementModifier = -1;
+
+        this.light = {};
 
         this.attackStats = Utils.getEmptyStats();
         this.defenseStats = Utils.getEmptyStats();

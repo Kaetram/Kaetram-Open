@@ -15,6 +15,7 @@ type SelectCallback = (type: Modules.ContainerType, index: number, count?: numbe
 
 export default class Trade extends Menu {
     public override hideOnShow = false;
+    public override identifier: number = Modules.Interfaces.Trade;
 
     private inventoryList: HTMLUListElement = document.querySelector(
         '#trade-inventory-slots > ul'
@@ -45,7 +46,7 @@ export default class Trade extends Menu {
     private closeCallback?: () => void;
 
     public constructor(private inventory: Inventory) {
-        super('#trade-container', undefined, '#close-trade');
+        super('#trade', '#close-trade');
 
         this.load();
 
@@ -163,7 +164,7 @@ export default class Trade extends Menu {
      * @param key The key of the item being added (if we are adding item of other player).
      */
 
-    public override add(index: number, count: number, key: string, otherPlayer = false): void {
+    public override add(index: number, count: number, key?: string, otherPlayer = false): void {
         let slot = otherPlayer
                 ? this.otherPlayerSlots.children[index]
                 : this.playerSlots.children[index],
@@ -290,7 +291,7 @@ export default class Trade extends Menu {
     private select(type: Modules.ContainerType, index: number, count?: number): void {
         this.inventoryIndex = index;
 
-        this.selectCallback?.(type, index, count);
+        this.selectCallback?.(type, index, count || 1);
     }
 
     /**
@@ -301,7 +302,7 @@ export default class Trade extends Menu {
      */
 
     private getElement(index: number): HTMLElement {
-        return this.inventoryList.children[index].querySelector('div') as HTMLElement;
+        return this.inventoryList.children[index] as HTMLElement;
     }
 
     /**
@@ -322,7 +323,7 @@ export default class Trade extends Menu {
      */
 
     public isInputDialogueVisible(): boolean {
-        return this.tradeDialog.style.display === 'block';
+        return this.tradeDialog.style.display === 'flex';
     }
 
     /**

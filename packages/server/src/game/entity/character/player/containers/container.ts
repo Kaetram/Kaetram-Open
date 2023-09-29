@@ -5,8 +5,8 @@ import Item from '../../../objects/item';
 import log from '@kaetram/common/util/log';
 
 import type { Modules } from '@kaetram/common/network';
-import type { ContainerItem, Enchantments } from '@kaetram/common/types/item';
 import type { SlotData } from '@kaetram/common/types/slot';
+import type { ContainerItem, Enchantments } from '@kaetram/common/types/item';
 
 interface SerializedContainer {
     slots: SlotData[];
@@ -33,7 +33,10 @@ export default abstract class Container {
     protected removeCallback?: RemoveCallback;
     protected notifyCallback?: NotifyCallback;
 
-    public constructor(public type: Modules.ContainerType, public size: number) {
+    public constructor(
+        public type: Modules.ContainerType,
+        public size: number
+    ) {
         // Create `size` amount of slots with empty data.
         for (let i = 0; i < size; i++) this.slots.push(new Slot(i));
     }

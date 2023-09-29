@@ -1,194 +1,336 @@
 {
- "163-339": { 
-    "name": "Ancient Wizard",
-    "roaming": true,
-    "miniboss": true,
-    "hitPoints": 250,
-    "level": 10,
-    "attackLevel": 7,
-    "defenseLevel": 5,
-    "projectileName": "fireball2",
-    "achievement": "ancientwizard"
-  },
-
-  "224-359": {
-    "name": "Hermit Crab Warrior",
-    "drops": {
-      "flask": 200,
-      "gold": 750,
-      "spear": 75,
-      "platearmor": 100
+    "259-435": {
+        "name": "Ancient Wizard",
+        "roaming": true,
+        "miniboss": true,
+        "hitPoints": 250,
+        "level": 10,
+        "projectileName": "fireball2",
+        "achievement": "ancientwizard"
     },
-    "dropTables": ["ordinary", "unusual", "warriorcrab"],
-    "roaming": true,
-    "miniboss": true,
-    "hitPoints": 300,
-    "level": 30,
-    "aggroRange": 3,
-    "aggressive": true,
-    "attackLevel": 10,
-    "defenseLevel": 15,
-    "achievement": "warriorcrab"
-  },
 
-  "197-633": {
-    "name": "Water Guardian",
-    "drops": {
-      "redguardarmor": 75,
-      "redguardarcherarmor": 75,
-      "ring1": 100,
-      "scimitar": 100,
-      "watermelonbow": 100
+    "320-455": {
+        "name": "Hermit Crab Warrior",
+        "drops": [
+            {
+                "key": "flask",
+                "chance": 2000
+            },
+            {
+                "key": "gold",
+                "chance": 7500
+            },
+            {
+                "key": "ironspear",
+                "chance": 750
+            },
+            {
+                "key": "platearmor",
+                "chance": 1000
+            }
+        ],
+        "dropTables": ["ordinary", "unusual", "warriorcrab"],
+        "roaming": true,
+        "miniboss": true,
+        "hitPoints": 300,
+        "level": 30,
+        "aggroRange": 3,
+        "aggressive": true,
+        "achievement": "warriorcrab"
     },
-    "miniboss": true,
-    "level": 36,
-    "hitPoints": 350,
-    "attackLevel": 8,
-    "defenseLevel": 18,
-    "achievement": "waterguardian"
-  },
 
-  "291-644": {
-    "name": "Ogre Guardian",
-    "miniboss": true,
-    "level": 32,
-    "hitPoints": 650,
-    "defenseLevel": 8,
-    "experience": 120,
-    "respawnDelay": 180000,
-    "achievement": "ogreguardian"
-  },
+    "293-729": {
+        "name": "Water Guardian",
+        "drops": [
+            {
+                "key": "ring1",
+                "chance": 1000
+            }
+        ],
+        "miniboss": true,
+        "level": 36,
+        "hitPoints": 350,
+        "achievement": "waterguardian"
+    },
 
-  "175-635": {
-    "name": "Mimic",
-    "achievement": "notwhatitseems",
-    "drops": {"gold": 700, "bigflask": 300, "spear": 100, "ring1": 100, "pendant1": 100, "goldring": 14}
-  },
+    "387-740": {
+        "name": "Ogre Guardian",
+        "miniboss": true,
+        "level": 32,
+        "hitPoints": 650,
+        "defenseLevel": 8,
+        "experience": 120,
+        "respawnDelay": 180000,
+        "achievement": "ogreguardian"
+    },
 
-  "411-732": {
-    "name": "Mimic",
-    "achievement": "treadcarefully",
-    "drops": {"gold": 300, "bigflask": 500, "spear": 100, "ring1": 100, "pendant1": 100}
-  },
+    "271-731": {
+        "name": "Mimic",
+        "achievement": "notwhatitseems",
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 7000
+            },
+            {
+                "key": "bigflask",
+                "chance": 3000
+            },
+            {
+                "key": "crystalspear",
+                "chance": 1000
+            },
+            {
+                "key": "ring1",
+                "chance": 1000
+            },
+            {
+                "key": "pendant1",
+                "chance": 1000
+            },
+            {
+                "key": "goldnugget",
+                "chance": 1000
+            }
+        ]
+    },
 
-  "228-156": {
-    "name": "Mimic",
-    "achievement": "notwhatitseems",
-    "hitPoints": 1500,
-    "level": 30,
-    "defenseLevel": 10,
-    "drops": {"gold": 800, "bigflask": 400, "silverring": 10, "scimitar": 75, "pendant1": 125}
-  },
+    "507-828": {
+        "name": "Mimic",
+        "achievement": "treadcarefully",
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 7000
+            },
+            {
+                "key": "bigflask",
+                "chance": 3000
+            },
+            {
+                "key": "crystalspear",
+                "chance": 1000
+            },
+            {
+                "key": "ring1",
+                "chance": 1000
+            },
+            {
+                "key": "pendant1",
+                "chance": 1000
+            },
+            {
+                "key": "goldnugget",
+                "chance": 1000
+            }
+        ]
+    },
 
-  "460-725": {
-    "name": "Mimic",
-    "achievement": "notwhatitseems",
-    "hitPoints": 2200,
-    "level": 84,
-    "defenseLevel": 10,
-    "drops": {"gold": 800, "manaflask": 100, "sproutring": 10, "bluescimitar": 50, "shardt1": 50}
-  },
+    "324-252": {
+        "name": "Mimic",
+        "achievement": "notwhatitseems",
+        "hitPoints": 1500,
+        "level": 30,
+        "defenseLevel": 10,
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 7000
+            },
+            {
+                "key": "bigflask",
+                "chance": 3000
+            },
+            {
+                "key": "crystalspear",
+                "chance": 1000
+            },
+            {
+                "key": "ring1",
+                "chance": 1000
+            },
+            {
+                "key": "pendant1",
+                "chance": 1000
+            },
+            {
+                "key": "goldnugget",
+                "chance": 1000
+            }
+        ]
+    },
 
-  "855-611": {
-    "name": "Mimic",
-    "achievement": "notwhatitseems",
-    "hitPoints": 2200,
-    "level": 84,
-    "defenseLevel": 10,
-    "drops": {"gold": 800, "cure": 100, "shardt2": 25, "bluescimitar": 50, "greenpendant": 50}
-  },
+    "556-821": {
+        "name": "Mimic",
+        "achievement": "notwhatitseems",
+        "hitPoints": 2200,
+        "level": 84,
+        "defenseLevel": 10,
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 7000
+            },
+            {
+                "key": "manaflask",
+                "chance": 3000
+            },
+            {
+                "key": "sproutring",
+                "chance": 100
+            },
+            {
+                "key": "shardt2",
+                "chance": 3000
+            }
+        ]
+    },
 
-  "677-671": {
-    "name": "Mimic",
-    "achievement": "notwhatitseems",
-    "hitPoints": 2200,
-    "level": 84,
-    "defenseLevel": 10,
-    "drops": {"gold": 800, "cure": 100, "shardt2": 25, "bluescimitar": 50, "greenpendant": 50}
-  },
+    "951-707": {
+        "name": "Mimic",
+        "achievement": "notwhatitseems",
+        "hitPoints": 2200,
+        "level": 84,
+        "defenseLevel": 10,
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 8000
+            },
+            {
+                "key": "cure",
+                "chance": 3000
+            },
+            {
+                "key": "greenpendant",
+                "chance": 500
+            }
+        ]
+    },
 
-  "706-555": {
-    "name": "Mimic",
-    "achievement": "notwhatitseems",
-    "hitPoints": 1300,
-    "level": 62,
-    "defenseLevel": 15,
-    "drops": {"gold": 500, "cure": 50, "shardt1": 50, "bluescimitar": 50, "greenpendant": 45}
-  },
+    "773-767": {
+        "name": "Mimic",
+        "achievement": "notwhatitseems",
+        "hitPoints": 2200,
+        "level": 84,
+        "defenseLevel": 10,
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 8000
+            },
+            {
+                "key": "cure",
+                "chance": 3000
+            },
+            {
+                "key": "greenpendant",
+                "chance": 500
+            }
+        ]
+    },
 
-  "168-31": {
-    "name": "Old Ogre",
-    "miniboss": true
-  },
+    "802-651": {
+        "name": "Mimic",
+        "achievement": "notwhatitseems",
+        "hitPoints": 1300,
+        "level": 62,
+        "defenseLevel": 15,
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 8000
+            },
+            {
+                "key": "cure",
+                "chance": 3000
+            },
+            {
+                "key": "greenpendant",
+                "chance": 500
+            }
+        ]
+    },
 
-  "259-151": {
-    "name": "Ice Guardian",
-    "miniboss": true,
-    "defenseLevel": 15,
-    "level": 35
-  },
+    "264-127": {
+        "name": "Old Ogre",
+        "miniboss": true
+    },
 
-  "260-156": {
-    "name": "Ice Guardian",
-    "miniboss": true,
-    "defenseLevel": 15,
-    "level": 35
-  },
+    "355-247": {
+        "name": "Ice Guardian",
+        "miniboss": true,
+        "defenseLevel": 15,
+        "level": 35
+    },
 
-  "202-39": {
-    "name": "Vulture",
-    "achievement": "vulture"
-  },
+    "356-252": {
+        "name": "Ice Guardian",
+        "miniboss": true,
+        "defenseLevel": 15,
+        "level": 35
+    },
 
-  "238-48": {
-    "name": "Iron Ogre",
-    "miniboss": true,
-    "level": 25,
-    "attackLevel": 8,
-    "achievement": "pathofdeath"
-  },
+    "398-135": {
+        "name": "Vulture",
+        "achievement": "vulture"
+    },
 
-  "53-306": {
-    "name": "Baby Sea Dragon",
-    "miniboss": true,
-    "achievement": "babyseadragon"
-  },
+    "334-144": {
+        "name": "Iron Ogre",
+        "miniboss": true,
+        "level": 25,
+        "achievement": "pathofdeath"
+    },
 
-  "712-717": {
-    "name": "Ice Knight",
-    "miniboss": true,
-    "level": 62,
-    "attackLevel": 14,
-    "drops": {"gold": 300, "icesword": 1000}
-  },
+    "149-402": {
+        "name": "Baby Sea Dragon",
+        "miniboss": true,
+        "achievement": "babyseadragon"
+    },
 
-  "784-676": {
-    "name": "Golden Golem",
-    "miniboss": true,
-    "achievement": "goldengolem"
-  },
+    "808-813": {
+        "name": "Ice Knight",
+        "miniboss": true,
+        "level": 62,
+        "drops": [
+            {
+                "key": "gold",
+                "chance": 3000
+            },
+            {
+                "key": "icesword",
+                "chance": 10000
+            }
+        ]
+    },
 
-  "769-657": {
-    "name": "Big Baby Spooder",
-    "miniboss": true,
-    "achievement": "webdeveloper",
-    "level": 45
-  },
+    "880-772": {
+        "name": "Golden Golem",
+        "miniboss": true,
+        "achievement": "goldengolem"
+    },
 
-  "580-755": {
-    "name": "Mermaid",
-    "miniboss": true,
-    "achievement": "mermaidguard",
-    "defenseLevel": 28,
-    "level": 55
-  },
+    "865-753": {
+        "name": "Big Baby Spooder",
+        "miniboss": true,
+        "achievement": "webdeveloper",
+        "level": 45
+    },
 
-  "1016-682": {
-    "name": "Dark Wolf",
-    "miniboss": true,
-    "achievement": "roadtohell",
-    "hitPoints": 1050,
-    "attackLevel": 54,
-    "attackRate": 800
-  }
+    "676-851": {
+        "name": "Mermaid",
+        "miniboss": true,
+        "achievement": "mermaidguard",
+        "defenseLevel": 28,
+        "level": 55
+    },
+
+    "1112-778": {
+        "name": "Dark Wolf",
+        "miniboss": true,
+        "achievement": "roadtohell",
+        "hitPoints": 1050,
+        "attackRate": 800
+    }
 }

@@ -1,0 +1,47 @@
+{
+    "name": "Fisherman's Despair",
+    "description": "A lonesome fisherman by the coast is struggling to catch the rare golden fish.|He's tried every bait and trick in the book but to no avail. The fisherman is starting to believe the golden fish is just a myth. Will you be the one to restore his hope?",
+    "rewards": ["Golden Fishing Rod", "1500 Fishing experience"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "fisher",
+            "text": [
+                "Ahoy there, traveler. Ever heard of the golden fish?",
+                "Legends say it grants wishes to those who catch it.",
+                "I've spent half my life in pursuit but never even got a glimpse.",
+                "Could you perhaps try your hand at it? If you bring me the",
+                "golden fish, I'll share with you a secret of the seas!"
+            ],
+            "completedText": ["Any luck finding the golden fish?", "Remember, it's just a legend. Or is it?"]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "fisher",
+            "hasItemText": [
+                "I can't believe it! You've actually found the golden fish!",
+                "I've been such a fool to doubt its existence.",
+                "As promised, here's a secret of the seas:",
+                "The Golden Fishing Rod! It's been in my family for generations.",
+                "Now it's yours. May it bring you luck and fortune!"
+            ],
+            "itemRequirements": [
+                {
+                    "key": "goldenfish",
+                    "count": 1
+                }
+            ],
+            "skillRewards": [
+                {
+                    "key": "fishing",
+                    "experience": 1500
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Fisherman's Despair@green@. You've been awarded @crimson@1500@green@ Fishing experience and a @crimson@Golden Fishing Rod@green@!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

@@ -1,7 +1,6 @@
 import Default from './default';
 
 import Utils from '@kaetram/common/util/utils';
-import { Teleport } from '@kaetram/common/network/impl';
 
 import type Mob from '@kaetram/server/src/game/entity/character/mob/mob';
 import type Character from '@kaetram/server/src/game/entity/character/character';
@@ -16,17 +15,17 @@ export default class PirateCaptain extends Default {
     private lastPickedTeleport: Position = { x: 0, y: 0 };
 
     private teleportSpots: Position[] = [
-        { x: 822, y: 649 },
-        { x: 825, y: 659 },
-        { x: 836, y: 659 },
-        { x: 834, y: 649 }
+        { x: 935, y: 743 },
+        { x: 930, y: 755 },
+        { x: 920, y: 753 },
+        { x: 918, y: 743 }
     ];
 
     private minionSpots: Position[] = [
-        { x: 826, y: 651 },
-        { x: 837, y: 650 },
-        { x: 835, y: 657 },
-        { x: 824, y: 654 }
+        { x: 923, y: 745 },
+        { x: 931, y: 746 },
+        { x: 929, y: 754 },
+        { x: 923, y: 752 }
     ];
 
     public constructor(mob: Mob) {
@@ -43,6 +42,7 @@ export default class PirateCaptain extends Default {
         for (let minion of Object.values(this.minions)) minion.deathCallback?.();
 
         this.minionsSpawned = 0;
+        this.mob.attackRange = 1;
     }
 
     /**
@@ -70,7 +70,7 @@ export default class PirateCaptain extends Default {
         // Stop all players from attacking the pirate captain.
         this.mob.world.cleanCombat(this.mob);
 
-        this.mob.attackRange = 14;
+        this.mob.attackRange = 11;
 
         // Update the position and teleport the captain with an animation.
         this.mob.teleport(position.x, position.y, true);
@@ -88,7 +88,7 @@ export default class PirateCaptain extends Default {
             target = super.getTarget(); // Pick a random target from the attackers
 
         // Update the roam distance for minions (so they don't go back to spawn point).
-        minion.roamDistance = this.mob.roamDistance;
+        minion.roamDistance = 20;
 
         // Set the target for the minion.
         if (target) minion.combat.attack(target);

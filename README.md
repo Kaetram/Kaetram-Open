@@ -27,19 +27,19 @@ Live Version &ndash; <https://kaetram.com>
 
 Join us on Discord &ndash; <https://discord.gg/MmbGAaw>
 
-![Demo 1](https://i.imgur.com/MvErlP4.png)
+![Demo 1](https://i.imgur.com/PJdVts7.png)
 
-![Demo 2](https://i.imgur.com/jS5d3oq.png)
+![Demo 2](https://i.imgur.com/fmpcLhK.png)
 
-![Demo 3](https://i.imgur.com/KrqVNFw.png)![Demo 4](https://i.imgur.com/1U7iiJo.png)
+![Demo 3](https://i.imgur.com/tQxib9S.png)
 
-![Demo 5](https://i.imgur.com/8Is0pY0.png)![Demo 6](https://i.imgur.com/ErBNdkf.png)
+![Demo 4](https://i.imgur.com/Vlb3z8W.png)
 
-![Demo 7](https://i.imgur.com/L0MN6LO.png)
+![Demo 5](https://i.imgur.com/Fhvrw2S.png)
 
-![Demo 8](https://i.imgur.com/aFXdmpv.png)
+![Demo 6](https://i.imgur.com/eiK6wcr.png)
 
-![Demo 9](https://i.imgur.com/ewtLbyZ.png)
+![Demo 7](https://i.imgur.com/C7cZsuf.png)
 
 ## Technologies
 
@@ -78,7 +78,7 @@ the server.
 
 #### NOTE: Node.js
 
-> You need to use a Node.js version greater than or equal to `v14.19.0`, following the
+> You need to use a Node.js version greater than or equal to `v16.17.1`, following the
 > [Long Term Support (LTS) schedule](https://nodejs.org/en/about/releases), to have the most stable
 > experience when developing/experimenting with Kaetram. Older versions would not work with our
 > current dependencies and package manager.
@@ -93,15 +93,17 @@ the server.
 
 #### Yarn
 
-You will also need to enable [Yarn](https://yarnpkg.com) through [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html), to manage our dependencies.
+You will also need to enable [Yarn](https://yarnpkg.com) through [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html), to manage the dependencies.
 
-Starting from Node.js `v14.19.0`, [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html) is included by default, but is currently opt-in.
-
-To enable it, run
-
-```console
-corepack enable
-```
+> The preferred way to manage Yarn is through [Corepack](https://nodejs.org/dist/latest/docs/api/corepack.html), a new binary shipped with all Node.js releases [...]
+>
+> To enable it, run the following command:
+>
+> ```console
+> corepack enable
+> ```
+>
+> <https://yarnpkg.com/getting-started/install>
 
 ### Installing
 
@@ -112,6 +114,8 @@ yarn
 ```
 
 ### Running
+
+**You must accept the MPL2.0 and OPL licensing agreement by toggling `ACCEPT_LICENSE` in the enviroment variable file. The server and client are disabled until you have done so.**
 
 To run live development builds, use
 
@@ -131,13 +135,11 @@ Then, to run each production build, use
 yarn start
 ```
 
-Add `--host` at the end to make the game visible on your network.
-
 ### Configuration
 
 Optionally, if you want some additional configuration, There is a file named
 [`.env.defaults`](.env.defaults), and it's values will be used unless overridden by a new `.env`
-file, or by setting environmental variables.
+file.
 
 Copy and rename [`.env.defaults`](.env.defaults) to `.env`, and modify the contents to fit your
 needs.
@@ -260,12 +262,24 @@ Open Collective &ndash; <https://opencollective.com/kaetram>
 
 ## License & Commission
 
-For all inquiries about purchasing a different license or commission work, please contact **@Keros**
-on [Discord][discord].
+Following the release of the beta, Kaetram-Open will only be updated once every 2-4 weeks. There will be no more updates to the sprite art, music, item/mob/npc/etc properties. This repository will provide you with the tools necessary to create your own version of Kaetram, there are plenty of assets included for that. Further modifications will be primarily to the game-engine itself and improvements to the rendering.
 
-This project is distributed under the
-**[Mozilla Public License Version 2.0](https://choosealicense.com/licenses/mpl-2.0/)**. See
-[`LICENSE`][license] for more information.
+For all inquiries about purchasing a different license, commission work, or purchasing access to our up-to-date version please contact **@kaetram** on [Discord][discord] or email admin@kaetram.com.
+
+This project is distributed under the **[Mozilla Public License Version 2.0](https://choosealicense.com/licenses/mpl-2.0/)**. See [`LICENSE`][license] for more information.
+
+Additionally, Kaetram is shipped with a secondary license, Omnia Public License (OPL):
+
+- You MUST provide a direct link to Kaetram in the credits section.
+- You MUST keep the code open-source and continue to do so.
+- You may NOT use this project or any parts therein for anything related to artifical intelligence, cryptocurrencies, or NFTs without direct permission from the creators.
+- You may NOT remove the credits section. It MUST remain visible on the front page of the website. It MUST be easily accessible to any user who accesses the project as per [W3C Accessibility Standards](https://www.w3.org/WAI/standards-guidelines/).
+- You may NOT remove any credits to the artists, musicians, or any other original creators of this project.
+- You may NOT use this project or any parts therein to sell online courses, you may however use this for general streaming platforms, including view-based revenue.
+- You may NOT use this project or any parts therein for any illicit activity.
+- You may NOT use this project or any parts therein to spread hate, racism, or any form of discriminatory behaviour.
+
+If you have any questions, contact @kaetram on [Discord][discord].
 
 [license]: LICENSE 'Project License'
 [issues]: https://github.com/Kaetram/Kaetram-Open/issues 'Open Issues'

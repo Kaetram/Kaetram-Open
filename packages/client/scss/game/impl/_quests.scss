@@ -1,53 +1,59 @@
 @use '../../abstracts/media';
 
-#quests-container,
-#quest-log {
-    position: absolute;
-    overflow: auto;
-    font-family: AdvoCut, sans-serif;
+#quests {
+    display: none;
 }
 
-.quest-log-h1 {
-    font-size: 150%;
-    color: white;
-    text-align: left;
+#quests-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    height: 100%;
 }
 
-.quest-log-p {
-    color: white;
-}
+#quests-list {
+    flex: 3;
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #quests {
-            background: url('/img/interface/quests.png') 0 0 no-repeat;
-            background-size: calc(width('quests.png') * $i);
-        }
+    ul {
+        overflow: hidden auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25em;
 
-        #quests-container {
-            width: 106px * $i;
-            height: 117px * $i;
-            margin-top: 20px * $i;
-            margin-left: 21px * $i;
-        }
+        height: 100%;
+        padding-right: 0.25em;
 
-        #quest-log {
-            width: 172px * $i;
-            height: 117px * $i;
-            margin-top: 20px * $i;
-            margin-left: 151px * $i;
-        }
-
-        #quest-log > div {
-            margin-top: 4px * $i;
-            margin-left: 4px * $i;
+        li {
+            flex-shrink: 0;
         }
     }
+}
 
-    @media (--sm) {
-        #quests-container,
-        #quest-log {
-            font-size: 8px;
+#quests-logs {
+    flex: 4;
+}
+
+#quests-logs-container {
+    overflow: auto;
+    height: 100%;
+}
+
+@media (--portrait) {
+    #quests {
+        width: 20em;
+        height: 30em;
+        margin-bottom: 5em;
+    }
+
+    #quests-container {
+        flex-direction: column;
+
+        #quests-list {
+            flex: 3;
+        }
+
+        #quests-logs {
+            flex: 4;
         }
     }
 }

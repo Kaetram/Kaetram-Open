@@ -2,16 +2,17 @@ import Areas from '../areas';
 
 import log from '@kaetram/common/util/log';
 
-import type { ProcessedArea } from '@kaetram/common/types/map';
 import type World from '../../../world';
 import type Area from '../area';
+import type { ProcessedArea } from '@kaetram/common/types/map';
 
 export default class Dynamic extends Areas {
     public constructor(data: ProcessedArea[], world: World) {
         super(data, world);
 
-        super.load(this.data, (area: Area, rawData) => {
+        super.load(this.data, (area: Area, rawData: ProcessedArea) => {
             area.mapping = rawData.mapping!;
+            area.animation = rawData.animation!;
             area.quest = rawData.quest!;
             area.achievement = rawData.achievement!;
         });
@@ -30,6 +31,7 @@ export default class Dynamic extends Areas {
             if (!area.mapping) continue;
 
             area.mappedArea = this.get(area.mapping);
+            area.mappedAnimation = this.get(area.animation);
         }
     }
 }

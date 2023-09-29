@@ -1,39 +1,62 @@
 @use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
 #chat {
     pointer-events: auto;
     scroll-behavior: smooth;
 
     position: absolute;
-    bottom: 12px;
-    left: 12px;
+    bottom: 3em;
+    left: 1em;
 
     display: none;
+    flex-direction: column;
 
-    p {
-        padding-left: 8px;
-        font-family: AdvoCut, sans-serif;
+    width: 24em;
+
+    @media (--portrait) {
+        bottom: 6em;
+        font-size: 0.875em;
     }
 }
 
-#chat-log {
+#chat-frame {
     position: absolute;
-    overflow-y: scroll;
-    text-shadow: 2px 2px 2px black;
 }
 
-#chat-log::-webkit-scrollbar-thumb {
-    pointer-events: auto;
+#chat-log {
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    height: 10em;
+    margin: 1em 0.375em 0 0.675em;
+
+    text-shadow: 0.125em 0.125em 0.125em black;
+
+    p {
+        margin-bottom: 0.1em;
+        font-size: 1.25em;
+    }
+}
+
+#chat-log::-webkit-scrollbar {
+    width: 0;
 }
 
 #chat-input {
     pointer-events: auto;
 
     position: absolute;
+    bottom: -1.35em;
 
     display: none;
 
-    width: 90%;
+    box-sizing: border-box;
+    width: 22em;
+    height: 1.25em;
+    margin-left: 1em;
+
+    font-size: 1em;
 
     background: transparent;
     border: none;
@@ -41,45 +64,8 @@
 
 #chat-log,
 #chat-input {
-    font-family: AdvoCut, sans-serif;
-    font-size: 16px;
+    z-index: 4;
     color: white;
 }
 
-@each $size, $i in media.$s-sizes {
-
-    @media ($size) {
-        #chat {
-            width: 264px * $i;
-            height: 135px * $i;
-            background: url('/img/interface/chatbox.png') no-repeat;
-            background-size: calc(width('chatbox.png') * $i);
-        }
-
-        #chat-log {
-            top: 8px * $i;
-            left: 4px * $i;
-            width: 254px * $i;
-            height: 104px * $i;
-        }
-
-        #chat-input {
-            bottom: 4px * $i;
-            left: 12px * $i;
-            height: 10px * $i;
-        }
-    }
-
-    @media (--lg) {
-        #chat-log {
-            font-size: 18px;
-        }
-    }
-
-    @media(--sm) {
-        #chat {
-            bottom: 70px;
-            left: 4px;
-        }
-    }
-}
+@include sprite.sheet($image: 'chatbox', $scale: 1.5, $selectors: #chat-frame);

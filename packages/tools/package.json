@@ -4,16 +4,16 @@
     "scripts": {
         "bot": "tsx --preserve-symlinks bot/bot",
         "exportmap": "tsx --preserve-symlinks map/parser/exporter",
-        "map": "yarn exportmap map/data/map.json"
+        "map": "yarn exportmap map/data/map.json",
+        "replacer": "tsx --preserve-symlinks map/parser/replacer map/data/map.json"
     },
     "dependencies": {
         "@kaetram/common": "workspace:*",
         "@kaetram/server": "workspace:*",
-        "tsx": "^3.12.6",
+        "tsx": "^3.12.10",
         "websocket": "^1.0.34"
     },
     "devDependencies": {
-        "@types/node": "^18.15.5",
-        "typescript": "^5.0.2"
+        "typescript": "^5.2.2"
     }
 }

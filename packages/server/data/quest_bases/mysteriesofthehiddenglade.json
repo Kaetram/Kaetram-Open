@@ -1,0 +1,65 @@
+{
+    "name": "Mysteries of the Hidden Glade",
+    "description": "A sealed forest awaits.|Rumors speak of a sealed glade, hidden away from the world. Deep within, a creature of power guards a great treasure.",
+    "rewards": ["gladering"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "villagehistorian",
+            "text": [
+                "Greetings, adventurer. Have you heard of the Hidden Glade?",
+                "It's a mystical forest sealed by our ancestors due to the danger within.",
+                "Could you perhaps venture in and discover its secrets?"
+            ],
+            "completedText": ["Find the entrance to the Hidden Glade."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "gladeentrance",
+            "text": [
+                "A sealed gate stands before you, adorned with ancient symbols.",
+                "By solving a riddle, the gate slowly opens, revealing the glade within."
+            ],
+            "completedText": ["Enter the Hidden Glade."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "mysteriousaltar",
+            "text": ["Deep within the glade, an altar beckons. Placing an offering might grant you safe passage."],
+            "completedText": ["Seek the creature guarding the treasure."]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "gladeboss",
+            "text": [
+                "A creature of immense power stands before you, its eyes watching your every move.",
+                "To reach the treasure, you must first defeat this guardian."
+            ],
+            "completedText": ["Prepare for battle!"]
+        },
+        "4": {
+            "task": "kill",
+            "mob": ["gladeboss"],
+            "mobCountRequirement": 1
+        },
+        "5": {
+            "task": "talk",
+            "npc": "gladetreasure",
+            "text": [
+                "Having defeated the guardian, a chest materializes before you.",
+                "Inside, you find a ring that radiates energy."
+            ],
+            "itemRewards": [
+                {
+                    "key": "gladering",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have completed @crimson@Mysteries of the Hidden Glade@green@. The glade's treasure, the Glade Ring, is now yours!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

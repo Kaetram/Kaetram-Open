@@ -1,20 +1,27 @@
-import Character from '../game/entity/character/character';
-import Item from '../game/entity/objects/item';
 import Formulas from '../info/formulas';
+import Item from '../game/entity/objects/item';
+import Character from '../game/entity/character/character';
+import Items from '../../data/items.json';
 
 import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Command, Notification, NPC, Pointer, Store } from '@kaetram/common/network/impl';
+import {
+    CommandPacket,
+    DespawnPacket,
+    NPCPacket,
+    SpawnPacket,
+    StorePacket
+} from '@kaetram/common/network/impl';
 
+import type Region from '../game/map/region';
+import type Entity from '../game/entity/entity';
 import type Mob from '../game/entity/character/mob/mob';
-import type Achievement from '../game/entity/character/player/achievement/achievement';
 import type Player from '../game/entity/character/player/player';
 import type Quest from '../game/entity/character/player/quest/quest';
 import type Skill from '../game/entity/character/player/skill/skill';
-import type Entity from '../game/entity/entity';
-import type Region from '../game/map/region';
+import type Achievement from '../game/entity/character/player/achievement/achievement';
 
 export default class Commands {
     private world;
@@ -45,7 +52,7 @@ export default class Commands {
      * @param blocks Associated string blocks after the command.
      */
 
-    private handlePlayerCommands(command: string, blocks: string[]): void {
+    private async handlePlayerCommands(command: string, blocks: string[]): Promise<void> {
         switch (command) {
             case 'players': {
                 let players = this.world.entities.getPlayerUsernames(),
@@ -64,14 +71,12 @@ export default class Commands {
                 return;
             }
 
-            case 'pickup': {
-                return this.player.removePet();
-            }
-
             case 'coords': {
                 return this.player.notify(`x: ${this.player.x} y: ${this.player.y}`);
             }
 
+            case 'g':
+            case 'gc':
             case 'global': {
                 return this.player.chat(
                     Filter.clean(blocks.join(' ')),
@@ -116,6 +121,8 @@ export default class Commands {
 
                         this.world.guilds.kick(this.player, username);
 
+                        this.player.notify(`You have kicked ${username} from your guild.`);
+
                         break;
                     }
 
@@ -132,7 +139,22 @@ export default class Commands {
                         if (parseInt(rank) === 7 || rank === 'landlord')
                             return this.player.notify('You cannot set a rank to landlord.');
 
-                        this.world.guilds.setRank(this.player, username, parseInt(rank));
+                        let guild = await this.world.guilds.getGuild(this.player.guild);
+
+                        if (!guild) return this.player.notify('You are not in a guild.');
+
+                        let member = await this.world.guilds.getMember(guild, username);
+
+                        if (!member)
+                            return this.player.notify(
+                                `Could not find a member with the name: ${username}.`
+                            );
+
+                        this.world.guilds.setRank(guild, this.player, member, parseInt(rank));
+
+                        this.player.notify(`You have set ${username}'s rank to ${rank}.`);
+
+                        break;
                     }
                 }
 
@@ -154,12 +176,16 @@ export default class Commands {
             case 'mute':
             case 'ban': {
                 let duration = parseInt(blocks.shift()!),
-                    targetName = blocks.join(' ');
+                    targetName = blocks.join(' ').toLowerCase();
 
                 if (!duration || !targetName)
                     return this.player.notify(
                         'Malformed command, expected /ban(mute) [duration] [username]'
                     );
+
+                // Prevent banning yourself.
+                if (targetName === this.player.username)
+                    return this.player.notify(`You cannot ban yourself you silly. Thanks James.`);
 
                 let user: Player = this.world.getPlayerByName(targetName);
 
@@ -172,6 +198,8 @@ export default class Commands {
                     if (command === 'ban' && duration > 72) duration = 72;
                 }
 
+                let hours = duration;
+
                 // Convert hours to milliseconds.
                 duration *= 60 * 60 * 1000;
 
@@ -181,14 +209,14 @@ export default class Commands {
                     user.mute = timeFrame;
                     user.save();
 
-                    this.player.notify(`${user.username} has been muted for ${duration} hours.`);
+                    this.player.notify(`${user.username} has been muted for ${hours} hours.`);
                 } else if (command === 'ban') {
                     user.ban = timeFrame;
 
                     user.connection.sendUTF8('ban');
                     user.connection.close('banned');
 
-                    this.player.notify(`${user.username} has been banned for ${duration} hours.`);
+                    this.player.notify(`${user.username} has been banned for ${hours} hours.`);
                 }
 
                 return;
@@ -227,6 +255,55 @@ export default class Commands {
                 );
 
                 break;
+            }
+
+            case 'jail': {
+                let duration = parseInt(blocks.shift()!),
+                    username = blocks.join(' ');
+
+                if (!duration || !username)
+                    return this.player.notify(
+                        'Malformed command, expected /jail [duration] [username]'
+                    );
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
+
+                // Limit the duration of the jail sentence for mods.
+                if (this.player.isMod() && duration > 12) duration = 12;
+
+                let hours = duration;
+
+                // Convert hours to milliseconds.
+                duration *= 60 * 60 * 1000;
+
+                player.jail = Date.now() + duration;
+                player.sendToSpawn();
+
+                player.notify(`You have been jailed for ${hours} hours.`, 'crimsonred');
+                this.player.notify(`${player.username} has been jailed for ${hours} hours.`);
+
+                break;
+            }
+
+            case 'unjail': {
+                let username = blocks.join(' ');
+
+                if (!username)
+                    return this.player.notify(`Malformed command, expected /unjail [username]`);
+
+                let player = this.world.getPlayerByName(username);
+
+                if (!player)
+                    return this.player.notify(`Could not find player with name: ${username}`);
+
+                player.jail = 0;
+                player.sendToSpawn();
+
+                player.notify(`You have been unjailed.`);
+                this.player.notify(`${player.username} has been unjailed.`);
             }
         }
     }
@@ -353,6 +430,8 @@ export default class Commands {
                 }
 
                 this.player.notify(`Copied ${username}'s ${command} to your ${command}.`);
+
+                break;
             }
 
             case 'drop': {
@@ -364,6 +443,8 @@ export default class Commands {
                 if (!count) count = 1;
 
                 this.world.entities.spawnItem(key, this.player.x, this.player.y, true, count);
+
+                break;
             }
 
             case 'remove': {
@@ -386,7 +467,7 @@ export default class Commands {
                     y = parseInt(blocks.shift()!),
                     withAnimation = parseInt(blocks.shift()!);
 
-                if (x && y) this.player.teleport(x, y, !!withAnimation);
+                if (x && y) this.player.teleport(x, y, !!withAnimation, false, true);
 
                 return;
             }
@@ -395,7 +476,7 @@ export default class Commands {
                 username = blocks.join(' ');
                 player = this.world.getPlayerByName(username);
 
-                player?.teleport(this.player.x, this.player.y);
+                player?.teleport(this.player.x, this.player.y, false, false, true);
 
                 return;
             }
@@ -404,11 +485,12 @@ export default class Commands {
                 username = blocks.join(' ');
                 player = this.world.getPlayerByName(username);
 
-                if (player) this.player.teleport(player.x, player.y);
+                if (player) this.player.teleport(player.x, player.y, false, false, true);
 
                 return;
             }
 
+            case 'immortal':
             case 'nohit':
             case 'invincible': {
                 if (this.player.status.has(Modules.Effects.Invincible)) {
@@ -464,22 +546,23 @@ export default class Commands {
 
                     if (!posX || !posY) return;
 
-                    this.player.send(
-                        new Pointer(Opcodes.Pointer.Location, {
-                            id: this.player.instance,
-                            x: posX,
-                            y: posY
-                        })
-                    );
+                    this.player.pointer({
+                        type: Opcodes.Pointer.Location,
+                        instance: this.player.instance,
+                        x: posX,
+                        y: posY
+                    });
                 } else {
                     let instance = blocks.shift()!;
 
                     if (!instance) return;
 
-                    this.player.send(
-                        new Pointer(Opcodes.Pointer.Entity, {
-                            id: instance
-                        })
+                    this.player.pointer(
+                        {
+                            type: Opcodes.Pointer.Entity,
+                            instance
+                        },
+                        false
                     );
                 }
 
@@ -488,7 +571,7 @@ export default class Commands {
 
             case 'teleall': {
                 this.entities.forEachPlayer((player: Player) => {
-                    player.teleport(this.player.x, this.player.y);
+                    player.teleport(this.player.x, this.player.y, false, false, true);
                 });
 
                 return;
@@ -500,7 +583,7 @@ export default class Commands {
             }
 
             case 'debug': {
-                this.player.send(new Command({ command: 'debug' }));
+                this.player.send(new CommandPacket({ command: 'debug' }));
 
                 return;
             }
@@ -562,7 +645,7 @@ export default class Commands {
             case 'max': {
                 this.player.skills.forEachSkill((skill: Skill) => {
                     skill.setExperience(0);
-                    skill.addExperience(669_420_769);
+                    skill.addExperience(696_420_969);
                 });
                 break;
             }
@@ -611,6 +694,13 @@ export default class Commands {
                     return;
                 }
 
+                if (isNaN(movementSpeed)) {
+                    this.player.notify('Invalid movement speed specified.');
+                    return;
+                }
+
+                if (movementSpeed > 10_000) movementSpeed = 2000;
+
                 if (movementSpeed < 75)
                     // Just to not break stuff.
                     movementSpeed = 75;
@@ -629,8 +719,24 @@ export default class Commands {
                 break;
             }
 
+            case 'undostage': {
+                key = blocks.shift()!;
+
+                if (!key) return this.player.notify('No quest specified.');
+
+                let quest = this.player.quests.get(key);
+
+                if (!quest) return this.player.notify('Could not find quest.');
+
+                quest.setStage(quest.getStage() - 1);
+
+                break;
+            }
+
             case 'resetquests': {
-                this.player.quests.forEachQuest((quest: Quest) => quest.setStage(0));
+                this.player.quests.forEachQuest((quest: Quest) => {
+                    quest.setStage(0, undefined, true, true);
+                });
                 break;
             }
 
@@ -639,7 +745,9 @@ export default class Commands {
 
                 if (!key) return this.player.notify('No quest specified.');
 
-                this.player.quests.get(key)?.setStage(0);
+                let quest = this.player.quests.get(key);
+
+                quest.setStage(0, undefined, true, true);
                 break;
             }
 
@@ -665,7 +773,7 @@ export default class Commands {
 
                 if (!entity) return this.player.notify(`Entity not found.`);
 
-                if (entity.isMob()) entity.move(x, y);
+                if (entity.isMob()) entity.setPosition(x, y);
 
                 break;
             }
@@ -917,7 +1025,9 @@ export default class Commands {
 
                 if (!key) return this.player.notify(`Malformed command, expected /store key`);
 
-                this.player.send(new Store(Opcodes.Store.Open, this.world.stores.serialize(key)));
+                this.player.send(
+                    new StorePacket(Opcodes.Store.Open, this.world.stores.serialize(key))
+                );
 
                 this.player.storeOpen = key;
 
@@ -930,7 +1040,9 @@ export default class Commands {
             }
 
             case 'bank': {
-                this.player.send(new NPC(Opcodes.NPC.Bank, this.player.bank.serialize()));
+                this.player.canAccessContainer = true;
+
+                this.player.send(new NPCPacket(Opcodes.NPC.Bank, this.player.bank.serialize()));
                 break;
             }
 
@@ -944,7 +1056,7 @@ export default class Commands {
 
                 if (!player) return this.player.notify(`Could not find player: ${username}`);
 
-                this.player.send(new NPC(Opcodes.NPC.Bank, player.bank.serialize()));
+                this.player.send(new NPCPacket(Opcodes.NPC.Bank, player.bank.serialize()));
 
                 break;
             }
@@ -983,14 +1095,48 @@ export default class Commands {
                 if (!key) return this.player.notify(`Malformed command, expected /setpet key`);
 
                 this.player.setPet(key);
+
+                break;
             }
 
             case 'opencrafting': {
                 return this.world.crafting.open(this.player, Modules.Skills.Crafting);
             }
 
+            case 'openalchemy': {
+                return this.world.crafting.open(this.player, Modules.Skills.Alchemy);
+            }
+
+            case 'opencooking': {
+                return this.world.crafting.open(this.player, Modules.Skills.Cooking);
+            }
+
+            case 'opensmithing': {
+                return this.world.crafting.open(this.player, Modules.Skills.Smithing);
+            }
+
+            case 'opensmelting': {
+                return this.world.crafting.open(this.player, Modules.Skills.Smelting);
+            }
+
+            case 'lootbag': {
+                let items: Item[] = [
+                    new Item('oldonesblade', -1, -1, false, 1),
+                    new Item('froghelm', -1, -1, false, 1),
+                    new Item('gold', -1, -1, false, 1500)
+                ];
+
+                this.world.entities.spawnLootBag(
+                    this.player.x,
+                    this.player.y,
+                    this.player.username,
+                    items
+                );
+                break;
+            }
+
             case 'ipban': {
-                let username = blocks.join(' ');
+                let username = blocks.join(' ').toLowerCase();
 
                 if (!username)
                     return log.info(`Malformed command, expected /${command} <username>`);
@@ -1006,6 +1152,8 @@ export default class Commands {
                 // Kick all players with the same IP.
                 for (let p of this.entities.getPlayersByIp(player.connection.address))
                     p.connection.reject('banned');
+
+                break;
             }
 
             case 'countdown': {
@@ -1014,6 +1162,140 @@ export default class Commands {
                 if (!time) return this.player.notify(`Malformed command, expected /countdown time`);
 
                 this.player.countdown(time);
+
+                break;
+            }
+
+            case 'find': {
+                let npc = this.world.entities.getNPCByKey(blocks.join(' '));
+
+                this.player.notify(
+                    npc
+                        ? `Found NPC: ${npc.name} at x: ${npc.x}, y: ${npc.y}`
+                        : `Could not find NPC.`
+                );
+
+                break;
+            }
+
+            case 'testitems': {
+                this.player.bank.empty();
+
+                // Add 100 of each item into the bank.
+                for (let key in Items) this.player.bank.add(new Item(key, -1, -1, false, 100));
+
+                break;
+            }
+
+            case 'collision': {
+                let x = parseInt(blocks.shift()!) || this.player.x,
+                    y = parseInt(blocks.shift()!) || this.player.y;
+
+                if (!x || !y)
+                    return this.player.notify(`Malformed command, expected /collision x y`);
+
+                let index = this.world.map.coordToIndex(x, y);
+
+                this.player.notify(`${this.world.map.isColliding(x, y)} - index: ${index}`);
+
+                log.debug(`Data: ${this.world.map.data[index]}`);
+
+                break;
+            }
+
+            case 'hide': {
+                this.player.visible = !this.player.visible;
+
+                if (this.player.visible) {
+                    this.player.notify(`You are now visible.`);
+
+                    this.player.sendToRegions(new SpawnPacket(this.player), true);
+                } else {
+                    this.player.notify(`You are now invisible.`);
+
+                    this.player.sendToRegions(
+                        new DespawnPacket({ instance: this.player.instance }),
+                        true
+                    );
+                }
+
+                break;
+            }
+
+            case 'tp': {
+                let key = blocks.shift()!;
+
+                switch (key) {
+                    case 'home': {
+                        return this.player.teleport(191, 166, true, false, true);
+                    }
+
+                    case 'underwater': {
+                        return this.player.teleport(119, 290, true, false, true);
+                    }
+
+                    case 'underwatervolcano': {
+                        return this.player.teleport(194, 427, true, false, true);
+                    }
+
+                    case 'kok': {
+                        return this.player.teleport(290, 357, true, false, true);
+                    }
+
+                    case 'mountain': {
+                        return this.player.teleport(440, 312, true, false, true);
+                    }
+
+                    case 'santa': {
+                        return this.player.teleport(526, 256, true, false, true);
+                    }
+
+                    case 'ice': {
+                        return this.player.teleport(608, 332, true, false, true);
+                    }
+
+                    case 'pink': {
+                        return this.player.teleport(685, 433, true, false, true);
+                    }
+
+                    case 'hell': {
+                        return this.player.teleport(1112, 787, true, false, true);
+                    }
+
+                    case 'sewer': {
+                        return this.player.teleport(1117, 709, true, false, true);
+                    }
+
+                    case 'shroom': {
+                        return this.player.teleport(992, 631, true, false, true);
+                    }
+
+                    case 'skeletonking': {
+                        return this.player.teleport(120, 794, true, false, true);
+                    }
+
+                    case 'ogrelord': {
+                        return this.player.teleport(342, 166, true, false, true);
+                    }
+
+                    case 'queenant': {
+                        return this.player.teleport(591, 820, true, false, true);
+                    }
+
+                    case 'forestdragon': {
+                        return this.player.teleport(457, 807, true, false, true);
+                    }
+
+                    case 'crystalcave': {
+                        return this.player.teleport(886, 622, true, false, true);
+                    }
+
+                    case 'piratecaptain': {
+                        return this.player.teleport(930, 752, true, false, true);
+                    }
+                }
+
+                break;
             }
 
             case 'toggle': {
@@ -1042,10 +1324,10 @@ export default class Commands {
                     }
 
                     case 'terror': {
-                        if (this.player.status.has(Modules.Effects.Terror))
-                            return this.player.status.remove(Modules.Effects.Terror);
+                        if (this.player.status.has(Modules.Effects.TerrorStatus))
+                            return this.player.status.remove(Modules.Effects.TerrorStatus);
 
-                        effect = Modules.Effects.Terror;
+                        effect = Modules.Effects.TerrorStatus;
                         break;
                     }
 
@@ -1057,12 +1339,16 @@ export default class Commands {
                         break;
                     }
 
+                    case 'hide': {
+                        return this.player.send(new CommandPacket({ command: 'hide' }));
+                    }
+
                     default: {
                         return this.player.status.clear();
                     }
                 }
 
-                return this.player.status.add(effect);
+                return this.player.status.addWithTimeout(effect, 60_000);
             }
         }
     }

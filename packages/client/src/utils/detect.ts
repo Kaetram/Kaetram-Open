@@ -8,14 +8,14 @@ export let isSafari = (): boolean => agent.includes('safari') && !agent.includes
 
 export let isEdge = (): boolean => agent.includes('edge/');
 
-export function isTablet(): boolean {
-    let isAppleTablet = agent.includes('ipad'),
-        isAndroidTablet = agent.includes('android');
+export let isIos = (): boolean => agent.includes('iphone') || agent.includes('ipad');
 
-    return (isAppleTablet || isAndroidTablet) && window.innerWidth >= 640;
-}
+export let isMobile = (): boolean =>
+    agent.includes('android') || agent.includes('iphone') || agent.includes('ipad');
 
-export let isMobile = (): boolean => window.innerWidth < 1000;
+export let isTablet = () => isMobile() && window.innerWidth >= 640;
+
+export let isMacintoshFirefox = (): boolean => agent.includes('mac') && agent.includes('firefox');
 
 export function iOSVersion(): number | undefined {
     let match = /os (\d+)_(\d+)_?(\d+?)/.exec(agent);

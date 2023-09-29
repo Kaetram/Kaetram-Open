@@ -1,959 +1,482 @@
 @use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
 #guilds {
-    cursor: url('/img/hand.png'), auto;
-
-    position: absolute;
-    inset: 0;
-
     display: none;
-
-    margin: auto;
+    padding-left: 8.5em;
 }
 
-#guilds-list-container,
 #guilds-info-container {
-    position: absolute;
+    display: none;
+    flex: 1;
+    flex-direction: column;
+}
 
-    p {
-        font-family: AdvoCut, sans-serif;
-        text-align: center;
+#guilds-create {
+    overflow: hidden;
+    display: none;
+    flex: 1;
+    flex-direction: row;
+    gap: 0.5em;
+    align-items: center;
+
+    @media (--portrait) {
+        flex-direction: column;
+        justify-content: center;
     }
+}
+
+#create-guild {
+    position: absolute;
+    top: 6em;
+    left: 2.25em;
+}
+
+#guilds-list-container {
+    display: flex;
+    flex: 1;
+    gap: 0.5em;
+    text-align: center;
+}
+
+#guilds-list {
+    flex: 1;
 
     ul {
-        position: absolute;
-        overflow: auto;
-        height: 86%;
+        padding-right: 0.25em;
     }
 }
 
-#guilds-create-container,
-#guilds-info-container {
-    display: none;
+#banner-select {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 0 1.5em;
 }
 
-#close-guilds {
-    position: absolute;
-    right: 1px;
+#banner-options {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.25em;
+    justify-content: center;
 }
 
-#guilds-info {
-    color: white;
-}
-
-#create-guild,
-#guild-back,
-#guild-create {
-    position: absolute;
-}
-
-#banner-colours,
-#banner-crests {
-    position: absolute;
-    overflow: auto;
+#banner-colours {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 0.25em;
+    justify-items: center;
 }
 
-#guild-name-input,
-#guild-chat-input {
-    position: absolute;
+#guilds-create-error {
+    height: 1em;
 
-    font-family: AdvoCut, sans-serif;
-    color: #fff;
-    text-align: center;
-
-    background-color: transparent;
-    border: none;
-}
-
-#guild-chat-input {
-    display: none;
-}
-
-#guild-chat-log {
-    position: absolute;
-
-    overflow: auto;
-    display: none;
-
-    font-family: AdvoCut, sans-serif;
-    color: #fff;
-
-    p {
-        text-align: left;
-        text-shadow: 2px 2px 2px black;
-    }
-}
-
-#create-error {
-    position: absolute;
-
-    font-family: AdvoCut, sans-serif;
-    font-size: 16px;
+    font-size: 0.675em;
     color: rgb(233 31 31);
     text-align: center;
     text-shadow: 1px 1px 1px rgb(226 101 101);
 }
 
-#sidebar-list {
-    li {
-        div.members-icon,
-        div.chat-icon {
-            position: relative;
-        }
-    }
+#guilds-back-button,
+#guilds-create-button {
+    font-size: 0.75em;
+}
+
+#banner-outline {
+    position: absolute;
+    top: 0.875em;
 }
 
 #banner-colour-button,
 #banner-outline-button {
-    position: absolute;
+    position: relative;
+    box-sizing: border-box;
+    padding: 0.375em;
 }
 
-.colour-button-arrow-left,
+#guilds-info-header {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5em;
+    align-items: center;
+}
+
+.title-decoration {
+    @include sprite.sheet(
+        $image: 'guilds/frames',
+        $x: 286,
+        $y: 8,
+        $width: 78,
+        $height: 6,
+        $selectors: '&::after'
+    ) {
+        content: '';
+    }
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $x: 105,
+    $y: 78,
+    $width: 9,
+    $height: 16,
+    $gap: 1,
+    $disabled: 1,
+    $rows: false,
+    $selectors: (
+        '.colour-button-arrow-left',
+        '.colour-button-arrow-right'
+    )
+);
+
+.colour-button-arrow-left {
+    position: absolute;
+    left: -1.5em;
+}
+
 .colour-button-arrow-right {
     position: absolute;
+    right: -1.5em;
 }
 
-.guilds-decoration {
-    position: absolute;
-    inset: 0 0 auto 0;
-    margin: auto;
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $y: 124,
+    $width: 22,
+    $height: 22,
+    $hover: 1,
+    $active: 2,
+    $selectors: (
+        '.button-banner-colour',
+        '.outline-button-1',
+        '.outline-button-2',
+        '.outline-button-3',
+        '.outline-button-4',
+        '.outline-button-5'
+    )
+);
 
-    p {
-        font-family: AdvoCut, sans-serif;
-        color: #fff;
-        text-align: center;
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $x: 144,
+    $y: 160,
+    $width: 20,
+    $height: 20,
+    $gap: 1,
+    $rows: false,
+    $hover: 1,
+    $active: 2,
+    $selectors: '.banner-colour-button-outline'
+);
+
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $x: 165,
+    $y: 160,
+    $width: 20,
+    $height: 20,
+    $gap: 1,
+    $rows: false,
+    $selectors: (
+        '.banner-colour-button-teal',
+        '.banner-colour-button-green',
+        '.banner-colour-button-grey',
+        '.banner-colour-button-darkgrey',
+        '.banner-colour-button-red'
+    )
+);
+
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $x: 165,
+    $y: 181,
+    $width: 20,
+    $height: 20,
+    $gap: 1,
+    $rows: false,
+    $selectors: (
+        '.banner-colour-button-goldenyellow',
+        '.banner-colour-button-fuchsia',
+        '.banner-colour-button-brown',
+        '.banner-colour-button-cyan'
+    )
+);
+
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $x: 45,
+    $y: 78,
+    $width: 28,
+    $height: 14,
+    $scale: 2.5,
+    $rows: false,
+    $hover: 1,
+    $active: 2,
+    $selectors: (
+        '.element-button',
+        '.element-button-red'
+    )
+) {
+    line-height: 1.75em;
+    text-align: center;
+
+    &:hover {
+        line-height: 2em;
+    }
+
+    &:active,
+    &.active {
+        line-height: 2.25em;
     }
 }
 
-.element-button {
-    font-family: AdvoCut, sans-serif;
-    color: white;
-    text-align: center;
-    vertical-align: middle;
+@include sprite.sheet(
+    $image: 'guilds/banners',
+    $width: 50,
+    $scale: 2.25,
+    $rows: false,
+    $selectors: (
+        '.banner-grey',
+        '.banner-green',
+        '.banner-fuchsia',
+        '.banner-red',
+        '.banner-brown',
+        '.banner-cyan',
+        '.banner-darkgrey',
+        '.banner-teal',
+        '.banner-goldenyellow'
+    )
+) {
+    position: absolute;
+    top: -1.375em;
+    left: 1em;
+    box-sizing: border-box;
 }
 
-.slot-element {
+@include sprite.sheet(
+    $image: 'guilds/outline1',
+    $width: 50,
+    $scale: 2.25,
+    $rows: false,
+    $selectors: (
+        '.banner-outline-1.banner-outline-goldenyellow',
+        '.banner-outline-1.banner-outline-fuchsia',
+        '.banner-outline-1.banner-outline-red',
+        '.banner-outline-1.banner-outline-brown',
+        '.banner-outline-1.banner-outline-cyan',
+        '.banner-outline-1.banner-outline-darkgrey',
+        '.banner-outline-1.banner-outline-teal',
+        '.banner-outline-1.banner-outline-green',
+        '.banner-outline-1.banner-outline-grey'
+    )
+);
+
+@include sprite.sheet(
+    $image: 'guilds/outline2',
+    $width: 50,
+    $scale: 2.25,
+    $rows: false,
+    $selectors: (
+        '.banner-outline-2.banner-outline-goldenyellow',
+        '.banner-outline-2.banner-outline-fuchsia',
+        '.banner-outline-2.banner-outline-red',
+        '.banner-outline-2.banner-outline-brown',
+        '.banner-outline-2.banner-outline-cyan',
+        '.banner-outline-2.banner-outline-darkgrey',
+        '.banner-outline-2.banner-outline-teal',
+        '.banner-outline-2.banner-outline-green',
+        '.banner-outline-2.banner-outline-grey'
+    )
+);
+
+@include sprite.sheet(
+    $image: 'guilds/outline3',
+    $width: 50,
+    $scale: 2.25,
+    $rows: false,
+    $selectors: (
+        '.banner-outline-3.banner-outline-goldenyellow',
+        '.banner-outline-3.banner-outline-fuchsia',
+        '.banner-outline-3.banner-outline-red',
+        '.banner-outline-3.banner-outline-brown',
+        '.banner-outline-3.banner-outline-cyan',
+        '.banner-outline-3.banner-outline-darkgrey',
+        '.banner-outline-3.banner-outline-teal',
+        '.banner-outline-3.banner-outline-green',
+        '.banner-outline-3.banner-outline-grey'
+    )
+);
+
+@include sprite.sheet(
+    $image: 'guilds/outline4',
+    $width: 50,
+    $scale: 2.25,
+    $rows: false,
+    $selectors: (
+        '.banner-outline-4.banner-outline-goldenyellow',
+        '.banner-outline-4.banner-outline-fuchsia',
+        '.banner-outline-4.banner-outline-red',
+        '.banner-outline-4.banner-outline-brown',
+        '.banner-outline-4.banner-outline-cyan',
+        '.banner-outline-4.banner-outline-darkgrey',
+        '.banner-outline-4.banner-outline-teal',
+        '.banner-outline-4.banner-outline-green',
+        '.banner-outline-4.banner-outline-grey'
+    )
+);
+
+@include sprite.sheet(
+    $image: 'guilds/outline5',
+    $width: 50,
+    $scale: 2.25,
+    $rows: false,
+    $selectors: (
+        '.banner-outline-5.banner-outline-goldenyellow',
+        '.banner-outline-5.banner-outline-fuchsia',
+        '.banner-outline-5.banner-outline-red',
+        '.banner-outline-5.banner-outline-brown',
+        '.banner-outline-5.banner-outline-cyan',
+        '.banner-outline-5.banner-outline-darkgrey',
+        '.banner-outline-5.banner-outline-teal',
+        '.banner-outline-5.banner-outline-green',
+        '.banner-outline-5.banner-outline-grey'
+    )
+);
+
+#member-list-container {
+    flex: 1;
+
+    ul {
+        overflow: hidden auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+
+        li {
+            flex-shrink: 0;
+        }
+    }
+}
+
+#guild-member-selected {
+    padding: 0.5em;
+    text-align: center;
+}
+
+#guild-member-demote {
+    margin-right: 1em;
+}
+
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $x: 242,
+    $width: 12,
+    $height: 12,
+    $gap: 2,
+    $rows: false,
+    $selectors: (
+        '.members-icon',
+        '.chat-icon'
+    )
+);
+
+#guilds-chat {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+}
+
+#guilds-chat-log {
+    overflow: auto;
+    flex: 1;
+}
+
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $x: 128,
+    $y: 80,
+    $width: 125,
+    $height: 22,
+    $gap: 1,
+    $scale: 2.5,
+    $hover: 1,
+    $active: 2,
+    $rows: false,
+    $selectors: '.slot-element'
+) {
     display: flex;
+    flex-direction: row;
+    gap: 1.5em;
     align-items: center;
 
-    span.count {
+    box-sizing: border-box;
+    padding-right: 2em;
+    padding-left: 0.875em;
+
+    .name {
         flex: 1;
-        text-align: center;
-    }
-
-    span.name {
-        flex: 3;
-    }
-
-    span.server {
-        text-align: right;
-    }
-
-    span.count,
-    span.name,
-    span.server {
-        font-family: AdvoCut, sans-serif;
-        color: white;
-    }
-
-    span.red {
-        color: #f00;
-    }
-
-    span.yellow {
-        color: #ff0;
-    }
-
-    span.green {
-        color: #0f0;
     }
 }
 
-.guild-banner-decoration,
-.banner-crest {
+.slot-image {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    width: 2em;
+    height: 2em;
+}
+
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $x: 144,
+    $y: 48,
+    $width: 14,
+    $height: 12,
+    $rows: false,
+    $gap: 2,
+    $selectors: (
+        '.slot-image-landlord',
+        '.slot-image-master',
+        '.slot-image-elite',
+        '.slot-image-veteran',
+        '.slot-image-adept',
+        '.slot-image-established',
+        '.slot-image-emergent',
+        '.slot-image-fledgling'
+    )
+);
+
+#sidebar-list {
     position: absolute;
+    top: 6em;
+    right: -4.25em;
 }
 
-.banner,
-.banner-outline,
-.banner-outline-2,
-.banner-outline-3,
-.banner-outline-4,
-.banner-outline-5 {
-    position: absolute;
-}
-
-
-@each $size, $i in media.$sizes {
-    @if $i == 3 {
-        $i: 5;
-    } @else if $i == 2 {
-        $i: 3;
-    } @else if $i == 1 {
-        $i: 2;
-    }
-
-    @media ($size) {
-        #guilds {
-            width: 240px * $i;
-            height: 116px * $i;
-        }
-
-        #guilds-list-container,
-        #guilds-info-container {
-            top: 18px * $i;
-            left: 64px * $i;
-
-            // top: 40px * $i;
-            // right: -144px * $i;
-
-            width: 140px * $i;
-            height: 84px * $i;
-
-            ul {
-                top: 6px * $i;
-                left: 6px * $i;
-
-                li {
-                    margin-bottom: 2px * $i;
-                }
-            }
-        }
-
-        #guilds-create-container {
-            top: 0;
-            left: 64px * $i;
-            width: 140px * $i;
-            height: 102px * $i;
-        }
-
-        #guilds-info {
-            margin-top: 50%;
-        }
-
-        #create-guild {
-            top: 68px * $i;
-            left: -59px * $i;
-        }
-
-        #banner-colours {
-            top: 20px * $i;
-            right: 6px * $i;
-            width: 74px * $i;
-            height: 64px * $i;
-        }
-
-        #banner-crests {
-            top: 50px * $i;
-            right: 26px * $i;
-            width: 78px * $i;
-            height: 100px * $i;
-        }
-
-        #guild-name-input {
-            top: 5px * $i;
-            right: 24px * $i;
-        }
-
-        #guild-chat-input {
-            right: 18px * $i;
-            bottom: 4px * $i;
-        }
-
-        #guild-chat-log {
-            top: 6px * $i;
-            left: 6px * $i;
-            width: 128px * $i;
-            height: 52px * $i;
-        }
-
-        #guild-back {
-            right: 102px * $i;
-            bottom: 2px * $i;
-        }
-
-        #guild-create {
-            right: 10px * $i;
-            bottom: 2px * $i;
-        }
-
-        #create-error {
-            right: 38px * $i;
-            bottom: 6px * $i;
-            width: 64px * $i;
-        }
-
-        #guild-leave {
-            margin-top: -18px * $i;
-        }
-
-        #sidebar-list {
-            top: 16px * $i !important;
-            left: 139px * $i !important;
-            width: 44px * $i;
-            height: 57px * $i;
-
-            li {
-                margin-bottom: 2px * $i;
-            }
-        }
-
-        #banner-colour-button,
-        #banner-outline-button {
-            left: 18px * $i;
-        }
-
-        #banner-colour-button {
-            top: 24px * $i;
-        }
-
-        #banner-outline-button {
-            top: 52px * $i;
-        }
-
-        .guild-chat {
-            background-position: -528px * $i 0 * $i !important;
-        }
-
-        .guilds-decoration {
-            top: -12px * $i;
-
-            width: 78px * $i;
-            height: 6px * $i;
-
-            background: url('/img/interface/guilds/frames.png') -286px * $i -8px * $i no-repeat;
-            background-size: calc(width('guilds/frames.png') * $i);
-
-            p {
-                margin-top: -6px * $i;
-            }
-        }
-
-        .slot-element {
-            box-sizing: border-box;
-            width: 125px * $i;
-            height: 22px * $i;
-            padding-left: 4px * $i;
-
-            background: url('/img/interface/guilds/elements.png') -128px * $i -103px * $i;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:hover {
-                background-position-y: -126px * $i;
-            }
-
-            &:active,
-            &.active {
-                background-position-y: -80px * $i;
-            }
-
-            span.name {
-                margin-left: 6px * $i;
-            }
-
-            span.server {
-                margin-right: 10px * $i;
-            }
-        }
-
-        .crest-element {
-            width: 24px * $i;
-            height: 32px * $i;
-            margin-top: 1px * $i;
-
-            background: url('/img/interface/guilds/elements.png') -125px * $i -37px * $i;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:hover {
-                background-position-x: -152px * $i;
-            }
-
-            &:active,
-            &.active {
-                background-position-x: -179px * $i;
-            }
-        }
-
-        .members-icon {
-            width: 12px * $i;
-            height: 12px * $i;
-            background: url('/img/interface/guilds/elements.png') -272px * $i 0;
-            background-size: calc(width('guilds/elements.png') * $i);
-        }
-
-        .chat-icon {
-            width: 15px * $i;
-            height: 12px * $i;
-            background: url('/img/interface/guilds/elements.png') -256px * $i 0;
-            background-size: calc(width('guilds/elements.png') * $i);
-        }
-
-        .element-button,
-        .element-button-red {
-            width: 28px * $i;
-            height: 16px * $i;
-
-            line-height: 14px * $i;
-
-            background: url('/img/interface/guilds/elements.png') 0 -144px * $i;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:hover {
-                line-height: 12px * $i;
-                background-position-y: -128px * $i;
-            }
-
-            &:active,
-            &.active {
-                line-height: 16px * $i;
-                background-position-y: -158px * $i;
-            }
-        }
-
-        .element-button-red {
-            background-position-x: -32px * $i;
-        }
-
-        .sidebar-element {
-            width: 43px * $i;
-            height: 22px * $i;
-            background: url('/img/interface/guilds/elements.png') 0 -80px * $i;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:hover {
-                background-position-y: -103px * $i;
-
-                div.members-icon,
-                div.chat-icon {
-                    left: 10px * $i;
-                }
-            }
-
-            &:active,
-            &.active {
-                background-position-y: -57px * $i;
-
-                div.members-icon,
-                div.chat-icon {
-                    left: 6px * $i;
-                }
-            }
-
-            div.members-icon,
-            div.chat-icon {
-                top: 5px * $i;
-                left: 6px * $i;
-            }
-        }
-
-        .guild-name-input-image {
-            width: 76px * $i;
-            height: 13px * $i;
-            background: url('/img/interface/guilds/elements.png') -176px * $i -208px * $i;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:active, &.active, &:focus {
-                background-position-y: -224px * $i;
-            }
-        }
-
-        .guild-chat-input-image {
-            width: 96px * $i;
-            height: 19px * $i;
-            background: url('/img/interface/guilds/elements.png') -144px * $i 0;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:active, &.active, &:focus {
-                background-position-y: -20px * $i;
-            }
-        }
-
-        .guild-banner-decoration {
-            top: 16px * $i;
-
-            width: 9px * $i;
-            height: 12px * $i;
-
-            background: url('/img/interface/guilds/elements.png') no-repeat;
-            background-size: calc(width('guilds/elements.png') * $i);
-        }
-
-        .guild-banner-select {
-            left: 84px * $i;
-            background-position-x: -72px * $i;
-        }
-
-        .guild-outline-select {
-            left: 104px * $i;
-            background-position-x: -94px * $i;
-        }
-
-        .slot-image {
-            width: 14px * $i;
-            height: 14px * $i;
-            margin-top: 3px * $i;
-
-            background: url('/img/interface/guilds/elements.png') no-repeat;
-            background-size: calc(width('guilds/elements.png') * $i);
-        }
-
-        .slot-image-fledgling {
-            background-position: -256px * $i -48px * $i;
-        }
-
-        .slot-image-emergent {
-            background-position: -240px * $i -48px * $i;
-        }
-
-        .slot-image-established {
-            background-position: -224px * $i -48px * $i;
-        }
-
-        .slot-image-adept {
-            background-position: -208px * $i -48px * $i;
-        }
-
-        .slot-image-veteran {
-            background-position: -192px * $i -48px * $i;
-        }
-
-        .slot-image-elite {
-            background-position: -176px * $i -48px * $i;
-        }
-
-        .slot-image-master {
-            background-position: -160px * $i -48px * $i;
-        }
-
-        .slot-image-landlord {
-            background-position: -144px * $i -48px * $i;
-        }
-
-        .banner,
-        .banner-outline,
-        .banner-outline-2,
-        .banner-outline-3,
-        .banner-outline-4,
-        .banner-outline-5 {
-            width: 50px * $i;
-            height: 128px * $i;
-        }
-
-        .banner {
-            top: -6px * $i;
-            left: 12px * $i;
-            background: url('/img/interface/guilds/banners.png') no-repeat;
-            background-size: calc(width('guilds/banners.png') * $i);
-        }
-
-        .banner-outline,
-        .banner-outline-2,
-        .banner-outline-3,
-        .banner-outline-4,
-        .banner-outline-5 {
-            top: 6px * $i;
-        }
-
-
-        .banner-outline {
-            background: url('/img/interface/guilds/outline1.png') 0 0 no-repeat;
-            background-size: calc(width('guilds/outline1.png') * $i);
-        }
-
-        .banner-outline-2 {
-            background: url('/img/interface/guilds/outline2.png') 0 0 no-repeat;
-            background-size: calc(width('guilds/outline2.png') * $i);
-        }
-
-        .banner-outline-3 {
-            background: url('/img/interface/guilds/outline3.png') 0 0 no-repeat;
-            background-size: calc(width('guilds/outline3.png') * $i);
-        }
-
-        .banner-outline-4 {
-            background: url('/img/interface/guilds/outline4.png') 0 0 no-repeat;
-            background-size: calc(width('guilds/outline4.png') * $i);
-        }
-
-        .banner-outline-5 {
-            background: url('/img/interface/guilds/outline5.png') 0 0 no-repeat;
-            background-size: calc(width('guilds/outline5.png') * $i);
-        }
-
-        .banner-crest,
-        .banner-crest-icon {
-            background: url('/img/interface/guilds/decorations.png') no-repeat;
-            background-size: calc(width('guilds/decorations.png') * $i);
-        }
-
-        .banner-crest {
-            top: 72px * $i;
-            left: 15px * $i;
-
-            width: 52px * $i;
-            height: 52px * $i;
-
-            background-position: -1px * $i -1px * $i;
-        }
-
-        .banner-crest-icon {
-            width: 16px * $i;
-            height: 15px * $i;
-            margin-top: 10px * $i;
-            margin-left: 4px * $i;
-
-            background-position-y: -240px * $i;
-        }
-
-        .banner-colour-button {
-            width: 20px * $i;
-            height: 20px * $i;
-            background: url('/img/interface/guilds/elements.png') no-repeat;
-            background-size: calc(width('guilds/elements.png') * $i);
-        }
-
-        .banner-colour-button-outline {
-            width: 20px * $i;
-            height: 20px * $i;
-            background: url('/img/interface/guilds/elements.png') -144px * $i -160px * $i;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &:hover {
-                background-position-y: -181px * $i;
-            }
-
-            &:active, &.active {
-                background-position-y: -202px * $i;
-            }
-        }
-        
-        .banner-colour-button-teal {
-            background-position: -165px * $i -160px * $i
-        }
-
-        .banner-colour-button-green {
-            background-position: -186px * $i -160px * $i
-        }
-
-        .banner-colour-button-grey {
-            background-position: -207px * $i -160px * $i
-        }
-
-        .banner-colour-button-darkgrey {
-            background-position: -228px * $i -160px * $i
-        }
-
-        .banner-colour-button-red {
-            background-position: -249px * $i -160px * $i
-        }
-
-        .banner-colour-button-goldenyellow {
-            background-position: -165px * $i -181px * $i
-        }
-
-        .banner-colour-button-fuchsia {
-            background-position: -186px * $i -181px * $i
-        }
-
-        .banner-colour-button-brown {
-            background-position: -207px * $i -181px * $i
-        }
-
-        .banner-colour-button-cyan {
-            background-position: -228px * $i -181px * $i
-        }
-
-        .banner-grey {
-            background-position-x: 0;
-        }
-
-        .banner-green {
-            background-position-x: -50px * $i;
-        }
-
-        .banner-fuchsia {
-            background-position-x: -100px * $i;
-        }
-
-        .banner-red {
-            background-position-x: -150px * $i;
-        }
-
-        .banner-brown {
-            background-position-x: -200px * $i;
-        }
-
-        .banner-cyan {
-            background-position-x: -250px * $i;
-        }
-
-        .banner-darkgrey {
-            background-position-x: -300px * $i;
-        }
-
-        .banner-teal {
-            background-position-x: -350px * $i;
-        }
-
-        .banner-goldenyellow {
-            background-position-x: -400px * $i;
-        }
-
-        .banner-outline-goldenyellow {
-            background-position-x: 0;
-        }
-
-        .banner-outline-fuchsia {
-            background-position-x: -50px * $i;
-        }
-
-        .banner-outline-red {
-            background-position-x: -100px * $i;
-        }
-
-        .banner-outline-brown {
-            background-position-x: -150px * $i;
-        }
-
-        .banner-outline-cyan {
-            background-position-x: -200px * $i;
-        }
-
-        .banner-outline-darkgrey {
-            background-position-x: -250px * $i;
-        }
-
-        .banner-outline-teal {
-            background-position-x: -300px * $i;
-        }
-
-        .banner-outline-green {
-            background-position-x: -350px * $i;
-        }
-
-        .banner-outline-grey {
-            background-position-x: -400px * $i;
-        }
-
-        .banner-crest-star {
-            background-position-x: -55px * $i;
-        }
-
-        .banner-crest-hawk {
-            background-position-x: -109px * $i;
-        }
-
-        .banner-crest-phoenix {
-            background-position-x: -163px * $i;
-        }
-
-        .banner-crest-icon-none {
-            background-position-x: 0;
-        }
-
-        .banner-crest-icon-star {
-            background-position-x: -16px * $i;
-        }
-
-        .banner-crest-icon-hawk {
-            background-position-x: -32px * $i;
-        }
-
-        .banner-crest-icon-phoenix {
-            background-position-x: -48px * $i;
-        }
-
-        .colour-select-button {
-            width: 22px * $i;
-            height: 22px * $i;
-            background: url('/img/interface/guilds/elements.png') no-repeat;
-            background-size: calc(width('guilds/elements.png') * $i);
-        }
-
-        .colour-button-arrow-right {
-            top: 3px * $i;
-            left: 24px * $i;
-
-            width: 9px * $i;
-            height: 16px * $i;
-
-            background: url('/img/interface/guilds/elements.png') -94px * $i -128px * $i;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &.disabled {
-                background-position-x: -84px * $i;
-            }
-        }
-
-        .colour-button-arrow-left {
-            top: 3px * $i;
-            left: -11px * $i;
-
-            width: 9px * $i;
-            height: 16px * $i;
-
-            background: url('/img/interface/guilds/elements.png') -64px * $i -128px * $i;
-            background-size: calc(width('guilds/elements.png') * $i);
-
-            &.disabled {
-                background-position-x: -74px * $i;
-            }
-        }
-        
-        .button-banner-colour {
-            background-position: -115px * $i -176px * $i;
-
-            &:hover {
-                background-position: -69px * $i -176px * $i;
-            }
-
-            &:active, &.active {
-                background-position: -92px * $i -176px * $i;
-            }
-        }
-
-        .outline-button-1 {
-            background-position: -46px * $i -199px * $i;
-
-            &:hover {
-                background-position: 0 -199px * $i;
-            }
-
-            &:active, &.active {
-                background-position: -23px * $i -199px * $i;
-            }
-        }
-
-        .outline-button-2 {
-            background-position: -46px * $i -176px * $i;
-
-            &:hover {
-                background-position: 0 -176px * $i;
-            }
-
-            &:active, &.active {
-                background-position: -23px * $i -176px * $i;
-            }
-        }
-
-        .outline-button-3 {
-            background-position: -46px * $i -222px * $i;
-
-            &:hover {
-                background-position: 0 -222px * $i;
-            }
-
-            &:active, &.active {
-                background-position: -23px * $i -222px * $i;
-            }
-        }
-
-        .outline-button-4 {
-            background-position: -115px * $i -199px * $i;
-
-            &:hover {
-                background-position: -69px * $i -199px * $i;
-            }
-
-            &:active, &.active {
-                background-position: -92px * $i -199px * $i;
-            }
-        }
-
-        .outline-button-5 {
-            background-position: -115px * $i -222px * $i;
-
-            &:hover {
-                background-position: -69px * $i -222px * $i;
-            }
-
-            &:active, &.active {
-                background-position: -92px * $i -222px * $i;
-            }
-        }
-    }
-}
-
-@media (--lg) {
-    #guild-name-input,
-    #guild-chat-input {
-        font-size: 20px;
-    }
-
-    .guilds-decoration {
-        p {
-            margin-top: -24px;
-            font-size: 28px;
-        }
-    }
-
-    .slot-element {
-        span.name,
-        span.count,
-        span.server {
-            font-size: 22px;
-        }
-    }
-
-    .element-button {
-        font-size: 18px;
-    }
-}
-
-@media (--md) {
-    #guild-name-input,
-    #guild-chat-input {
-        font-size: 14px;
-    }
-
-    #guild-chat-log {
-        font-size: 14px;
-    }
-
-    .guilds-decoration {
-        p {
-            margin-top: -22px;
-            font-size: 20px;
-        }
-    }
-
-    .slot-element {
-        span.name,
-        span.count,
-        span.server {
-            font-size: 14px;
-        }
-    }
-}
-
-@media (--sm) {
-    #guild-name-input,
-    #guild-chat-input {
-        font-size: 8px;
-    }
-
-    #guild-chat-log {
-        font-size: 10px;
-    }
-
-    .guilds-decoration {
-        p {
-            margin-top: -12px;
-            font-size: 10px;
-        }
-    }
-
-    .slot-element {
-        span.name,
-        span.count,
-        span.server {
-            font-size: 8px;
-        }
-    }
-
-    .element-button {
-        font-size: 7px;
+@include sprite.sheet(
+    $image: 'guilds/elements',
+    $width: 43,
+    $height: 22,
+    $y: 57,
+    $hover: 1,
+    $active: 2,
+    $rows: false,
+    $selectors: '.sidebar-element'
+) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    box-sizing: border-box;
+    padding-left: 1em;
+
+    &:hover:not(:active, .active) {
+        padding-left: 2em;
     }
 }

@@ -1,17 +1,30 @@
 import ResourceSkill from '../resourceskill';
 import Item from '../../../../objects/item';
-import Rocks from '../../../../../../../data/rocks.json';
 
 import Utils from '@kaetram/common/util/utils';
+import ResourceText from '@kaetram/common/text/en/resource';
 import { Modules } from '@kaetram/common/network';
-import ResourceEn from '@kaetram/common/text/en/resource';
 
 import type Player from '../../player';
-import type Resource from '../../../../../globals/impl/resource';
+import type Resource from '../../../../../entity/objects/resource/resource';
 
 export default class Mining extends ResourceSkill {
     public constructor() {
-        super(Modules.Skills.Mining, Rocks);
+        super(Modules.Skills.Mining);
+
+        this.onExhaust(this.handleExhaust.bind(this));
+    }
+
+    /**
+     * Handles obtaining the resource information and sending it to the superclass
+     * to process handling the random item rewarding.
+     * @param player The player that is cutting the tree.
+     * @param resource The resource belonging to the tree that was cut.
+     */
+
+    private handleExhaust(player: Player, resource?: Resource): void {
+        // Use the superclass logic to handle the random item selection.
+        super.handleRandomItems(player, resource!.data);
     }
 
     /**
@@ -25,7 +38,7 @@ export default class Mining extends ResourceSkill {
         let weapon = player.equipment.getWeapon();
 
         // Player's weapon is not a valid mining weapon.
-        if (!weapon.isMining()) return player.notify(ResourceEn.INVALID_WEAPON(this.type));
+        if (!weapon.isMining()) return player.notify(ResourceText.INVALID_WEAPON(this.type));
 
         // Pass the info onto the super class interact function.
         this.interact(player, rock, weapon.mining);

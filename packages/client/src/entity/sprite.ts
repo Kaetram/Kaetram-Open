@@ -1,6 +1,7 @@
 import Animation from './animation';
 
 import Utils from '../utils/util';
+import { isMobile } from '../utils/detect';
 
 export interface AnimationData {
     [name: string]: {
@@ -13,6 +14,7 @@ export interface SpriteData {
     id: string;
     width?: number;
     height?: number;
+    preload?: boolean;
     idleSpeed?: number;
     animations?: AnimationData;
     offsetX?: number;
@@ -26,7 +28,6 @@ export interface Animations {
 export default class Sprite {
     public key = '';
 
-    private type = '';
     private path = '';
 
     public width = Utils.tileSize; // Default tile size of 16 if not specified.
@@ -38,7 +39,7 @@ export default class Sprite {
     public idleSpeed = 250;
 
     public loaded = false;
-    public loading = false;
+    public preload = false;
     public hasDeathAnimation = false;
 
     public animations: Animations = {};
@@ -55,11 +56,16 @@ export default class Sprite {
 
         this.path = `/img/sprites/${data.id}.png`;
 
-        this.width = this.data.width ?? this.width;
-        this.height = this.data.height ?? this.height;
+        let dimensions = Utils.getDefaultEquipmentDimension(this.getSubType()),
+            offset = Utils.getDefaultOffset(this.getType());
 
-        this.offsetX = this.data.offsetX ?? -Utils.tileSize;
-        this.offsetY = this.data.offsetY ?? -Utils.tileSize;
+        this.width = this.data.width ?? dimensions;
+        this.height = this.data.height ?? dimensions;
+
+        this.preload = this.data.preload ?? false;
+
+        this.offsetX = this.data.offsetX ?? offset.x;
+        this.offsetY = this.data.offsetY ?? offset.y;
 
         this.idleSpeed = this.data.idleSpeed || this.idleSpeed;
 
@@ -75,9 +81,7 @@ export default class Sprite {
      */
 
     public load(): void {
-        if (this.loading || this.loaded) return;
-
-        this.loading = true;
+        if (this.loaded) return;
 
         this.image = new Image();
 
@@ -88,18 +92,32 @@ export default class Sprite {
         this.image.addEventListener('load', () => {
             this.loaded = true;
 
-            // Ignore drawing hurt sprites for item types and very small sprites.
-            if (this.key.includes('items') && this.image.width > 96)
-                this.hurtSprite = Utils.getHurtSprite(this);
-
-            // Load the silhouette sprite for the entity if it has one.
-            if (this.hasSilhouette()) this.silhouetteSprite = Utils.getSilhouetteSprite(this);
-
-            // Loading only done after the hurt sprite.
-            this.loading = false;
-
             this.loadCallback?.();
         });
+    }
+
+    /**
+     * Loads the hurt sprite for the current sprite. This is used for mobs and players
+     * when they are engaged in combat and receive any damage.
+     */
+
+    public loadHurtSprite(): void {
+        // Hurt sprite already exists or there's not hurt effect, no need to load.
+        if (this.hurtSprite || !this.hasHurtSprite() || !this.loaded) return;
+
+        this.hurtSprite = Utils.getHurtSprite(this);
+    }
+
+    /**
+     * Loads the silhouette sprite for the current sprite. This is used upon hovering over
+     * an entity to display an outline around them.
+     */
+
+    public loadSilhouetteSprite(): void {
+        // Silhouette sprite already exists or there's no silhouette, no need to load.
+        if (this.silhouetteSprite || !this.hasSilhouette() || isMobile() || !this.loaded) return;
+
+        this.silhouetteSprite = Utils.getSilhouetteSprite(this);
     }
 
     /**
@@ -143,16 +161,44 @@ export default class Sprite {
     }
 
     /**
+     * The subtype is the second index after splitting the path format
+     * of the sprite. So for example, for the path player/weapon/sword, the
+     * subtype would be the weapon. If the provided sprite doesn't have a subtype
+     * we just return an empty string.
+     * @return The subtype based on the sprite's key, otherwise an empty string.
+     */
+
+    private getSubType(): string {
+        let blocks = this.key.split('/');
+
+        if (blocks.length < 3) return '';
+
+        return blocks[1];
+    }
+
+    /**
+     * Load the hurt sprite only for mobs and players.
+     * @returns Whether or not the current sprite supports a hurt sprite.
+     */
+
+    public hasHurtSprite(): boolean {
+        let type = this.getType();
+
+        return type === 'mobs' || type === 'player';
+    }
+
+    /**
      * Checks whether or not to draw a silhouette based on the sprite type.
      * We do not need to have a silhouette for everything, only for mobs,
      * players, and npcs.
      * @returns Whether or not the sprite has a silhouette.
      */
 
-    private hasSilhouette(): boolean {
-        let type = this.getType();
+    public hasSilhouette(): boolean {
+        let type = this.getType(),
+            list = ['mobs', 'player', 'npcs', 'trees', 'rocks', 'fishspots', 'bushes'];
 
-        return type === 'mobs' || type === 'player' || type === 'npcs';
+        return list.includes(type);
     }
 
     /**

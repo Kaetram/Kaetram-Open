@@ -1,0 +1,27 @@
+@use '../../abstracts/sprite';
+
+#joystick {
+    @include sprite.sheet($image: 'main', $y: 133, $width: 42, $height: 42, $scale: 3);
+
+    position: absolute;
+    bottom: 2.5em;
+    left: 2.5em;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0.75;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+#joystick-handle {
+    @include sprite.sheet($image: 'main', $y: 175, $width: 22, $height: 22, $scale: 3, $active: 1);
+
+    pointer-events: none;
+    user-select: none;
+}

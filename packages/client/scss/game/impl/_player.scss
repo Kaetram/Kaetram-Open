@@ -1,178 +1,86 @@
 @use '../../abstracts/media';
-
-@keyframes flash {
-    0% {
-        background: #ffa2a2;
-    }
-
-    100% {
-        background: #e22525;
-    }
-}
-
-@keyframes flash-green {
-    0% {
-        background: #a2ffa2;
-    }
-
-    100% {
-        background: #25e225;
-    }
-}
-
-@keyframes flash-poison {
-    0% {
-        background: #42e373;
-    }
-
-    100% {
-        background: #146e2b;
-    }
-}
+@use '../../abstracts/sprite';
 
 #health,
-#mana {
-    cursor: url('/img/hand.png'), auto;
+#mana,
+#mana-mask,
+.health-mask-base,
+.health-text,
+.mana-text {
     position: absolute;
 }
 
-#health-mask,
-.health-mask-poison,
-.health-mask-white,
-#mana-mask {
-    position: absolute;
-    top: 0;
-    left: 0;
+#health {
+    top: 0.5em;
+    left: 1em;
+}
 
+#mana {
+    top: 3.25em;
+    left: 1em;
+}
+
+#mana-mask,
+.health-mask-base,
+.health-text,
+.mana-text {
+    inset: 0;
     width: 100%;
     height: 100%;
-
-    transition: 0.5s width ease;
 }
 
-#player-info {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+#mana-mask,
+.health-mask-base,
+.health-mask-poison,
+.health-mask-white {
+    transition: 0.5s width ease;
 }
 
 .health-text,
 .mana-text {
-    position: absolute;
-    z-index: 5;
-
     width: 100%;
-
-    font-family: AdvoCut, sans-serif;
+    font-size: 1.25em;
     color: white;
     text-align: center;
-    vertical-align: middle;
 }
 
-#exp {
-    /* Safari 5.1, Chrome 10+ */
-    background: linear-gradient(to left, #4f4, #080);
-    transition: 0.5s width ease;
+.health-text {
+    top: 0.75em;
 }
 
-#health.white {
-    animation: flash 0.5s linear infinite;
+.mana-text {
+    top: 0.1em;
 }
 
-#health.green {
-    animation: flash-green 0.5s linear infinite;
-}
+/* Safari 7.1+ */
 
-#health.poison {
-    animation: flash-poison 0.5s linear infinite;
-}
-
-@each $size, $i in media.$sizes {
-    @if $i == 3 {
-        $i: 4.25;
-    } @else if $i == 2 {
-        $i: 3.75;
-    } @else {
-        $i: 3;
-    }
-
-    @media ($size) {
-        #health, #health-mask {
-            width: 63px * $i;
-            height: 15px * $i;
-        }
-
-        #mana, #mana-mask {
-            width: 56px * $i;
-            height: 11px * $i;
-        }
-
-        #health {
-            background: url('/img/interface/bars.png') no-repeat;
-            background-size: calc(width('bars.png') * $i);
-        }
-
-        #health-mask {
-            background: url('/img/interface/bars.png') 0 -32px * $i no-repeat;
-            background-size: calc(width('bars.png') * $i);
-        }
-
-        .health-mask-poison {
-            background: url('/img/interface/bars.png') 0 -64px * $i no-repeat !important;
-            background-size: calc(width('bars.png') * $i) !important;
-        }
-
-        .health-mask-white {
-            background: url('/img/interface/bars.png') 0 -80px * $i no-repeat !important;
-            background-size: calc(width('bars.png') * $i) !important;
-        }
-
-        #mana {
-            top: 12px * $i;
-            left: 3px * $i;
-            background: url('/img/interface/bars.png') 0 -16px * $i no-repeat;
-            background-size: calc(width('bars.png') * $i);
-        }
-
-        #mana-mask {
-            background: url('/img/interface/bars.png') 0 -48px * $i no-repeat;
-            background-size: calc(width('bars.png') * $i);
-        }
-    }
-
-    @media (--lg) {
-        .health-text {
-            top: 17px;
-        }
-    }
-
-    @media (--md) {
-        .health-text {
-            top: 17px;
-        }
-
-        .mana-text {
-            top: 2px;
-        }
-
-        .health-text,
-        .mana-text {
-            font-size: 14px;
-        }
-    }
-
-    @media (--sm) {
-        .health-text {
-            top: 11px;
-        }
-
-        .mana-text {
-            top: 0;
-        }
-
-        .health-text,
-        .mana-text {
-            font-size: 11px;
-        }
+_::-webkit-full-page-media,
+_:future,
+:root .safari_only {
+    #health,
+    #mana {
+        left: 2.5em !important;
     }
 }
+
+@media (--lg) {
+    #health,
+    #mana {
+        font-size: 0.85em;
+    }
+}
+
+@include sprite.sheet(
+    $image: 'bars',
+    $width: 63,
+    $height: 15,
+    $scale: 4,
+    $selectors: (
+        #health,
+        #mana,
+        '.health-mask-base',
+        #mana-mask,
+        '.health-mask-poison',
+        '.health-mask-white'
+    )
+);

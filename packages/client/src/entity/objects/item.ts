@@ -36,7 +36,7 @@ export default class Item extends Entity {
 
         // We use the `onBop` callback to update the sprite's offset.
         this.animation?.onBop((bopIndex: number) => {
-            this.sprite.offsetY = this.originalY - bopIndex;
+            this.offsetY = this.originalY - bopIndex;
         });
     }
 

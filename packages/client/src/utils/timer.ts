@@ -1,5 +1,8 @@
 export default class Timer {
-    public constructor(public time: number, public duration: number) {}
+    public constructor(
+        public time: number,
+        public duration: number
+    ) {}
 
     /**
      * Checks if the timer has expired, that is,

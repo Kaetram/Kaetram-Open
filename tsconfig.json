@@ -1,25 +1,52 @@
 {
     "compilerOptions": {
-        "strict": true,
-        "target": "ESNext",
-        "module": "ESNext",
+        "incremental": true,
+        // "composite": true,
+        "tsBuildInfoFile": "./.tsbuildinfo",
 
-        "esModuleInterop": true,
-        "moduleResolution": "Node",
-        "resolveJsonModule": true,
-        "sourceMap": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "preserveSymlinks": true,
+        "target": "esnext",
+        "moduleDetection": "force",
 
-        "noImplicitAny": true,
-        "noImplicitOverride": true,
-        "strictNullChecks": true,
-
-        "rootDir": ".",
+        "module": "esnext",
+        "rootDir": "./",
+        "moduleResolution": "node",
         "baseUrl": "./packages",
-        "paths": {
-            "@kaetram/*": ["*"]
-        }
+        "paths": { "@kaetram/*": ["*"] },
+        "types": ["@types/node", "@kaetram/common"],
+        "allowImportingTsExtensions": true,
+        // "resolvePackageJsonExports": true,
+        // "resolvePackageJsonImports": true,
+        "resolveJsonModule": true,
+        "allowArbitraryExtensions": true,
+
+        "allowJs": false,
+        "checkJs": false,
+        // "maxNodeModuleJsDepth": 1,
+
+        "disableSizeLimit": false,
+        "plugins": [{ "name": "@astrojs/ts-plugin" }],
+
+        "noEmit": true,
+
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": false,
+        "preserveSymlinks": true,
+        "forceConsistentCasingInFileNames": true,
+
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        // "exactOptionalPropertyTypes": true,
+        // "noImplicitReturns": true,
+        // "noFallthroughCasesInSwitch": true,
+        // "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+        // "noPropertyAccessFromIndexSignature": true,
+        "allowUnusedLabels": false,
+        "allowUnreachableCode": false,
+
+        "skipLibCheck": true
     }
 }

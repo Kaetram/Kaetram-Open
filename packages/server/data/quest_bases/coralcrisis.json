@@ -1,0 +1,80 @@
+{
+    "name": "Coral Crisis",
+    "description": "Mirela, a concerned mermaid, needs your assistance.|The coral reefs in the underwater world are dying. Mirela believes a dark sorcerer is poisoning the waters and has sought your help to put an end to this malevolent act.",
+    "rewards": ["1500 gold", "coralcrown"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "mirela",
+            "text": [
+                "Adventurer! It's a relief to see you!",
+                "The corals are dying and I believe it's no natural occurrence.",
+                "I suspect a dark sorcerer is poisoning the waters. Can you help?"
+            ],
+            "completedText": ["You must investigate the situation!"]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "darksorcerer",
+            "text": [
+                "Heh! The little mermaid sent you?",
+                "Yes, I poisoned the water, and no, you can't stop me.",
+                "But if you're so eager to try, meet me at the Forbidden Caves!"
+            ],
+            "completedText": ["Prove yourself, if you dare!"]
+        },
+        "2": {
+            "task": "kill",
+            "mob": ["darkminions"],
+            "mobCountRequirement": 3
+        },
+        "3": {
+            "task": "talk",
+            "npc": "mirela",
+            "text": [
+                "You did it! The water seems to be purifying.",
+                "But we need the purecoralessence to fully heal the corals. Can you get it?"
+            ],
+            "completedText": ["Find the purecoralessence in the Shimmering Grotto."]
+        },
+        "4": {
+            "task": "talk",
+            "npc": "guardianofgrotto",
+            "text": [
+                "Seeking the purecoralessence, are you?",
+                "To earn it, you must prove your worth by defeating me!"
+            ],
+            "completedText": ["Prepare for battle!"]
+        },
+        "5": {
+            "task": "kill",
+            "mob": ["guardianofgrotto"],
+            "mobCountRequirement": 1
+        },
+        "6": {
+            "task": "talk",
+            "npc": "mirela",
+            "itemRequirements": [
+                {
+                    "key": "purecoralessence",
+                    "count": 1
+                }
+            ],
+            "itemRewards": [
+                {
+                    "key": "gold",
+                    "count": 1500
+                },
+                {
+                    "key": "coralcrown",
+                    "count": 1
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have just finished @crimson@Coral Crisis@green@. You have gained 1500 gold and a Coral Crown!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

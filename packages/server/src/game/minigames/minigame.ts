@@ -4,15 +4,21 @@ import Area from '../map/areas/area';
 
 import Utils from '@kaetram/common/util/utils';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Minigame as Packet } from '@kaetram/common/network/impl';
+import { MinigamePacket as Packet } from '@kaetram/common/network/impl';
 
 import type World from '../world';
 import type Player from '../entity/character/player/player';
-import type { MinigamePacket } from '@kaetram/common/types/messages/outgoing';
+import type { MinigamePacketData } from '@kaetram/common/types/messages/outgoing';
 
 export default class Minigame {
+    // The name for the minigame (used for scoreboard, entering, etc.)
+    public name = '';
+
     // State of the minigame.
     protected started = false;
+
+    // Countdown for the lobby/in-game used for certain minigames.
+    protected countdown = 300_000; // 4 minutes.
 
     // The lobby area for the minigame.
     protected lobby: Area = new Area(0, 0, 0, 0, 0);
@@ -21,7 +27,16 @@ export default class Minigame {
     protected playersInLobby: Player[] = [];
     protected playersInGame: Player[] = [];
 
-    public constructor(protected world: World, private type: Opcodes.Minigame) {}
+    // Tick interval for the minigame.
+    private tickInterval = 1000; // Every 1 second.
+
+    public constructor(
+        protected world: World,
+        private type: Opcodes.Minigame
+    ) {
+        // Begin the tick interval for the minigame.
+        setInterval(this.tick.bind(this), this.tickInterval);
+    }
 
     /**
      * Superclass implementation responsible for creating the baseline requirements
@@ -34,9 +49,20 @@ export default class Minigame {
         // Specifically handle the lobby area.
         if (area.mObjectType !== 'lobby') return;
 
+        this.lobby = area;
+
         // Handle the entry and exit of players into the lobby.
         area.onEnter((player: Player) => this.addPlayer(player));
         area.onExit((player: Player) => this.removePlayer(player));
+    }
+
+    /**
+     * Generic implementation for the tick function. This is called at a specified
+     * interval and is used to handle the logic for the minigame.
+     */
+
+    protected tick(): void {
+        //
     }
 
     /**
@@ -75,10 +101,15 @@ export default class Minigame {
      */
 
     public stop(): void {
+        // Signal to the players in game that the minigame has ended.
+        this.sendPacket(this.playersInGame, {
+            action: Opcodes.MinigameActions.End
+        });
+
         this.started = false;
 
         for (let player of this.playersInGame) {
-            player.minigame = undefined;
+            player.clearMinigame();
 
             let position = this.getLobbyPosition();
 
@@ -100,6 +131,9 @@ export default class Minigame {
         this.sendPacket([player], {
             action: Opcodes.MinigameState.Lobby
         });
+
+        // Notify the player of the minigame.
+        player.notify(`misc:ENTERED_LOBBY;name=${this.name}`);
     }
 
     /**
@@ -111,8 +145,11 @@ export default class Minigame {
         this.playersInLobby.splice(this.playersInLobby.indexOf(player), 1);
 
         this.sendPacket([player], {
-            action: Opcodes.TeamWar.Exit
+            action: Opcodes.MinigameActions.Exit
         });
+
+        // Notify the player of the minigame.
+        player.notify(`misc:EXITED_LOBBY;name=${this.name}`);
     }
 
     /**
@@ -123,11 +160,30 @@ export default class Minigame {
      * @param info The packet information we are sending.
      */
 
-    protected sendPacket(players: Player[], info: MinigamePacket): void {
+    protected sendPacket(players: Player[], info: MinigamePacketData): void {
         this.world.push(Modules.PacketType.Players, {
             players,
             packet: new Packet(this.type, info)
         });
+    }
+
+    /**
+     * Shuffles the players in the lobby.
+     * @returns Returns the shuffled players in the lobby.
+     */
+
+    protected shuffleLobby(): Player[] {
+        let lobby = this.playersInLobby;
+
+        for (let x = lobby.length - 1; x > 0; x--) {
+            let y = Math.floor(Math.random() * x),
+                temp = lobby[x];
+
+            lobby[x] = lobby[y];
+            lobby[y] = temp;
+        }
+
+        return lobby;
     }
 
     /**
@@ -143,12 +199,24 @@ export default class Minigame {
     }
 
     /**
-     * Superclass implementation for respawn during a minigame.
+     * Superclass implementation for spawn during a minigame.
      * @params _var1 Optional parameter for the spawn point.
      * @returns Default position in the world.
      */
 
-    public getRespawnPoint(_var1?: unknown): Position {
-        return { x: 50, y: 23 };
+    public getSpawnPoint(_var1?: unknown): Position {
+        return this.getLobbyPosition();
+    }
+
+    /**
+     * Iterates through all the players in the game and calls the callback function.
+     * @param callback Contains the player object that we are iterating through.
+     */
+
+    protected forEachPlayerInGame(callback: (player: Player) => void): void {
+        // No players in game or the game hasn't started, used to prevent unnecessary overhead.
+        if (!this.started || this.playersInGame.length === 0) return;
+
+        for (let player of this.playersInGame) callback(player);
     }
 }

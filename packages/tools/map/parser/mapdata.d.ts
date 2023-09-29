@@ -1,3 +1,5 @@
+import type { ProcessedArea } from '@kaetram/common/types/map';
+
 export interface Door {
     height: number;
     id: number;
@@ -30,6 +32,7 @@ export interface PropertyValues {
     rock?: string;
     rockbase?: string;
     rockempty?: string;
+    fish?: string;
     fishspot?: string;
     fishempty?: string;
     forage?: string; // A forageable tile

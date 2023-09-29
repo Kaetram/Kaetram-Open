@@ -2,10 +2,15 @@ import Packet from '../packet';
 
 import { Packets } from '@kaetram/common/network';
 
-import type { DespawnPacket } from '@kaetram/common/types/messages/outgoing';
+export interface DespawnPacketData {
+    instance: string; // The entity we are despawning.
+    regions?: number[]; // Region checker for when an entity despawns.
+}
 
-export default class Despawn extends Packet {
-    public constructor(info: DespawnPacket) {
+export type DespawnPacketCallback = (info: DespawnPacketData) => void;
+
+export default class DespawnPacket extends Packet {
+    public constructor(info: DespawnPacketData) {
         super(Packets.Despawn, undefined, info);
     }
 }

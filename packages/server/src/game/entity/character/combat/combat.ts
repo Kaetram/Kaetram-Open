@@ -4,7 +4,7 @@ import Formulas from '../../../../info/formulas';
 
 import log from '@kaetram/common/util/log';
 import { Modules, Opcodes } from '@kaetram/common/network';
-import { Combat as CombatPacket, Spawn } from '@kaetram/common/network/impl';
+import { CombatPacket, SpawnPacket } from '@kaetram/common/network/impl';
 
 import type Character from '../character';
 
@@ -12,6 +12,7 @@ export default class Combat {
     public started = false;
 
     public lastAttack = 0;
+    public lastFollow = 0;
 
     // The combat loop
     private loop?: NodeJS.Timeout | undefined;
@@ -41,7 +42,7 @@ export default class Combat {
 
         if (this.loop) return;
 
-        this.loop = setInterval(this.handleLoop.bind(this), this.character.getAttackRate() / 2);
+        this.loop = setInterval(() => this.handleLoop(), this.character.getAttackRate() / 4);
     }
 
     /**
@@ -74,7 +75,7 @@ export default class Combat {
 
         clearInterval(this.loop);
 
-        this.loop = setInterval(this.handleLoop.bind(this), this.character.getAttackRate() / 2);
+        this.loop = setInterval(() => this.handleLoop(), this.character.getAttackRate() / 4);
     }
 
     /**
@@ -112,10 +113,21 @@ export default class Combat {
      */
 
     private handleLoop(): void {
-        if (!this.character.hasTarget() || this.character.target?.isDead()) return this.stop();
+        // No target or target is dead, stop combat.
+        if (
+            !this.character.hasTarget() ||
+            this.character.target?.isDead() ||
+            this.character.teleporting
+        )
+            return this.stop();
 
-        // Do not attack while teleporting.
-        if (this.character.teleporting) return;
+        // Prevent combat loop from persisting during PVP flag changes.
+        if (
+            this.character.isPlayer() &&
+            this.character.target?.isPlayer() &&
+            !this.character.target!.pvp
+        )
+            return this.stop();
 
         this.loopCallback?.(this.lastAttack);
 
@@ -124,6 +136,8 @@ export default class Combat {
         if (this.character.isNearTarget()) {
             if (!this.canAttack()) return;
 
+            this.character.stopMovement();
+
             let hit = this.createHit();
 
             this.sendAttack(hit);
@@ -131,7 +145,20 @@ export default class Combat {
             this.lastAttack = Date.now();
 
             this.attackCallback?.();
-        } else this.character.follow();
+        } else {
+            // Prevent follow spamming
+            if (Date.now() - this.lastFollow < 500) return;
+
+            this.character.follow();
+            this.lastFollow = Date.now();
+
+            if (this.shouldTeleportNearby())
+                this.character.setPosition(
+                    this.character.target!.x,
+                    this.character.target!.y,
+                    false
+                );
+        }
     }
 
     /**
@@ -141,7 +168,10 @@ export default class Combat {
     private checkTargetPosition(): void {
         if (!this.character.isOnSameTile()) return;
 
-        this.character.target!.findAdjacentTile();
+        // Only move the character if it's a mob.
+        if (!this.character.isMob()) return;
+
+        this.character.findAdjacentTile();
     }
 
     /**
@@ -186,7 +216,7 @@ export default class Combat {
         );
 
         // Spawn the projectile in the game client.
-        this.character.sendToRegions(new Spawn(projectile));
+        this.character.sendToRegions(new SpawnPacket(projectile));
     }
 
     /**
@@ -206,7 +236,10 @@ export default class Combat {
                 damageType === Modules.Hits.Critical
             ),
             this.character.isRanged(),
-            this.character.getAoE()
+            this.character.getAoE(),
+            this.character.isMagic(),
+            this.character.isArcher(),
+            this.character.getAttackStyle()
         );
     }
 
@@ -228,6 +261,38 @@ export default class Combat {
         return Date.now() - this.lastAttack > 10_000;
     }
 
+    /**
+     * Checks whether or not both the player and the target are players and if the
+     * target is in a valid PVP zone in order to be attacked.
+     * @returns Whether or not the target is in a PVP zone.
+     */
+
+    public isPvp(): boolean {
+        return (
+            this.character.isPlayer() &&
+            !!this.character.target?.isPlayer() &&
+            this.character.target?.pvp
+        );
+    }
+
+    /**
+     * Mob positions may not be updated if there is not a spectator and the player switches
+     * tabs. In this case we just teleport the mob next to the player. Because the lastMovement
+     * exceeds 5 seconds and the mob is still not nearby, we can conclude it's not able to
+     * move and we should teleport it.
+     * @returns Whether the character is a mob and it hasn't moved in the last 5 seconds.
+     */
+
+    private shouldTeleportNearby(): boolean {
+        if (!this.character.isMob()) return false;
+
+        if (this.character.isStunned() || this.character.isDead()) return false;
+
+        // Prevent teleporting when differences in plateau exist.
+        if (this.character.plateauLevel !== this.character.target?.plateauLevel) return false;
+
+        return Date.now() - this.character.lastMovement > 5000;
+    }
     /**
      * Callback for when the combat starts.
      */

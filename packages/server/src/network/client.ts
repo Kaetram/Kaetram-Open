@@ -3,7 +3,7 @@ import Incoming from '../controllers/incoming';
 import WebSocket from 'websocket';
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
-import { Handshake, Relay } from '@kaetram/common/network/impl';
+import { HandshakePacket, RelayPacket } from '@kaetram/common/network/impl';
 
 import type World from '../game/world';
 import type Packet from '@kaetram/common/network/packet';
@@ -58,7 +58,8 @@ export default class Client {
         // Relay the handshake packet to the connection immediately.
         connection.send(
             JSON.stringify(
-                new Handshake({
+                new HandshakePacket({
+                    type: 'hub',
                     gVer: config.gver,
                     name: config.name,
                     serverId: config.serverId,
@@ -136,6 +137,6 @@ export default class Client {
      */
 
     public relay(username: string, packet: Packet): void {
-        this.send(new Relay(username, packet));
+        this.send(new RelayPacket(username, packet));
     }
 }

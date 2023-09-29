@@ -1,10 +1,13 @@
 import { Opcodes } from '@kaetram/common/network';
 
 import type Player from '../entity/character/player/player';
-import type { SelectCallback } from './profile/impl/abilities';
+
 interface QuickSlotElement extends HTMLElement {
     key?: string;
 }
+
+export type SelectCallback = (type: Opcodes.Ability, key: string, index?: number) => void;
+
 export default class QuickSlots {
     private abilityBar: HTMLElement = document.querySelector('#ability-shortcut')!;
 

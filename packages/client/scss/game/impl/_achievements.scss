@@ -1,129 +1,110 @@
-@use '../../abstracts/media';
+@use '../../abstracts/sprite';
 
-#achievements-container {
-    position: absolute;
-    inset: 0;
+#achievements {
+    display: none;
 
-    overflow: auto;
+    &-tab {
+        position: absolute;
+        top: -3em;
+        left: calc(50% - 5.5em);
 
-    margin: auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
 
-    font-family: AdvoCut, sans-serif;
-}
+        width: 11em;
+        height: 3em;
 
-#achievements-container > ul > li:last-child.achievement-element {
-    padding-bottom: 0 !important;
-}
+        #achievements-tab-arrow-left {
+            position: absolute;
+            top: 0.375em;
+            left: -1.6875em;
 
-.achievement-element > p.achievement-title {
-    float: left;
-    color: #fff;
-}
+            padding: 0.3125em;
+            padding-right: 0.25em;
 
-.achievement-element > p.achievement-progress {
-    float: right;
-    color: #fff;
-}
+            border-image-width: 1em 0 1em 1em;
 
-.coin {
-    position: absolute;
-}
-
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #achievements-container {
-            width: 318px * $i;
-            height: 130px * $i;
-            font-size: 22px;
+            .colour-button-arrow-left {
+                position: static;
+            }
         }
 
-        .achievement-element {
-            width: 318px * $i;
-            height: 26px * $i;
-            padding-bottom: 8px * $i;
+        #achievements-tab-arrow-right {
+            position: absolute;
+            top: 0.375em;
+            right: -1.6875em;
 
-            background: url('/img/interface/achievements.png') 0 -96px * $i no-repeat;
-            background-size: calc(width('achievements.png') * $i);
+            padding: 0.3125em;
+            padding-left: 0.25em;
+
+            border-image-width: 1em 1em 1em 0;
+
+            .colour-button-arrow-right {
+                position: static;
+            }
         }
 
-        .achievement-element > p.achievement-title,
-        .achievement-element > p.achievement-description {
-            padding-top: 9px * $i;
-        }
-
-        .achievement-element > p.achievement-title {
-            margin-left: 30px * $i;
-            font-size: 8px * $i;
-        }
-
-        .achievement-element > p.achievement-description {
-            margin-left: 95px * $i;
-        }
-
-        .achievement-element > p.achievement-progress {
-            margin-right: 2px * $i;
-        }
-
-        .coin {
-            width: 24px * $i;
-            height: 26px * $i;
-            background: url('/img/interface/achievements.png') no-repeat;
-            background-size: calc(width('achievements.png') * $i);
-        }
-
-        // Coin used by default achievements when completed.
-        .coin-default {
-            background-position: -72px * $i -26px * $i;
-        }
-
-        .coin-gravemystery {
-            background-position: -216px * $i 0;
-        }
-
-        .coin-kaetramdungeon {
-            background-position: -120px * $i 0;
-        }
-
-        .coin-lumberjacking50,
-        .coin-lumberjacking100,
-        .coin-lumberjacking500,
-        .coin-lumberjacking1000,
-        .coin-lumberjacking5000,
-        .coin-lumberjacking10000,
-        .coin-mining50,
-        .coin-mining100,
-        .coin-mining500,
-        .coin-mining1000,
-        .coin-mining5000,
-        .coin-mining10000,
-        .coin-fishing50,
-        .coin-fishing100,
-        .coin-fishing500,
-        .coin-fishing1000,
-        .coin-fishing5000,
-        .coin-fishing10000 {
-            background-position: -72px * $i -26px * $i;
+        span {
+            font-family: Fibberish;
+            font-size: 1.2em;
         }
     }
 
-    @media (--md) {
-        .achievement-element > p.achievement-title {
-            font-size: 16px;
-        }
+    &-content {
+        height: 100%;
+        padding: 0.75em;
 
-        .achievement-element > p.achievement-description {
-            font-size: 15px;
-        }
-    }
+        ul {
+            overflow: hidden auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
 
-    @media (--sm) {
-        .achievement-element > p.achievement-title {
-            font-size: 10px;
-        }
+            height: 100%;
+            padding-right: 0.25em;
 
-        .achievement-element > p.achievement-description {
-            margin-left: 110px;
-            font-size: 9px;
+            li {
+                display: flex;
+                flex-direction: row;
+                flex-shrink: 0;
+                gap: 0.5em;
+                align-items: center;
+
+                .achievement-title {
+                    flex: 1;
+                    font-family: Fibberish;
+                    font-size: 1.1em;
+                }
+
+                .achievement-description {
+                    flex: 2;
+                    font-size: 1em;
+                }
+            }
         }
     }
 }
+
+@media (--portrait) {
+    #achievements {
+        width: 22em;
+        height: 27em;
+        margin-bottom: 5em;
+    }
+}
+
+@include sprite.sheet($image: 'achievements', $width: 20, $height: 20, $selectors: '.coin-slot') {
+    box-sizing: border-box;
+    padding: 0.25em;
+}
+
+@include sprite.sheet(
+    $image: 'achievements',
+    $x: 21,
+    $y: 2,
+    $width: 16,
+    $height: 16,
+    $selectors: '.coin-default'
+);

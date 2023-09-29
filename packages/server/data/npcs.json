@@ -1,291 +1,469 @@
 {
-  "king": {
-    "name": "King",
-    "text": ["Welcome to the kingdom of Kaetram!", "You have travelled long and far, and for that you have my respect."]
-  },
+    "king": {
+        "name": "King",
+        "text": [
+            "Welcome to the kingdom of Kaetram!",
+            "You have travelled long and far, and for that you have my respect."
+        ]
+    },
 
-  "king2": {
-    "name": "King"
-  },
+    "king2": {
+        "name": "King"
+    },
 
-  "villagegirl": {
-    "name": "Wife",
-    "text": ["Please, call me Azaria."]
-  },
+    "prisoner": {
+        "name": "Prisoner",
+        "text": [
+            "Oh hey there, it's been so long since I've seen a new face.",
+            "I've been trapped here for ages.",
+            "But you'll probably be fine to be honest.",
+            "I'm guessing you did something to get in here?",
+            "Let me let you in on a little secret.",
+            "This whole world is a prison.",
+            "I don't even think it's real.",
+            "I think it's just a simulation.",
+            "I think we're all just a simulation.",
+            "I think I'm just a simulation.",
+            "I think you're just a simulation.",
+            "Anyway, hang in there and when your time runs out,",
+            "You can just teleport back.",
+            "As for me, I'll stay here...",
+            "Forever..."
+        ]
+    },
 
-  "villagegirl2": {
-    "name": "Village Girl",
-    "text": ["Hope you're having a good day!"]
-  },
+    "villagegirl": {
+        "name": "Wife",
+        "text": ["Please, call me Azaria."]
+    },
 
-  "villagegirl3": {
-    "name": "Another Village Girl",
-    "text": ["How's yous doings?"]
-  },
+    "villagegirl2": {
+        "name": "Village Girl",
+        "text": ["Hope you're having a good day!"]
+    },
 
-  "villager": {
-    "name": "Forester",
-    "text": ["Good day to you!"],
-    "store": "forester"
-  },
+    "villagegirl3": {
+        "name": "Another Village Girl",
+        "text": ["How's yous doings?"]
+    },
 
-  "miner": {
-    "name": "Miner",
-    "text": ["Leave me alone, I'm busy pretending to work!"],
-    "store": "miner"
-  },
+    "villagegirl4": {
+        "name": "Another Village Girl",
+        "text": ["How's yous doings?"]
+    },
 
-  "beachnpc": {
-    "name": "Bubba",
-    "text": [
-      "Well, thanks for the help.",
-      "Not really doing much but thanks regardless.",
-      "Though I did hear some crunbling east of here, a cave might've opened up.",
-      "This might just be an urban legend but it is said that an entire",
-      "underworld exists beneath the surface of this beach."]
-  },
+    "villagegirl5": {
+        "name": "Yet Another Village Girl",
+        "text": ["How's yous doings?"]
+    },
 
-  "agent": {
-    "name": "Secret Agent",
-    "text": [
-      "Hello there, would you be so kind as to assist me?",
-      "It seems I have stumbled upon this strange phenomenon.",
-      "You see, this cave I am heavily guarding appears to be",
-      "exhibiting a warm-hole like situation.",
-      "Regardless, I feel its best to send a stup-",
-      "I mean, brave adventurer in there rather than me."
-    ]
-  },
+    "villagegirl6": {
+        "name": "Just Village Girl",
+        "text": ["How's yous doings?"]
+    },
 
-  "nyan": {
-    "name": "Nyan Cat (Stale Meme)"
-  },
+    "villagegirl7": {
+        "name": "Village Girl",
+        "text": ["How's yous doings?"]
+    },
 
-  "rick": {
-    "name": "Rick"
-  },
+    "forestnpc": {
+        "name": "Forester",
+        "text": ["Good day to you!"],
+        "store": "forester"
+    },
 
-  "priest": {
-    "name": "Priest"
-  },
+    "miner": {
+        "name": "Miner",
+        "text": ["Leave me alone, I'm busy pretending to work!"],
+        "store": "miner"
+    },
 
-  "guard": {
-    "name": "Guard",
-    "text": ["We're seriously busy at the moment."]
-  },
+    "miner2": {
+        "name": "Yet Another Miner",
+        "text": ["Leave me alone, I'm busy pretending to work!"],
+        "store": "miner"
+    },
 
-  "guard2": {
-    "name": "Royal Guard",
-    "text": ["Any form of defiance will be met with death."]
-  },
+    "beachnpc": {
+        "name": "Bubba",
+        "text": [
+            "Well, thanks for the help.",
+            "Not really doing much but thanks regardless.",
+            "Though I did hear some crunbling east of here, a cave might've opened up.",
+            "This might just be an urban legend but it is said that an entire",
+            "underworld exists beneath the surface of this beach."
+        ]
+    },
 
-  "scientist": {
-    "name": "Scientist"
-  },
+    "agent": {
+        "name": "Secret Agent",
+        "text": [
+            "Hello there, would you be so kind as to assist me?",
+            "It seems I have stumbled upon this strange phenomenon.",
+            "You see, this cave I am heavily guarding appears to be",
+            "exhibiting a warm-hole like situation.",
+            "Regardless, I feel its best to send a stup-",
+            "I mean, brave adventurer in there rather than me."
+        ]
+    },
 
-  "desertnpc": {
-    "name": "Billey"
-  },
+    "nyan": {
+        "name": "Nyan Cat (Stale Meme)"
+    },
 
-  "lavanpc": {
-    "name": "Dying Soldier",
-    "text": ["Thank you for all your help. I will perish in your absence."]
-  },
+    "rick": {
+        "name": "Rick",
+        "text": [
+            "We're no strangers to love...",
+            "You know the rules and so do I...",
+            "A full commitment's what I'm thinking of...",
+            "You wouldn't get this from any other guy...",
+            "I just wanna tell you how I'm feeling...",
+            "Gotta make you understand...",
+            "Never gonna give you up...",
+            "Never gonna let you down...",
+            "Never gonna run around and desert you...",
+            "Never gonna make you cry...",
+            "Never gonna say goodbye...",
+            "Never gonna tell a lie and hurt you...",
+            "We've known each other for so long...",
+            "Your heart's been aching but you're too shy to say it...",
+            "Inside we both know what's been going on...",
+            "We know the game and we're gonna play it...",
+            "And if you ask me how I'm feeling...",
+            "Don't tell me you're too blind to see...",
+            "Never gonna give you up...",
+            "Never gonna let you down...",
+            "Never gonna run around and desert you...",
+            "Never gonna make you cry...",
+            "Never gonna say goodbye...",
+            "Never gonna tell a lie and hurt you...",
+            "Never gonna give you up...",
+            "Never gonna let you down...",
+            "Never gonna run around and desert you...",
+            "Never gonna make you cry...",
+            "Never gonna say goodbye...",
+            "Never gonna tell a lie and hurt you...",
+            "Never gonna give, never gonna give...",
+            "(Give you up)",
+            "(Ooh) Never gonna give, never gonna give...",
+            "(Give you up)",
+            "We've known each other for so long...",
+            "Your heart's been aching but you're too shy to say it...",
+            "Inside we both know what's been going on..."
+        ]
+    },
 
-  "boxingman": {
-    "name": "Mike Tyson",
-    "text": ["Woosh."]
-  },
+    "rick2": {
+        "name": "Rick",
+        "text": [
+            "We're no strangers to love...",
+            "You know the rules and so do I...",
+            "A full commitment's what I'm thinking of...",
+            "You wouldn't get this from any other guy...",
+            "I just wanna tell you how I'm feeling...",
+            "Gotta make you understand...",
+            "Never gonna give you up...",
+            "Never gonna let you down...",
+            "Never gonna run around and desert you...",
+            "Never gonna make you cry...",
+            "Never gonna say goodbye...",
+            "Never gonna tell a lie and hurt you...",
+            "We've known each other for so long...",
+            "Your heart's been aching but you're too shy to say it...",
+            "Inside we both know what's been going on...",
+            "We know the game and we're gonna play it...",
+            "And if you ask me how I'm feeling...",
+            "Don't tell me you're too blind to see...",
+            "Never gonna give you up...",
+            "Never gonna let you down...",
+            "Never gonna run around and desert you...",
+            "Never gonna make you cry...",
+            "Never gonna say goodbye...",
+            "Never gonna tell a lie and hurt you...",
+            "Never gonna give you up...",
+            "Never gonna let you down...",
+            "Never gonna run around and desert you...",
+            "Never gonna make you cry...",
+            "Never gonna say goodbye...",
+            "Never gonna tell a lie and hurt you...",
+            "Never gonna give, never gonna give...",
+            "(Give you up)",
+            "(Ooh) Never gonna give, never gonna give...",
+            "(Give you up)",
+            "We've known each other for so long...",
+            "Your heart's been aching but you're too shy to say it...",
+            "Inside we both know what's been going on..."
+        ]
+    },
 
-  "vampire": {
-    "name": "Vampire"
-  },
+    "priest": {
+        "name": "Priest"
+    },
 
-  "doctor": {
-    "name": "Doctor",
-    "text": ["I'm a doctor, not a magician."]
-  },
+    "guard": {
+        "name": "Guard",
+        "text": ["We're seriously busy at the moment."]
+    },
 
-  "oddeyecat": {
-    "name": "Odd-Eyed Cat"
-  },
+    "guard2": {
+        "name": "Royal Guard",
+        "text": ["Any form of defiance will be met with death."]
+    },
 
-  "sorcerer": {
-    "name": "Sorcerer",
-    "store": "sorcerer"
-  },
+    "scientist": {
+        "name": "Scientist"
+    },
 
-  "coder": {
-    "name": "Programmer",
-    "text": ["Oh.. This is awkward...", "You may be wondering why I'm here as well.", "Well just letting you know..",
-            "It's definitely not because we're running low on pixel art..", "Regardless.. If you want to join the community",
-            "Our Discord <a target=\"_blank\" href=\"https://discord.gg/MmbGAaw\">is available here!</a>"]
-  },
+    "madscientist": {
+        "name": "Mad Scientisto"
+    },
 
-  "forestnpc": {
-    "name": "Forester"
-  },
+    "desertnpc": {
+        "name": "Billey"
+    },
 
-  "octocat": {
-    "name": "Octocat",
-    "text": ["Hey there!",
+    "lavanpc": {
+        "name": "Dying Soldier",
+        "text": ["Thank you for all your help. I will perish in your absence."]
+    },
+
+    "boxingman": {
+        "name": "Bike Lyson",
+        "text": ["Woosh."]
+    },
+
+    "vampire": {
+        "name": "Vampire"
+    },
+
+    "doctor": {
+        "name": "Doctor",
+        "text": ["I'm a doctor, not a magician."]
+    },
+
+    "oddeyecat": {
+        "name": "Odd-Eyed Cat"
+    },
+
+    "sorcerer": {
+        "name": "Sorcerer",
+        "store": "sorcerer"
+    },
+
+    "coder": {
+        "name": "Programmer",
+        "text": [
+            "Well well, hello there. Seems you managed to esca- I mean,",
+            "find your way out of that tutorial.",
+            "Listen, your first task should be to discover the world around you.",
+            "Why don't you go talk to the villagers for starters?",
+            "After that, maybe we can look into getting you some tasks to do."
+        ]
+    },
+
+    "villager": {
+        "name": "Villager",
+        "text": ["Howdy!"]
+    },
+
+    "villager2": {
+        "name": "Villager",
+        "text": ["Howdy!"]
+    },
+
+    "villager3": {
+        "name": "Villager",
+        "text": ["Howdy!"]
+    },
+
+    "villager4": {
+        "name": "Villager",
+        "text": ["Howdy!"]
+    },
+
+    "octocat": {
+        "name": "Octocat",
+        "text": [
+            "Hey there!",
             "I am the Octocat, the programmer and I",
             "are very well acquainted.",
             "In case you did not know, Kaetram is completely open-source.",
-            "You can <a target=\"_blank\" href=\"https://github.com/Kaetram/Kaetram-Open\">check out the source on GitHub!</a>"]
-  },
+            "You can <a target=\"_blank\" href=\"https://github.com/Kaetram/Kaetram-Open\">check out the source on GitHub!</a>"
+        ]
+    },
 
-  "soldier": {
-    "name": "Soldier"
-  },
+    "soldier": {
+        "name": "Soldier"
+    },
 
-  "fisherman": {
-    "name": "Fisherman",
-    "store": "fishingstore"
-  },
+    "fisherman": {
+        "name": "Fisherman",
+        "store": "fishingstore"
+    },
 
-  "octopus": {
-    "name": "Octopus"
-  },
+    "octopus": {
+        "name": "Octopus"
+    },
 
-  "mermaidnpc": {
-    "name": "Mermaid"
-  },
+    "mermaidnpc": {
+        "name": "Mermaid"
+    },
 
-  "sponge": {
-    "name": "Sponge"
-  },
+    "sponge": {
+        "name": "Sponge"
+    },
 
-  "fairynpc": {
-    "name": "Fairy"
-  },
+    "fairynpc": {
+        "name": "Fairy"
+    },
 
-  "shepherdboy": {
-    "name": "Shepherd Boy"
-  },
+    "shepherdboy": {
+        "name": "Shepherd Boy"
+    },
 
-  "zombiegf": {
-    "name": "Zombie Girlfriend"
-  },
+    "zombiegf": {
+        "name": "Zombie Girlfriend"
+    },
 
-  "pirategirlnpc": {
-    "name": "Pirate Girl",
-    "text": ["Hi"]
-  },
+    "pirategirlnpc": {
+        "name": "Pirate Girl",
+        "text": ["Hi"]
+    },
 
-  "bluebikinigirlnpc": {
-    "name": "Pretzel"
-  },
+    "bluebikinigirlnpc": {
+        "name": "Pretzel"
+    },
 
-  "redbikinigirlnpc": {
-    "name": "Flaris"
-  },
+    "redbikinigirlnpc": {
+        "name": "Flaris"
+    },
 
-  "iamverycoldnpc": {
-    "name": "Babushka",
-    "store": "ingredientsstore"
-  },
+    "iamverycoldnpc": {
+        "name": "Babushka",
+        "store": "ingredientsstore"
+    },
 
-  "iceelfnpc": {
-    "name": "Ice Elf"
-  },
+    "iceelfnpc": {
+        "name": "Ice Elf"
+    },
 
-  "elfnpc": {
-    "name": "Elf"
-  },
+    "elfnpc": {
+        "name": "Elf"
+    },
 
-  "snowshepherdboy": {
-    "name": "Sherpa",
-    "text": ["Hello dear adventurer!", "Hope you're enjoying the beautiful sights!"]
-  },
+    "snowshepherdboy": {
+        "name": "Sherpa",
+        "text": ["Hello dear adventurer!", "Hope you're enjoying the beautiful sights!"]
+    },
 
-  "angelnpc": {
-    "name": "Angel"
-  },
+    "angelnpc": {
+        "name": "Angel"
+    },
 
-  "momangelnpc": {
-    "name": "Archangel"
-  },
+    "momangelnpc": {
+        "name": "Archangel"
+    },
 
-  "superiorangelnpc": {
-    "name": "Mentor"
-  },
+    "superiorangelnpc": {
+        "name": "Mentor"
+    },
 
-  "firstsonangelnpc": {
-    "name": "Angel"
-  },
+    "firstsonangelnpc": {
+        "name": "Angel"
+    },
 
-  "secondsonangelnpc": {
-    "name": "Superior Angel"
-  },
+    "secondsonangelnpc": {
+        "name": "Superior Angel"
+    },
 
-  "mojojojonpc": {
-    "name": "Monky"
-  },
+    "mojojojonpc": {
+        "name": "Monky"
+    },
 
-  "ancientmanumentnpc": {
-    "name": "Ancient Monument"
-  },
+    "ancientmanumentnpc": {
+        "name": "Ancient Monument"
+    },
 
-  "vendingmachine": {
-    "name": "Enchantment Vendor",
-    "role": "enchanter"
-  },
+    "vendingmachine": {
+        "name": "Enchantment Vendor",
+        "role": "enchanter"
+    },
 
-  "redstoremannpc": {
-    "name": "Banker",
-    "role": "banker"
-  },
+    "redstoremannpc": {
+        "name": "Banker",
+        "role": "banker"
+    },
 
-  "purplestoremannpc": {
-    "name": "Kosmetics Vendor",
-    "store": "cosmetics"
-  },
+    "purplestoremannpc": {
+        "name": "Kosmetics Vendor",
+        "store": "cosmetics"
+    },
 
-  "bluestoremannpc": {
-    "name": "Clerk",
-    "store": "startshop"
-  },
+    "bluestoremannpc": {
+        "name": "Clerk",
+        "store": "startshop"
+    },
 
-  "royalguard": {
-    "name": "Royal Guard",
-    "text": ["There shall be no trespassing!"]
-  },
+    "royalguard": {
+        "name": "Royal Guard",
+        "text": ["There shall be no trespassing!"]
+    },
 
-  "royalguard2": {
-    "name": "Royal Guard",
-    "text": ["There shall be no trespassing!"]
-  },
+    "royalguard2": {
+        "name": "Royal Guard",
+        "text": ["There shall be no trespassing!"]
+    },
 
-  "royalguard3": {
-    "name": "Royal Guard",
-    "text": ["There shall be no trespassing!"]
-  },
+    "royalguard3": {
+        "name": "Royal Guard",
+        "text": ["There shall be no trespassing!"]
+    },
 
-  "picklenpc": {
-    "name": "Sea Cucumber"
-  },
+    "picklenpc": {
+        "name": "Sea Cucumber"
+    },
 
-  "guildnpc": {
-    "name": "Guild Master"
-  },
+    "guildnpc": {
+        "name": "Guild Master"
+    },
 
-  "santaelfnpc": {
-    "name": "Santa's Helper",
-    "text": ["What do you want? I'm busy being overworked."]
-  },
+    "santaelfnpc": {
+        "name": "Santa's Helper",
+        "text": ["What do you want? I'm busy being overworked."]
+    },
 
-  "oldlady": {
-    "name": "Old Lady",
-    "text": ["Hello there dear adventurer!", "Make sure you're careful on your adventures."]
-  },
+    "oldlady": {
+        "name": "Old Lady",
+        "text": ["Hello there dear adventurer!", "Make sure you're careful on your adventures."]
+    },
 
-  "oldlady2": {
-    "name": "Old Lady"
-  },
+    "oldlady2": {
+        "name": "Old Lady"
+    },
 
-  "ratnpc": {
-    "name": "Rat",
-    "text": ["Squeak!"]
-  }
+    "ratnpc": {
+        "name": "Rat",
+        "text": ["Squeak!"]
+    },
+
+    "blacksmith": {
+        "name": "Blacksmith",
+        "text": ["Hi!"]
+    },
+
+    "blacksmith2": {
+        "name": "Blacksmith",
+        "text": ["Hi!"]
+    },
+
+    "herbalist": {
+        "name": "Herby Mc. Herb",
+        "text": ["Hi!"]
+    },
+    "rickgf": {
+        "name": "Lena",
+        "text": ["Oh, it's been so long since I've seen another soul.", "Have you seen my love, Rick?"]
+    }
 }

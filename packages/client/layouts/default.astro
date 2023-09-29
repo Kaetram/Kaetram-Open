@@ -1,0 +1,141 @@
+---
+import { Schema } from 'astro-seo-schema';
+import { GoogleAnalytics } from '@astrolib/analytics';
+import { t, dir, getLanguage } from '@kaetram/common/i18n';
+
+export interface Props {
+    title?: string;
+}
+
+let { title } = Astro.props,
+    currentLanguage = getLanguage();
+
+function site(path = '') {
+    return new URL(path, Astro.site).toString();
+}
+
+let name = t('game:NAME'),
+    description = t('game:DESCRIPTION');
+---
+
+<html dir={dir(currentLanguage)} lang={currentLanguage}>
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=0"
+        />
+
+        <title>{name}{title ? ` | ${title}` : ''}</title>
+
+        <GoogleAnalytics id="G-SLX5NNTBX4" partytown />
+
+        <!-- Meta -->
+        <meta name="application-name" content="Kaetram" />
+        <meta name="description" content={description} />
+        <meta name="robots" content="index, follow" />
+        <meta name="image" content={site('icon.png')} />
+        <meta name="language" content="English" />
+
+        <!-- Sitemap -->
+        <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap-index.xml" />
+
+        <!-- Icon -->
+        <link rel="shortcut icon" href="/favicon.ico" />
+
+        <!-- Apple -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Kaetram" />
+
+        <!-- Open Graph Protocol -->
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:url" content={site()} />
+        <meta property="og:type" content="game" />
+        <meta property="og:title" content="Kaetram" />
+        <meta property="og:site_name" content="Kaetram" />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={site('icon.png')} />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="192" />
+        <meta property="og:image:height" content="192" />
+        <meta property="og:image:alt" content="Kaetram Icon" />
+
+        <!-- Google -->
+        <meta itemprop="name" content="Kaetram" />
+        <meta itemprop="description" content={description} />
+        <meta itemprop="image" content={site('icon.png')} />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Kaetram" />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image:src" content={site('icon.png')} />
+
+        <!-- Mobile -->
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="format-detection" content="telephone=no" />
+
+        <!-- Windows -->
+        <meta name="msapplication-starturl" content="/?utm_source=a2hs" />
+        <meta name="msapplication-tooltip" content="Kaetram" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="msapplication-navbutton-color" content="#000000" />
+        <meta name="msapplication-TileColor" content="#000000" />
+        <meta name="msapplication-TileImage" content="/img/icons/mstile-144x144.png" />
+        <meta name="msapplication-config" content="browserconfig.xml" />
+
+        <!-- UC Mobile Browser -->
+        <meta name="full-screen" content="yes" />
+        <meta name="browsermode" content="application" />
+
+        <!-- Disable night mode for this page -->
+        <meta name="nightmode" content="enable/disable" />
+
+        <!-- Layout mode -->
+        <meta name="layoutmode" content="fitscreen/standard" />
+
+        <!-- Show image even in text only mode -->
+        <meta name="imagemode" content="force" />
+
+        <!-- Orientation -->
+        <meta name="screen-orientation" content="any" />
+
+        <!-- JSON-LD -->
+        <Schema
+            item={{
+                '@context': 'https://schema.org',
+                '@type': 'VideoGame',
+                name: 'Kaetram',
+                url: site(),
+                image: site('icon.png'),
+                description,
+                inLanguage: ['English'],
+                operatingSystem: 'ANY',
+                applicationCategory: 'https://schema.org/VideoGame',
+                author: {
+                    '@type': 'Organization',
+                    name: 'OmniaDev'
+                },
+                offers: {
+                    '@type': 'Offer',
+                    price: 0
+                },
+                genre: ['MMORPG'],
+                audience: {
+                    '@type': 'PeopleAudience',
+                    suggestedMinAge: 8
+                }
+            }}
+        />
+
+        <meta name="rating" content="General" />
+    </head>
+    <body class="intro">
+        <noscript>
+            <div id="alert">You must enable JavaScript to play Kaetram.</div>
+        </noscript>
+
+        <slot />
+    </body>
+</html>

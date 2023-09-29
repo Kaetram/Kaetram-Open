@@ -1,0 +1,79 @@
+{
+    "name": "Dynasties of the Deep",
+    "description": "Underwater politics.|The sea cucumber, a former antagonist, is actually King Cucumis of the Seaweed Dynasty. He needs your help to strengthen ties with the other underwater royal families and possibly uncover a conspiracy.",
+    "rewards": ["royalseal", "5000 gold"],
+    "stages": {
+        "0": {
+            "task": "talk",
+            "npc": "kingcucumis",
+            "text": [
+                "Ah, it's you again. Our previous encounter was... unfortunate.",
+                "I need an outsider's help, someone uninvolved in our politics.",
+                "Three other royal families rule these waters with me. Can you act as my envoy?"
+            ],
+            "completedText": ["Meet with representatives of the three royal families."]
+        },
+        "1": {
+            "task": "talk",
+            "npc": "princesscoral",
+            "text": [
+                "Greetings, envoy of King Cucumis. I am Princess Coral of the Reef Dynasty.",
+                "A clandestine group opposes the unity of our families.",
+                "Find out who they are and I shall consider an alliance."
+            ],
+            "completedText": ["Investigate the clandestine group."]
+        },
+        "2": {
+            "task": "talk",
+            "npc": "lordkelp",
+            "text": [
+                "I am Lord Kelp of the Tidal Dynasty. Cucumis and I have our differences.",
+                "Yet, a bigger threat emerges from the abyss.",
+                "Retrieve a dark pearl from the abyss, and I'll hear your plea."
+            ],
+            "completedText": ["Retrieve the dark pearl from the abyss."]
+        },
+        "3": {
+            "task": "talk",
+            "npc": "ladybubbles",
+            "text": [
+                "Oh, hello! I'm Lady Bubbles of the Bubble Dynasty.",
+                "A secret tryst between two families might lead to war.",
+                "Discover which families, and I shall align with King Cucumis."
+            ],
+            "completedText": ["Discover the families involved in the secret tryst."]
+        },
+        "4": {
+            "task": "talk",
+            "npc": "clandestinemember",
+            "text": [
+                "You've uncovered our plan! Yet, we only wish for equal power among families.",
+                "Convince the king to a council, where all voices are heard, and conflict will cease."
+            ],
+            "completedText": ["Return to King Cucumis with the information."]
+        },
+        "5": {
+            "task": "talk",
+            "npc": "kingcucumis",
+            "text": [
+                "A council, you say? I've been blind, letting power dictate our paths.",
+                "Let's bring unity to our underwater world. Here's a reward for your invaluable aid."
+            ],
+            "itemRewards": [
+                {
+                    "key": "royalseal",
+                    "count": 1
+                },
+                {
+                    "key": "gold",
+                    "count": 5000
+                }
+            ],
+            "popup": {
+                "title": "Quest completed!",
+                "text": "@green@You have diplomatically navigated the @crimson@Dynasties of the Deep@green@. King Cucumis awards you with the Royal Seal and 5000 gold!",
+                "colour": "#33cc33"
+            }
+        }
+    }
+}

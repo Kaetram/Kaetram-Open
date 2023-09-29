@@ -6,9 +6,6 @@ import type Player from '../entity/character/player/player';
 import type Entity from '../entity/entity';
 
 export default class Interact extends Menu {
-    // Contains the list of actions.
-    private list: HTMLUListElement = document.querySelector('#interact > ul')!;
-
     private buttonCallback?: (menuAction: Modules.MenuActions) => void;
     private closeCallback?: () => void;
 
@@ -91,7 +88,7 @@ export default class Interact extends Menu {
         // Assign an action when the element is clicked.
         element.addEventListener('click', () => this.buttonCallback!(menuAction));
 
-        this.list.append(element);
+        this.container.append(element);
     }
 
     /**
@@ -99,7 +96,7 @@ export default class Interact extends Menu {
      */
 
     private clear(): void {
-        this.list.innerHTML = '';
+        this.container.innerHTML = '';
     }
 
     /**

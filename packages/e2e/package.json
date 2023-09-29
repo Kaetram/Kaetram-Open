@@ -8,15 +8,14 @@
         "test:open": "yarn test 'yarn cypress open -e TAGS=\"not @ignore\"'"
     },
     "devDependencies": {
-        "@badeball/cypress-cucumber-preprocessor": "^12.0.0",
-        "@bahmutov/cypress-esbuild-preprocessor": "^2.1.3",
+        "@badeball/cypress-cucumber-preprocessor": "^18.0.5",
+        "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0",
         "@kaetram/common": "workspace:*",
-        "@types/node": "^18.15.5",
-        "cypress": "^10.4.0",
-        "esbuild": "^0.14.53",
-        "start-server-and-test": "^1.14.0",
-        "tsx": "^3.12.6",
-        "typescript": "^5.0.2"
+        "cypress": "^13.1.0",
+        "esbuild": "^0.19.2",
+        "start-server-and-test": "^2.0.0",
+        "tsx": "^3.12.10",
+        "typescript": "^5.2.2"
     },
     "cypress-cucumber-preprocessor": {
         "stepDefinitions": [

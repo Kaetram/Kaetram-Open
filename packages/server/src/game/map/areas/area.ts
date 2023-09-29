@@ -1,10 +1,10 @@
 import { Modules } from '@kaetram/common/network';
 
-import type { OverlayType } from '@kaetram/common/types/map';
-import type Character from '../../entity/character/character';
-import type Mob from '../../entity/character/mob/mob';
-import type Player from '../../entity/character/player/player';
 import type Chest from '../../entity/objects/chest';
+import type Mob from '../../entity/character/mob/mob';
+import type Character from '../../entity/character/character';
+import type Player from '../../entity/character/player/player';
+import type { OverlayType } from '@kaetram/common/types/map';
 
 type AreaCallback = (player: Player) => void;
 export default class Area {
@@ -17,8 +17,12 @@ export default class Area {
     public hasRespawned = true;
     public ignore = false; // If the area is omitted from player walk callbacks.
 
+    public boundaryX = 0;
+    public boundaryY = 0;
+
     // Overlay properties
     public darkness = 0;
+    public rgb: number[] = [];
     public type: OverlayType = 'none';
     public fog = '';
     public reason = ''; // Message displayed when player takes damage in the area.
@@ -35,7 +39,9 @@ export default class Area {
 
     // Dynamic areas
     public mappedArea!: Area | undefined;
+    public mappedAnimation!: Area | undefined;
     public mapping!: number;
+    public animation!: number;
 
     // Minigame
     public minigame = '';
@@ -60,7 +66,10 @@ export default class Area {
         public y: number,
         public width: number,
         public height: number
-    ) {}
+    ) {
+        this.boundaryX = x + width;
+        this.boundaryY = y + height;
+    }
 
     /**
      * Adds a mob to the area.
@@ -118,7 +127,8 @@ export default class Area {
     }
 
     /**
-     * Checks if the player fulfills the requirements of the area.
+     * Checks if the player fulfills the requirements of the area. This can be
+     * whether the player has completed a quest or achievement or not.
      * @param player The player we are checking requirements for
      * @returns Checks if the requirement is fulfilled.
      */
@@ -150,6 +160,28 @@ export default class Area {
         return {
             x: this.mappedArea.x + relativeX,
             y: this.mappedArea.y + relativeY
+        };
+    }
+
+    /**
+     * Same process as `getMappedTile` but instead we are grabbing an animation
+     * that this tile is mapped to. This is used for dynamic tiles that have an
+     * animation effect before they are mapped to the other state.
+     * @param x The x grid coordinate we are grabbing the animation for.
+     * @param y The y grid coordinate we are grabbing the animation for.
+     * @returns A position (x and y) of the mapped animation.
+     */
+
+    public getMappedAnimationTile(x: number, y: number): Position | undefined {
+        if (!this.mappedAnimation) return;
+
+        // The x and y relative to the area rather than globally.
+        let relativeX = Math.abs(this.x - x),
+            relativeY = Math.abs(this.y - y);
+
+        return {
+            x: this.mappedAnimation.x + relativeX,
+            y: this.mappedAnimation.y + relativeY
         };
     }
 
@@ -194,7 +226,7 @@ export default class Area {
      */
 
     private inRectangularArea(x: number, y: number): boolean {
-        return x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
+        return x >= this.x && y >= this.y && x < this.boundaryX && y < this.boundaryY;
     }
 
     /**
@@ -226,8 +258,8 @@ export default class Area {
      */
 
     public forEachTile(callback: (x: number, y: number) => void): void {
-        for (let i = this.y; i < this.y + this.height; i++)
-            for (let j = this.x; j < this.x + this.width; j++) callback(j, i);
+        for (let i = this.y; i < this.boundaryY; i++)
+            for (let j = this.x; j < this.boundaryX; j++) callback(j, i);
     }
 
     /**

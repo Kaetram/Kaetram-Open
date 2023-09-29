@@ -1,5 +1,5 @@
 // Tile that has undergone rotation
-export interface RotatedTile {
+export interface TransformedTile {
     tileId: number;
     h: boolean;
     v: boolean;
@@ -8,17 +8,17 @@ export interface RotatedTile {
 
 // These are tiles straight from the map file.
 export type Tile = number | number[];
+export type RotatedTile = TransformedTile | TransformedTile[];
 
-export type FlatTile = (number | RotatedTile)[];
-
-// Tiles used when sending region data to the client.
-export type RegionTile = Tile | RotatedTile | RotatedTile[];
+// Client tiles are processed tiles that are cached on the client.
+export type ClientTile = Tile | RotatedTile;
 
 // Tile data that is sent to the client.
 export interface RegionTileData {
     x: number;
     y: number;
-    data: RegionTile;
+    data: Tile;
+    animation?: Tile; // animation data
     c?: boolean; // collision property
     cur?: string; // cursor property
     o?: boolean; // object property
@@ -60,12 +60,15 @@ export interface ProcessedArea {
     destination?: number;
     orientation?: string;
     stage?: number;
+    npc?: string;
 
     // Light
     colour?: string;
     distance?: number;
     diffuse?: number;
     objects?: Position[];
+    flickerSpeed?: number;
+    flickerIntensity?: number;
 
     // Chest
     entities?: number;
@@ -88,11 +91,13 @@ export interface ProcessedArea {
 
     // Overlay
     darkness?: number;
+    rgb?: string;
     fog?: string;
 
     // Dynamic
     quest?: string;
     mapping?: number;
+    animation?: number;
 
     // Minigame
     minigame?: string;
@@ -118,6 +123,7 @@ export interface ProcessedDoor {
     stage: number;
     skill: string;
     level: number;
+    npc: string; // NPC to trigger chat when player can't pass through.
 }
 
 export interface ProcessedResource {
@@ -147,7 +153,9 @@ export interface ProcessedMap {
 
     data: (number | number[])[];
 
+    // Corresponds to the tile id of the tile that is considered a collision.
     collisions: number[];
+
     entities: { [tileId: number]: string };
 
     // tilesetId: firstGid
@@ -162,19 +170,4 @@ export interface ProcessedMap {
     obstructing?: number[];
     areas: { [name: string]: ProcessedArea[] };
     cursors: { [tileId: number]: string };
-    trees: ProcessedResource[];
-    rocks: ProcessedResource[];
-    fishSpots: ProcessedResource[];
-    foraging: ProcessedResource[];
-}
-
-export interface ProcessedClientMap {
-    width: number;
-    height: number;
-    tileSize: number;
-    version: number;
-    high: number[];
-    tilesets: { [name: string]: number };
-    animations: { [tileId: number]: ProcessedAnimation[] };
-    grid?: number[][];
 }

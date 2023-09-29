@@ -1,0 +1,404 @@
+---
+import { t, getLanguage } from '@kaetram/common/i18n';
+
+let currentLanguage = getLanguage(),
+    languages = [
+        { locale: 'en', name: 'English' },
+        { locale: 'de', name: 'Deutsch' },
+        { locale: 'es', name: 'Español' },
+        { locale: 'fr', name: 'Français' },
+        { locale: 'pt', name: 'Português' },
+        { locale: 'ro', name: 'Română' },
+        { locale: 'ru', name: 'Русский' },
+        { locale: 'tl', name: 'Tagalog'}
+    ];
+---
+
+<div id="intro">
+    <section id="parchment" class="load-character slice-menu-fancy">
+        <article id="load-character">
+            <h1 class="title-decoration">{t('game:NAME')}</h1>
+
+            <form onsubmit={'return false'}>
+                <input
+                    type="text"
+                    id="login-name-input"
+                    class="stroke slice-input"
+                    name="player-name"
+                    placeholder="Username"
+                    aria-label="Username"
+                    maxlength="32"
+                    autocomplete="off"
+                />
+                <input
+                    type="password"
+                    id="login-password-input"
+                    class="stroke slice-input"
+                    name="player-password"
+                    placeholder="Password"
+                    aria-label="Password"
+                    maxlength="64"
+                    autocomplete="off"
+                />
+
+                <div class="validation-summary"></div>
+
+                <div class="button-row">
+                    <label id="remember-me" class="check">
+                        <input type="checkbox" aria-labelledby="remember-me-text" />
+                        <span class="checkmark"></span>
+
+                        <span id="remember-me-text">Remember Me</span>
+                    </label>
+                    <label id="guest" class="check">
+                        <input type="checkbox" aria-labelledby="guest-text" />
+                        <span class="checkmark"></span>
+
+                        <span id="guest-text">Play as a guest</span>
+                    </label>
+                </div>
+
+                <div class="button-row">
+                    <button
+                        title="Login"
+                        aria-label="Login"
+                        type="submit"
+                        id="login"
+                        class="stroke slice-button"
+                        disabled
+                    >
+                        LOGIN
+                    </button>
+                    <button
+                        title="New Account"
+                        aria-label="New Account"
+                        type="button"
+                        id="new-account"
+                        class="stroke slice-button"
+                    >
+                        NEW ACCOUNT
+                    </button>
+                </div>
+            </form>
+        </article>
+
+        <article id="create-character">
+            <h1 class="title-decoration">New Character</h1>
+
+            <form onsubmit={'return false'}>
+                <input
+                    type="text"
+                    id="register-name-input"
+                    class="stroke slice-input"
+                    name="player-name"
+                    placeholder="Username"
+                    aria-label="Username"
+                    maxlength="32"
+                    autocomplete="off"
+                />
+                <input
+                    type="password"
+                    id="register-password-input"
+                    class="stroke slice-input"
+                    name="player-password"
+                    placeholder="Password"
+                    aria-label="Password"
+                    maxlength="64"
+                    autocomplete="off"
+                />
+                <input
+                    type="password"
+                    id="register-password-confirmation-input"
+                    class="stroke slice-input"
+                    name="player-password2"
+                    placeholder="Confirm Password"
+                    aria-label="Confirm Password"
+                    maxlength="64"
+                    autocomplete="off"
+                />
+                <input
+                    type="email"
+                    id="register-email-input"
+                    class="stroke slice-input"
+                    name="player-email"
+                    placeholder="Email Address"
+                    aria-label="Email Address"
+                    maxlength="64"
+                    autocomplete="off"
+                />
+
+                <div class="validation-summary"></div>
+
+                <div class="button-row">
+                    <button
+                        title="Cancel"
+                        aria-label="Cancel"
+                        type="button"
+                        id="cancel-register"
+                        class="stroke slice-button"
+                    >
+                        CANCEL
+                    </button>
+                    <button
+                        title="Play"
+                        aria-label="Play"
+                        type="submit"
+                        id="play"
+                        class="stroke slice-button"
+                    >
+                        PLAY
+                    </button>
+                </div>
+            </form>
+        </article>
+
+        <article id="reset-password">
+            <h1>
+                <span class="left-ornament"></span>
+                 Reset Password
+                <span class="right-ornament"></span>
+            </h1>
+
+            <form onsubmit={'return false'}>
+                <input
+                    type="text"
+                    id="email-reset-input"
+                    class="stroke slice-input"
+                    name="player-email"
+                    placeholder="Email Address"
+                    aria-label="Email Address"
+                    maxlength="32"
+                    autocomplete="off"
+                />
+
+                <div class="validation-summary"></div>
+
+                <div class="button-row">
+                    <button
+                        title="Cancel"
+                        aria-label="Cancel"
+                        type="button"
+                        id="cancel-forget"
+                        class="stroke slice-button"
+                    >
+                        CANCEL
+                    </button>
+                    <button
+                        title="Submit"
+                        aria-label="Submit"
+                        type="submit"
+                        id="continue-forget"
+                        class="stroke slice-button"
+                    >
+                        CONTINUE
+                    </button>
+                </div>
+            </form>
+        </article>
+
+        <article id="world-select">
+            <h1>
+                <span class="left-ornament"></span>
+                 World Select
+                <span class="right-ornament"></span>
+            </h1>
+
+            <form onsubmit={'return false'}>
+                <ol id="worlds"></ol>
+
+                <div class="button-row">
+                    <button
+                        title="Cancel"
+                        aria-label="Cancel"
+                        type="button"
+                        id="cancel-worlds"
+                        class="stroke slice-button"
+                    >
+                        CANCEL
+                    </button>
+                    <button
+                        title="Continue"
+                        aria-label="Continue"
+                        type="submit"
+                        id="continue-worlds"
+                        class="stroke slice-button"
+                    >
+                        CONTINUE
+                    </button>
+                </div>
+            </form>
+        </article>
+
+        <article id="credits">
+            <h1 class="title-decoration">Credits</h1>
+
+            <p>
+                <br />
+                 Special thanks to
+                <a
+                    rel="noopener noreferrer"
+                    class="clickable"
+                    target="_blank"
+                    href="https://www.littleworkshop.fr/">Little Workshop</a
+                >
+                 for the pixel art,
+                <br />
+                <br />
+                 and the Asky Team.
+                <br />
+                <br />
+                 More pixel assets by
+                <a
+                    rel="noopener noreferrer"
+                    class="clickable"
+                    target="_blank"
+                    href="https://opengameart.org/users/buch">Buch</a
+                >,
+                <a
+                    rel="noopener noreferrer"
+                    class="clickable"
+                    target="_blank"
+                    href="https://shikashiassets.itch.io/shikashis-fantasy-icons-pack">Shikashi</a
+                >,
+                <a
+                    rel="noopener noreferrer"
+                    class="clickable"
+                    target="_blank"
+                    href="https://opengameart.org/content/kyrises-free-16x16-rpg-icon-pack"
+                    >Kyrise</a
+                >,
+                <a
+                    rel="noopener noreferrer"
+                    class="clickable"
+                    target="_blank"
+                    href="https://game-icons.net">Game-Icons.net</a
+                >, &amp; Boo
+                <br />
+                <br />
+                 Music by
+                <a
+                    rel="noopener noreferrer"
+                    class="clickable"
+                    target="_blank"
+                    href="https://soundcloud.com/gyrowolf">Terrel O'Brien</a
+                >,
+                <a
+                    rel="noopener noreferrer"
+                    class="clickable"
+                    target="_blank"
+                    href="https://blog.dayjo.org">Joel Day</a
+                >,
+                <a
+                    rel="noopener noreferrer"
+                    class="clickable"
+                    target="_blank"
+                    href="https://www.dantilden.com">Dan Tilden</a
+                >, &amp;
+                <a
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    class="clickable"
+                    href="https://soundcloud.com/aaron-anderson-11">Aaron Krogh</a
+                >
+            </p>
+
+            <div class="close-about">
+                <span>-- Click anywhere to close --</span>
+            </div>
+        </article>
+
+        <article id="about">
+            <h1 class="title-decoration">About</h1>
+
+            <p>
+                Kaetram is a browser-based 2D MMORPG adventure. You play as an adventurer amongst
+                others and explore the world of Kaetram. Originally started as a fork of
+                BrowserQuest, Kaetram has evolved into its own game. In honour to the original idea,
+                the assets have been preserved and expanded upon. We are one of a few open-source
+                community driven game projects. We are always looking for assistance in terms of
+                programming, graphic artists, and/or music composers. Our source-code can be found
+                on our
+                <a target="_blank" href="https://github.com/Kaetram/Kaetram-Open"
+                    >GitHub Repository</a
+                >. If you would like to stay up-to-date with the project, make sure you join our
+                <a target="_blank" href="https://discord.gg/MmbGAaw">Discord server</a>.
+            </p>
+
+            <div class="close-about">
+                <span>-- Click anywhere to close --</span>
+            </div>
+        </article>
+
+        <article id="git">Structure this later</article>
+
+        <article id="death">
+            <h1>You have died...</h1>
+            <button
+                title="Respawn"
+                id="respawn"
+                title="Respawn"
+                aria-label="Respawn"
+                class="stroke slice-button">RESPAWN</button
+            >
+        </article>
+
+        <span class="loader" hidden>
+            Connecting<span class="loader-dot">.</span><span class="loader-dot">.</span><span
+                class="loader-dot">.</span
+            >
+        </span>
+    </section>
+
+    <select id="lang-select" oninput={'location = "/" + this.value + "/"'}>
+        {
+            languages.map(({ locale, name }) => (
+                <option value={locale} selected={locale === currentLanguage}>
+                    {name}
+                </option>
+            ))
+        }
+    </select>
+
+    <button id="world-select-button" class="slice-button" hidden>
+        <strong class="stroke"></strong>
+        <span class="stroke"></span>
+    </button>
+
+    <span id="game-version" class="version"></span>
+
+    <footer>
+        <div id="about-link" class="clickable">
+            <span id="toggle-about">About</span>
+        </div>
+        <span>&ndash;</span>
+        <div id="credits-link" class="clickable">
+            <span id="toggle-credits">Credits</span>
+        </div>
+        <span>&ndash;</span>
+        <div id="discord-link" class="clickable">
+            <a class="footer-button" target="_blank" href="https://discord.gg/MmbGAaw">
+                <span>Discord</span>
+            </a>
+        </div>
+        <span>&ndash;</span>
+        <div class="clickable">
+            <a
+                class="footer-button"
+                target="_blank"
+                href="https://www.patreon.com/bePatron?u=29287394"
+            >
+                <span>Patreon</span>
+            </a>
+        </div>
+        <span>&ndash;</span>
+        <div id="privacy" class="clickable">
+            <a class="footer-button" href="/privacy/">
+                <span>Privacy</span>
+            </a>
+        </div>
+        <span>&ndash;</span>
+        <div id="reset" class="clickable">
+            <span id="toggle-reset-password">Reset Password</span>
+        </div>
+    </footer>
+</div>

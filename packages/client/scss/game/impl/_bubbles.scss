@@ -11,12 +11,6 @@
     width: 100%;
     height: 100%;
 
-    font-family: AdvoCut, sans-serif;
-
-    p {
-        margin-top: 6px;
-    }
-
     a {
         pointer-events: auto;
         color: #fcda5c;
@@ -27,8 +21,15 @@
 .pointer {
     pointer-events: none;
     user-select: none;
+
     position: absolute;
+
     display: inline-block;
+
+    width: 4.5rem;
+    height: 4.5rem;
+
+    background: url('/img/pointer.png') no-repeat;
 }
 
 .bubble {
@@ -38,22 +39,30 @@
 
     display: inline-block;
 
-    padding: 3px 10px 0;
+    box-sizing: border-box;
+    max-width: 12em;
+    padding: 0.5em 0.55em;
 
+    font-size: 0.9em;
     color: rgb(255 255 255 / 80%);
     text-align: center;
 
     background-color: rgb(45 45 45 / 90%);
-    border-radius: 8px;
-}
+    border-radius: 0.5em;
 
-.bubble-tip {
-    position: relative;
-    top: 10px;
+    &::after {
+        content: '';
 
-    width: 11px;
-    height: 10px;
-    margin: 0 auto;
+        position: absolute;
+        bottom: -0.7em;
+        left: calc(50% - 0.75em);
 
-    background-image: url('/img/thingy.png');
+        display: block;
+
+        width: 0;
+
+        border-color: rgb(45 45 45 / 90%) transparent;
+        border-style: solid;
+        border-width: 0.75em 0.5em 0;
+    }
 }

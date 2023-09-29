@@ -5,7 +5,11 @@ export default class Skill {
     public percentage = 0;
     public nextExperience = 0;
 
-    public constructor(public type: Modules.Skills, public experience = 0, public level = 1) {
+    public constructor(
+        public type: Modules.Skills,
+        public experience = 0,
+        public level = 1
+    ) {
         this.name = Modules.Skills[type];
     }
 

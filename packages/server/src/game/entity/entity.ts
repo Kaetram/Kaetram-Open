@@ -1,7 +1,7 @@
 import Character from './character/character';
 
-import { Modules } from '@kaetram/common/network';
 import Utils from '@kaetram/common/util/utils';
+import { Modules } from '@kaetram/common/network';
 
 import type NPC from './npc/npc';
 import type Item from './objects/item';
@@ -10,6 +10,11 @@ import type Pet from './character/pet/pet';
 import type Effect from './objects/effect';
 import type Projectile from './objects/projectile';
 import type Player from './character/player/player';
+import type LootBag from './objects/lootbag';
+import type Tree from './objects/resource/impl/tree';
+import type Rock from './objects/resource/impl/rock';
+import type FishSpot from './objects/resource/impl/fishspot';
+import type Foraging from './objects/resource/impl/foraging';
 import type { EntityData, EntityDisplayInfo } from '@kaetram/common/types/entity';
 
 type MovementCallback = (x: number, y: number) => void;
@@ -21,7 +26,7 @@ type MovementCallback = (x: number, y: number) => void;
  */
 
 abstract class Entity {
-    private type: number; // EntityType
+    public type: number; // EntityType
     public name = '';
 
     public x = -1;
@@ -41,7 +46,12 @@ abstract class Entity {
 
     public movementCallback?: MovementCallback;
 
-    protected constructor(public instance = '', public key = '', x: number, y: number) {
+    protected constructor(
+        public instance = '',
+        public key = '',
+        x: number,
+        y: number
+    ) {
         this.type = Utils.getEntityType(this.instance);
 
         this.updatePosition(x, y);
@@ -213,7 +223,7 @@ abstract class Entity {
      */
 
     public isMob(): this is Mob {
-        return this.type === Modules.EntityType.Mob;
+        return this.type === (Modules.EntityType.Mob as number);
     }
 
     /**
@@ -222,7 +232,7 @@ abstract class Entity {
      */
 
     public isNPC(): this is NPC {
-        return this.type === Modules.EntityType.NPC;
+        return this.type === (Modules.EntityType.NPC as number);
     }
 
     /**
@@ -231,7 +241,16 @@ abstract class Entity {
      */
 
     public isItem(): this is Item {
-        return this.type === Modules.EntityType.Item;
+        return this.type === (Modules.EntityType.Item as number);
+    }
+
+    /**
+     * Checks whether the entity's type is a loot bag.
+     * @returns Whether the type is equal to the EntityType loot bag.
+     */
+
+    public isLootBag(): this is LootBag {
+        return this.type === (Modules.EntityType.LootBag as number);
     }
 
     /**
@@ -240,7 +259,7 @@ abstract class Entity {
      */
 
     public isChest(): this is Item {
-        return this.type === Modules.EntityType.Chest;
+        return this.type === (Modules.EntityType.Chest as number);
     }
 
     /**
@@ -249,7 +268,7 @@ abstract class Entity {
      */
 
     public isPlayer(): this is Player {
-        return this.type === Modules.EntityType.Player;
+        return this.type === (Modules.EntityType.Player as number);
     }
 
     /**
@@ -258,7 +277,7 @@ abstract class Entity {
      */
 
     public isProjectile(): this is Projectile {
-        return this.type === Modules.EntityType.Projectile;
+        return this.type === (Modules.EntityType.Projectile as number);
     }
 
     /**
@@ -267,7 +286,7 @@ abstract class Entity {
      */
 
     public isPet(): this is Pet {
-        return this.type === Modules.EntityType.Pet;
+        return this.type === (Modules.EntityType.Pet as number);
     }
 
     /**
@@ -276,7 +295,52 @@ abstract class Entity {
      */
 
     public isEffect(): this is Effect {
-        return this.type === Modules.EntityType.Effect;
+        return this.type === (Modules.EntityType.Effect as number);
+    }
+
+    /**
+     * Checks whether or not the entity is a tree.
+     * @returns Whether the type is equal to the EntityType tree.
+     */
+
+    public isTree(): this is Tree {
+        return this.type === (Modules.EntityType.Tree as number);
+    }
+
+    /**
+     * Checks whether or not the entity is a rock.
+     * @returns Whether the type is equal to the EntityType rock.
+     */
+
+    public isRock(): this is Rock {
+        return this.type === (Modules.EntityType.Rock as number);
+    }
+
+    /**
+     * Checks whether or not the entity is a fish spot.
+     * @returns Whether the type is equal to the EntityType fish spot.
+     */
+
+    public isFishSpot(): this is FishSpot {
+        return this.type === (Modules.EntityType.FishSpot as number);
+    }
+
+    /**
+     * Checks whether or not the entity is a foraging spot.
+     * @returns Whether the type is equal to the EntityType foraging spot.
+     */
+
+    public isForaging(): this is Foraging {
+        return this.type === (Modules.EntityType.Foraging as number);
+    }
+
+    /**
+     * Checks whether or not the entity is a resource.
+     * @returns Whether the entity is a tree, rock, fish spot, or foraging spot.
+     */
+
+    public isResource(): boolean {
+        return this.isTree() || this.isRock() || this.isFishSpot() || this.isForaging();
     }
 
     /**

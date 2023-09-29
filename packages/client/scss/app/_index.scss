@@ -6,11 +6,9 @@
 
 #alert {
     width: 100%;
-    height: 50px;
+    height: 3.125em;
 
-    font-family: AdvoCut, arial, sans-serif;
-    font-size: 20px;
-    line-height: 50px;
+    line-height: 3.125em;
     color: #eee;
     text-align: center;
 
@@ -23,9 +21,7 @@
     right: 0;
     bottom: 0;
 
-    padding: 3em;
+    padding: 1em;
 
-    font-family: AdvoCut, sans-serif, arial;
-    font-size: 24px;
     color: #eee;
 }

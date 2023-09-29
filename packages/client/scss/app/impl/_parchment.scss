@@ -1,40 +1,10 @@
 @use '../../abstracts/media';
 
-#parchment,
-#parchment input,
-#parchment select {
-    font-family: AdvoCut, sans-serif;
-}
-
 #parchment {
+    top: -3em;
+    width: 38em;
+    height: 19em;
     opacity: 0;
-
-    p {
-        font-family: AdvoCut, sans-serif;
-    }
-
-    input {
-        width: 50%;
-
-        color: #eee;
-        text-align: center;
-
-        background-color: rgb(0 0 0 / 5%);
-
-        animation: glow 0.5s linear infinite alternate;
-
-        &:focus {
-            color: #fff;
-            background-color: rgb(0 0 0 / 10%);
-            border-color: rgb(0 0 0 / 30%);
-            animation: none;
-        }
-
-        &.field-error {
-            background-color: rgb(255 0 0 / 10%);
-            border-color: #f84444;
-        }
-    }
 
     select {
         width: 25%;
@@ -57,37 +27,44 @@
     pointer-events: none;
 
     position: absolute;
-    z-index: 1000;
-    left: 50%;
+    inset: 0;
 
-    font-family: AdvoCut, sans-serif;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    box-sizing: border-box;
+    width: 24em;
+    height: 16.5em;
+    margin: auto;
+    padding: 0 0.25em;
+
     text-align: center;
 
     opacity: 0;
 
     transition: none;
-}
 
-#credits,
-#about,
-#death,
-#news,
-#git {
-    top: 50%;
-}
+    form {
+        position: relative;
 
-#parchment,
-#create-character,
-#reset-password,
-#load-character,
-#world-select,
-#error {
-    position: absolute;
-    z-index: 2;
-    top: 55%;
-    left: 50%;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 0;
+        justify-content: space-between;
 
-    text-align: center;
+        height: 100%;
+
+        button {
+            width: 8em;
+        }
+
+        input {
+            font-size: 0.9em;
+        }
+    }
 }
 
 .parchment-left {
@@ -115,16 +92,6 @@
     image-rendering: pixelated;
 }
 
-.animate {
-    .parchment-left {
-        animation: move-parchment-left 1s ease-in-out 1;
-    }
-
-    .parchment-right {
-        animation: move-parchment-right 1s ease-in-out 1;
-    }
-}
-
 .left-ornament,
 .right-ornament {
     position: relative;
@@ -132,35 +99,21 @@
     image-rendering: pixelated;
 }
 
-#about p,
-#news p {
-    width: 80%;
-    margin-top: 5%;
-    margin-left: 10%;
-}
-
-#news p {
-    margin-top: 3%;
-}
-
-.close-about {
-    margin-top: 2%;
-}
-
-.close-news {
-    margin-top: 5%;
-}
-
 #death {
-    p {
-        margin-top: 10%;
+    h1 {
+        margin-top: 20%;
     }
 
     #respawn {
         cursor: pointer;
-        margin-top: 5%;
-        background-color: transparent;
-        border: none;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        margin-top: 1em;
+
+        font-size: 1.5em;
     }
 }
 
@@ -179,260 +132,35 @@
     transition: 0.5s opacity linear;
 }
 
-@each $size, $i in media.$sizes {
-    @media ($size) {
-        #parchment h1,
-        #news h1,
-        #about h1 {
-            margin-top: 20px * $i;
-        }
-
-        #parchment,
-        #create-character,
-        #reset-password,
-        #load-character,
-        #world-select,
-        #error {
-            width: 422px * $i;
-            height: 182px * $i;
-            margin-top: -91px * $i;
-            margin-left: -211px * $i;
-        }
-
-        #parchment input,
-        #parchment select {
-            padding: 0 5px * $i;
-            font-size: 10px * $i;
-            border: 1px * $i dashed #b2af9b;
-            border-radius: 3px * $i;
-        }
-
-        #parchment input {
-            height: 20px * $i;
-            margin-top: 10px * $i;
-        }
-
-        #parchment select {
-            height: 16px * $i;
-            margin-top: 8px * $i;
-        }
-
-        #load-character h1,
-        #create-character h1,
-        #reset-password h1,
-        #world-select h1 {
-            margin-top: 10px * $i;
-        }
-
-        #credits,
-        #about,
-        #death,
-        #news,
-        #git {
-            width: 422px * $i;
-            height: 182px * $i;
-            margin-top: -91px * $i;
-            margin-left: -211px * $i;
-
-            font-size: 10px * $i;
-        }
-
-        .parchment-left,
-        .parchment-middle,
-        .parchment-right,
-        #respawn {
-            background-image: url('/img/interface/spritesheet.png');
-            background-size: calc(width('spritesheet.png') * $i);
-        }
-
-        .parchment-left {
-            width: 38px * $i;
-            height: 182px * $i;
-            background-position: 0 -294px * $i;
-        }
-
-        .parchment-middle {
-            width: 346px * $i;
-            height: 182px * $i;
-            margin-left: -173px * $i;
-            background-position: -38px * $i -294px * $i;
-        }
-
-        .parchment-right {
-            width: 38px * $i;
-            height: 182px * $i;
-            background-position: -384px * $i -294px * $i;
-        }
-
-        .left-ornament,
-        .right-ornament {
-            top: 3px * $i;
-
-            width: 31px * $i;
-            height: 12px * $i;
-            margin: 0 5px * $i + 5px;
-
-            background-image: url('/img/interface/spritesheet.png');
-            background-size: calc(width('spritesheet.png') * $i);
-        }
-
-        .left-ornament {
-            background-position-x: -354px * $i;
-        }
-
-        .right-ornament {
-            background-position-x: -385px * $i;
-        }
-    }
-}
-
-@media (--lg) {
-    #parchment h1,
-    #load-character h1,
-    #news h1,
-    #about h1 {
-        margin-top: 30px;
-        font-size: 30px;
+@media (--portrait) {
+    #parchment {
+        top: -5em;
+        width: 20em;
+        height: 26em;
     }
 
-    #create-character h1,
-    #reset-password h1 {
-        margin-top: 10px;
-        font-size: 30px;
-    }
-
-    .left-ornament,
-    .right-ornament {
-        top: 12px;
-    }
-
-    #parchment,
-    #create-character,
-    #reset-password,
+    #loading,
     #load-character,
-    #world-select,
-    #error {
-        font-size: 20px;
-    }
-
-    #parchment.create-character input {
-        height: 45px;
-        margin-top: 24px;
-    }
-
-    #parchment.reset-password input {
-        height: 45px;
-        margin-top: 120px;
-        margin-bottom: 90px;
-    }
-
-    .animate .parchment-middle {
-        animation: parchment-middle-3 1s ease-in-out 1;
-    }
-
-    .game.death .parchment-middle,
-    .game.news .parchment-middle {
-        width: 1038px;
-        margin-left: -519px;
-        background-position: -114px -882px;
-    }
-
-    #respawn {
-        width: 375px;
-        height: 153px;
-        margin: 63px auto 0;
-        background-position: 0 -1428px;
-
-        &:active {
-            background-position: -375px -1428px;
-        }
-    }
-}
-
-@media (--md) {
-    #parchment,
     #create-character,
     #reset-password,
     #world-select,
-    #load-character,
+    #credits,
+    #about,
+    #git,
+    #death,
+    #news,
     #error {
-        font-size: 20px;
-    }
+        flex-flow: column;
+        justify-content: center;
+        width: 16em;
+        height: 23em;
 
-    #parchment.create-character input {
-        height: 30px;
-        margin-top: 15px;
-    }
-
-    #parchment.reset-password input {
-        height: 30px;
-        margin-top: 80px;
-        margin-bottom: 60px;
-    }
-
-    .animate .parchment-middle {
-        animation: parchment-middle-2 1s ease-in-out 1;
-    }
-
-    .game.death .parchment-middle,
-    .game.news .parchment-middle {
-        width: 692px;
-        margin-left: -346px;
-        background-position: -76px -588px;
-    }
-
-    #respawn {
-        width: 250px;
-        height: 102px;
-        margin: 42px auto 0;
-        background-position: 0 -952px;
-
-        &:active {
-            background-position: -250px -952px;
+        .button-row {
+            flex-flow: column;
         }
-    }
-}
 
-@media (--sm) {
-    #parchment,
-    #create-character,
-    #reset-password,
-    #load-character,
-    #world-select,
-    #error {
-        font-size: 10px;
-    }
-
-    #parchment.create-character input {
-        height: 15px;
-        margin-top: 8px;
-    }
-
-    #parchment.reset-password input {
-        height: 15px;
-        margin-top: 40px;
-        margin-bottom: 30px;
-    }
-
-    .animate .parchment-middle {
-        animation: parchment-middle-1 1s ease-in-out 1;
-    }
-
-    .game.death .parchment-middle,
-    .game.news .parchment-middle {
-        width: 346px;
-        margin-left: -173px;
-        background-position: -38px -294px;
-    }
-
-    #respawn {
-        width: 125px;
-        height: 51px;
-        margin: 21px auto 0;
-        background-position: 0 -476px;
-
-        &:active {
-            background-position: -125px -476px;
+        .slice-button {
+            width: 15em;
         }
     }
 }

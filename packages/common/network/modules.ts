@@ -18,7 +18,8 @@ export enum PacketType {
 export enum ContainerType {
     Bank,
     Inventory,
-    Trade
+    Trade,
+    LootBag
 }
 
 export enum Orientation {
@@ -38,7 +39,35 @@ export enum EntityType {
     Object,
     Pet,
     LootBag,
-    Effect
+    Effect,
+    Tree,
+    Rock,
+    Foraging,
+    FishSpot
+}
+
+export enum Interfaces {
+    Inventory,
+    Crafting,
+    Spells,
+    Bank,
+    Store,
+    Quests,
+    Quest,
+    Achievements,
+    Skills,
+    Trade,
+    Settings,
+    Warp,
+    Leaderboards,
+    Guilds,
+    Friends,
+    Enchant,
+    Customization,
+    Book,
+    Lootbag,
+    Equipments,
+    Welcome
 }
 
 export enum AbilityType {
@@ -69,14 +98,12 @@ export enum Actions {
 }
 
 export enum MenuActions {
+    Attack = 'attack',
+    Equip = 'equip',
     DropOne = 'drop-one',
     DropMany = 'drop-many',
-    Wield = 'wield',
-    Equip = 'equip',
-    Attack = 'attack',
     Eat = 'eat',
-    Eat2 = 'eat2',
-    Move = 'move',
+    Interact = 'interact',
     Trade = 'trade',
     Potion = 'potion',
     Follow = 'follow',
@@ -104,22 +131,26 @@ export enum Hits {
 
 export enum Equipment {
     Helmet,
-    Chestplate,
-    Legs,
-    Skin,
-    Boots,
     Pendant,
-    Ring,
     Arrows,
+    Chestplate,
     Weapon,
-    WeaponSkin
+    Shield,
+    Ring,
+    ArmourSkin,
+    WeaponSkin,
+    Legplates,
+    Cape,
+    Boots
 }
 
 export let EquipmentRenderOrder = [
-    Equipment.Helmet,
-    Equipment.Legs,
+    Equipment.Cape,
+    Equipment.Legplates,
     Equipment.Chestplate,
-    Equipment.Skin,
+    Equipment.Helmet,
+    Equipment.ArmourSkin,
+    Equipment.Shield,
     Equipment.Weapon,
     Equipment.WeaponSkin
 ];
@@ -154,7 +185,11 @@ export enum Hovering {
     Item,
     NPC,
     Chest,
-    Object
+    Object,
+    Tree,
+    Rock,
+    FishSpot,
+    Foraging
 }
 
 export enum AudioTypes {
@@ -190,11 +225,13 @@ export enum Skills {
     Cooking,
     Smithing,
     Crafting,
+    Chiseling, // Not a skill, but used to differntiate chiseling from crafting in the crafting.
     Fletching,
     Smelting, // Not a skill, but used to differntiate smithing from smelting in the crafting.
     Foraging,
     Eating,
-    Loitering
+    Loitering,
+    Alchemy
 }
 
 // It's easier to define and swap order around here.
@@ -213,6 +250,7 @@ export let SkillsOrder = [
     Skills.Cooking,
     Skills.Fletching,
     Skills.Smithing,
+    Skills.Alchemy,
     Skills.Eating,
     Skills.Loitering
 ];
@@ -250,9 +288,17 @@ export enum Effects {
     Burning,
     Freezing,
     Invincible,
-    AccuracyPotion,
-    StrengthPotion,
-    DefensePotion
+    AccuracyBuff,
+    StrengthBuff,
+    DefenseBuff,
+    MagicBuff,
+    ArcheryBuff,
+    AccuracySuperBuff,
+    StrengthSuperBuff,
+    DefenseSuperBuff,
+    MagicSuperBuff,
+    ArcherySuperBuff,
+    Bleed
 }
 
 export enum DamageStyle {
@@ -264,7 +310,7 @@ export enum DamageStyle {
     Archery
 }
 
-export enum Medals {
+export enum Crowns {
     None,
     Silver,
     Gold,
@@ -407,6 +453,11 @@ export let DamageColours = {
     [Hits.Burning]: {
         fill: 'rgb(227, 170, 14)',
         stroke: 'rgb(235, 135, 52)'
+    },
+
+    [Hits.Terror]: {
+        fill: 'rgb(89, 21, 125)',
+        stroke: 'rgb(136, 29, 194)'
     }
 };
 
@@ -415,85 +466,77 @@ export let SkillExpColours = {
         fill: 'rgb(132, 57, 45)',
         stroke: 'rgb(101, 48, 35)'
     },
-
     [Skills.Accuracy]: {
         fill: 'rgb(6, 191, 188)',
         stroke: 'rgb(2, 94, 93)'
     },
-
     [Skills.Archery]: {
         fill: 'rgb(34, 214, 130)',
         stroke: 'rgb(7, 184, 101)'
     },
-
     [Skills.Health]: {
         fill: 'rgb(239, 90, 90)',
         stroke: 'rgb(255, 0, 0)'
     },
-
     [Skills.Magic]: {
         fill: 'rgb(37, 124, 210)',
         stroke: 'rgb(12, 55, 208)'
     },
-
     [Skills.Mining]: {
         fill: 'rgb(105, 106, 107)',
         stroke: 'rgb(45, 45, 46)'
     },
-
     [Skills.Strength]: {
         fill: 'rgb(232, 211, 185)',
         stroke: 'rgb(189, 172, 151)'
     },
-
     [Skills.Defense]: {
         fill: 'rgb(110, 158, 255)',
         stroke: 'rgb(7, 63, 176)'
     },
-
     [Skills.Fishing]: {
-        fill: 'rgb(0, 255, 255)',
-        stroke: 'rgb(0, 255, 255)'
+        fill: 'rgb(0, 170, 230)',
+        stroke: 'rgb(0, 100, 180)'
     },
-
     [Skills.Cooking]: {
-        fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)'
+        fill: 'rgb(255, 165, 0)',
+        stroke: 'rgb(205, 133, 0)'
     },
-
     [Skills.Smithing]: {
         fill: 'rgb(132, 57, 45)',
         stroke: 'rgb(101, 48, 35)'
     },
-
     [Skills.Crafting]: {
-        fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)'
+        fill: 'rgb(128, 0, 128)',
+        stroke: 'rgb(85, 0, 85)'
     },
-
+    [Skills.Chiseling]: {
+        fill: 'rgb(188, 143, 143)',
+        stroke: 'rgb(139, 100, 100)'
+    },
     [Skills.Fletching]: {
-        fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)'
+        fill: 'rgb(139, 69, 19)',
+        stroke: 'rgb(85, 40, 0)'
     },
-
     [Skills.Smelting]: {
-        fill: 'rgb(255, 255, 0)',
-        stroke: 'rgb(255, 255, 0)'
+        fill: 'rgb(255, 99, 71)',
+        stroke: 'rgb(205, 50, 25)'
     },
-
-    [Skills.Eating]: {
-        fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)'
-    },
-
-    [Skills.Loitering]: {
-        fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)'
-    },
-
     [Skills.Foraging]: {
-        fill: 'rgb(255, 0, 0)',
-        stroke: 'rgb(255, 0, 0)'
+        fill: 'rgb(124, 252, 0)',
+        stroke: 'rgb(85, 180, 0)'
+    },
+    [Skills.Eating]: {
+        fill: 'rgb(255, 228, 196)',
+        stroke: 'rgb(238, 213, 183)'
+    },
+    [Skills.Loitering]: {
+        fill: 'rgb(221, 160, 221)',
+        stroke: 'rgb(199, 120, 199)'
+    },
+    [Skills.Alchemy]: {
+        fill: 'rgb(255, 215, 0)',
+        stroke: 'rgb(218, 165, 0)'
     }
 };
 
@@ -576,18 +619,21 @@ export enum BannerCrests {
 
 export const Constants = {
     MAX_STACK: 2_147_483_647, // Maximum default stack size for a stackable item.
-    MAX_LEVEL: 135, // Maximum attainable level.
+    MAX_LEVEL: 120, // Maximum attainable level.
     INVENTORY_SIZE: 25, // Maximum inventory size
     BANK_SIZE: 420, // Maximum bank size
-    DROP_PROBABILITY: 10_000, // 1 in 10000
+    DROP_PROBABILITY: 100_000, // 1 in 100000
     MAX_PROFESSION_LEVEL: 99, // Totally not influenced by another game lol
     HEAL_RATE: 7000, // healing every 7 seconds
     EFFECT_RATE: 10_000, // effects every 10 seconds
     STORE_UPDATE_FREQUENCY: 20_000, // update store every 20 seconds
     MAP_DIVISION_SIZE: 48, // The size of a region the map is split into.
-    SPAWN_POINT: '405,27', // Default starting point outside the tutorial
-    TUTORIAL_QUEST_KEY: 'tutorial', // key of the tutorial quest
-    TUTORIAL_SPAWN_POINT: '579,7', // 'x,y' values
+    SPAWN_POINT: '328,892', // Default starting point outside the tutorial
+    TUTORIAL_QUEST_KEY: 'tutorial', // key of the tutorial quest.
+    ALCHEMY_QUEST_KEY: 'scientistspotion', // key of the alchemy quest.
+    CRAFTING_QUEST_KEY: 'artsandcrafts', // key of the crafting quest.
+    TUTORIAL_SPAWN_POINT: '133,562', // 'x,y' values
+    JAIL_SPAWN_POINT: '110,915',
     RESOURCE_RESPAWN: 30_000,
     TREE_RESPAWN: 25_000,
     CHEST_RESPAWN: 50_000, // 50 seconds
@@ -595,10 +641,9 @@ export const Constants = {
     MAX_ACCURACY: 0.45, // Maximum attainable accuracy for a character.
     EDIBLE_COOLDOWN: 1500, // 1.5 seconds between eating foods to prevent spam.
     CRAFT_COOLDOWN: 1500, // 1.5 seconds between crafting items to prevent spam.
-    INVALID_MOVEMENT_THRESHOLD: 3, // Amount of invalid movements before ignoring packets.
     ARCHER_ATTACK_RANGE: 8, // Default attack range for bows if no other range is specified.
     MAX_CONNECTIONS: 16, // Maximum number of connections per IP address.
-    EXPERIENCE_PER_HIT: 4, // Amount of experinece received per 1 damage dealt.
+    EXPERIENCE_PER_HIT: 2, // Amount of experience received per 1 damage dealt.
     SNOW_POTION_DURATION: 60_000, // 60 seconds
     FIRE_POTION_DURATION: 60_000, // 60 seconds
     FREEZING_DURATION: 60_000, // 60 seconds
@@ -614,8 +659,11 @@ export const Constants = {
 };
 
 export enum MinigameConstants {
-    TEAM_WAR_COUNTDOWN = 240, // 240 seconds (4 minutes) in the lobby
-    TEAM_WAR_MIN_PLAYERS = 2 // Minimum number of players to start a team war
+    TEAM_WAR_COUNTDOWN = 240, // 240 seconds (4 minutes) in the lobby and in-game
+    TEAM_WAR_MIN_PLAYERS = 2, // Minimum number of players to start a team war
+    COURSING_COUNTDOWN = 45, // 360 seconds (6 minutes) in the lobby and in-game
+    COURSING_MIN_PLAYERS = 2, // Minimum number of players to start coursing
+    COURSING_SCORE_DIVISOR = 10 // Divide the score by 100 to get the number of points
 }
 
 export enum APIConstants {
@@ -627,7 +675,7 @@ export enum APIConstants {
 
 // Defaults that apply to all types of entities
 export enum Defaults {
-    MOVEMENT_SPEED = 250, // 250 milliseconds to traverse one tile
+    MOVEMENT_SPEED = 220, // 250 milliseconds to traverse one tile
     ATTACK_RATE = 1000, // every 1 second
     POISON_CHANCE = 15 // 15 in (235 - level) chance to poison
 }

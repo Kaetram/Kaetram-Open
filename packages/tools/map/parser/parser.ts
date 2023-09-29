@@ -3,27 +3,12 @@ import zlib from 'node:zlib';
 import { Modules } from '@kaetram/common/network';
 import log from '@kaetram/common/util/log';
 
-import type {
-    ProcessedAnimation,
-    ProcessedMap,
-    ProcessedResource,
-    ProcessedTileset
-} from '@kaetram/common/types/map';
-import type { Animation, Layer, LayerObject, MapData, Property, Tile, Tileset } from './mapdata';
-
-interface Resources {
-    [key: string]: ProcessedResource;
-}
+import type { ProcessedAnimation, ProcessedMap, ProcessedTileset } from '@kaetram/common/types/map';
+import type { Animation, Layer, LayerObject, MapData, Property, Tileset } from './mapdata';
 
 export default class ProcessMap {
     private map: ProcessedMap;
     private tilesetEntities: { [tileId: number]: string } = {};
-
-    private collisionTiles: { [tileId: number]: boolean } = {};
-    private trees: Resources = {};
-    private rocks: Resources = {};
-    private fishSpots: Resources = {};
-    private foraging: Resources = {};
 
     /**
      * We create the skeleton file for the ExportedMap.
@@ -48,6 +33,7 @@ export default class ProcessMap {
             data: [],
 
             collisions: [],
+
             entities: {},
 
             tilesets: [],
@@ -59,11 +45,7 @@ export default class ProcessMap {
             obstructing: [],
             objects: [],
             areas: {},
-            cursors: {},
-            trees: [],
-            rocks: [],
-            fishSpots: [],
-            foraging: []
+            cursors: {}
         };
 
         this.parseTilesets();
@@ -105,16 +87,6 @@ export default class ProcessMap {
 
             this.parseTileset(tileset);
         }
-
-        // As the last step of the tileset processing, we parse the resources and add them to the map.
-        this.parseResources(this.trees, (tree: ProcessedResource) => this.map.trees.push(tree));
-        this.parseResources(this.rocks, (rock: ProcessedResource) => this.map.rocks.push(rock));
-        this.parseResources(this.fishSpots, (fishSpot: ProcessedResource) =>
-            this.map.fishSpots.push(fishSpot)
-        );
-        this.parseResources(this.foraging, (forage: ProcessedResource) =>
-            this.map.foraging.push(forage)
-        );
     }
 
     /**
@@ -139,16 +111,19 @@ export default class ProcessMap {
     }
 
     /**
-     * We parse the tileset and extract collisions
-     * and other individual tile properties.
+     * Handles parsing an individual tileset and extracting all the necessary
+     * information, such as tile properties, animations, entities, etc.
      * @param tileset A tileset from the tilemap.
      */
 
     private parseTileset(tileset: Tileset): void {
         let { tiles, firstgid } = tileset;
 
+        // Tiled starts counting from 1 for some reason.
+        firstgid -= 1;
+
         for (let tile of tiles) {
-            let tileId = this.getTileId(tileset, tile);
+            let tileId = this.getId(firstgid, tile.id);
 
             if (tile.animation) this.parseAnimation(tileId, firstgid, tile.animation);
 
@@ -191,9 +166,9 @@ export default class ProcessMap {
     private parseProperties(tileId: number, property: Property): void {
         let { name } = property,
             value = (parseInt(property.value, 10) as never) || property.value,
-            { high, obstructing, objects, cursors } = this.map;
+            { collisions, high, obstructing, objects, cursors } = this.map;
 
-        if (this.isCollisionProperty(name)) this.collisionTiles[tileId] = true;
+        if (this.isCollisionProperty(name)) collisions.push(tileId);
 
         switch (name) {
             case 'v': {
@@ -216,55 +191,6 @@ export default class ProcessMap {
                 cursors[tileId] = value;
                 break;
             }
-
-            // Properties fo resource classification.
-            case 'tree': {
-                return this.parseResourceProperty(this.trees, 'data', tileId, value);
-            }
-
-            case 'stump': {
-                return this.parseResourceProperty(this.trees, 'base', tileId, value);
-            }
-
-            case 'cutstump':
-            case 'stumpcut': {
-                return this.parseResourceProperty(this.trees, 'depleted', tileId, value);
-            }
-
-            // Mining
-            case 'rock': {
-                return this.parseResourceProperty(this.rocks, 'data', tileId, value);
-            }
-
-            case 'rockbase': {
-                return this.parseResourceProperty(this.rocks, 'base', tileId, value);
-            }
-
-            case 'rockempty': {
-                return this.parseResourceProperty(this.rocks, 'depleted', tileId, value);
-            }
-
-            // Fishing
-            case 'fishspot': {
-                // Fish spots share the same base and data tiles.
-                this.parseResourceProperty(this.fishSpots, 'base', tileId, value);
-                return this.parseResourceProperty(this.fishSpots, 'data', tileId, value);
-            }
-
-            case 'fishempty': {
-                return this.parseResourceProperty(this.fishSpots, 'depleted', tileId, value);
-            }
-
-            // Foraging
-            case 'forage': {
-                // Foraging spots share the same base and data tiles.
-                this.parseResourceProperty(this.foraging, 'base', tileId, value);
-                return this.parseResourceProperty(this.foraging, 'data', tileId, value);
-            }
-
-            case 'forageempty': {
-                return this.parseResourceProperty(this.foraging, 'depleted', tileId, value);
-            }
         }
     }
 
@@ -279,9 +205,11 @@ export default class ProcessMap {
     private parseTileLayer(layer: Layer): void {
         let name = layer.name.toLowerCase();
 
+        // These are visual-only tiles that we use to create map images.
+        if (name === 'trees' || name === 'rocks' || name === 'foraging') return;
+
         layer.data = this.getLayerData(layer.data, layer.compression)!;
 
-        if (name === 'blocking') return this.parseBlocking(layer);
         if (name === 'entities') return this.parseEntities(layer);
         if (name.startsWith('plateau')) return this.parsePlateau(layer);
 
@@ -301,10 +229,10 @@ export default class ProcessMap {
      */
 
     private parseTileLayerData(mapData: number[]): void {
-        let { data, collisions } = this.map;
+        let { data } = this.map;
 
         for (let i in mapData) {
-            let value = mapData[i];
+            let value = mapData[i] - 1;
 
             if (value < 1) continue;
 
@@ -313,29 +241,6 @@ export default class ProcessMap {
             if (!data[index]) data[index] = value;
             else if (Array.isArray(data[index])) (data[index] as number[]).push(value);
             else data[index] = [data[index] as number, value];
-
-            // Remove flip flags for the sake of calculating collisions.
-            if (this.isFlipped(value)) value = this.removeFlipFlags(value);
-
-            // Add collision indexes to the map.
-            if (value in this.collisionTiles) collisions.push(index);
-        }
-    }
-
-    /**
-     * A blocking tile is a special type of collision that is
-     * added independently of tileIds. It is instead a collision
-     * that is part of the map tile index. In other words, we can
-     * add a collision to a tile in the map despite that tile
-     * not having a collision property.
-     * @param layer The tile layer containing the blocking data.
-     */
-
-    private parseBlocking(layer: Layer): void {
-        for (let index in layer.data) {
-            if (layer.data[index] < 1) continue;
-
-            this.map.collisions.push(parseInt(index));
         }
     }
 
@@ -351,7 +256,7 @@ export default class ProcessMap {
         let { entities } = this.map;
 
         for (let index in layer.data) {
-            let value = layer.data[index];
+            let value = layer.data[index] - 1;
 
             if (value < 1) continue;
 
@@ -376,7 +281,7 @@ export default class ProcessMap {
 
             if (value < 1) continue;
 
-            // We skip collisions
+            // We skip collision
             if (collisions.includes(value)) continue;
 
             plateau[parseInt(index)] = level;
@@ -431,69 +336,6 @@ export default class ProcessMap {
     }
 
     /**
-     * Generic implementation for parsing a resource property. This may be a tree, or a rock
-     * or anything else in the future. When we pass properties onto this function, we ensure
-     * they use the standard `data,` `base,` and `depleted` properties.
-     * @param resourceType The type of resource we are adding data onto (trees, rocks, etc.)
-     * @param name The name of the property (data, base, depleted)
-     * @param tileId The tileId being processed currently (the tile data).
-     * @param value The value represents the resource's identifier.
-     */
-
-    private parseResourceProperty(
-        resourceType: Resources,
-        name: string,
-        tileId: number,
-        value: never
-    ): void {
-        // Create a new resource type if it does not exist.
-        if (!(value in resourceType))
-            resourceType[value] = {
-                data: [],
-                base: [],
-                depleted: [],
-                type: value
-            };
-
-        // Organize resource data into their respective arrays.
-        switch (name) {
-            case 'data': {
-                resourceType[value].data.push(tileId);
-                break;
-            }
-
-            case 'base': {
-                resourceType[value].base.push(tileId);
-                break;
-            }
-
-            case 'depleted': {
-                resourceType[value].depleted.push(tileId);
-                break;
-            }
-        }
-    }
-
-    /**
-     * Parses through a specified resource and creates a callback after it has been validated.
-     * @param resources The list of processed resources to look through.
-     * @param callback Contains resource currently being processed.
-     */
-
-    private parseResources(
-        resources: Resources,
-        callback: (resource: ProcessedResource) => void
-    ): void {
-        for (let resource of Object.values(resources)) {
-            // Determine whether the normal and exhausted resource match lengths, otherwise skip.
-            if (resource.base.length !== resource.depleted.length)
-                return log.error(`${resource.type} has a base and depleted length mismatch.`);
-
-            callback(resource);
-        }
-    }
-
-    /**
      * Looks through all the tiles in the map and finds which one contain a hidden
      * tile at their uppermost layer. We remove the layers behind the hidden tile.
      */
@@ -507,17 +349,29 @@ export default class ProcessMap {
             let tile = data[index];
 
             // Ignore non-array tiles.
-            if (!Array.isArray(data)) continue;
+            if (!Array.isArray(tile)) continue;
 
-            // Find the last tile in the array.
-            let lastTile = (tile as number[])[(tile as number[]).length - 1];
+            let obstructingIndex = -1;
 
-            // If the last tile is hidden, we remove the tile.
-            if (obstructing?.includes(lastTile)) {
-                data[index] = lastTile;
+            // Iterate from the top of the tile and find the topmost obstructing tile.
+            for (let i = tile.length - 1; i >= 0; i--)
+                if (obstructing!.includes(tile[i])) {
+                    obstructingIndex = i;
+                    break;
+                }
 
-                clearedTiles++;
-            }
+            // No obstructing tile found, continuing to next index.
+            if (obstructingIndex === -1) continue;
+
+            // Splice the data after the obstructing index.
+            data[index] = (tile as number[]).splice(obstructingIndex);
+
+            let formattedData = data[index] as number[];
+
+            // eslint-disable-next-line prefer-destructuring
+            if ((formattedData as number[]).length === 1) data[index] = formattedData[0];
+
+            clearedTiles++;
         }
 
         log.notice(`Found ${clearedTiles} full tiles that overlap.`);
@@ -560,25 +414,6 @@ export default class ProcessMap {
 
     private format(): void {
         for (let i = 0; i < this.map.data.length; i++) if (!this.map.data[i]) this.map.data[i] = 0;
-    }
-
-    /**
-     * Tiles that undergo transformations have their tileId altered.
-     * We must temporarily remove that in order to calculate collision
-     * indexes.
-     * @param tileId The tileId with transformation flags applied.
-     * @returns The original tileId without transformation flags.
-     */
-
-    private removeFlipFlags(tileId: number): number {
-        return (
-            tileId &
-            ~(
-                Modules.MapFlags.DIAGONAL_FLAG |
-                Modules.MapFlags.VERTICAL_FLAG |
-                Modules.MapFlags.HORIZONTAL_FLAG
-            )
-        );
     }
 
     /**
@@ -654,16 +489,6 @@ export default class ProcessMap {
     }
 
     /**
-     * Checks if the tileId specified has undergone any translations.
-     * @param tileId The tileId we are checking.
-     * @returns Whether the tileId is greater than the lowest bitwise flag.
-     */
-
-    private isFlipped(tileId: number): boolean {
-        return tileId > Modules.MapFlags.DIAGONAL_FLAG;
-    }
-
-    /**
      * A barebones function for adding firstgid, id, and offset together
      * when trying to determine the overall tileId of a tile.
      * @param firstgid The first tileId in the tileset.
@@ -674,21 +499,6 @@ export default class ProcessMap {
 
     private getId(firstgid: number, id: number, offset = 0): number {
         return firstgid + id + offset;
-    }
-
-    /**
-     * We are using a unified function in case we need to make adjustments
-     * to how we process tiling indexes. An example is not having to go through
-     * all the instances of tileId calculations to modify one variable. This
-     * is just an overall more organized way of doing work.
-     *
-     * @param tileset A tileset layer that we are parsing.
-     * @param tile The current tile that we are parsing through.
-     * @param offset The offset of the tileIndex.
-     */
-
-    private getTileId(tileset: Tileset, tile: Tile, offset = 0): number {
-        return this.getId(tileset.firstgid, tile.id, offset);
     }
 
     /**
@@ -723,11 +533,7 @@ export default class ProcessMap {
             high,
             objects,
             cursors,
-            entities,
-            trees,
-            rocks,
-            fishSpots,
-            foraging
+            entities
         } = this.map;
 
         return JSON.stringify({
@@ -742,11 +548,7 @@ export default class ProcessMap {
             high,
             objects,
             cursors,
-            entities,
-            trees,
-            rocks,
-            fishSpots,
-            foraging
+            entities
         });
     }
 

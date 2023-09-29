@@ -1,6 +1,9 @@
 import Timer from '../../utils/timer';
 
 export default class Blob {
+    public x = -1;
+    public y = -1;
+
     public element: HTMLElement;
     public duration = 5000;
 
@@ -19,6 +22,17 @@ export default class Blob {
 
         // Automatically static if we provied an absolute position.
         this.static = !!this.position;
+    }
+
+    /**
+     * Sets the position of the blob to the specified x and y coordinates.
+     * @param x The x coordinate (absolute position on the map).
+     * @param y The y coordinate (absolute position on the map).
+     */
+
+    public setPosition(x: number, y: number): void {
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -65,21 +79,17 @@ export default class Blob {
 
     private createBlob(instance: string, message: string): HTMLElement {
         let blob = document.createElement('div'),
-            tip = document.createElement('div'),
             text = document.createElement('p');
 
         // Add the identifiers and classes to the blob.
         blob.id = instance;
         blob.classList.add('bubble');
 
-        // Add the identifiers and classes to the tip.
-        tip.classList.add('bubble-tip');
-
         // Add the message to the text element.
         text.innerHTML = message;
 
         // Combine elements and return the result.
-        blob.append(text, tip);
+        blob.append(text);
 
         return blob;
     }
