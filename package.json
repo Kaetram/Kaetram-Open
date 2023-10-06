@@ -47,7 +47,7 @@
         "eslint-plugin-unicorn": "^48.0.1",
         "husky": "^8.0.3",
         "lint-staged": "^14.0.1",
-        "postcss": "^8.4.29",
+        "postcss": "^8.4.31",
         "postcss-custom-media": "^10.0.0",
         "postcss-html": "^1.5.0",
         "postcss-preset-env": "^9.1.3",
