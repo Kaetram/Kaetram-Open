@@ -1156,7 +1156,7 @@
         "activeAbility": {
             "name": "Moonbeam",
             "manaCost": 25,
-            "cooldown": 10000
+            "cooldown": 60000
         }
     },
 
