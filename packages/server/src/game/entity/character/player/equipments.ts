@@ -120,6 +120,13 @@ export default class Equipments {
         }
 
         /**
+         * If the player is equipping the Moonlight Greatsword, then we add the skill Moonbeam
+         * to the player's abilities.
+         */
+
+
+
+        /**
          * Similarly to handling the two-handed weapon, we must also cover the case when the player tries
          * to equip a shield while wielding a two-handed weapon. We must ensure that they have enough space
          * in their inventory before removing the weapon.

@@ -137,6 +137,32 @@
         "type": "passive"
     },
 
+    "moonbeam": {
+        "type": "active",
+        "levels": {
+            "1": {
+                "cooldown": 60000,
+                "duration": 20000,
+                "mana": 25
+            },
+            "2": {
+                "cooldown": 60000,
+                "duration": 20000,
+                "mana": 25
+            },
+            "3": {
+                "cooldown": 60000,
+                "duration": 20000,
+                "mana": 25
+            },
+            "4": {
+                "cooldown": 60000,
+                "duration": 20000,
+                "mana": 25
+            }
+        }
+    },
+
     "secretcalling": {
         "type": "active",
         "levels": {
