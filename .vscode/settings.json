@@ -2,7 +2,9 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
-    "editor.codeActionsOnSave": { "source.fixAll": true },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit"
+    },
     "npm.packageManager": "yarn",
     "prettier.trailingComma": "none",
     "typescript.tsdk": "./node_modules/typescript/lib",

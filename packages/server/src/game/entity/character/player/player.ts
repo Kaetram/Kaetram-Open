@@ -25,6 +25,7 @@ import { Team } from '@kaetram/common/api/minigame';
 import {
     CameraPacket,
     ChatPacket,
+    ConnectedPacket,
     GuildPacket,
     HealPacket,
     MovementPacket,
@@ -112,6 +113,7 @@ export default class Player extends Character {
     public displayedManaWarning = false;
     public bypassAntiCheat = false;
     public pickingUpPet = false; // Used to doubly ensure the player is not spamming the pickup button.
+    public requestedPing = false;
     public overrideMovementSpeed = -1;
 
     // Player info
@@ -212,6 +214,9 @@ export default class Player extends Character {
         this.friends = new Friends(this);
         this.trade = new Trade(this);
         this.handler = new Handler(this);
+
+        // Send the connected packet, begin the handshake process.
+        this.send(new ConnectedPacket());
     }
 
     /**
@@ -720,14 +725,16 @@ export default class Player extends Character {
 
     private verifyMovement(x: number, y: number, latency: number): boolean {
         let now = Date.now(),
-            stepDiff = now - this.lastStep - latency - 10, // subtract latency
+            stepDiff = now - this.lastStep - latency, // subtract latency
             regionDiff = now - this.lastRegionChange;
 
         // High latency may cause packets to be sent in a delayed manner, causing two to be sent/received at once.
         if (latency > 35 && stepDiff < 35) return false;
 
-        // Firstly ensure that the last step was behaving normally.
-        if (stepDiff > this.getMovementSpeed()) return false;
+        // Firstly ensure that the last step was behaving normally, within a 5% margin of error.
+        let movementSpeed = this.getMovementSpeed();
+
+        if (stepDiff > movementSpeed - ~~(movementSpeed * 0.05)) return false;
 
         // A region change may trigger a movement anomaly, so we ignore movement for 1.5 seconds of a region change.
         if (regionDiff < 1500) return false;
@@ -1195,11 +1202,23 @@ export default class Player extends Character {
             this.stopMovement();
         }
 
-        let latency = Date.now() - timestamp;
+        // Add 1 to offset errors in calculations/rounding.
+        let latency = ~~(performance.now() - timestamp);
+
+        // Attempt to resync the player if the latency is too high.
+        if (latency < 0) {
+            this.send(new NetworkPacket(Opcodes.Network.Sync, { timestamp: performance.now() }));
+
+            log.error(`[${this.username}] Negative latency of ${latency}ms detected.`);
+        }
 
         // Ensure the movement is valid, negative latency is impossible lmfao.
-        if (this.verifyMovement(x, y, latency) || latency < 0)
-            this.incrementCheatScore(`Mismatch in movement speed: ${Date.now() - timestamp}`);
+        if (this.verifyMovement(x, y, latency) /*|| latency < 0*/)
+            this.incrementCheatScore(
+                `Movement mismatch: ${
+                    Date.now() - this.lastStep - latency
+                }ms/tile (latency: ${latency}ms)`
+            );
 
         this.setPosition(x, y);
         this.resetTalk();
@@ -1885,8 +1904,10 @@ export default class Player extends Character {
 
     public ping(): void {
         this.pingTime = Date.now();
+        this.requestedPing = true;
 
-        this.send(new NetworkPacket(Opcodes.Network.Ping));
+        // Bypass the queue and send the packet immediately.
+        this.connection.send([new NetworkPacket(Opcodes.Network.Ping).serialize()]);
     }
 
     /**

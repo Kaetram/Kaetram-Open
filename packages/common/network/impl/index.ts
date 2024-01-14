@@ -1,3 +1,4 @@
+export { default as ConnectedPacket } from './connected';
 export { default as HandshakePacket } from './handshake';
 export { default as WelcomePacket } from './welcome';
 export { default as MapPacket } from './map';

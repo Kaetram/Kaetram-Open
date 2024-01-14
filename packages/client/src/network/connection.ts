@@ -69,6 +69,7 @@ import type { TradePacketValues } from '@kaetram/common/network/impl/trade';
 import type { EquipmentPacketValues } from '@kaetram/common/network/impl/equipment';
 import type Resource from '../entity/objects/resource/resource';
 import type { ResourcePacketData } from '@kaetram/common/network/impl/resource';
+import type { NetworkPacketData } from '@kaetram/common/network/impl/network';
 
 export default class Connection {
     /**
@@ -125,6 +126,7 @@ export default class Connection {
             this.lastEntityListRequest = Date.now();
         });
 
+        this.messages.onConnected(this.handleConnected.bind(this));
         this.messages.onHandshake(this.handleHandshake.bind(this));
         this.messages.onWelcome(this.handleWelcome.bind(this));
         this.messages.onMap(this.handleMap.bind(this));
@@ -177,6 +179,18 @@ export default class Connection {
     }
 
     /**
+     * Received signal from the server that we have fully connected, we now begin
+     * sending the handshake packet to the server.
+     */
+
+    private handleConnected(): void {
+        // Send the handshake with the game version.
+        this.socket.send(Packets.Handshake, {
+            gVer: this.app.config.version
+        });
+    }
+
+    /**
      * Handles the handshake packet from the server. The handshake signals
      * to the client that the connection is now established and the client
      * must send the login packet (guest, registering, or login).
@@ -190,6 +204,9 @@ export default class Connection {
         }
 
         this.app.updateLoader('Connecting to server');
+
+        // Calculate the offset of timing relative to the server.
+        this.game.timeOffset = ~~performance.now() - data.serverTime!;
 
         // Set the server id and instance
         this.game.player.instance = data.instance!;
@@ -656,14 +673,25 @@ export default class Connection {
         }
     }
 
-    /**
+    /*
      * Handler for the network packet. These are debugging methods such
      * as latency tests that may be implemented in the future.
      */
 
-    private handleNetwork(): void {
-        // Send a resposne to the ping back.
-        this.socket.send(Packets.Network, [Opcodes.Network.Pong]);
+    private handleNetwork(opcode: Opcodes.Network, info?: NetworkPacketData): void {
+        switch (opcode) {
+            case Opcodes.Network.Ping: {
+                return this.socket.send(Packets.Network, [Opcodes.Network.Pong]);
+            }
+
+            case Opcodes.Network.Sync: {
+                if (!info?.timestamp) return;
+
+                // Calculate the offset of timing relative to the server.
+                this.game.timeOffset = ~~performance.now() - info.timestamp!;
+                return;
+            }
+        }
     }
 
     /**

@@ -19,8 +19,6 @@ export default class {
      */
 
     public load(effects: SerializedEffects): void {
-        console.log(effects);
-
         for (let type in effects) {
             let effect = effects[type];
 

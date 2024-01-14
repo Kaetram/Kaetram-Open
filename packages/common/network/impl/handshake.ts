@@ -6,6 +6,7 @@ export interface ClientHandshakePacketData {
     type: 'client';
     instance?: string; // Player's instance.
     serverId?: number;
+    serverTime?: number;
 }
 
 export interface HubHandshakePacketData {

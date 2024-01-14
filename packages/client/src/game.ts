@@ -66,6 +66,7 @@ export default class Game {
     public timeDiff = Date.now(); // Used for FPS calculation.
     public timeLast = Date.now();
     public targetFPS = 1000 / 50;
+    public timeOffset = 0; // Offset relative to the server time.
 
     public started = false;
     public ready = false;

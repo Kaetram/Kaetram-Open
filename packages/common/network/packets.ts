@@ -1,4 +1,5 @@
 enum Packets {
+    Connected,
     Handshake,
     Login,
     Welcome,

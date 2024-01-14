@@ -2,9 +2,8 @@ import Messages from './messages';
 
 import log from '../lib/log';
 
-import { Packets } from '@kaetram/common/network';
-
 import type Game from '../game';
+import type { Packets } from '@kaetram/common/network';
 import type { SerializedServer } from '@kaetram/common/types/network';
 import type { TradePacketOutgoing } from '@kaetram/common/network/impl/trade';
 
@@ -69,7 +68,12 @@ export default class Socket {
         this.connection.addEventListener('error', () => this.handleConnectionError(host, port));
 
         // Handler for when a disconnection occurs.
-        this.connection.addEventListener('close', () => this.game.handleDisconnection());
+        this.connection.addEventListener('close', (event: CloseEvent) => {
+            // Event code 1010 is our custom code when the server rejects us for a specific reason.
+            if (event.code === 1010 && event.reason) this.messages.handleCloseReason(event.reason);
+
+            this.game.handleDisconnection();
+        });
 
         /**
          * The audio controller can only be properly initialized when the player interacts
@@ -87,12 +91,20 @@ export default class Socket {
     private receive(message: string): void {
         if (!this.listening) return;
 
-        if (message.startsWith('[')) {
-            let data = JSON.parse(message);
+        /**
+         * Invalid message format, we skip. Previously we would handle UTF8
+         * messages separately here, but we now rely on the close event to
+         * signal to use the appropriate reason for closing.
+         */
 
-            if (data.length > 1) this.messages.handleBulkData(data);
-            else this.messages.handleData(data.shift());
-        } else this.messages.handleUTF8(message);
+        if (!message.startsWith('[')) return;
+
+        // Parse the JSON string into an array.
+        let data = JSON.parse(message);
+
+        // Handle bulk data or single data.
+        if (data.length > 1) this.messages.handleBulkData(data);
+        else this.messages.handleData(data.shift());
     }
 
     /**
@@ -101,7 +113,7 @@ export default class Socket {
      * @param data Packet data in an array format.
      */
 
-    public send<const P extends Packets>(packet: P, data?: OutgoingPackets[P & number]): void {
+    public send(packet: Packets, data?: unknown): void {
         // Ensure the connection is open before sending.
         if (this.connection?.readyState !== WebSocket.OPEN) return;
 
@@ -118,11 +130,6 @@ export default class Socket {
         log.info('Connection established...');
 
         this.game.app.updateLoader('Preparing handshake');
-
-        // Send the handshake with the game version.
-        this.send(Packets.Handshake, {
-            gVer: this.config.version
-        });
     }
 
     /**

@@ -58,9 +58,14 @@ export default class Network {
             // Ensure that the connection is not banned.
             if (banned) return connection.reject('banned');
 
-            // Create the player instance and check the time difference between the last connection.
-            let player = new Player(this.world, this.database, connection),
-                timeDifference = Date.now() - this.getLastConnection(connection);
+            // Create the packet queue for the connection instance.
+            this.packets[connection.instance] = [];
+
+            // Check the time difference between the last connection.
+            let timeDifference = Date.now() - this.getLastConnection(connection);
+
+            // Update the last time the connection was made.
+            this.socketHandler.updateLastTime(connection.address);
 
             // Skip if we are in debug mode.
             if (!config.debugging) {
@@ -72,18 +77,8 @@ export default class Network {
                     return connection.reject('toomany');
             }
 
-            this.socketHandler.updateLastTime(connection.address);
-
-            this.createPacketQueue(player);
-
-            this.send(
-                player,
-                new HandshakePacket({
-                    type: 'client',
-                    instance: player.instance,
-                    serverId: config.serverId
-                })
-            );
+            // Create the player instance finally.
+            new Player(this.world, this.database, connection);
         });
     }
 

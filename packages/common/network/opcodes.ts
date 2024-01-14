@@ -51,7 +51,8 @@ export enum Projectile {
 
 export enum Network {
     Ping,
-    Pong
+    Pong,
+    Sync
 }
 
 export enum Container {

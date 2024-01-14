@@ -52,10 +52,12 @@ import type {
     UpdatePacketCallback,
     WelcomePacketCallback
 } from '@kaetram/common/types/messages/outgoing';
+import type { ConnectedPacketCallback } from '@kaetram/common/network/impl/connected';
 
 export default class Messages {
     private messages: (() => ((...data: never[]) => void) | undefined)[] = [];
 
+    private connectedCallback?: ConnectedPacketCallback;
     private handshakeCallback?: HandshakePacketCallback;
     private welcomeCallback?: WelcomePacketCallback;
     private mapCallback?: MapPacketCallback;
@@ -117,6 +119,7 @@ export default class Messages {
      * accordingly.
      */
     public constructor(private app: App) {
+        this.messages[Packets.Connected] = () => this.connectedCallback;
         this.messages[Packets.Handshake] = () => this.handshakeCallback;
         this.messages[Packets.Welcome] = () => this.welcomeCallback;
         this.messages[Packets.Spawn] = () => this.spawnCallback;
@@ -192,15 +195,15 @@ export default class Messages {
     }
 
     /**
-     * UTF8 messages handler. These are simple messages that are pure
-     * strings. These errors are displayed on the login page.
-     * @param message UTF8 message received from the server.
+     * Handles the close event when the connection is closed. The reason passed determines
+     * what error we display to the user.
+     * @param reason UTF8 reason received from the server.
      */
 
-    public handleUTF8(message: string): void {
+    public handleCloseReason(reason: string): void {
         this.app.toggleLogin(false);
 
-        switch (message) {
+        switch (reason) {
             case 'worldfull': {
                 this.app.sendError('The servers are currently full!');
                 break;
@@ -250,6 +253,11 @@ export default class Messages {
                 this.app.sendError(
                     'The input you have entered is invalid. Please do not use special characters.'
                 );
+                break;
+            }
+
+            case 'swappedworlds': {
+                this.app.sendError('You have recently swapped worlds, please wait 15 seconds.');
                 break;
             }
 
@@ -313,6 +321,10 @@ export default class Messages {
     /**
      * Packet callbacks.
      */
+
+    public onConnected(callback: ConnectedPacketCallback): void {
+        this.connectedCallback = callback;
+    }
 
     public onHandshake(callback: HandshakePacketCallback): void {
         this.handshakeCallback = callback;

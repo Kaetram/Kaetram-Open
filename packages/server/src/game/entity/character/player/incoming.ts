@@ -6,7 +6,7 @@ import log from '@kaetram/common/util/log';
 import Utils from '@kaetram/common/util/utils';
 import Filter from '@kaetram/common/util/filter';
 import Creator from '@kaetram/common/database/mongodb/creator';
-import { SpawnPacket } from '@kaetram/common/network/impl';
+import { SpawnPacket, HandshakePacket as Handshake } from '@kaetram/common/network/impl';
 import { Opcodes, Packets } from '@kaetram/common/network';
 
 import type Player from './player';
@@ -29,8 +29,8 @@ import type {
     StorePacket,
     WarpPacket,
     FriendsPacket,
-    TradePacket,
     HandshakePacket,
+    TradePacket,
     EnchantPacket,
     GuildPacket,
     CraftingPacket,
@@ -45,6 +45,8 @@ export default class Incoming {
     private entities: Entities;
     private database: MongoDB;
     private commands: Commands;
+
+    private completedHandshake = false;
 
     public constructor(private player: Player) {
         this.connection = player.connection;
@@ -158,7 +160,25 @@ export default class Incoming {
      */
 
     private handleHandshake(data: HandshakePacket): void {
-        if (data.gVer !== config.gver) this.connection.reject('updated');
+        // Reject if the client is not on the right version.
+        if (data.gVer !== config.gver) return this.connection.reject('updated');
+
+        // Used to prevent the client from sending any packets before the handshake is complete.
+        this.completedHandshake = true;
+
+        /**
+         * Immediately send the handshake packet and bypass the queue so that the client
+         * can obtain the most accurace server time.
+         */
+
+        this.player.connection.send([
+            new Handshake({
+                type: 'client',
+                instance: this.player.instance,
+                serverId: config.serverId,
+                serverTime: ~~performance.now()
+            }).serialize()
+        ]);
     }
 
     /**
@@ -169,6 +189,9 @@ export default class Incoming {
      */
 
     private handleLogin(data: LoginPacket): void {
+        // Ensure the handshake has been completed before proceeding.
+        if (!this.completedHandshake) return this.connection.reject('lost');
+
         let { opcode, username, password, email } = data;
 
         if (username) {
@@ -424,9 +447,13 @@ export default class Incoming {
 
         switch (opcode) {
             case Opcodes.Network.Pong: {
+                if (!this.player.requestedPing) return;
+
                 let time = Date.now();
 
                 this.player.notify(`Latency of ${time - this.player.pingTime}ms`, 'red');
+
+                this.player.requestedPing = false;
 
                 break;
             }
