@@ -85,4 +85,9 @@ export interface ItemData {
     pet?: string;
     effect?: string;
     duration?: number;
+    activeAbility?: {
+        name: string;       // Name of the active ability
+        manaCost: number;   // Mana cost of the ability
+        cooldown: number;   // Cooldown duration for the ability
+    };
 }

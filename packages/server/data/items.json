@@ -1125,6 +1125,41 @@
             "magic": -8
         }
     },
+
+    "moonlightgreatsword": {
+        "type": "weapon",
+        "name": "Moonlight Greatsword",
+        "weaponType": "sword",
+        "price": 5000,
+        "skill": "magic",
+        "level": 55,
+        "attackStats": {
+            "crush": 4,
+            "slash": 12,
+            "stab": 14,
+            "archery": 0,
+            "magic": 38
+        },
+        "defenseStats": {
+            "crush": 2,
+            "slash": 8,
+            "stab": 6,
+            "archery": 0,
+            "magic": 14
+        },
+        "bonuses": {
+            "accuracy": 0,
+            "strength": 0,
+            "archery": 0,
+            "magic": 27
+        },
+        "activeAbility": {
+            "name": "Moonbeam",
+            "manaCost": 25,
+            "cooldown": 60000
+        }
+    },
+
     "bluelightsaber": {
         "type": "weapon",
         "name": "Blue Lightsaber",

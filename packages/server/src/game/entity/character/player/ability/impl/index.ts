@@ -6,6 +6,7 @@ import precognition from './precognition';
 import run from './run';
 import secretcalling from './secretcalling';
 import thickskin from './thickskin';
+import moonbeam from './moonbeam'
 
 export default {
     intimidate,
@@ -15,5 +16,6 @@ export default {
     hotshot,
     thickskin,
     precognition,
-    secretcalling
+    secretcalling,
+    moonbeam
 };
