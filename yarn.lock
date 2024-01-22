@@ -3494,7 +3494,7 @@ __metadata:
     "@types/dotenv-parse-variables": "npm:^2.0.1"
     "@types/express": "npm:^4.17.17"
     "@types/nodemailer": "npm:^6.4.9"
-    axios: "npm:^1.5.0"
+    axios: "npm:^1.6.0"
     cors: "npm:^2.8.5"
     discord.js: "npm:^14.13.0"
     dotenv-extended: "npm:^2.9.0"
@@ -3523,7 +3523,7 @@ __metadata:
     "@types/express": "npm:^4.17.17"
     "@types/sanitizer": "npm:^0.0.28"
     "@types/websocket": "npm:^1.0.6"
-    axios: "npm:^1.5.0"
+    axios: "npm:^1.6.0"
     discord.js: "npm:^14.13.0"
     dotenv-extended: "npm:^2.9.0"
     dotenv-parse-variables: "npm:^2.0.0"
@@ -5418,14 +5418,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "axios@npm:1.5.0"
+"axios@npm:^1.6.0":
+  version: 1.6.1
+  resolution: "axios@npm:1.6.1"
   dependencies:
     follow-redirects: "npm:^1.15.0"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 39440528483b1eeaeac1913a96a9bedfcb477bc059f0cc690a8242f361ce5ed84b73206dca5ce2977b94cf6b8c2b0132602764fc2fa465765ee3729e5d3f2d6a
+  checksum: a306bd74ddac770dc2529108059a4294d594e952056ac330d27c1755b7d3f6cbdde1c58fb748b979e2b2a13f47024e0d6bfd219fc6901558775c7148e520b96c
   languageName: node
   linkType: hard
 
