@@ -74,7 +74,7 @@ export default abstract class Points {
     }
 
     /**
-     * Returns wheather or not the points are at the maximum points.
+     * Returns whether or not the points are at the maximum points.
      * @returns `true` if the points are at the maximum points.
      */
 
