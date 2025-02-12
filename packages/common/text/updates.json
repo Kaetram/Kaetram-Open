@@ -1,11 +1,6 @@
 {
     "0.5.5-beta": {
-        "title": "Kaetram 0.5.5-beta",
-        "content": [
-            "- Add language selection menu",
-            "- Add FPS throttle option",
-            "- New quests",
-            "- Anti-cheating detection improvements"
-        ]
+        "title": "Sprite Land Beta2",
+        "content": ["- New graphics", "- $SPRITE integration", "- New quests", "- Anti-cheating detection improvements"]
     }
 }

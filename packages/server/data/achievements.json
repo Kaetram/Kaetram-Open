@@ -257,13 +257,13 @@
     "getmaxlevel": {
         "name": "Get Max Level!",
         "description": "Receive max amount of experience if you talk to this inhabitant in hell.",
-        "region": "Kingdom of Kaetram",
+        "region": "Kingdom of Sprite Land",
         "npc": "rick"
     },
     "roadtohell": {
         "name": "Road to Hell",
         "description": "Defeat the Dark Wolf guarding the entrance to the Hellhound.",
-        "region": "Kingdom of Kaetram",
+        "region": "Kingdom of Sprite Land",
         "hidden": true,
         "rewardSkill": "health",
         "rewardExperience": 4000
@@ -271,7 +271,7 @@
     "hellhound": {
         "name": "Hellhound",
         "description": "Defeat the hellhound in the hell dungeon!",
-        "region": "Kingdom of Kaetram",
+        "region": "Kingdom of Sprite Land",
         "hidden": true,
         "rewardSkill": "strength",
         "rewardExperience": 25600
@@ -390,8 +390,8 @@
         "secret": true
     },
     "kaetramdungeon": {
-        "name": "Kaetram's Dungeon",
-        "description": "Discovered the secret ladder to enter Kaetram's dungeon!",
+        "name": "Sprite Land's Dungeon",
+        "description": "Discovered the secret ladder to enter Sprite Land's dungeon!",
         "secret": true
     },
 
@@ -483,7 +483,7 @@
     },
     "questmaster": {
         "name": "Quest Master",
-        "description": "Complete all quests in Kaetram.",
+        "description": "Complete all quests in Sprite Land.",
         "secret": true
     },
     "dungeoncrawler": {

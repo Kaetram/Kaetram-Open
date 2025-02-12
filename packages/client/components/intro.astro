@@ -17,7 +17,7 @@ let currentLanguage = getLanguage(),
 <div id="intro">
     <section id="parchment" class="load-character slice-menu-fancy">
         <article id="load-character">
-            <h1 class="title-decoration">{t('game:NAME')}</h1>
+            <h1 class="title-decoration">Sprite Land - $SPRITE on Solana</h1>
 
             <form onsubmit={'return false'}>
                 <input
@@ -117,12 +117,23 @@ let currentLanguage = getLanguage(),
                     autocomplete="off"
                 />
                 <input
-                    type="email"
+                    type="text"
                     id="register-email-input"
                     class="stroke slice-input"
                     name="player-email"
-                    placeholder="Email Address"
-                    aria-label="Email Address"
+                    placeholder="Solana Wallet"
+                    aria-label="Solana Wallet"
+                    maxlength="64"
+                    autocomplete="off"
+                />
+
+                <input
+                    type="text"
+                    id="ref-friend"
+                    class="stroke slice-input"
+                    name="player-friend"
+                    placeholder="Referral Friend"
+                    aria-label="Your Referral Friend Username"
                     maxlength="64"
                     autocomplete="off"
                 />
@@ -234,72 +245,14 @@ let currentLanguage = getLanguage(),
 
             <p>
                 <br />
-                 Special thanks to
-                <a
-                    rel="noopener noreferrer"
-                    class="clickable"
-                    target="_blank"
-                    href="https://www.littleworkshop.fr/">Little Workshop</a
-                >
-                 for the pixel art,
+                 Sprite Land 
                 <br />
                 <br />
-                 and the Asky Team.
+                 is
                 <br />
                 <br />
-                 More pixel assets by
-                <a
-                    rel="noopener noreferrer"
-                    class="clickable"
-                    target="_blank"
-                    href="https://opengameart.org/users/buch">Buch</a
-                >,
-                <a
-                    rel="noopener noreferrer"
-                    class="clickable"
-                    target="_blank"
-                    href="https://shikashiassets.itch.io/shikashis-fantasy-icons-pack">Shikashi</a
-                >,
-                <a
-                    rel="noopener noreferrer"
-                    class="clickable"
-                    target="_blank"
-                    href="https://opengameart.org/content/kyrises-free-16x16-rpg-icon-pack"
-                    >Kyrise</a
-                >,
-                <a
-                    rel="noopener noreferrer"
-                    class="clickable"
-                    target="_blank"
-                    href="https://game-icons.net">Game-Icons.net</a
-                >, &amp; Boo
-                <br />
-                <br />
-                 Music by
-                <a
-                    rel="noopener noreferrer"
-                    class="clickable"
-                    target="_blank"
-                    href="https://soundcloud.com/gyrowolf">Terrel O'Brien</a
-                >,
-                <a
-                    rel="noopener noreferrer"
-                    class="clickable"
-                    target="_blank"
-                    href="https://blog.dayjo.org">Joel Day</a
-                >,
-                <a
-                    rel="noopener noreferrer"
-                    class="clickable"
-                    target="_blank"
-                    href="https://www.dantilden.com">Dan Tilden</a
-                >, &amp;
-                <a
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    class="clickable"
-                    href="https://soundcloud.com/aaron-anderson-11">Aaron Krogh</a
-                >
+                 Powered by Solana
+                
             </p>
 
             <div class="close-about">
@@ -311,17 +264,9 @@ let currentLanguage = getLanguage(),
             <h1 class="title-decoration">About</h1>
 
             <p>
-                Kaetram is a browser-based 2D MMORPG adventure. You play as an adventurer amongst
-                others and explore the world of Kaetram. Originally started as a fork of
-                BrowserQuest, Kaetram has evolved into its own game. In honour to the original idea,
-                the assets have been preserved and expanded upon. We are one of a few open-source
-                community driven game projects. We are always looking for assistance in terms of
-                programming, graphic artists, and/or music composers. Our source-code can be found
-                on our
-                <a target="_blank" href="https://github.com/Kaetram/Kaetram-Open"
-                    >GitHub Repository</a
-                >. If you would like to stay up-to-date with the project, make sure you join our
-                <a target="_blank" href="https://discord.gg/MmbGAaw">Discord server</a>.
+                Sprite Land is a browser-based 2D MMORPG adventure. You play as an adventurer amongst
+                others and explore the world of Sprite Land. 
+                
             </p>
 
             <div class="close-about">
@@ -366,6 +311,7 @@ let currentLanguage = getLanguage(),
 
     <span id="game-version" class="version"></span>
 
+
     <footer>
         <div id="about-link" class="clickable">
             <span id="toggle-about">About</span>
@@ -376,8 +322,8 @@ let currentLanguage = getLanguage(),
         </div>
         <span>&ndash;</span>
         <div id="discord-link" class="clickable">
-            <a class="footer-button" target="_blank" href="https://discord.gg/MmbGAaw">
-                <span>Discord</span>
+            <a class="footer-button" target="_blank" href="https://t.me/sprite_land">
+                <span>Telegram</span>
             </a>
         </div>
         <span>&ndash;</span>
@@ -385,9 +331,9 @@ let currentLanguage = getLanguage(),
             <a
                 class="footer-button"
                 target="_blank"
-                href="https://www.patreon.com/bePatron?u=29287394"
+                href="https://presale.magiceden.io/pay/67ac8fa5e316ca7a58b6feb6"
             >
-                <span>Patreon</span>
+                <span>Presale</span>
             </a>
         </div>
         <span>&ndash;</span>

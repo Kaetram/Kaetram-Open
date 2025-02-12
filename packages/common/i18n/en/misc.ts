@@ -75,7 +75,7 @@ export default {
     TRADE_REQUEST: 'You have requested to trade with {{username}}.',
     TRADE_REQUEST_OTHER: '{{username}} has requested to trade with you.',
     TRADE_EMPTY: `Yo why are y'all trading nothing?`,
-    TRADE_COMPLETE: 'Thank you for using Kaetram trading system!',
+    TRADE_COMPLETE: 'Thank you for using Sprite Land trading system!',
     WELCOME: 'Welcome to {{name}}!',
     WELCOME_BACK: 'Welcome back to {{name}}!',
     WHY_GO_THERE: 'Now hang on, why would I wanna go in there?'
