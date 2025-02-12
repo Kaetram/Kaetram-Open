@@ -86,7 +86,7 @@ export default {
     TRADE_REQUEST: 'Du hast angefragt, mit {{username}} zu handeln.',
     TRADE_REQUEST_OTHER: '{{username}} hat angefragt, mit dir zu handeln.',
     TRADE_EMPTY: `Yo, warum handelt ihr mit nichts??`,
-    TRADE_COMPLETE: 'Danke, dass du das Kaetram Handelssystem benutzt!',
+    TRADE_COMPLETE: 'Danke, dass du das Sprite Land Handelssystem benutzt!',
     WELCOME: 'Willkommen bei {{name}}!',
     WELCOME_BACK: 'Willkommen zurück bei {{name}}!',
     WHY_GO_THERE: 'Moment mal, warum sollte ich da reingehen??'

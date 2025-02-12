@@ -1,6 +1,6 @@
 {
     "name": "Royal Drama",
-    "description": "The king of Kaetram is in need of your help.|The king of Kaetram is missing and no one knows about his whereabouts. Perhaps you should go speak to the guards and see what they might not know about him.",
+    "description": "The king of Sprite Land is in need of your help.|The king of Sprite Land is missing and no one knows about his whereabouts. Perhaps you should go speak to the guards and see what they might not know about him.",
     "rewards": ["Access to the castle"],
     "hideNPCs": {
         "king": "before",

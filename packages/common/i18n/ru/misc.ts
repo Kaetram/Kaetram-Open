@@ -72,7 +72,7 @@ export default {
     TRADE_REQUEST: 'Вы запросили торговлю с {{username}}.',
     TRADE_REQUEST_OTHER: '{{username}} запросил торговлю с вами.',
     TRADE_EMPTY: `Йо, почему вы ничего не торгуете?`,
-    TRADE_COMPLETE: 'Благодарим Вас за использование торговой системы Kaetram!',
+    TRADE_COMPLETE: 'Благодарим Вас за использование торговой системы Sprite Land!',
     WELCOME: 'Добро пожаловать в {{name}}!',
     WELCOME_BACK: 'С возвращением в {{name}}!',
     WHY_GO_THERE: 'Погодите, зачем мне туда идти?'

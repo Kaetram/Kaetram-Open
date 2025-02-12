@@ -5,8 +5,8 @@
     "type": "module",
     "packageManager": "yarn@4.0.0-rc.40",
     "author": "OmniaDev",
-    "description": "Kaetram is an open-source game-engine created to aid those interested in entering the game development realm. The original idea is based on Little Workshop's demo game - BrowserQuest. The assets have remained the same, but the code itself has been completely wiped and redone from the ground up.",
-    "homepage": "https://kaetram.com/",
+    "description": "Sprite Land Powered by Solana.",
+    "homepage": "https://solsprite.world/",
     "license": "MPL-2.0",
     "scripts": {
         "postinstall": "husky install",
@@ -71,9 +71,9 @@
     "engines": {
         "node": "^18.14.1 || ^20.0.0"
     },
-    "repository": "git+https://github.com/Kaetram/Kaetram-Open.git",
+    "repository": "git+https://github.com",
     "bugs": {
-        "url": "https://github.com/Kaetram/Kaetram-Open/issues"
+        "url": "https://github.com/"
     },
     "keywords": [
         "2d",

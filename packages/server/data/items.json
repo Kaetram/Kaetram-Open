@@ -8520,31 +8520,31 @@
         "type": "object",
         "name": "Aquasillius Logs",
         "price": 350,
-        "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
+        "description": "Mystical logs found in the forests of Sprite Land. Can be used to craft powerful bows, granted that you have the requirements I guess."
     },
     "alkythnlogs": {
         "type": "object",
         "name": "Alkythn Logs",
         "price": 350,
-        "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
+        "description": "Mystical logs found in the forests of Sprite Land. Can be used to craft powerful bows, granted that you have the requirements I guess."
     },
     "heliphatitlogs": {
         "type": "object",
         "name": "Heliphatit Logs",
         "price": 350,
-        "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
+        "description": "Mystical logs found in the forests of Sprite Land. Can be used to craft powerful bows, granted that you have the requirements I guess."
     },
     "zoncillogs": {
         "type": "object",
         "name": "Zoncil Logs",
         "price": 350,
-        "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
+        "description": "Mystical logs found in the forests of Sprite Land. Can be used to craft powerful bows, granted that you have the requirements I guess."
     },
     "zondullogs": {
         "type": "object",
         "name": "Zondul Logs",
         "price": 350,
-        "description": "Mystical logs found in the forests of Kaetram. Can be used to craft powerful bows, granted that you have the requirements I guess."
+        "description": "Mystical logs found in the forests of Sprite Land. Can be used to craft powerful bows, granted that you have the requirements I guess."
     },
     "bloodwoodlogs": {
         "type": "object",
@@ -9006,7 +9006,7 @@
     "mustardplant": {
         "type": "object",
         "name": "Mustard",
-        "description": "A plant found throughout the kingdom of Kaetram. Might be good for some ingredients.",
+        "description": "A plant found throughout the kingdom of Sprite Land. Might be good for some ingredients.",
         "price": 50
     },
     "cuminplant": {

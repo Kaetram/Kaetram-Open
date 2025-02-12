@@ -77,7 +77,7 @@ export default {
     TRADE_REQUEST: 'Has solicitado comerciar con {{username}}.',
     TRADE_REQUEST_OTHER: '{{username}} ha solicitado comerciar contigo.',
     TRADE_EMPTY: '¿Oye, por qué no intercambias nada?',
-    TRADE_COMPLETE: '¡Gracias por usar el sistema de comercio de Kaetram!',
+    TRADE_COMPLETE: '¡Gracias por usar el sistema de comercio de Sprite Land!',
     WELCOME: '¡Bienvenido a {{name}}!',
     WELCOME_BACK: '¡Bienvenido de nuevo a {{name}}!',
     WHY_GO_THERE: 'Espera, ¿por qué querría entrar allí?'

@@ -1,7 +1,7 @@
 {
-    "name": "Welcome to Kaetram",
-    "description": "Teaching you the very basics of Kaetram.|This tutorial will teach you how to move around, attack, interact with objects and use ranged weapons. Follow the arrows and talk to the NPCs if you are stuck.",
-    "rewards": ["Knowledge of the game :)"],
+    "name": "Welcome to Sprite Land",
+    "description": "Teaching you the very basics of Sprite Land.|This tutorial will teach you how to move around, attack, interact with objects and use ranged weapons. Follow the arrows and talk to the NPCs if you are stuck.",
+    "rewards": ["Knowledge of the game and some $SPRITE in your wallet :)"],
     "stages": {
         "0": {
             "task": "talk",
@@ -39,41 +39,6 @@
         },
 
         "2": {
-            "task": "talk",
-            "npc": "guard",
-            "text": [
-                "Oh great anot- nevermind.",
-                "Welcome to the world of Kaetram.",
-                "I'm here to teach you about skills and combat.",
-                "Skills are activities that allow you to collect items and gain experience.",
-                "You can use the experience to discover new areas and engage in more complex tasks.",
-                "Before we get to any combat-related skills, I want you to cut two trees for me.",
-                "Here, take this axe, open your inventory, and equip it."
-            ],
-
-            "completedText": ["Go on, cut two trees for me."],
-
-            "itemRewards": [
-                {
-                    "key": "bronzeaxe",
-                    "count": 1
-                }
-            ],
-
-            "pointer": {
-                "type": 0,
-                "x": 60,
-                "y": 602
-            }
-        },
-
-        "3": {
-            "task": "tree",
-            "tree": "tutorialoak",
-            "treeCount": 2
-        },
-
-        "4": {
             "task": "npc",
             "npc": "guard",
 
@@ -97,88 +62,7 @@
             }
         },
 
-        "5": {
-            "task": "talk",
-            "npc": "guard",
-
-            "hasItemText": [
-                "Awesome, just bear with me a little longer.",
-                "I know it's boring but I am obligated to teach you this.",
-                "Now take this fishing pole and go catch two shrimps for me."
-            ],
-
-            "completedText": ["Go on, catch two shrimps for me."],
-
-            "itemRequirements": [
-                {
-                    "key": "stick",
-                    "count": 1
-                }
-            ],
-
-            "itemRewards": [
-                {
-                    "key": "stick",
-                    "count": 1
-                },
-                {
-                    "key": "fishingpole",
-                    "count": 1
-                }
-            ]
-        },
-
-        "6": {
-            "task": "fish",
-            "fish": "tutorialshrimpspot",
-            "fishCount": 2
-        },
-
-        "7": {
-            "task": "talk",
-            "npc": "guard",
-
-            "text": [
-                "Great, one more thing and we're done with the boring stuff.",
-                "It's as much of a chore for me as it is for you so don't worry.",
-                "Go click on that cooking pot and cook these shrimps for me."
-            ],
-            "completedText": ["Go on, cook the shrimps for me."],
-            "pointer": {
-                "type": 0,
-                "x": 60,
-                "y": 602
-            }
-        },
-
-        "8": {
-            "task": "talk",
-            "npc": "guard",
-
-            "hasItemText": [
-                "Awesome, you're done with the boring stuff.",
-                "Head down that suspicious ladder to the left and meet me in the cave.",
-                "Don't question it, just trust me."
-            ],
-            "completedText": ["Head down the ladder and meet me in the cave."],
-            "itemRequirements": [
-                {
-                    "key": "cookedshrimp",
-                    "count": 1
-                }
-            ]
-        },
-
-        "9": {
-            "task": "door",
-            "pointer": {
-                "type": 0,
-                "x": 39,
-                "y": 612
-            }
-        },
-
-        "10": {
+        "3": {
             "task": "talk",
             "npc": "guard",
 
@@ -202,13 +86,13 @@
             }
         },
 
-        "11": {
+        "4": {
             "task": "kill",
             "mob": ["rat"],
             "mobCountRequirement": 3
         },
 
-        "12": {
+        "5": {
             "task": "talk",
             "npc": "guard",
 
@@ -235,13 +119,13 @@
             }
         },
 
-        "13": {
+        "6": {
             "task": "kill",
             "mob": ["crab"],
             "mobCountRequirement": 2
         },
 
-        "14": {
+        "7": {
             "task": "talk",
             "npc": "guard",
 
@@ -256,17 +140,17 @@
 
             "pointer": {
                 "type": 0,
-                "x": 29,
-                "y": 541
+                "x": 542,
+                "y": 12
             }
         },
 
-        "15": {
+        "8": {
             "task": "door",
             "pointer": {
                 "type": 0,
-                "x": 41,
-                "y": 549
+                "x": 542,
+                "y": 12
             }
         }
     }

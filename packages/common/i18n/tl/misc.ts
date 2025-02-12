@@ -27,7 +27,7 @@ export default {
     CANNOT_TRADE_ITEM: 'Hindi ma aring i-trade ang item na ito.',
     CANNOT_TRADE_CHEATER: 'Paumanhi pero bawal mag trade ang mga cheaters.',
     CANNOT_TRADE_CHEATER_OTHER: 'Manloloko ang player na yan, baka bebentahan ka ng droga nyan!',
-    CANNOT_TRADE_ADMIN: 'Bilang isang admin, hindi mo maiimpluwensya ang ekonomiya ng Kaetram.',
+    CANNOT_TRADE_ADMIN: 'Bilang isang admin, hindi mo maiimpluwensya ang ekonomiya ng Sprite Land.',
     CANNOT_TRADE_ADMIN_OTHER:
         'Ang Player na to ay isang admin at hindi maaring makapag trade sakanya.',
     DONT_THINK_GO_IN: 'Sa tingin ko, dapat di pa ako papasok diyan.',
@@ -79,7 +79,7 @@ export default {
     TRADE_REQUEST: 'Humihiling kang makipag trade kay {{username}}.',
     TRADE_REQUEST_OTHER: 'Si {{username}} ay humihiling na makipag trade sa iyo.',
     TRADE_EMPTY: `Yo, Bakit wala kayong pinagpalit?`,
-    TRADE_COMPLETE: 'Salamat sa paggamit ng Trading System nang Kaetram!',
+    TRADE_COMPLETE: 'Salamat sa paggamit ng Trading System nang Sprite Land!',
     WELCOME: 'Maligayang pagdating {{name}}!',
     WELCOME_BACK: 'Maligayang pag balik {{name}}!',
     WHY_GO_THERE: 'Teka lang, bakit ako pupunta diyan?'

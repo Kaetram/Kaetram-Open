@@ -33,7 +33,7 @@ If applicable, add screenshots to help explain your problem.
 - Device: [e.g. PC, Mac, iPhone6]
 - OS: [e.g. iOS8.1]
 - Browser [e.g. stock browser, safari]
-- Kaetram Version [e.g. 22]
+- Sprite Land Version [e.g. Beta2]
 
 ### Additional context
 
