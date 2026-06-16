@@ -113,15 +113,11 @@ Install the dependencies by simply running
 yarn
 ```
 
+```markdown
 ### Running
-
-**You must accept the MPL2.0 and OPL licensing agreement by toggling `ACCEPT_LICENSE` in the enviroment variable file. The server and client are disabled until you have done so.**
-
 To run live development builds, use
-
 ```console
 yarn dev
-```
 
 To create production builds, run
 
