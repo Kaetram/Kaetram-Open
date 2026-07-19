@@ -25,6 +25,10 @@ test('strict environment RNG configuration is deterministic and fail closed', ()
     let temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'kaetram-rng-test-')),
         destination = path.join(temporaryDirectory, 'environment-rng.json'),
         seed = '11001',
+        bundleSha256 = crypto
+            .createHash('sha256')
+            .update(fs.readFileSync(fs.realpathSync(process.argv[1])))
+            .digest('hex'),
         revision = execFileSync('git', ['rev-parse', 'HEAD'], {
             encoding: 'utf8'
         }).trim();
@@ -57,7 +61,8 @@ test('strict environment RNG configuration is deterministic and fail closed', ()
                     KAETRAM_ENV_RNG_REQUIRED: '1',
                     KAETRAM_ENV_SEED: seed,
                     KAETRAM_ENV_RNG_ATTESTATION_PATH: destination,
-                    KAETRAM_GAME_REVISION: 'develop'
+                    KAETRAM_GAME_REVISION: 'develop',
+                    KAETRAM_GAME_BUNDLE_SHA256: bundleSha256
                 }),
             /exact 40- or 64-character commit hash/
         );
@@ -67,16 +72,39 @@ test('strict environment RNG configuration is deterministic and fail closed', ()
                     KAETRAM_ENV_RNG_REQUIRED: '1',
                     KAETRAM_ENV_SEED: seed,
                     KAETRAM_ENV_RNG_ATTESTATION_PATH: destination,
-                    KAETRAM_GAME_REVISION: '0'.repeat(40)
+                    KAETRAM_GAME_REVISION: revision
+                }),
+            /KAETRAM_GAME_BUNDLE_SHA256 is required/
+        );
+        assert.throws(
+            () =>
+                configureEnvironmentRng({
+                    KAETRAM_ENV_RNG_REQUIRED: '1',
+                    KAETRAM_ENV_SEED: seed,
+                    KAETRAM_ENV_RNG_ATTESTATION_PATH: destination,
+                    KAETRAM_GAME_REVISION: '0'.repeat(40),
+                    KAETRAM_GAME_BUNDLE_SHA256: bundleSha256
                 }),
             /Game revision mismatch/
+        );
+        assert.throws(
+            () =>
+                configureEnvironmentRng({
+                    KAETRAM_ENV_RNG_REQUIRED: '1',
+                    KAETRAM_ENV_SEED: seed,
+                    KAETRAM_ENV_RNG_ATTESTATION_PATH: destination,
+                    KAETRAM_GAME_REVISION: revision,
+                    KAETRAM_GAME_BUNDLE_SHA256: '0'.repeat(64)
+                }),
+            /Game bundle mismatch/
         );
 
         let attestation = configureEnvironmentRng({
                 KAETRAM_ENV_RNG_REQUIRED: '1',
                 KAETRAM_ENV_SEED: seed,
                 KAETRAM_ENV_RNG_ATTESTATION_PATH: destination,
-                KAETRAM_GAME_REVISION: revision
+                KAETRAM_GAME_REVISION: revision,
+                KAETRAM_GAME_BUNDLE_SHA256: bundleSha256
             })!,
             recorded = JSON.parse(fs.readFileSync(destination, 'utf8'));
 
@@ -86,6 +114,7 @@ test('strict environment RNG configuration is deterministic and fail closed', ()
             crypto.createHash('sha256').update(seed, 'utf8').digest('hex')
         );
         assert.equal(attestation.gameRevision, revision);
+        assert.equal(attestation.serverBundleSha256, bundleSha256);
         assert.equal(attestation.drawsAtAttestation, 0);
         assert.deepEqual(recorded, attestation);
 
@@ -107,7 +136,8 @@ test('strict environment RNG configuration is deterministic and fail closed', ()
             () =>
                 configureEnvironmentRng({
                     KAETRAM_ENV_SEED: seed,
-                    KAETRAM_GAME_REVISION: revision
+                    KAETRAM_GAME_REVISION: revision,
+                    KAETRAM_GAME_BUNDLE_SHA256: bundleSha256
                 }),
             /already configured/
         );

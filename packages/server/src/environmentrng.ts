@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
@@ -7,13 +8,14 @@ import {
     DeterministicRandomAlgorithm
 } from '@kaetram/common/util/random';
 
-export const EnvironmentRngAttestationSchema = 'kaetram-environment-rng-attestation/v1' as const;
+export const EnvironmentRngAttestationSchema = 'kaetram-environment-rng-attestation/v2' as const;
 
 export interface EnvironmentRngAttestation {
     schema: typeof EnvironmentRngAttestationSchema;
     algorithm: typeof DeterministicRandomAlgorithm;
     seedSha256: string;
     gameRevision: string;
+    serverBundleSha256: string;
     drawsAtAttestation: 0;
     coverage: string[];
     residualNondeterminism: string[];
@@ -34,16 +36,42 @@ function writeAttestation(destination: string, attestation: EnvironmentRngAttest
         throw new Error(`Environment RNG attestation directory is not a directory: ${directory}`);
 
     try {
-        fs.writeFileSync(temporary, `${JSON.stringify(attestation, null, 2)}\n`, {
-            encoding: 'utf8',
-            flag: 'wx'
-        });
+        let temporaryFd = fs.openSync(temporary, 'wx');
+
+        try {
+            fs.writeFileSync(temporaryFd, `${JSON.stringify(attestation, null, 2)}\n`, 'utf8');
+            fs.fsyncSync(temporaryFd);
+        } finally {
+            fs.closeSync(temporaryFd);
+        }
 
         // linkSync is an atomic no-clobber publication on the same filesystem.
         // A stale or duplicate attestation is therefore a hard startup failure.
         fs.linkSync(temporary, destination);
+        let directoryFd = fs.openSync(directory, 'r');
+
+        try {
+            fs.fsyncSync(directoryFd);
+        } finally {
+            fs.closeSync(directoryFd);
+        }
     } finally {
         if (fs.existsSync(temporary)) fs.unlinkSync(temporary);
+    }
+}
+
+function detectExecutedBundleSha256(): string {
+    let entrypoint = process.argv[1];
+
+    if (!entrypoint) throw new Error('Cannot resolve the executed game-server bundle path.');
+
+    try {
+        return crypto
+            .createHash('sha256')
+            .update(fs.readFileSync(fs.realpathSync(entrypoint)))
+            .digest('hex');
+    } catch (error) {
+        throw new Error(`Cannot hash the executed game-server bundle: ${error}`);
     }
 }
 
@@ -70,7 +98,8 @@ export function configureEnvironmentRng(
     let required = enabled(environment.KAETRAM_ENV_RNG_REQUIRED),
         seed = environment.KAETRAM_ENV_SEED,
         destination = environment.KAETRAM_ENV_RNG_ATTESTATION_PATH,
-        gameRevision = environment.KAETRAM_GAME_REVISION;
+        gameRevision = environment.KAETRAM_GAME_REVISION,
+        expectedBundleSha256 = environment.KAETRAM_GAME_BUNDLE_SHA256;
 
     if (!seed) {
         if (required) throw new Error('KAETRAM_ENV_SEED is required for this run.');
@@ -84,12 +113,21 @@ export function configureEnvironmentRng(
         throw new Error('KAETRAM_GAME_REVISION is required for this run.');
     if (required && !/^(?:[\dA-Fa-f]{40}|[\dA-Fa-f]{64})$/.test(gameRevision!))
         throw new Error('KAETRAM_GAME_REVISION must be an exact 40- or 64-character commit hash.');
+    if (!expectedBundleSha256 && required)
+        throw new Error('KAETRAM_GAME_BUNDLE_SHA256 is required for this run.');
+    if (expectedBundleSha256 && !/^[\dA-Fa-f]{64}$/.test(expectedBundleSha256))
+        throw new Error('KAETRAM_GAME_BUNDLE_SHA256 must be an exact 64-character SHA-256.');
 
-    let detectedRevision = required ? detectGameRevision() : gameRevision;
+    let detectedRevision = required ? detectGameRevision() : gameRevision,
+        detectedBundleSha256 = detectExecutedBundleSha256();
 
     if (required && detectedRevision !== gameRevision)
         throw new Error(
             `Game revision mismatch: expected ${gameRevision}, detected ${detectedRevision}.`
+        );
+    if (expectedBundleSha256 && detectedBundleSha256 !== expectedBundleSha256)
+        throw new Error(
+            `Game bundle mismatch: expected ${expectedBundleSha256}, detected ${detectedBundleSha256}.`
         );
 
     let randomAttestation = configureDeterministicRandom(seed),
@@ -98,6 +136,7 @@ export function configureEnvironmentRng(
             algorithm: DeterministicRandomAlgorithm,
             seedSha256: randomAttestation.seedSha256!,
             gameRevision: detectedRevision ?? 'unrecorded',
+            serverBundleSha256: detectedBundleSha256,
             drawsAtAttestation: 0,
             coverage: [
                 '@kaetram/common/util/utils randomFloat',
