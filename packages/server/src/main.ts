@@ -5,6 +5,7 @@ import World from './game/world';
 import Loader from './info/loader';
 import SocketHandler from './network/sockethandler';
 import Args from './args';
+import { configureEnvironmentRng } from './environmentrng';
 
 import log from '@kaetram/common/util/log';
 import config from '@kaetram/common/config';
@@ -21,6 +22,8 @@ class Main {
     private ready = false;
 
     public constructor(private params: string[] = process.argv) {
+        configureEnvironmentRng();
+
         if (!this.handleLicensing()) return;
 
         log.info(`Initializing ${config.name} game engine...`);

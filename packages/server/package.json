@@ -4,6 +4,7 @@
     "scripts": {
         "dev": "tsx watch --preserve-symlinks --clear-screen=false ./src/main.ts",
         "build": "tsc && tsx --preserve-symlinks ./build.ts",
+        "test:run": "tsx --test ./test/*.test.ts",
         "start": "node --enable-source-maps ./dist/main.js"
     },
     "dependencies": {

@@ -176,7 +176,7 @@ export default class Minigame {
         let lobby = this.playersInLobby;
 
         for (let x = lobby.length - 1; x > 0; x--) {
-            let y = Math.floor(Math.random() * x),
+            let y = Utils.randomInt(0, x - 1),
                 temp = lobby[x];
 
             lobby[x] = lobby[y];
