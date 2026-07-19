@@ -12,11 +12,12 @@ KAETRAM_GAME_REVISION=<exact-git-commit>
 ```
 
 The server fails before constructing the world when any required value is
-missing, a random draw happened before configuration, or the attestation cannot
-be written. The attestation records the SHA-256 digest of the seed rather than
-the seed itself; the experiment manifest must retain the original seed and
-verify the digest. The generator is `mulberry32-sha256-v1`: SHA-256 of the UTF-8
-seed supplies its initial 32-bit state.
+missing, the registered revision differs from `git rev-parse HEAD`, a random
+draw happened before configuration, or the attestation cannot be written. The
+attestation records the SHA-256 digest of the seed rather than the seed itself;
+the experiment manifest must retain the original seed and verify the digest.
+The generator is `mulberry32-sha256-v1`: SHA-256 of the UTF-8 seed supplies its
+initial 32-bit state.
 
 ## Audited coverage
 

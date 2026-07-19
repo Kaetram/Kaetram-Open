@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 import { configureEnvironmentRng, EnvironmentRngAttestationSchema } from '../src/environmentrng';
 
@@ -24,7 +25,9 @@ test('strict environment RNG configuration is deterministic and fail closed', ()
     let temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'kaetram-rng-test-')),
         destination = path.join(temporaryDirectory, 'environment-rng.json'),
         seed = '11001',
-        revision = '4bdbd6d50a000000000000000000000000000000';
+        revision = execFileSync('git', ['rev-parse', 'HEAD'], {
+            encoding: 'utf8'
+        }).trim();
 
     try {
         assert.throws(
@@ -57,6 +60,16 @@ test('strict environment RNG configuration is deterministic and fail closed', ()
                     KAETRAM_GAME_REVISION: 'develop'
                 }),
             /exact 40- or 64-character commit hash/
+        );
+        assert.throws(
+            () =>
+                configureEnvironmentRng({
+                    KAETRAM_ENV_RNG_REQUIRED: '1',
+                    KAETRAM_ENV_SEED: seed,
+                    KAETRAM_ENV_RNG_ATTESTATION_PATH: destination,
+                    KAETRAM_GAME_REVISION: '0'.repeat(40)
+                }),
+            /Game revision mismatch/
         );
 
         let attestation = configureEnvironmentRng({

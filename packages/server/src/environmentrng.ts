@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 import {
     configureDeterministicRandom,
@@ -46,6 +47,18 @@ function writeAttestation(destination: string, attestation: EnvironmentRngAttest
     }
 }
 
+function detectGameRevision(): string {
+    try {
+        return execFileSync('git', ['rev-parse', 'HEAD'], {
+            cwd: process.cwd(),
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'pipe']
+        }).trim();
+    } catch (error) {
+        throw new Error(`Cannot resolve the game server Git revision: ${error}`);
+    }
+}
+
 /**
  * Configure and attest server gameplay RNG before World/Loader construction.
  * Confirmatory runs set KAETRAM_ENV_RNG_REQUIRED=1 so missing provenance is a
@@ -72,12 +85,19 @@ export function configureEnvironmentRng(
     if (required && !/^(?:[\dA-Fa-f]{40}|[\dA-Fa-f]{64})$/.test(gameRevision!))
         throw new Error('KAETRAM_GAME_REVISION must be an exact 40- or 64-character commit hash.');
 
+    let detectedRevision = required ? detectGameRevision() : gameRevision;
+
+    if (required && detectedRevision !== gameRevision)
+        throw new Error(
+            `Game revision mismatch: expected ${gameRevision}, detected ${detectedRevision}.`
+        );
+
     let randomAttestation = configureDeterministicRandom(seed),
         attestation: EnvironmentRngAttestation = {
             schema: EnvironmentRngAttestationSchema,
             algorithm: DeterministicRandomAlgorithm,
             seedSha256: randomAttestation.seedSha256!,
-            gameRevision: gameRevision ?? 'unrecorded',
+            gameRevision: detectedRevision ?? 'unrecorded',
             drawsAtAttestation: 0,
             coverage: [
                 '@kaetram/common/util/utils randomFloat',
