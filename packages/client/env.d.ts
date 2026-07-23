@@ -2,8 +2,17 @@
 /// <reference types="vite-plugin-pwa/client" />
 
 import type { env } from './astro.config';
+import type Game from './src/game';
 
 declare global {
+    interface Window {
+        /**
+         * The active game runtime. Automation and accessibility integrations use
+         * this stable bridge instead of reaching into framework internals.
+         */
+        readonly game?: Game;
+    }
+
     let globalConfig: typeof env & {
         version: string;
         minor: string;
