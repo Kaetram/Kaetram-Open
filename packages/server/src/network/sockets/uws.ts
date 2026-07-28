@@ -9,7 +9,13 @@ import { App, DISABLED } from 'uws';
 
 import type SocketHandler from '../sockethandler';
 import type { HeaderWebSocket } from '../connection';
-import type { WebSocket as WS, HttpRequest, HttpResponse, us_socket_context_t } from 'uws';
+import type {
+    WebSocket as WS,
+    HttpRequest,
+    HttpResponse,
+    us_listen_socket,
+    us_socket_context_t
+} from 'uws';
 import type { ConnectionInfo } from '@kaetram/common/types/network';
 
 export default class UWS extends WebSocket {
@@ -28,7 +34,7 @@ export default class UWS extends WebSocket {
                 message: this.handleMessage.bind(this),
                 close: this.handleClose.bind(this)
             })
-            .listen(config.port, (socket: WS<ConnectionInfo>) => {
+            .listen(config.host, config.port, (socket: us_listen_socket) => {
                 if (!socket) throw new Error(`Failed to listen on port ${config.port}`);
 
                 this.initializedCallback?.();
