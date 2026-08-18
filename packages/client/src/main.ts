@@ -10,5 +10,9 @@ import './lib/sentry';
  */
 
 window.addEventListener('load', () => {
-    new Game(new App());
+    if (Object.hasOwn(window, 'game')) throw new Error('window.game is already defined');
+
+    Object.defineProperty(window, 'game', {
+        value: new Game(new App())
+    });
 });

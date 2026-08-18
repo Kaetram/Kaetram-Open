@@ -10,6 +10,21 @@ import type World from '../world';
 import type Player from '../entity/character/player/player';
 import type { MinigamePacketData } from '@kaetram/common/types/messages/outgoing';
 
+export function shuffleInPlace<T>(
+    items: T[],
+    randomInt: (minimum: number, maximum: number) => number = Utils.randomInt
+): T[] {
+    for (let x = items.length - 1; x > 0; x--) {
+        let y = randomInt(0, x),
+            temporary = items[x];
+
+        items[x] = items[y];
+        items[y] = temporary;
+    }
+
+    return items;
+}
+
 export default class Minigame {
     // The name for the minigame (used for scoreboard, entering, etc.)
     public name = '';
@@ -173,17 +188,7 @@ export default class Minigame {
      */
 
     protected shuffleLobby(): Player[] {
-        let lobby = this.playersInLobby;
-
-        for (let x = lobby.length - 1; x > 0; x--) {
-            let y = Math.floor(Math.random() * x),
-                temp = lobby[x];
-
-            lobby[x] = lobby[y];
-            lobby[y] = temp;
-        }
-
-        return lobby;
+        return shuffleInPlace(this.playersInLobby);
     }
 
     /**

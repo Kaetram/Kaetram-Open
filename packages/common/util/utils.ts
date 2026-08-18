@@ -5,7 +5,7 @@
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
 
-import log from './log';
+import { random } from './random';
 
 import config from '../config';
 import { Modules, Packets } from '../network';
@@ -31,7 +31,7 @@ export default {
     },
 
     /**
-     * Pseudo-random float number generator using Math library.
+     * Pseudo-random float number generator using the configured random source.
      * @param min Minimum value (inclusive)
      * @param max Maximum value (inclusive)
      * @param decimalPoint How many decimal points.
@@ -39,18 +39,18 @@ export default {
      */
 
     randomFloat(min: number, max: number, decimalPoint = 4): number {
-        return parseFloat((min + Math.random() * (max - min + 1)).toFixed(decimalPoint));
+        return parseFloat((min + random() * (max - min + 1)).toFixed(decimalPoint));
     },
 
     /**
-     * Generates a random integer number using Math library.
+     * Generates a random integer number using the configured random source.
      * @param min Minimum value (inclusive)
      * @param max Maximum value (inclusive)
      * @returns Random integer between min and max.
      */
 
     randomInt(min: number, max: number): number {
-        return min + Math.floor(Math.random() * (max - min + 1));
+        return min + Math.floor(random() * (max - min + 1));
     },
 
     /**
@@ -65,7 +65,7 @@ export default {
      */
 
     randomWeightedInt(min: number, max: number, weight: number): number {
-        return Math.floor(Math.pow(Math.random(), weight) * (max - min + 1) + min);
+        return Math.floor(Math.pow(random(), weight) * (max - min + 1) + min);
     },
 
     /**
