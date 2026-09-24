@@ -3442,7 +3442,7 @@ __metadata:
     dotenv-parse-variables: "npm:^2.0.0"
     gl-tiled: "npm:^1.0.0"
     illuminated: "npm:^1.3.7"
-    image-size: "npm:^1.0.2"
+    image-size: "npm:^2.0.3"
     kaetram: "workspace:*"
     pako: "npm:^2.1.0"
     sass: "npm:^1.66.1"
@@ -9645,14 +9645,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"image-size@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "image-size@npm:1.0.2"
-  dependencies:
-    queue: "npm:6.0.2"
+"image-size@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "image-size@npm:2.0.3"
   bin:
     image-size: bin/image-size.js
-  checksum: 7b54fb03519d73549a5e39a45d877c47a3d8914b82157665b6d44042e75e4abcf583713ceb91e4ea1edd5cd844e6c6b7b40275f18406c19cb6b0bb1363f0abe3
+  checksum: dd85aa7b7114448783a6b5a3dafbf79123c0cc41772f33aec35c68b133dfaf9ff8524cc233e62c98e90511a5ba47f5588cb88a384992b6af5daaabedc404de43
   languageName: node
   linkType: hard
 
@@ -9718,7 +9716,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inherits@npm:2, inherits@npm:2.0.4, inherits@npm:^2.0.3, inherits@npm:^2.0.4, inherits@npm:~2.0.3":
+"inherits@npm:2, inherits@npm:2.0.4, inherits@npm:^2.0.3, inherits@npm:^2.0.4":
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: ca76c7e45ec715bfe6c1dd67b780b9a15068f37b37ab56cf8b773537b2654238469a42950f5f4d301212755e7512be888f627752e778e1863d95cfedefc8b8bd
@@ -13403,15 +13401,6 @@ __metadata:
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
   checksum: 84624bee6c25c9d9776242ce0dcc3e15f703d897f4b7d982f32ef4d88c51048507a0999d9ff038ec46f65901655460b69240e414da1cebc2d723987ec81cbae8
-  languageName: node
-  linkType: hard
-
-"queue@npm:6.0.2":
-  version: 6.0.2
-  resolution: "queue@npm:6.0.2"
-  dependencies:
-    inherits: "npm:~2.0.3"
-  checksum: e3cdce3fe26cdb3a70f868e9fd260484482feacb77f1c9af4728118d64234bf1d9665d9342f1fdac2d30276e3a5d09cdaeab895138c9f9300fb03c54c665c5cf
   languageName: node
   linkType: hard
 
