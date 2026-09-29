@@ -3502,7 +3502,7 @@ __metadata:
     esbuild: "npm:^0.19.2"
     express: "npm:^4.18.2"
     mongodb: "npm:^6.0.0"
-    nodemailer: "npm:^6.9.5"
+    nodemailer: "npm:^10.0.2"
     stripe: "npm:^13.5.0"
     tsx: "npm:^3.12.10"
     typescript: "npm:^5.2.2"
@@ -12146,10 +12146,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^6.9.5":
-  version: 6.9.5
-  resolution: "nodemailer@npm:6.9.5"
-  checksum: adfdb5debc340fcb5fc021609d31b6ce6800d48c8f02e6bdb44e0af6e8d94c087e9d30f5c7c52ee8c800bcf92b4acfddd7870365842df373d6e3113666e214f7
+"nodemailer@npm:^10.0.2":
+  version: 10.0.2
+  resolution: "nodemailer@npm:10.0.2"
+  checksum: 2054b585a8cdeafa23e2526fba0d59a10b3e97ea78d3eb5b65bf409d68dffc49014f754238bd2fc842b14854992343aad83538742d8439b755d092d69d5f9ca4
   languageName: node
   linkType: hard
 
