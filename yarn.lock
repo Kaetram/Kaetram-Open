@@ -13248,13 +13248,13 @@ __metadata:
   linkType: hard
 
 "probe-image-size@npm:^7.2.3":
-  version: 7.2.3
-  resolution: "probe-image-size@npm:7.2.3"
+  version: 7.4.0
+  resolution: "probe-image-size@npm:7.4.0"
   dependencies:
     lodash.merge: "npm:^4.6.2"
     needle: "npm:^2.5.2"
     stream-parser: "npm:~0.3.1"
-  checksum: d94cd006011e511986e48b01231eb668cb521bbe535efd403a424302005b7374ef2860017a7d41019da9013b715dbb07548985978075110a1f8d8fdd7549fca2
+  checksum: e6b1bac7a8cd24869c197a5aa1a8d63375dfba7106d80c136fced777a2375524a2e1b39eb9ad74ec64a6858e2ae47283602478a9efa4b679d4fdd10673a9fa78
   languageName: node
   linkType: hard
 
