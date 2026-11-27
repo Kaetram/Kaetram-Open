@@ -70,6 +70,15 @@ import ResourceTl from './tl/resource';
 import StoreTl from './tl/store';
 import GameTl from './tl/game';
 import WarpsTl from './tl/warps';
+import CraftingJa from './ja/crafting';
+import EnchantJa from './ja/enchant';
+import GuildsJa from './ja/guilds';
+import ItemJa from './ja/item';
+import MiscJa from './ja/misc';
+import ResourceJa from './ja/resource';
+import StoreJa from './ja/store';
+import GameJa from './ja/game';
+import WarpsJa from './ja/warps';
 
 export let resources = {
     en: {
@@ -159,6 +168,17 @@ export let resources = {
         store: StoreTl,
         game: GameTl,
         warps: WarpsTl
+    },
+    ja: {
+        crafting: CraftingJa,
+        enchant: EnchantJa,
+        guilds: GuildsJa,
+        item: ItemJa,
+        misc: MiscJa,
+        resource: ResourceJa,
+        store: StoreJa,
+        game: GameJa,
+        warps: WarpsJa
     }
 } as const;
 
@@ -172,7 +192,8 @@ export let locales: { [K in Locale]: string } = {
     pt: 'pt-PT',
     ro: 'ro-RO',
     ru: 'ru-RU',
-    tl: 'tl-PH'
+    tl: 'tl-PH',
+    ja: 'ja-JP'
 } as const;
 
 export let defaultLocale = 'en' as const;
